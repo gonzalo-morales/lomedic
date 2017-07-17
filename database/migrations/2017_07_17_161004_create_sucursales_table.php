@@ -14,6 +14,7 @@ class CreateSucursalesTable extends Migration
     public function up()
     {
         Schema::create('ges_cat_sucursales', function (Blueprint $table) {
+            /*Principal fields*/
             $table->increments('id_sucursal');
             $table->string('nombre_sucursal')->unique()->comment('Nombre de la sucursal');
             $table->integer('fk_id_localidad')->comment('ID de la localidad');
@@ -41,18 +42,21 @@ class CreateSucursalesTable extends Migration
             $table->string('clave_presupuestal','12')->comment('Clave de presupuesto');
             $table->string('fk_id_jurisdiccion')->comment('Jurisdiccion');
 
-            /*Campos generales*/
+            /*General fields*/
             $table->boolean('activo')->default('1');
             $table->boolean('eliminar')->default('0');
-
-            $table->integer('fk_id_usuario_crea');
+            $table->integer('fk_id_usuario_crea')->unsigned();
             $table->timestamp('fecha_crea')->default(DB::raw('now()'));
-
-            $table->integer('fk_id_usuario_actualiza')->nullable();
+            $table->integer('fk_id_usuario_actualiza')->unsigned()->nullable();
             $table->timestamp('fecha_actualiza')->nullable();
-
-            $table->integer('fk_id_usuario_elimina')->nullable();
+            $table->integer('fk_id_usuario_elimina')->unsigned()->nullable();
             $table->timestamp('fecha_elimina')->nullable();
+            $table->foreign('fk_id_usuario_crea')->references('id_usuario')->on('ges_cat_usuarios');
+            $table->foreign('fk_id_usuario_actualiza')->references('id_usuario')->on('ges_cat_usuarios');
+            $table->foreign('fk_id_usuario_elimina')->references('id_usuario')->on('ges_cat_usuarios');
+
+            /*Foreign keys*/
+            $table->foreign('fk_id_supervisor')->references('id_usuario')->on('ges_cat_usuarios');
         });
     }
 
