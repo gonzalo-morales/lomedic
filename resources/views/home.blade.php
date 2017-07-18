@@ -1,5 +1,9 @@
 @extends('layouts.dashboard')
 
+@section('header-bottom')
+	<script src="{{ asset('js/dataChart.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="center">
 <h2>¡Bienvenido!</h2>

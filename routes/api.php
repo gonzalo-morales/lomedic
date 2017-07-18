@@ -14,6 +14,5 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-	echo "oks";
-	// return $request->user();
+	return $request->user();
 });

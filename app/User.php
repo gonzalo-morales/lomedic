@@ -9,18 +9,18 @@ class User extends Authenticatable
 {
 	use Notifiable;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ges_cat_usuarios';
+	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'ges_cat_usuarios';
 
-    /**
-     * LLave primaria de la tabla
-     * @var string
-     */
-    protected $primaryKey = 'id_usuario';
+	/**
+	 * The primary key of the table
+	 * @var string
+	 */
+	protected $primaryKey = 'id_usuario';
 
 	/**
 	 * The attributes that are mass assignable.
