@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateCorreosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('ges_cat_usuarios', function (Blueprint $table) {
+        Schema::create('ges_cat_correos', function (Blueprint $table) {
             /*Principal fields*/
-            $table->increments('id_usuario');
-            $table->string('usuario','20')->unique()->comment('Nombre de usuario');
-            $table->string('nombre_corto','100')->unique()->comment('Nombre corto de la persona');
-            $table->integer('fk_id_empleado')->comment('ID de empleado recursos humanos')->unsigned()->nullable();/*Foreign key from 'empleado' left*/
-            /*$table->string('email')->unique();*/
-            $table->string('password','60')->comment('Contrasena de acceso');
-            $table->rememberToken();
+            $table->increments('id_correo');
+            $table->string('correo')->unique()->comment('Correo electronico');
+            $table->integer('fk_id_empresa')->unsigned()->comment('Empresa del correo');/*Foreign key from 'empresa' left*/
+            $table->integer('fk_id_usuario')->unsigned()->comment('Dueno del correo');
 
             /*General fields*/
             $table->boolean('activo')->default('1');
@@ -35,6 +32,9 @@ class CreateUsersTable extends Migration
             $table->foreign('fk_id_usuario_crea')->references('id_usuario')->on('ges_cat_usuarios');
             $table->foreign('fk_id_usuario_actualiza')->references('id_usuario')->on('ges_cat_usuarios');
             $table->foreign('fk_id_usuario_elimina')->references('id_usuario')->on('ges_cat_usuarios');
+
+            /*Foreign keys*/
+            $table->foreign('fk_id_usuario')->references('id_usuario')->on('ges_cat_usuarios');
         });
     }
 
@@ -45,6 +45,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ges_cat_usuarios');
+        Schema::dropIfExists('ges_cat_correos');
     }
 }
