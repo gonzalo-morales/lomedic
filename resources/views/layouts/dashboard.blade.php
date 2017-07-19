@@ -18,6 +18,12 @@
 	<link type="text/css" rel="stylesheet" href="{{ asset('css/style.css') }}"  media="screen,projection"/>
 	@yield('header-top')
 </head>
+<?php 
+use App\Menu;
+
+$Menu = New Menu();
+$MainMenu =  $Menu->getMenu();
+?>
 <body class="grey lighten-3">
 
 <div class="navbar-fixed">
@@ -71,13 +77,9 @@
 					<p>Notification message</p>
 			</li>
 	</ul><!--/dropdown-->
-				<li class="active"><a href="#!"><i class="material-icons">supervisor_account</i>Administración</a></li>
-				<li><a href="#!"><i class="material-icons">store</i>Almacén</a></li>
-				<li><a href="#!"><i class="material-icons">class</i>Auditoria</a></li>
-				<li><a href="#!"><i class="material-icons">payment</i>Compra</a></li>
-				<li><a href="#!"><i class="material-icons">receipt</i>Pedidos</a></li>
-				<li><a href="#!"><i class="material-icons">assignment_ind</i>Recursos Humanos</a></li>
-				<li><a href="#!"><i class="material-icons">assignment</i>Reportes</a></li>
+				<ul id='main-menu'>
+					<?php echo $MainMenu; ?>
+				</ul>
 			</ul><!--/slide-out, principal nav-->
 			<ul id="slide-help" class="side-nav">
 				<li>
@@ -98,7 +100,7 @@
 
 			<div class="row teal">
 				<div class="col s12">
-					<a href="#!" class="breadcrumb">Home</a>
+					<a href="{{ route('home') }}" class="breadcrumb">Home</a>
 					<a href="#!" class="breadcrumb">Section</a>
 				</div>
 			</div><!--/breadcrum-->
