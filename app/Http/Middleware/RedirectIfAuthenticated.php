@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Session;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,10 +18,12 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        
         if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+            $request->session()->put('id_usr', Auth::id());
+            return redirect('/');
         }
-
+        
         return $next($request);
     }
 }
