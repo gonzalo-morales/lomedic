@@ -1,12 +1,13 @@
 <?php
 namespace App\Http\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelCompany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Bancos extends Model
+class Bancos extends ModelCompany
 {
-    use SoftDeletes;
+    // use SoftDeletes;
+
 	/**
 	 * The table associated with the model.
 	 *
@@ -42,10 +43,5 @@ class Bancos extends Model
 		'razon_social' => 'required',
 		'banco' => 'required',
 	];
-	
-	public function __construct()
-	{
-	    
-	    
-	}
+
 }
