@@ -1,3 +1,8 @@
+<?php
+use App\Menu;
+$Barra = New Menu();
+$Acciones = $Barra->getBarra(47);
+?>
 @extends('layouts.dashboard')
 
 @section('title', 'Bancos')
@@ -16,8 +21,9 @@
 
 @section('content')
 <div class="col s12 xl8 offset-xl2">
-	<p class="right-align">
-		<a href="{{ route("$entity.create") }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br>
+	<p class="right">
+		<?php echo $Acciones; ?>
+		<!-- <a href="{{ route("$entity.create") }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br> -->
 	</p>
 </div>
 @if (session('success'))
@@ -28,7 +34,7 @@
 </div>
 @endif
 <div class="col s12 xl8 offset-xl2">
-	<table class="bordered">
+	<table class="striped responsive-table highlight">
 		<thead>
 			<tr>
 				<th>Bancos</th>
@@ -46,9 +52,9 @@
 			<td>{{ $banco->rfc }}</td>
 			<td>{{ $banco->nacional }}</td>
 			<td class="width-auto">
-				<a href="{{ route("$entity.show", ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn"><i class="material-icons">visibility</i></a>
-				<a href="{{ route("$entity.edit", ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn"><i class="material-icons">mode_edit</i></a>
-				<a href="#" class="waves-effect waves-light btn" onclick="event.preventDefault(); document.getElementById('delete-form').submit();"><i class="material-icons">delete</i></a>
+				<a href="{{ route("$entity.show", ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ route("$entity.edit", ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form').submit();"><i class="material-icons">delete</i></a>
 				<form id="delete-form" action="{{ route("$entity.destroy", ['id' => $banco->id_banco]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
