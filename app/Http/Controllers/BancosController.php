@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Bancos;
+use App\Http\Models\Bancos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
