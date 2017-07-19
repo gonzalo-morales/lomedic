@@ -14,7 +14,7 @@
 						<input id="user" type="text" class="validate" name="email" value="{{ old('email') }}" autofocus>
 						<label for="user">Correo:</label>
 						@if ($errors->has('email'))
-							<span class="help-block">
+							<span class="help-block left red-text text-darken4">
 								<strong>{{ $errors->first('email') }}</strong>
 							</span>
 						@endif
@@ -26,7 +26,7 @@
 						<input id="password" type="password" class="validate" name="password">
 						<label for="password">Contraseña:</label>
 						@if ($errors->has('password'))
-							<span class="help-block">
+							<span class="help-block left red-text text-darken4">
 								<strong>{{ $errors->first('password') }}</strong>
 							</span>
 						@endif
