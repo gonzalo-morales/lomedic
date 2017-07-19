@@ -30,6 +30,7 @@ class BancosController extends Controller
 	{
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
+			'company' => $this->entity->getConnectionName(),
 			'data' => $this->entity->all(),
 		]);
 	}
@@ -43,6 +44,7 @@ class BancosController extends Controller
 	{
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
+			'company' => $this->entity->getConnectionName(),
 		]);
 	}
 
@@ -60,7 +62,7 @@ class BancosController extends Controller
 		$created = $this->entity->create($request->all());
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index")->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+		return redirect()->route("$this->entity_name.index", ['company'=> $this->entity->getConnectionName()])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
 	}
 
 	/**
@@ -73,6 +75,7 @@ class BancosController extends Controller
 	{
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
+			'company' => $this->entity->getConnectionName(),
 			'data' => $this->entity->findOrFail($id),
 		]);
 	}
@@ -87,6 +90,7 @@ class BancosController extends Controller
 	{
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
+			'company' => $this->entity->getConnectionName(),
 			'data' => $this->entity->findOrFail($id),
 		]);
 	}
@@ -108,7 +112,7 @@ class BancosController extends Controller
 		$entity->save();
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index")->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
+		return redirect()->route("$this->entity_name.index", ['company'=> $this->entity->getConnectionName()])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
 	}
 
 	/**
@@ -123,6 +127,6 @@ class BancosController extends Controller
 		$entity->delete();
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index")->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
+		return redirect()->route("$this->entity_name.index", ['company'=> $this->entity->getConnectionName()])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
 	}
 }

@@ -15,5 +15,7 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::resource('bancos', 'BancosController');
-
+Route::pattern('company', '(pgsql|one|two)');
+Route::prefix('{company}')->group(function () {
+    Route::resource('bancos', 'BancosController');
+});
