@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Auth;
 
 use Session;
 use Auth;
+use DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -40,6 +41,14 @@ class LoginController extends Controller
         
         $request->session()->put('usuario', $request->get('email'));
         $request->session()->put('id_sistema', $request->get('sistema'));
+        
+        $idEmpresa = !empty($request->get('sistema')) ? $request->get('sistema') : 0;
+        
+        $QueryCompany =  DB::table('gen_cat_empresas')->select('conexion')->where('id_empresa','=',$idEmpresa)->get()->toarray();
+        $redirect = isset($QueryCompany[0]->conexion) ? $QueryCompany[0]->conexion.'/' : '/';
+        
+        $this->redirectTo = $redirect;
+        
         
         $field = filter_var($request->get($this->username()), FILTER_VALIDATE_EMAIL) ? $this->username() : 'usuario';
         
