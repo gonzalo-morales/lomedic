@@ -6,7 +6,7 @@
 @endsection
 
 @section('header-bottom')
-	<script src="{{ asset('js/bancos.js') }}"></script>
+	<script src="{{ asset('js/modulos.js') }}"></script>
 @endsection
 
 @section('content')

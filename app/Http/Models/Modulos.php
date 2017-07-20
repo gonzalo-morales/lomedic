@@ -41,7 +41,7 @@ class Modulos extends Model
 	 * @var array
 	 */
 	public $rules = [
-		'nombre' => 'required',
+		'nombre' => 'required|unique:ges_cat_modulos',
 		'descripcion' => 'required',
 		'url' => 'required',
 		'empresas' => 'required',
