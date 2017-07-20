@@ -41,6 +41,7 @@ $QueryOterCompany =  DB::table('gen_cat_empresas')->where('conexion','<>',$Compa
 
 $NombreUsuario = !empty($QueryUser[0]->nombre_corto) ? $QueryUser[0]->nombre_corto : '<\ Usuario >';
 $NombreEmpresa = !empty($QueryCompany[0]->nombre_comercial) ? $QueryCompany[0]->nombre_comercial : '<\ Empresa >';
+$LogoEmpresa = !empty($QueryCompany[0]->logotipo) ? $QueryCompany[0]->logotipo : 'twitch-logo.png';
 
 $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 ?>
@@ -51,7 +52,7 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 		<div class="nav-wrapper">
 			<a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
 			<a href="#!" data-activates="enteDrop" data-beloworigin="true" class="brand-logo dropdown-button logo-enterprise">
-				<img src="http://www.technologytell.com/gaming/files/2013/02/twitch-logo.png" alt="Sesión activa" class="circle responsive-img">{{ $NombreEmpresa }}
+				<img src="/img/{{ $LogoEmpresa }}" alt="Sesión activa" class="circle responsive-img"> {{ $NombreEmpresa }}
 			</a>
 			<ul class="right">
 				<li><a href="#" data-activates="slide-help" class="help-collapse"><i class="material-icons">live_help</i></a></li>
