@@ -18,4 +18,8 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::pattern('company', '(pgsql|one|two)');
 Route::prefix('{company}')->group(function () {
     Route::resource('bancos', 'BancosController');
+    Route::resource('perfiles','PerfilesController');
+    Route::resource('usuarios','UsuariosController');
+    Route::resource('sucursales','SucursalesController');
+    Route::resource('correos','CorreosController');
 });

@@ -13,7 +13,7 @@ class CreateCorreosTable extends Migration
      */
     public function up()
     {
-        Schema::create('ges_cat_correos', function (Blueprint $table) {
+        Schema::create('ges_det_correos', function (Blueprint $table) {
             /*Principal fields*/
             $table->increments('id_correo');
             $table->string('correo')->unique()->comment('Correo electronico');
