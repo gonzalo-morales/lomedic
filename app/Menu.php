@@ -13,6 +13,7 @@ class Menu
     public function getMenu($Parent = Null)
     {
         $id_usuario = empty(Auth::id()) ? Auth::id() : 1;
+
         $htmlMenu = '';
     
         $Rows = DB::select('SELECT *
@@ -49,7 +50,7 @@ class Menu
                         <li><a class='collapsible-header waves-effect' href='$Url'>".$Icono.' <span class="menu-text">'.$item->nombre."</span></a>";
             
             if($IsParent)
-            { $htmlMenu .= "<div class='collapsible-body'><ul>\n".$this->getMenu($item->id_modulo)."\n</ul></div>"; }
+            { $htmlMenu .= "<div class='collapsible-body grey lighten-3'><ul>\n".$this->getMenu($item->id_modulo)."\n</ul></div>"; }
             
             $htmlMenu .= "</li>
                     </ul>
