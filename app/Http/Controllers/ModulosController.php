@@ -62,7 +62,7 @@ class ModulosController extends Controller
 		$this->validate($request, $this->entity->rules);
 
 		$created = $this->entity->create($request->all());
-		$created->empresas()->attach($request->empresas);
+		$created->empresas()->sync($request->empresas);
 
 		# Redirigimos a index
 		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
@@ -74,13 +74,13 @@ class ModulosController extends Controller
 	 * @param  integer $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($company, $id)
+	public function show(Empresas $empresas, $company, $id)
 	{
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
 			'data' => $this->entity->findOrFail($id),
-			'empresas' => $this->entity->empresas
+			'empresas' => $empresas->all()
 		]);
 	}
 
@@ -116,6 +116,8 @@ class ModulosController extends Controller
 		$entity->fill($request->all());
 		$entity->save();
 
+		$entity->empresas()->sync($request->empresas);
+
 		# Redirigimos a index
 		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
 	}
@@ -129,6 +131,7 @@ class ModulosController extends Controller
 	public function destroy($company, $id)
 	{
 		$entity = $this->entity->findOrFail($id);
+		$entity->empresas()->detach($entity->empresas);
 		$entity->delete();
 
 		# Redirigimos a index
