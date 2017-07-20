@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Models\Bancos;
+use App\Http\Models\Sucursales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-class BancosController extends Controller
+use Auth;
+use DB;
+class SucursalesController extends Controller
 {
 
 	/**
@@ -14,9 +15,9 @@ class BancosController extends Controller
 	 *
 	 * @return void
 	 */
-	public function __construct(Bancos $entity)
+	public function __construct(Sucursales $entity)
 	{
-		// $this->middleware('auth');
+		$this->middleware('auth');
 		$this->entity = $entity;
 		$this->entity_name = strtolower(class_basename($entity));
 	}
@@ -30,8 +31,7 @@ class BancosController extends Controller
 	{
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
-			'company' => $this->entity->getConnectionName(),
-			'data' => $this->entity->all(),
+			'data' => $this->entity->all()->where('eliminar', '=','0'),
 		]);
 	}
 
@@ -44,7 +44,6 @@ class BancosController extends Controller
 	{
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
-			'company' => $this->entity->getConnectionName(),
 		]);
 	}
 
@@ -59,10 +58,17 @@ class BancosController extends Controller
 		# Validamos request, si falla regresamos pagina
 		$this->validate($request, $this->entity->rules);
 
-		$created = $this->entity->create($request->all());
+//		$created = $this->entity->create($request->all());
+
+        $this->entity->fill($request->all());
+        $this->entity->fk_id_usuario_crea = Auth::id();
+        $this->entity->save();
+
+
+        /*$request->input('nombre')*/
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $this->entity->getConnectionName()])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+		return redirect()->route("$this->entity_name.index")->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
 	}
 
 	/**
@@ -75,7 +81,6 @@ class BancosController extends Controller
 	{
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
-			'company' => $this->entity->getConnectionName(),
 			'data' => $this->entity->findOrFail($id),
 		]);
 	}
@@ -90,7 +95,6 @@ class BancosController extends Controller
 	{
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
-			'company' => $this->entity->getConnectionName(),
 			'data' => $this->entity->findOrFail($id),
 		]);
 	}
@@ -104,15 +108,22 @@ class BancosController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		# Validamos request, si falla regresamos pagina
-		$this->validate($request, $this->entity->rules);
+        # Validamos request, si falla regresamos pagina
+        $this->validate($request, $this->entity->rules);
 
-		$entity = $this->entity->findOrFail($id);
-		$entity->fill($request->all());
-		$entity->save();
+//		$created = $this->entity->create($request->all());
 
-		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $this->entity->getConnectionName()])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
+        $entity = $this->entity->findOrFail($id);
+        $entity->fill($request->all());
+        $entity->fk_id_usuario_actualiza = Auth::id();//Usuario que actualiza el registro
+        $entity->fecha_actualiza = DB::raw('now()');//Fecha y hora de la actualización
+        $entity->save();
+
+
+        /*$request->input('nombre')*/
+
+        # Redirigimos a index
+        return redirect()->route("$this->entity_name.index")->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
 	}
 
 	/**
@@ -123,10 +134,15 @@ class BancosController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$entity = $this->entity->findOrFail($id);
-		$entity->delete();
+		/*$entity = $this->entity->findOrFail($id);
+		$entity->delete();*/
+        $entity = $this->entity->findOrFail($id);
+        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
+        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
+        $entity->eliminar='t';
+        $entity->save();
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $this->entity->getConnectionName()])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
+		return redirect()->route("$this->entity_name.index")->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
 	}
 }
