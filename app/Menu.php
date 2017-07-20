@@ -13,9 +13,8 @@ class Menu
     public function getMenu($Parent = Null)
     {
         $id_usuario = empty(Auth::id()) ? Auth::id() : 1;
-
         $htmlMenu = '';
-    
+        
         $Rows = DB::select('SELECT *
             FROM ges_cat_modulos m
             LEFT JOIN ges_det_parents p ON p.fk_id_modulo = m.id_modulo AND p.activo = TRUE
@@ -38,25 +37,26 @@ class Menu
         $Parents =[];
         foreach($Children as $item)
             array_push($Parents,$item->fk_id_parent);
-        
-        foreach($Rows as $item)
-        {
-            $IsParent  = in_array($item->id_modulo,$Parents);
-            $Url = !empty($item->url) ? $item->url : '#';
-            $Icono = !empty($item->icono) ? "<i class='material-icons'>$item->icono</i>" : '';
             
-            $htmlMenu .= "<li class='no-padding'>
+            $Company = request()->company;
+            foreach($Rows as $item)
+            {
+                $IsParent  = in_array($item->id_modulo,$Parents);
+                $Url = !empty($item->url) ? URL('/').'/'.$Company.'/'.$item->url : '#';
+                $Icono = !empty($item->icono) ? "<i class='material-icons'>$item->icono</i>" : '';
+                
+                $htmlMenu .= "<li class='no-padding'>
                     <ul class='no-padding".($IsParent ? " collapsible collapsible-accordion" : '')."'>
                         <li><a class='collapsible-header waves-effect' href='$Url'>".$Icono.' <span class="menu-text">'.$item->nombre."</span></a>";
-            
-            if($IsParent)
-            { $htmlMenu .= "<div class='collapsible-body grey lighten-3'><ul>\n".$this->getMenu($item->id_modulo)."\n</ul></div>"; }
-            
-            $htmlMenu .= "</li>
+                
+                if($IsParent)
+                { $htmlMenu .= "<div class='collapsible-body'><ul>\n".$this->getMenu($item->id_modulo)."\n</ul></div>"; }
+                
+                $htmlMenu .= "</li>
                     </ul>
                 </li>";
-        }
-        return $htmlMenu;
+            }
+            return $htmlMenu;
     }
     
     public function getBarra($Parent = Null)
@@ -81,13 +81,14 @@ class Menu
             	AND u.id_usuario = :id_usuario
             	ORDER BY fk_id_modulo)
             ORDER BY id_modulo', ['id_usuario' => $id_usuario]);
-            
-            foreach($Rows as $item)
-            {
-                $Url = !empty($item->url) ? $item->url : '#';
-                $htmlAccion .= '<a class="btn waves-effect waves-light" href="'.$Url.'">'.$item->nombre.'</a> ';
-            }
-            
-            return $htmlAccion;
+        
+        $Company = request()->company;
+        foreach($Rows as $item)
+        {
+            $Url = !empty($item->url) ? URL('/').'/'.$item->url : '#';
+            $htmlAccion .= '<a class="btn waves-effect waves-light" href="'.$Url.'">'.$item->nombre.'</a> ';
+        }
+        
+        return $htmlAccion;
     }
 }

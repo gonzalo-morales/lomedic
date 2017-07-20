@@ -1,3 +1,8 @@
+<?php 
+$QueryCompany =  DB::table('gen_cat_empresas')->where('estatus','=',1)->get()->toarray();
+
+?>
+
 @extends('layouts.app')
 
 @section('content')
@@ -37,9 +42,9 @@
 						<div class="input-field col s12">
 							<select class="icons" name="sistema">
 								<option value="" disabled selected>Selecciona:</option>
-								<option value="1" data-icon="img/tomatoe.jpg" class="left circle">example 1</option>
-								<option value="2" data-icon="img/tomatoe.jpg" class="left circle">example 2</option>
-								<option value="3" data-icon="img/tomatoe.jpg" class="left circle">example 3</option>
+								@foreach($QueryCompany as $Companys)
+								<option value="{{ $Companys->id_empresa }}" data-icon="img/tomatoe.jpg" class="left circle">{{ $Companys->nombre_comercial }}</option>
+								@endforeach
 							</select>
 							<label>Sistema:</label>
 						</div>

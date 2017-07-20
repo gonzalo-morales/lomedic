@@ -20,7 +20,7 @@ class RedirectIfAuthenticated
     {
         
         if (Auth::guard($guard)->check()) {
-            $request->session()->put('id_usr', Auth::id());
+            $request->session()->put('id_usuario', Auth::id());
             return redirect('/');
         }
         

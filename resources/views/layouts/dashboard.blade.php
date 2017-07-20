@@ -20,18 +20,38 @@
 </head>
 <?php 
 use App\Menu;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 
 $Menu = New Menu();
 $MainMenu =  $Menu->getMenu();
-?>
-<body>
 
-<div class="navbar-fixed">
-	<nav class="top-nav teal z-depth-0 nav-extended">
+$Url = URL('/');
+$Usuario = Session::get('usuario');
+$Company = request()->company;
+
+$QueryUser =  DB::table('ges_cat_usuarios')->where('usuario','=',$Usuario)->get()->toarray();
+$QueryCompany =  DB::table('gen_cat_empresas')->where('conexion','=',$Company)->get()->toarray();
+
+
+$QueryOterCompany =  DB::table('gen_cat_empresas')->where('conexion','<>',$Company)->get()->toarray();
+
+
+
+$NombreUsuario = !empty($QueryUser[0]->nombre_corto) ? $QueryUser[0]->nombre_corto : '<\ Usuario >';
+$NombreEmpresa = !empty($QueryCompany[0]->nombre_comercial) ? $QueryCompany[0]->nombre_comercial : '<\ Empresa >';
+
+$Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
+?>
+<body class="grey lighten-3">
+
+<div class="navbar-fixed ">
+	<nav class="top-nav {{ $Color }} z-depth-0 nav-extended">
 		<div class="nav-wrapper">
 			<a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
 			<a href="#!" data-activates="enteDrop" data-beloworigin="true" class="brand-logo dropdown-button logo-enterprise">
-				<img src="http://www.technologytell.com/gaming/files/2013/02/twitch-logo.png" alt="Sesión activa" class="circle responsive-img"> Entreprise
+				<img src="http://www.technologytell.com/gaming/files/2013/02/twitch-logo.png" alt="Sesión activa" class="circle responsive-img">{{ $NombreEmpresa }}
 			</a>
 			<ul class="right">
 				<li><a href="#" data-activates="slide-help" class="help-collapse"><i class="material-icons">live_help</i></a></li>
@@ -56,14 +76,15 @@ $MainMenu =  $Menu->getMenu();
 			<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 				{{ csrf_field() }}
 			</form>
-			<a href="#"><span class="white-text name">Hernando Fernando Hernández Fernández</span></a>
-			<a href="#"><span class="white-text">Facturación</span></a>
+			<a href="#"><span class="white-text name">{{ $NombreUsuario }}</span></a>
+			<!-- <a href="#"><span class="white-text">Facturación</span></a> -->
 		</div>
 	</li>
 	<!--enteprises dropdown-->
 	<ul id='enteDrop' class='dropdown-content'>
-		<li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
-		<li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+		@foreach($QueryOterCompany as $Companys)
+			<li><a target="_blank" href="{{ $Url }}/{{ $Companys->conexion }}"><i class="material-icons">business</i>{{ $Companys->nombre_comercial }}</a></li>
+		@endforeach
 	</ul>
 	<!--notifications dropdown-->
 	<ul id="notDrop" class="dropdown-content noti-content collection">
@@ -98,10 +119,10 @@ $MainMenu =  $Menu->getMenu();
 				<li><a href="#!">Proceso NAUS1234</a></li>
 			</ul><!--/slide-help, users help-->
 
-			<div class="row teal">
+			<div class="row {{ $Color }}">
 				<div class="col s12">
-					<a href="{{ route('home') }}" class="breadcrumb">Home</a>
-					<a href="#!" class="breadcrumb">Section</a>
+					<a href="{{ $Url }}/{{ $Company }}" class="breadcrumb">Home</a>
+					<!-- <a href="#!" class="breadcrumb">Section</a> -->
 				</div>
 			</div><!--/breadcrum-->
 
