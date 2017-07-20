@@ -55,4 +55,8 @@ class Modulos extends Model
 		return $this->belongsToMany('App\Http\Models\Empresas', 'ges_det_modulo_empresa', 'fk_id_modulo', 'fk_id_empresa');
 	}
 
+	public function perfiles()
+    {
+        return $this->belongsToMany('App\Http\Models\Perfiles','ges_det_modulo_perfil','fk_id_modulo','fk_id_perfil');
+    }
 }

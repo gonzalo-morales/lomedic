@@ -43,4 +43,12 @@ class Usuarios extends Authenticatable
     public function mails(){
         return $this->hasMany('app\Http\Models\Correos');
     }
+
+    public function profiles(){
+        return $this->belongsToMany('app\Http\Models\Perfiles','ges_det_usuario_perfil','fk_id_perfil','fk_id_usuario');
+    }
+
+    public function branches(){
+        return $this->belongsToMany('app\Http\Models\Sucursales','ges_det_usuario_sucursal','fk_id_usuario','fk_id_sucursal');
+    }
 }
