@@ -23,7 +23,7 @@ $Acciones = $Barra->getBarra(47);
 <div class="col s12 xl8 offset-xl2">
 	<p class="right">
 		<?php echo $Acciones; ?>
-		<!-- <a href="{{ route("$entity.create") }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br> -->
+		<!-- <a href="{{ route("$entity.create",['company'=> $company]) }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br> -->
 	</p>
 </div>
 @if (session('success'))
@@ -52,10 +52,10 @@ $Acciones = $Barra->getBarra(47);
 			<td>{{ $banco->rfc }}</td>
 			<td>{{ $banco->nacional }}</td>
 			<td class="width-auto">
-				<a href="{{ route("$entity.show", ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-				<a href="{{ route("$entity.edit", ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+				<a href="{{ route("$entity.show", ['company'=> $company, 'id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ route("$entity.edit", ['company'=> $company, 'id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
 				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form" action="{{ route("$entity.destroy", ['id' => $banco->id_banco]) }}" method="POST" style="display: none;">
+				<form id="delete-form" action="{{ route("$entity.destroy", ['company'=> $company, 'id' => $banco->id_banco]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>

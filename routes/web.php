@@ -11,9 +11,18 @@
 |
 */
 
+$Conecctions = implode('|',array_keys(config('database.connections')));
+
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::resource('bancos', 'BancosController');
-
+Route::pattern('company', "($Conecctions)");
+Route::prefix('{company}')->group(function () {
+    Route::resource('/', 'HomeController');
+    Route::resource('bancos', 'BancosController');
+    Route::resource('perfiles','PerfilesController');
+    Route::resource('usuarios','UsuariosController');
+    Route::resource('sucursales','SucursalesController');
+    Route::resource('correos','CorreosController');
+});

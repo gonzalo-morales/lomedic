@@ -13,6 +13,7 @@ class Menu
     public function getMenu($Parent = Null)
     {
         $id_usuario = empty(Auth::id()) ? Auth::id() : 1;
+
         $htmlMenu = '';
     
         $Rows = DB::select('SELECT *
