@@ -39,4 +39,8 @@ class Usuarios extends Authenticatable
 	protected $hidden = [
 		'password', 'remember_token',
 	];
+
+    public function mails(){
+        return $this->hasMany('app\Http\Models\Correos');
+    }
 }
