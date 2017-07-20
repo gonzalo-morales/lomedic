@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Models\Bancos;
+use App\Http\Models\Modulos;
+use App\Http\Models\Empresas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-class BancosController extends Controller
+class ModulosController extends Controller
 {
 
 	/**
@@ -14,7 +15,7 @@ class BancosController extends Controller
 	 *
 	 * @return void
 	 */
-	public function __construct(Bancos $entity)
+	public function __construct(Modulos $entity)
 	{
 		// $this->middleware('auth');
 		$this->entity = $entity;
@@ -40,11 +41,12 @@ class BancosController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create($company)
+	public function create(Empresas $empresas, $company)
 	{
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
+			'empresas' => $empresas->all(),
 		]);
 	}
 
@@ -60,6 +62,7 @@ class BancosController extends Controller
 		$this->validate($request, $this->entity->rules);
 
 		$created = $this->entity->create($request->all());
+		$created->empresas()->attach($request->empresas);
 
 		# Redirigimos a index
 		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
@@ -77,6 +80,7 @@ class BancosController extends Controller
 			'entity' => $this->entity_name,
 			'company' => $company,
 			'data' => $this->entity->findOrFail($id),
+			'empresas' => $this->entity->empresas
 		]);
 	}
 
@@ -86,12 +90,13 @@ class BancosController extends Controller
 	 * @param  integer $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit($company, $id)
+	public function edit(Empresas $empresas, $company, $id)
 	{
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
 			'data' => $this->entity->findOrFail($id),
+			'empresas' => $empresas->all()
 		]);
 	}
 
@@ -99,7 +104,7 @@ class BancosController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  integer	$id
+	 * @param  integer  $id
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, $company, $id)
@@ -118,7 +123,7 @@ class BancosController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  integer 	$id
+	 * @param  integer  $id
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($company, $id)

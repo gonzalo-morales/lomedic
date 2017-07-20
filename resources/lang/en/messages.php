@@ -15,5 +15,6 @@ return [
 
 	'previous' => '&laquo; Previous',
 	'next' => 'Next &raquo;',
-	'bancos' => 'bancos|banco'
+	'bancos' => 'bancos|banco',
+	'modulos' => 'modulos|modulo'
 ];
