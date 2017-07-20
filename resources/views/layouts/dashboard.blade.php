@@ -24,7 +24,7 @@ use App\Menu;
 $Menu = New Menu();
 $MainMenu =  $Menu->getMenu();
 ?>
-<body class="grey lighten-3">
+<body>
 
 <div class="navbar-fixed">
 	<nav class="top-nav teal z-depth-0 nav-extended">
