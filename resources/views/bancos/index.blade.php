@@ -22,8 +22,9 @@ $Acciones = $Barra->getBarra(47);
 @section('content')
 <div class="col s12 xl8 offset-xl2">
 	<p class="right">
-		<?php echo $Acciones; ?>
-		<!-- <a href="{{ route("$entity.create",['company'=> $company]) }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br> -->
+		<?php //echo $Acciones; ?>
+		<a href="{{ route("$entity.create",['company'=> $company]) }}" class="waves-effect waves-light btn orange">Nuevo</a>
+		<a href="{{ route("$entity.index",['company'=> $company]) }}" class="waves-effect waves-light btn"><i class="material-icons">cached</i></a>
 	</p>
 </div>
 @if (session('success'))
