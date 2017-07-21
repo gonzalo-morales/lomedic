@@ -66,14 +66,21 @@ class PerfilesController extends Controller
      */
     public function store(Request $request)
     {
+
+//        dd( $request->all() );
+
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
 
-//		$created = $this->entity->create($request->all());
-
         $this->entity->fill($request->all());
-        //$this->entity->fk_id_usuario_crea = Auth::id();
+        $this->entity->fk_id_usuario_crea = Auth::id();
         $this->entity->save();
+
+        $this->entity->usuarios()->sync($request->usuarios);
+
+        //        $created = $this->entity->create($request->all());
+
+//        $created = $this->entity->create($request->all());
 
 
         /*$request->input('nombre')*/
@@ -133,8 +140,8 @@ class PerfilesController extends Controller
 
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
-//        $entity->fk_id_usuario_actualiza = Auth::id();//Usuario que actualiza el registro
-        //$entity->fecha_actualiza = DB::raw('now()');//Fecha y hora de la actualización
+        $entity->fk_id_usuario_actualiza = Auth::id();//Usuario que actualiza el registro
+//        $entity->fecha_actualiza = DB::raw('now()');//Fecha y hora de la actualización
         $entity->save();
 
 
