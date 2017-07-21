@@ -27,7 +27,7 @@ class Modulos extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre', 'descripcion', 'url', 'icono', 'modulo_padre', 'accion_menu', 'accion_barra', 'accion_tabla', 'modulo_seguro'];
+	protected $fillable = ['nombre', 'descripcion', 'url', 'icono', 'accion_menu', 'accion_barra', 'accion_tabla', 'modulo_seguro'];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -40,13 +40,14 @@ class Modulos extends Model
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [
-		'nombre' => 'required|unique:ges_cat_modulos',
-		'descripcion' => 'required',
-		'url' => 'required',
-		'modulo_padre' => 'required',
-		'empresas' => 'required',
-	];
+	public function rules($id_modulo = false) {
+		return [
+			'nombre' => 'required|unique:ges_cat_modulos' . ($id_modulo ? ",nombre,$id_modulo,id_modulo" : ''),
+			'descripcion' => 'required',
+			'url' => 'required',
+			'empresas' => 'required',
+		];
+	}
 
 	/**
 	 * Las empresas que relacionan al modulo.
@@ -61,9 +62,8 @@ class Modulos extends Model
         return $this->belongsToMany('App\Http\Models\Perfiles','ges_det_modulo_perfil','fk_id_modulo','fk_id_perfil');
     }
 
-    public function  modules()
+    public function  modulos()
     {
-//        return $this->belongsToMany('App\Http\Models\Modulos','ges_det_parents','fk_id_modulo','fk_id_parent');
-        return $this->hasMany('App\Http\Models\Modulos');
+		return $this->belongsToMany('App\Http\Models\Modulos', 'ges_det_parents', 'fk_id_parent', 'fk_id_modulo');
     }
 }
