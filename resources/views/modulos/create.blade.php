@@ -68,15 +68,15 @@
 					@endif
 				</div>
 				<div class="input-field col s12 m3">
-					<select name="modulo_padre">
-						<option disabled selected>Modulo padre ...</option>
+					<select name="modulos[]" multiple>
+						<option disabled selected>modulos ...</option>
 						@foreach ($modulos as $modulo)
 						<option value="{{$modulo->id_modulo}}">{{$modulo->nombre}}</option>
 						@endforeach
 					</select>
-					@if ($errors->has('modulo_padre'))
+					@if ($errors->has('modulos'))
 						<span class="help-block">
-							<strong>{{ $errors->first('modulo_padre') }}</strong>
+							<strong>{{ $errors->first('modulos') }}</strong>
 						</span>
 					@endif
 				</div>

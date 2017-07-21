@@ -60,9 +60,10 @@ class ModulosController extends Controller
 	public function store(Request $request, $company)
 	{
 		# Validamos request, si falla regresamos pagina
-		$this->validate($request, $this->entity->rules);
+		$this->validate($request, $this->entity->rules());
 
 		$created = $this->entity->create($request->all());
+		$created->modulos()->sync($request->modulos);
 		$created->empresas()->sync($request->empresas);
 
 		# Redirigimos a index
@@ -81,7 +82,8 @@ class ModulosController extends Controller
 			'entity' => $this->entity_name,
 			'company' => $company,
 			'data' => $this->entity->findOrFail($id),
-			'empresas' => $empresas->all()
+			'empresas' => $empresas->all(),
+			'modulos' => $this->entity->all(),
 		]);
 	}
 
@@ -97,7 +99,8 @@ class ModulosController extends Controller
 			'entity' => $this->entity_name,
 			'company' => $company,
 			'data' => $this->entity->findOrFail($id),
-			'empresas' => $empresas->all()
+			'empresas' => $empresas->all(),
+			'modulos' => $this->entity->all(),
 		]);
 	}
 
@@ -111,12 +114,13 @@ class ModulosController extends Controller
 	public function update(Request $request, $company, $id)
 	{
 		# Validamos request, si falla regresamos pagina
-		$this->validate($request, $this->entity->rules);
+		$this->validate($request, $this->entity->rules($id));
 
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
 		$entity->save();
 
+		$entity->modulos()->sync($request->modulos);
 		$entity->empresas()->sync($request->empresas);
 
 		# Redirigimos a index
