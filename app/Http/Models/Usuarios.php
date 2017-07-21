@@ -9,6 +9,9 @@ class Usuarios extends Authenticatable
 {
 	use Notifiable;
 
+    const CREATED_AT = 'fecha_crea';
+    const UPDATED_AT = 'fecha_actualiza';
+
 	/**
 	 * The table associated with the model.
 	 *
@@ -28,7 +31,7 @@ class Usuarios extends Authenticatable
 	 * @var array
 	 */
 	protected $fillable = [
-		'name', 'email', 'password',
+		'usuario', 'nombre_corto','activo','password'
 	];
 
 	/**
@@ -39,6 +42,11 @@ class Usuarios extends Authenticatable
 	protected $hidden = [
 		'password', 'remember_token',
 	];
+
+    public $rules = [
+        'nombre_corto' => 'required',
+        'usuario' => 'required',
+    ];
 
     public function mails(){
         return $this->hasMany('app\Http\Models\Correos');
@@ -51,4 +59,6 @@ class Usuarios extends Authenticatable
     public function branches(){
         return $this->belongsToMany('app\Http\Models\Sucursales','ges_det_usuario_sucursal','fk_id_usuario','fk_id_sucursal');
     }
+
+
 }
