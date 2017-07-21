@@ -43,7 +43,7 @@ $QueryCompany =  DB::table('gen_cat_empresas')->where('estatus','=',1)->get()->t
 							<select class="icons" name="sistema">
 								<option value="" disabled selected>Selecciona:</option>
 								@foreach($QueryCompany as $Companys)
-								<option value="{{ $Companys->id_empresa }}" data-icon="img/tomatoe.jpg" class="left circle">{{ $Companys->nombre_comercial }}</option>
+								<option value="{{ $Companys->id_empresa }}" data-icon="img/{{ $Companys->logotipo }}" class="left circle">{{ $Companys->nombre_comercial }}</option>
 								@endforeach
 							</select>
 							<label>Sistema:</label>
