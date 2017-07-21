@@ -6,6 +6,8 @@ use App\Http\Models\Modulos;
 use App\Http\Models\Empresas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ModulosController extends Controller
 {
@@ -136,8 +138,12 @@ class ModulosController extends Controller
 	public function destroy($company, $id)
 	{
 		$entity = $this->entity->findOrFail($id);
-		$entity->empresas()->detach($entity->empresas);
-		$entity->delete();
+        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
+        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
+        $entity->eliminar='t';
+        $entity->save();
+//		$entity->empresas()->detach($entity->empresas);
+//		$entity->delete();
 
 		# Redirigimos a index
 		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
