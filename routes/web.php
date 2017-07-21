@@ -20,11 +20,16 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
     Route::resource('/', 'HomeController');
-	Route::resource('bancos', 'BancosController');
-	Route::resource('modulos', 'ModulosController');
+	
     Route::resource('bancos', 'BancosController');
+	Route::resource('diagnosticos', 'DiagnosticosController');
+	Route::resource('areas', 'AreasController');
+	Route::resource('tipocombustible', 'TipocombustibleController');
+	Route::resource('familiasproductos', 'FamiliasproductosController');
+	
+	Route::resource('modulos', 'ModulosController');
     Route::resource('perfiles','PerfilesController');
-    Route::resource('usuarios','UsuariosController');
+    Route::resource('usuarios','UserController');
     Route::resource('sucursales','SucursalesController');
     Route::resource('correos','CorreosController');
 });
