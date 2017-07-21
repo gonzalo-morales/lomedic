@@ -147,10 +147,10 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 
 	<!--CDN chartsJS, esta versión viene con http://momentjs.com/ incluído-->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
-	<script type="text/javascript" src="{{ asset('js/initiateComponents.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/InitiateComponents.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/picker.date.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/picker.time.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/initiateComponents.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/InitiateComponents.js') }}"></script>
 
 	@yield('header-bottom')
 
