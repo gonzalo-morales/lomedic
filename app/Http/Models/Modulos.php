@@ -27,7 +27,7 @@ class Modulos extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre', 'descripcion', 'url', 'icono', 'accion_menu', 'accion_barra', 'accion_tabla', 'modulo_seguro'];
+	protected $fillable = ['nombre', 'descripcion', 'url', 'icono', 'modulo_padre', 'accion_menu', 'accion_barra', 'accion_tabla', 'modulo_seguro'];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -44,6 +44,7 @@ class Modulos extends Model
 		'nombre' => 'required|unique:ges_cat_modulos',
 		'descripcion' => 'required',
 		'url' => 'required',
+		'modulo_padre' => 'required',
 		'empresas' => 'required',
 	];
 

@@ -47,6 +47,7 @@ class ModulosController extends Controller
 			'entity' => $this->entity_name,
 			'company' => $company,
 			'empresas' => $empresas->all(),
+			'modulos' => $this->entity->all(),
 		]);
 	}
 
