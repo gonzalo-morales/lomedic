@@ -45,7 +45,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="input-field col s12 m4">
+				<div class="input-field col s12 m3">
 					<input type="text" name="url" id="url" class="validate">
 					<label for="url">URL:</label>
 					@if ($errors->has('url'))
@@ -54,7 +54,7 @@
 						</span>
 					@endif
 				</div>
-				<div class="input-field col s12 m4">
+				<div class="input-field col s12 m3">
 					<select name="icono">
 						<option disabled selected>Icono ...</option>
 						<option value="icono-1">Option 1</option>
@@ -67,7 +67,20 @@
 						</span>
 					@endif
 				</div>
-				<div class="input-field col s12 m4">
+				<div class="input-field col s12 m3">
+					<select name="modulo_padre">
+						<option disabled selected>Modulo padre ...</option>
+						@foreach ($modulos as $modulo)
+						<option value="{{$modulo->id_modulo}}">{{$modulo->nombre}}</option>
+						@endforeach
+					</select>
+					@if ($errors->has('modulo_padre'))
+						<span class="help-block">
+							<strong>{{ $errors->first('modulo_padre') }}</strong>
+						</span>
+					@endif
+				</div>
+				<div class="input-field col s12 m3">
 					<select name="empresas[]" multiple>
 						<option disabled selected>Empresas ...</option>
 						@foreach ($empresas as $empresa)
