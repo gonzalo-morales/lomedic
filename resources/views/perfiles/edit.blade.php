@@ -93,30 +93,29 @@
 												{{--for para modulos--}}
 												{{--in_array($user->id_usuario,$data->usuarios->pluck('id_usuario')->toArray())--}}
 												<div class="collapsible-header">
-													<input type="checkbox" id="{{$module->id_modulo}}" />
-													<label for="{{$module->id_modulo}}" class="parent_checkbox">{{$module->nombre}}</label>
+													<input type="checkbox" id="{{$empresa->id_empresa}}{{$module->id_modulo}}" />
+													<label for="{{$empresa->id_empresa}}{{$module->id_modulo}}" class="parent_checkbox">{{$module->nombre}}</label>
 												</div>
 												<div class="collapsible-body grey lighten-3">
 													<ul class="collection">
 														<li class="collection-item">
-															<input type="checkbox" id="fac1_check1" class="fac1_child" checked="checked" />
-															<label for="fac1_check1">Crear</label>
+															<input type="checkbox" id="check1{{$empresa->id_empresa}}{{$module->id_modulo}}" class="fac1_child" checked="checked" />
+															<label for="check1{{$empresa->id_empresa}}{{$module->id_modulo}}">Crear</label>
 														</li>
 														<li class="collection-item">
-															<input type="checkbox" id="fac1_check2" class="fac1_child" checked="checked"/>
-															<label for="fac1_check2">Editar</label>
+															<input type="checkbox" id="check2{{$empresa->id_empresa}}{{$module->id_modulo}}" class="fac1_child" checked="checked"/>
+															<label for="check2{{$empresa->id_empresa}}{{$module->id_modulo}}">Editar</label>
 														</li>
 														<li class="collection-item">
-															<input type="checkbox" id="fac1_check3" class="fac1_child" checked="checked" />
-															<label for="fac1_check3">Borrar</label>
+															<input type="checkbox" id="check3{{$empresa->id_empresa}}{{$module->id_modulo}}" class="fac1_child" checked="checked" />
+															<label for="check3{{$empresa->id_empresa}}{{$module->id_modulo}}">Borrar</label>
 														</li>
 														<li class="collection-item">
-															<input type="checkbox" id="fac1_check4" class="fac1_child" checked="checked" />
-															<label for="fac1_check4">Ver</label>
+															<input type="checkbox" id="check4{{$empresa->id_empresa}}{{$module->id_modulo}}" class="fac1_child" checked="checked" />
+															<label for="check4{{$empresa->id_empresa}}{{$module->id_modulo}}">Ver</label>
 														</li>
 													</ul>
 												</div>
-
 												{{--end for modulos--}}
 											</li>
 										</ul>
