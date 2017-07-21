@@ -67,46 +67,54 @@
 			<div class="card-tabs">
 				<ul class="tabs tabs-fixed-width tabs-transparent">
 					{{--For para empresas--}}
-					<li class="tab"><a class="active" href="#e_loMedic">LoMedic</a></li>
-					<li class="tab"><a class="active" href="#e_abisa">Abisa</a></li>
+					@foreach($empresas as $empresa)
+						<li class="tab"><a class="active" href="#e_{{$empresa->nombre_comercial}}">{{$empresa->nombre_comercial}}</a></li>
+					@endforeach
 					{{--end for--}}
 				</ul>
 			</div>
 			<div class="card-content teal lighten-5">
 				{{--for para empresas--}}
-				<div id="e_loMedic">
-					<ul class="collapsible" data-collapsible="accordion">
-						<li>
-							{{--for para modulos--}}
-							<div class="collapsible-header">
-								<input type="checkbox" id="fac1_par_check" checked="checked" />
-								<label for="fac1_par_check" class="parent_checkbox">Facturación</label>
-							</div>
-							<div class="collapsible-body grey lighten-3">
-								<ul class="collection">
-									<li class="collection-item">
-										<input type="checkbox" id="fac1_check1" class="fac1_child" checked="checked" />
-										<label for="fac1_check1">Crear</label>
-									</li>
-									<li class="collection-item">
-										<input type="checkbox" id="fac1_check2" class="fac1_child" checked="checked"/>
-										<label for="fac1_check2">Editar</label>
-									</li>
-									<li class="collection-item">
-										<input type="checkbox" id="fac1_check3" class="fac1_child" checked="checked" />
-										<label for="fac1_check3">Borrar</label>
-									</li>
-									<li class="collection-item">
-										<input type="checkbox" id="fac1_check4" class="fac1_child" checked="checked" />
-										<label for="fac1_check4">Ver</label>
-									</li>
-								</ul>
-							</div>
-							{{--end for modulos--}}
-						</li>
-					</ul>
-				</div><!--/aquí termina el contenido de un tab-->
+				@foreach($empresas as $empresa)
+					<div id="e_{{$empresa->nombre_comercial}}">
+						@foreach($empresa->modulos as $module)
+							<ul class="collapsible" data-collapsible="accordion">
+								<li>
+									{{--for para modulos--}}
+									{{--in_array($user->id_usuario,$data->usuarios->pluck('id_usuario')->toArray())--}}
+									<div class="collapsible-header">
+										<input type="checkbox" id="{{$empresa->id_empresa}}{{$module->id_modulo}}" disabled />
+										<label for="{{$empresa->id_empresa}}{{$module->id_modulo}}" class="parent_checkbox">{{$module->nombre}}</label>
+									</div>
+									<div class="collapsible-body grey lighten-3">
+										<ul class="collection">
+											{{--for para cantidad de acciones--}}
 
+											<li class="collection-item">
+												<input type="checkbox" id="check1{{$empresa->id_empresa}}{{$module->id_modulo}}" class="fac1_child" checked="checked"  disabled/>
+												<label for="check1{{$empresa->id_empresa}}{{$module->id_modulo}}">Crear</label>
+											</li>
+											<li class="collection-item">
+												<input type="checkbox" id="check2{{$empresa->id_empresa}}{{$module->id_modulo}}" class="fac1_child" checked="checked" disabled/>
+												<label for="check2{{$empresa->id_empresa}}{{$module->id_modulo}}">Editar</label>
+											</li>
+											<li class="collection-item">
+												<input type="checkbox" id="check3{{$empresa->id_empresa}}{{$module->id_modulo}}" class="fac1_child" checked="checked" disabled/>
+												<label for="check3{{$empresa->id_empresa}}{{$module->id_modulo}}">Borrar</label>
+											</li>
+											<li class="collection-item">
+												<input type="checkbox" id="check4{{$empresa->id_empresa}}{{$module->id_modulo}}" class="fac1_child" checked="checked" disabled />
+												<label for="check4{{$empresa->id_empresa}}{{$module->id_modulo}}">Ver</label>
+											</li>
+											{{--end of--}}
+										</ul>
+									</div>
+									{{--end for modulos--}}
+								</li>
+							</ul>
+						@endforeach
+					</div><!--/aquí termina el contenido de un tab-->
+				@endforeach
 				{{--end for empresas--}}
 			</div>
 		</div>
