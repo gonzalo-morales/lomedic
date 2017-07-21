@@ -1,7 +1,7 @@
 <?php
 use App\Menu;
 $Barra = New Menu();
-$Acciones = $Barra->getBarra(47);
+$Acciones = $Barra->getBarra(23);
 ?>
 @extends('layouts.dashboard')
 
