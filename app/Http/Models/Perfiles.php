@@ -26,7 +26,7 @@ class Perfiles extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre_perfil', 'descripcion', 'activo','fk_id_usuario_crea'];
+    protected $fillable = ['nombre_perfil', 'descripcion', 'activo'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -40,7 +40,7 @@ class Perfiles extends Model
      * @var array
      */
     public $rules = [
-        'nombre_perfil' => 'required|unique:ges_cat_perfiles,nombre_perfil',
+        'nombre_perfil' => 'required',
     ];
 
     public function usuarios(){

@@ -64,6 +64,6 @@ class Modulos extends Model
 
     public function  modulos()
     {
-		return $this->belongsToMany('App\Http\Models\Modulos', 'ges_det_parents', 'fk_id_parent', 'fk_id_modulo');
+		return $this->belongsToMany('App\Http\Models\Modulos', 'ges_det_parents', 'fk_id_modulo','fk_id_parent');
     }
 }
