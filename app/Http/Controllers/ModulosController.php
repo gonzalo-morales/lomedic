@@ -19,7 +19,7 @@ class ModulosController extends Controller
 	 */
 	public function __construct(Modulos $entity)
 	{
-		// $this->middleware('auth');
+		$this->middleware('auth');
 		$this->entity = $entity;
 		$this->entity_name = strtolower(class_basename($entity));
 	}
