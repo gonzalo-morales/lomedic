@@ -141,3 +141,18 @@ td, th {
   font-size:24px;
   display:inline;
 }
+/*loading page*/
+#loading {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 998;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.7);
+    background-repeat: no-repeat;
+}
+.progress{
+  z-index: 999;
+}
