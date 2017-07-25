@@ -13,7 +13,7 @@ class CreateCorreosTable extends Migration
      */
     public function up()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->create('ges_det_correos', function (Blueprint $table) {
             /*Principal fields*/
             $table->increments('id_correo');
@@ -38,7 +38,7 @@ class CreateCorreosTable extends Migration
      */
     public function down()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->dropIfExists('ges_cat_correos');
     }
 }
