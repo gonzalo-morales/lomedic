@@ -20,7 +20,6 @@ class PerfilesController extends Controller
      */
     public function __construct(Perfiles $entity)
     {
-        $this->middleware('auth');
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
         $this->company = request()->company;

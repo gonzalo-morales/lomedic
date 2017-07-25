@@ -18,7 +18,6 @@ class DiagnosticosController extends Controller
 	 */
     public function __construct(Diagnosticos $entity)
 	{
-		// $this->middleware('auth');
 		$this->entity = $entity;
 		$this->entity_name = strtolower(class_basename($entity));
 	}

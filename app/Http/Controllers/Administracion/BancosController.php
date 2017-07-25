@@ -17,7 +17,6 @@ class BancosController extends Controller
 	 */
 	public function __construct(Bancos $entity)
 	{
-		$this->middleware('auth');
 		$this->entity = $entity;
 		$this->entity_name = strtolower(class_basename($entity));
 	}
