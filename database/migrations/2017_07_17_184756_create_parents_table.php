@@ -13,7 +13,8 @@ class CreateParentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ges_det_parents', function (Blueprint $table) {
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->create('ges_det_parents', function (Blueprint $table) {
             /*Principal fields*/
             $table->integer('fk_id_modulo')->unsigned()->comment('Llave foranea al modulo');
             $table->integer('fk_id_parent')->unsigned()->comment('Llave foranea al modulo');
@@ -34,6 +35,7 @@ class CreateParentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('parents');
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->dropIfExists('parents');
     }
 }

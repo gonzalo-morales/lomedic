@@ -13,7 +13,8 @@ class CreateModulosTable extends Migration
      */
     public function up()
     {
-        Schema::create('ges_cat_modulos', function (Blueprint $table) {
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->create('ges_cat_modulos', function (Blueprint $table) {
             /*Principal fields*/
             $table->increments('id_modulo');
             $table->string('nombre')->comment('Nombre del modulo')->unique();
@@ -39,6 +40,7 @@ class CreateModulosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('modulos');
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->dropIfExists('modulos');
     }
 }
