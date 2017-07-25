@@ -15,10 +15,12 @@ function companyRoute($action = '', $params = [])
 
 	# Injectamos Id
 	if (in_array($expected_action[1], ['show', 'edit', 'update', 'destroy'])) {
-		# Obtenmos nombre del Id
-		$param_id = array_last(request()->route()->parameterNames);
-		# Asiganmos Id
-		$autoparams['id'] =  request()->{$param_id};
+		# Obtenemos parametros, omitiendo empresa
+		$_params = array_except(request()->route()->parameters, ['company']);
+		if (!empty($_params)) {
+			# Asiganmos parametro, que por logica debe ser el Id
+			$autoparams['id'] =  array_first($_params);
+		}
 	}
 
 	# Generamos URL
