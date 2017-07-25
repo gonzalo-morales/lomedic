@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelCompany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bancos extends ModelCompany
 {
@@ -45,4 +44,7 @@ class Bancos extends ModelCompany
 		'banco' => 'required',
 	];
 
+    public function getTable(){
+	    return $this->table;
+    }
 }
