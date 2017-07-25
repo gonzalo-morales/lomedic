@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePerfilesTable extends Migration
+class CreatePermisosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,16 +14,13 @@ class CreatePerfilesTable extends Migration
     public function up()
     {
         Schema::connection(config('database.connections.corporativo.schema'))
-            ->create('ges_cat_perfiles', function (Blueprint $table) {
-            /*Principal fields*/
-            $table->increments('id_perfil');
-            $table->String('nombre_perfil','20')->unique()->comment('Nombre del perfil de usuario');
-            $table->text('descripcion','')->comment('Descripcion del perfil');
+            ->create('ges_cat_permisos', function (Blueprint $table) {
+            $table->increments('id_permiso');
+            $table->string('descripcion');
 
             /*General fields*/
             $table->boolean('activo')->default('1');
             $table->boolean('eliminar')->default('0');
-
         });
     }
 
@@ -35,6 +32,6 @@ class CreatePerfilesTable extends Migration
     public function down()
     {
         Schema::connection(config('database.connections.corporativo.schema'))
-            ->dropIfExists('ges_cat_perfiles');
+            ->dropIfExists('ges_cat_permisos');
     }
 }
