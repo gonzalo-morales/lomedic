@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administracion;
 
 use Form;
-use App\Http\Models\Tipocombustible;
+use App\Http\Models\Administracion\Tipocombustible;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 class TipocombustibleController extends Controller

@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administracion;
 
 use Form;
-use App\Http\Models\Familiasproductos;
+use App\Http\Models\Administracion\Diagnosticos;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
-class FamiliasproductosController extends Controller
+class DiagnosticosController extends Controller
 {
 
 	/**
@@ -15,7 +16,7 @@ class FamiliasproductosController extends Controller
 	 *
 	 * @return void
 	 */
-    public function __construct(Familiasproductos $entity)
+    public function __construct(Diagnosticos $entity)
 	{
 		// $this->middleware('auth');
 		$this->entity = $entity;
@@ -32,7 +33,7 @@ class FamiliasproductosController extends Controller
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
-			'data' => $this->entity->all(),
+		    'data' => $this->entity->all(), //->paginate(30),
 		]);
 	}
 

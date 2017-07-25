@@ -1,33 +1,33 @@
 <?php
 
-namespace App\Http\Models;
+namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelCompany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Areas extends Model
+class Bancos extends ModelCompany
 {
-	// use SoftDeletes;
+    // use SoftDeletes;
 
 	/**
 	 * The table associated with the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_areas';
+	protected $table = 'gen_cat_bancos';
 
 	/**
 	 * The primary key of the table
 	 * @var string
 	 */
-	protected $primaryKey = 'id_area';
+	protected $primaryKey = 'id_banco';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['area', 'clave_area',];
+	protected $fillable = ['razon_social', 'banco', 'rfc', 'nacional'];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -41,6 +41,8 @@ class Areas extends Model
 	 * @var array
 	 */
 	public $rules = [
-		'area' => 'required',
+		'razon_social' => 'required',
+		'banco' => 'required',
 	];
+
 }

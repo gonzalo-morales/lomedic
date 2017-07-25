@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administracion;
 
-use App\Http\Models\Correos;
-use App\Http\Models\Usuarios;
+use App\Http\Models\Administracion\Correos;
+use App\Http\Models\Administracion\Usuarios;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use Auth;
 use DB;

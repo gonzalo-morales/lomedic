@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administracion;
 
-use App\Http\Models\Perfiles;
-use App\Http\Models\Modulos;
-use App\Http\Models\Usuarios;
-use App\Http\Models\Empresas;
+use App\Http\Models\Administracion\Perfiles;
+use App\Http\Models\Administracion\Modulos;
+use App\Http\Models\Administracion\Usuarios;
+use App\Http\Models\Administracion\Empresas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 class PerfilesController extends Controller
 {

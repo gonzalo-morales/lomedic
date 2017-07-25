@@ -19,17 +19,19 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
-    Route::resource('/', 'HomeController');
-	
-    Route::resource('bancos', 'BancosController');
-	Route::resource('diagnosticos', 'DiagnosticosController');
-	Route::resource('areas', 'AreasController');
-	Route::resource('tipocombustible', 'TipocombustibleController');
-	Route::resource('familiasproductos', 'FamiliasproductosController');
+	Route::resource('/', 'HomeController');
 
-	Route::resource('modulos', 'ModulosController');
-    Route::resource('perfiles','PerfilesController');
-    Route::resource('usuarios','UsuariosController');
-    Route::resource('sucursales','SucursalesController');
-    Route::resource('correos','CorreosController');
+	Route::group(['prefix' => 'administracion', 'as' => 'administracion.' ], function() {
+		Route::resource('bancos', 'Administracion\BancosController');
+		Route::resource('areas', 'Administracion\AreasController');
+		Route::resource('diagnosticos', 'Administracion\DiagnosticosController');
+		Route::resource('tipocombustible', 'Administracion\TipocombustibleController');
+		Route::resource('familiasproductos', 'Administracion\FamiliasproductosController');
+		Route::resource('modulos', 'Administracion\ModulosController');
+		Route::resource('perfiles', 'Administracion\PerfilesController');
+		Route::resource('usuarios', 'Administracion\UsuariosController');
+		Route::resource('sucursales', 'Administracion\SucursalesController');
+		Route::resource('correos', 'Administracion\CorreosController');
+	});
+
 });
