@@ -42,10 +42,10 @@ class LoginController extends Controller
         $field = filter_var($request->usuario, FILTER_VALIDATE_EMAIL) ? $this->username() : 'usuario';
         $request->session()->put('usuario', $request->{$field});
         
-        $Usuario = Usuarios::where('usuario','=',$request->{$field})->first()->get()->toarray();
+        $Usuario = Usuarios::where('usuario','=',$request->{$field})->get()->toarray();
         $idEmpresa = isset($Usuario[0]['fk_id_empresa_default']) ? $Usuario[0]['fk_id_empresa_default'] : 0;
         
-        $QueryCompany =  Empresas::find($idEmpresa)->first()->get()->toarray();
+        $QueryCompany =  Empresas::where('id_empresa','=',$idEmpresa)->get()->toarray();
         $redirect = isset($QueryCompany[0]['conexion']) ? $QueryCompany[0]['conexion'] : '/';
         
         $this->redirectTo = $redirect;
