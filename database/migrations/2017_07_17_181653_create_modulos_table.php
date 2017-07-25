@@ -29,15 +29,6 @@ class CreateModulosTable extends Migration
             /*General fields*/
             $table->boolean('activo')->default('1');
             $table->boolean('eliminar')->default('0');
-            $table->integer('fk_id_usuario_crea')->unsigned();
-            $table->timestamp('fecha_crea')->default(DB::raw('now()'));
-            $table->integer('fk_id_usuario_actualiza')->unsigned()->nullable();
-            $table->timestamp('fecha_actualiza')->nullable();
-            $table->integer('fk_id_usuario_elimina')->unsigned()->nullable();
-            $table->timestamp('fecha_elimina')->nullable();
-            $table->foreign('fk_id_usuario_crea')->references('id_usuario')->on('ges_cat_usuarios');
-            $table->foreign('fk_id_usuario_actualiza')->references('id_usuario')->on('ges_cat_usuarios');
-            $table->foreign('fk_id_usuario_elimina')->references('id_usuario')->on('ges_cat_usuarios');
         });
     }
 
