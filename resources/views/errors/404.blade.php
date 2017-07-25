@@ -1,6 +1,5 @@
 <?php 
-$Url = URL('/');
-$Company = request()->company;
+$Url = url()->previous() != URL('/') ? url()->previous() : url()->previous().'/'.request()->company;
 ?>
   <!DOCTYPE html>
   <html>
@@ -41,7 +40,7 @@ $Company = request()->company;
         </div>
         <div class="test">
           <h3 class="center white-text">Error 404</h3>
-          <h6 class="center white-text">No pudimos encontrar la p·gina. <a class="orange-text" href="{{ $Url }}/{{ $Company }}">Clic aquÌ para volver</a><br></h6>
+          <h6 class="center white-text">No pudimos encontrar la p√°gina. <a class="orange-text" href="{{ $Url }}">Clic aqu√≠ para volver</a><br></h6>
         </div>
       </div>
       </div>

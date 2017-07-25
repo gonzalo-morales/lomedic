@@ -1,8 +1,3 @@
-<?php
-use App\Menu;
-$Barra = New Menu();
-$Acciones = $Barra->getBarra(47);
-?>
 @extends('layouts.dashboard')
 
 @section('title', 'Sucursales')
@@ -22,7 +17,8 @@ $Acciones = $Barra->getBarra(47);
 @section('content')
 <div class="col s12 xl8 offset-xl2">
 	<p class="right-align">
-		<a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br>
+		<a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn orange">Nuevo</a>
+		<a href="{{ companyRoute('index') }}" class="waves-effect waves-light btn"><i class="material-icons">cached</i></a>
 	</p>
 </div>
 @if (session('success'))
@@ -57,9 +53,9 @@ $Acciones = $Barra->getBarra(47);
 				</p>
 			</td>
 			<td class="width-auto">
-				<a href="{{ companyRoute('show', ['id' => $sucursal->id_sucursal]) }}" class="waves-effect waves-light btn"><i class="material-icons">visibility</i></a>
-				<a href="{{ companyRoute('edit', ['id' => $sucursal->id_sucursal]) }}" class="waves-effect waves-light btn"><i class="material-icons">mode_edit</i></a>
-				<a href="#" class="waves-effect waves-light btn" onclick="event.preventDefault(); document.getElementById('delete-form{{$sucursal->id_sucursal}}').submit();"><i class="material-icons">delete</i></a>
+				<a href="{{ companyRoute('show', ['id' => $sucursal->id_sucursal]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $sucursal->id_sucursal]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form{{$sucursal->id_sucursal}}').submit();"><i class="material-icons">delete</i></a>
 				<form id="delete-form{{$sucursal->id_sucursal}}" action="{{ companyRoute('destroy', ['id' => $sucursal->id_sucursal]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}

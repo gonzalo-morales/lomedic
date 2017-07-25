@@ -26,6 +26,7 @@ class PerfilesController extends Controller
         $this->users = Usuarios::all();
         $this->modules = Modulos::all();
         $this->empresas = Empresas::all();
+        $this->logs = Logs::all();
     }
 
     /**
@@ -77,6 +78,7 @@ class PerfilesController extends Controller
         $this->entity->save();
 
         $this->entity->usuarios()->sync($request->usuarios);
+
 
         //        $created = $this->entity->create($request->all());
 
