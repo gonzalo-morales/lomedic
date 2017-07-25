@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Models;
+namespace App\Http\Models\Administracion;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -46,7 +46,7 @@ class Sucursales extends Model
 	];
 
 	public function users(){
-	    return $this->hasMany('app\Http\Models\Usuarios');
+	    return $this->hasMany('app\Http\Models\Administracion\Usuarios');
     }
 
 }

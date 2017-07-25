@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administracion;
+
+use App\Http\Models\Administracion\Areas;
 
 use Form;
-use App\Http\Models\Diagnosticos;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
-class DiagnosticosController extends Controller
+class AreasController extends Controller
 {
 
 	/**
@@ -15,7 +17,7 @@ class DiagnosticosController extends Controller
 	 *
 	 * @return void
 	 */
-    public function __construct(Diagnosticos $entity)
+    public function __construct(Areas $entity)
 	{
 		// $this->middleware('auth');
 		$this->entity = $entity;
@@ -32,7 +34,7 @@ class DiagnosticosController extends Controller
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
-		    'data' => $this->entity->all(), //->paginate(30),
+			'data' => $this->entity->all(),
 		]);
 	}
 

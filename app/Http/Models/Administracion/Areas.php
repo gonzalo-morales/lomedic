@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Models;
+namespace App\Http\Models\Administracion;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Familiasproductos extends Model
+class Areas extends Model
 {
 	// use SoftDeletes;
 
@@ -14,20 +14,20 @@ class Familiasproductos extends Model
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_familias_productos';
+	protected $table = 'gen_cat_areas';
 
 	/**
 	 * The primary key of the table
 	 * @var string
 	 */
-	protected $primaryKey = 'id_familia';
+	protected $primaryKey = 'id_area';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['descripcion', 'nomenclatura', 'estatus',];
+	protected $fillable = ['area', 'clave_area',];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -40,5 +40,7 @@ class Familiasproductos extends Model
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = ['descripcion' => 'required',];
+	public $rules = [
+		'area' => 'required',
+	];
 }

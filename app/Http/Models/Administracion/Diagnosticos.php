@@ -1,32 +1,33 @@
 <?php
-namespace App\Http\Models;
 
-use App\Http\Models\ModelCompany;
+namespace App\Http\Models\Administracion;
+
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Bancos extends ModelCompany
+class Diagnosticos extends Model
 {
-    // use SoftDeletes;
+	// use SoftDeletes;
 
 	/**
 	 * The table associated with the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_bancos';
+	protected $table = 'gen_cat_diagnosticos';
 
 	/**
 	 * The primary key of the table
 	 * @var string
 	 */
-	protected $primaryKey = 'id_banco';
+	protected $primaryKey = 'id_diagnostico';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['razon_social', 'banco', 'rfc', 'nacional'];
+	protected $fillable = ['clave_diagnostico', 'diagnostico', 'medicamento_sugerido',];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -40,8 +41,8 @@ class Bancos extends ModelCompany
 	 * @var array
 	 */
 	public $rules = [
-		'razon_social' => 'required',
-		'banco' => 'required',
+		'clave_diagnostico' => 'required',
+		'diagnostico' => 'required',
+		'medicamento_sugerido' => 'required',
 	];
-
 }

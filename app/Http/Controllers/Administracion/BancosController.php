@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administracion;
 
-use Form;
-use App\Http\Models\Areas;
+use App\Http\Models\Administracion\Bancos;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-class AreasController extends Controller
+class BancosController extends Controller
 {
 
 	/**
@@ -15,9 +15,9 @@ class AreasController extends Controller
 	 *
 	 * @return void
 	 */
-    public function __construct(Areas $entity)
+	public function __construct(Bancos $entity)
 	{
-		// $this->middleware('auth');
+		$this->middleware('auth');
 		$this->entity = $entity;
 		$this->entity_name = strtolower(class_basename($entity));
 	}
@@ -100,7 +100,7 @@ class AreasController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  integer  $id
+	 * @param  integer	$id
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, $company, $id)
@@ -119,7 +119,7 @@ class AreasController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  integer  $id
+	 * @param  integer 	$id
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($company, $id)
