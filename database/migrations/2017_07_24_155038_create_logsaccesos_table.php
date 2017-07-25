@@ -13,7 +13,8 @@ class CreateLogsaccesosTable extends Migration
      */
     public function up()
     {
-        Schema::connection('logs')->create('log_accesos', function (Blueprint $table) {
+        Schema::connection(config('database.connections.logs.schema'))
+            ->create('log_accesos', function (Blueprint $table) {
             $table->integer('fk_id_usuario')->comment('ID del usuario que intento loguearse; si existe');
             $table->string('nombre_usuario')->comment('Nombre del usuario que intento loguearse');
             $table->integer('fk_id_empresa')->comment('ID empresa del usuario; si existe');
@@ -38,6 +39,7 @@ class CreateLogsaccesosTable extends Migration
      */
     public function down()
     {
-        Schema::connection('logs')->dropIfExists('log_accesos');
+        Schema::connection(config('database.connections.logs.schema'))
+            ->dropIfExists('log_accesos');
     }
 }
