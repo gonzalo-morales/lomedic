@@ -64,11 +64,11 @@ class UsuariosController extends Controller
         $this->validate($request, $this->entity->rules);
         $this->entity->fill($request->all());
         $this->entity->password = Hash::make($request->get('password'));
-        $this->entity->fk_id_usuario_crea = Auth::id();
+        //$this->entity->fk_id_usuario_crea = Auth::id();
         $this->entity->save();
         # Redirigimos a index
-        return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
-
+        //return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+        return redirect(companyRoute('index'));
     }
 
     /**
@@ -114,13 +114,12 @@ class UsuariosController extends Controller
         //$this->validate($request, $this->entity->rules);
 
         $entity = $this->entity->findOrFail($id);
-        $entity->fk_id_usuario_actualiza = Auth::id();
         $entity->fill($request->all());
 
         $entity->save();
 
         # Redirigimos a index
-        return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
+        return redirect(companyRoute('index'));
     }
 
     /**
@@ -137,12 +136,12 @@ class UsuariosController extends Controller
         */
 
         $entity = $this->entity->findOrFail($id);
-        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
-        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
+        //$entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
+        //$entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
         $entity->eliminar='t';
         $entity->save();
 
         # Redirigimos a index
-        return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
+        return redirect(companyRoute('index'));
     }
 }

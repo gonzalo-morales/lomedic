@@ -31,7 +31,7 @@ class BancosController extends Controller
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
-			'data' => $this->entity->all(),
+			'data' => $this->entity->all()->where('eliminar','=',false),
 		]);
 	}
 
@@ -62,7 +62,8 @@ class BancosController extends Controller
 		$created = $this->entity->create($request->all());
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+		//return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+	    return redirect(companyRoute('index'));
 	}
 
 	/**
@@ -112,7 +113,8 @@ class BancosController extends Controller
 		$entity->save();
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
+		//return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
+	    return redirect(companyRoute('index'));
 	}
 
 	/**
@@ -124,9 +126,13 @@ class BancosController extends Controller
 	public function destroy($company, $id)
 	{
 		$entity = $this->entity->findOrFail($id);
-		$entity->delete();
+		//$entity->delete();
+        $entity->eliminar='t';
+        $entity->save();
+
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
+		//return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
+	    return redirect(companyRoute('index'));
 	}
 }
