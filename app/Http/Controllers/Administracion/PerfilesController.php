@@ -163,8 +163,8 @@ class PerfilesController extends Controller
         /*$entity = $this->entity->findOrFail($id);
         $entity->delete();*/
         $entity = $this->entity->findOrFail($id);
-        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
-        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
+//        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
+//        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
         $entity->eliminar='t';
         $entity->save();
 
