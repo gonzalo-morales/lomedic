@@ -1,20 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: ihernandezt
- * Date: 20/07/2017
- * Time: 12:39
- */
-
-/*
-use App\Menu;
-
-$Barra = New Menu();
-$Acciones = $Barra->getBarra(47);
-
-*/
-
-?>
 @extends('layouts.dashboard')
 
 @section('title', 'Usuarios')
@@ -34,8 +17,8 @@ $Acciones = $Barra->getBarra(47);
 @section('content')
     <div class="col s12 xl8 offset-xl2">
         <p class="right">
-            <?php //echo $Acciones; ?>
-            <a href="{{ route("$entity.create", ['company'=> $company]) }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo Usuario</a> <br>
+            <a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn orange">Nuevo</a>
+		<a href="{{ companyRoute('index') }}" class="waves-effect waves-light btn"><i class="material-icons">cached</i></a>
         </p>
     </div>
     @if (session('success'))
@@ -62,10 +45,10 @@ $Acciones = $Barra->getBarra(47);
                     <td>{{ $usuario->nombre_corto }}</td>
                     <td>{{ $usuario->activo }}</td>
                     <td class="width-auto">
-                        <a href="{{ route("$entity.show", ['company'=> $company, 'id' => $usuario->id_usuario]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-                        <a href="{{ route("$entity.edit", ['company'=> $company, 'id' => $usuario->id_usuario]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+                        <a href="{{  companyRoute('show', ['id'=> $usuario->id_usuario]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+                        <a href="{{ companyRoute('edit', ['id'=> $usuario->id_usuario]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
                         <a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form{{$usuario->id_usuario}}').submit();"><i class="material-icons">delete</i></a>
-                        <form id="delete-form{{$usuario->id_usuario}}" action="{{ route("$entity.destroy", ['company'=> $company, 'id' => $usuario->id_usuario]) }}" method="POST" style="display: none;">
+                        <form id="delete-form{{$usuario->id_usuario}}" action="{{ companyRoute('destroy', ['id' => $usuario->id_usuario])  }}" method="POST" style="display: none;">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
                         </form>

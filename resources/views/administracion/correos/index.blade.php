@@ -1,8 +1,3 @@
-<?php
-use App\Menu;
-$Barra = New Menu();
-$Acciones = $Barra->getBarra(47);
-?>
 @extends('layouts.dashboard')
 
 @section('title', 'correos')
@@ -22,7 +17,8 @@ $Acciones = $Barra->getBarra(47);
 @section('content')
 <div class="col s12 xl8 offset-xl2">
 	<p class="right">
-	<a href="{{ route("$entity.create", ['company'=> $company]) }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br>
+		<a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn orange">Nuevo</a>
+		<a href="{{ companyRoute('index') }}" class="waves-effect waves-light btn"><i class="material-icons">cached</i></a>
 	</p>
 </div>
 @if (session('success'))
@@ -67,10 +63,10 @@ $Acciones = $Barra->getBarra(47);
 				</p>
 			</td>
 			<td class="width-auto">
-				<a href="{{ route("$entity.show", ['id' => $correo->id_correo, 'company'=> $company]) }}" class="waves-effect waves-light btn "><i class="material-icons">visibility</i></a>
-				<a href="{{ route("$entity.edit", ['id' => $correo->id_correo, 'company'=> $company]) }}" class="waves-effect waves-light btn "><i class="material-icons">mode_edit</i></a>
+				<a href="{{ companyRoute('show', ['id' => $correo->id_correo]) }}" class="waves-effect waves-light btn "><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $correo->id_correo]) }}" class="waves-effect waves-light btn "><i class="material-icons">mode_edit</i></a>
 				<a href="#" class="waves-effect waves-light btn" onclick="event.preventDefault(); document.getElementById('delete-form{{$correo->id_correo}}').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form{{$correo->id_correo}}" action="{{ route("$entity.destroy", ['id' => $correo->id_correo, 'company'=> $company]) }}" method="POST" style="display: none;">
+				<form id="delete-form{{$correo->id_correo}}" action="{{ companyRoute('destroy', ['id' => $correo->id_correo]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>

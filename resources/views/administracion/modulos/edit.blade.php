@@ -10,7 +10,7 @@
 @endsection
 
 @section('content')
-<form action="{{ route("$entity.update", ['company'=> $company, 'id' => $data->id_modulo]) }}" method="post" class="col s12">
+<form action="{{ companyRoute('update') }}" method="post" class="col s12">
 	{{ csrf_field() }}
 	{{ method_field('PUT') }}
 	<div class="col s12">
