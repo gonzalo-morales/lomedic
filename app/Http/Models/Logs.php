@@ -38,7 +38,7 @@ class Logs extends Model
             'fk_id_usuario' => Auth::id(),
             'fk_id_empresa' => Empresas::where('nombre_comercial',strtoupper($company))->first(['id_empresa'])->id_empresa,
             'accion' =>'crear',
-            'id_registro' => $created->id_banco,
+            'id_registro' => $created,
             'fecha_hora' => DB::raw('now()'),
             'comentario' => 'Registro insertado',
             'ip_cliente' => $_SERVER['REMOTE_ADDR'],
@@ -55,7 +55,7 @@ class Logs extends Model
             'accion' =>'editar',
             'id_registro' => $id,
             'fecha_hora' => DB::raw('now()'),
-            'comentario' => 'Registro insertado',
+            'comentario' => 'Registro editado',
             'ip_cliente' => $_SERVER['REMOTE_ADDR'],
             'ip_servidor' => $_SERVER['SERVER_ADDR'],
             'dominio_servidor' => $_SERVER['SERVER_NAME']
@@ -71,7 +71,7 @@ class Logs extends Model
             'accion' =>'eliminar',
             'id_registro' => $id,
             'fecha_hora' => DB::raw('now()'),
-            'comentario' => 'Registro insertado',
+            'comentario' => 'Registro eliminado',
             'ip_cliente' => $_SERVER['REMOTE_ADDR'],
             'ip_servidor' => $_SERVER['SERVER_ADDR'],
             'dominio_servidor' => $_SERVER['SERVER_NAME']
