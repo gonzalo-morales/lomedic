@@ -24,7 +24,7 @@
 </div>
 <div class="col s12 xl8 offset-xl2">
 	<div class="row">
-		<form action="{{ route("$entity.index") }}" method="post" class="col s12">
+		<form action="{{ companyRoute('index') }}" method="post" class="col s12">
 			{{ csrf_field() }}
 			{{ method_field('POST') }}
 			<div class="row">
