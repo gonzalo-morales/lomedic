@@ -20,8 +20,10 @@ class CreateUsuarioPerfilTable extends Migration
             $table->boolean('activo')->default('1');
 
             /*Foreign keys*/
-            $table->foreign('fk_id_usuario')->references('id_usuario')->on('ges_cat_usuarios');
-            $table->foreign('fk_id_perfil')->references('id_perfil')->on('ges_cat_perfiles');
+            $table->foreign('fk_id_usuario')->references('id_usuario')->on('ges_cat_usuarios')->
+            onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('fk_id_perfil')->references('id_perfil')->on('ges_cat_perfiles')->
+            onDelete('restrict')->onUpdate('restrict');
         });
     }
 

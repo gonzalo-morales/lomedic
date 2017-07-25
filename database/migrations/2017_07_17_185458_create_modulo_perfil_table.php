@@ -20,8 +20,10 @@ class CreateModuloPerfilTable extends Migration
             $table->boolean('activo')->default('1');
 
             /*Foreign keys*/
-            $table->foreign('fk_id_modulo')->references('id_modulo')->on('ges_cat_modulos');
-            $table->foreign('fk_id_perfil')->references('id_perfil')->on('ges_cat_perfiles');
+            $table->foreign('fk_id_modulo')->references('id_modulo')->on('ges_cat_modulos')->
+            onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('fk_id_perfil')->references('id_perfil')->on('ges_cat_perfiles')->
+            onDelete('restrict')->onUpdate('restrict');
         });
     }
 
