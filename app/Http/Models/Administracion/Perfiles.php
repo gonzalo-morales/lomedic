@@ -55,4 +55,9 @@ class Perfiles extends Model
         return $this->hasMany('app\Http\Models\Administracion\Modulos');
     }
 
+    public function logs()
+    {
+        return $this->belongsToMany('app\Http\Models\Logs');
+    }
+
 }
