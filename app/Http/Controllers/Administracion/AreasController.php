@@ -19,7 +19,6 @@ class AreasController extends Controller
 	 */
     public function __construct(Areas $entity)
 	{
-		// $this->middleware('auth');
 		$this->entity = $entity;
 		$this->entity_name = strtolower(class_basename($entity));
 	}

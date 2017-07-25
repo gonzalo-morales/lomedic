@@ -18,10 +18,11 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::pattern('company', "($Conecctions)");
-Route::prefix('{company}')->group(function () {
-	Route::resource('/', 'HomeController');
 
-	Route::group(['prefix' => 'administracion', 'as' => 'administracion.' ], function() {
+Route::prefix('{company}')->group(function () {
+    Route::resource('/', 'HomeController');
+
+    Route::group(['prefix' => 'administracion', 'as' => 'administracion.', 'middleware' => 'auth' ], function() {
 		Route::resource('bancos', 'Administracion\BancosController');
 		Route::resource('areas', 'Administracion\AreasController');
 		Route::resource('diagnosticos', 'Administracion\DiagnosticosController');
@@ -33,5 +34,4 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('sucursales', 'Administracion\SucursalesController');
 		Route::resource('correos', 'Administracion\CorreosController');
 	});
-
 });
