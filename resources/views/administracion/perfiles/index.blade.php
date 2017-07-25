@@ -22,7 +22,7 @@ $Acciones = $Barra->getBarra(47);
 @section('content')
 <div class="col s12 xl8 offset-xl2">
 	<p class="right">
-	<a href="{{ route("$entity.create", ['company'=> $company]) }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br>
+	<a href="{{ companyRoute("create", ['company'=> $company]) }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br>
 	</p>
 </div>
 @if (session('success'))
@@ -54,10 +54,10 @@ $Acciones = $Barra->getBarra(47);
 				</p>
 			</td>
 			<td class="width-auto">
-				<a href="{{ route("$entity.show", ['id' => $perfiles->id_perfil,'company'=> $company]) }}" class="waves-effect waves-light btn "><i class="material-icons">visibility</i></a>
-				<a href="{{ route("$entity.edit", ['id' => $perfiles->id_perfil,'company'=> $company]) }}" class="waves-effect waves-light btn "><i class="material-icons">mode_edit</i></a>
+				<a href="{{ companyRoute("show", ['id' => $perfiles->id_perfil,'company'=> $company]) }}" class="waves-effect waves-light btn "><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute("edit", ['id' => $perfiles->id_perfil,'company'=> $company]) }}" class="waves-effect waves-light btn "><i class="material-icons">mode_edit</i></a>
 				<a href="#" class="waves-effect waves-light btn" onclick="event.preventDefault(); document.getElementById('delete-form{{$perfiles->id_perfil}}').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form{{$perfiles->id_perfil}}" action="{{ route("$entity.destroy", ['id' => $perfiles->id_perfil,'company'=> $company]) }}" method="POST" style="display: none;">
+				<form id="delete-form{{$perfiles->id_perfil}}" action="{{ companyRoute("destroy", ['id' => $perfiles->id_perfil,'company'=> $company]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>
