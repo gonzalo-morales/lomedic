@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::conection(config('database.conecction.corporativo.schema'))
+        Schema::connection(config('database.connections.corporativo.schema'))
             ->create('ges_cat_usuarios', function (Blueprint $table) {
             /*Principal fields*/
             $table->increments('id_usuario');
@@ -42,6 +42,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ges_cat_usuarios');
+        Schema::connection(config('database.connections.corporativo.schema'))->dropIfExists('ges_cat_usuarios');
     }
 }

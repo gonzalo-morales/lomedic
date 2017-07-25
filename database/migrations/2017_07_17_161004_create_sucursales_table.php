@@ -13,7 +13,8 @@ class CreateSucursalesTable extends Migration
      */
     public function up()
     {
-        Schema::create('ges_cat_sucursales', function (Blueprint $table) {
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->create('ges_cat_sucursales', function (Blueprint $table) {
             /*Principal fields*/
             $table->increments('id_sucursal');
             $table->string('nombre_sucursal')->unique()->comment('Nombre de la sucursal');
@@ -59,6 +60,7 @@ class CreateSucursalesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ges_cat_sucursales');
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->dropIfExists('ges_cat_sucursales');
     }
 }

@@ -13,7 +13,8 @@ class CreatePerfilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('ges_cat_perfiles', function (Blueprint $table) {
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->create('ges_cat_perfiles', function (Blueprint $table) {
             /*Principal fields*/
             $table->increments('id_perfil');
             $table->String('nombre_perfil','20')->unique()->comment('Nombre del perfil de usuario');
@@ -33,6 +34,7 @@ class CreatePerfilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ges_cat_perfiles');
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->dropIfExists('ges_cat_perfiles');
     }
 }
