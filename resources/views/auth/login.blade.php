@@ -1,8 +1,3 @@
-<?php 
-$QueryCompany =  DB::table('gen_cat_empresas')->where('estatus','=',1)->get()->toarray();
-
-?>
-
 @extends('layouts.app')
 
 @section('content')

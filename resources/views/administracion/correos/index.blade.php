@@ -1,8 +1,3 @@
-<?php
-use App\Menu;
-$Barra = New Menu();
-$Acciones = $Barra->getBarra(47);
-?>
 @extends('layouts.dashboard')
 
 @section('title', 'correos')
@@ -22,7 +17,8 @@ $Acciones = $Barra->getBarra(47);
 @section('content')
 <div class="col s12 xl8 offset-xl2">
 	<p class="right">
-	<a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br>
+		<a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn orange">Nuevo</a>
+		<a href="{{ companyRoute('index') }}" class="waves-effect waves-light btn"><i class="material-icons">cached</i></a>
 	</p>
 </div>
 @if (session('success'))
