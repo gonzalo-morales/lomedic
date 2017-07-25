@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Administracion;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Models\Administracion\Bancos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Models\Logs;
+use App\Http\Models\Administracion\Empresas;
 
 class BancosController extends Controller
 {
@@ -29,6 +33,7 @@ class BancosController extends Controller
 	 */
 	public function index($company)
 	{
+
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
@@ -43,6 +48,8 @@ class BancosController extends Controller
 	 */
 	public function create($company)
 	{
+//        dump(Empresas::where('nombre_comercial', strtoupper($company))->get());
+
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
@@ -56,11 +63,13 @@ class BancosController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request, $company)
-	{
-		# Validamos request, si falla regresamos pagina
-		$this->validate($request, $this->entity->rules);
+    {
+        # Validamos request, si falla regresamos pagina
+        //$this->validate($request, $this->entity->rules);
 
-		$created = $this->entity->create($request->all());
+        $created = $this->entity->create($request->all());
+
+        Logs::createLog($this->entity->getTable(),$created->id_banco,$company);
 
 		# Redirigimos a index
 		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
@@ -111,6 +120,14 @@ class BancosController extends Controller
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
 		$entity->save();
+        Logs::editLog($this->entity->getTable(),$company,$id);
+//		Logs::create([
+//			'table' => $this->entity->getTable();
+//			'fk_id_usuario' => Auth::user()
+//			'acction' =>
+//			'table' =>
+//		])
+
 
 		# Redirigimos a index
 		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
@@ -126,6 +143,7 @@ class BancosController extends Controller
 	{
 		$entity = $this->entity->findOrFail($id);
 		$entity->delete();
+        Logs::deleteLog($this->entity->getTable(),$company,$id);
 
 		# Redirigimos a index
 		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
