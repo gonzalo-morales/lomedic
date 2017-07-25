@@ -13,7 +13,7 @@ class CreatePasswordResetsTable extends Migration
      */
     public function up()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->create('password_resets', function (Blueprint $table) {
             $table->string('email')->index();
             $table->string('token');
@@ -28,7 +28,7 @@ class CreatePasswordResetsTable extends Migration
      */
     public function down()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->dropIfExists('password_resets');
     }
 }

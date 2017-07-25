@@ -13,7 +13,7 @@ class CreatePermisosTable extends Migration
      */
     public function up()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->create('ges_cat_permisos', function (Blueprint $table) {
             $table->increments('id_permiso');
             $table->string('descripcion');
@@ -31,7 +31,7 @@ class CreatePermisosTable extends Migration
      */
     public function down()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->dropIfExists('ges_cat_permisos');
     }
 }

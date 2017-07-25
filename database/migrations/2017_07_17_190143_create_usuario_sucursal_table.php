@@ -13,7 +13,7 @@ class CreateUsuarioSucursalTable extends Migration
      */
     public function up()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->create('ges_det_usuario_sucursal', function (Blueprint $table) {
             $table->integer('fk_id_usuario')->unsigned()->comment('Llave foranea al usuario');
             $table->integer('fk_id_sucursal')->unsigned()->comment('Llave foranea a la sucursal');
@@ -34,7 +34,7 @@ class CreateUsuarioSucursalTable extends Migration
      */
     public function down()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->dropIfExists('ges_det_usuario_sucursal');
     }
 }

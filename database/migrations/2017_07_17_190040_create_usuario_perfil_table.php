@@ -13,7 +13,7 @@ class CreateUsuarioPerfilTable extends Migration
      */
     public function up()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->create('ges_det_usuario_perfil', function (Blueprint $table) {
             /*Principal fields*/
             $table->integer('fk_id_usuario')->unsigned()->comment('Llave foranea al usuario');
@@ -35,7 +35,7 @@ class CreateUsuarioPerfilTable extends Migration
      */
     public function down()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->dropIfExists('ges_det_usuario_perfil');
     }
 }
