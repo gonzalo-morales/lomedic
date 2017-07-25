@@ -13,7 +13,7 @@ class CreateModuloPerfilTable extends Migration
      */
     public function up()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->create('ges_det_modulo_perfil', function (Blueprint $table) {
             /*Principal fields*/
             $table->integer('fk_id_modulo')->unsigned()->comment('Llave foranea al modulo');
@@ -35,7 +35,7 @@ class CreateModuloPerfilTable extends Migration
      */
     public function down()
     {
-        Schema::connection(config('database.connections.corporativo.schema'))
+        Schema::connection('corporativo')
             ->dropIfExists('ges_det_modulo_perfil');
     }
 }

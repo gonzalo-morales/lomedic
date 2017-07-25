@@ -13,7 +13,7 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
-        Schema::connection(config('database.connections.logs.schema'))
+        Schema::connection('logs')
             ->create('log_movimientos', function (Blueprint $table) {
             $table->string('tabla')->comment('Tabla afectada');
             $table->integer('fk_id_usuario')->comment('Usuario que realizó el movimiento');
@@ -27,9 +27,9 @@ class CreateLogsTable extends Migration
             $table->string('dominio_servidor')->comment('Dominio del servidor');
 
             $table->foreign('fk_id_usuario')->references('id_usuario')->onDelete('restrict')->onUpdate('restrict')
-                ->on(config('database.connections.maestro.schema').'.ges_cat_usuarios');
+                ->on(config('database.connections.corporativo.schema').'.ges_cat_usuarios');
             $table->foreign('fk_id_empresa')->references('id_empresa')->onDelete('restrict')->onUpdate('restrict')
-                ->on(config('database.connections.maestro.schema').'.gen_cat_empresas');
+                ->on(config('database.connections.corporativo.schema').'.gen_cat_empresas');
 
         });
     }
@@ -41,7 +41,7 @@ class CreateLogsTable extends Migration
      */
     public function down()
     {
-        Schema::connection(config('database.connections.logs.schema'))
+        Schema::connection('logs')
             ->dropIfExists('log_movimientos');
     }
 }
