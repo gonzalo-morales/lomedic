@@ -16,11 +16,11 @@ $QueryCompany =  DB::table('gen_cat_empresas')->where('estatus','=',1)->get()->t
 				<div class="row">
 					<div class="input-field col s12">
 						<i class="material-icons prefix">account_circle</i>
-						<input id="user" type="text" class="validate" name="email" value="{{ old('email') }}" autofocus>
-						<label for="user">Correo:</label>
-						@if ($errors->has('email'))
+						<input id="user" type="text" class="validate" name="usuario" value="{{ old('usuario') }}" autofocus>
+						<label for="user">Usuario:</label>
+						@if ($errors->has('usuario'))
 							<span class="help-block left red-text text-darken4">
-								<strong>{{ $errors->first('email') }}</strong>
+								<strong>{{ $errors->first('usuario') }}</strong>
 							</span>
 						@endif
 					</div>
@@ -40,13 +40,6 @@ $QueryCompany =  DB::table('gen_cat_empresas')->where('estatus','=',1)->get()->t
 				</div>
 				<div class="row">
 						<div class="input-field col s12">
-							<select class="icons" name="sistema">
-								<option value="" disabled selected>Selecciona:</option>
-								@foreach($QueryCompany as $Companys)
-								<option value="{{ $Companys->id_empresa }}" data-icon="img/{{ $Companys->logotipo }}" class="left circle">{{ $Companys->nombre_comercial }}</option>
-								@endforeach
-							</select>
-							<label>Sistema:</label>
 						</div>
 					<div class="col s12">
 						<button class="btn orange waves-effect waves-light" type="submit" name="enter">Entrar</button>
