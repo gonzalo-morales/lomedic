@@ -13,7 +13,8 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
-        Schema::connection('logs')->create('log_movimientos', function (Blueprint $table) {
+        Schema::connection(config('database.connections.logs.schema'))
+            ->create('log_movimientos', function (Blueprint $table) {
             $table->string('tabla')->comment('Tabla afectada');
             $table->integer('fk_id_usuario')->comment('Usuario que realizó el movimiento');
             $table->integer('fk_id_empresa')->comment('Empresa en la que se realizó el movimiento');
@@ -40,6 +41,7 @@ class CreateLogsTable extends Migration
      */
     public function down()
     {
-        Schema::connection('logs')->dropIfExists('log_movimientos');
+        Schema::connection(config('database.connections.logs.schema'))
+            ->dropIfExists('log_movimientos');
     }
 }
