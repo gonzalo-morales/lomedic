@@ -13,7 +13,7 @@ return [
 	|
 	*/
 
-	'default' => env('DB_CONNECTION', 'maestro'),
+	'default' => env('DB_CONNECTION', 'corporativo'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -32,21 +32,7 @@ return [
 	*/
 
 	'connections' => [
-		'pgsql' => [
-			'driver' => 'pgsql',
-			'host'   => env('DB_HOST', '127.0.0.1'),
-			'port'   => env('DB_PORT', '5432'),
-			'database' => env('DB_DATABASE', 'forge'),
-			'username' => env('DB_USERNAME', 'forge'),
-			'password' => env('DB_PASSWORD', ''),
-			'charset'  => 'utf8',
-		    'timezone' =>config('app.timezone'),
-			'prefix'   => '',
-			'schema'   => 'maestro',
-			'sslmode'   => 'prefer',
-		],
-	    
-	    'maestro' => [
+	    'corporativo' => [
 	        'driver' => 'pgsql',
 	        'host'   => env('DB_HOST', '127.0.0.1'),
 	        'port'   => env('DB_PORT', '5432'),
@@ -87,6 +73,19 @@ return [
 			'schema' => 'lomedic',
 			'sslmode' => 'prefer',
 		],
+        'logs' => [
+            'driver' => 'pgsql',
+            'host'   => env('DB_HOST', '127.0.0.1'),
+            'port'   => env('DB_PORT', '5432'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset'  => 'utf8',
+            'timezone' =>config('app.timezone'),
+            'prefix'   => '',
+            'schema'   => 'logs',
+            'sslmode'   => 'prefer',
+        ],
 
 	],
 

@@ -13,7 +13,8 @@ class CreateCorreosTable extends Migration
      */
     public function up()
     {
-        Schema::create('ges_det_correos', function (Blueprint $table) {
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->create('ges_det_correos', function (Blueprint $table) {
             /*Principal fields*/
             $table->increments('id_correo');
             $table->string('correo')->unique()->comment('Correo electronico');
@@ -23,18 +24,10 @@ class CreateCorreosTable extends Migration
             /*General fields*/
             $table->boolean('activo')->default('1');
             $table->boolean('eliminar')->default('0');
-            $table->integer('fk_id_usuario_crea')->unsigned();
-            $table->timestamp('fecha_crea')->default(DB::raw('now()'));
-            $table->integer('fk_id_usuario_actualiza')->unsigned()->nullable();
-            $table->timestamp('fecha_actualiza')->nullable();
-            $table->integer('fk_id_usuario_elimina')->unsigned()->nullable();
-            $table->timestamp('fecha_elimina')->nullable();
-            $table->foreign('fk_id_usuario_crea')->references('id_usuario')->on('ges_cat_usuarios');
-            $table->foreign('fk_id_usuario_actualiza')->references('id_usuario')->on('ges_cat_usuarios');
-            $table->foreign('fk_id_usuario_elimina')->references('id_usuario')->on('ges_cat_usuarios');
 
             /*Foreign keys*/
-            $table->foreign('fk_id_usuario')->references('id_usuario')->on('ges_cat_usuarios');
+            $table->foreign('fk_id_usuario')->references('id_usuario')->on('ges_cat_usuarios')->
+            onDelete('restrict')->onUpdate('restrict');
         });
     }
 
@@ -45,6 +38,7 @@ class CreateCorreosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ges_cat_correos');
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->dropIfExists('ges_cat_correos');
     }
 }

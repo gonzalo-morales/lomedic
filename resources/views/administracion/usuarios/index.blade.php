@@ -64,8 +64,8 @@ $Acciones = $Barra->getBarra(47);
                     <td class="width-auto">
                         <a href="{{ route("$entity.show", ['company'=> $company, 'id' => $usuario->id_usuario]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
                         <a href="{{ route("$entity.edit", ['company'=> $company, 'id' => $usuario->id_usuario]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
-                        <a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form').submit();"><i class="material-icons">delete</i></a>
-                        <form id="delete-form" action="{{ route("$entity.destroy", ['company'=> $company, 'id' => $usuario->id_usuario]) }}" method="POST" style="display: none;">
+                        <a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form{{$usuario->id_usuario}}').submit();"><i class="material-icons">delete</i></a>
+                        <form id="delete-form{{$usuario->id_usuario}}" action="{{ route("$entity.destroy", ['company'=> $company, 'id' => $usuario->id_usuario]) }}" method="POST" style="display: none;">
                             {{ csrf_field() }}
                             {{ method_field('DELETE') }}
                         </form>

@@ -13,14 +13,17 @@ class CreateUsuarioSucursalTable extends Migration
      */
     public function up()
     {
-        Schema::create('ges_det_usuario_sucursal', function (Blueprint $table) {
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->create('ges_det_usuario_sucursal', function (Blueprint $table) {
             $table->integer('fk_id_usuario')->unsigned()->comment('Llave foranea al usuario');
             $table->integer('fk_id_sucursal')->unsigned()->comment('Llave foranea a la sucursal');
             $table->boolean('activo')->default('1');
 
             /*Foreign keys*/
-            $table->foreign('fk_id_usuario')->references('id_usuario')->on('ges_cat_usuarios');
-            $table->foreign('fk_id_sucursal')->references('id_sucursal')->on('ges_cat_sucursales');
+            $table->foreign('fk_id_usuario')->references('id_usuario')->on('ges_cat_usuarios')->
+            onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('fk_id_sucursal')->references('id_sucursal')->on('ges_cat_sucursales')->
+            onDelete('restrict')->onUpdate('restrict');
         });
     }
 
@@ -31,6 +34,7 @@ class CreateUsuarioSucursalTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ges_det_usuario_sucursal');
+        Schema::connection(config('database.connections.corporativo.schema'))
+            ->dropIfExists('ges_det_usuario_sucursal');
     }
 }
