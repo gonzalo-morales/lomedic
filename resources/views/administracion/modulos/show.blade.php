@@ -14,12 +14,12 @@
 	<div class="row">
 		<div class="col s6">
 			<p class="left-align">
-				<a href="{{ route("$entity.index",['company'=> $company]) }}" class="waves-effect waves-light btn">Regresar</a> <br>
+				<a href="{{ companyRoute('index') }}" class="waves-effect waves-light btn">Regresar</a> <br>
 			</p>
 		</div>
 		<div class="col s6">
 			<p class="right-align">
-				<a href="{{ route("$entity.edit", ['company'=> $company, 'id' => $data->id_modulo]) }}" class="waves-effect waves-light btn"><i class="material-icons right">mode_edit</i>Editar</a>
+				<a href="{{ companyRoute('edit', ['id' => $data->id_modulo]) }}" class="waves-effect waves-light btn"><i class="material-icons right">mode_edit</i>Editar</a>
 			</p>
 		</div>
 	</div>

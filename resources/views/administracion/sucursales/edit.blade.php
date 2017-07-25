@@ -22,7 +22,7 @@
 
 <div class="col s12 xl8 offset-xl2">
 	<div class="row">
-		<form action="{{ route("$entity.update", ['id' => $data->id_sucursal]) }}" method="post" class="col s12">
+		<form action="{{ companyRoute('update') }}" method="post" class="col s12">
 			{{ csrf_field() }}
 			{{ method_field('PUT') }}
 			<div class="row">

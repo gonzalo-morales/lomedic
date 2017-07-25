@@ -22,7 +22,7 @@ $Acciones = $Barra->getBarra(47);
 @section('content')
 <div class="col s12 xl8 offset-xl2">
 	<p class="right-align">
-		<a href="{{ route("$entity.create") }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br>
+		<a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br>
 	</p>
 </div>
 @if (session('success'))
@@ -57,10 +57,10 @@ $Acciones = $Barra->getBarra(47);
 				</p>
 			</td>
 			<td class="width-auto">
-				<a href="{{ route("$entity.show", ['id' => $sucursal->id_sucursal]) }}" class="waves-effect waves-light btn"><i class="material-icons">visibility</i></a>
-				<a href="{{ route("$entity.edit", ['id' => $sucursal->id_sucursal]) }}" class="waves-effect waves-light btn"><i class="material-icons">mode_edit</i></a>
+				<a href="{{ companyRoute('show', ['id' => $sucursal->id_sucursal]) }}" class="waves-effect waves-light btn"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $sucursal->id_sucursal]) }}" class="waves-effect waves-light btn"><i class="material-icons">mode_edit</i></a>
 				<a href="#" class="waves-effect waves-light btn" onclick="event.preventDefault(); document.getElementById('delete-form{{$sucursal->id_sucursal}}').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form{{$sucursal->id_sucursal}}" action="{{ route("$entity.destroy", ['id' => $sucursal->id_sucursal]) }}" method="POST" style="display: none;">
+				<form id="delete-form{{$sucursal->id_sucursal}}" action="{{ companyRoute('destroy', ['id' => $sucursal->id_sucursal]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>

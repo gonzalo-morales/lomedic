@@ -23,7 +23,7 @@ $Acciones = $Barra->getBarra(23);
 <div class="col s12 xl8 offset-xl2">
 	<p class="right">
 		<?php echo $Acciones; ?>
-		<!-- <a href="{{ route("$entity.create",['company'=> $company]) }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br> -->
+		<!-- <a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn"><i class="material-icons right">add</i>Nuevo {{ trans_choice('messages.'.$entity, 0) }}</a> <br> -->
 	</p>
 </div>
 @if (session('success'))
@@ -46,10 +46,10 @@ $Acciones = $Barra->getBarra(23);
 		<tr>
 			<td>{{ $modulo->nombre }}</td>
 			<td class="width-auto">
-				<a href="{{ route("$entity.show", ['company'=> $company, 'id' => $modulo->id_modulo]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-				<a href="{{ route("$entity.edit", ['company'=> $company, 'id' => $modulo->id_modulo]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+				<a href="{{ companyRoute('show', ['id' => $modulo->id_modulo]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $modulo->id_modulo]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
 				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$modulo->id_modulo}}').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form-{{$modulo->id_modulo}}" action="{{ route("$entity.destroy", ['company'=> $company, 'id' => $modulo->id_modulo]) }}" method="POST" style="display: none;">
+				<form id="delete-form-{{$modulo->id_modulo}}" action="{{ companyRoute('destroy', ['id' => $modulo->id_modulo]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>
