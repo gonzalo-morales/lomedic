@@ -43,6 +43,18 @@
 				@endif
 			</div>
 		</div>
+		<div class="row">
+			<div class="input-field col s12 m7">
+				<input type="hidden" name="activo" value="0">
+				<input type="checkbox" id="activo" name="activo" {{$data->activo ? 'checked' : ''}} />
+				<label for="activo">Activo:</label>
+				@if ($errors->has('activo'))
+					<span class="help-block">
+						<strong>{{ $errors->first('activo') }}</strong>
+					</span>
+				@endif
+			</div>
+		</div>
 	</div>
 </form>
 @endsection

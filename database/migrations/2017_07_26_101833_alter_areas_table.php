@@ -13,7 +13,8 @@ class AlterAreasTable extends Migration
      */
     public function up()
     {
-        Schema::table('gen_cat_areas', function (Blueprint $table) {
+        Schema::connection('corporativo')
+            ->table('gen_cat_areas', function (Blueprint $table) {
             $table->boolean('activo')->default('t');
             $table->boolean('eliminar')->default('f');
         });
@@ -26,7 +27,8 @@ class AlterAreasTable extends Migration
      */
     public function down()
     {
-        Schema::table('gen_cat_areas',function(Blueprint $table){
+        Schema::connection('corporativo')
+            ->table('gen_cat_areas',function(Blueprint $table){
             $table->dropColumn('activo');
             $table->dropColumn('eliminar');
         });
