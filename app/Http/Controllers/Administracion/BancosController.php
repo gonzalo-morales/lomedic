@@ -69,7 +69,7 @@ class BancosController extends Controller
         Logs::createLog($this->entity->getTable(),$created->id_banco,$company);
 
 		# Redirigimos a index
-        return redirect(companyRoute(index));
+        return redirect(companyRoute('index'));
     }
 
 	/**
@@ -129,7 +129,7 @@ class BancosController extends Controller
 
 
 		# Redirigimos a index
-        return redirect(companyRoute(index));
+        return redirect(companyRoute('index'));
 	}
 
 	/**
@@ -147,6 +147,6 @@ class BancosController extends Controller
         Logs::editLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');
 
 		# Redirigimos a index
-        return redirect(companyRoute(index));
+        return redirect(companyRoute('index'));
 	}
 }
