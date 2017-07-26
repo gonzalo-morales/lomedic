@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterAreasTable extends Migration
+class AlterTipocombustibleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,9 @@ class AlterAreasTable extends Migration
     public function up()
     {
         Schema::connection('corporativo')
-            ->table('gen_cat_areas', function (Blueprint $table) {
-            $table->boolean('activo')->default('t');
-            $table->boolean('eliminar')->default('f');
+            ->table('gen_cat_tipo_combustible', function (Blueprint $table) {
+            $table->renameColumn('estatus','activo')->default('true');
+            $table->boolean('eliminar')->default('false');
         });
     }
 
@@ -28,8 +28,8 @@ class AlterAreasTable extends Migration
     public function down()
     {
         Schema::connection('corporativo')
-            ->table('gen_cat_areas',function(Blueprint $table){
-            $table->dropColumn('activo');
+            ->table('gen_cat_tipo_combustible', function (Blueprint $table) {
+            $table->renameColumn('activo','estatus');
             $table->dropColumn('eliminar');
         });
     }
