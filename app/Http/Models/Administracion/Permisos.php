@@ -5,7 +5,7 @@ namespace App\Http\Models\Administracion;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Bancos extends Model
+class Permisos extends Model
 {
     // use SoftDeletes;
 
@@ -14,20 +14,20 @@ class Bancos extends Model
      *
      * @var string
      */
-    protected $table = 'gen_cat_bancos';
+    protected $table = 'ges_cat_permisos';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_banco';
+    protected $primaryKey = 'id_permiso';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['razon_social', 'banco', 'rfc', 'nacional'];
+    protected $fillable = ['descripcion'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -41,8 +41,7 @@ class Bancos extends Model
      * @var array
      */
     public $rules = [
-        'razon_social' => 'required',
-        'banco' => 'required',
+        'descripcion' => 'required',
     ];
 
 }
