@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Models\Logs;
 use Auth;
 use DB;
 
@@ -65,7 +66,10 @@ class UsuariosController extends Controller
         $this->entity->fill($request->all());
         $this->entity->password = Hash::make($request->get('password'));
         //$this->entity->fk_id_usuario_crea = Auth::id();
-        $this->entity->save();
+        if($this->entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$this->entity->id_usuario,'crear','Registro creado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$this->entity->id_usuario,'crear','Error al crear');}
         # Redirigimos a index
         //return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
         return redirect(companyRoute('index'));
@@ -79,6 +83,8 @@ class UsuariosController extends Controller
      */
     public function show($company, $id)
     {
+        Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
+
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
@@ -116,8 +122,10 @@ class UsuariosController extends Controller
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
 
-        $entity->save();
-
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
         # Redirigimos a index
         return redirect(companyRoute('index'));
     }
@@ -139,7 +147,10 @@ class UsuariosController extends Controller
         //$entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
         //$entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
         $entity->eliminar='t';
-        $entity->save();
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al editar');}
 
         # Redirigimos a index
         return redirect(companyRoute('index'));
