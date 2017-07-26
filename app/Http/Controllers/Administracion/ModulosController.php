@@ -7,8 +7,7 @@ use App\Http\Models\Administracion\Empresas;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Models\Logs;
 
 class ModulosController extends Controller
 {
@@ -31,10 +30,11 @@ class ModulosController extends Controller
 	 */
 	public function index($company)
 	{
+        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
-			'data' => $this->entity->all(),
+			'data' => $this->entity->all()->where('eliminar',0),
 		]);
 	}
 
@@ -65,11 +65,20 @@ class ModulosController extends Controller
 		$this->validate($request, $this->entity->rules());
 
 		$created = $this->entity->create($request->all());
-		$created->modulos()->sync($request->modulos);
-		$created->empresas()->sync($request->empresas);
+
+        if($created)
+        {
+            Logs::createLog($this->entity->getTable(),$company,$created->id_modulo,'crear','Registro insertado');
+            $created->modulos()->sync($request->modulos);
+            $created->empresas()->sync($request->empresas);
+        }
+        else
+        {
+            Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');
+        }
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+		return redirect(companyRoute('index'));
 	}
 
 	/**
@@ -80,6 +89,7 @@ class ModulosController extends Controller
 	 */
 	public function show(Empresas $empresas, $company, $id)
 	{
+        Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
@@ -120,13 +130,18 @@ class ModulosController extends Controller
 
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
-		$entity->save();
-
-		$entity->modulos()->sync($request->modulos);
-		$entity->empresas()->sync($request->empresas);
+		if($entity->save())
+        {
+            Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');
+            $entity->modulos()->sync($request->modulos);
+            $entity->empresas()->sync($request->empresas);
+        }else
+        {
+            Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');
+        }
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
+		return redirect(companyRoute('index'));
 	}
 
 	/**
@@ -138,14 +153,13 @@ class ModulosController extends Controller
 	public function destroy($company, $id)
 	{
 		$entity = $this->entity->findOrFail($id);
-        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
-        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
         $entity->eliminar='t';
-        $entity->save();
-//		$entity->empresas()->detach($entity->empresas);
-//		$entity->delete();
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
+		return redirect(companyRoute('index'));
 	}
 }

@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Correos extends Model
 {
-    const CREATED_AT = 'fecha_crea';
-    const UPDATED_AT = 'fecha_actualiza';
-
-
     /**
      * The table associated with the model.
      *
@@ -36,7 +32,7 @@ class Correos extends Model
      *
      * @var bool
      */
-    public $timestamps = true;
+    public $timestamps = false;
 
     /**
      * The validation rules
@@ -51,5 +47,10 @@ class Correos extends Model
     public function user()
     {
         return $this->belongsTo('app\Http\Models\Administracion\Usuarios');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo('app\Http\Models\Administracion\Empresas');
     }
 }

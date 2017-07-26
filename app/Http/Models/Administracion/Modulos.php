@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Modulos extends Model
 {
@@ -54,16 +53,16 @@ class Modulos extends Model
 	 */
 	public function empresas()
 	{
-		return $this->belongsToMany('App\Http\Models\Empresas', 'ges_det_modulo_empresa', 'fk_id_modulo', 'fk_id_empresa');
+		return $this->belongsToMany('App\Http\Models\Administracion\Empresas', 'ges_det_modulo_empresa', 'fk_id_modulo', 'fk_id_empresa');
 	}
 
 	public function perfiles()
     {
-        return $this->belongsToMany('App\Http\Models\Perfiles','ges_det_modulo_perfil','fk_id_modulo','fk_id_perfil');
+        return $this->belongsToMany('App\Http\Models\Administracion\Perfiles','ges_det_modulo_perfil','fk_id_modulo','fk_id_perfil');
     }
 
     public function  modulos()
     {
-		return $this->belongsToMany('App\Http\Models\Modulos', 'ges_det_parents', 'fk_id_modulo','fk_id_parent');
+		return $this->belongsToMany('App\Http\Models\Administracion\Modulos', 'ges_det_parents', 'fk_id_modulo','fk_id_parent');
     }
 }
