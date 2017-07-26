@@ -20,13 +20,13 @@ class PerfilesController extends Controller
      */
     public function __construct(Perfiles $entity)
     {
-        $this->middleware('auth');
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
         $this->company = request()->company;
         $this->users = Usuarios::all();
         $this->modules = Modulos::all();
         $this->empresas = Empresas::all();
+        $this->logs = Logs::all();
     }
 
     /**
@@ -78,6 +78,7 @@ class PerfilesController extends Controller
         $this->entity->save();
 
         $this->entity->usuarios()->sync($request->usuarios);
+
 
         //        $created = $this->entity->create($request->all());
 
@@ -164,8 +165,8 @@ class PerfilesController extends Controller
         /*$entity = $this->entity->findOrFail($id);
         $entity->delete();*/
         $entity = $this->entity->findOrFail($id);
-        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
-        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
+//        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
+//        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
         $entity->eliminar='t';
         $entity->save();
 

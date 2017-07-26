@@ -7,6 +7,8 @@ use DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Http\Models\Administracion\Usuarios;
+use App\Http\Models\Administracion\Empresas;
 
 class LoginController extends Controller
 {
@@ -37,26 +39,23 @@ class LoginController extends Controller
     
     protected function credentials(Request $request)
     {
-        Session::flush();
+        $field = filter_var($request->usuario, FILTER_VALIDATE_EMAIL) ? $this->username() : 'usuario';
+        $request->session()->put('usuario', $request->{$field});
         
-        $request->session()->put('usuario', $request->get('email'));
-        $request->session()->put('id_sistema', $request->get('sistema'));
+        $Usuario = Usuarios::where('usuario','=',$request->{$field})->get()->toarray();
+        $idEmpresa = isset($Usuario[0]['fk_id_empresa_default']) ? $Usuario[0]['fk_id_empresa_default'] : 0;
         
-        $idEmpresa = !empty($request->get('sistema')) ? $request->get('sistema') : 0;
-        
-        $QueryCompany =  DB::table('gen_cat_empresas')->select('conexion')->where('id_empresa','=',$idEmpresa)->get()->toarray();
-        $redirect = isset($QueryCompany[0]->conexion) ? $QueryCompany[0]->conexion.'/' : '/';
+        $QueryCompany =  Empresas::where('id_empresa','=',$idEmpresa)->get()->toarray();
+        $redirect = isset($QueryCompany[0]['conexion']) ? $QueryCompany[0]['conexion'] : '/';
         
         $this->redirectTo = $redirect;
         
-        
-        $field = filter_var($request->get($this->username()), FILTER_VALIDATE_EMAIL) ? $this->username() : 'usuario';
-        
-        return [$field => $request->get($this->username()),'password' => $request->password, 'activo' => 1,'eliminar'=> 0];
+        return [$field => $request->{$field}, 'password' => $request->password, 'activo' => 1,'eliminar'=> 0];
     }
     
     protected function validateLogin(Request $request)
     {
-        $this->validate($request, [$this->username() => 'required', 'password' => 'required', 'sistema' => 'required',]);
+        $field = filter_var($request->usuario, FILTER_VALIDATE_EMAIL) ? $this->username() : 'usuario';
+        $this->validate($request, [$field => 'required', 'password' => 'required',]);
     }
 }

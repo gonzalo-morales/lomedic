@@ -45,4 +45,7 @@ class Bancos extends Model
         'banco' => 'required',
     ];
 
+    public function getTable(){
+	    return $this->table;
+    }
 }

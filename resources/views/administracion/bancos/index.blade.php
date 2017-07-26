@@ -1,8 +1,3 @@
-<?php
-use App\Menu;
-$Barra = New Menu();
-$Acciones = $Barra->getBarra(47);
-?>
 @extends('layouts.dashboard')
 
 @section('title', 'Bancos')
@@ -22,7 +17,6 @@ $Acciones = $Barra->getBarra(47);
 @section('content')
 <div class="col s12 xl8 offset-xl2">
 	<p class="right">
-		<?php //echo $Acciones; ?>
 		<a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn orange">Nuevo</a>
 		<a href="{{ companyRoute('index') }}" class="waves-effect waves-light btn"><i class="material-icons">cached</i></a>
 	</p>
@@ -55,8 +49,8 @@ $Acciones = $Barra->getBarra(47);
 			<td class="width-auto">
 				<a href="{{ companyRoute('show', ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
 				<a href="{{ companyRoute('edit', ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
-				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form" action="{{ companyRoute('destroy', ['id' => $banco->id_banco]) }}" method="POST" style="display: none;">
+				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form{{$banco->id_banco}}').submit();"><i class="material-icons">delete</i></a>
+				<form id="delete-form{{$banco->id_banco}}" action="{{ companyRoute('destroy', ['id' => $banco->id_banco]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>

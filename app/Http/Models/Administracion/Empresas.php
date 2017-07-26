@@ -39,14 +39,12 @@ class Empresas extends Model
 	 * The validation rules
 	 * @var array
 	 */
-	// public $rules = [
-	//     'razon_social' => 'required',
-	//     'banco' => 'required',
-	// ];
 
 	/**
 	 * Los modulos que relacionan a la empresa.
 	 */
+
+
 	public function modulos()
 	{
 		return $this->belongsToMany('App\Http\Models\Administracion\Modulos', 'ges_det_modulo_empresa', 'fk_id_empresa', 'fk_id_modulo');
