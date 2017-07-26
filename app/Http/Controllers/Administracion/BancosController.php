@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Administracion;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Http\Models\Administracion\Bancos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
-use App\Http\Models\Administracion\Empresas;
 
 class BancosController extends Controller
 {
@@ -32,6 +29,7 @@ class BancosController extends Controller
 	 */
 	public function index($company)
 	{
+        Logs::editLog($this->entity->getTable(),$company,null,'index',null);
 
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
@@ -82,6 +80,8 @@ class BancosController extends Controller
 	 */
 	public function show($company, $id)
 	{
+        Logs::editLog($this->entity->getTable(),$company,$id,'ver',null);
+
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
@@ -119,7 +119,7 @@ class BancosController extends Controller
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
 		$entity->save();
-        Logs::editLog($this->entity->getTable(),$company,$id);
+        Logs::editLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');
 //		Logs::create([
 //			'table' => $this->entity->getTable();
 //			'fk_id_usuario' => Auth::user()
@@ -144,7 +144,7 @@ class BancosController extends Controller
         $entity->eliminar='t';
         $entity->save();
 //		$entity->delete();
-        Logs::deleteLog($this->entity->getTable(),$company,$id);
+        Logs::editLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');
 
 		# Redirigimos a index
 		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
