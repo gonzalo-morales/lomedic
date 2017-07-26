@@ -37,6 +37,9 @@
 				</div>
 				<div class="input-field col s4">
 					<select name="fk_id_empresa" id="fk_id_empresa">
+							@foreach($companies as $empresa)
+							<option value="{{$empresa->id_empresa}}">{{$empresa->nombre_comercial}}</option>
+						@endforeach
 					</select>
 					<label for="fk_id_empresa">Empresa</label>
 				</div>
