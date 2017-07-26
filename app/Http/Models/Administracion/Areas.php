@@ -27,7 +27,7 @@ class Areas extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['area', 'clave_area',];
+	protected $fillable = ['area', 'clave_area','activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.

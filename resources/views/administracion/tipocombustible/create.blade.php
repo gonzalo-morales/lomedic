@@ -34,15 +34,6 @@
 					</span>
 				@endif
 			</div>
-			<div class="input-field col s12 m5">
-				<input type="checkbox" id="estatus" name="estatus" checked />
-				<label for="Estatus">Estatus:</label>
-				@if ($errors->has('estatus'))
-					<span class="help-block">
-						<strong>{{ $errors->first('estatus') }}</strong>
-					</span>
-				@endif
-			</div>
 		</div>
 	</div>
 </form>
