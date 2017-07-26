@@ -58,7 +58,7 @@
 			</td>
 			<td>
 				<p>
-					<input type="checkbox" id="activo" name="activo" disabled checked="{{ $correo->activo}}">
+					<input type="checkbox" id="activo" name="activo" disabled @if($correo->activo) checked="{{ $correo->activo}}"@endif>
 					<label for="activo"></label>
 				</p>
 			</td>

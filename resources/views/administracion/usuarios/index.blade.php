@@ -43,7 +43,11 @@
                 <tr>
                     <td>{{ $usuario->usuario }}</td>
                     <td>{{ $usuario->nombre_corto }}</td>
-                    <td>{{ $usuario->activo }}</td>
+                    <td>
+                        <input type="checkbox" id="activo" name="activo" disabled @if($usuario->activo) checked="{{ $usuario->activo}}"@endif>
+                        <label for="activo"></label>
+                    </td>
+
                     <td class="width-auto">
                         <a href="{{  companyRoute('show', ['id'=> $usuario->id_usuario]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
                         <a href="{{ companyRoute('edit', ['id'=> $usuario->id_usuario]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
