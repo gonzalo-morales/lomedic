@@ -7,6 +7,7 @@ use App\Http\Models\Administracion\Usuarios;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
+use App\Http\Models\Administracion\Empresas;
 use Auth;
 use DB;
 class CorreosController extends Controller
