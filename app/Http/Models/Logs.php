@@ -32,30 +32,9 @@ class Logs extends Model
      */
     public $timestamps = false;
 
-    public static function createLog($table,$created,$company)//Crear un registro en log cuando se agrega un registro a una tabla
+    public static function createLog($table,$company,$id,$accion,$comentario)//Crear un registro en log cuando se agrega un registro a una tabla
     {//Creación de un registro
         Logs::create([
-            'id_log' => '',
-            'tabla' => $table,
-            'fk_id_usuario' => Auth::id(),
-            'fk_id_empresa' => Empresas::where('nombre_comercial',strtoupper($company))->first(['id_empresa'])->id_empresa,
-            'fk_id_accion' =>1,
-            'id_registro' => $created,
-            'fecha_hora' => DB::raw('now()'),
-            'comentario' => 'Registro insertado',
-            'ip_cliente' => $_SERVER['REMOTE_ADDR'],
-            'ip_servidor' => $_SERVER['SERVER_ADDR'],
-            'dominio_servidor' => $_SERVER['SERVER_NAME']
-        ]);
-    }
-    public static function editLog($table,$company,$id,$accion,$comentario)//Crear un registro en log cuando se modifica un registro a una tabla
-    {//Editar, eliminar, mostrar e index
-
-
-
-
-        Logs::create([
-            'id_log' => '',
             'tabla' => $table,
             'fk_id_usuario' => Auth::id(),
             'fk_id_empresa' => Empresas::where('nombre_comercial',strtoupper($company))->first(['id_empresa'])->id_empresa,
