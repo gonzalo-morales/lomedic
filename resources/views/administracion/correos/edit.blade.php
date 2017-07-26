@@ -38,11 +38,7 @@
 				<div class="input-field col s3">
 					<select name="fk_id_usuario" id="fk_id_usuario" class="validate">
 						@foreach($users as $usuario)
-							@if($usuario->id_usuario = $data->fk_id_usuario)
-								<option selected value="{{$data->fk_id_usuario}}">{{$usuario->usuario}}</option>
-								@else
-								<option value="{{$data->fk_id_usuario}}">{{$usuario->usuario}}</option>
-							@endif
+							<option {{$usuario->id_usuario == $data->fk_id_usuario ? ' selected ' : ''}} value="{{$usuario->id_usuario}}">{{$usuario->usuario}}</option>
 						@endforeach
 					</select>
 					<label for="fk_id_usuario">Usuario</label>
@@ -54,7 +50,9 @@
 				</div>
 				<div class="input-field col s3">
 					<select name="fk_id_empresa" id="fk_id_empresa" class="validate">
-
+						@foreach($companies as $empresa)
+							<option {{$empresa->id_empresa == $data->fk_id_empresa ? ' selected ' : ''}} value="{{$empresa->id_empresa}}">{{$empresa->nombre_comercial}}</option>
+						@endforeach
 					</select>
 					<label for="fk_id_empresa">Empresa</label>
 					@if ($errors->has('fk_id_empresa'))
@@ -68,7 +66,7 @@
 				<div class="col s2">
 					<p>
 						<input type="hidden" name="activo" value="0">
-						<input type="checkbox" id="activo" name="activo" checked="{{ $data->activo}}">
+						<input type="checkbox" id="activo" name="activo" {{$data->activo ? 'checked':''}}>
 						<label for="activo">Activo</label>
 					</p>
 				</div>
