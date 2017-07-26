@@ -67,6 +67,7 @@
 			<div class="row">
 				<div class="col s2">
 					<p>
+						<input type="hidden" name="activo" value="0">
 						<input type="checkbox" id="activo" name="activo" checked="{{ $data->activo}}">
 						<label for="activo">Activo</label>
 					</p>

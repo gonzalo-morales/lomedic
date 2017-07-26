@@ -141,7 +141,7 @@ class BancosController extends Controller
         if($entity->save())
         {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
         else
-        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al editar');}
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
 
 		# Redirigimos a index
         return redirect(companyRoute('index'));

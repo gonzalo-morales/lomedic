@@ -49,6 +49,4 @@ class Empresas extends Model
 	{
 		return $this->belongsToMany('App\Http\Models\Modulos', 'ges_det_modulo_empresa', 'fk_id_empresa', 'fk_id_modulo');
 	}
-
-
 }
