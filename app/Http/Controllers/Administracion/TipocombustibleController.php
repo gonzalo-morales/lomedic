@@ -35,7 +35,7 @@ class TipocombustibleController extends Controller
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
-			'data' => $this->entity->all(),
+			'data' => $this->entity->all()->where('eliminar',0),
 		]);
 	}
 
@@ -137,12 +137,13 @@ class TipocombustibleController extends Controller
 	{
 		$entity = $this->entity->findOrFail($id);
         $entity->eliminar='t';
+
         if($entity->save())
         {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
         else
         {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
 
 		# Redirigimos a index
-        return redirect(companyRoute('index'));
+        //return redirect(companyRoute('index'));
 	}
 }
