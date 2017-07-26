@@ -10,7 +10,6 @@ use App\Http\Models\Logs;
 
 class BancosController extends Controller
 {
-
 	/**
 	 * Create a new controller instance.
 	 *
@@ -29,7 +28,7 @@ class BancosController extends Controller
 	 */
 	public function index($company)
 	{
-        Logs::editLog($this->entity->getTable(),$company,null,'index',null);
+        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
 
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
@@ -65,8 +64,10 @@ class BancosController extends Controller
         //$this->validate($request, $this->entity->rules);
 
         $created = $this->entity->create($request->all());
-
-        Logs::createLog($this->entity->getTable(),$created->id_banco,$company);
+        if($created)
+        {Logs::createLog($this->entity->getTable(),$company,$created->id_banco,'crear','Registro insertado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 
 		# Redirigimos a index
         return redirect(companyRoute('index'));
@@ -80,7 +81,7 @@ class BancosController extends Controller
 	 */
 	public function show($company, $id)
 	{
-        Logs::editLog($this->entity->getTable(),$company,$id,'ver',null);
+        Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
 
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
@@ -118,15 +119,10 @@ class BancosController extends Controller
 
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
-		$entity->save();
-        Logs::editLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');
-//		Logs::create([
-//			'table' => $this->entity->getTable();
-//			'fk_id_usuario' => Auth::user()
-//			'acction' =>
-//			'table' =>
-//		])
-
+		if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
 
 		# Redirigimos a index
         return redirect(companyRoute('index'));
@@ -142,9 +138,10 @@ class BancosController extends Controller
 	{
 		$entity = $this->entity->findOrFail($id);
         $entity->eliminar='t';
-        $entity->save();
-//		$entity->delete();
-        Logs::editLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al editar');}
 
 		# Redirigimos a index
         return redirect(companyRoute('index'));

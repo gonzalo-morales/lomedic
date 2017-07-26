@@ -39,10 +39,6 @@ class Empresas extends Model
 	 * The validation rules
 	 * @var array
 	 */
-	// public $rules = [
-	//     'razon_social' => 'required',
-	//     'banco' => 'required',
-	// ];
 
 	/**
 	 * Los modulos que relacionan a la empresa.
