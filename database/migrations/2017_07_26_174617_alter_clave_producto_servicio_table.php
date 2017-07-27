@@ -16,10 +16,6 @@ class AlterClaveProductoServicioTable extends Migration
         Schema::connection('corporativo')
             ->rename('sat_cat_clave_producto_servicio', 'sat_cat_claves_productos_servicios');
 
-        Schema::connection('corporativo')
-            ->table('sat_cat_clave_producto_servicio', function (Blueprint $table) {
-            //
-        });
     }
 
     /**
@@ -30,8 +26,7 @@ class AlterClaveProductoServicioTable extends Migration
     public function down()
     {
         Schema::connection('corporativo')
-            ->table('sat_cat_clave_producto_servicio', function (Blueprint $table) {
-            //
-        });
+            ->rename('sat_cat_clave_productos_servicios', 'sat_cat_claves_producto_servicio');
+
     }
 }
