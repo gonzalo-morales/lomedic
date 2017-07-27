@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVehiculoMarcaTable extends Migration
+class CreateSatFormasPagoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,13 @@ class CreateVehiculoMarcaTable extends Migration
     public function up()
     {
         Schema::connection('corporativo')
-            ->create('gen_cat_vehiculos_marcas', function (Blueprint $table) {
-            $table->increments('id_marca');
-            $table->string('marca');
-            $table->boolean('activo')->default('true');
-            $table->boolean('eliminar')->default('false');
+            ->create('sat_cat_formas_pago', function (Blueprint $table) {
+            $table->increments('id_forma_pago');
+            $table->string('forma_pago',3);
+            $table->string('descripcion');
+            $table->boolean('activo')->default(true);
+            $table->boolean('eliminar')->default(false);
+
         });
     }
 
@@ -30,6 +32,6 @@ class CreateVehiculoMarcaTable extends Migration
     public function down()
     {
         Schema::connection('corporativo')
-            ->dropIfExists('gen_cat_vehiculo_marca');
+            ->dropIfExists('sat_cat_formas_pago');
     }
 }

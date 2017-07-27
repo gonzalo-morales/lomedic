@@ -18,9 +18,8 @@ class CreateUnidadesMedidasTable extends Migration
             ->create('gen_cat_unidades_medidas', function (Blueprint $table) {
                 $table->increments('id_unidad_medida');
                 $table->string('nombre')->comment('Nombre de la unidad medida')->nullable();
-                $table->boolean('activo')->default(false);
+                $table->boolean('activo')->default(true);
                 $table->boolean('eliminar')->default(false);
-
             });
 
     }
