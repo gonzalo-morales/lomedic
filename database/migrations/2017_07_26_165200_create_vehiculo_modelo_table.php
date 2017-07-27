@@ -14,13 +14,13 @@ class CreateVehiculoModeloTable extends Migration
     public function up()
     {
         Schema::connection('corporativo')
-            ->create('gen_cat_vehiculo_modelo', function (Blueprint $table) {
+            ->create('gen_cat_vehiculos_modelos', function (Blueprint $table) {
                 $table->increments('id_modelo');
                 $table->string('modelo');
                 $table->integer('fk_id_marca');
                 $table->boolean('activo')->default('true');
                 $table->boolean('eliminar')->default('false');
-                $table->foreign('fk_id_marca')->references('id_marca')->on('gen_cat_vehiculo_marca')
+                $table->foreign('fk_id_marca')->references('id_marca')->on('gen_cat_vehiculos_marcas')
                     ->onUpdate('restrict')->onDelete('restrict');
         });
     }
@@ -33,6 +33,6 @@ class CreateVehiculoModeloTable extends Migration
     public function down()
     {
         Schema::connection('corporativo')
-            ->dropIfExists('gen_cat_vehiculo_modelo');
+            ->dropIfExists('gen_cat_vehiculos_modelos');
     }
 }
