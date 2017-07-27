@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
+use App\Http\Models\Logs;
 class PerfilesController extends Controller
 {
     /**
@@ -34,12 +35,15 @@ class PerfilesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($company)
     {
+
+        Logs::createLog($this->entity->getTable(),$company,null,'index','index');
+
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
-            'data' => $this->entity->all()->where('eliminar', '=','0'),
             'company' => $this->company,
+            'data' => $this->entity->all()->where('eliminar', '=',false),
         ]);
     }
 
@@ -65,30 +69,20 @@ class PerfilesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,$company)
     {
-
-//        dd( $request->all() );
-
         # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
+        //$this->validate($request, $this->entity->rules);
 
-        $this->entity->fill($request->all());
-        $this->entity->fk_id_usuario_crea = Auth::id();
-        $this->entity->save();
+        $created = $this->entity->create($request->all());
+        if($created)
+        {Logs::createLog($this->entity->getTable(),$company,$created->id_banco,'crear','Registro insertado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 
-        $this->entity->usuarios()->sync($request->usuarios);
-
-
-        //        $created = $this->entity->create($request->all());
-
-//        $created = $this->entity->create($request->all());
-
-
-        /*$request->input('nombre')*/
 
         # Redirigimos a index
-        return redirect()->route("$this->entity_name.index",['company' => $this->company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+        return redirect(companyRoute('index'));
     }
 
     /**
@@ -99,6 +93,8 @@ class PerfilesController extends Controller
      */
     public function show($company,$id)
     {
+        Logs::createLog($this->entity->getTable(),$company,$id,'ver','Registro visto');
+
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'data' => $this->entity->findOrFail($id),
@@ -114,9 +110,8 @@ class PerfilesController extends Controller
      * @param  integer $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($company,$id)
+    public function edit($company, $id)
     {
-        //dd($this->entity->find($id)->usuarios);
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'data' => $this->entity->findOrFail($id),
@@ -138,19 +133,16 @@ class PerfilesController extends Controller
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
 
-//		$created = $this->entity->create($request->all());
 
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
-        $entity->fk_id_usuario_actualiza = Auth::id();//Usuario que actualiza el registro
-//        $entity->fecha_actualiza = DB::raw('now()');//Fecha y hora de la actualización
-        $entity->save();
-
-
-        /*$request->input('nombre')*/
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
 
         # Redirigimos a index
-        return redirect()->route("$this->entity_name.index",['company' => $this->company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
+        return redirect(companyRoute('index'));
     }
 
     /**
@@ -161,16 +153,15 @@ class PerfilesController extends Controller
      */
     public function destroy($company,$id)
     {
-        echo "Destroy";
-        /*$entity = $this->entity->findOrFail($id);
-        $entity->delete();*/
         $entity = $this->entity->findOrFail($id);
-//        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
-//        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
         $entity->eliminar='t';
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
         $entity->save();
 
         # Redirigimos a index
-        return redirect()->route("$this->entity_name.index",['company' => $this->company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
+        return redirect(companyRoute('index'));
     }
 }

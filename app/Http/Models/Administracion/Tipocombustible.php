@@ -27,7 +27,7 @@ class Tipocombustible extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['combustible', 'estatus',];
+	protected $fillable = ['combustible', 'activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.

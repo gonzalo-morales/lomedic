@@ -7,6 +7,8 @@ use App\Http\Models\Administracion\Usuarios;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
+use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Logs;
 use Auth;
 use DB;
 class CorreosController extends Controller
@@ -22,6 +24,7 @@ class CorreosController extends Controller
         $this->entity_name = strtolower(class_basename($entity));
         $this->users = Usuarios::all();
         $this->company = request()->company;
+        $this->companies = Empresas::all();
     }
 
     /**
@@ -31,13 +34,16 @@ class CorreosController extends Controller
      */
 
 
-    public function index()
+    public function index($company)
     {
+        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
+
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'data' => $this->entity->all()->where('eliminar', '=','0'),
             'users' => $this->users,
-            'company' => $this->company
+            'company' => $this->company,
+            'companies' => $this->companies
         ]);
     }
 
@@ -51,7 +57,8 @@ class CorreosController extends Controller
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'users' => $this->users,
-            'company' => $this->company
+            'company' => $this->company,
+            'companies' => $this->companies
         ]);
     }
 
@@ -61,7 +68,7 @@ class CorreosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,$company)
     {
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
@@ -69,14 +76,14 @@ class CorreosController extends Controller
 //		$created = $this->entity->create($request->all());
 
         $this->entity->fill($request->all());
-        $this->entity->fk_id_usuario_crea = Auth::id();
-        $this->entity->save();
 
-
-        /*$request->input('nombre')*/
+        if($this->entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$this->entity->id_correo,'crear','Registro insertado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 
         # Redirigimos a index
-        return redirect()->route("$this->entity_name.index",['company' => $this->company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+        return redirect(companyRoute('index'));
     }
 
     /**
@@ -88,12 +95,14 @@ class CorreosController extends Controller
     public function show($company,$id)
     {
         $fk_id_usuario = $this->entity->findOrFail($id)->fk_id_usuario;
+        $fk_id_empresa = $this->entity->findOrFail($id)->fk_id_empresa;
 
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'data' => $this->entity->findOrFail($id),
             'user' => $this->users->find($fk_id_usuario)->usuario,
-            'company' => $company
+            'empresa' => $this->companies->find($fk_id_empresa)->nombre_comercial,
+            'company' => $company,
         ]);
     }
 
@@ -109,8 +118,8 @@ class CorreosController extends Controller
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'data' => $this->entity->findOrFail($id),
-            'user' => $this->users->find($fk_id_usuario)->usuario,
             'users' => $this->users,
+            'companies' => $this->companies,
             'company' => $company,
         ]);
     }
@@ -127,16 +136,15 @@ class CorreosController extends Controller
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
 
-//		$created = $this->entity->create($request->all());
-
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
-//        $entity->fk_id_usuario_actualiza = Auth::id();//Usuario que actualiza el registro
-        //$entity->fecha_actualiza = DB::raw('now()');//Fecha y hora de la actualización
-        $entity->save();
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
         /*$request->input('nombre')*/
         # Redirigimos a index
-        return redirect()->route("$this->entity_name.index",['company' => $this->company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
+        return redirect(companyRoute('index'));
     }
 
     /**
@@ -147,16 +155,16 @@ class CorreosController extends Controller
      */
     public function destroy($company,$id)
     {
-        echo "Destroy";
         /*$entity = $this->entity->findOrFail($id);
         $entity->delete();*/
         $entity = $this->entity->findOrFail($id);
-        $entity->fk_id_usuario_elimina = Auth::id();//Usuario que elimina el registro
-        $entity->fecha_elimina = DB::raw('now()');//Fecha y hora de la eliminación
         $entity->eliminar='t';
-        $entity->save();
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
 
         # Redirigimos a index
-        return redirect()->route("$this->entity_name.index",['company' => $this->company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
+        return redirect(companyRoute('index'));
     }
 }
