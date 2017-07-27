@@ -55,14 +55,13 @@
 							<strong>{{ $errors->first('password') }}</strong>
 						</span>
 						@endif
-					-->
-					</div>
+					</div>-->
 				</div>
 				<div class="row">
 					<div class="col s12">
 						<p>
 							<input type="hidden" name="activo" value="0">
-							<input type="checkbox" id="activo" name="activo" checked="{{ $data->activo }}"/>
+							<input type="checkbox" id="activo" name="activo" {{$data->activo ? 'checked':''}}/>
 							<label for="activo">¿Activo?</label>
 						</p>
 						@if ($errors->has('activo'))

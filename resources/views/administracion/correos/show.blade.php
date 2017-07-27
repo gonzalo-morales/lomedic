@@ -32,7 +32,11 @@
 			<input type="text" name="correo" id="correo" class="validate" readonly value="{{ $data->correo}}">
 			<label for="correo">Correo</label>
 		</div>
-		<div class="input-field col s6">
+		<div class="input-field col s4">
+			<input type="text" name="empresa" id="empresa" class="validate" readonly value="{{ $empresa}}">
+			<label for="empresa">Empresa</label>
+		</div>
+		<div class="input-field col s4">
 			<input type="text" name="usuario" id="usuario" class="validate" readonly value="{{ $user}}">
 			<label for="usuario">Usuario</label>
 		</div>

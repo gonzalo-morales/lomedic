@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class Perfiles extends Model
 {
-    const CREATED_AT = 'fecha_crea';
-    const UPDATED_AT = 'fecha_actualiza';
-
     /**
      * The table associated with the model.
      *
@@ -35,7 +32,8 @@ class Perfiles extends Model
      *
      * @var bool
      */
-    public $timestamps = true;
+
+    public $timestamps =  false;
 
     /**
      * The validation rules
@@ -44,16 +42,6 @@ class Perfiles extends Model
     public $rules = [
         'nombre_perfil' => 'required',
     ];
-
-    public function modulos()
-    {
-        return $this->hasMany('app\Http\Models\Administracion\Modulos');
-    }
-
-    public function logs()
-    {
-        return $this->belongsToMany('app\Http\Models\Logs');
-    }
 
     /**
      * Obtenemos usuarios relacionados al perfil
@@ -71,6 +59,5 @@ class Perfiles extends Model
     {
         return $this->belongsToMany('App\Http\Models\Administracion\Permisos', 'ges_det_permisos_perfiles', 'fk_id_perfil', 'fk_id_permiso');
     }
-
 
 }
