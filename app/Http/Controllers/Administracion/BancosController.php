@@ -48,7 +48,6 @@ class BancosController extends Controller
 	 */
 	public function create($company)
 	{
-//        dump(Empresas::where('nombre_comercial', strtoupper($company))->get());
 
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
@@ -65,7 +64,7 @@ class BancosController extends Controller
 	public function store(Request $request, $company)
     {
         # Validamos request, si falla regresamos pagina
-        //$this->validate($request, $this->entity->rules);
+        $this->validate($request, $this->entity->rules);
 
         $created = $this->entity->create($request->all());
         if($created)
@@ -145,7 +144,7 @@ class BancosController extends Controller
         if($entity->save())
         {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
         else
-        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al editar');}
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
 
 		# Redirigimos a index
         return redirect(companyRoute('index'));

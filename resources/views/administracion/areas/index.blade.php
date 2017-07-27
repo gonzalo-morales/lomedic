@@ -34,6 +34,7 @@
 			<tr>
 				<th>Area</th>
 				<th>Clave</th>
+				<th>Activo</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -42,6 +43,13 @@
 		<tr>
 			<td>{{ $row->area }}</td>
 			<td>{{ $row->clave_area }}</td>
+			<td>
+				<p>
+					<input type="hidden" name="activo" value="0">
+					<input type="checkbox" id="activo" name="activo" disabled @if($row->activo) checked="{{ $row->activo}}"@endif>
+					<label for="activo"></label>
+				</p>
+			</td>
 			<td class="width-auto">
 				<a href="{{ companyRoute('show', ['id' => $row->id_area]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
 				<a href="{{ companyRoute('edit', ['id' => $row->id_area]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>

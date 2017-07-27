@@ -7,6 +7,7 @@ use App\Http\Models\Administracion\Diagnosticos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
+use App\Http\Models\Logs;
 
 class DiagnosticosController extends Controller
 {
@@ -29,10 +30,12 @@ class DiagnosticosController extends Controller
 	 */
 	public function index($company)
 	{
-		return view(Route::currentRouteName(), [
+        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
+
+        return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
-		    'data' => $this->entity->all(), //->paginate(30),
+		    'data' => $this->entity->all()->where('eliminar','=',false), //->paginate(30),
 		]);
 	}
 
@@ -58,12 +61,18 @@ class DiagnosticosController extends Controller
 	public function store(Request $request, $company)
 	{
 		# Validamos request, si falla regresamos pagina
-		$this->validate($request, $this->entity->rules);
+		//$this->validate($request, $this->entity->rules);
 
 		$created = $this->entity->create($request->all());
+        if($created)
+        {Logs::createLog($this->entity->getTable(),$company,$created->id_diagnostico,'crear','Registro insertado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 
+        //Logs::createLog($this->entity->getTable(),$created->id_banco,$company);
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+		//return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
+	    return redirect(companyRoute('index'));
 	}
 
 	/**
@@ -74,7 +83,9 @@ class DiagnosticosController extends Controller
 	 */
 	public function show($company, $id)
 	{
-		return view (Route::currentRouteName(), [
+        Logs::createLog($this->entity->getTable(),$company,$id,'ver','Registro visto');
+
+        return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
 			'data' => $this->entity->findOrFail($id),
@@ -110,10 +121,14 @@ class DiagnosticosController extends Controller
 
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
-		$entity->save();
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
+
 
 		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', actualizado con exito.');
+	    return redirect(companyRoute('index'));
 	}
 
 	/**
@@ -124,10 +139,14 @@ class DiagnosticosController extends Controller
 	 */
 	public function destroy($company, $id)
 	{
-		$entity = $this->entity->findOrFail($id);
-		$entity->delete();
+        $entity = $this->entity->findOrFail($id);
+        $entity->eliminar='t';
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al editar');}
 
-		# Redirigimos a index
-		return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', borrado con exito.');
+        # Redirigimos a index
+	    return redirect(companyRoute('index'));
 	}
 }

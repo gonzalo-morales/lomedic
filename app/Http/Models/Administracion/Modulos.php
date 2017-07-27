@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Modulos extends Model
 {
@@ -27,7 +26,7 @@ class Modulos extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre', 'descripcion', 'url', 'icono', 'accion_menu', 'accion_barra', 'accion_tabla', 'modulo_seguro'];
+	protected $fillable = ['nombre', 'descripcion', 'url', 'icono', 'accion_menu', 'accion_barra', 'accion_tabla', 'modulo_seguro','activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -56,12 +55,6 @@ class Modulos extends Model
 	public function empresas()
 	{
 		return $this->belongsToMany('App\Http\Models\Administracion\Empresas', 'ges_det_modulos_empresas', 'fk_id_modulo', 'fk_id_empresa');
-	}
-
-
-	public function perfiles()
-	{
-		return $this->belongsToMany('App\Http\Models\Perfiles','ges_det_modulo_perfil','fk_id_modulo','fk_id_perfil');
 	}
 
 	/**
