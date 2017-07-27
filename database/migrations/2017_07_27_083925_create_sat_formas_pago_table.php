@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClaveProductoServicioTable extends Migration
+class CreateSatFormasPagoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,13 @@ class CreateClaveProductoServicioTable extends Migration
     public function up()
     {
         Schema::connection('corporativo')
-            ->create('sat_cat_claves_producto_servicio', function (Blueprint $table) {
-            $table->increments('id_clave_producto_servicio');
-            $table->string('clave_producto_servicio');
+            ->create('sat_cat_formas_pago', function (Blueprint $table) {
+            $table->increments('id_forma_pago');
+            $table->string('forma_pago',3);
             $table->string('descripcion');
-            $table->string('vigencia')->nullable();
-            $table->boolean('activo')->default('true');
-            $table->boolean('eliminar')->default('false');
+            $table->boolean('activo')->default(true);
+            $table->boolean('eliminar')->default(false);
+
         });
     }
 
@@ -32,6 +32,6 @@ class CreateClaveProductoServicioTable extends Migration
     public function down()
     {
         Schema::connection('corporativo')
-            ->dropIfExists('sat_cat_clave_producto_servicio');
+            ->dropIfExists('sat_cat_formas_pago');
     }
 }
