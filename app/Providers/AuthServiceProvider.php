@@ -2,12 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Models\Administracion\Permisos;
-use App\Http\Models\Administracion\Empresas;
-
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -19,7 +13,8 @@ class AuthServiceProvider extends ServiceProvider
 	 * @var array
 	 */
 	protected $policies = [
-		'App\Model' => 'App\Policies\ModelPolicy',
+		// "App\Model" => "App\Policies\ModelPolicy"
+		// "App\Http\Models\Administracion\Bancos" => "App\Policies\Administracion\BancosPolicy"
 	];
 
 	/**
@@ -27,37 +22,15 @@ class AuthServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function boot(Permisos $permisos, Empresas $empresas)
+	public function boot()
 	{
+		# Agregamos politicas dinamicamente
+		foreach (glob('../app/Policies/*/*Policy.php') as $politica) {
+			$policy = 'App' . str_replace('/', '\\', substr($politica, 6, -4));
+			$model = substr(str_replace('Policies', 'Http\Models', $policy), 0, -6);
+			$this->policies[$model] = $policy;
+		}
+
 		$this->registerPolicies();
-
-
-		// $empresa = $empresas->where('conexion', 'corporativo')->first();
-
-		// if ($empresa) {
-		// 	dump( $empresa->modulos  );
-		// }
-
-
-		// Get the currently authenticated user...
-$user = Auth::user();
-
-
-// Get the currently authenticated user's ID...
-$id = Auth::id();
-
-
-dump( $user, $id );
-
-
-
-
-		// dump( $permisos->all() );
-		// Gate::define('some-permiso', function() {
-		// 	return $algo ? true : false;
-		// });
-
-
-
 	}
 }

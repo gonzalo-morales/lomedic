@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
 
+use Auth;
+
+
 class BancosController extends Controller
 {
 	/**
@@ -28,6 +31,7 @@ class BancosController extends Controller
 	 */
 	public function index($company)
 	{
+		// $this->authorize('view', $this->entity);
         Logs::createLog($this->entity->getTable(),$company,null,'index',null);
 
 		return view(Route::currentRouteName(), [

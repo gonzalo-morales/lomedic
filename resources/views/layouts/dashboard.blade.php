@@ -18,14 +18,16 @@
 	<link type="text/css" rel="stylesheet" href="{{ asset('css/style.css') }}"  media="screen,projection"/>
 	@yield('header-top')
 </head>
-<?php 
+
+<?php
 use App\Menu;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 
 $Menu = New Menu();
-$MainMenu =  $Menu->getMenu();
+// $MainMenu =  $Menu->getMenu();
+$MainMenu =  '';
 
 $Url = URL('/');
 $Usuario = Session::get('usuario');
@@ -101,6 +103,37 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 	</ul><!--/dropdown-->
 				<ul id='main-menu'>
 					<?php echo $MainMenu; ?>
+
+					@foreach($menu as $modulo)
+					<li>
+						@if(!$modulo->modulos()->count())
+						<a class="waves-effect" href="{{ companyRoute($modulo->url) }}">
+							<i class='material-icons'>{{ $modulo->icono }}</i>
+							<span class="menu-text">{{ $modulo->nombre }}</span>
+						</a>
+						@else
+						<ul class="collapsible collapsible-accordion">
+							<li>
+								<a class="collapsible-header">
+									<i class="material-icons">arrow_drop_down</i> {{ $modulo->nombre }}
+								</a>
+								<div class="collapsible-body">
+									<ul>
+										@foreach($modulo->modulos as $submodulo)
+										<li>
+											<a class="collapsible-header waves-effect" href="{{ companyRoute($submodulo->url) }}">
+												<i class='material-icons'>{{ $submodulo->icono }}</i>
+												<span class="menu-text">{{ $submodulo->nombre }}</span>
+											</a>
+										</li>
+										@endforeach
+									</ul>
+								</div>
+							</li>
+					    </ul>
+						@endif
+					</li>
+					@endforeach
 				</ul>
 			</ul><!--/slide-out, principal nav-->
 			<ul id="slide-help" class="side-nav">

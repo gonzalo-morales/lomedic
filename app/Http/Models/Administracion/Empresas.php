@@ -36,19 +36,12 @@ class Empresas extends Model
 	public $timestamps = false;
 
 	/**
-	 * The validation rules
-	 * @var array
+	 * Obtenemos los modulos relacionados a la empresa
+	 * @return array
 	 */
-
-	/**
-	 * Los modulos que relacionan a la empresa.
-	 */
-
-
 	public function modulos()
 	{
-		return $this->belongsToMany('App\Http\Models\Administracion\Modulos', 'ges_det_modulo_empresa', 'fk_id_empresa', 'fk_id_modulo');
+		return $this->belongsToMany('App\Http\Models\Administracion\Modulos', 'ges_det_modulos_empresas', 'fk_id_empresa', 'fk_id_modulo');
 	}
-
 
 }
