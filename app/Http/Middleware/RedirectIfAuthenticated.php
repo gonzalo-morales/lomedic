@@ -6,6 +6,10 @@ use Session;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Administracion\Usuarios;
+
+
 class RedirectIfAuthenticated
 {
     /**
@@ -18,12 +22,12 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        
+        # Si existe session, redirige a empresa default
         if (Auth::guard($guard)->check()) {
-            $request->session()->put('id_usuario', Auth::id());
-            return redirect('/');
+            $usuario = Usuarios::where('id_usuario', Auth::Id())->first();
+            $empresa = Empresas::findOrFail($usuario->fk_id_empresa_default);
+            return redirect("/$empresa->conexion");
         }
-        
         return $next($request);
     }
 }
