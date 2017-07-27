@@ -50,20 +50,36 @@ class Modulos extends Model
 	}
 
 	/**
-	 * Las empresas que relacionan al modulo.
+	 * Obtenemos las empresas relacionadas al modulo
+	 * @return array
 	 */
 	public function empresas()
 	{
-		return $this->belongsToMany('App\Http\Models\Empresas', 'ges_det_modulo_empresa', 'fk_id_modulo', 'fk_id_empresa');
+		return $this->belongsToMany('App\Http\Models\Administracion\Empresas', 'ges_det_modulos_empresas', 'fk_id_modulo', 'fk_id_empresa');
 	}
 
-	public function perfiles()
-    {
-        return $this->belongsToMany('App\Http\Models\Perfiles','ges_det_modulo_perfil','fk_id_modulo','fk_id_perfil');
-    }
 
-    public function  modulos()
-    {
-		return $this->belongsToMany('App\Http\Models\Modulos', 'ges_det_parents', 'fk_id_modulo','fk_id_parent');
-    }
+	public function perfiles()
+	{
+		return $this->belongsToMany('App\Http\Models\Perfiles','ges_det_modulo_perfil','fk_id_modulo','fk_id_perfil');
+	}
+
+	/**
+	 * Obtenemos los modulos hijos
+	 * @return array
+	 */
+	public function  modulos()
+	{
+		return $this->belongsToMany('App\Http\Models\Administracion\Modulos', 'ges_det_modulos', 'fk_id_modulo','fk_id_modulo_hijo');
+	}
+
+	/**
+	 * Obtenemos los permisos relacionados al modulo
+	 * @return array
+	 */
+	public function permisos()
+	{
+		return $this->belongsToMany('App\Http\Models\Administracion\Permisos', 'ges_det_permisos_modulos', 'fk_id_modulo', 'fk_id_permiso');
+	}
+
 }

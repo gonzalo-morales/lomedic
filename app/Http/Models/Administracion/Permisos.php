@@ -44,4 +44,13 @@ class Permisos extends Model
         'descripcion' => 'required',
     ];
 
+    /**
+     * Obtenemos los modulos relacionados a permiso
+     * @return array
+     */
+    public function modulos()
+    {
+        return $this->belongsToMany('App\Http\Models\Administracion\modulos', 'ges_det_permisos_modulos', 'fk_id_permiso', 'fk_id_modulo');
+    }
+
 }

@@ -13,14 +13,14 @@ class CretePerfilPermisoTable extends Migration
      */
     public function up()
     {
-        Schema::connection('corporativo')
-            ->create('perfil_permiso', function (Blueprint $table) {
-            $table->integer('fk_id_perfil');
+        Schema::connection('corporativo')->create('ges_det_permisos_perfiles', function (Blueprint $table) {
             $table->integer('fk_id_permiso');
+            $table->integer('fk_id_perfil');
+
+            $table->foreign('fk_id_permiso')->references('id_permiso')->on('ges_cat_permisos')->
+            onDelete('restrict')->onUpdate('restrict');
 
             $table->foreign('fk_id_perfil')->references('id_perfil')->on('ges_cat_perfiles')->
-            onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('fk_id_permiso')->references('id_permiso')->on('ges_cat_permisos')->
             onDelete('restrict')->onUpdate('restrict');
         });
     }
@@ -32,7 +32,6 @@ class CretePerfilPermisoTable extends Migration
      */
     public function down()
     {
-        Schema::connection('corporativo')
-            ->dropIfExists('perfil_permiso');
+        Schema::connection('corporativo')->dropIfExists('ges_det_permisos_perfiles');
     }
 }

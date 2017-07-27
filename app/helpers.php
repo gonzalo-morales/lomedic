@@ -4,7 +4,7 @@ function companyRoute($action = '', $params = [])
 {
 	# RouteAction actual, ej: HomeController@index
 	// $current_action = class_basename(Route::getCurrentRoute()->getActionName());
-	$current_action = str_replace('App\Http\Controllers\\','',Route::getCurrentRoute()->getActionName());
+	$current_action = str_replace('App\Http\Controllers\\', '', Route::currentRouteAction());
 	#
 	$expected_action = array_map(function($current, $expected) {
 		return $expected === '' ? $current : $expected;

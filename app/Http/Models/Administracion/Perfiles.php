@@ -10,7 +10,6 @@ class Perfiles extends Model
     const CREATED_AT = 'fecha_crea';
     const UPDATED_AT = 'fecha_actualiza';
 
-
     /**
      * The table associated with the model.
      *
@@ -46,10 +45,6 @@ class Perfiles extends Model
         'nombre_perfil' => 'required',
     ];
 
-    public function usuarios(){
-        return $this->belongsToMany('app\Http\Models\Administracion\Usuarios','ges_det_usuario_perfil','fk_id_perfil','fk_id_usuario');
-    }
-
     public function modulos()
     {
         return $this->hasMany('app\Http\Models\Administracion\Modulos');
@@ -59,5 +54,23 @@ class Perfiles extends Model
     {
         return $this->belongsToMany('app\Http\Models\Logs');
     }
+
+    /**
+     * Obtenemos usuarios relacionados al perfil
+     * @return array
+     */
+    public function usuarios(){
+        return $this->belongsToMany('app\Http\Models\Administracion\Usuarios','ges_det_perfiles_usuarios','fk_id_perfil','fk_id_usuario');
+    }
+
+    /**
+     * Obtenemos permisos asignados al perfil
+     * @return array
+     */
+    public function permisos()
+    {
+        return $this->belongsToMany('App\Http\Models\Administracion\Permisos', 'ges_det_permisos_perfiles', 'fk_id_perfil', 'fk_id_permiso');
+    }
+
 
 }
