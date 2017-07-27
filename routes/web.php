@@ -33,5 +33,10 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('usuarios', 'Administracion\UsuariosController');
 		Route::resource('sucursales', 'Administracion\SucursalesController');
 		Route::resource('correos', 'Administracion\CorreosController');
+		Route::resource('municipios', 'Administracion\MunicipiosController');
+		Route::resource('estados', 'Administracion\EstadosController');
+		Route::resource('paises', 'Administracion\PaisesController');
+		Route::resource('metodospago', 'Administracion\MetodosPagoController');
+		Route::resource('parentescos', 'Administracion\ParentescosController');
 	});
 });
