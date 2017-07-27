@@ -22,40 +22,43 @@ class LoginController extends Controller
      | to conveniently provide its functionality to your applications.
      |
      */
-    
+
     use AuthenticatesUsers;
-    
+
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/';
-    
+    protected $redirectTo = '/gome';
+
     public function __construct()
     {
         $this->middleware('guest',['except'=>'logout']);
     }
-    
+
     protected function credentials(Request $request)
     {
         $field = filter_var($request->usuario, FILTER_VALIDATE_EMAIL) ? $this->username() : 'usuario';
-        $request->session()->put('usuario', $request->{$field});
-        
-        $Usuario = Usuarios::where('usuario','=',$request->{$field})->get()->toarray();
-        $idEmpresa = isset($Usuario[0]['fk_id_empresa_default']) ? $Usuario[0]['fk_id_empresa_default'] : 0;
-        
-        $QueryCompany =  Empresas::where('id_empresa','=',$idEmpresa)->get()->toarray();
-        $redirect = isset($QueryCompany[0]['conexion']) ? $QueryCompany[0]['conexion'] : '/';
-        
-        $this->redirectTo = $redirect;
-        
         return [$field => $request->{$field}, 'password' => $request->password, 'activo' => 1,'eliminar'=> 0];
     }
-    
+
     protected function validateLogin(Request $request)
     {
         $field = filter_var($request->usuario, FILTER_VALIDATE_EMAIL) ? $this->username() : 'usuario';
         $this->validate($request, [$field => 'required', 'password' => 'required',]);
     }
+
+    /**
+     * Redirige a usuario una nez iniciada la session
+     * @param  Request $request
+     * @param  Usuarios $usuario
+     * @return rediredt
+     */
+    protected function authenticated(Request $request, $usuario)
+    {
+        $empresa = Empresas::findOrFail($usuario->fk_id_empresa_default);
+        return redirect("/$empresa->conexion");
+    }
+
 }
