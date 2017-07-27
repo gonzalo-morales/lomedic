@@ -30,7 +30,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/gome';
+    protected $redirectTo = '/';
 
     public function __construct()
     {
