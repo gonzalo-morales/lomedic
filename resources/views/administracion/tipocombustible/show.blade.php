@@ -33,11 +33,11 @@
 			@endif
 		</div>
 		<div class="input-field col s12 m7">
-			<input type="checkbox" id="estatus" name="estatus" readonly {{$data->estatus ? 'checked' : ''}} />
-			<label for="Estatus">Estatus:</label>
-			@if ($errors->has('estatus'))
+			<input type="checkbox" id="activo" name="activo" readonly {{$data->activo ? 'checked' : ''}} />
+			<label for="activo">Estatus:</label>
+			@if ($errors->has('activo'))
 				<span class="help-block">
-					<strong>{{ $errors->first('estatus') }}</strong>
+					<strong>{{ $errors->first('activo') }}</strong>
 				</span>
 			@endif
 		</div>

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterAreasTable extends Migration
+class CreateVehiculoMarcaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,11 @@ class AlterAreasTable extends Migration
     public function up()
     {
         Schema::connection('corporativo')
-            ->table('gen_cat_areas', function (Blueprint $table) {
-            $table->boolean('activo')->default('t');
-            $table->boolean('eliminar')->default('f');
+            ->create('gen_cat_vehiculos_marcas', function (Blueprint $table) {
+            $table->increments('id_marca');
+            $table->string('marca');
+            $table->boolean('activo')->default('true');
+            $table->boolean('eliminar')->default('false');
         });
     }
 
@@ -28,9 +30,6 @@ class AlterAreasTable extends Migration
     public function down()
     {
         Schema::connection('corporativo')
-            ->table('gen_cat_areas',function(Blueprint $table){
-            $table->dropColumn('activo');
-            $table->dropColumn('eliminar');
-        });
+            ->dropIfExists('gen_cat_vehiculo_marca');
     }
 }

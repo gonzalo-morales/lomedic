@@ -44,10 +44,11 @@
 		<tr>
 			<td>{{ $correo->correo}}</td>
 			<td>
-				<p>
-					<label for="fk_id_empresa"></label>
-					<input type="text" id="fk_id_empresa" name="fk_id_empresa" disabled checked="{{ $correo->fk_id_empresa}}">
-				</p>
+				@foreach($companies as $empresa)
+					@if($correo->fk_id_empresa==$empresa->id_empresa)
+						{{$empresa->nombre_comercial}}
+					@endif
+				@endforeach
 			</td>
 			<td>
 				@foreach($users as $user)
@@ -63,9 +64,9 @@
 				</p>
 			</td>
 			<td class="width-auto">
-				<a href="{{ companyRoute('show', ['id' => $correo->id_correo]) }}" class="waves-effect waves-light btn "><i class="material-icons">visibility</i></a>
-				<a href="{{ companyRoute('edit', ['id' => $correo->id_correo]) }}" class="waves-effect waves-light btn "><i class="material-icons">mode_edit</i></a>
-				<a href="#" class="waves-effect waves-light btn" onclick="event.preventDefault(); document.getElementById('delete-form{{$correo->id_correo}}').submit();"><i class="material-icons">delete</i></a>
+				<a href="{{ companyRoute('show', ['id' => $correo->id_correo]) }}" class="waves-effect waves-light btn btn-flat no-padding "><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $correo->id_correo]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form{{$correo->id_correo}}').submit();"><i class="material-icons">delete</i></a>
 				<form id="delete-form{{$correo->id_correo}}" action="{{ companyRoute('destroy', ['id' => $correo->id_correo]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}

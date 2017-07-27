@@ -26,7 +26,7 @@ class Bancos extends ModelCompany
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['razon_social', 'banco', 'rfc', 'nacional'];
+	protected $fillable = ['razon_social', 'banco', 'rfc', 'nacional','activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.

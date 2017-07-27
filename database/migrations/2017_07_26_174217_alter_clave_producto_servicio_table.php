@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterAreasTable extends Migration
+class AlterClaveProductoServicioTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,11 @@ class AlterAreasTable extends Migration
     public function up()
     {
         Schema::connection('corporativo')
-            ->table('gen_cat_areas', function (Blueprint $table) {
-            $table->boolean('activo')->default('t');
-            $table->boolean('eliminar')->default('f');
+            ->rename('sat_cat_clave_producto_servicio', 'sat_cat_claves_productos_servicios');
+
+        Schema::connection('corporativo')
+            ->table('sat_cat_clave_producto_servicio', function (Blueprint $table) {
+            //
         });
     }
 
@@ -28,9 +30,8 @@ class AlterAreasTable extends Migration
     public function down()
     {
         Schema::connection('corporativo')
-            ->table('gen_cat_areas',function(Blueprint $table){
-            $table->dropColumn('activo');
-            $table->dropColumn('eliminar');
+            ->table('sat_cat_clave_producto_servicio', function (Blueprint $table) {
+            //
         });
     }
 }

@@ -26,7 +26,7 @@
 		<div class="row">
 			<div class="input-field col s12 m5">
 				<input type="text" name="combustible" id="combustible" class="validate" value="{{ $data->combustible }}">
-				<label for="Combustible">Combustible:</label>
+				<label for="combustible">Combustible:</label>
 				@if ($errors->has('combustible'))
 					<span class="help-block">
 						<strong>{{ $errors->first('combustible') }}</strong>
@@ -34,11 +34,12 @@
 				@endif
 			</div>
 			<div class="input-field col s12 m7">
-				<input type="checkbox" id="estatus" name="estatus" {{$data->estatus ? 'checked' : ''}} />
-				<label for="Estatus">Estatus:</label>
-				@if ($errors->has('estatus'))
+				<input type="hidden" name="activo" value="0">
+				<input type="checkbox" id="activo" name="activo" {{$data->activo ? 'checked' : ''}} />
+				<label for="activo">Estatus:</label>
+				@if ($errors->has('activo'))
 					<span class="help-block">
-						<strong>{{ $errors->first('estatus') }}</strong>
+						<strong>{{ $errors->first('activo') }}</strong>
 					</span>
 				@endif
 			</div>

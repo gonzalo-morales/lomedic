@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterAreasTable extends Migration
+class CreateCadenaPagoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,12 @@ class AlterAreasTable extends Migration
     public function up()
     {
         Schema::connection('corporativo')
-            ->table('gen_cat_areas', function (Blueprint $table) {
-            $table->boolean('activo')->default('t');
-            $table->boolean('eliminar')->default('f');
+        ->create('sat_cat_cadenas_pagos', function (Blueprint $table) {
+            $table->increments('id_cadena_pago');
+            $table->string('cadena_pago');
+            $table->string('descripcion');
+            $table->boolean('activo')->default('true');
+            $table->boolean('eliminar')->default('false');
         });
     }
 
@@ -28,9 +31,6 @@ class AlterAreasTable extends Migration
     public function down()
     {
         Schema::connection('corporativo')
-            ->table('gen_cat_areas',function(Blueprint $table){
-            $table->dropColumn('activo');
-            $table->dropColumn('eliminar');
-        });
+            ->dropIfExists('sat_cat_cadenas_pagos');
     }
 }
