@@ -21,7 +21,7 @@ class EmpleadosController extends Controller
     public function index($company)
     {
         // $this->authorize('view', $this->entity);
-        //Logs::createLog($this->entity->getTable(),$company,null,'index',null);
+        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
 
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
@@ -56,13 +56,16 @@ class EmpleadosController extends Controller
 
     public function show($company, $id)
     {
-        //Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
+        Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
+
 
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
             'companies' => $this->companies,
+            'empresa_alta_imss' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_alta_imss)->first(),
+            'empresa_laboral' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_laboral)->first()
         ]);
     }
 
@@ -80,7 +83,6 @@ class EmpleadosController extends Controller
     {
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
-
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
         if($entity->save())
