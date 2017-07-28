@@ -41,7 +41,27 @@ $(document).ready(function(){
     canceltext: 'CANCELAR', // Text for cancel-button
     autoclose: false, // automatic close timepicker
     ampmclickable: true, // make AM PM clickable
-    aftershow: function(){} //Function for after opening timepicker  
+    aftershow: function(){} //Function for after opening timepicker
+  });
+  $('#fecha_nacimiento.datepicker').pickadate({
+      //Cambiamos idiomas a español
+      labelMonthNext: 'Siguiente mes',
+      labelMonthPrev: 'Regresar mes',
+      labelMonthSelect: 'Selecciona el mes',
+      labelYearSelect: 'Selecciona el año',
+      monthsFull: [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ],
+      monthsShort: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
+      weekdaysFull: [ 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado' ],
+      weekdaysShort: [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab' ],
+      weekdaysLetter: [ 'D', 'L', 'M', 'M', 'J', 'V', 'S' ],
+      today: 'Hoy',
+      clear: 'Limpiar',
+      close: 'Aceptar',
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 100, // Creates a dropdown of 15 years to control year
+      min: new Date(1960,1,1),
+      max: true,
+      format: 'yyyy/mm/dd'
   });
   $('.datepicker').pickadate({
     //Cambiamos idiomas a español
@@ -58,7 +78,7 @@ $(document).ready(function(){
     clear: 'Limpiar',
     close: 'Aceptar',
     selectMonths: true, // Creates a dropdown to control month
-    selectYears: 70 // Creates a dropdown of 15 years to control year
+    selectYears: 15 // Creates a dropdown of 15 years to control year
   });
   $('input.autocomplete').autocomplete({ //Iniciamos el autocomplete
     data: { //agregamos data de ejemplo, el null es para decir que no llevará una imagen o ícono a un lado del nombre...

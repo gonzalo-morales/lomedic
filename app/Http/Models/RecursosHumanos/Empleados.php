@@ -25,8 +25,8 @@ class Empleados extends Model
      * @var array
      */
     protected $fillable = ['nombre', 'apellido_paterno', 'apellido_materno', 'curp',
-        'rfc','fecha_nacimiento','correo_personal','telefono','celular','fk_id_empresa_alta_imms',
-        'numero_imms','fk_id_empresa_laboral','numero_infonavit','factor_documento'];
+        'rfc','fecha_nacimiento','correo_personal','telefono','celular','fk_id_empresa_alta_imss',
+        'numero_imss','fk_id_empresa_laboral','numero_infonavit','factor_documento'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -40,13 +40,15 @@ class Empleados extends Model
      * @var array
      */
     public $rules = [
-        'nombre' => 'required,alpha',
-        'apellido_paterno' => 'required,alpha',
-        'curp' => 'required,alpha_num',
-        'rfc' => 'required,alpha_nu,',
+
+        'nombre' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+        'apellido_paterno' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+        'apellido_materno' => 'regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+        'curp' => 'required|alpha_num',
+        'rfc' => 'required|alpha_num',
         'fecha_nacimiento' => 'required',
         'correo_personal' => 'email',
-        'numero_imms' => 'required,numeric',
+        'numero_imss' => 'numeric',
     ];
 
     public function usuario()

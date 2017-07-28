@@ -41,6 +41,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('paises', 'Administracion\PaisesController');
 		Route::resource('metodospago', 'Administracion\MetodosPagoController');
 		Route::resource('parentescos', 'Administracion\ParentescosController');
+        Route::resource('sustanciasactivas', 'Administracion\SustanciasActivasController');
 	});
 
     Route::group(['prefix' => 'recursos_humanos', 'as' => 'recursos_humanos.', 'middleware' => ['auth','share']], function(){

@@ -175,15 +175,20 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 		</div><!--/Modal de ayuda-->
 
 	<!--Import jQuery before materialize.js-->
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 	<script type="text/javascript" src="{{ asset('js/materialize.min.js') }}"></script>
 
 	<!--CDN chartsJS, esta versión viene con http://momentjs.com/ incluído-->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
-	<script type="text/javascript" src="{{ asset('js/InitiateComponents.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/picker.date.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/picker.time.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/InitiateComponents.js') }}"></script>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+<script type="text/javascript" src="{{ asset('js/InitiateComponents.js') }}"></script>
+
+
 
 	@yield('header-bottom')
 
