@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bancos extends Model
 {
