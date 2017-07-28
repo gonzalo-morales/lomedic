@@ -45,5 +45,7 @@ Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'recursos_humanos', 'as' => 'recursos_humanos.', 'middleware' => ['auth','share']], function(){
        Route::resource('empleados', 'RecursosHumanos\EmpleadosController');
+       Route::resource('puestos', 'RecursosHumanos\PuestosController');
+       Route::resource('despartamentos', 'RecursosHumanos\DepartamentosController');
     });
 });
