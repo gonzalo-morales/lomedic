@@ -58,7 +58,7 @@ $(document).ready(function(){
     clear: 'Limpiar',
     close: 'Aceptar',
     selectMonths: true, // Creates a dropdown to control month
-    selectYears: 15 // Creates a dropdown of 15 years to control year
+    selectYears: 70 // Creates a dropdown of 15 years to control year
   });
   $('input.autocomplete').autocomplete({ //Iniciamos el autocomplete
     data: { //agregamos data de ejemplo, el null es para decir que no llevará una imagen o ícono a un lado del nombre...

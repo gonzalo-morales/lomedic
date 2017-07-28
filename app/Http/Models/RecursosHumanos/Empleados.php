@@ -45,6 +45,7 @@ class Empleados extends Model
         'curp' => 'required,alpha_num',
         'rfc' => 'required,alpha_nu,',
         'fecha_nacimiento' => 'required',
+        'correo_personal' => 'email',
         'numero_imms' => 'required,numeric',
     ];
 
