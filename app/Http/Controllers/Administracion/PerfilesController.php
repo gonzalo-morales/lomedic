@@ -76,7 +76,7 @@ class PerfilesController extends Controller
 
         $created = $this->entity->create($request->all());
         if($created)
-        {Logs::createLog($this->entity->getTable(),$company,$created->id_banco,'crear','Registro insertado');}
+        {Logs::createLog($this->entity->getTable(),$company,$created->id_perfil,'crear','Registro insertado');}
         else
         {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 

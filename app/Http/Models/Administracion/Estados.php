@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Administracion;
 
-use App\Http\Models\ModelCompany;
+use Illuminate\Database\Eloquent\Model;
 
-class Estados extends ModelCompany
+class Estados extends Model
 {
     // use SoftDeletes;
 
