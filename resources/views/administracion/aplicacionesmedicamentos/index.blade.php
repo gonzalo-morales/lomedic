@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Tipo Combustibles')
+@section('title', 'Marcas de vehículos')
 
 @section('header-top')
 	<!--dataTable.css-->
@@ -32,8 +32,7 @@
 	<table class="striped responsive-table highlight">
 		<thead>
 			<tr>
-				<th>Jurisdiccion</th>
-				<th>Estado</th>
+				<th>Marca</th>
 				<th>Activo</th>
 				<th></th>
 			</tr>
@@ -41,12 +40,7 @@
 		<tbody>
 		@foreach ($data as $row)
 		<tr>
-			<td>{{ $row->jurisdiccion }}</td>
-			<td>
-			@foreach($states as $estado)
-				{{ $estado->id_estado == $row->fk_id_estado ? $estado->estado: '' }}
-			@endforeach
-			</td>
+			<td>{{ $row->aplicacion }}</td>
 			<td>
 				<p>
 					<input type="checkbox" id="activo" name="activo" disabled
@@ -55,10 +49,10 @@
 				</p>
 			</td>
 			<td class="width-auto">
-				<a href="{{ companyRoute('show', ['id' => $row->id_jurisdiccion]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-				<a href="{{ companyRoute('edit', ['id' => $row->id_jurisdiccion]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
-				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$row->id_jurisdiccion}}').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form-{{$row->id_jurisdiccion}}" action="{{ companyRoute('destroy', ['id' => $row->id_jurisdiccion]) }}" method="POST" style="display: none;">
+				<a href="{{ companyRoute('show', ['id' => $row->id_aplicacion]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $row->id_aplicacion]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$row->id_aplicacion}}').submit();"><i class="material-icons">delete</i></a>
+				<form id="delete-form-{{$row->id_aplicacion}}" action="{{ companyRoute('destroy', ['id' => $row->id_aplicacion]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>
