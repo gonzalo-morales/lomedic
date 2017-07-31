@@ -6,7 +6,16 @@
 @endsection
 
 @section('header-bottom')
-    <script src="{{ asset('js/empleados.js')  }}" type="text/javascript"></script>
+<!-- Import js picker data and time -->
+	<script type="text/javascript" src="{{ asset('js/picker.date.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/picker.time.js') }}"></script>
+@endsection
+
+@section('header-bottom2')
+<!-- Import js picker data and time config -->
+	<script type="text/javascript" src="{{ asset('js/InitiateComponents.js') }}"></script>
+	
+	<script src="{{ asset('js/empleados.js') }}"></script>
 @endsection
 
 @section('content')
