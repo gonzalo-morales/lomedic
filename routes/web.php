@@ -45,13 +45,8 @@ Route::prefix('{company}')->group(function () {
         Route::resource('vehiculosmodelos', 'Administracion\VehiculosModelosController');
         Route::resource('sustanciasactivas', 'Administracion\SustanciasActivasController');
         Route::resource('jurisdicciones', 'Administracion\JurisdiccionesController');
-<<<<<<< HEAD
         Route::resource('unidadesmedicas', 'Administracion\UnidadesMedicasController');
         Route::resource('unidadesmedidas', 'Administracion\UnidadesMedidasController');
-=======
-        Route::resource('unidadesmedicas', 'Administracion\Unidades MedicasController');
-        Route::resource('unidadesmedidas', 'Administracion\JurisdiccionesController');
->>>>>>> dc97993051dd3ec30ed349025de0e19d083f178a
         Route::resource('aplicacionesmedicamentos', 'Administracion\AplicacionesMedicamentosController');
 	});
 
