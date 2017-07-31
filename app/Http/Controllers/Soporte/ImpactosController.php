@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Soporte;
 
-use App\Http\Models\Soporte\Subcategorias;
+use App\Http\Models\Soporte\Impactos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
 
-class SubcategoriasController extends Controller
+class ImpactosController extends Controller
 {
-    public function __construct(Subcategorias $entity)
+    public function __construct(Impactos $entity)
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
@@ -43,7 +43,7 @@ class SubcategoriasController extends Controller
 
         $created = $this->entity->create($request->all());
         if($created)
-        {Logs::createLog($this->entity->getTable(),$company,$created->id_subcategoria,'crear','Registro insertado');}
+        {Logs::createLog($this->entity->getTable(),$company,$created->id_impacto,'crear','Registro insertado');}
         else
         {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 

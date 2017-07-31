@@ -62,5 +62,9 @@ Route::prefix('{company}')->group(function () {
         Route::resource('categorias', 'Soporte\CategoriasController');
         Route::resource('subcategorias', 'Soporte\SubcategoriasController');
         Route::resource('acciones', 'Soporte\AccionesController');
+        Route::resource('impactos', 'Soporte\ImpactosController');
+        Route::resource('urgencias', 'Soporte\UrgenciasController');
+        Route::resource('prioridades', 'Soporte\PrioridadesController');
+        Route::resource('modoscontacto', 'Soporte\ModosContactoController');
     });
 });
