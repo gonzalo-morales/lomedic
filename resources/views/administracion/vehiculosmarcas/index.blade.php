@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Sustancias Activas')
+@section('title', 'Marcas de vehículos')
 
 @section('header-top')
 	<!--dataTable.css-->
@@ -10,7 +10,7 @@
 
 @section('header-bottom')
 	<script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
-	<script src="{{asset('js/bancos.js')}}"></script>
+	<script src="{{ asset('js/modulos.js') }}"></script>
 	<!-- <script src="https://cdn.datatables.net/v/dt/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-colvis-1.2.2/b-html5-1.2.2/b-print-1.2.2/cr-1.3.2/r-2.1.0/datatables.min.js"></script> -->
 @endsection
 
@@ -32,26 +32,27 @@
 	<table class="striped responsive-table highlight">
 		<thead>
 			<tr>
-				<th>Sustancia Activa</th>
-				<th>Gramaje</th>
+				<th>Marca</th>
+				<th>Activo</th>
 				<th></th>
 			</tr>
 		</thead>
 		<tbody>
-		@foreach ($data as $sustancia)
+		@foreach ($data as $row)
 		<tr>
-			<td>{{ $sustancia->sustancia_activa }}</td>
+			<td>{{ $row->marca }}</td>
 			<td>
 				<p>
-					<input value="{{$sustancia->opcion_gramaje}}" type="checkbox" id="opcion_gramaje" name="opcion_gramaje" disabled @if($sustancia->opcion_gramaje) checked="{{ $sustancia->opcion_gramaje}}"@endif>
-					<label for="opcion_gramaje"></label>
+					<input type="checkbox" id="activo" name="activo" disabled
+						   {{$row->activo ? 'checked' : ''}}>
+					<label for="activo"></label>
 				</p>
 			</td>
 			<td class="width-auto">
-				<a href="{{ companyRoute('show', ['id' => $sustancia->id_sustancia_activa]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-				<a href="{{ companyRoute('edit', ['id' => $sustancia->id_sustancia_activa]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
-				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form{{$sustancia->id_sustancia_activa}}').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form{{$sustancia->id_sustancia_activa}}" action="{{ companyRoute('destroy', ['id' => $sustancia->id_sustancia_activa]) }}" method="POST" style="display: none;">
+				<a href="{{ companyRoute('show', ['id' => $row->id_marca]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $row->id_marca]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$row->id_marca}}').submit();"><i class="material-icons">delete</i></a>
+				<form id="delete-form-{{$row->id_marca}}" action="{{ companyRoute('destroy', ['id' => $row->id_marca]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>

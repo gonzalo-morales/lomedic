@@ -26,47 +26,18 @@
 			{{ csrf_field() }}
 			{{ method_field('POST') }}
 			<div class="row">
-				<div class="input-field col s12">
-					<input type="text" name="razon_social" id="razon_social" class="validate">
-					<label for="razon_social">Razón Social</label>
-					@if ($errors->has('razon_social'))
-						<span class="help-block">
-							<strong>{{ $errors->first('razon_social') }}</strong>
-						</span>
-					@endif
-				</div>
-			</div>
-			<div class="row">
 				<div class="input-field col s6">
-					<input type="text" name="banco" id="banco" class="validate">
-					<label for="banco">Banco</label>
-					@if ($errors->has('banco'))
+					<input type="text" name="sustancia_activa" id="sustancia_activa" class="validate">
+					<label for="sustancia_activa">Sustancia Activa</label>
+					@if ($errors->has('sustancia_activa'))
 						<span class="help-block">
-							<strong>{{ $errors->first('banco') }}</strong>
+							<strong>{{ $errors->first('sustancia_activa') }}</strong>
 						</span>
 					@endif
 				</div>
 				<div class="input-field col s6">
-					<input type="text" name="rfc" id="rfc" class="validate">
-					<label for="rfc">RFC</label>
-					@if ($errors->has('rfc'))
-						<span class="help-block">
-							<strong>{{ $errors->first('rfc') }}</strong>
-						</span>
-					@endif
-				</div>
-			</div>
-			<div class="row">
-				<div class="col s12">
-					<p>
-						<input type="checkbox" id="nacional" name="nacional" />
-						<label for="nacional">¿Banco nacional?</label>
-					</p>
-					@if ($errors->has('nacional'))
-						<span class="help-block">
-							<strong>{{ $errors->first('nacional') }}</strong>
-						</span>
-					@endif
+					<input type="checkbox" name="opcion_gramaje" id="opcion_gramaje" clase="validate">
+					<label for="opcion_gramaje">¿Gramaje?</label>
 				</div>
 			</div>
 			<div class="row">
