@@ -48,6 +48,7 @@ Route::prefix('{company}')->group(function () {
         Route::resource('unidadesmedicas', 'Administracion\UnidadesMedicasController');
         Route::resource('unidadesmedidas', 'Administracion\UnidadesMedidasController');
         Route::resource('aplicacionesmedicamentos', 'Administracion\AplicacionesMedicamentosController');
+        Route::resource('laboratorios', 'Administracion\LaboratoriosController');
 	});
 
     Route::group(['prefix' => 'recursos_humanos', 'as' => 'recursos_humanos.', 'middleware' => ['auth','share']], function(){
