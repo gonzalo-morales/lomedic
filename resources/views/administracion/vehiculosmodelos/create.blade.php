@@ -37,7 +37,9 @@
 					<select name="fk_id_marca" id="fk_id_marca">
 						<option value="" disabled selected>Selecciona...</option>
 					@foreach($brands as $marca)
-							<option value="{{$marca->id_marca}}">{{$marca->marca}}</option>
+							<option value="{{$marca->id_marca}}"
+									{{ $marca->id_marca == old('fk_id_marca') ? 'selected' : '' }}
+							>{{$marca->marca}}</option>
 					@endforeach
 					</select>
 					<label for="fk_id_marca">Marca</label>

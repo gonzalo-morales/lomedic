@@ -39,6 +39,7 @@ class VehiculosModelos extends Model
      */
     public $rules = [
         'modelo' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+        'fk_id_marca' => 'required|numeric'
     ];
 
     public function marcas()
