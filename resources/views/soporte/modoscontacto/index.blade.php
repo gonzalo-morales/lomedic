@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Acciones')
+@section('title', 'Modos de contacto')
 
 @section('header-top')
 	<!--dataTable.css-->
@@ -32,7 +32,7 @@
 	<table class="striped responsive-table highlight">
 		<thead>
 			<tr>
-				<th>Acción</th>
+				<th>Modo de contacto</th>
 				<th>Activo</th>
 				<th></th>
 			</tr>
@@ -40,7 +40,7 @@
 		<tbody>
 		@foreach ($data as $row)
 		<tr>
-			<td>{{ $row->accion}}</td>
+			<td>{{ $row->modo_contacto}}</td>
 			<td>
 				<p>
 					<input type="checkbox" id="activo" name="activo" disabled
@@ -49,10 +49,10 @@
 				</p>
 			</td>
 			<td class="width-auto">
-				<a href="{{ companyRoute('show', ['id' => $row->id_accion]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-				<a href="{{ companyRoute('edit', ['id' => $row->id_accion]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
-				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$row->id_accion}}').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form-{{$row->id_accion}}" action="{{ companyRoute('destroy', ['id' => $row->id_accion]) }}" method="POST" style="display: none;">
+				<a href="{{ companyRoute('show', ['id' => $row->id_modo_contacto]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $row->id_modo_contacto]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$row->id_modo_contacto}}').submit();"><i class="material-icons">delete</i></a>
+				<form id="delete-form-{{$row->id_modo_contacto}}" action="{{ companyRoute('destroy', ['id' => $row->id_modo_contacto]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>
