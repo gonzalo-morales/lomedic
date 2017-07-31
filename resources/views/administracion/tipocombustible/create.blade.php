@@ -26,8 +26,8 @@
 		<h5>Datos Tipo de Combustible</h5>
 		<div class="row">
 			<div class="input-field col s12 m7">
-				<input type="text" name="combustible" id="combustible" class="validate">
-				<label for="Combustible">Combustible:</label>
+				<input type="text" name="combustible" id="combustible" class="validate" value="{{old('combustible')}}">
+				<label for="combustible">Combustible:</label>
 				@if ($errors->has('combustible'))
 					<span class="help-block">
 						<strong>{{ $errors->first('combustible') }}</strong>
