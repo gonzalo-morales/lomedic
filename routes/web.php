@@ -45,7 +45,7 @@ Route::prefix('{company}')->group(function () {
         Route::resource('vehiculosmodelos', 'Administracion\VehiculosModelosController');
         Route::resource('sustanciasactivas', 'Administracion\SustanciasActivasController');
         Route::resource('jurisdicciones', 'Administracion\JurisdiccionesController');
-        Route::resource('unidadesmedicas', 'Administracion\SustanciasActivasController');
+        Route::resource('unidadesmedicas', 'Administracion\Unidades MedicasController');
         Route::resource('unidadesmedidas', 'Administracion\JurisdiccionesController');
         Route::resource('aplicacionesmedicamentos', 'Administracion\AplicacionesMedicamentosController');
 	});
@@ -55,5 +55,10 @@ Route::prefix('{company}')->group(function () {
        Route::resource('puestos', 'RecursosHumanos\PuestosController');
        Route::resource('departamentos', 'RecursosHumanos\DepartamentosController');
        Route::resource('causasbajas', 'RecursosHumanos\CausasBajasController');
+    });
+
+    Route::group(['prefix' => 'soporte', 'as' => 'soporte.', 'middleware' => ['auth','share']], function(){
+        Route::resource('estatustickets', 'soporte\EstatusTicketsController');
+        Route::resource('categorias', 'soporte\CategoriasController');
     });
 });
