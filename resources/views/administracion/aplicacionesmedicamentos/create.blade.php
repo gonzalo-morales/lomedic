@@ -22,14 +22,14 @@
 			</div>
 		</div>
 		<div class="col s12 xl8 offset-xl2">
-			<h5>Datos Marca</h5>
+			<h5>Datos Aplicación de medicamento</h5>
 			<div class="row">
 				<div class="input-field col s12">
-					<input type="text" name="marca" id="marca" class="validate">
-					<label for="marca">Marca</label>
-					@if ($errors->has('marca'))
+					<input type="text" name="aplicacion" id="aplicacion" class="validate">
+					<label for="aplicacion">Aplicación</label>
+					@if ($errors->has('aplicacion'))
 						<span class="help-block">
-						<strong>{{ $errors->first('marca') }}</strong>
+						<strong>{{ $errors->first('aplicacion') }}</strong>
 					</span>
 					@endif
 				</div>

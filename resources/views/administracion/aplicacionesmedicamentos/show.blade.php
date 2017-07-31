@@ -21,14 +21,14 @@
 	</div>
 </div>
 <div class="col s12 xl8 offset-xl2">
-	<h5>Datos de la marca</h5>
+	<h5>Datos de la aplicación de medicamento</h5>
 	<div class="row">
 		<div class="input-field col s12 m5">
-			<input type="text" name="marca" id="marca" class="validate"  readonly value="{{ $data->marca}}">
-			<label for="marca">Marca</label>
-			@if ($errors->has('marca'))
+			<input type="text" name="aplicacion" id="aplicacion" class="validate"  readonly value="{{ $data->aplicacion}}">
+			<label for="aplicacion">Aplicación</label>
+			@if ($errors->has('aplicacion'))
 				<span class="help-block">
-					<strong>{{ $errors->first('marca') }}</strong>
+					<strong>{{ $errors->first('aplicacion') }}</strong>
 				</span>
 			@endif
 		</div>
