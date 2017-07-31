@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Administracion;
 
-use App\Http\Models\ModelCompany;
+use Illuminate\Database\Eloquent\Model;
 
-class Parentescos extends ModelCompany
+class Parentescos extends Model
 {
     // use SoftDeletes;
 
