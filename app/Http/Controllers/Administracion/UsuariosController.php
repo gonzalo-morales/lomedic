@@ -69,7 +69,7 @@ class UsuariosController extends Controller
         if($this->entity->save())
         {Logs::createLog($this->entity->getTable(),$company,$this->entity->id_usuario,'crear','Registro creado');}
         else
-        {Logs::createLog($this->entity->getTable(),$company,$this->entity->id_usuario,'crear','Error al crear');}
+        {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al crear');}
         # Redirigimos a index
         //return redirect()->route("$this->entity_name.index", ['company'=> $company])->with('success', trans_choice('messages.'.$this->entity_name, 0) .', creado con exito.');
         return redirect(companyRoute('index'));

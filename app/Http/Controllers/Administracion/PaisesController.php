@@ -68,7 +68,7 @@ class PaisesController extends Controller
 			'activo'	=> $request->activo,
 		]);
 		if($created){
-			Logs::createLog($this->entity->getTable(),$company,$created->id_municipio,'crear','Registro insertado');
+			Logs::createLog($this->entity->getTable(),$company,$created->id_pais,'crear','Registro insertado');
 		}else{
 			Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');
 		}

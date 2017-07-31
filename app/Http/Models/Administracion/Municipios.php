@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Administracion;
 
-use App\Http\Models\ModelCompany;
+use Illuminate\Database\Eloquent\Model;
 
-class Municipios extends ModelCompany
+class Municipios extends Model
 {
     // use SoftDeletes;
 
@@ -58,7 +58,7 @@ class Municipios extends ModelCompany
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
 	public function estado(){
-		return $this->belongsTo('App\Http\Models\Administracion\Estados','fk_id_estado');
+		return $this->belongsTo('App\Http\Models\Administracion\Estados');
 	}
 
 	/**
