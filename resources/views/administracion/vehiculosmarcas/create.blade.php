@@ -25,7 +25,7 @@
 			<h5>Datos Marca</h5>
 			<div class="row">
 				<div class="input-field col s12">
-					<input type="text" name="marca" id="marca" class="validate">
+					<input type="text" name="marca" id="marca" class="validate" value="{{old('marca')}}">
 					<label for="marca">Marca</label>
 					@if ($errors->has('marca'))
 						<span class="help-block">

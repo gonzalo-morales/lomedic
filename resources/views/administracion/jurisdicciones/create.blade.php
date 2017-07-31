@@ -37,7 +37,9 @@
 					<select name="fk_id_estado" id="fk_id_estado">
 						<option value="" disabled selected>Selecciona...</option>
 						@foreach($states as $estado)
-							<option value="{{$estado->id_estado}}">{{$estado->estado}}</option>
+							<option value="{{$estado->id_estado}}"
+									{{ $estado->id_estado == old('fk_id_estado') ? 'selected' : '' }}
+							>{{$estado->estado}}</option>
 						@endforeach
 					</select>
 					<label for="fk_id_estado">Estado</label>

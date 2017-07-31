@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Administracion;
+namespace App\Http\Controllers\Soporte;
 
-use App\Http\Models\Administracion\SustanciasActivas;
+use App\Http\Models\Soporte\Acciones;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
 
-class SustanciasActivasController extends Controller
+class AccionesController extends Controller
 {
-    public function __construct(SustanciasActivas $entity)
+    public function __construct(Acciones $entity)
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
@@ -19,7 +19,7 @@ class SustanciasActivasController extends Controller
     public function index($company)
     {
         // $this->authorize('view', $this->entity);
-        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
+        //Logs::createLog($this->entity->getTable(),$company,null,'index',null);
 
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
@@ -38,13 +38,12 @@ class SustanciasActivasController extends Controller
 
     public function store(Request $request, $company)
     {
-        echo "Hola";
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
 
-        $created = $this->entity->create($requeswt->all());
+        $created = $this->entity->create($request->all());
         if($created)
-        {Logs::createLog($this->entity->getTable(),$company,$created->id_sustancia_activa,'crear','Registro insertado');}
+        {Logs::createLog($this->entity->getTable(),$company,$created->id_accion,'crear','Registro insertado');}
         else
         {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 
@@ -55,7 +54,6 @@ class SustanciasActivasController extends Controller
     public function show($company, $id)
     {
         Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
-
 
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,

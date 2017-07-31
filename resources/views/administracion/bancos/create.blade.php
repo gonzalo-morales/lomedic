@@ -27,7 +27,7 @@
 			{{ method_field('POST') }}
 			<div class="row">
 				<div class="input-field col s12">
-					<input type="text" name="razon_social" id="razon_social" class="validate">
+					<input type="text" name="razon_social" id="razon_social" class="validate" value="{{old('razon_social')}}">
 					<label for="razon_social">Razón Social</label>
 					@if ($errors->has('razon_social'))
 						<span class="help-block">
@@ -38,7 +38,7 @@
 			</div>
 			<div class="row">
 				<div class="input-field col s6">
-					<input type="text" name="banco" id="banco" class="validate">
+					<input type="text" name="banco" id="banco" class="validate" value="{{old('banco')}}">
 					<label for="banco">Banco</label>
 					@if ($errors->has('banco'))
 						<span class="help-block">
@@ -47,7 +47,7 @@
 					@endif
 				</div>
 				<div class="input-field col s6">
-					<input type="text" name="rfc" id="rfc" class="validate">
+					<input type="text" name="rfc" id="rfc" class="validate" value="{{old('rfc')}}">
 					<label for="rfc">RFC</label>
 					@if ($errors->has('rfc'))
 						<span class="help-block">
@@ -59,7 +59,7 @@
 			<div class="row">
 				<div class="col s12">
 					<p>
-						<input type="checkbox" id="nacional" name="nacional" />
+						<input type="checkbox" id="nacional" name="nacional" {{old('nacional') ? 'checked' : ''}}/>
 						<label for="nacional">¿Banco nacional?</label>
 					</p>
 					@if ($errors->has('nacional'))
