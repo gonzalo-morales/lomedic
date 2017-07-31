@@ -88,15 +88,53 @@ class Usuarios extends Authenticatable
 	 * Obtenemos modulos a los que tiene acceso el usuario por medio de sus permisos
 	 * @return array
 	 */
-	public function modulos()
+	public function modulos($empresa = null)
 	{
 		# Obtenemos modulos en base a ...
 		return Modulos::whereHas('permisos', function($q) {
-			# Modulos relacionados a empresa actual
-			$q->whereIn('id_modulo', Empresas::where('conexion', request()->company)->first()->modulos->pluck('id_modulo') );
 			# Modulos relacionados a los permisos del usuario
 			$q->whereIn('id_permiso', $this->permisos()->pluck('id_permiso') );
 		})->get();
+	}
+
+	/**
+	 * Obtenemos modulos anidados a los que tiene acceso el usuario por medio de sus permisos
+	 * @return array
+	 */
+	public function modulos_anidados()
+	{
+		return $this->__modulos();
+	}
+
+	/**
+	 * Obtenemos modulos anidados a los que tiene acceso el usuario por medio de sus permisos
+	 * @param  Empresa $empresa
+	 * @return array
+	 */
+	private function __modulos($empresa = null)
+	{
+		$empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
+		$modulos_empresa = method_exists($empresa, 'modulos_anidados') ? $empresa->modulos_anidados() : $empresa;
+
+		# Obtenemos modulos en base a ...
+		$modulos_usuario = Modulos::whereHas('permisos', function($q) {
+			# Modulos relacionados a los permisos del usuario
+			$q->whereIn('id_permiso', $this->permisos()->pluck('id_permiso') );
+		})->get();
+
+		# Recorremos modulos de la empresa
+		foreach ($modulos_empresa as $key => $modulo) {
+			# Si usuario tiene acceso a modulo
+			if (in_array($modulo->id_modulo, $modulos_usuario->pluck('id_modulo')->toArray() )) {
+				# Mismo proceso a submodulos
+				$modulo->submodulos = $this->__modulos($modulo->submodulos);
+			} else {
+				# Eliminamos modulo de coleccion
+				$modulos_empresa->forget($key);
+			}
+		}
+
+		return $modulos_empresa;
 	}
 
 }

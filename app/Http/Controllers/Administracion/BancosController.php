@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
 
-use Auth;
-
-
 class BancosController extends Controller
 {
 	/**
@@ -31,8 +28,10 @@ class BancosController extends Controller
 	 */
 	public function index($company)
 	{
-		// $this->authorize('view', $this->entity);
-        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
+		# ¿Usuario tiene permiso para ver?
+		$this->authorize('view', $this->entity);
+
+		Logs::createLog($this->entity->getTable(),$company,null,'index',null);
 
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
@@ -48,6 +47,8 @@ class BancosController extends Controller
 	 */
 	public function create($company)
 	{
+		# ¿Usuario tiene permiso para crear?
+		$this->authorize('create', $this->entity);
 
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
@@ -62,19 +63,22 @@ class BancosController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request, $company)
-    {
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
+	{
+		# ¿Usuario tiene permiso para crear?
+		$this->authorize('create', $this->entity);
 
-        $created = $this->entity->create($request->all());
-        if($created)
-        {Logs::createLog($this->entity->getTable(),$company,$created->id_banco,'crear','Registro insertado');}
-        else
-        {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
+		# Validamos request, si falla regresamos pagina
+		$this->validate($request, $this->entity->rules);
+
+		$created = $this->entity->create($request->all());
+		if($created)
+		{Logs::createLog($this->entity->getTable(),$company,$created->id_banco,'crear','Registro insertado');}
+		else
+		{Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 
 		# Redirigimos a index
-        return redirect(companyRoute('index'));
-    }
+		return redirect(companyRoute('index'));
+	}
 
 	/**
 	 * Display the specified resource
@@ -84,7 +88,10 @@ class BancosController extends Controller
 	 */
 	public function show($company, $id)
 	{
-        Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
+		# ¿Usuario tiene permiso para ver?
+		$this->authorize('view', $this->entity);
+
+		Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
 
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
@@ -101,6 +108,9 @@ class BancosController extends Controller
 	 */
 	public function edit($company, $id)
 	{
+		# ¿Usuario tiene permiso para actualizar?
+		$this->authorize('update', $this->entity);
+
 		return view (Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
@@ -117,18 +127,21 @@ class BancosController extends Controller
 	 */
 	public function update(Request $request, $company, $id)
 	{
+		# ¿Usuario tiene permiso para actualizar?
+		$this->authorize('update', $this->entity);
+
 		# Validamos request, si falla regresamos pagina
 		$this->validate($request, $this->entity->rules);
 
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
 		if($entity->save())
-        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
-        else
-        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
+		{Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
+		else
+		{Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
 
 		# Redirigimos a index
-        return redirect(companyRoute('index'));
+		return redirect(companyRoute('index'));
 	}
 
 	/**
@@ -139,14 +152,17 @@ class BancosController extends Controller
 	 */
 	public function destroy($company, $id)
 	{
+		# ¿Usuario tiene permiso para eliminar?
+		$this->authorize('delete', $this->entity);
+
 		$entity = $this->entity->findOrFail($id);
-        $entity->eliminar='t';
-        if($entity->save())
-        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
-        else
-        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
+		$entity->eliminar='t';
+		if($entity->save())
+		{Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
+		else
+		{Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
 
 		# Redirigimos a index
-        return redirect(companyRoute('index'));
+		return redirect(companyRoute('index'));
 	}
 }
