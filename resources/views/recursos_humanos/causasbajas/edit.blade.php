@@ -22,32 +22,21 @@
 
 <div class="col s12 xl8 offset-xl2">
 	<div class="row">
-		<form action="{{ companyRoute("update", ['company'=> $company, 'id' => $data->id_departamento]) }}" method="post" class="col s12">
+		<form action="{{ companyRoute("update", ['company'=> $company, 'id' => $data->id_causa_baja]) }}" method="post" class="col s12">
 			{{ csrf_field() }}
 			{{ method_field('PUT') }}
 			<div class="row">
 				<div class="input-field col s12">
-					<input type="text" name="descripcion" id="descripcion" class="validate" value="{{ $data->descripcion }}">
-					<label for="descripcion">Descripcion del puesto</label>
+					<input type="text" name="causa_baja" id="causa_baja" class="validate" value="{{ $data->causa_baja }}">
+					<label for="causa_baja">Causa de baja</label>
 					@if ($errors->has('razon_social'))
 						<span class="help-block">
-							<strong>{{ $errors->first('descripcion') }}</strong>
+							<strong>{{ $errors->first('causa_baja') }}</strong>
 						</span>
 					@endif
 				</div>
 			</div>
-
-			<div class="row">
-				<div class="input-field col s12">
-					<input type="text" name="nomenclatura" id="nomenclatura" class="validate" value="{{ $data->nomenclatura }}">
-					<label for="descripcion">Descripcion del puesto</label>
-					@if ($errors->has('nomenclatura'))
-						<span class="help-block">
-							<strong>{{ $errors->first('nomenclatura') }}</strong>
-						</span>
-					@endif
-				</div>
-			</div>
+			
 
 			<div class="row">
 				<div class="col s12">
