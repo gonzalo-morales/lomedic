@@ -3,6 +3,7 @@
 namespace App\Http\Models\Administracion;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Perfiles extends Model
 {
@@ -47,7 +48,7 @@ class Perfiles extends Model
      * @return array
      */
     public function usuarios(){
-        return $this->belongsToMany(Usuarios::class, 'ges_det_perfiles_usuarios', 'fk_id_perfil', 'fk_id_usuario');
+        return $this->belongsToMany('app\Http\Models\Administracion\Usuarios','ges_det_perfiles_usuarios','fk_id_perfil','fk_id_usuario');
     }
 
     /**
@@ -56,7 +57,7 @@ class Perfiles extends Model
      */
     public function permisos()
     {
-        return $this->belongsToMany(Permisos::class, 'ges_det_permisos_perfiles', 'fk_id_perfil', 'fk_id_permiso');
+        return $this->belongsToMany('App\Http\Models\Administracion\Permisos', 'ges_det_permisos_perfiles', 'fk_id_perfil', 'fk_id_permiso');
     }
 
 }
