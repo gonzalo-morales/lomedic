@@ -54,7 +54,7 @@ class Modulos extends Model
 	 */
 	public function empresas()
 	{
-		return $this->belongsToMany(Empresas::class, 'ges_det_modulos', 'fk_id_modulo', 'fk_id_empresa');
+		return $this->belongsToMany('App\Http\Models\Administracion\Empresas', 'ges_det_modulos_empresas', 'fk_id_modulo', 'fk_id_empresa');
 	}
 
 	/**
@@ -63,7 +63,7 @@ class Modulos extends Model
 	 */
 	public function  modulos()
 	{
-		return $this->belongsToMany(Modulos::class, 'ges_det_modulos', 'fk_id_modulo_hijo','fk_id_modulo');
+		return $this->belongsToMany('App\Http\Models\Administracion\Modulos', 'ges_det_modulos', 'fk_id_modulo','fk_id_modulo_hijo');
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Modulos extends Model
 	 */
 	public function permisos()
 	{
-		return $this->belongsToMany(Permisos::class, 'ges_det_permisos_modulos', 'fk_id_modulo', 'fk_id_permiso');
+		return $this->belongsToMany('App\Http\Models\Administracion\Permisos', 'ges_det_permisos_modulos', 'fk_id_modulo', 'fk_id_permiso');
 	}
 
 }

@@ -48,16 +48,12 @@
 			<td>{{ $banco->nacional }}</td>
 			<td class="width-auto">
 				<a href="{{ companyRoute('show', ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-				@can('update', App\Http\Models\Administracion\Bancos::class)
 				<a href="{{ companyRoute('edit', ['id' => $banco->id_banco]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
-				@endcan
-				@can('delete', currentRouteModel())
 				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form{{$banco->id_banco}}').submit();"><i class="material-icons">delete</i></a>
 				<form id="delete-form{{$banco->id_banco}}" action="{{ companyRoute('destroy', ['id' => $banco->id_banco]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>
-				@endcan
 			</td>
 		</tr>
 		@endforeach

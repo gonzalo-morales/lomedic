@@ -16,16 +16,14 @@ class CreateParentsTable extends Migration
         Schema::connection('corporativo')
             ->create('ges_det_modulos', function (Blueprint $table) {
             /*Principal fields*/
-            $table->integer('fk_id_modulo')->unsigned()->comment('Llave foranea al modulo');
-            $table->integer('fk_id_modulo_padre')->unsigned()->comment('Llave foranea al modulo');
-            $table->integer('fk_id_empresa')->unsigned()->comment('Llave foranea a la empresa');
+            $table->integer('fk_id_modulo_hijo')->unsigned()->comment('Llave foranea al modulo');
+            $table->integer('fk_id_modulpo_padre')->unsigned()->comment('Llave foranea al modulo');
+            $table->boolean('activo')->default('1');
 
             /*Foreign keys*/
-            $table->foreign('fk_id_modulo')->references('id_modulo')->on('ges_cat_modulos')->
+            $table->foreign('fk_id_modulo_hijo')->references('id_modulo')->on('ges_cat_modulos')->
             onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('fk_id_modulo_padre')->references('id_modulo')->on('ges_cat_modulos')->
-            onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('fk_id_empresa')->references('id_empresa')->on('gen_cat_empresas')->
+            $table->foreign('fk_id_modulpo_padre')->references('id_modulo')->on('ges_cat_modulos')->
             onDelete('restrict')->onUpdate('restrict');
         });
     }
@@ -37,6 +35,7 @@ class CreateParentsTable extends Migration
      */
     public function down()
     {
-        Schema::connection('corporativo')->dropIfExists('ges_det_modulos');
+        Schema::connection('corporativo')
+            ->dropIfExists('ges_det_modulos');
     }
 }
