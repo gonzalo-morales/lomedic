@@ -27,7 +27,7 @@
 			{{ method_field('POST') }}
 			<div class="row">
 				<div class="input-field col s4">
-					<input type="text" name="correo" id="correo" class="validate">
+					<input type="text" name="correo" id="correo" class="validate" value="{{old('correo')}}">
 					<label for="correo">Correo</label>
 					@if ($errors->has('correo'))
 						<span class="help-block">
@@ -38,7 +38,9 @@
 				<div class="input-field col s4">
 					<select name="fk_id_empresa" id="fk_id_empresa">
 							@foreach($companies as $empresa)
-							<option value="{{$empresa->id_empresa}}">{{$empresa->nombre_comercial}}</option>
+							<option value="{{$empresa->id_empresa}}"
+									{{ $empresa->id_empresa == old('fk_id_empresa') ? 'selected' : '' }}
+							>{{$empresa->nombre_comercial}}</option>
 						@endforeach
 					</select>
 					<label for="fk_id_empresa">Empresa</label>
@@ -46,7 +48,9 @@
 				<div class="input-field col s4">
 					<select name="fk_id_usuario" id="fk_id_usuario">
 						@foreach($users as $user)
-							<option value="{{$user->id_usuario}}">{{$user->usuario}}</option>
+							<option value="{{$user->id_usuario}}"
+									{{ $empresa->id_usuario == old('fk_id_usuario') ? 'selected' : '' }}
+							>{{$user->usuario}}</option>
 						@endforeach
 					</select>
 					<label for="fk_id_usuario">Usuario</label>

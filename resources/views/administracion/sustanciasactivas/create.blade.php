@@ -27,7 +27,7 @@
 			{{ method_field('POST') }}
 			<div class="row">
 				<div class="input-field col s6">
-					<input type="text" name="sustancia_activa" id="sustancia_activa" class="validate">
+					<input type="text" name="sustancia_activa" id="sustancia_activa" class="validate" value="{{old('sustancia_activa')}}">
 					<label for="sustancia_activa">Sustancia Activa</label>
 					@if ($errors->has('sustancia_activa'))
 						<span class="help-block">
@@ -36,7 +36,9 @@
 					@endif
 				</div>
 				<div class="input-field col s6">
-					<input type="checkbox" name="opcion_gramaje" id="opcion_gramaje" clase="validate">
+					<input type="checkbox" name="opcion_gramaje" id="opcion_gramaje" clase="validate"
+					{{old('opcion_gramaje') ? 'checked' : ''}}
+					>
 					<label for="opcion_gramaje">¿Gramaje?</label>
 				</div>
 			</div>

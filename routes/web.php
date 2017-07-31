@@ -58,7 +58,9 @@ Route::prefix('{company}')->group(function () {
     });
 
     Route::group(['prefix' => 'soporte', 'as' => 'soporte.', 'middleware' => ['auth','share']], function(){
-        Route::resource('estatustickets', 'soporte\EstatusTicketsController');
-        Route::resource('categorias', 'soporte\CategoriasController');
+        Route::resource('estatustickets', 'Soporte\EstatusTicketsController');
+        Route::resource('categorias', 'Soporte\CategoriasController');
+        Route::resource('subcategorias', 'Soporte\SubcategoriasController');
+        Route::resource('acciones', 'Soporte\AccionesController');
     });
 });
