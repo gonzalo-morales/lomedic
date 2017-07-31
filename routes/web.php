@@ -48,6 +48,6 @@ Route::prefix('{company}')->group(function () {
        Route::resource('empleados', 'RecursosHumanos\EmpleadosController');
        Route::resource('puestos', 'RecursosHumanos\PuestosController');
        Route::resource('departamentos', 'RecursosHumanos\DepartamentosController');
-       Route::resource('causas_bajas', 'RecursosHumanos\CausasBajasController');
+       Route::resource('causasbajas', 'RecursosHumanos\CausasBajasController');
     });
 });
