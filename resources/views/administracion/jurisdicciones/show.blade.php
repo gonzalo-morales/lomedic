@@ -21,15 +21,15 @@
 	</div>
 </div>
 <div class="col s12 xl8 offset-xl2">
-	<h5>Datos de la marca</h5>
+	<h5>Datos de la jurisdicción</h5>
 	<div class="row">
 		<div class="input-field col s4">
-			<input type="text" name="modelo" id="modelo" class="validate" value="{{$data->modelo}}" readonly>
-			<label for="modelo">Modelo</label>
+			<input type="text" name="jurisdiccion" id="jurisdiccion" class="" value="{{$data->jurisdiccion}}" readonly>
+			<label for="jurisdiccion">Jurisdicción</label>
 		</div>
 		<div class="input-field col s4">
-			<input type="text" name="marca" id="marca" class="validate" value="{{$brand}}" readonly>
-			<label for="fk_id_marca">Marca</label>
+			<input type="text" name="fk_id_estado" id="fk_id_estado" class="" value="{{$state}}" readonly>
+			<label for="fk_id_estado">Estado</label>
 		</div>
 		<div class="input-field col s4">
 			<input type="hidden" name="activo" value="0">
