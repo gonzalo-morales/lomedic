@@ -58,7 +58,7 @@ class Municipios extends ModelCompany
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
 	public function estado(){
-		return $this->belongsTo('App\Http\Models\Administracion\Estados','fk_id_estado');
+		return $this->belongsTo('App\Http\Models\Administracion\Estados');
 	}
 
 	/**

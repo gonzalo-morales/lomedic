@@ -19,7 +19,7 @@
 		</div>
 		<div class="col s6">
 			<p class="right-align">
-				<a href="{{ companyRoute("edit", ['company'=> $company, 'id' => $data->id_banco]) }}" class="waves-effect waves-light btn"><i class="material-icons right">mode_edit</i>Editar</a>
+				<a href="{{ companyRoute("edit", ['company'=> $company, 'id' => $data->id_sustancia_activa]) }}" class="waves-effect waves-light btn"><i class="material-icons right">mode_edit</i>Editar</a>
 			</p>
 		</div>
 	</div>
@@ -28,27 +28,19 @@
 
 <div class="col s12 xl8 offset-xl2">
 	<div class="row">
-		<div class="input-field col s12">
-			<input type="text" name="razon_social" id="razon_social" class="validate" readonly value="{{ $data->razon_social }}">
-			<label for="razon_social">Razón Social</label>
+		<div class="input-field col s4">
+			<input type="text" name="sustancia_activa" id="sustancia_activa" class="validate" value="{{$data->sustancia_activa}}">
+			<label for="sustancia_activa">Sustancia Activa</label>
 		</div>
-	</div>
-	<div class="row">
-		<div class="input-field col s6">
-			<input type="text" name="banco" id="banco" class="validate" readonly value="{{ $data->banco }}">
-			<label for="banco">Banco</label>
+		<div class="input-field col s4">
+			<input type="hidden" name="opcion_gramaje" value="0">
+			<input type="checkbox" name="opcion_gramaje" id="opcion_gramaje" clase="validate" {{$data->opcion_gramaje ? 'checked':''}}>
+			<label for="opcion_gramaje">¿Gramaje?</label>
 		</div>
-		<div class="input-field col s6">
-			<input type="text" name="rfc" id="rfc" class="validate" readonly value="{{ $data->rfc }}">
-			<label for="rfc">RFC</label>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s12">
-			<p>
-				<input type="checkbox" id="nacional" name="nacional" disabled checked="{{ $data->razon_social }}">
-				<label for="nacional">¿Banco nacional?</label>
-			</p>
+		<div class="input-field col s4">
+			<input type="hidden" name="activo" value="0">
+			<input type="checkbox" name="activo" id="activo" clase="validate" {{$data->activo ? 'checked':''}}>
+			<label for="activo">¿Activo?</label>
 		</div>
 	</div>
 </div>

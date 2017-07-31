@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\RecursosHumanos;
+namespace App\Http\Controllers\Administracion;
 
-use App\Http\Models\RecursosHumanos\Empleados;
-use App\Http\Models\Administracion\Empresas;
-use App\Http\Controllers\Controller;
+use App\Http\Models\Administracion\Jurisdicciones;
+use App\Http\Models\Administracion\Estados;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
 
-class EmpleadosController extends Controller
+class JurisdiccionesController extends Controller
 {
-    public function __construct(Empleados $entity)
+    public function __construct(Jurisdicciones $entity)
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
-        $this->companies = Empresas::all();
+        $this->states = Estados::all();
     }
 
     public function index($company)
@@ -27,6 +27,7 @@ class EmpleadosController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->all()->where('eliminar', '=','0'),
+            'states' => $this->states,
         ]);
     }
 
@@ -35,7 +36,7 @@ class EmpleadosController extends Controller
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
-            'companies' => $this->companies,
+            'states' => $this->states,
         ]);
     }
 
@@ -46,7 +47,7 @@ class EmpleadosController extends Controller
 
         $created = $this->entity->create($request->all());
         if($created)
-        {Logs::createLog($this->entity->getTable(),$company,$created->id_empleado,'crear','Registro insertado');}
+        {Logs::createLog($this->entity->getTable(),$company,$created->id_jurisdiccion,'crear','Registro insertado');}
         else
         {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 
@@ -58,13 +59,13 @@ class EmpleadosController extends Controller
     {
         Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
 
+        $state = $this->entity->findOrFail($id)->fk_id_estado;
+
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
-            'companies' => $this->companies,
-            'empresa_alta_imss' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_alta_imss)->first(),
-            'empresa_laboral' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_laboral)->first()
+            'state' => $this->states->find($state)->estado,
         ]);
     }
 
@@ -74,6 +75,7 @@ class EmpleadosController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
+            'states' => $this->states,
         ]);
     }
 
