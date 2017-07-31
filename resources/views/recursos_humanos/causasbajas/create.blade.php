@@ -28,26 +28,16 @@
 			{{ method_field('POST') }}
 			<div class="row">
 				<div class="input-field col s4">
-					<input type="text" name="descripcion" id="descripcion" class="validate" value="{{ old('descripcion')  }}">
-					<label for="descripcion">Descripcion del puesto</label>
-					@if ($errors->has('descripcion'))
+					<input type="text" name="causa_baja" id="causa_baja" class="validate" value="{{ old('causa_baja')  }}">
+					<label for="causa_baja">Causa de baja</label>
+					@if ($errors->has('causa_baja'))
 						<span class="help-block">
-							<strong>{{ $errors->first('descripcion') }}</strong>
+							<strong>{{ $errors->first('causa_baja') }}</strong>
 						</span>
 					@endif
 				</div>
 			</div>
-			<div class="row">
-				<div class="input-field col s4">
-					<input type="text" name="nomenclatura" id="nomenclatura" class="validate" value="{{ old('nomenclatura')  }}">
-					<label for="nomenclatura">Nomenclatura</label>
-					@if ($errors->has('descripcion'))
-						<span class="help-block">
-							<strong>{{ $errors->first('descripcion') }}</strong>
-						</span>
-					@endif
-				</div>
-			</div>
+			
 			<div class="row">
 				<div class="col s12">
 					<button class="waves-effect waves-light btn right">Guardar {{ trans_choice('messages.'.$entity, 0) }}</button>

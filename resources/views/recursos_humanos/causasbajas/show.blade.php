@@ -19,7 +19,7 @@
 		</div>
 		<div class="col s6">
 			<p class="right-align">
-				<a href="{{ companyRoute("edit", ['company'=> $company, 'id' => $data->id_departamento]) }}" class="waves-effect waves-light btn"><i class="material-icons right">mode_edit</i>Editar</a>
+				<a href="{{ companyRoute("edit", ['company'=> $company, 'id' => $data->id_causa_baja]) }}" class="waves-effect waves-light btn"><i class="material-icons right">mode_edit</i>Editar</a>
 			</p>
 		</div>
 	</div>
@@ -29,8 +29,8 @@
 <div class="col s12 xl8 offset-xl2">
 	<div class="row">
 		<div class="input-field col s12">
-			<input type="text" name="descripcion" id="descripcion" class="validate" readonly value="{{ $data->descripcion }}">
-			<label for="descripcion">Descripcion del puesto</label>
+			<input type="text" name="descripcion" id="descripcion" class="validate" readonly value="{{ $data->causa_baja }}">
+			<label for="descripcion">Causa de baja</label>
 		</div>
 	</div>
 	<div class="row">
