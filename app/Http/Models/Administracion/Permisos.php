@@ -50,7 +50,7 @@ class Permisos extends Model
      */
     public function modulos()
     {
-        return $this->belongsToMany('App\Http\Models\Administracion\modulos', 'ges_det_permisos_modulos', 'fk_id_permiso', 'fk_id_modulo');
+        return $this->belongsToMany(Modulos::class, 'ges_det_permisos_modulos', 'fk_id_permiso', 'fk_id_modulo');
     }
 
 }

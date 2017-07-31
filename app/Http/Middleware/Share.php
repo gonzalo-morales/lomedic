@@ -4,6 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+
 class Share
 {
 	/**
@@ -15,18 +18,8 @@ class Share
 	 */
 	public function handle($request, Closure $next)
 	{
-
-		# Menu
-		$modulos = \Auth::user()->modulos();
-
-		// dump( 'modulos usuarios' );
-		// dump( $modulos->pluck('nombre')->toArray() );
-
-		// foreach ($modulos as $modulo) {
-		// 	dump( $modulo->modulos );
-		// }
-
-		\View::share('menu', $modulos);
+		# Compartimos modulos de usuario para generar menu
+		View::share('menu', Auth::user()->modulos_anidados());
 
 		return $next($request);
 	}

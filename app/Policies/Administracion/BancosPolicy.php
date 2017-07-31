@@ -4,8 +4,6 @@ namespace App\Policies\Administracion;
 
 use App\Http\Models\Administracion\Usuarios;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Route;
-
 
 class BancosPolicy
 {
@@ -20,13 +18,9 @@ class BancosPolicy
 	 */
 	public function view(Usuarios $usuario)
 	{
-
-		dump ( Route::currentRouteAction() );
-
-		dump( ' GATE HAS ' );
-		return false;
-
-
+		$permisos = $usuario->permisos()->pluck('descripcion');
+		// dump( $permisos );
+		return $permisos->contains(currentRouteAction('view'));
 	}
 
 	/**
@@ -37,7 +31,8 @@ class BancosPolicy
 	 */
 	public function create(Usuarios $usuario)
 	{
-		//
+		$permisos = $usuario->permisos()->pluck('descripcion');
+		return $permisos->contains(currentRouteAction('create'));
 	}
 
 	/**
@@ -49,7 +44,8 @@ class BancosPolicy
 	 */
 	public function update(Usuarios $usuario)
 	{
-		//
+		$permisos = $usuario->permisos()->pluck('descripcion');
+		return $permisos->contains(currentRouteAction('update'));
 	}
 
 	/**
@@ -61,6 +57,7 @@ class BancosPolicy
 	 */
 	public function delete(Usuarios $usuario)
 	{
-		//
+		$permisos = $usuario->permisos()->pluck('descripcion');
+		return $permisos->contains(currentRouteAction('delete'));
 	}
 }
