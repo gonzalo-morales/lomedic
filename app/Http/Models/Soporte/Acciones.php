@@ -26,7 +26,7 @@ class Acciones extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['accion', 'activo'];
+	protected $fillable = ['accion','fk_id_subcategoria', 'activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -41,5 +41,16 @@ class Acciones extends Model
 	 */
 	public $rules = [
 		'accion' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+        'fk_id_subcategoria' => 'required',
 	];
+
+	public function subcategoria()
+    {
+        return $this->belongsTo('App\Http\Models\Soporte\Subcategorias');
+    }
+
+    public function solicitudes()
+    {
+        return $this->belongsTo('App\Http\Models\Soporte\Solicitudes');
+    }
 }

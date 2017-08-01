@@ -23,7 +23,7 @@
 	<div class="col s12 xl8 offset-xl2">
 		<h5>Editar Subcategoría</h5>
 		<div class="row">
-			<div class="input-field col s12 m5">
+			<div class="input-field col s4 m5">
 				<input type="text" name="subcategoria" id="subcategoria" class="validate" value="{{ $data->subcategoria}}">
 				<label for="subcategoria">Subcategoría</label>
 				@if ($errors->has('subcategoria'))
@@ -32,7 +32,23 @@
 					</span>
 				@endif
 			</div>
-			<div class="input-field col s12 m7">
+			<div class="input-field col s4">
+				<select name="fk_id_categoria" id="fk_id_categoria">
+					<option value="" disabled selected>Selecciona...</option>
+					@foreach($categories as $categoria)
+						<option value="{{$categoria->id_categoria}}"
+								{{ $categoria->id_categoria == $data->fk_id_categoria ? 'selected' : '' }}
+						>{{$categoria->categoria}}</option>
+					@endforeach
+				</select>
+				<label for="fk_id_categoria">Categoria</label>
+				@if ($errors->has('fk_id_categoria'))
+					<span class="help-block">
+						<strong>{{ $errors->first('fk_id_categoria') }}</strong>
+					</span>
+				@endif
+			</div>
+			<div class="input-field col s4 m7">
 				<input type="hidden" name="activo" value="0">
 				<input type="checkbox" id="activo" name="activo" {{$data->activo ? 'checked' : ''}} />
 				<label for="activo">Estatus:</label>

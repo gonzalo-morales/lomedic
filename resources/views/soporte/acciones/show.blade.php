@@ -23,23 +23,17 @@
 <div class="col s12 xl8 offset-xl2">
 	<h5>Datos de la Subcategoría</h5>
 	<div class="row">
-		<div class="input-field col s12 m5">
-			<input type="text" name="accion" id="accion" class="validate"  readonly value="{{ $data->accion}}">
+		<div class="input-field col s4 m5">
+			<input type="text" name="accion" id="accion" class=""  readonly value="{{ $data->accion}}">
 			<label for="accion">Acción</label>
-			@if ($errors->has('accion'))
-				<span class="help-block">
-					<strong>{{ $errors->first('accion') }}</strong>
-				</span>
-			@endif
 		</div>
-		<div class="input-field col s12 m7">
+		<div class="input-field col s4">
+			<input type="text" name="fk_id_subcategoria" id="fk_id_subcategoria" readonly value="{{$subcategory}}">
+			<label for="fk_id_subcategoria">Subcategoria</label>
+		</div>
+		<div class="input-field col s4 m7">
 			<input type="checkbox" id="activo" name="activo" disabled {{$data->activo ? 'checked' : ''}} />
 			<label for="activo">Estatus:</label>
-			@if ($errors->has('activo'))
-				<span class="help-block">
-					<strong>{{ $errors->first('activo') }}</strong>
-				</span>
-			@endif
 		</div>
 	</div>
 </div>

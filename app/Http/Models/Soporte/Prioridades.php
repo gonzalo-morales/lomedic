@@ -34,7 +34,6 @@ class Prioridades extends Model
 	 * @var bool
 	 */
 	public $timestamps = false;
-
 	/**
 	 * The validation rules
 	 * @var array
@@ -42,4 +41,9 @@ class Prioridades extends Model
 	public $rules = [
 		'prioridad' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
 	];
+
+    public function solicitudes()
+    {
+        return $this->belongsToMany('App\Http\Models\Soporte\Solicitudes');
+    }
 }

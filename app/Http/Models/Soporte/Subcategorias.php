@@ -26,7 +26,7 @@ class Subcategorias extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['subcategoria', 'activo'];
+	protected $fillable = ['subcategoria', 'fk_id_categoria','activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -42,4 +42,19 @@ class Subcategorias extends Model
 	public $rules = [
 		'subcategoria' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
 	];
+
+	public function solicitudes()
+    {
+        return $this->belongsToMany('App\Http\Models\Soporte\Solicitudes');
+    }
+
+    public function categoria()
+    {
+        return $this->belongsTo('App\Http\Models\Soporte\Categorias');
+    }
+
+    public function accion()
+    {
+        return $this->hasMany('App\Http\Models\Soporte\Acciones');
+    }
 }

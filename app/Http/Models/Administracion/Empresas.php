@@ -44,4 +44,11 @@ class Empresas extends Model
 		return $this->belongsToMany('App\Http\Models\Administracion\Modulos', 'ges_det_modulos_empresas', 'fk_id_empresa', 'fk_id_modulo');
 	}
 
+	public function numeroscuenta()
+    {
+        return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
+    }
+
+
+
 }

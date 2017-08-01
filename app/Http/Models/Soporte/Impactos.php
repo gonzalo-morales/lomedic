@@ -42,4 +42,9 @@ class Impactos extends Model
 	public $rules = [
 		'impacto' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
 	];
+
+	public function solicitud()
+    {
+        return $this->belongsToMany('App\Http\Models\Soporte\Solicitudes');
+    }
 }

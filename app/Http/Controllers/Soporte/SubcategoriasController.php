@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Soporte;
 
+use App\Http\Models\Soporte\Categorias;
 use App\Http\Models\Soporte\Subcategorias;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,6 +15,7 @@ class SubcategoriasController extends Controller
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
+        $this->categories = Categorias::all();
     }
 
     public function index($company)
@@ -25,6 +27,7 @@ class SubcategoriasController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->all()->where('eliminar', '=','0'),
+            'categories' => $this->categories,
         ]);
     }
 
@@ -33,11 +36,14 @@ class SubcategoriasController extends Controller
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
+            'categories' => $this->categories,
         ]);
     }
 
     public function store(Request $request, $company)
     {
+//        dd($request->all());
+
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
 
@@ -55,10 +61,13 @@ class SubcategoriasController extends Controller
     {
         Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
 
+        $categoria = $this->entity->where('id_subcategoria',$id)->fk_id_categoria;
+
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
+            'category' => $this->categories->find($categoria)->categoria,
         ]);
     }
 
@@ -68,6 +77,7 @@ class SubcategoriasController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
+            'categories' => $this->categories,
         ]);
     }
 

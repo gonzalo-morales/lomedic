@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers\Administracion;
 
-use App\Http\Models\Administracion\SustanciasActivas;
+use App\Http\Models\Administracion\NumerosCuenta;
+use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Administracion\Bancos;
+use App\Http\Models\Administracion\Monedas;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
 
-class SustanciasActivasController extends Controller
+class NumerosCuentaController extends Controller
 {
-    public function __construct(SustanciasActivas $entity)
+    public function __construct(NumerosCuenta $entity)
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
+        $this->companies = Empresas::all();
+        $this->banks = Bancos::all();
+        $this->coins = Monedas::all();
     }
 
     public function index($company)
@@ -25,6 +31,10 @@ class SustanciasActivasController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->all()->where('eliminar', '=','0'),
+            'companies' => $this->companies,
+            'banks' => $this->banks,
+            'coins' => $this->coins,
+
         ]);
     }
 
@@ -33,17 +43,21 @@ class SustanciasActivasController extends Controller
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
+            'companies' => $this->companies,
+            'banks' => $this->banks,
+            'coins' => $this->coins,
         ]);
     }
 
     public function store(Request $request, $company)
     {
+        //dd($request->all());
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
 
         $created = $this->entity->create($request->all());
         if($created)
-        {Logs::createLog($this->entity->getTable(),$company,$created->id_sustancia_activa,'crear','Registro insertado');}
+        {Logs::createLog($this->entity->getTable(),$company,$created->id_numero_cuenta,'crear','Registro insertado');}
         else
         {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 
@@ -55,11 +69,17 @@ class SustanciasActivasController extends Controller
     {
         Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
 
+        $bank = $this->entity->findOrFail($id)->fk_id_banco;
+        $empresa = $this->entity->findOrFail($id)->fk_id_empresa;
+        $coin = $this->entity->findOrFail($id)->fk_id_sat_moneda;
 
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
+            'bank' => $this->banks->find($bank)->banco,
+            'company_owner' => $this->companies->find($empresa)->nombre_comercial,
+            'coin' => $this->coins->find($coin)->moneda,
         ]);
     }
 
@@ -69,6 +89,9 @@ class SustanciasActivasController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
+            'companies' => $this->companies,
+            'banks' => $this->banks,
+            'coins' => $this->coins,
         ]);
     }
 

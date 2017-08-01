@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Administracion;
 
-use App\Http\Models\Administracion\SustanciasActivas;
+use App\Http\Models\Administracion\DevolucionesMotivos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
 
-class SustanciasActivasController extends Controller
+class DevolucionesMotivosController extends Controller
 {
-    public function __construct(SustanciasActivas $entity)
+    public function __construct(DevolucionesMotivos $entity)
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
@@ -43,7 +43,7 @@ class SustanciasActivasController extends Controller
 
         $created = $this->entity->create($request->all());
         if($created)
-        {Logs::createLog($this->entity->getTable(),$company,$created->id_sustancia_activa,'crear','Registro insertado');}
+        {Logs::createLog($this->entity->getTable(),$company,$created->id_devolucion_motivo,'crear','Registro insertado');}
         else
         {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
 
