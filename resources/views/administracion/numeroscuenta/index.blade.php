@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Acciones')
+@section('title', 'Números de cuenta')
 
 @section('header-top')
 	<!--dataTable.css-->
@@ -32,8 +32,10 @@
 	<table class="striped responsive-table highlight">
 		<thead>
 			<tr>
-				<th>Acción</th>
-				<th>Subcategoría</th>
+				<th>Número de cuenta</th>
+				<th>Banco</th>
+				<th>Moneda</th>
+				<th>Empresa</th>
 				<th>Activo</th>
 				<th></th>
 			</tr>
@@ -41,10 +43,20 @@
 		<tbody>
 		@foreach ($data as $row)
 		<tr>
-			<td>{{ $row->accion}}</td>
+			<td>{{ $row->numero_cuenta }}</td>
 			<td>
-				@foreach($subcategories as $subcategoria)
-					{{ $subcategoria->id_subcategoria == $row->fk_id_subcategoria ? $subcategoria->subcategoria : '' }}
+				@foreach($banks as $banco)
+					{{ $banco->id_banco == $row->fk_id_banco ? $banco->banco : '' }}
+				@endforeach
+			</td>
+			<td>
+				@foreach($coins as $moneda)
+					{{ $moneda->id_moneda == $row->fk_id_sat_moneda ? $moneda->moneda : '' }}
+				@endforeach
+			</td>
+			<td>
+				@foreach($companies as $empresa)
+					{{ $empresa->id_empresa == $row->fk_id_empresa ? $empresa->nombre_comercial : '' }}
 				@endforeach
 			</td>
 			<td>
@@ -55,10 +67,10 @@
 				</p>
 			</td>
 			<td class="width-auto">
-				<a href="{{ companyRoute('show', ['id' => $row->id_accion]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-				<a href="{{ companyRoute('edit', ['id' => $row->id_accion]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
-				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$row->id_accion}}').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form-{{$row->id_accion}}" action="{{ companyRoute('destroy', ['id' => $row->id_accion]) }}" method="POST" style="display: none;">
+				<a href="{{ companyRoute('show', ['id' => $row->id_numero_cuenta]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $row->id_numero_cuenta]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
+				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$row->id_numero_cuenta}}').submit();"><i class="material-icons">delete</i></a>
+				<form id="delete-form-{{$row->id_numero_cuenta}}" action="{{ companyRoute('destroy', ['id' => $row->id_numero_cuenta]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
 				</form>

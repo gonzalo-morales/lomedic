@@ -33,6 +33,7 @@
 		<thead>
 			<tr>
 				<th>Subcategoría</th>
+				<th>Categoría</th>
 				<th>Activo</th>
 				<th></th>
 			</tr>
@@ -41,6 +42,11 @@
 		@foreach ($data as $row)
 		<tr>
 			<td>{{ $row->subcategoria}}</td>
+			<td>
+				@foreach($categories as $categoria)
+					{{ $categoria->id_categoria == $row->fk_id_categoria ? $categoria->categoria : '' }}
+				@endforeach
+			</td>
 			<td>
 				<p>
 					<input type="checkbox" id="activo" name="activo" disabled

@@ -42,4 +42,9 @@ class ModosContacto extends Model
 	public $rules = [
 		'modo_contacto' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
 	];
+
+	public function solicitudes()
+    {
+        return $this->belongsToMany('App\Http\Models\Soporte\Solicitudes');
+    }
 }

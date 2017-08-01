@@ -42,4 +42,14 @@ class Categorias extends Model
 	public $rules = [
 		'categoria' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
 	];
+
+	public function solicitudes()
+    {
+        return $this->belongsToMany('App\Http\Models\Soporte\Solicitudes');
+    }
+
+    public function accion()
+    {
+        return $this->hasMany('App\Http\Models\Soporte\Subcategorias');
+    }
 }

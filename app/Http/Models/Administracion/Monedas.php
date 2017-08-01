@@ -4,29 +4,27 @@ namespace App\Http\Models\Administracion;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Bancos extends Model
+class Monedas extends Model
 {
-    // use SoftDeletes;
-
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'gen_cat_bancos';
+    protected $table = 'sat_cat_monedas';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_banco';
+    protected $primaryKey = 'id_moneda';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['razon_social', 'banco', 'rfc', 'nacional'];
+    protected $fillable = ['moneda', 'descripcion','total_decimales','porcentaje_variacion','activo'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -35,21 +33,9 @@ class Bancos extends Model
      */
     public $timestamps = false;
 
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-        'razon_social' => 'required',
-        'banco' => 'required',
-    ];
-
-    public function getTable(){
-	    return $this->table;
-    }
-
     public function numeroscuenta()
     {
         return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
     }
+
 }

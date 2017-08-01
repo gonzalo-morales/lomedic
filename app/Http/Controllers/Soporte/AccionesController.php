@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Soporte;
 
 use App\Http\Models\Soporte\Acciones;
+use App\Http\Models\Soporte\Subcategorias;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,7 @@ class AccionesController extends Controller
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
+        $this->subcategories = Subcategorias::all();
     }
 
     public function index($company)
@@ -25,6 +27,7 @@ class AccionesController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->all()->where('eliminar', '=','0'),
+            'subcategories' => $this->subcategories,
         ]);
     }
 
@@ -33,6 +36,7 @@ class AccionesController extends Controller
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
+            'subcategories' => $this->subcategories,
         ]);
     }
 
@@ -55,10 +59,13 @@ class AccionesController extends Controller
     {
         Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
 
+        $subcategoria = $this->entity->where('id_accion',$id)->fk_id_subcategoria;
+
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
+            'subcategory' => $this->subcategories->find($subcategoria)->subcategoria,
         ]);
     }
 
@@ -68,6 +75,7 @@ class AccionesController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
+            'subcategories' => $this->subcategories,
         ]);
     }
 

@@ -24,22 +24,16 @@
 	<h5>Datos de la Subcategoría</h5>
 	<div class="row">
 		<div class="input-field col s12 m5">
-			<input type="text" name="subcategoria" id="subcategoria" class="validate"  readonly value="{{ $data->subcategoria}}">
+			<input type="text" name="subcategoria" id="subcategoria" class=""  readonly value="{{ $data->subcategoria}}">
 			<label for="subcategoria">Subategoría</label>
-			@if ($errors->has('subcategoria'))
-				<span class="help-block">
-					<strong>{{ $errors->first('subcategoria') }}</strong>
-				</span>
-			@endif
+		</div>
+		<div class="input-field col s4">
+			<input type="text" name="fk_id_subcategoria" id="fk_id_subcategoria" readonly value="{{$category}}">
+			<label for="fk_id_subcategoria">Subcategoria</label>
 		</div>
 		<div class="input-field col s12 m7">
 			<input type="checkbox" id="activo" name="activo" disabled {{$data->activo ? 'checked' : ''}} />
 			<label for="activo">Estatus:</label>
-			@if ($errors->has('activo'))
-				<span class="help-block">
-					<strong>{{ $errors->first('activo') }}</strong>
-				</span>
-			@endif
 		</div>
 	</div>
 </div>

@@ -42,4 +42,9 @@ class Urgencias extends Model
 	public $rules = [
 		'urgencia' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
 	];
+
+    public function solicitud()
+    {
+        return $this->belongsToMany('App\Http\Models\Soporte\Solicitudes');
+    }
 }

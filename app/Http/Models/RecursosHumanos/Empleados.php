@@ -60,4 +60,9 @@ class Empleados extends Model
     {
         $this->$this->hasOne('app\Http\Models\Administracion\Empresas');
     }
+
+    public function solicitudes()
+    {
+        $this->hasMany('app\Http\Models\Soporte\Solicitudes');
+    }
 }

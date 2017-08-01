@@ -4,22 +4,22 @@ namespace App\Http\Models\Administracion;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SustanciasActivas extends Model
+class DevolucionesMotivos extends Model
 {
-    protected $table = 'gen_cat_sustancias_activas';
+    protected $table = 'gen_cat_devoluciones_motivos';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_sustancia_activa';
+    protected $primaryKey = 'id_devolucion_motivo';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['sustancia_activa', 'opcion_gramaje','activo'];
+    protected $fillable = ['devolucion_motivo', 'solicitante_devolucion','activo'];//Solicitante devolución. false: localidad; true: proveedor;
 
     /**
      * Indicates if the model should be timestamped.
@@ -33,6 +33,6 @@ class SustanciasActivas extends Model
      * @var array
      */
     public $rules = [
-        'sustancia_activa' => 'required',
+        'devolucion_motivo' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
     ];
 }

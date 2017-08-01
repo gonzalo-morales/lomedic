@@ -49,4 +49,9 @@ class Sucursales extends Model
 	    return $this->hasMany('app\Http\Models\Administracion\Usuarios');
     }
 
+    public function solicitudes()
+    {
+        return $this->hasMany('app\Http\Models\Soporte\Solicitudes');
+    }
+
 }

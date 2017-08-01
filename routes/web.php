@@ -47,6 +47,8 @@ Route::prefix('{company}')->group(function () {
         Route::resource('jurisdicciones', 'Administracion\JurisdiccionesController');
         Route::resource('unidadesmedicas', 'Administracion\UnidadesMedicasController');
         Route::resource('unidadesmedidas', 'Administracion\UnidadesMedidasController');
+        Route::resource('devolucionesmotivos', 'Administracion\DevolucionesMotivosController');
+        Route::resource('numeroscuenta', 'Administracion\NumerosCuentaController');
         Route::resource('aplicacionesmedicamentos', 'Administracion\AplicacionesMedicamentosController');
 	});
 
