@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -38,8 +39,8 @@ class RouteServiceProvider extends ServiceProvider
 		$this->mapApiRoutes();
 
 		$this->mapWebRoutes();
-
-		//
+		
+		$this->mapRoutesByDirectory();
 	}
 
 	/**
@@ -48,6 +49,7 @@ class RouteServiceProvider extends ServiceProvider
 	 * These routes all receive session state, CSRF protection, etc.
 	 *
 	 * @return void
+	 * 
 	 */
 	protected function mapWebRoutes()
 	{
@@ -69,5 +71,23 @@ class RouteServiceProvider extends ServiceProvider
 			 ->middleware('api')
 			 ->namespace($this->namespace)
 			 ->group(base_path('routes/api.php'));
+	}
+	
+	/**
+	 * Define the all files "*Route.php" routes for the application.
+	 *
+	 * These routes all receive session state, CSRF protection, etc.
+	 *
+	 * @return void
+	 *
+	 */
+	protected function mapRoutesByDirectory()
+	{
+	Route::group(['namespace' => $this->namespace, 'middleware'=>'web'], function ($router) {
+	        foreach(File::allFiles(base_path().'/routes') as $route) {
+	            if(preg_match("/^.*Route.php$/", $route->getPathname()))
+	                require $route->getPathname();
+	        }
+	    });
 	}
 }
