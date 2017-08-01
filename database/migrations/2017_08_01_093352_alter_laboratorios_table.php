@@ -26,8 +26,6 @@ class AlterLaboratoriosTable extends Migration
      */
     public function down()
     {
-
-
         Schema::table('gen_cat_laboratorio', function (Blueprint $table) {
             //
             /*General fields*/
