@@ -17,20 +17,20 @@ class Menu
 
         $Rows = DB::select('SELECT *
             FROM ges_cat_modulos m
-            LEFT JOIN ges_det_modulos p ON p.fk_id_modulo_hijo = m.id_modulo AND p.activo = TRUE
+            LEFT JOIN ges_det_modulos p ON p.fk_id_modulo_padre = m.id_modulo AND p.activo = TRUE
             WHERE m.eliminar = FALSE
             AND m.activo = TRUE
             AND m.accion_menu = TRUE
             AND '.(empty($Parent) ? 'p.fk_id_modulo is null' : 'p.fk_id_modulo = '.$Parent).'
             AND m.id_modulo IN(
-            	SELECT DISTINCT mp.fk_id_modulo_hijo
-            	FROM ges_cat_usuarios u
-            	LEFT JOIN ges_det_perfiles_usuarios up ON up.fk_id_usuario = u.id_usuario AND up.activo = TRUE
-            	LEFT JOIN ges_det_modulo_perfil mp ON mp.fk_id_perfil = up.fk_id_perfil AND mp.activo = TRUE
-            	WHERE u.eliminar = FALSE
-            	AND u.activo = TRUE
-            	AND u.id_usuario = :id_usuario
-            	ORDER BY fk_id_modulo_hijo)
+                SELECT DISTINCT mp.fk_id_modulo_padre
+                FROM ges_cat_usuarios u
+                LEFT JOIN ges_det_perfiles_usuarios up ON up.fk_id_usuario = u.id_usuario AND up.activo = TRUE
+                LEFT JOIN ges_det_modulo_perfil mp ON mp.fk_id_perfil = up.fk_id_perfil AND mp.activo = TRUE
+                WHERE u.eliminar = FALSE
+                AND u.activo = TRUE
+                AND u.id_usuario = :id_usuario
+                ORDER BY fk_id_modulo_padre)
             ORDER BY id_modulo', ['id_usuario' => $id_usuario]);
 
         $Children = DB::table('ges_det_modulos')->select('fk_id_modulo')->distinct()->whereRaw('fk_id_modulo is not null')->get()->toarray();
@@ -66,20 +66,20 @@ class Menu
 
         $Rows = DB::select('SELECT *
             FROM ges_cat_modulos m
-            LEFT JOIN ges_det_modulos p ON p.fk_id_modulo_hijo = m.id_modulo AND p.activo = TRUE
+            LEFT JOIN ges_det_modulos p ON p.fk_id_modulo_padre = m.id_modulo AND p.activo = TRUE
             WHERE m.eliminar = FALSE
             AND m.activo = TRUE
             AND m.accion_barra = TRUE
             AND '.(empty($Parent) ? 'p.fk_id_modulo is null' : 'p.fk_id_modulo = '.$Parent).'
             AND m.id_modulo IN(
-            	SELECT DISTINCT mp.fk_id_modulo_hijo
-            	FROM ges_cat_usuarios u
-            	LEFT JOIN ges_det_perfiles_usuarios up ON up.fk_id_usuario = u.id_usuario AND up.activo = TRUE
-            	LEFT JOIN ges_det_modulo_perfil mp ON mp.fk_id_perfil = up.fk_id_perfil AND mp.activo = TRUE
-            	WHERE u.eliminar = FALSE
-            	AND u.activo = TRUE
-            	AND u.id_usuario = :id_usuario
-            	ORDER BY fk_id_modulo_hijo)
+                SELECT DISTINCT mp.fk_id_modulo_padre
+                FROM ges_cat_usuarios u
+                LEFT JOIN ges_det_perfiles_usuarios up ON up.fk_id_usuario = u.id_usuario AND up.activo = TRUE
+                LEFT JOIN ges_det_modulo_perfil mp ON mp.fk_id_perfil = up.fk_id_perfil AND mp.activo = TRUE
+                WHERE u.eliminar = FALSE
+                AND u.activo = TRUE
+                AND u.id_usuario = :id_usuario
+                ORDER BY fk_id_modulo_padre)
             ORDER BY id_modulo', ['id_usuario' => $id_usuario]);
 
         $Company = request()->company;
