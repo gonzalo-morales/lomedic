@@ -10,3 +10,18 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Auth::routes();
+
+$Conecctions = implode('|',array_keys(config('database.connections')));
+
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::pattern('company', "($Conecctions)");
+
+Route::prefix('{company}')->group(function () {
+    
+    Route::group(['middleware' => 'share'], function() {
+        Route::resource('/', 'HomeController');
+    });
+});
