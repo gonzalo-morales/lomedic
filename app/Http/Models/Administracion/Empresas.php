@@ -41,7 +41,43 @@ class Empresas extends Model
 	 */
 	public function modulos()
 	{
-		return $this->belongsToMany('App\Http\Models\Administracion\Modulos', 'ges_det_modulos_empresas', 'fk_id_empresa', 'fk_id_modulo');
+		return $this->belongsToMany(Modulos::class, 'ges_det_modulos', 'fk_id_empresa', 'fk_id_modulo');
+	}
+
+	/**
+	 * Obtenemos los modulos anidados relacionados a la empresa
+	 * @return array
+	 */
+	public function modulos_anidados()
+	{
+		return $this->__modulos();
+	}
+
+	/**
+	 * Obtenemos los modulos anidados relacionados a la empresa
+	 * @param  Modulo $modulo
+	 * @return array
+	 */
+	private function __modulos($modulo = null)
+	{
+		#
+		$collection = collect([]);
+		# Obtenemos modulos hijos donde ...
+		$modulos = Modulos::whereHas('empresas', function($q) use ($modulo) {
+			if (!$modulo) {
+				$q->whereNull('fk_id_modulo_hijo');
+			} else {
+				$q->whereIn('fk_id_modulo_hijo', [$modulo->id_modulo]);
+			}
+			# Modulos relacionados a empresa
+			$q->where('fk_id_empresa', $this->id_empresa );
+		})->get();
+		# Recorremos modulos
+		foreach ($modulos as $modulo) {
+			$modulo->submodulos = $this->__modulos($modulo);
+			$collection[] = $modulo;
+		}
+		return collect($collection);
 	}
 
 }
