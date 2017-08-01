@@ -54,6 +54,8 @@ Route::prefix('{company}')->group(function () {
         Route::resource('motivosdesviaciones', 'Administracion\MotivosDesviacionesController');
         Route::resource('motivosnotas', 'Administracion\MotivosNotasController');
         Route::resource('motivosajustes', 'Administracion\MotivosAjustesController');
+        Route::resource('grupoproductos', 'Administracion\GrupoProductosController');
+        Route::resource('familiasproductos', 'Administracion\FamiliasProductosController');
 	});
 
     Route::group(['prefix' => 'recursos_humanos', 'as' => 'recursos_humanos.', 'middleware' => ['auth','share']], function(){
