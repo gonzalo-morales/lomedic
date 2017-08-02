@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Administracion;
 
-use App\Http\Models\Administracion\FamiliasProductos;
+use App\Http\Models\Administracion\GruposProductos;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
 
-class FamiliasproductosController extends Controller
+class GrupoProductosController extends Controller
 {
-    public function __construct(FamiliasProductos $entity)
+    public function __construct(GruposProductos $entity)
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));

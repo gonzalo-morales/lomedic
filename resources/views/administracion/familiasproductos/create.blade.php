@@ -35,20 +35,50 @@
 				@endif
 			</div>
 			<div class="input-field col s12 m4">
+				<input type="text" name="tipo_presentacion" id="tipo_presentacion" class="validate">
+				<label for="Nomenclatura">Tipo de presentacion:</label>
+				@if ($errors->has('tipo_presentacion'))
+					<span class="help-block">
+						<strong class="red-text">* {{ $errors->first('tipo_presentacion') }}</strong>
+					</span>
+				@endif
+			</div>
+			<div class="input-field col s12 m4">
 				<input type="text" name="nomenclatura" id="nomenclatura" class="validate">
-				<label for="Nomenclatura">Nomenclatura:</label>
+				<label for="nomenclatura">Nomenclatura:</label>
 				@if ($errors->has('nomenclatura'))
 					<span class="help-block">
 						<strong class="red-text">* {{ $errors->first('nomenclatura') }}</strong>
 					</span>
 				@endif
 			</div>
-			<div class="input-field col s12 m3">
-				<input type="checkbox" id="estatus" name="estatus" checked />
-				<label for="Estatus">Estatus:</label>
-				@if ($errors->has('estatus'))
+
+		{{--</div>--}}
+		{{--<div class="row">--}}
+			<div class="input-field col s12 m5">
+				<input type="text" name="tipo" id="tipo" class="validate">
+				<label for="Tipo">Tipo:</label>
+				@if ($errors->has('tipo'))
 					<span class="help-block">
-						<strong class="red-text">* {{ $errors->first('estatus') }}</strong>
+						<strong class="red-text">* {{ $errors->first('tipo') }}</strong>
+					</span>
+				@endif
+			</div>
+			<div class="input-field col s12 m4">
+				<input type="text" name="tipo_presentacion" id="tipo_presentacion" class="validate">
+				<label for="Nomenclatura">Tipo de presentacion:</label>
+				@if ($errors->has('tipo_presentacion'))
+					<span class="help-block">
+						<strong class="red-text">* {{ $errors->first('tipo_presentacion') }}</strong>
+					</span>
+				@endif
+			</div>
+			<div class="input-field col s12 m3">
+				<input type="checkbox" id="activo" name="activo" checked />
+				<label for="activo">Activo:</label>
+				@if ($errors->has('activo'))
+					<span class="help-block">
+						<strong class="red-text">* {{ $errors->first('activo') }}</strong>
 					</span>
 				@endif
 			</div>
