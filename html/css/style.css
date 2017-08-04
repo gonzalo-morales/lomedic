@@ -249,3 +249,12 @@ td, th {
     transform: scale(1);
   }
 }
+/*Estílos de mensajes*/
+.m_error{
+background: #f44336;
+color: white;
+}
+.m_success{
+background: #4caf50;
+color: white;
+}
