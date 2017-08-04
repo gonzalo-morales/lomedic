@@ -46,4 +46,9 @@ class VehiculosMarcas extends Model
         return $this->hasMany('App\Http\Models\Administracion\VehiculosModelos');
     }
 
+
+    // public function vehiculos(){
+    //     return $this->hasMany('App\Http\Models\Servicios\Vehiculos','id_marca');
+    // }
+
 }

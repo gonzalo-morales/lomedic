@@ -46,4 +46,8 @@ class VehiculosModelos extends Model
     {
         return $this->belongsTo('app\Http\Models\Administracion\VehiculosMarcas');
     }
+
+    public function vehiculos(){
+        return $this->belongsTo('App\Http\Models\Servicios\Vehiculos','id_modelo');
+    }
 }
