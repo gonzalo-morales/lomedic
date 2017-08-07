@@ -1,5 +1,5 @@
 <?php 
-$Url = url()->previous() != URL('/') ? url()->previous() : url()->previous().'/'.request()->company;
+$Url = url()->previous() != URL('/') ? url()->previous() : url()->previous().'/';
 ?>
   <!DOCTYPE html>
   <html>

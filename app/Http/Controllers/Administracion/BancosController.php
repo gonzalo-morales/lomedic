@@ -53,6 +53,7 @@ class BancosController extends Controller
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
+            'data' => $this->entity->ColumnDefaultValues(),
         ]);
     }
 
