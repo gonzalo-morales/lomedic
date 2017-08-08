@@ -27,6 +27,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('perfiles', 'Administracion\PerfilesController');
 		Route::resource('usuarios', 'Administracion\UsuariosController');
 		Route::resource('sucursales', 'Administracion\SucursalesController');
+        Route::get('sucursalesautocomplete','Administracion\SucursalesController@obtenerSucursales');
 		Route::resource('correos', 'Administracion\CorreosController');
 		Route::resource('municipios', 'Administracion\MunicipiosController');
 		Route::resource('estados', 'Administracion\EstadosController');

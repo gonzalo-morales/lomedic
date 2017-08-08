@@ -45,6 +45,8 @@ function companyRoute($action = '', $params = [])
 	));
 }
 
+
+
 /**
  * Obtenemos accion de ruta actual
  * @param  string $action - Acción por la que reemplazar

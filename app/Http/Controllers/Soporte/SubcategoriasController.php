@@ -61,7 +61,7 @@ class SubcategoriasController extends Controller
     {
         Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
 
-        $categoria = $this->entity->where('id_subcategoria',$id)->fk_id_categoria;
+        $categoria = $this->entity->where('id_subcategoria',$id)->first()->fk_id_categoria;
 
         return view (Route::currentRouteName(), [
             'entity' => $this->entity_name,

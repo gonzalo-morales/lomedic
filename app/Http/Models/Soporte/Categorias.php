@@ -48,8 +48,8 @@ class Categorias extends Model
         return $this->belongsToMany('App\Http\Models\Soporte\Solicitudes');
     }
 
-    public function accion()
+    public function subcategorias()
     {
-        return $this->hasMany('App\Http\Models\Soporte\Subcategorias');
+            return $this->hasMany('App\Http\Models\Soporte\Subcategorias','fk_id_categoria');
     }
 }
