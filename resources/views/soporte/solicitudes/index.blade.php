@@ -46,12 +46,6 @@
 			<td>{{$row->estatusTickets->estatus}}</td>
 			<td class="width-auto">
 				<a href="{{ companyRoute('show', ['id' => $row->id_solicitud]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-				<a href="{{ companyRoute('conversation', ['id' => $row->id_solicitud]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">message</i></a>
-				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$row->id_solicitud}}').submit();"><i class="material-icons">delete</i></a>
-				<form id="delete-form-{{$row->id_solicitud}}" action="{{ companyRoute('destroy', ['id' => $row->id_solicitud]) }}" method="POST" style="display: none;">
-					{{ csrf_field() }}
-					{{ method_field('DELETE') }}
-				</form>
 			</td>
 		</tr>
 		@endforeach

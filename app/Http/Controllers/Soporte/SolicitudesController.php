@@ -101,15 +101,6 @@ class SolicitudesController extends Controller
         ]);
     }
 
-    public function conversation($company,$id)
-    {
-        return view (Route::currentRouteName(), [
-            'entity' => $this->entity,
-            'company' => $company,
-            'data' => $this->entity->findOrFail($id),
-        ]);
-    }
-
     public function obtenerSubcategorias($company, $id)
     {
         $subcategorias = Categorias::all()->find($id)->subcategorias->where('activo','1');
