@@ -22,6 +22,7 @@ class SeguimientoSolicitudesController extends Controller
 
     public function store(Request $request, $company)//Para crear un nuevo ticket
     {
+
         $this->validate($request,$this->entity->rules);
         $created = $this->entity->create($request->all());
         if($created)

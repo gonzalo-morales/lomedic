@@ -47,7 +47,7 @@ $LogoEmpresa = !empty($QueryCompany[0]->logotipo) ? $QueryCompany[0]->logotipo :
 
 $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 ?>
-<body class="grey lighten-3">
+<body class="white lighten-3">
 
 <div class="navbar-fixed ">
     <nav class="top-nav {{ $Color }} z-depth-0 nav-extended">
@@ -114,9 +114,10 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
                     </div>
                     <a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
                     <a href="#ticketHelp" class="waves-effect waves-light btn-flat white-text">Crear ticket/solicitud</a>
-                    <a href="{{ companyRoute('Soporte\SolicitudesController@index', ['company'=> $Company]) }}" class="waves-effect waves-light btn-flat white-text">Ver mis tickets/solicitudes</a>
                 </div>
                 </li>
+                <li><a href="{{ companyRoute('Soporte\SolicitudesController@index', ['company'=> $Company]) }}"><i class="material-icons">dvr</i>Lista de Tickets/Solicitudes</a></li>
+                <div class="divider"></div>
                 <li><a href="#!">Proceso NAUS1234</a></li>
                 <li><a href="#!">Proceso NAUS1234</a></li>
                 <li><a href="#!">Proceso NAUS1234</a></li>
