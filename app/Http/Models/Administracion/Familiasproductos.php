@@ -27,7 +27,7 @@ class Familiasproductos extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['descripcion', 'nomenclatura', 'estatus',];
+	protected $fillable = ['descripcion', 'tipo_presentacion','nomenclatura','tipo','activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -40,5 +40,20 @@ class Familiasproductos extends Model
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = ['descripcion' => 'required',];
+	public $rules = [
+	    'descripcion' => 'required',
+        'tipo_presentacion' => 'required',
+        'nomenclatura' => 'required',
+        'tipo' => 'required',
+        ];
+
+    public function usuario()
+    {
+        $this->hasOne('app\Http\Models\Administracion\Usuarios');
+    }
+
+    public function empresa()
+    {
+        $this->$this->hasOne('app\Http\Models\Administracion\Empresas');
+    }
 }

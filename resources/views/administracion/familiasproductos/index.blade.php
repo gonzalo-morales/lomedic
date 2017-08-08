@@ -33,8 +33,9 @@
 		<thead>
 			<tr>
 				<th>Familia</th>
+				<th>Tipo de presentacion</th>
 				<th>Nomenclatura</th>
-				<th>Estatus</th>
+				<th>Activo</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -42,8 +43,12 @@
 		@foreach ($data as $row)
 		<tr>
 			<td>{{ $row->descripcion }}</td>
+			<td>{{ $row->tipo_presentacion }}</td>
 			<td>{{ $row->nomenclatura }}</td>
-			<td>{{ $row->estatus }}</td>
+			<td>
+				<input type="checkbox" id="activo" name="activo" disabled @if($row->activo) checked="{{ $row->activo}}"@endif>
+				<label for="activo"></label>
+			</td>
 			<td class="width-auto">
 				<a href="{{ companyRoute('show', ['id' => $row->id_familia]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
 				<a href="{{ companyRoute('edit', ['id' => $row->id_familia]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
