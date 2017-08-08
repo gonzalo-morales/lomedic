@@ -95,10 +95,9 @@
           <option value="3">Option 3</option>
         </select>
       </div>
-      <div class="col 12">
-          <label>Destino:</label>
-          <input id="pac-input" class="controls" type="text" placeholder="Escribe la ubicación">
-          <div id="map"></div>
+      <div class="input-field col s12">
+        <input id="destiny" type="text" class="validate">
+        <label for="destiny">*Destino:</label>
       </div>
     </div>
   </div>
@@ -325,114 +324,5 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
 <!--jquery de dateTables creados-->
 <script type="text/javascript" src="../js/initiateComponents.js"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
-<script type="text/javascript">
-function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: {
-      lat: 20.654554,
-      lng: -103.447691
-    },
-    zoom: 15
-  });
-  var input = document.getElementById('pac-input');
-
-  //var types = document.getElementById('type-selector');
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-  //map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
-
-  var autocomplete = new google.maps.places.Autocomplete(input);
-  autocomplete.bindTo('bounds', map);
-
-  var infowindow = new google.maps.InfoWindow();
-  var marker = new google.maps.Marker({
-    map: map,
-    anchorPoint: new google.maps.Point(0, -29)
-  });
-  
-  google.maps.event.addDomListener(input, 'keydown', function(e) {
-    if ($(".pac-item-selected").length == 0) {
-      if (e.keyCode === 13 && !e.triggered) {
-        google.maps.event.trigger(this, 'keydown', {
-          keyCode: 40
-        });
-        google.maps.event.trigger(this, 'keydown', {
-          keyCode: 13,
-          triggered: true
-        });
-      }
-    }
-  });
-  
-  /*document.addEventListener("keydown", function(event) {
-    if(event.which == 13) {
-      event.preventDefault();
-      var place = autocomplete.getPlace();
-        console.log($(".pac-item").length);
-    }
-  });*/
-
-  autocomplete.addListener('place_changed', function() {
-    infowindow.close();
-    marker.setVisible(false);
-    var place = autocomplete.getPlace();
-    if (!place.geometry) {
-      window.alert("Sorry, that location could not be found. Please select a suggested option from the dropdown.");
-      return;
-    }
-
-    // If the place has a geometry, then present it on a map.
-    if (place.geometry.viewport) {
-      //map.fitBounds(place.geometry.viewport);
-      map.setCenter(place.geometry.location);
-      map.setZoom(14);
-    } else {
-      map.setCenter(place.geometry.location);
-      map.setZoom(14);
-    }
-    marker.setIcon({
-      url: place.icon,
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(35, 35)
-    });
-    marker.setPosition(place.geometry.location);
-    marker.setVisible(true);
-
-    var address = '';
-    if (place.address_components) {
-      address = [
-        (place.address_components[0] && place.address_components[0].short_name || ''),
-        (place.address_components[1] && place.address_components[1].short_name || ''),
-        (place.address_components[2] && place.address_components[2].short_name || '')
-      ].join(' ');
-    }
-    
-    console.log("Name: " + place.name)
-    console.log("Lat: " + place.geometry.location.lat())
-    console.log("Lng: " + place.geometry.location.lng())
-    console.log(place.formatted_address);
-
-    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-    infowindow.open(map, marker);
-  });
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
-  /*function setupClickListener(id, types) {
-    var radioButton = document.getElementById(id);
-    radioButton.addEventListener('click', function() {
-      autocomplete.setTypes(types);
-    });
-  }*/
-
-  setupClickListener('changetype-all', []);
-  setupClickListener('changetype-address', ['address']);
-  setupClickListener('changetype-establishment', ['establishment']);
-  setupClickListener('changetype-geocode', ['geocode']);
-}
-
-initMap();
-</script>
 </body>
 </html>
