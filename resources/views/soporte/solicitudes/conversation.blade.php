@@ -12,7 +12,7 @@
 @section('content')
 	<div class="col s12 xl8 offset-xl2">
 		<h5>Conversación del ticket {{$data->id_solicitud}}</h5>
-		@foreach($seguimientos as $seguimiento)
+		@foreach($data->seguimiento as $seguimiento)
 			<div>Mensaje</div>
 			<div class="row">
 				<div class="input-field col s4">

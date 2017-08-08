@@ -34,7 +34,6 @@ class Logs extends Model
 
     public static function createLog($table,$company,$id,$accion,$comentario)//Crear un registro en log cuando se agrega un registro a una tabla
     {//Creación de un registro
-
         if(Auth::id()!= null && is_numeric($id) || $id == null)
         {
             Logs::create([
