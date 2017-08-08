@@ -33,17 +33,6 @@ class SolicitudesController extends Controller
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
-        $this->employees = Empleados::all();
-        $this->companies = Empresas::all();
-        $this->branches = Sucursales::all();
-        $this->status = EstatusTickets::all();
-        $this->categories = Categorias::all();
-        $this->subcategories = Subcategorias::all();
-        $this->actions = Acciones::all();
-        $this->priorities = Prioridades::all();
-        $this->contactmethods = ModosContacto::all();
-        $this->impacts = Impactos::all();
-        $this->urgencies = Urgencias::all();
     }
 
     public function index($company)
@@ -118,7 +107,6 @@ class SolicitudesController extends Controller
             'entity' => $this->entity,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
-            'seguimientos' => SeguimientoSolicitudes::where('fk_id_solicitud',$id)->get(),
         ]);
     }
 
@@ -141,6 +129,7 @@ class SolicitudesController extends Controller
     public function descargarArchivosAdjuntos($company,$id)
     {
         $archivo = ArchivosAdjuntos::where('id_archivo_adjunto',$id)->first();
+        Logs::createLog($archivo->getTable(),$company,$archivo->id_archivo_adjunto,'descargar','Archivo adjunto de ticket');
         return Response::download($archivo->ruta_archivo.'/'.$archivo->nombre_archivo);
     }
 

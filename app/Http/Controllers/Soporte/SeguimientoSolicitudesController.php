@@ -42,7 +42,7 @@ class SeguimientoSolicitudesController extends Controller
                     }
                 }
 
-//                Logs::createLog($this->entity->getTable(),$company,$created->id_solicitud,'crear','Ticket creado');
+                Logs::createLog($this->entity->getTable(),$company,$created->id_solicitud,'crear','Ticket creado');
             }
         else
             {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al guardar mensaje');}

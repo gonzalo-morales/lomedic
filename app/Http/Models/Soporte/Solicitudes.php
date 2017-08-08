@@ -113,6 +113,6 @@ class Solicitudes extends Model
 
     public function seguimiento()
     {
-        return $this->hasMany('App\Http\Models\Soporte\SeguimientoSolicitudes','id_seguimiento');
+        return $this->hasMany('App\Http\Models\Soporte\SeguimientoSolicitudes','fk_id_solicitud','id_solicitud');
     }
 }
