@@ -63,6 +63,11 @@ class Empleados extends Model
 
     public function solicitudes()
     {
-        $this->hasMany('app\Http\Models\Soporte\Solicitudes');
+        return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_empleado_solicitud','id_empleado');
+    }
+
+    public function solicitudes_encargado()
+    {
+        return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_empleado_tecnico','id_empleado');
     }
 }
