@@ -6,7 +6,7 @@
 	<title>SIM - @yield('title')</title>
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
 	{{ HTML::meta('csrf-token', csrf_token()) }}
-	{{ HTML::favicon(asset('img/'.$LogoEmpresa)) }}
+	{{ HTML::favicon(asset("img/$empresa->logotipo")) }}
 	{{ HTML::style('https://fonts.googleapis.com/icon?family=Material+Icons') }}
 	{{ HTML::style('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css') }}
 	{{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
@@ -46,8 +46,7 @@
 
 	<ul id='enteDrop' class='dropdown-content'>
 		@foreach($empresas as $_empresa)
-		<li><a target="_blank" href="{{ companyRoute('HomeController@index',['company' => $_empresa->conexion]) }}"><i class="material-icons">business</i>{{ $_empresa->nombre_comercial }}</a></li>
-		<li><a target="_blank" href="{{ asset($Companys->conexion) }}">{{ HTML::image(asset('img/'.$Companys->logotipo),null,['class'=>'circle responsive-img','width'=>'24px']) }} {{ $Companys->nombre_comercial }}</a></li>
+		<li><a target="_blank" href="{{ companyRoute('HomeController@index',['company' => $_empresa->conexion]) }}">{{ HTML::image(asset("img/$_empresa->logotipo"), null, ['class'=>'circle responsive-img','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}</a></li>
 		@endforeach
 	</ul>
 
@@ -72,8 +71,7 @@
 
 <div class="row {{ $empresa->color }}">
 	<div class="col s12">
-		<a href="{{ companyRoute('HomeController@index',['company' => $empresa->conexion]) }}" class="breadcrumb">Home</a>
-		{{ HTML::link(asset($Company),'Inicio', ['class'=>'breadcrumb']) }}
+		{{ HTML::link(companyRoute('HomeController@index', ['company' => $empresa->conexion]), 'Inicio', ['class'=>'breadcrumb']) }}
 	</div>
 </div>
 

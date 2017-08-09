@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 		$this->mapApiRoutes();
 
 		$this->mapWebRoutes();
-		
+
 		$this->mapRoutesByDirectory();
 	}
 
@@ -49,7 +49,7 @@ class RouteServiceProvider extends ServiceProvider
 	 * These routes all receive session state, CSRF protection, etc.
 	 *
 	 * @return void
-	 * 
+	 *
 	 */
 	protected function mapWebRoutes()
 	{
@@ -72,7 +72,7 @@ class RouteServiceProvider extends ServiceProvider
 			 ->namespace($this->namespace)
 			 ->group(base_path('routes/api.php'));
 	}
-	
+
 	/**
 	 * Define the all files "*Route.php" routes for the application.
 	 *
