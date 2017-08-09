@@ -1,45 +1,17 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <!--meta para caracteres especiales-->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Laravel') }} - @yield('title')</title>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <!--<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
-    <!--estilo css personal-->
-    <link type="text/css" rel="stylesheet" href="{{ asset('css/style.css') }}"  media="screen,projection"/>
-    @yield('header-top')
-</head>
-
 <?php
-use App\Menu;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 
-$Menu = New Menu();
-// $MainMenu =  $Menu->getMenu();
-$MainMenu =  '';
-
 $Url = URL('/');
-$Usuario = Session::get('usuario');
+$IdUsuario = Auth::id();
 $Company = request()->company;
 
-$QueryUser =  DB::table('ges_cat_usuarios')->where('usuario','=',$Usuario)->get()->toarray();
+$QueryUser =  DB::table('ges_cat_usuarios')->where('id_usuario','=',$IdUsuario)->get()->toarray();
 $QueryCompany =  DB::table('gen_cat_empresas')->where('conexion','=',$Company)->get()->toarray();
 
-
 $QueryOterCompany =  DB::table('gen_cat_empresas')->where('conexion','<>',$Company)->get()->toarray();
-
-
 
 $NombreUsuario = !empty($QueryUser[0]->nombre_corto) ? $QueryUser[0]->nombre_corto : '<\ Usuario >';
 $NombreEmpresa = !empty($QueryCompany[0]->nombre_comercial) ? $QueryCompany[0]->nombre_comercial : '<\ Empresa >';
@@ -47,6 +19,28 @@ $LogoEmpresa = !empty($QueryCompany[0]->logotipo) ? $QueryCompany[0]->logotipo :
 
 $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!--meta para caracteres especiales-->
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ config('app.name', 'Laravel') }} - @yield('title')</title>
+    <!--Let browser know website is optimized for mobile-->
+    {{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
+    <!-- CSRF Token -->
+    {{ HTML::meta('csrf-token', csrf_token()) }}
+    <!-- Favicon -->
+    {{ HTML::favicon(asset('img/'.$LogoEmpresa)) }}
+    <!--Import Google Icon Font-->
+    {{ HTML::style('https://fonts.googleapis.com/icon?family=Material+Icons') }}
+    <!--Import materialize.css-->
+    {{ HTML::style('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css') }}
+    <!--estilo css personal-->
+    {{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
+    @yield('header-top')
+</head>
 <body class="grey lighten-3">
 
 <div class="navbar-fixed ">
@@ -54,7 +48,8 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
         <div class="nav-wrapper">
             <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
             <a href="#!" data-activates="enteDrop" data-beloworigin="true" class="brand-logo dropdown-button logo-enterprise">
-                <img src="/img/{{ $LogoEmpresa }}" alt="Sesión activa" class="circle responsive-img"> {{ $NombreEmpresa }}
+            	{{ HTML::image(asset('img/'.$LogoEmpresa),'Logo',['class'=>'circle responsive-img']) }}
+				{{ $NombreEmpresa }}
             </a>
             <ul class="right">
                 <li><a href="#" data-activates="slide-help" class="help-collapse"><i class="material-icons">live_help</i></a></li>
@@ -67,18 +62,15 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 <ul id="slide-out" class="side-nav">
     <li>
         <div class="user-view center">
-            <object id="front-page-logo" class="Sim" type="image/svg+xml" data="img/sim2.svg" name="SIM">Your browser does not support SVG</object>
+            <object id="front-page-logo" class="Sim" type="image/svg+xml" data="{{ asset('img/sim2.svg') }}" name="SIM">Your browser does not support SVG</object>
             <div class="background">
-                <img src="img/userBG2.jpg">
+            	{{ HTML::image(asset('img/userBG2.jpg')) }}
             </div>
-            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <span class="white-text name">
-                    <i class="tiny material-icons">power_settings_new</i> CERRAR SESIÓN
-                </span>
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text name">
+            	<i class="tiny material-icons">power_settings_new</i> CERRAR SESIÓN
             </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                {{ csrf_field() }}
-            </form>
+            {!! Form::open(['route' => 'logout', 'before' => 'csrf', 'id' => 'logout-form', 'class' => 'hidden']) !!}
+            {!! Form::close() !!}
             <a href="#"><span class="white-text name">{{ $NombreUsuario }}</span></a>
             <!-- <a href="#"><span class="white-text">Facturación</span></a> -->
         </div>
@@ -86,7 +78,7 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
     <!--enteprises dropdown-->
     <ul id='enteDrop' class='dropdown-content'>
         @foreach($QueryOterCompany as $Companys)
-            <li><a target="_blank" href="{{ $Url }}/{{ $Companys->conexion }}"><i class="material-icons">business</i>{{ $Companys->nombre_comercial }}</a></li>
+            <li><a target="_blank" href="{{ asset($Companys->conexion) }}">{{ HTML::image(asset('img/'.$Companys->logotipo),null,['class'=>'circle responsive-img','width'=>'24px']) }} {{ $Companys->nombre_comercial }}</a></li>
         @endforeach
     </ul>
     <!--notifications dropdown-->
@@ -102,7 +94,9 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
             </li>
     </ul><!--/dropdown-->
                 <ul id='main-menu'>
-                    @each('partials.menu', $menu, 'modulo')
+                	@if(isset($menu))
+                    	@each('partials.menu', $menu, 'modulo')
+                    @endif
                 </ul>
             </ul><!--/slide-out, principal nav-->
             <ul id="slide-help" class="side-nav">
@@ -125,8 +119,8 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 
             <div class="row {{ $Color }}">
                 <div class="col s12">
-                    <a href="{{ $Url }}/{{ $Company }}" class="breadcrumb">Home</a>
-                    <!-- <a href="#!" class="breadcrumb">Section</a> -->
+                	{{ HTML::link(asset($Company),'Inicio', ['class'=>'breadcrumb']) }}
+                    <!-- <a href="#!" class="breadcrumb">Administracion</a> -->
                 </div>
             </div><!--/breadcrum-->
 
@@ -222,14 +216,12 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
     </div><!--/Modal de ayuda-->
 </form>
 	<!--Import jQuery before materialize.js-->
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-
+	{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js') }}
 	@yield('header-bottom')
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
-    <script type="text/javascript" src="{{ asset('js/InitiateComponents.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/jquery.ui.autocomplete2.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/ticket.js') }}"></script>
-
+    {{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js') }}
+    {{ HTML::script(asset('js/InitiateComponents.js')) }}
+	{{ HTML::script(asset('js/jquery.ui.autocomplete2.js')) }}
+	{{ HTML::script(asset('js/ticket.js')) }}
 </body>
 </html>
