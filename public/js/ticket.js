@@ -32,15 +32,15 @@ $(document).ready(function () {
     });
 
     $('#fk_id_categoria').on('change', function(){
-
-        var data = $('option:selected', this).data('url');
+    	var data = $(this).data('url');
+        
         $('#fk_id_accion option').remove();
         $('#fk_id_subcategoria option').remove();
         $('#fk_id_subcategoria').prop('disabled',true);
         $('#fk_id_accion').prop('disabled',true);
 
         $.ajax({
-            url: data,
+        	url: data.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
                 $.each(data, function (key, subcategoria) {
@@ -49,7 +49,6 @@ $(document).ready(function () {
                     option.val(subcategoria.id_subcategoria);
                     option.text(subcategoria.subcategoria);
                     option.data('url', subcategoria.url);
-
 
                     $('#fk_id_subcategoria').append(option);
 
@@ -65,14 +64,12 @@ $(document).ready(function () {
     });
 
     $('#fk_id_subcategoria').on('change', function(){
-
-        var data = $('option:selected', this).data('url');
+    	var data = $(this).data('url');
 
         $.ajax({
-            url: data,
+            url: data.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
-
 
                 $('#fk_id_accion option').remove();
 
@@ -81,7 +78,6 @@ $(document).ready(function () {
                     var option = $('<option/>');
                     option.val(accion.id_accion);
                     option.text(accion.accion);
-
 
                     $('#fk_id_accion').append(option);
                 });
