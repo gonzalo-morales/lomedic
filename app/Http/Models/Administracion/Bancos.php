@@ -29,6 +29,17 @@ class Bancos extends Model
     protected $fillable = ['razon_social', 'banco', 'rfc', 'nacional'];
 
     /**
+     * Los atributos que seran visibles en index-datable
+     * @var [type]
+     */
+    protected $fields = [
+      'banco' => 'Banco',
+      'razon_social' => 'Razón Social',
+      'rfc' => 'RFC',
+      'nacional' => 'Nacional'
+    ];
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
@@ -44,8 +55,9 @@ class Bancos extends Model
         'banco' => 'required',
     ];
 
-    public function getTable(){
-	    return $this->table;
+    public function getFields()
+    {
+        return $this->fields;
     }
 
     public function numeroscuenta()
