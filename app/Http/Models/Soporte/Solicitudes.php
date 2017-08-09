@@ -60,7 +60,6 @@ class Solicitudes extends Model
     {
         return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_empleado_tecnico','id_empleado');
     }
-
     public function sucursal()
     {
         return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');

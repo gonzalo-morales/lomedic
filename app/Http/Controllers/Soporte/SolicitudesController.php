@@ -42,7 +42,32 @@ class SolicitudesController extends Controller
         return view(Route::currentRouteName(),[
             'entity' => $this->entity_name,
             'company' => $company,
-            'data' => $this->entity->all()->where('eliminar','0')->where('fk_id_empleado_solicitud',Auth::id()),
+            'data' => $this->entity->all()->where('eliminar','0')
+                ->where('fk_id_empleado_solicitud',Auth::id()),
+        ]);
+    }
+
+    public function index_tecnicos($company)
+    {
+        return view(Route::currentRouteName(),[
+            'entity' => $this->entity_name,
+            'company' => $company,
+            'data' => $this->entity->all()->where('eliminar','0')
+                ->where('fk_id_empleado_tecnico',null),
+        ]);
+    }
+
+    public function index_tecnico($company)
+    {
+        $id_empleado = Empleados::findOrFail(Usuarios::where('id_usuario', Auth::id())
+            ->first()->
+            fk_id_empleado)->id_empleado;
+
+        return view(Route::currentRouteName(),[
+            'entity' => $this->entity_name,
+            'company' => $company,
+            'data' => $this->entity->all()->where('eliminar','0')
+                ->where('fk_id_empleado_tecnico',$id_empleado),
         ]);
     }
 
@@ -98,7 +123,27 @@ class SolicitudesController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'data' => $this->entity->findOrFail($id),
+            'employees' => Empleados::all(),
+            'status' => EstatusTickets::all(),
+            'impacts' => Impactos::all(),
+            'urgencies' => Urgencias::all(),
+            'employee_department' => Empleados::findOrFail(Usuarios::where('id_usuario', Auth::id())
+                ->first()->
+                fk_id_empleado)->fk_id_departamento,
         ]);
+    }
+
+    public function update(Request $request, $company, $id)
+    {
+        $entity = $this->entity->findOrFail($id);
+        $entity->fill($request->all());
+        if($entity->save())
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
+        else
+        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
+
+        # Redirigimos a index
+        return redirect(companyRoute('index'));
     }
 
     public function obtenerSubcategorias($company, $id)

@@ -33,53 +33,135 @@
 	</div>
 </div><!--/row principal data-->
 {{--Datos del ticket--}}
+
 <div class="row">
-	<div class="col s12 m4">
-		<h5>Datos del ticket</h5>
-		<div class="card-panel teal lighten-5">
-			<p>Asunto: <b>{{$data->asunto}}</b></p>
-			<p>Categoría: <b>{{$data->categoria->categoria}}</b></p>
-			<p>Sucategoría: <b>{{$data->subcategoria->subcategoria}}</b></p>
-			<p>Acción: <b>{{$data->accion->accion}}</b></p>
-			<p>Descripción: {{ $data->descripcion}}</p>
-			<ul>
-				@foreach($data->archivos_adjuntos as $archivo_adjunto)
-					<li>
-					<a href="{{companyRoute('descargarArchivosAdjuntos', ['id' => $archivo_adjunto->id_archivo_adjunto])}}">
-						<i class="material-icons">attachment</i>{{$archivo_adjunto->nombre_archivo}}
-					</a>
-					</li>
-				@endforeach
-			</ul>
+	<form action="{{ companyRoute('update') }}" method="post" class="col s12">
+		{{ csrf_field() }}
+		{{ method_field('PUT') }}
+		<div class="col s12 m4">
+			<h5>Datos del ticket</h5>
+			<div class="card-panel teal lighten-5">
+				<p>Asunto: <b>{{$data->asunto}}</b></p>
+				<p>Categoría: <b>{{$data->categoria->categoria}}</b></p>
+				<p>Sucategoría: <b>{{$data->subcategoria->subcategoria}}</b></p>
+				<p>Acción: <b>{{$data->accion->accion}}</b></p>
+				<p>Descripción: {{ $data->descripcion}}</p>
+				<ul>
+					@foreach($data->archivos_adjuntos as $archivo_adjunto)
+						<li>
+							<a href="{{companyRoute('descargarArchivosAdjuntos', ['id' => $archivo_adjunto->id_archivo_adjunto])}}">
+								<i class="material-icons">attachment</i>{{$archivo_adjunto->nombre_archivo}}
+							</a>
+						</li>
+					@endforeach
+				</ul>
+			</div>
+		</div><!--/col s12 m4-->
+			@if($data->fk_id_empleado_tecnico == Auth::id() || $data->fk_id_empleado_tecnico == null) {{--Si es el técnico asignado--}}
+			<div class="col s12 m8">
+				<h5>Datos adicionales sobre la solución del ticket</h5>
+				<div class="col s3">
+					<label for="fk_id_empleado_tecnico">Asignado a:</label>
+					<select name="fk_id_empleado_tecnico" id="fk_id_empleado_tecnico">
+					<option selected disabled>Selecciona un técnico</option>
+						@foreach($employees as $empleado)
+							@if($empleado->fk_id_departamento == 18) {{--Si pertenece al área de sistemas--}}
+								<option value="{{$empleado->id_empleado}}"
+								{{$empleado->id_empleado == $data->fk_id_empleado_tecnico
+								? 'selected'
+								: ''}}
+								>{{$empleado->nombre.' '.$empleado->apellido_paterno.' '.$empleado->apellido_materno}}</option>
+							@endif
+						@endforeach
+					</select>
+				</div>
+				<div class="col s3">
+					<label for="fk_id_estatus_ticket">Estatus:</label>
+					<select name="fk_id_estatus_ticket" id="fk_id_estatus_ticket">
+						@foreach($status as $estatus)
+							<option value="{{$estatus->id_estatus_ticket}}"
+							{{$data->fk_id_estatus_ticket == $estatus->id_estatus_ticket
+							? 'selected'
+							: ''}}
+							>{{$estatus->estatus}}</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="col s3">
+					<label for="fk_id_impacto">Estatus:</label>
+					<select name="fk_id_impacto" id="fk_id_impacto">
+						@foreach($impacts as $impacto)
+							<option value="{{$impacto->id_impacto}}"
+							{{$data->fk_id_impacto == $impacto->id_impacto
+							? 'selected'
+							: ''}}
+							>{{$impacto->impacto}}</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="col s3">
+					<label for="fk_id_urgencia">Urgencia:</label>
+					<select name="fk_id_urgencia" id="fk_id_urgencia">
+						@foreach($urgencies as $urgencia)
+							<option value="{{$urgencia->id_urgencia}}"
+							{{$data->fk_id_urgencia == $urgencia->id_urgencia
+							? 'selected'
+							: ''}}
+							>{{$urgencia->urgencia}}</option>
+						@endforeach
+					</select>
+				</div>
+			</div>
+			<div class="col s6">
+				<p>
+					<input type="checkbox" id="solucion" name="solucion"
+					   {{$data->resolucion != null ? 'checked' : ''}}
+					   onclick="descripcion()">
+					<label for="solucion">¿Solucionado?</label>
+				</p>
+			</div>
+			<div class="col s6">
+				<label for="resolucion">Descripción de resolución:</label>
+					<textarea class="materialize-textarea" name="resolucion" id="resolucion" disabled>{{$data->resolucion}}</textarea>
+			</div>
+			<div class="col s6">
+				<p class="right-align">
+					<button class="waves-effect waves-light btn btn-flat teal-text">Guardar cambios</button>
+				</p>
+			</div>
+		@elseif($employee_department != 18 || $data->fk_id_empleado_tecnico != Auth::id()) {{--Si no es el técnico asignado y no pertenece a sistemas, no podrá editar los valores--}}
+		<div class="col s12 m8">
+			<h5>Datos adicionales sobre la solución del ticket</h5>
+			<div class="col s3 row">
+				<label>Asignado a:</label>
+				<p>{{
+				$data->fk_id_empleado_tecnico
+				? $data->empleado_tecnico->nombre.' '.$data->empleado_tecnico->apellido_paterno.' '.$data->empleado_tecnico->apellido_materno
+				: 'Sin encargado'
+				}}</p>
+			</div>
+			<div class="col s3">
+				<label>Estatus:</label>
+				<p class="green-text"><i class="material-icons"></i>{{$data->estatusTickets->estatus}}</p>
+			</div>
 		</div>
-	</div><!--/col s12 m4-->
-	<div class="col s12 m8">
-		<h5>Datos adicionales sobre la solución del ticket</h5>
-		<div class="col s6">
-			<label>Asignado a:</label>
-			<p>{{
-			$data->fk_id_empleado_tecnico
-			? $data->empleado_tecnico->nombre.' '.$data->empleado_tecnico->apellido_paterno.' '.$data->empleado_tecnico->apellido_materno
-			: 'Sin encargado'
-			}}</p>
+		<div class="col s12 row m5">
+			<h5>Solución:</h5>
+			<div class="col s6">
+				<label>Fecha</label>
+				<p><i class="material-icons">event</i>{{$data->fecha_hora_resolucion}}</p>
+			</div>
+			<div class="col s12">
+				<label>Descripción de resolución:</label>
+				<p>{{$data->resolucion ? $data->resolucion : 'Ticket sin resolver'}}</p>
+			</div>
+			@endif
 		</div>
-		<div class="col s6">
-			<label>Estatus:</label>
-			<p class="green-text"><i class="material-icons"></i>{{$data->estatusTickets->estatus}}</p>
-		</div>
-		<h5>Solución:</h5>
-		<div class="col s6">
-			<label>Fecha</label>
-			<p><i class="material-icons">event</i>02/12/2017</p>
-		</div>
-		<div class="col s12">
-			<label>Descripción</label>
-			<p>{{$data->resolucion ? $data->resolucion : 'Ticket sin resolver'}}</p>
-		</div>
-	</div><!--/col s12 m4-->
+	</form>
 </div><!--/row-->
 {{--Fin datos del ticket--}}
 {{--Conversación--}}
+@if(Auth::id() == $data->fk_id_tecnico_asignado || Auth::id() == $data->fk_id_empleado_solicitud)
 <ul class="collection with-header">
 	<li class="collection-header"><h4>Chat</h4></li>
 	@foreach($data->seguimiento as $seguimiento)
@@ -146,5 +228,6 @@
 		<h5 class="green-text center"><b>El ticket se ha cerrado con éxito, si tienes algún problema adicional te recomendamos dar de alta otro ticket.</b></h5>
 	</li>
 </ul>
+@endif
 {{--Fin conversación--}}
 @endsection
