@@ -44,13 +44,4 @@ class Acciones extends Model
         'fk_id_subcategoria' => 'required',
 	];
 
-	public function subcategoria()
-    {
-        return $this->belongsTo('App\Http\Models\Soporte\Subcategorias');
-    }
-
-    public function solicitudes()
-    {
-        return $this->belongsTo('App\Http\Models\Soporte\Solicitudes');
-    }
 }

@@ -70,23 +70,6 @@
 	</ul>
 </ul>
 
-<ul id="slide-help" class="side-nav">
-	<li>
-		<div class="user-view center">
-			<span><i class="material-icons medium white-text">live_help</i></span>
-			<div class="background">
-				<img src="{{asset('img/helpBG2.png')}}">
-			</div>
-			<a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
-			<a href="#ticketHelp" class="waves-effect waves-light btn-flat white-text">Crear ticket/solicitud</a>
-		</div>
-	</li>
-	<li><a href="#!">Proceso NAUS1234</a></li>
-	<li><a href="#!">Proceso NAUS1234</a></li>
-	<li><a href="#!">Proceso NAUS1234</a></li>
-	<li><a href="#!">Proceso NAUS1234</a></li>
-</ul>
-
 <div class="row {{ $empresa->color }}">
 	<div class="col s12">
 		<a href="{{ companyRoute('HomeController@index',['company' => $empresa->conexion]) }}" class="breadcrumb">Home</a>
@@ -97,6 +80,8 @@
 <div class="row">
 	@yield('content')
 </div>
+
+@include('layouts.ticket')
 
 <!-- scripts -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
