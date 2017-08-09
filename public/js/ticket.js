@@ -39,6 +39,8 @@ $(document).ready(function () {
         $('#fk_id_subcategoria').prop('disabled',true);
         $('#fk_id_accion').prop('disabled',true);
         
+        
+        
         $.ajax({
         	url: data.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
@@ -47,12 +49,12 @@ $(document).ready(function () {
                     var option = $('<option/>');
                     option.val(subcategoria.id_subcategoria);
                     option.text(subcategoria.subcategoria);
-                    option.data('url', subcategoria.url);
 
                     $('#fk_id_subcategoria').append(option);
 
                 });
-                $('#fk_id_subcategoria').prop('disabled',false);
+                var $dis = Object.keys(data).length === 0;
+                $('#fk_id_subcategoria').prop('disabled',$dis);
                 $('select').material_select();
             },
             error: function () {
@@ -80,7 +82,8 @@ $(document).ready(function () {
 
                     $('#fk_id_accion').append(option);
                 });
-                $('#fk_id_accion').prop('disabled',false);
+                var $dis = Object.keys(data).length === 0;
+                $('#fk_id_accion').prop('disabled',$dis);
                 $('select').material_select();
             },
             error: function () {
