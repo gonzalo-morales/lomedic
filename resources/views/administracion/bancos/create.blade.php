@@ -14,7 +14,7 @@
     		<div class="row">
     			<div class="right">
         			{{ Form::submit('Guardar',['class'=>"waves-effect waves-light btn orange"]) }}
-        			{{ link_to(companyRoute("index",['company'=> $company]),'Cerrar',['class'=>"waves-effect waves-teal btn-flat teal-text"]) }}
+        			{{ link_to(companyRoute("index",['company'=> $company]),'Cerrar',['class'=>"waves-effect waves-teal btn-flat teal-text"],Null,false) }}
     			</div>
     		</div>
     	</div>
@@ -54,7 +54,7 @@
 	
 	<div id="modal-1" class="modal">
     <div class="modal-content">
-      <h4>Informacion RFC:</h4>
+      <h5>RFC:</h5>
       <p>Publico General: XAXX010101000.</p>
       <p>Extranjero: XEXX010101000.</p>
     </div>

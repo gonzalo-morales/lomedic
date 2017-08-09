@@ -16,10 +16,15 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::group(['prefix' => 'recursos_humanos', 'as' => 'recursos_humanos.', 'middleware' => ['auth','share']], function(){
-        Route::resource('empleados', 'RecursosHumanos\EmpleadosController');
-        Route::resource('puestos', 'RecursosHumanos\PuestosController');
-        Route::resource('departamentos', 'RecursosHumanos\DepartamentosController');
-        Route::resource('causasbajas', 'RecursosHumanos\CausasBajasController');
+
+    Route::group(['prefix' => 'soporte', 'as' => 'soporte.', 'middleware' => ['auth','share']], function(){
+        Route::resource('estatustickets', 'Soporte\EstatusTicketsController');
+        Route::resource('categorias', 'Soporte\CategoriasController');
+        Route::resource('subcategorias', 'Soporte\SubcategoriasController');
+        Route::resource('acciones', 'Soporte\AccionesController');
+        Route::resource('impactos', 'Soporte\ImpactosController');
+        Route::resource('urgencias', 'Soporte\UrgenciasController');
+        Route::resource('prioridades', 'Soporte\PrioridadesController');
+        Route::resource('modoscontacto', 'Soporte\ModosContactoController');
     });
 });

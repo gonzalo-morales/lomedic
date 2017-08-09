@@ -51,7 +51,7 @@ class Sucursales extends Model
 
     public function solicitudes()
     {
-        return $this->hasMany('app\Http\Models\Soporte\Solicitudes');
+        return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_sucursal','id_sucursal');
     }
 
 }

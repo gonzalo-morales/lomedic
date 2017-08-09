@@ -29,7 +29,7 @@ class Solicitudes extends Model
 	protected $fillable = ['descripcion', 'asunto','fk_id_empleado_solicitud','fk_id_empresa_empleado_solicitud',
         'fk_id_sucursal','fk_id_estatus_ticket','fk_id_categoria','fk_id_subcategoria','fk_id_accion',
         'fk_id_prioridad','fk_id_modo_contacto','fk_id_empleado_tecnico','fk_id_impacto','fk_id_urgencia',
-        'resolucion','fecha_hora_resolucion','activo'];
+        'resolucion','fecha_hora_resolucion','activo','nombre_solicitante','fk_id_departamento'];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -46,59 +46,73 @@ class Solicitudes extends Model
 		'descripcion' => 'required',
         'asunto' => 'required',
         'fk_id_empleado_solicitud' => 'required',
-        'fk_id_estatus_ticket' => 'required',
         'fk_id_categoria' => 'required',
+        'fk_id_subcategoria' => 'required',
+        'fk_id_accion' => 'required',
         'fk_id_prioridad' => 'required',
-        'fk_id_modo_contacto' => 'required',
 	];
 
-    public function empleados()
+    public function empleado()
     {
-        return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados');
+        return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_empleado_solicitud','id_empleado');
+    }
+    public function empleado_tecnico()
+    {
+        return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_empleado_tecnico','id_empleado');
     }
 
     public function sucursal()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Sucursales');
+        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
     }
 
     public function estatusTickets()
     {
-        return $this->hasOne('App\Http\Models\Soporte\EstatusTickets');
+        return $this->hasOne('App\Http\Models\Soporte\EstatusTickets','id_estatus_ticket','fk_id_estatus_ticket');
     }
 
     public function categoria()
     {
-        return $this->hasOne('App\Http\Models\Soporte\Categorias');
+        return $this->hasOne('App\Http\Models\Soporte\Categorias','id_categoria','fk_id_categoria');
     }
 
     public function subcategoria()
     {
-        return $this->hasOne('App\Http\Models\Soporte\Subcategorias');
+        return $this->hasOne('App\Http\Models\Soporte\Subcategorias','id_subcategoria','fk_id_subcategoria');
     }
 
     public function accion()
     {
-        return $this->hasOne('App\Http\Models\Soporte\Acciones');
+        return $this->hasOne('App\Http\Models\Soporte\Acciones','id_accion','fk_id_accion');
     }
 
     public function prioridad()
     {
-        return $this->hasOne('App\Http\Models\Soporte\Prioridades');
+        return $this->hasOne('App\Http\Models\Soporte\Prioridades','id_prioridad','fk_id_prioridad');
     }
 
     public function modocontacto()
     {
-        return $this->hasOne('App\Http\Models\Soporte\ModosContacto');
+        return $this->hasOne('App\Http\Models\Soporte\ModosContacto','id_modo_contacto','fk_id_modo_contacto');
     }
 
     public function impacto()
     {
-        return $this->hasOne('App\Http\Models\Soporte\Impactos');
+        return $this->hasOne('App\Http\Models\Soporte\Impactos','id_impacto','fk_id_impacto');
     }
 
     public function urgencia()
     {
-        return $this->hasOne('App\Http\Models\Soporte\Urgencias');
+        return $this->hasOne('App\Http\Models\Soporte\Urgencias','id_urgencia','fk_id_urgencia');
+    }
+
+    public function archivos_adjuntos()
+    {
+        return $this->hasMany('App\Http\Models\Soporte\ArchivosAdjuntos','fk_id_solicitud');
+    }
+
+    public function seguimiento()
+    {
+        return $this->hasMany('App\Http\Models\Soporte\SeguimientoSolicitudes','id_seguimiento');
     }
 }
