@@ -104,7 +104,7 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
                 <div class="user-view center">
                     <span><i class="material-icons medium white-text">live_help</i></span>
                     <div class="background">
-                        <img src="img/helpBG2.png">
+                    	{{ HTML::image(asset('img/helpBG2.png')) }}
                     </div>
                     <a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
                     <a href="#ticketHelp" class="waves-effect waves-light btn-flat white-text">Crear ticket/solicitud</a>
@@ -127,9 +127,8 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
 <div class="row">
 @yield('content')
 </div><!--/row section-->
-<form action="{{ companyRoute('Soporte\SolicitudesController@store', ['company'=> $Company]) }}" method="post" class="col s12" enctype="multipart/form-data">
-    {{ csrf_field() }}
-    {{ method_field('POST') }}
+
+{!! Form::model(null,['url'=>companyRoute('Soporte\SolicitudesController@store', ['company'=> $Company]), 'class'=>"col s12", 'enctype'=>"multipart/form-data"]) !!}
     <div id="ticketHelp" class="modal modal-fixed-footer">
         <div class="modal-content">
             <h4>Nuevo Ticket:</h4>
@@ -140,9 +139,13 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
             <div class="row">
                 <div class="input-field col s12">
                     <p class="col s6">
-                        <input name="groupWho" type="radio" id="forMe1" onclick="activar_empleado()" checked
-                               data-url="{{companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleado')}}"/>
-                        <label for="forMe1">El ticket es para mí</label>
+                    	{{ Form::radio('groupWho', '', true, ['id'=>'forMe1', 'class'=>'validate', 'onclick'=>'activar_empleado()', 'data-url'=>companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleado')]) }}
+    					{{ Form::label('forMe1', 'El ticket es para m�') }}
+    					{{ $errors->has('groupWho') ? HTML::tag('span', $errors->first('groupWho'), ['class'=>'help-block deep-orange-text']) : '' }}
+                        
+                    
+                        
+                        
                     </p>
                     <p class="col s6">
                         <input name="groupWho" type="radio" id="otherUser" onchange="activar_empleado()"/>
@@ -214,7 +217,7 @@ $Color = !empty($QueryCompany[0]->color) ? $QueryCompany[0]->color : 'teal';
             {{--<button class="modal-action modal-close waves-effect teal-text btn-flat">Cancelar</button>--}}
         </div>
     </div><!--/Modal de ayuda-->
-</form>
+{!! Form::close() !!}
 	<!--Import jQuery before materialize.js-->
 	{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js') }}
 	@yield('header-bottom')
