@@ -26,5 +26,11 @@ Route::prefix('{company}')->group(function () {
         Route::resource('urgencias', 'Soporte\UrgenciasController');
         Route::resource('prioridades', 'Soporte\PrioridadesController');
         Route::resource('modoscontacto', 'Soporte\ModosContactoController');
+        Route::get('solicitudes/{id}/subcategorias', 'Soporte\SolicitudesController@obtenerSubcategorias');
+        Route::get('solicitudes/{id}/acciones', 'Soporte\SolicitudesController@obtenerAcciones');
+        Route::get('solicitudes/{id}/descargar', 'Soporte\SolicitudesController@descargarArchivosAdjuntos');
+        Route::get('solicitudes/{id}/conversacion', 'Soporte\SolicitudesController@conversation')->name('solicitudes.conversation');
+        Route::resource('solicitudes', 'Soporte\SolicitudesController');
+        Route::resource('seguimiento', 'Soporte\SeguimientoSolicitudesController');
     });
 });
