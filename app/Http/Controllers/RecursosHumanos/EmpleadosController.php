@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\RecursosHumanos;
 
+use App\Http\Models\Administracion\Usuarios;
+use App\Http\Models\RecursosHumanos\Departamentos;
 use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
+use Illuminate\Support\Facades\Response;
+
 
 class EmpleadosController extends Controller
 {
@@ -16,6 +21,7 @@ class EmpleadosController extends Controller
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
         $this->companies = Empresas::all();
+        $this->offices = Departamentos::all();
     }
 
     public function index($company)
@@ -36,6 +42,7 @@ class EmpleadosController extends Controller
             'entity' => $this->entity_name,
             'company' => $company,
             'companies' => $this->companies,
+            'offices' => $this->offices
         ]);
     }
 
@@ -43,7 +50,6 @@ class EmpleadosController extends Controller
     {
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
-
         $created = $this->entity->create($request->all());
         if($created)
         {Logs::createLog($this->entity->getTable(),$company,$created->id_empleado,'crear','Registro insertado');}
@@ -64,7 +70,8 @@ class EmpleadosController extends Controller
             'data' => $this->entity->findOrFail($id),
             'companies' => $this->companies,
             'empresa_alta_imss' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_alta_imss)->first(),
-            'empresa_laboral' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_laboral)->first()
+            'empresa_laboral' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_laboral)->first(),
+            'offices' => $this->offices
         ]);
     }
 
@@ -76,7 +83,8 @@ class EmpleadosController extends Controller
             'data' => $this->entity->findOrFail($id),
             'companies' => $this->companies,
             'empresa_alta_imss' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_alta_imss)->first(),
-            'empresa_laboral' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_laboral)->first()
+            'empresa_laboral' => $this->companies->where('id_empresa',$this->entity->findOrFail($id)->fk_id_empresa_laboral)->first(),
+            'offices' => $this->offices
         ]);
     }
 
@@ -107,4 +115,24 @@ class EmpleadosController extends Controller
         # Redirigimos a index
         return redirect(companyRoute('index'));
     }
+
+    public function obtenerEmpleados($company)
+    {
+        $empleados = Empleados::all()->where('activo','1');
+
+        foreach($empleados as $empleado){
+            $empleado_data['id'] = (int)$empleado->id_empleado;
+            $empleado_data['text'] = $empleado->nombre." ".$empleado->apellido_paterno." ".$empleado->apellido_materno;
+            $empleados_set[] = $empleado_data;
+        }
+        return Response::json($empleados_set);
+    }
+
+    public function obtenerEmpleado($company)
+    {
+        $fk_id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
+        $empleado = $this->entity->findOrFail($fk_id_empleado)->id_empleado;
+        return Response::json($empleado);
+    }
+
 }
