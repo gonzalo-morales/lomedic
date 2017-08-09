@@ -3,12 +3,13 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<title>SIM - @yield('title')</title>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
-	<link rel="stylesheet" href="{{ asset('css/style.css') }}" media="screen,projection"/>
+	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
+	{{ HTML::meta('csrf-token', csrf_token()) }}
+	{{ HTML::favicon(asset('img/'.$LogoEmpresa)) }}
+	{{ HTML::style('https://fonts.googleapis.com/icon?family=Material+Icons') }}
+	{{ HTML::style('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css') }}
+	{{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
 	@yield('header-top')
 </head>
 <body class="grey lighten-3">
@@ -18,7 +19,7 @@
 		<div class="nav-wrapper">
 			<a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
 			<a href="#!" data-activates="enteDrop" data-beloworigin="true" class="brand-logo dropdown-button logo-enterprise">
-				<img src="{{asset("img/$empresa->logotipo")}}" alt="Sesión activa" class="circle responsive-img"> {{ $empresa->nombre_comercial }}
+				{{ HTML::image(asset("img/$empresa->logotipo"), 'Logo', ['class'=>'circle responsive-img']) }} {{ $empresa->nombre_comercial }}
 			</a>
 			<ul class="right">
 				<li><a href="#" data-activates="slide-help" class="help-collapse"><i class="material-icons">live_help</i></a></li>
@@ -33,16 +34,12 @@
 		<div class="user-view center">
 			<object id="front-page-logo" class="Sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object>
 			<div class="background">
-				<img src="{{asset('img/userBG2.jpg')}}">
+				{{ HTML::image(asset('img/userBG2.jpg')) }}
 			</div>
-			<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-				<span class="white-text name">
-					<i class="tiny material-icons">power_settings_new</i> CERRAR SESIÓN
-				</span>
+			<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text name">
+				<i class="tiny material-icons">power_settings_new</i> CERRAR SESI�N
 			</a>
-			<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-				{{ csrf_field() }}
-			</form>
+			{!! Form::open(['route' => 'logout', 'before' => 'csrf', 'id' => 'logout-form', 'class' => 'hidden']) !!} {!! Form::close() !!}
 			<a href="#"><span class="white-text name">{{ Auth::User()->nombre_corto }}</span></a>
 		</div>
 	</li>
@@ -50,6 +47,7 @@
 	<ul id='enteDrop' class='dropdown-content'>
 		@foreach($empresas as $_empresa)
 		<li><a target="_blank" href="{{ companyRoute('HomeController@index',['company' => $_empresa->conexion]) }}"><i class="material-icons">business</i>{{ $_empresa->nombre_comercial }}</a></li>
+		<li><a target="_blank" href="{{ asset($Companys->conexion) }}">{{ HTML::image(asset('img/'.$Companys->logotipo),null,['class'=>'circle responsive-img','width'=>'24px']) }} {{ $Companys->nombre_comercial }}</a></li>
 		@endforeach
 	</ul>
 
@@ -66,14 +64,16 @@
 	</ul>
 
 	<ul id='main-menu'>
-		@each('partials.menu', $menu, 'modulo')
+		@if(isset($menu))
+			@each('partials.menu', $menu, 'modulo')
+		@endif
 	</ul>
 </ul>
 
 <div class="row {{ $empresa->color }}">
 	<div class="col s12">
 		<a href="{{ companyRoute('HomeController@index',['company' => $empresa->conexion]) }}" class="breadcrumb">Home</a>
-		<!-- <a href="#!" class="breadcrumb">Section</a> -->
+		{{ HTML::link(asset($Company),'Inicio', ['class'=>'breadcrumb']) }}
 	</div>
 </div>
 
@@ -84,9 +84,9 @@
 @include('layouts.ticket')
 
 <!-- scripts -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
-<script type="text/javascript" src="{{ asset('js/InitiateComponents.js') }}"></script>
+{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js') }}
+{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js') }}
+{{ HTML::script(asset('js/InitiateComponents.js')) }}
 @yield('header-bottom')
 </body>
 </html>

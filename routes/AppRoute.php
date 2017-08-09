@@ -20,8 +20,5 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    
-    Route::group(['middleware' => 'share'], function() {
-        Route::resource('/', 'HomeController');
-    });
+    Route::resource('/', 'HomeController',['middleware' => 'share']);
 });
