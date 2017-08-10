@@ -38,22 +38,23 @@ $(document).ready(function () {
         $('#fk_id_subcategoria option').remove();
         $('#fk_id_subcategoria').prop('disabled',true);
         $('#fk_id_accion').prop('disabled',true);
-
+        
+        
+        
         $.ajax({
         	url: data.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
                 $.each(data, function (key, subcategoria) {
-
                     var option = $('<option/>');
                     option.val(subcategoria.id_subcategoria);
                     option.text(subcategoria.subcategoria);
-                    option.data('url', subcategoria.url);
 
                     $('#fk_id_subcategoria').append(option);
 
                 });
-                $('#fk_id_subcategoria').prop('disabled',false);
+                var $dis = Object.keys(data).length === 0;
+                $('#fk_id_subcategoria').prop('disabled',$dis);
                 $('select').material_select();
             },
             error: function () {
@@ -81,7 +82,8 @@ $(document).ready(function () {
 
                     $('#fk_id_accion').append(option);
                 });
-                $('#fk_id_accion').prop('disabled',false);
+                var $dis = Object.keys(data).length === 0;
+                $('#fk_id_accion').prop('disabled',$dis);
                 $('select').material_select();
             },
             error: function () {
@@ -94,7 +96,7 @@ $(document).ready(function () {
 
 function activar_empleado(){
 
-    if ($('#otherUser:checked').val() == 'on')
+    if ($('#otherUser').prop('checked') == true)
         {
             $('#empleado_solicitud').prop('disabled',false);
             // var data_empleado = $('#forMe1').data('url');
