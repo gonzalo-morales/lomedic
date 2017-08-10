@@ -1,4 +1,3 @@
-
 @section('header-bottom')
 <script type="text/javascript" src="{{ asset('js/jquery.ui.autocomplete2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/ticket.js') }}"></script>
@@ -22,7 +21,7 @@
     <li><a href="#!">Proceso NAUS1234</a></li>
 </ul>
 
-<form action="{{ companyRoute('Soporte\SolicitudesController@store') }}" method="post" class="col s12" enctype="multipart/form-data">
+<form action="{{ companyRoute('Soporte\SolicitudesController@store') }}" method="post" class="row" enctype="multipart/form-data">
     {{ csrf_field() }}
     {{ method_field('POST') }}
     <div id="ticketHelp" class="modal modal-fixed-footer">
