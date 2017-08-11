@@ -112,7 +112,6 @@ td, th {
 }
 
 /* Tables - Nowrap column */
-
 .width-auto {
     width: 1px;
     white-space: nowrap;
@@ -122,11 +121,34 @@ td, th {
 .text-strike {
     text-decoration: line-through;
 }
-
 .dataTable-search .dataTable-input {
     width: auto !important;
 }
-
 ul#dataTable-headings-selector {
     width: auto !important;
+}
+
+/* Smart view */
+#smart-view .single-check + label,
+.smart-actions > * {
+    opacity: 0;
+}
+#smart-view tr:hover .single-check + label,
+#smart-view tr:hover .smart-actions > *,
+#smart-view .single-check:checked + label {
+    opacity: 1;
+}
+
+fieldset {
+    border: none !important;
+}
+
+/* toast */
+.toast_error {
+    background: #f44336;
+    color: white;
+}
+.toast_success {
+    background: #4caf50;
+    color: white;
 }

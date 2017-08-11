@@ -17,8 +17,6 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'administracion', 'as' => 'administracion.', 'middleware' => ['auth','share'] ], function() {
-        Route::match(['GET','POST'],'bancos/export', 'Administracion\BancosController@export');
-        Route::delete('bancos/destroy-multiple', 'Administracion\BancosController@destroyMultiple');
 		Route::resource('bancos', 'Administracion\BancosController');
 		Route::resource('areas', 'Administracion\AreasController');
 		Route::resource('diagnosticos', 'Administracion\DiagnosticosController');

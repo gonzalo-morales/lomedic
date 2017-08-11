@@ -1,6 +1,6 @@
 <li>
     @if(!$modulo->submodulos->count())
-    <a class="waves-effect" href="{{ companyRoute($modulo->url) }}">
+    <a class="waves-effect" href="{{ companyAction($modulo->url) }}">
         <i class='material-icons'>{{ $modulo->icono }}</i>
         <span class="menu-text">{{ $modulo->nombre }}</span>
     </a>

@@ -13,7 +13,7 @@
             </div>
             <a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
             <a href="#ticketHelp" class="waves-effect waves-light btn-flat white-text">Crear ticket/solicitud</a>
-            <a href="{{ companyRoute('Soporte\SolicitudesController@index') }}" class="waves-effect waves-light btn-flat white-text">Ver mis tickets/solicitudes</a>
+            <a href="{{ companyAction('Soporte\SolicitudesController@index') }}" class="waves-effect waves-light btn-flat white-text">Ver mis tickets/solicitudes</a>
         </div>
     </li>
     <li><a href="#!">Proceso NAUS1234</a></li>
@@ -22,6 +22,9 @@
     <li><a href="#!">Proceso NAUS1234</a></li>
 </ul>
 
+<form action="{{ companyAction('Soporte\SolicitudesController@store') }}" method="post" class="col s12" enctype="multipart/form-data">
+    {{ csrf_field() }}
+    {{ method_field('POST') }}
     <div id="ticketHelp" class="modal modal-fixed-footer">
         {!! Form::model(null,['url'=>companyRoute('Soporte\SolicitudesController@store'), 'class'=>"col s12", 'enctype'=>"multipart/form-data"]) !!}
         <div class="modal-content">
@@ -35,6 +38,9 @@
                     <p class="col s6">
                         {!! Form::radio('groupWho','',true,['id'=>'forMe1','class'=>'validate', 'onclick'=>'activar_empleado()', 'data-url'=>companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleado')    ]) !!}
                         {{ Form::label('forMe1', 'El ticket es para mí') }}
+                        <input name="groupWho" type="radio" id="forMe1" onclick="activar_empleado()" checked
+                               data-url="{{companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')}}"/>
+                        <label for="forMe1">El ticket es para mí</label>
                     </p>
                     <p class="col s6">
                         {{Form::radio('groupWho','',true,['id'=>'otherUser','class'=>'validate', 'onchange'=>'activar_empleado()'])}}
