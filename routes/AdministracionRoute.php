@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 $Conecctions = implode('|',array_keys(config('database.connections')));
 
 Route::pattern('company', "($Conecctions)");
@@ -18,6 +17,8 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'administracion', 'as' => 'administracion.', 'middleware' => ['auth','share'] ], function() {
+        Route::match(['GET','POST'],'bancos/export', 'Administracion\BancosController@export');
+        Route::delete('bancos/destroy-multiple', 'Administracion\BancosController@destroyMultiple');
 		Route::resource('bancos', 'Administracion\BancosController');
 		Route::resource('areas', 'Administracion\AreasController');
 		Route::resource('diagnosticos', 'Administracion\DiagnosticosController');
@@ -28,6 +29,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('usuarios', 'Administracion\UsuariosController');
 		Route::resource('sucursales', 'Administracion\SucursalesController');
         Route::get('sucursalesautocomplete','Administracion\SucursalesController@obtenerSucursales');
+        Route::get('sucursalesempleado/{id}','Administracion\SucursalesController@sucursalesEmpleado');
 		Route::resource('correos', 'Administracion\CorreosController');
 		Route::resource('municipios', 'Administracion\MunicipiosController');
 		Route::resource('estados', 'Administracion\EstadosController');
@@ -47,8 +49,6 @@ Route::prefix('{company}')->group(function () {
         Route::resource('motivosajustes', 'Administracion\MotivosAjustesController');
         Route::resource('grupoproductos', 'Administracion\GrupoProductosController');
         Route::resource('familiasproductos', 'Administracion\FamiliasProductosController');
-
-
 
 	});
 });

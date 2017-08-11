@@ -92,4 +92,27 @@ $(document).ready(function(){
     },
     minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
   });
+  $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': document.querySelector('[name="csrf-token"]').content
+    }
+  });
+  // Extendemos metodos jQuery ajax
+  jQuery.each( [ "put", "delete" ], function( i, method ) {
+    jQuery[ method ] = function( url, data, callback, type ) {
+      if ( jQuery.isFunction( data ) ) {
+        type = type || callback;
+        callback = data;
+        data = {};
+      }
+
+      return jQuery.ajax({
+        url: url,
+        type: 'post',
+        dataType: type,
+        data: $.extend(data, {'_method': method}),
+        success: callback
+      });
+    };
+  });
 }); //aquí termina el function

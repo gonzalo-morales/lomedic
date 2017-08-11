@@ -1,8 +1,5 @@
 $(document).ready(function () {
-    activar_empleado();
-    $('select').material_select();
-
-    var data_empleados = $('#empleado_solicitud').data('url');
+    let data_empleados = $('#empleado_solicitud').data('url');
     $.ajax({
        type:'GET',
        url: data_empleados,
@@ -10,51 +7,36 @@ $(document).ready(function () {
            $('#empleado_solicitud').autocomplete2({
                data: response
            });
-
        },
     });
-    $('#empleado_solicitud').on('change',function () {
-        $('#nombre_solicitante').val($('#empleado_solicitud').val());
-    });
 
-    var data_sucursales = $('#sucursal').data('url');
-    $.ajax({
-        type:'GET',
-        url: data_sucursales,
-        success: function (response) {
-            $('#sucursal').autocomplete2({
-                data: response
-            })
-        }
-    });
-    $('#sucursal').on('change',function () {
-        $('#fk_id_sucursal').val($('#sucursal').data('id'));
+    $('#empleado_solicitud').change(function () {
+        sucursal();
     });
 
     $('#fk_id_categoria').on('change', function(){
-
-        var data = $('option:selected', this).data('url');
+    	let data = $(this).data('url');
+        
         $('#fk_id_accion option').remove();
         $('#fk_id_subcategoria option').remove();
         $('#fk_id_subcategoria').prop('disabled',true);
         $('#fk_id_accion').prop('disabled',true);
 
         $.ajax({
-            url: data,
+        	url: data.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
                 $.each(data, function (key, subcategoria) {
-
-                    var option = $('<option/>');
+                    let option = $('<option/>');
                     option.val(subcategoria.id_subcategoria);
                     option.text(subcategoria.subcategoria);
-                    option.data('url', subcategoria.url);
-
 
                     $('#fk_id_subcategoria').append(option);
 
                 });
-                $('#fk_id_subcategoria').prop('disabled',false);
+                if(Object.keys(data).length ==0)
+                {$('#fk_id_subcategoria').prop('disabled',true)}
+                else{$('#fk_id_subcategoria').prop('disabled',false)}
                 $('select').material_select();
             },
             error: function () {
@@ -65,28 +47,26 @@ $(document).ready(function () {
     });
 
     $('#fk_id_subcategoria').on('change', function(){
-
-        var data = $('option:selected', this).data('url');
+    	let data = $(this).data('url');
 
         $.ajax({
-            url: data,
+            url: data.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
-
 
                 $('#fk_id_accion option').remove();
 
                 $.each(data, function (key, accion) {
 
-                    var option = $('<option/>');
+                    let option = $('<option/>');
                     option.val(accion.id_accion);
                     option.text(accion.accion);
 
-
                     $('#fk_id_accion').append(option);
                 });
-                $('#fk_id_accion').prop('disabled',false);
-                $('select').material_select();
+                if(Object.keys(data).length ==0)
+                {$('#fk_id_accion').prop('disabled',true)}
+                else{$('#fk_id_accion').prop('disabled',false)}
             },
             error: function () {
                 alert('error');
@@ -97,24 +77,87 @@ $(document).ready(function () {
 });
 
 function activar_empleado(){
-
-    if ($('#otherUser:checked').val() == 'on')
+    $('#fk_id_sucursal').prop('disabled',true);//Deshabilitar
+    if ($('#otherUser').prop('checked') == true)
         {
             $('#empleado_solicitud').prop('disabled',false);
-            // var data_empleado = $('#forMe1').data('url');
-            // $.ajax({
-            //     type:'GET',
-            //     url: data_empleado,
-            //     success: function (response) {
-            //         $('#nombre_solicitante').val(response);
-            //     }
-            // });
+            removerOpciones('fk_id_sucursal');
+            $('select').material_select();
         }
     else
     {
         $('#empleado_solicitud').prop('disabled',true);
         $('#empleado_solicitud').val('');
         $('#nombre_solicitante').val('');
+        sucursal();
     }
 }
 
+function sucursal()
+{
+    $('#nombre_solicitante').val($('#empleado_solicitud').val());
+    let url = $('#nombre_solicitante').data('url');
+    $('#fk_id_sucursal').prop('disabled',true);//Deshabilitar
+    if($('#forMe1').prop('checked')==true)//Si es para el usuario activo
+    {
+        let data_empleado = $('#forMe1').data('url');
+        $.ajax({
+            type:'GET',
+            url: data_empleado,
+            success: function (response) {
+                // $('#fk_id_sucursal option').remove();//Limpiar
+                $('#fk_id_sucursal').prop('disabled',true);//Deshabilitar
+
+                $.ajax({
+                    url: url.replace('?id', response),
+                    dataType: 'json',
+                    success: function (data) {
+                        removerOpciones('fk_id_sucursal');
+                        $.each(data, function (key, sucursal) {
+                            let option = $('<option/>');
+                            option.val(sucursal.id_sucursal);
+                            option.text(sucursal.nombre_sucursal);
+                            $('#fk_id_sucursal').append(option);
+                        });
+                        if(Object.keys(data).length ==0)
+                        {$('#fk_id_sucursal').prop('disabled',true)}
+                        else{$('#fk_id_sucursal').prop('disabled',false)}
+
+                        $('select').material_select();
+                    },
+                    error: function () {
+                        alert('error');
+                    }
+                });
+            }
+        });
+    }else if($('#empleado_solicitud').data('id')>0)//Si es para otra persona
+    {
+        $.ajax({
+            url: url.replace('?id', $('#empleado_solicitud').data('id')),
+            dataType: 'json',
+            success: function (data) {
+                removerOpciones('fk_id_sucursal');
+                $.each(data, function (key, sucursal) {
+                    let option = $('<option/>');
+                    option.val(sucursal.id_sucursal);
+                    option.text(sucursal.nombre_sucursal);
+
+                    $('#fk_id_sucursal').append(option);
+
+                });
+                if(Object.keys(data).length ==0)
+                {$('#fk_id_sucursal').prop('disabled',true)}
+                else{$('#fk_id_sucursal').prop('disabled',false)}
+                $('select').material_select();
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    }
+}
+
+function removerOpciones(id) {
+    document.getElementById(id).options.length = 0;
+}

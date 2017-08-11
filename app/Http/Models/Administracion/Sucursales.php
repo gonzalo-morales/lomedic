@@ -45,8 +45,9 @@ class Sucursales extends Model
 		'nombre_sucursal' => 'required|alpha_num',
 	];
 
-	public function users(){
-	    return $this->hasMany('app\Http\Models\Administracion\Usuarios');
+	public function empleados()
+    {
+	    return $this->hasMany('app\Http\Models\RecursosHumanos\Empleados');
     }
 
     public function solicitudes()
