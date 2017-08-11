@@ -29,10 +29,14 @@ class Share
 		# Compartimos otras empresas
 		View::share('empresas', Empresas::where('conexion', '!=', request()->company)->get());
 
+//		$categoria[0] = 'Selecciona una categoría';
+//		$categoria = $categoria + Categorias::all()->pluck('categoria','id_categoria')->toArray();
+//		dd($categoria);
+
 		# Compartimos modulos de usuario para generar menu
 		View::share('menu', Auth::user()->modulos_anidados());
 		View::share('employees_tickets', Empleados::all());
-		View::share('categories_tickets', Categorias::all()->pluck('categoria','id_categoria'));
+		View::share('categories_tickets', Categorias::all()->pluck('categoria','id_categoria')->toArray());
 		View::share('priorities_tickets', Prioridades::all());
 
 		return $next($request);

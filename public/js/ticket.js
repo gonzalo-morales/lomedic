@@ -14,8 +14,11 @@ $(document).ready(function () {
         sucursal();
     });
 
+    activar_empleado();
+
     $('#fk_id_categoria').on('change', function(){
     	let data = $(this).data('url');
+    	let id = $('option:selected', this).val();
         
         $('#fk_id_accion option').remove();
         $('#fk_id_subcategoria option').remove();
@@ -26,6 +29,12 @@ $(document).ready(function () {
         	url: data.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
+                let option = $('<option/>');
+                option.val(null);
+                option.attr('disabled','disabled');
+                option.attr('selected','selected');
+                option.text('Selecciona una subcategoría');
+                $('#fk_id_subcategoria').append(option);
                 $.each(data, function (key, subcategoria) {
                     let option = $('<option/>');
                     option.val(subcategoria.id_subcategoria);
@@ -48,14 +57,17 @@ $(document).ready(function () {
 
     $('#fk_id_subcategoria').on('change', function(){
     	let data = $(this).data('url');
-
+        $('#fk_id_accion option').remove();
         $.ajax({
             url: data.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
-
-                $('#fk_id_accion option').remove();
-
+                let option = $('<option/>');
+                option.val(null);
+                option.attr('disabled','disabled');
+                option.attr('selected','selected');
+                option.text('Selecciona una acción');
+                $('#fk_id_accion').append(option);
                 $.each(data, function (key, accion) {
 
                     let option = $('<option/>');
@@ -67,6 +79,7 @@ $(document).ready(function () {
                 if(Object.keys(data).length ==0)
                 {$('#fk_id_accion').prop('disabled',true)}
                 else{$('#fk_id_accion').prop('disabled',false)}
+                $('select').material_select();
             },
             error: function () {
                 alert('error');

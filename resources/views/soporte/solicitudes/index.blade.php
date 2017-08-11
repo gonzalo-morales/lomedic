@@ -18,7 +18,7 @@
 @section('content')
 <div class="col s12 xl8 offset-xl2">
 	<p class="right">
-		<a href="{{ companyRoute('index') }}" class="waves-effect waves-light btn"><i class="material-icons">cached</i></a>
+		<a href="{{ companyAction('index') }}" class="waves-effect waves-light btn"><i class="material-icons">cached</i></a>
 	</p>
 </div>
 @if (session('success'))
@@ -45,7 +45,7 @@
 			<td>{{$row->descripcion}}</td>
 			<td>{{$row->estatusTickets->estatus}}</td>
 			<td class="width-auto">
-				<a href="{{ companyRoute('show', ['id' => $row->id_solicitud]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyAction('show', ['id' => $row->id_solicitud]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
 			</td>
 		</tr>
 		@endforeach

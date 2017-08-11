@@ -14,7 +14,7 @@
 	<div class="row">
 		<div class="col s12">
 			<p class="right-align">
-				<a href="{{ companyRoute('index') }}" class="waves-effect waves-light btn btn-flat teal-text">Regresar</a>
+				<a href="{{ companyAction('index') }}" class="waves-effect waves-light btn btn-flat teal-text">Regresar</a>
 			</p>
 		</div>
 	</div>
@@ -35,7 +35,7 @@
 {{--Datos del ticket--}}
 
 <div class="row">
-	<form action="{{ companyRoute('update') }}" method="post" class="col s12">
+	<form action="{{ companyAction('update') }}" method="post" class="col s12">
 		{{ csrf_field() }}
 		{{ method_field('PUT') }}
 		<div class="col s12 m4">
@@ -49,7 +49,7 @@
 				<ul>
 					@foreach($data->archivos_adjuntos as $archivo_adjunto)
 						<li>
-							<a href="{{companyRoute('descargarArchivosAdjuntos', ['id' => $archivo_adjunto->id_archivo_adjunto])}}">
+							<a href="{{companyAction('descargarArchivosAdjuntos', ['id' => $archivo_adjunto->id_archivo_adjunto])}}">
 								<i class="material-icons">attachment</i>{{$archivo_adjunto->nombre_archivo}}
 							</a>
 						</li>
@@ -175,7 +175,7 @@
 			<p>{{$seguimiento->comentario}}
 			<ul>
 				@foreach($seguimiento->archivo_adjunto as $archivo_adjunto)
-					<li><a href="{{companyRoute('descargarArchivosAdjuntos', ['id' => $archivo_adjunto->id_archivo_adjunto])}}">
+					<li><a href="{{companyAction('descargarArchivosAdjuntos', ['id' => $archivo_adjunto->id_archivo_adjunto])}}">
 						<i class="material-icons">attachment</i>{{$archivo_adjunto->nombre_archivo}}
 					</a></li>
 				@endforeach
@@ -186,13 +186,13 @@
 	<li class="collection-item avatar row">
 		<i class="material-icons circle">person</i>
 		<span class="title"><b>{{$data->empleado->nombre.' '.$data->empleado->apellido_paterno.' '.$data->empleado->apellido_materno}}</b></span>
-		<form action="{{ companyRoute('Soporte\SeguimientoSolicitudesController@index') }}" method="post" class="col s12" enctype="multipart/form-data">
+		<form action="{{ companyAction('Soporte\SeguimientoSolicitudesController@index') }}" method="post" class="col s12" enctype="multipart/form-data">
 			{{ csrf_field() }}
 			{{ method_field('POST') }}
 		<div class="input-field col s12">
 			<input type="hidden" name="fk_id_solicitud" id="fk_id_solicitud" value="{{ $data->id_solicitud}}">
 			<input type="hidden" name="fk_id_empleado_comentario" id="fk_id_empleado_comentario"
-				   data-url="{{companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleado')}}">{{-- El empleado que está logueado --}}
+				   data-url="{{companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')}}">{{-- El empleado que está logueado --}}
 			<input type="text" id="asunto" name="asunto" class="input-field" value="{{old('asunto')}}">
 			<label for="asunto">Asunto</label>
 			@if ($errors->has('asunto'))
@@ -225,7 +225,7 @@
 		</form>
 	</li>
 	<li class="collection-item"><!--Item para finalizar chat-->
-		<h5 class="green-text center"><b>El ticket se ha cerrado con éxito, si tienes algún problema adicional te recomendamos dar de alta otro ticket.</b></h5>
+		<h5 class="green-text center"><b>El ticket se ha cerrado con éxito</b></h5>
 	</li>
 </ul>
 @endif
