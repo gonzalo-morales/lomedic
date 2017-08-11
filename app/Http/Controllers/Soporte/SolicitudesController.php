@@ -143,14 +143,14 @@ class SolicitudesController extends Controller
         {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
 
         # Redirigimos a index
-        return redirect(companyRoute('index'));
+        return redirect(companyAction('index'));
     }
 
     public function obtenerSubcategorias($company, $id)
     {
         $subcategorias = Categorias::all()->find($id)->subcategorias->where('activo','1');
         foreach ($subcategorias as $subcategoria) {
-            $subcategoria->url = companyRoute('obtenerAcciones', ['id' =>$subcategoria->id_subcategoria]);
+            $subcategoria->url = companyAction('obtenerAcciones', ['id' =>$subcategoria->id_subcategoria]);
         }
 
         return Response::json($subcategorias->toArray());

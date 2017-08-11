@@ -44,20 +44,20 @@
 		</div>
 			<div class="row">
 			@foreach($seguimiento->archivo_adjunto as $archivo_adjunto)
-					<a href="{{companyRoute('descargarArchivosAdjuntos', ['id' => $archivo_adjunto->id_archivo_adjunto])}}">
+					<a href="{{companyAction('descargarArchivosAdjuntos', ['id' => $archivo_adjunto->id_archivo_adjunto])}}">
 						<i class="material-icons">attachment</i>{{$archivo_adjunto->nombre_archivo}}
 					</a>
 			@endforeach
 			</div>
 		@endforeach
-<form action="{{ companyRoute('Soporte\SeguimientoSolicitudesController@store') }}" method="post" class="col s12" enctype="multipart/form-data">
+<form action="{{ companyAction('Soporte\SeguimientoSolicitudesController@store') }}" method="post" class="col s12" enctype="multipart/form-data">
 	{{ csrf_field() }}
 	{{ method_field('POST') }}
 		<div class="row">
 			<div>Responder</div>
 			<input type="hidden" name="fk_id_solicitud" id="fk_id_solicitud" value="{{ $data->id_solicitud}}">
 			<input type="hidden" name="fk_id_empleado_comentario" id="fk_id_empleado_comentario"
-				   data-url="{{companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleado')}}">
+				   data-url="{{companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')}}">
 			<div class="input-field col s12">
 				<input type="text" name="asunto" id="asunto" class="validate" value="{{ old('asunto')}}">
 				<label for="asunto">Asunto</label>

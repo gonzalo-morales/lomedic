@@ -26,7 +26,7 @@
     {{ csrf_field() }}
     {{ method_field('POST') }}
     <div id="ticketHelp" class="modal modal-fixed-footer">
-        {!! Form::model(null,['url'=>companyRoute('Soporte\SolicitudesController@store'), 'class'=>"col s12", 'enctype'=>"multipart/form-data"]) !!}
+        {!! Form::model(null,['url'=>companyAction('Soporte\SolicitudesController@store'), 'class'=>"col s12", 'enctype'=>"multipart/form-data"]) !!}
         <div class="modal-content">
             <h4>Nuevo Ticket:</h4>
                 <div class="input-field col s12">
@@ -36,11 +36,8 @@
             <div class="row">
                 <div class="input-field col s12">
                     <p class="col s6">
-                        {!! Form::radio('groupWho','',true,['id'=>'forMe1','class'=>'validate', 'onclick'=>'activar_empleado()', 'data-url'=>companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleado')    ]) !!}
+                        {!! Form::radio('groupWho','',true,['id'=>'forMe1','class'=>'validate', 'onclick'=>'activar_empleado()', 'data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')]) !!}
                         {{ Form::label('forMe1', 'El ticket es para mí') }}
-                        <input name="groupWho" type="radio" id="forMe1" onclick="activar_empleado()" checked
-                               data-url="{{companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')}}"/>
-                        <label for="forMe1">El ticket es para mí</label>
                     </p>
                     <p class="col s6">
                         {{Form::radio('groupWho','',true,['id'=>'otherUser','class'=>'validate', 'onchange'=>'activar_empleado()'])}}
@@ -48,20 +45,20 @@
                     </p>
                 </div>
                 <div class="input-field col s12">
-                    {!! Form::text('empleado_solicitud',null,['id'=>'empleado_solicitud','','autocomplete'=>'off','data-url'=>companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleados')])!!}
+                    {!! Form::text('empleado_solicitud',null,['id'=>'empleado_solicitud','','autocomplete'=>'off','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados')])!!}
                     {{Form::label('empleado_solicitud','Empleado que realizó la solicitud')}}
-                    {{Form::hidden('nombre_solicitante',null,['id'=>'nombre_solicitante','data-url'=>companyRoute('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])])}}
+                    {{Form::hidden('nombre_solicitante',null,['id'=>'nombre_solicitante','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])])}}
                 </div>
                 <div class="input-field col s12">
                     {!! Form::select('fk_id_sucursal',[],null,['id'=>'fk_id_sucursal', 'disabled' => 'true'])!!}
                     {{Form::label('fk_id_sucursal','Sucursal')}}
                 </div>
                 <div class="input-field col s4">
-                    {!! Form::select('fk_id_categoria',$categories_tickets,null,['id'=>'fk_id_categoria', 'data-url' => companyRoute('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
+                    {!! Form::select('fk_id_categoria',[0 => 'Selecciona una categoria',$categories_tickets],null,['id'=>'fk_id_categoria', 'data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
                     {{Form::label('fk_id_categoria','Categoría')}}
                 </div>
                 <div class="input-field col s4">
-                    {!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria', 'disabled'=>'disabled','data-url' => companyRoute('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
+                    {!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria', 'disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
                     {{Form::label('fk_id_subcategoria','Subategoría')}}
                 </div>
                 <div class="input-field col s4">
