@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administracion;
 
 use App\Http\Models\Administracion\Sucursales;
+use App\Http\Models\RecursosHumanos\Empleados;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Controller;
@@ -156,5 +157,10 @@ class SucursalesController extends Controller
             $sucursal_set[] = $sucursal_data;
         }
         return Response::json($sucursal_set);
+    }
+
+    public function sucursalesEmpleado($company,$id)
+    {
+        return Empleados::where('id_empleado',$id)->first()->sucursales()->get();
     }
 }

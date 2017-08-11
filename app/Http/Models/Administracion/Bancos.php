@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Administracion;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Bancos extends Model
@@ -29,6 +30,17 @@ class Bancos extends Model
     protected $fillable = ['razon_social', 'banco', 'rfc', 'nacional'];
 
     /**
+     * Los atributos que seran visibles en index-datable
+     * @var [type]
+     */
+    protected $fields = [
+      'banco' => 'Banco',
+      'razon_social' => 'Razón Social',
+      'rfc' => 'RFC',
+      'nacional' => 'Nacional'
+    ];
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
@@ -44,12 +56,32 @@ class Bancos extends Model
         'banco' => 'required',
     ];
 
-    public function getTable(){
-	    return $this->table;
+    public function getFields()
+    {
+        return $this->fields;
     }
 
     public function numeroscuenta()
     {
         return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
+    }
+    
+    public function ColumnDefaultValues()
+    {
+        $schema = config('database.connections.'.$this->getConnection()->getName().'.schema');
+
+        $data = DB::table('information_schema.columns')
+            ->select('column_name', 'data_type', DB::Raw("replace(replace(column_default, concat('::',data_type), ''),'''','') as column_default"))
+            ->whereRaw('column_default is not null')
+            ->whereRaw("column_default not ilike '%nextval%'")
+            ->where('table_name','=',$this->table)
+            ->where('table_schema','=',$schema)
+            ->where('table_catalog','=',$this->getConnection()->getDatabaseName())->get();
+        
+       foreach ($data as $value) {
+           $data->{$value->column_name} = $value->data_type == 'boolean' ? $value->column_default == 'true' : $value->column_default;
+       }
+        
+        return $data;
     }
 }

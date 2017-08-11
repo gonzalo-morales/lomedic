@@ -118,3 +118,15 @@ td, th {
     white-space: nowrap;
 }
 
+/* Vanilla DataTables */
+.text-strike {
+    text-decoration: line-through;
+}
+
+.dataTable-search .dataTable-input {
+    width: auto !important;
+}
+
+ul#dataTable-headings-selector {
+    width: auto !important;
+}
