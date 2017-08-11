@@ -21,7 +21,7 @@ function routeActionReplace($action = '')
  * @param  array  $params - Parametros personalizados
  * @return string
  */
-function companyRoute($action = '', $params = [])
+function companyAction($action = '', $params = [])
 {
 	#
 	$expected_action = routeActionReplace($action);
@@ -35,7 +35,7 @@ function companyRoute($action = '', $params = [])
 		$_params = array_except(request()->route()->parameters, ['company']);
 		if (!empty($_params)) {
 			# Asiganmos parametro, que por logica debe ser el Id
-			$autoparams['id'] =  array_first($_params);
+			$autoparams['id'] =  head($_params);
 		}
 	}
 
@@ -44,8 +44,6 @@ function companyRoute($action = '', $params = [])
 		$autoparams, $params
 	));
 }
-
-
 
 /**
  * Obtenemos accion de ruta actual
@@ -58,12 +56,80 @@ function currentRouteAction($action = '')
 }
 
 /**
- * Obtenemos modelo asociado a controlador
- * @return Model
+ * Obtenemos arreglo de nombres de ruta actual
+ * @param  string $route - nombre por el que reemplazar
+ * @return array
  */
-function currentRouteModel()
+function routeNameReplace($route = '')
 {
-	$action = explode('@', Route::currentRouteAction());
-	$model = str_replace('Controller', '', str_replace('Controllers', 'Models', $action[0]));
-	return new $model;
+	return array_map(function($current, $expected) {
+		return $expected === '' ? $current : $expected;
+	}, explode('.', Route::currentRouteName()), array_pad(explode('.', $route, 3), -3, '') );
+}
+
+/**
+ * Obtenemos URL de ruta
+ * @param  string $route - Acción por la que reemplazar
+ * @param  array  $params - Parametros personalizados
+ * @return string
+ */
+function companyRoute($route = '', $params = [])
+{
+	#
+	$expected_action = routeNameReplace($route);
+
+	# Injectamos empresa
+	$autoparams = ['company' => request()->company];
+
+	# Injectamos Id
+	if (in_array(last($expected_action), ['show', 'edit', 'update', 'destroy'])) {
+		# Obtenemos parametros, omitiendo empresa
+		$_params = array_except(request()->route()->parameters, ['company']);
+		if (!empty($_params)) {
+			# Asiganmos parametro, que por logica debe ser el Id
+			$autoparams['id'] =  head($_params);
+		}
+	}
+
+	# Generamos URL
+	return route(implode('.', $expected_action), array_merge(
+		$autoparams, $params
+	));
+}
+
+/**
+ * Obtenemos nombre de ruta actual
+ * @param  string $route - nombre por el que reemplazar
+ * @return string
+ */
+function currentRouteName($route = '')
+{
+	return implode('.', routeNameReplace($route));
+}
+
+/**
+ * Obtenemos entidad
+ * @return Entity
+ */
+function currentEntity()
+{
+	return Route::getCurrentRoute()->getController()->entity;
+}
+
+/**
+ * Obtenemos nombre completo de la entidad
+ * @return string
+ */
+function currentEntityName()
+{
+	return get_class(currentEntity());
+}
+
+/**
+ * Obtenemos nombre base de la entidad
+ * @return string
+ */
+function currentEntityBaseName()
+{
+	return class_basename(currentEntityName());
 }
