@@ -1,7 +1,7 @@
 
 let datatable = new DataTable(".smart-table", {
-	perPageSelect: [2,3,5],
-	perPage: 5,
+	perPageSelect: [20,30,50],
+	perPage: 20,
 	columns: [
 		{ select: [0], sortable: false },
 	],
