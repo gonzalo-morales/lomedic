@@ -13,6 +13,13 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
+
+		# Extend Route Resource
+		$registrar = new \App\Http\ResourceRegistrar($this->app['router']);
+		$this->app->bind('Illuminate\Routing\ResourceRegistrar', function () use ($registrar) {
+			return $registrar;
+		});
+
 		//
 		\Route::resourceVerbs([
 			'create' => 'crear',
@@ -28,6 +35,6 @@ class AppServiceProvider extends ServiceProvider
 	public function register()
 	{
 		//
-        require_once __DIR__ . '/../helpers.php';
+		require_once __DIR__ . '/../helpers.php';
 	}
 }

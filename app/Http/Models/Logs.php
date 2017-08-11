@@ -37,18 +37,18 @@ class Logs extends Model
 
         if(Auth::id()!= null && is_numeric($id) || $id == null)
         {
-            Logs::create([
-            	'tabla' => $table,
-                'fk_id_usuario' => Auth::id(),
-                'fk_id_empresa' => Empresas::where('nombre_comercial',strtoupper($company))->first(['id_empresa'])->id_empresa,
-                'fk_id_accion' =>AccionLog::where('accion',$accion)->first(['id_accion'])->id_accion,
-                'id_registro' => $id,
-                'fecha_hora' => DB::raw('now()'),
-                'comentario' => $comentario,
-                'ip_cliente' => $_SERVER['REMOTE_ADDR'],
-                'ip_servidor' => $_SERVER['SERVER_ADDR'],
-                'dominio_servidor' => $_SERVER['SERVER_NAME']
-           	]);
+            // Logs::create([
+            // 	'tabla' => $table,
+            //     'fk_id_usuario' => Auth::id(),
+            //     'fk_id_empresa' => Empresas::where('nombre_comercial',strtoupper($company))->first(['id_empresa'])->id_empresa,
+            //     'fk_id_accion' =>AccionLog::where('accion',$accion)->first(['id_accion'])->id_accion,
+            //     'id_registro' => $id,
+            //     'fecha_hora' => DB::raw('now()'),
+            //     'comentario' => $comentario,
+            //     'ip_cliente' => $_SERVER['REMOTE_ADDR'],
+            //     'ip_servidor' => $_SERVER['SERVER_ADDR'],
+            //     'dominio_servidor' => $_SERVER['SERVER_NAME']
+           	// ]);
         }
     }
 }

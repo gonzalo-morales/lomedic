@@ -1,5 +1,0 @@
-
-
-$(document.querySelector('table')).DataTable()
-
-
