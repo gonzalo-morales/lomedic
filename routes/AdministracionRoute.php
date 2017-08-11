@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 $Conecctions = implode('|',array_keys(config('database.connections')));
 
 Route::pattern('company', "($Conecctions)");
@@ -30,6 +29,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('usuarios', 'Administracion\UsuariosController');
 		Route::resource('sucursales', 'Administracion\SucursalesController');
         Route::get('sucursalesautocomplete','Administracion\SucursalesController@obtenerSucursales');
+        Route::get('sucursalesempleado/{id}','Administracion\SucursalesController@sucursalesEmpleado');
 		Route::resource('correos', 'Administracion\CorreosController');
 		Route::resource('municipios', 'Administracion\MunicipiosController');
 		Route::resource('estados', 'Administracion\EstadosController');
@@ -49,8 +49,6 @@ Route::prefix('{company}')->group(function () {
         Route::resource('motivosajustes', 'Administracion\MotivosAjustesController');
         Route::resource('grupoproductos', 'Administracion\GrupoProductosController');
         Route::resource('familiasproductos', 'Administracion\FamiliasProductosController');
-
-
 
 	});
 });

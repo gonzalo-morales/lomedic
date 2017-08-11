@@ -78,7 +78,7 @@ $.fn.autocomplete2 = function(options) {
                 $input.val($(this).text().trim());
                 $input.data('id', $(this).data('id'));
                 $input.trigger('change');
-                // console.log($input.data('id'));
+                console.log($input.data('id'));
                 $autocomplete.empty();
             });
         }
