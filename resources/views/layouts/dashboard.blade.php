@@ -12,7 +12,7 @@
 	{{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
 	@yield('header-top')
 </head>
-<body class="grey lighten-3">
+<body>
 
 <div class="navbar-fixed ">
 	<nav class="top-nav {{$empresa->color}} z-depth-0 nav-extended">
@@ -46,7 +46,7 @@
 
 	<ul id='enteDrop' class='dropdown-content'>
 		@foreach($empresas as $_empresa)
-		<li><a target="_blank" href="{{ companyRoute('HomeController@index',['company' => $_empresa->conexion]) }}">{{ HTML::image(asset("img/$_empresa->logotipo"), null, ['class'=>'circle responsive-img','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}</a></li>
+		<li><a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">{{ HTML::image(asset("img/$_empresa->logotipo"), null, ['class'=>'circle responsive-img','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}</a></li>
 		@endforeach
 	</ul>
 
@@ -71,13 +71,11 @@
 
 <div class="row {{ $empresa->color }}">
 	<div class="col s12">
-		{{ HTML::link(companyRoute('HomeController@index', ['company' => $empresa->conexion]), 'Inicio', ['class'=>'breadcrumb']) }}
+		{{ HTML::link(companyAction('HomeController@index', ['company' => $empresa->conexion]), 'Inicio', ['class'=>'breadcrumb']) }}
 	</div>
 </div>
 
-<div class="row">
-	@yield('content')
-</div>
+@yield('content')
 
 @include('layouts.ticket')
 
