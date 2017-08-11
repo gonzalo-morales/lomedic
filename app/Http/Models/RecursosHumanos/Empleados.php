@@ -53,21 +53,26 @@ class Empleados extends Model
 
     public function usuario()
     {
-        $this->hasOne('app\Http\Models\Administracion\Usuarios');
+        $this->hasOne('App\Http\Models\Administracion\Usuarios');
     }
 
     public function empresa()
     {
-        $this->$this->hasOne('app\Http\Models\Administracion\Empresas');
+        $this->$this->hasOne('App\Http\Models\Administracion\Empresas');
     }
 
     public function solicitudes()
     {
-        return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_empleado_solicitud','id_empleado');
+        return $this->hasMany('App\Http\Models\Soporte\Solicitudes','fk_id_empleado_solicitud','id_empleado');
     }
 
     public function solicitudes_encargado()
     {
-        return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_empleado_tecnico','id_empleado');
+        return $this->hasMany('App\Http\Models\Soporte\Solicitudes','fk_id_empleado_tecnico','id_empleado');
+    }
+
+    public function sucursales()
+    {
+        return $this->belongsToMany('App\Http\Models\Administracion\Sucursales','ges_det_empleado_sucursal','fk_id_empleado','fk_id_sucursal');
     }
 }

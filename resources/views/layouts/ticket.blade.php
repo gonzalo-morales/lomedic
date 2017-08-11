@@ -22,91 +22,73 @@
     <li><a href="#!">Proceso NAUS1234</a></li>
 </ul>
 
-<form action="{{ companyRoute('Soporte\SolicitudesController@store') }}" method="post" class="col s12" enctype="multipart/form-data">
-    {{ csrf_field() }}
-    {{ method_field('POST') }}
     <div id="ticketHelp" class="modal modal-fixed-footer">
+        {!! Form::model(null,['url'=>companyRoute('Soporte\SolicitudesController@store'), 'class'=>"col s12", 'enctype'=>"multipart/form-data"]) !!}
         <div class="modal-content">
             <h4>Nuevo Ticket:</h4>
                 <div class="input-field col s12">
-                    <input type="text" id="asunto" name="asunto" class="validate" value="{{old('asunto')}}">
-                    <label for="asunto">Asunto</label>
+                    {!! Form::text('asunto',old('asunto'),['class'=>'validate','id'=>'asunto']) !!}
+                    {{Form::label('asunto','Asunto')}}
                 </div>
             <div class="row">
                 <div class="input-field col s12">
                     <p class="col s6">
-                        <input name="groupWho" type="radio" id="forMe1" onclick="activar_empleado()" checked
-                               data-url="{{companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleado')}}"/>
-                        <label for="forMe1">El ticket es para mí</label>
+                        {!! Form::radio('groupWho','',true,['id'=>'forMe1','class'=>'validate', 'onclick'=>'activar_empleado()', 'data-url'=>companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleado')    ]) !!}
+                        {{ Form::label('forMe1', 'El ticket es para mí') }}
                     </p>
                     <p class="col s6">
-                        <input name="groupWho" type="radio" id="otherUser" onchange="activar_empleado()"/>
-                        <label for="otherUser">Para otra persona</label>
+                        {{Form::radio('groupWho','',true,['id'=>'otherUser','class'=>'validate', 'onchange'=>'activar_empleado()'])}}
+                        {{ Form::label('otherUser', 'El ticket es para otra persona') }}
                     </p>
                 </div>
                 <div class="input-field col s12">
-                    <input type="text" id="empleado_solicitud" class="autocomplete_empleado"
-                           data-url="{{companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleados')}}" autocomplete="off">
-                    <label for="empleado_solicitud">Usuario</label>
-                    <input type="hidden" id="nombre_solicitante" name="nombre_solicitante" value="">
+                    {!! Form::text('empleado_solicitud',null,['id'=>'empleado_solicitud','','autocomplete'=>'off','data-url'=>companyRoute('RecursosHumanos\EmpleadosController@obtenerEmpleados')])!!}
+                    {{Form::label('empleado_solicitud','Empleado que realizó la solicitud')}}
+                    {{Form::hidden('nombre_solicitante',null,['id'=>'nombre_solicitante','data-url'=>companyRoute('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])])}}
                 </div>
                 <div class="input-field col s12">
-                    <input type="text" id="sucursal" class="autocomplete_sucursal"
-                           data-url="{{companyRoute('Administracion\SucursalesController@obtenerSucursales')}}" autocomplete="off">
-                    <label for="sucursal">Sucursal</label>
-                    <input type="hidden" id="fk_id_sucursal" name="fk_id_sucursal" value="">
+                    {!! Form::select('fk_id_sucursal',[],null,['id'=>'fk_id_sucursal', 'disabled' => 'true'])!!}
+                    {{Form::label('fk_id_sucursal','Sucursal')}}
                 </div>
                 <div class="input-field col s4">
-                    <select name="fk_id_categoria" id="fk_id_categoria">
-                        <option selected disabled>Selecciona una categoría</option>
-                        @foreach($categories_tickets as $category_ticket)
-                            <option value="{{$category_ticket->id_categoria}}"
-                                    data-url="{{companyRoute('Soporte\SolicitudesController@obtenerSubcategorias'
-                                    ,['id' => $category_ticket->id_categoria])}}">
-                                {{$category_ticket->categoria}}
-                            </option>
-                        @endforeach
-                    </select>
-                    <label for="fk_id_categoria">Categoría</label>
+                    {!! Form::select('fk_id_categoria',$categories_tickets,null,['id'=>'fk_id_categoria', 'data-url' => companyRoute('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
+                    {{Form::label('fk_id_categoria','Categoría')}}
                 </div>
                 <div class="input-field col s4">
-                    <select name="fk_id_subcategoria" id="fk_id_subcategoria" disabled>
-                    </select>
-                    <label>Subcategoría</label>
+                    {!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria', 'disabled'=>'disabled','data-url' => companyRoute('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
+                    {{Form::label('fk_id_subcategoria','Subategoría')}}
                 </div>
                 <div class="input-field col s4">
-                    <select name="fk_id_accion" id="fk_id_accion" disabled>
-                    </select>
-                    <label>Acción</label>
+                    {!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','disabled'=>'disabled']) !!}
+                    {{Form::label('fk_id_accion','Acción')}}
                 </div>
                 <div class="input-field col s12">
-                    <textarea id="descripcion" name="descripcion" class="materialize-textarea"></textarea>
-                    <label for="descripcion">Descripción</label>
+                    {!! Form::textarea('descripcion',old('descripcion'),['id'=>'descripcion','class'=>'materialize-textarea']) !!}
+                    {{Form::label('descripción','Descripción')}}
                 </div>
                 <div class="file-field input-field col s12">
                     <div class="btn">
                         <span><i class="material-icons">file_upload</i>Anexar pruebas</span>
-                        <input type="file" name="archivo[]" id="archivo" multiple>
+                        {!! Form::file('archivo[]',['id'=>'archivo','multiple'=>'multiple']) !!}
                     </div>
                     <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                        {!! Form::text('',null,['class'=>'file-path validate','placeholder'=>'Selecciona uno o más archivos']) !!}
                     </div>
                 </div>
                 <div class="input-field col s12">
                     <p>Prioridad:</p>
                     @foreach($priorities_tickets as $priority_ticket)
                         <p class="col s4">
-                            <input name="fk_id_prioridad" type="radio" value="{{$priority_ticket->id_prioridad}}"
-                                   id="prioridad{{$priority_ticket->id_prioridad}}"/>
-                            <label for="prioridad{{$priority_ticket->id_prioridad}}">{{$priority_ticket->prioridad}}</label>
+                            {!! Form::radio('fk_id_prioridad',$priority_ticket->id_prioridad,false,['id'=>'prioridad'.$priority_ticket->id_prioridad]) !!}
+                            {{ Form::label('prioridad'.$priority_ticket->id_prioridad,$priority_ticket->prioridad) }}
                         </p>
                     @endforeach
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="modal-action waves-effect waves-light btn orange">Aceptar</button>
-            {{--<button class="modal-action modal-close waves-effect teal-text btn-flat">Cancelar</button>--}}
+            {!! Form::button('Enviar',['class'=>'modal-action waves-effect waves-light btn orange']) !!}
         </div>
+        {!! Form::close() !!}
     </div><!--/Modal de ayuda-->
 </form>
