@@ -45,7 +45,7 @@
 			<td>{{$row->descripcion}}</td>
 			<td>{{$row->estatusTickets->estatus}}</td>
 			<td class="width-auto">
-				<a href="{{ companyAction('show', ['id' => $row->id_solicitud]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyAction('show', ['id' => $row->id_solicitud]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_comment</i></a>
 			</td>
 		</tr>
 		@endforeach

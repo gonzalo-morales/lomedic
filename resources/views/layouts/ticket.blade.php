@@ -13,20 +13,36 @@
             </div>
             <a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
             <a href="#ticketHelp" class="waves-effect waves-light btn-flat white-text">Crear ticket/solicitud</a>
-            <a href="{{ companyAction('Soporte\SolicitudesController@index') }}" class="waves-effect waves-light btn-flat white-text">Ver mis tickets/solicitudes</a>
         </div>
     </li>
+    <li><a href="{{ companyAction('Soporte\SolicitudesController@index') }}"><i class="material-icons">dvr</i>Todos mis tickets</a></li>
+    {{--<div class="divider"></div>--}}
+    <li class="no-padding">
+        <ul class="collapsible collapsible-accordion">
+            <li class="">
+                <a class="collapsible-header"><i class="material-icons">list</i>Tickets recientes</a>
+                <div class="collapsible-body grey lighten-4" style="display: none;">
+                    <ul>
+                        @foreach($ultimos_tickets as $ticket)
+                            <li><a href="{{ companyAction('Soporte\SolicitudesController@show', ['id' => $ticket->id_solicitud]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">note</i>
+                                    {{$ticket->asunto}}
+                                </a></li>
+                        @endforeach
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <div class="divider"></div>
+
     <li><a href="#!">Proceso NAUS1234</a></li>
     <li><a href="#!">Proceso NAUS1234</a></li>
     <li><a href="#!">Proceso NAUS1234</a></li>
     <li><a href="#!">Proceso NAUS1234</a></li>
 </ul>
 
-<form action="{{ companyAction('Soporte\SolicitudesController@store') }}" method="post" class="col s12" enctype="multipart/form-data">
-    {{ csrf_field() }}
-    {{ method_field('POST') }}
     <div id="ticketHelp" class="modal modal-fixed-footer">
-        {!! Form::model(null,['url'=>companyAction('Soporte\SolicitudesController@store'), 'class'=>"col s12", 'enctype'=>"multipart/form-data"]) !!}
+        {!! Form::model(null,['url'=>companyAction('Soporte\SolicitudesController@store'), 'class'=>"col s12", 'enctype'=>"multipart/form-data",'method'=>'post']) !!}
         <div class="modal-content">
             <h4>Nuevo Ticket:</h4>
                 <div class="input-field col s12">
@@ -54,7 +70,7 @@
                     {{Form::label('fk_id_sucursal','Sucursal')}}
                 </div>
                 <div class="input-field col s4">
-                    {!! Form::select('fk_id_categoria',[0 => 'Selecciona una categoria',$categories_tickets],null,['id'=>'fk_id_categoria', 'data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
+                    {!! Form::select('fk_id_categoria',$categories_tickets,null,['id'=>'fk_id_categoria', 'data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
                     {{Form::label('fk_id_categoria','Categoría')}}
                 </div>
                 <div class="input-field col s4">
@@ -90,7 +106,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            {!! Form::button('Enviar',['class'=>'modal-action waves-effect waves-light btn orange']) !!}
+            {!! Form::button('Enviar',['class'=>'modal-action waves-effect waves-light btn orange','type'=>'submit']) !!}
         </div>
         {!! Form::close() !!}
     </div><!--/Modal de ayuda-->

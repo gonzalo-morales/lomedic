@@ -73,6 +73,8 @@ class SolicitudesController extends Controller
 
     public function store(Request $request, $company)//Para crear un nuevo ticket
     {
+//        dd($request->request);
+
         if($request->nombre_solicitante == '' || $request->nombre_solicitante == null){//Comprobar si es para otro usuario o no
             //Obtener nombre de empleado
             $fk_id_empleado = Usuarios::where('id_usuario',Auth::id())->first()->fk_id_empleado;
@@ -135,7 +137,11 @@ class SolicitudesController extends Controller
 
     public function update(Request $request, $company, $id)
     {
+//        dd($request->request);
+
         $entity = $this->entity->findOrFail($id);
+
+        $entity->setAttribute('fecha_hora_resolucion','now()');
         $entity->fill($request->all());
         if($entity->save())
         {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
