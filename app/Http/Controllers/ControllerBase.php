@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,21 +14,29 @@ class ControllerBase extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index($company)
+    public function index($company, $attributes = ['where'=>['eliminar = 0']])
 	{
 		# ¿Usuario tiene permiso para ver?
 		$this->authorize('view', $this->entity);
 
-		// $r = $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->paginate(20);
-		// return \Response::JSON($r);
-
 		# Log
 		$this->log('index');
+		
+		// $r = $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->paginate(20);
+		// return \Response::JSON($r);
+		
+		$query = $this->entity->orderby($this->entity->getKeyName(),'ASC')->limit(500);
+		
+		if(isset($attributes['where'])) {
+		    foreach ($attributes['where'] as $key=>$condition) {
+		        $query->where(DB::raw($condition));
+		    }
+		}
+		
+		$data = $query->get();
+		$fields = $this->entity->getFields();
 
-		return view(currentRouteName('smart'), [
-			'fields' => $this->entity->getFields(),
-			'data' => $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->limit(500)->get(),
-		]);
+		return view(currentRouteName('smart'), compact('fields','data');
 	}
 
 	/**
