@@ -16,4 +16,12 @@ class BancosController extends ControllerBase
 	{
 		$this->entity = $entity;
 	}
+	
+	/*
+	public function index($company, array $attributes = [])
+	{
+	    $attributes = ['where'=>[]];
+	    return parent::index($company, $attributes);
+	}
+	*/
 }
