@@ -19,12 +19,15 @@ class ControllerBase extends Controller
 		# ¿Usuario tiene permiso para ver?
 		$this->authorize('view', $this->entity);
 
+		// $r = $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->paginate(20);
+		// return \Response::JSON($r);
+
 		# Log
 		$this->log('index');
 
 		return view(currentRouteName('smart'), [
 			'fields' => $this->entity->getFields(),
-			'data' => $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->get(),
+			'data' => $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->limit(500)->get(),
 		]);
 	}
 
