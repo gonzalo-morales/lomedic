@@ -224,9 +224,11 @@
 		</div>
 		</form>
 	</li>
+	@if($data->fecha_hora_resolucion != null || $data->fecha_hora_resolucion != '')
 	<li class="collection-item"><!--Item para finalizar chat-->
 		<h5 class="green-text center"><b>El ticket se ha cerrado con éxito</b></h5>
 	</li>
+	@endif
 </ul>
 @endif
 {{--Fin conversación--}}

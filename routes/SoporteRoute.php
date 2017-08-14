@@ -29,8 +29,8 @@ Route::prefix('{company}')->group(function () {
         Route::get('solicitudes/{id}/subcategorias', 'Soporte\SolicitudesController@obtenerSubcategorias');
         Route::get('solicitudes/{id}/acciones', 'Soporte\SolicitudesController@obtenerAcciones');
         Route::get('solicitudes/{id}/descargar', 'Soporte\SolicitudesController@descargarArchivosAdjuntos');
-        Route::get('solicitudes/tecnicos', 'Soporte\SolicitudesController@index_tecnicos')->name('solicitudes.index_tecnicos');
-        Route::get('solicitudes/tecnico', 'Soporte\SolicitudesController@index_tecnico')->name('solicitudes.index_tecnico');
+        Route::get('solicitudes/disponibles', 'Soporte\SolicitudesController@index_tecnicos')->name('solicitudes.index_tecnicos');
+        Route::get('solicitudes/asignadas', 'Soporte\SolicitudesController@index_tecnico')->name('solicitudes.index_tecnico');
         Route::resource('solicitudes', 'Soporte\SolicitudesController');
         Route::resource('seguimiento', 'Soporte\SeguimientoSolicitudesController');
     });

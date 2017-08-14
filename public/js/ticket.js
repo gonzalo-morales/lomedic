@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $('#fk_id_categoria option[value="0"]').prop('disabled',true);
     let data_empleados = $('#empleado_solicitud').data('url');
     $.ajax({
        type:'GET',
@@ -86,7 +87,6 @@ $(document).ready(function () {
             }
         });
     });
-
 });
 
 function activar_empleado(){
@@ -126,6 +126,12 @@ function sucursal()
                     dataType: 'json',
                     success: function (data) {
                         removerOpciones('fk_id_sucursal');
+                        let option = $('<option/>');
+                        option.val(null);
+                        option.attr('disabled','disabled');
+                        option.attr('selected','selected');
+                        option.text('Selecciona una sucursal');
+                        $('#fk_id_sucursal').append(option);
                         $.each(data, function (key, sucursal) {
                             let option = $('<option/>');
                             option.val(sucursal.id_sucursal);
@@ -151,6 +157,12 @@ function sucursal()
             dataType: 'json',
             success: function (data) {
                 removerOpciones('fk_id_sucursal');
+                let option = $('<option/>');
+                option.val(null);
+                option.attr('disabled','disabled');
+                option.attr('selected','selected');
+                option.text('Selecciona una sucursal');
+                $('#fk_id_sucursal').append(option);
                 $.each(data, function (key, sucursal) {
                     let option = $('<option/>');
                     option.val(sucursal.id_sucursal);
