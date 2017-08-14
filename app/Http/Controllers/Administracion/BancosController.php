@@ -20,7 +20,7 @@ class BancosController extends ControllerBase
 	/*
 	public function index($company, array $attributes = [])
 	{
-	    $attributes = ['where'=>[]];
+	    $attributes = ['where'=>['eliminar = 0','company = 1']];
 	    return parent::index($company, $attributes);
 	}
 	*/
