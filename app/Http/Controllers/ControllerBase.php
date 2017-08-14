@@ -36,7 +36,7 @@ class ControllerBase extends Controller
 		$data = $query->get();
 		$fields = $this->entity->getFields();
 
-		return view(currentRouteName('smart'), compact('fields','data');
+		return view(currentRouteName('smart'), compact('fields','data'));
 	}
 
 	/**
@@ -251,7 +251,7 @@ class ControllerBase extends Controller
 
 			return response()->json([
 				'success' => true,
-				'url' => 'http://localhost:8000/abisa/administracion/bancos/export?type=CSV&download=1',
+				'url' => 'http://localhost:8000/abisa/administracion/solicitudes/export?type=CSV&download=1',
 			]);
 
 		} else {
