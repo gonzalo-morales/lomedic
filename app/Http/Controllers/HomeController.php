@@ -21,6 +21,9 @@ class HomeController extends Controller
 	 */
 	public function index()
 	{
+	    if(empty(request()->company))
+	        return redirect()->route('login');
+	        
 		return view('home');
 	}
 }
