@@ -12,7 +12,7 @@ class ResourceRegistrar extends OriginalRegistrar
 	 *
 	 * @var array
 	 */
-	protected $resourceDefaults = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy', 'export', 'destroyMultiple'];
+    protected $resourceDefaults = ['export', 'destroyMultiple', 'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
 
 	/**
 	 * Add the export method for a resourceful route.

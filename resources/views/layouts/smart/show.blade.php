@@ -15,6 +15,9 @@
             @can('update', currentEntity())
             {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'waves-effect waves-teal btn-flat teal-text']) }}
             @endcan
+            @can('create', currentEntity())
+            {{ link_to(companyRoute('create'), 'Nuevo', ['class'=>'waves-effect waves-teal btn-flat teal-text']) }}
+            @endcan
         </div>
     </div>
 @endsection

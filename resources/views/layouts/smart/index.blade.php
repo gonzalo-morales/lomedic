@@ -8,14 +8,14 @@
 @endsection
 
 @section('header-bottom')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.9.6/rivets.bundled.min.js"></script>
-<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
-<script src="{{ asset('js/smartindex.js') }}"></script>
-@if (session('message'))
-<script type="text/javascript">
-	Materialize.toast('<span><i class="material-icons">priority_high</i>{{session('message.text')}}</span>', 4000, '{{session('message.type')}}' );
-</script>
-@endif
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.9.6/rivets.bundled.min.js"></script>
+    <script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
+    <script src="{{ asset('js/smartindex.js') }}"></script>
+    @if (session('message'))
+    <script type="text/javascript">
+    	Materialize.toast('<span><i class="material-icons">priority_high</i>{{session('message.text')}}</span>', 4000, '{{session('message.type')}}' );
+    </script>
+    @endif
 @endsection
 
 @section('content')
@@ -53,8 +53,12 @@
 							</div>
 						</button>
 						<ul id="export-all" class="dropdown-content">
-							<li><a href="#" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'CSV'])}}">Exportar a Excel</a></li>
-							<li><a href="#" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'PDF'])}}">Exportar a PDF</a></li>
+							<li><a href="#" class="teal-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLSX'])}}">Libro Excel</a></li>
+							<li><a href="#" class="teal-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'PDF'])}}">Archivo Pdf</a></li>
+							<li class="divider"></li>
+							<li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLS'])}}">Excel 97-2003</a></li>
+							<li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'CSV'])}}">CSV</a></li>
+							<li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'TXT'])}}">TXT</a></li>
 						</ul>
 					</div>
 				</div>
@@ -83,8 +87,12 @@
 							</div>
 						</button>
 						<ul id="export-custom" class="dropdown-content">
-							<li><a href="#" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'CSV'])}}">Exportar a Excel</a></li>
-							<li><a href="#" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'PDF'])}}">Exportar a PDF</a></li>
+							<li><a href="#" class="teal-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLSX'])}}">Libro Excel</a></li>
+							<li><a href="#" class="teal-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'PDF'])}}">Archivo Pdf</a></li>
+							<li class="divider"></li>
+							<li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLS'])}}">Excel 97-2003</a></li>
+							<li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'CSV'])}}">CSV</a></li>
+							<li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'TXT'])}}">TXT</a></li>
 						</ul>
 					</div>
 				</div>

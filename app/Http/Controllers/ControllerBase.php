@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use DB;
+use Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,10 +54,9 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para crear?
 		$this->authorize('create', $this->entity);
+		$data = $this->entity->ColumnDefaultValues();
 
-		return view(currentRouteName('smart'), [
-			'data' => $this->entity->ColumnDefaultValues(),
-		]);
+		return view(currentRouteName('smart'), compact('data'));
 	}
 
 	/**
@@ -96,10 +96,9 @@ class ControllerBase extends Controller
 
 		# Log
 		$this->log('show', $id);
+		$data = $this->entity->findOrFail($id);
 
-		return view(currentRouteName('smart'), [
-			'data' => $this->entity->findOrFail($id),
-		]);
+		return view(currentRouteName('smart'), compact('data'));
 	}
 
 	/**
@@ -112,10 +111,9 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);
+		$data = $this->entity->findOrFail($id);
 
-		return view(currentRouteName('smart'), [
-			'data' => $this->entity->findOrFail($id),
-		]);
+		return view(currentRouteName('smart'), compact('data'));
 	}
 
 	/**
@@ -248,25 +246,28 @@ class ControllerBase extends Controller
 	public function export(Request $request, $company)
 	{
 		# ¿Usuario tiene permiso para descargar?
-		// $this->authorize('download', $this->entity);
+		#$this->authorize('download', $this->entity);
 
-		if (!$request->download && $request->method() == 'POST') {
-
-			sleep(2);
-
-			return response()->json([
-				'success' => true,
-				'url' => 'http://localhost:8000/abisa/administracion/solicitudes/export?type=CSV&download=1',
-			]);
-
-		} else {
-
-			header("Content-type: text/plain");
-			header("Content-Disposition: attachment; filename=savethis.txt");
-
-			print "This is some text...\n";
-
+	    if (isset($request->ids)) {
+	        $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);
+	        $data = $this->entity->select(array_keys($this->entity->getFields()))->whereIn($this->entity->getKeyName(), $ids)->get()->toarray();
 		}
+		else {
+		    $data = $this->entity->select(array_keys($this->entity->getFields()))->get()->toarray();
+		}
+		
+		$type = $request->type;
+		    
+		Excel::create(currentEntityBaseName(), function($excel) use($data,$type) {
+		    $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$type) {
+		        if($type == 'pdf') {
+		            $sheet->setOrientation('landscape');
+		            $sheet->loadView(currentRouteName('smart'),$data);
+		        }
+		        else
+	               $sheet->fromArray($data);
+	        });
+	    })->download($request->type);
 	}
 
 	/**
