@@ -13,7 +13,6 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-
 		# Extend Route Resource
 		$registrar = new \App\Http\ResourceRegistrar($this->app['router']);
 		$this->app->bind('Illuminate\Routing\ResourceRegistrar', function () use ($registrar) {

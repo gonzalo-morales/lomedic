@@ -1,4 +1,28 @@
+function post_to_url(path, params, method) {
+    method = method || "post";
 
+    var form = document.createElement("form");
+
+    //Move the submit function to another variable
+    //so that it doesn't get overwritten.
+    form._submit_function_ = form.submit;
+
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", key);
+        hiddenField.setAttribute("value", params[key]);
+
+        form.appendChild(hiddenField);
+    }
+
+    document.body.appendChild(form);
+    form._submit_function_(); //Call the renamed function.
+}
+    
 let datatable = new DataTable(".smart-table", {
 	perPageSelect: [20,30,50],
 	perPage: 20,
@@ -127,21 +151,8 @@ let model = {
 			e.preventDefault();
 			//
 			rv.status.isDownloading = true;
-			//
-			$.post(this.dataset.exportUrl, {ids: rv.collections.items}, function(response){
-				rv.status.isDownloading = false;
-				//
-				if (response.success) {
-					//
-					let iframe = document.createElement('iframe');
-						iframe.style.display = 'none';
-						iframe.src = response.url;
-					//
-					smartView.appendChild(iframe);
-				} else {
-					console.log('SOME DOWNLOAD ERROR');
-				}
-			})
+			post_to_url(this.dataset.exportUrl, {'ids' : rv.collections.items});
+			rv.status.isDownloading = false;
 		},
 	},
 }
