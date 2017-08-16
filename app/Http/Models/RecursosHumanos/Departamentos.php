@@ -2,12 +2,12 @@
 
 namespace App\Http\Models\RecursosHumanos;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
 
-class Departamentos extends Model
+class Departamentos extends ModelBase
 {
     use Notifiable;
     /**
@@ -29,6 +29,16 @@ class Departamentos extends Model
      * @var array
      */
     protected $fillable = ['descripcion','nomenclatura','activo'];
+    
+    /**
+     * Los atributos que seran visibles en index-datable
+     * @var array
+     */
+    protected $fields = [
+        'nomenclatura' => 'Nomenclatura',
+        'descripcion' => 'Descripcion',
+        'activo' => 'Activo'
+    ];
 
     /**
      * Indicates if the model should be timestamped.

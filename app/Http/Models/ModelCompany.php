@@ -2,9 +2,9 @@
 
 namespace App\Http\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class ModelCompany extends Model
+class ModelCompany extends ModelBase
 {
     /**
      * Create a new Eloquent model instance.

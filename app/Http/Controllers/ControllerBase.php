@@ -19,19 +19,23 @@ class ControllerBase extends Controller
 	public function index($company, $attributes = ['where'=>['eliminar = 0']])
 	{
 		# ¿Usuario tiene permiso para ver?
-		$this->authorize('view', $this->entity);
+		#$this->authorize('view', $this->entity);
 
 		# Log
 		$this->log('index');
 
 		$query = $this->entity->orderby($this->entity->getKeyName(),'ASC');
 
-		foreach ($attributes['where'] as $key=>$condition) {
-			$query->where(DB::raw($condition));
+		if(isset($attributes['where'])) {
+    		foreach ($attributes['where'] as $key=>$condition) {
+    			$query->where(DB::raw($condition));
+    		}
 		}
-
+		
+		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
+		
 		if (!request()->ajax()) {
-			return view(currentRouteName('smart'), [
+		    return view(currentRouteName('smart'), $dataview+[
 				'fields' => $this->entity->getFields(),
 				'data' => $query->limit(20)->get(),
 			]);
@@ -51,13 +55,14 @@ class ControllerBase extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create($company)
+	public function create($company, $attributes =[])
 	{
 		# ¿Usuario tiene permiso para crear?
-		$this->authorize('create', $this->entity);
+		#$this->authorize('create', $this->entity);
 		$data = $this->entity->ColumnDefaultValues();
+		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), compact('data'));
+		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
 	}
 
 	/**
@@ -90,16 +95,17 @@ class ControllerBase extends Controller
 	 * @param  integer $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($company, $id)
+	public function show($company, $id, $attributes =[])
 	{
 		# ¿Usuario tiene permiso para ver?
-		$this->authorize('view', $this->entity);
+		#$this->authorize('view', $this->entity);
 
 		# Log
 		$this->log('show', $id);
 		$data = $this->entity->findOrFail($id);
+		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), compact('data'));
+		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
 	}
 
 	/**
@@ -108,13 +114,14 @@ class ControllerBase extends Controller
 	 * @param  integer $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit($company, $id)
+	public function edit($company, $id, $attributes =[])
 	{
 		# ¿Usuario tiene permiso para actualizar?
-		$this->authorize('update', $this->entity);
+		#$this->authorize('update', $this->entity);
 		$data = $this->entity->findOrFail($id);
+		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), compact('data'));
+		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
 	}
 
 	/**
