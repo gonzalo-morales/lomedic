@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +14,7 @@ class ControllerBase extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index(Request $request, $company)
+	public function index($company, $attributes = ['where'=>['eliminar = 0']])
 	{
 		# ¿Usuario tiene permiso para ver?
 		$this->authorize('view', $this->entity);
@@ -22,16 +22,22 @@ class ControllerBase extends Controller
 		# Log
 		$this->log('index');
 
-		if (!$request->ajax()) {
+		$query = $this->entity->orderby($this->entity->getKeyName(),'ASC');
+
+		foreach ($attributes['where'] as $key=>$condition) {
+			$query->where(DB::raw($condition));
+		}
+
+		if (!request()->ajax()) {
 			return view(currentRouteName('smart'), [
 				'fields' => $this->entity->getFields(),
-				'data' => $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->limit(20)->get(),
+				'data' => $query->limit(20)->get(),
 			]);
 
 		# Ajax
 		} else {
-			$data = $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->paginate(4000);
-			if( $request->page && $request->page == 1) {
+			$data = $query->paginate(4000);
+			if( request()->page && request()->page == 1) {
 				$data->setCollection($data->getCollection()->slice(20));
 			}
 			return response()->json($data);
@@ -250,7 +256,7 @@ class ControllerBase extends Controller
 
 			return response()->json([
 				'success' => true,
-				'url' => 'http://localhost:8000/abisa/administracion/bancos/export?type=CSV&download=1',
+				'url' => 'http://localhost:8000/abisa/administracion/solicitudes/export?type=CSV&download=1',
 			]);
 
 		} else {

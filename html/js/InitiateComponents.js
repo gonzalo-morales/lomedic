@@ -3,10 +3,20 @@ $(document).ready(function(){
   $('.tooltipped').tooltip({delay: 50}); // Iniciamos tooltips
   $('.chips-initial').material_chip({  //iniciamos chips
     data: [{
-      tag: 'Maria Luisa',
+      tag: 'Escribe y teclea Enter para crear',
     }],
   });
   $('#atendio.chips-initial').material_chip({  //iniciamos chips para el ID: #atendio (nuevaCompra_nuevo.html)
+    data: [{
+      tag: 'Escribe y teclea Enter para crear',
+    }],
+  });
+  $('#emails.chips-initial').material_chip({  //iniciamos chips para el ID: #atendio (nuevaCompra_nuevo.html)
+    data: [{
+      tag: 'Escribe y teclea Enter para crear',
+    }],
+  });
+  $('#phones.chips-initial').material_chip({  //iniciamos chips para el ID: #atendio (nuevaCompra_nuevo.html)
     data: [{
       tag: 'Escribe y teclea Enter para crear',
     }],
@@ -15,6 +25,15 @@ $(document).ready(function(){
     data: [{
       tag: 'Escribe y teclea Enter para crear',
     }],
+  });
+  $('#datos.chips-initial').material_chip({  //iniciamos chips para el ID: #datos en ayuda (index.html)
+    data: [{
+      tag: 'Escribe y teclea Enter para crear',
+    }],
+  });
+  $('.chips-placeholder').material_chip({
+    placeholder: 'teclea Enter para crear',
+    secondaryPlaceholder: '+Enter',
   });
   $('select').material_select(); //iniciamos el select
   $(".help-collapse").sideNav({ // Inicia sideNav para navegación derecho de ayuda
@@ -58,7 +77,7 @@ $(document).ready(function(){
     clear: 'Limpiar',
     close: 'Aceptar',
     selectMonths: true, // Creates a dropdown to control month
-    selectYears: 15 // Creates a dropdown of 15 years to control year
+    selectYears: 100 // Creates a dropdown of 15 years to control year
   });
   $('input.autocomplete').autocomplete({ //Iniciamos el autocomplete
     data: { //agregamos data de ejemplo, el null es para decir que no llevará una imagen o ícono a un lado del nombre...
@@ -71,5 +90,16 @@ $(document).ready(function(){
     // Callback function when value is autcompleted.
     },
     minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+  });
+  $('.chips-autocomplete').material_chip({
+    autocompleteOptions: {
+      data: {
+        'Apple': null,
+        'Microsoft': null,
+        'Google': null
+      },
+      limit: Infinity,
+      minLength: 1
+    }
   });
 }); //aquí termina el function
