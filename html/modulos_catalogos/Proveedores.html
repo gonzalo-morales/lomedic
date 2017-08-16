@@ -48,35 +48,37 @@
 </div><!--/row buttons-->
 
 <div class="row">
-    <div class="input-field col s6 m4">
-        <label for="razon_social" data-error="Campo obligatorio">*Razón social:</label>
-        <input id="razon_social" type="text" class="validate active">
-    </div>
-    <div class="input-field col s6 m4">
-        <label for="rfc" data-error="Campo obligatorio">*RFC:</label>
-        <input id="rfc" type="text" class="validate active">
-    </div>
-    <div class="input-field col s12 m4">
-        <label for="short_name">Nombre corto:</label>
-        <input id="short_name" type="text" class="validate active">
-    </div>
-</div><!--first Section-->
-
-<div class="divider"></div>
-
-<div class="row">
-    <div class="col s12 m4">
-        <h5>Información general</h5>
-        <div class="col s12 m6">
-        <label data-error="Campo obligatorio">*Tipo de socio:</label>
-        <select multiple>
-            <option value="" disabled selected>Selecciona...</option>
-            <option value="1">Cliente</option>
-            <option value="2">Proveedor</option>
-            <option value="5">Oportunidad de venta</option>
-        </select>
+    <div class="col s12 m8">
+    <h5>Información general</h5>
+        <div class="col s12">
+            <input type="checkbox" id="2" />
+            <label for="2">Activo</label>
         </div>
-        <div class="col s12 m6">
+        <div class="input-field col s6 m4">
+            <label for="razon_social" data-error="Campo obligatorio">*Razón social:</label>
+            <input id="razon_social" type="text" class="validate active">
+        </div>
+        <div class="input-field col s6 m4">
+            <label for="rfc" data-error="Campo obligatorio">*RFC:</label>
+            <input id="rfc" type="text" class="validate active">
+        </div>
+        <div class="input-field col s6 m4">
+            <label for="short_name">Nombre Comercial:</label>
+            <input id="short_name" type="text" class="validate active">
+        </div>
+        <div class="input-field col s6 m4">
+            <input id="ejecutivo_venta" type="text" class="validate">
+            <label for="ejecutivo_venta">Ejecutivo de venta:</label>
+        </div>
+        <div class="input-field col s6 m4">
+            <input id="tel_office" type="tel" class="validate">
+            <label for="tel_office">Teléfono:</label>
+        </div>
+        <div class="input-field col s6 m4">
+            <input id="web_site" type="text" class="validate">
+            <label for="web_site">Sitio web:</label>
+        </div>
+        <div class="col s6 m3">
             <label>*Ramo(s):</label> 
             <select multiple>
                 <option value="" disabled selected>Selecciona...</option>
@@ -85,161 +87,237 @@
                 <option value="5">Option3</option>
             </select>
         </div>
-        <div class="input-field col s12 m6">
-            <input id="tel_office" type="tel" class="validate">
-            <label for="tel_office">Teléfono:</label>
+        <div class="col s6 m3">
+            <label>País de Orígen:</label> 
+            <select multiple>
+                <option value="" disabled selected>Selecciona...</option>
+                <option value="1">Option1</option>
+                <option value="2">Option2</option>
+                <option value="5">Option3</option>
+            </select>
         </div>
-        <div class="input-field col s12 m6">
-            <input id="web_site" type="text" class="validate">
-            <label for="web_site">Sitio web:</label>
-        </div>
-        <div class="col s12 m6">
-        <label>Licencia Sanitaria</label>
-            <div class="file-field input-field">
-              <div class="btn">
-                <i class="material-icons">attach_file</i>
-                <input type="file" multiple>
-              </div>
-              <div class="file-path-wrapper">
-                <input class="file-path validate" type="text">
-              </div>
-            </div>
-        </div>
-        <div class="col s12 m6">
-        <label>Aviso de Funcionamiento</label>
-            <div class="file-field input-field">
-              <div class="btn">
-                <i class="material-icons">attach_file</i>
-                <input type="file" multiple>
-              </div>
-              <div class="file-path-wrapper">
-                <input class="file-path validate" type="text">
-              </div>
-            </div>
-        </div>
-        <div class="col s12 m6">
-        <label>Aviso de Responsable Sanitario</label>
-            <div class="file-field input-field">
-              <div class="btn">
-                <i class="material-icons">attach_file</i>
-                <input type="file" multiple>
-              </div>
-              <div class="file-path-wrapper">
-                <input class="file-path validate" type="text">
-              </div>
-            </div>
-        </div>
-    </div><!--/col s12 m4-->
-
-    <div class="col s12 m4">
-        <h5>Condiciones de pago</h5>
-        <label data-error="Campo obligatorio">*Condiciones:</label>
-        <form action="#">
-            <p>
-                <input name="group2" type="radio" id="credito"/>
-                <label for="credito">Crédito</label>
-            </p>
-            <p>
-                <input name="group2" type="radio" id="contado"/>
-                <label for="contado">Contado</label>
-            </p>
-        </form>
-        <div class="input-field col s6">
-            <label for="monto_credito">Monto de crédito:</label>             
-            <input id="monto_credito" type="number" class="validate">
-        </div>
-        <div class="input-field col s6">
-            <label for="dias_credito">Días de crédito:</label>             
-            <input id="dias_credito" type="number" class="validate">
-        </div>
-        <div class="col s12 m6">
-        <label>Banco:</label>
-        <select>
+        <div class="col s6 m3">
+        <label data-error="Campo obligatorio">*Tipo de socio:</label>
+        <select multiple>
             <option value="" disabled selected>Selecciona...</option>
-            <option value="1">Banorte</option>
-            <option value="2">Bancomer</option>
-            <option value="3">Banamex</option>
-            <option value="4">Santander</option>
-            <option value="5">Scotiabank</option>
-            <option value="6">Otro</option>
+            <option value="1">Cliente</option>
+            <option value="2">Proveedor</option>
+            <option value="5">Oportunidad de venta</option>
         </select>
         </div>
-        <div class="input-field col s12 m6">
-            <label for="cuenta_bancaria">Cuenta bancaria:</label>             
-            <input id="cuenta_bancaria" type="number" class="validate">
+        <div class="col s6 m3">
+        <label data-error="Campo obligatorio">*Monedas:</label>
+        <select multiple>
+            <option value="" disabled selected>Selecciona...</option>
+            <option value="1">Cliente</option>
+            <option value="2">Proveedor</option>
+            <option value="5">Oportunidad de venta</option>
+        </select>
         </div>
-    </div><!--/col-s12 m4-->
-
+    </div>
     <div class="col s12 m4">
-        <h5>Información de entrega</h5>
-        <div class="col s12">
-            <label data-error="Campo obligatorio">*Tipo de Entrega:</label>
-            <form action="#">
-                <p>
-                    <input name="group1" type="radio" id="sucursal"/>
-                    <label for="sucursal">Sucursal</label>
-                </p>
-                <p>
-                    <input name="group1" type="radio" id="paqueteria"/>
-                    <label for="paqueteria">Paquetería</label>
-                </p>
-                <p>
-                    <input name="group1" type="radio" id="recoleccion"/>
-                    <label for="recoleccion">Recolección</label>
-                </p>
-            </form>
-            <div class="input-field col s12">
-                <label for="colectiva">Monto mínimo de facturación:</label>             
-                <input id="colectiva" type="number" class="validate">
-            </div>
-        <div class="col s12">
-            <label data-error="Campo obligatorio">*Correos para envío de orden de compra:</label> 
-            <div id="emails" class="chips chips-initial"></div>
+        <h5>Empresas</h5>
+        <div class="internSectionTable">
+            <table class="responsive-table highlight">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="all" /><label for="all"></label></th>
+                    <th>Empresas:</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><input type="checkbox" id="1" /><label for="1"></label></td>
+                    <td>Empresa 1</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" id="2" /><label for="2"></label></td>
+                    <td>Empresa 2</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" id="3" /><label for="3"></label></td>
+                    <td>Empresa 3</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" id="4" /><label for="4"></label></td>
+                    <td>Empresa 4</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" id="5" /><label for="5"></label></td>
+                    <td>Empresa 5</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" id="6" /><label for="6"></label></td>
+                    <td>Empresa 6</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-        </div><!--/col-s12-->
-    </div><!--/col-s12 m4-->
-</div><!--/row-->
+    </div>
+</div>
 
-    <div class="row">
-        <div class="col s12 m6">
-            <h5>Contactos</h5>
-            <div class="card">
-                <div class="card-image teal lighten-5">
+<div class="row">
+<div class="col s12">
+    <h5>Datos adicionales</h5>
+    <div class="card teal">
+      <div class="card-content white-text">
+        <p>Ingresa la información de acuerdo a las categorías:</p>
+      </div>
+      <div class="card-tabs">
+        <ul class="tabs tabs-fixed-width tabs-transparent">
+          <li class="tab"><a class="active" href="#con_pago">Condiciones de pago</a></li>
+          <li class="tab"><a href="#info_entrega">Información de entrega</a></li>
+          <li class="tab"><a href="#contacts">Contactos</a></li>
+          <li class="tab"><a href="#directions">Direcciones</a></li>
+          <li class="tab"><a href="#licencias">Licencias</a></li>
+        </ul>
+      </div>
+      <div class="card-content teal lighten-5">
+        <div id="con_pago">
+          <div class="row">
+            <div class="row">
+                <div class="input-field col s6 m4">
+                    <label for="monto_credito">Monto de crédito:</label>             
+                    <input id="monto_credito" type="number" class="validate">
+                </div>
+                <div class="input-field col s6 m4">
+                    <label for="dias_credito">Días de crédito:</label>             
+                    <input id="dias_credito" type="number" class="validate">
+                </div>
+                <div class="col s12 m4">
+                <label>Forma de pago:</label>
+                <select>
+                    <option value="" disabled selected>Selecciona...</option>
+                    <option value="1">Opción 1</option>
+                    <option value="2">Opción 2</option>
+                    <option value="3">Opción 3</option>
+                    <option value="4">Opción 4</option>
+                    <option value="5">Opción 5</option>
+                    <option value="6">Opción 6</option>
+                </select>
+                </div>
+            </div>
+            <div class="card z-depth-0">
+                <div class="card-image">
                     <form>
                         <div class="row">
-                            <div class="col s12 m6">
-                                <label>Tipo de contacto:</label>
-                                <select>
-                                    <option value="" disabled selected>Selecciona...</option>
-                                    <option value="1">Crédito</option>
-                                    <option value="2">Cobranza</option>
-                                    <option value="3">Cotizaciones</option>
-                                    <option value="4">Venta gobiernos</option>
-                                    <option value="5">Venta privados</option>
-                                    <option value="6">Otro</option>
-                                </select>
+                            <div class="input-field col s6">
+                                <label for="cuenta_bancaria">Cuenta bancaria:</label>             
+                                <input id="cuenta_bancaria" type="number" class="validate">
                             </div>
-                            <div class="input-field col s12 m12">
-                                <label for="name">Nombre:</label>
-                                <input id="name" type="text" class="validate">
+                            <div class="col s6">
+                            <label>Banco:</label>
+                            <select>
+                                <option value="" disabled selected>Selecciona...</option>
+                                <option value="1">Banorte</option>
+                                <option value="2">Bancomer</option>
+                                <option value="3">Banamex</option>
+                                <option value="4">Santander</option>
+                                <option value="5">Scotiabank</option>
+                                <option value="6">Otro</option>
+                            </select>
                             </div>
-                            <div class="input-field col s12 m6">
-                                <input id="puesto" type="text" class="validate">
-                                <label for="puesto">Puesto:</label>
+                        </div>
+                        <button class="btn-floating btn-large orange halfway-fab waves-effect waves-light tooltipped"
+                                data-position="bottom" data-delay="50" data-tooltip="Agregar" type="submit"><i
+                                class="material-icons">add</i></button>
+                    </form><!--/Here ends de form-->
+                    <div class="divider"></div>
+                </div><!--/Here ends the up section-->
+                <div class="card-content">
+                    <table class="responsive-table highlight">
+                        <thead>
+                        <tr>
+                            <th>Banco</th>
+                            <th>Cuenta bancaria</th>
+                            <th>Acción</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Banamex</td>
+                            <td>123123123</td>
+                            <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">edit</i></a><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                        </tr>
+                        <tr>
+                            <td>Banorte</td>
+                            <td>123123123</td>
+                            <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">edit</i></a><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div><!--/here ends de down section-->
+            </div>
+          </div>
+        </div><!--/aquí termina el contenido de un tab-->
+        <div id="info_entrega">
+            <div class="row">
+                <form action="#" class="col s12">
+                <label data-error="Campo obligatorio">*Tipo de Entrega:</label>
+                    <p>
+                        <input name="group1" type="radio" id="sucursal"/>
+                        <label for="sucursal">Sucursal</label>
+                    </p>
+                    <p>
+                        <input name="group1" type="radio" id="paqueteria"/>
+                        <label for="paqueteria">Paquetería</label>
+                    </p>
+                    <p>
+                        <input name="group1" type="radio" id="recoleccion"/>
+                        <label for="recoleccion">Recolección</label>
+                    </p>
+                </form>
+                <div class="input-field col s12 m3">
+                    <label for="colectiva">Monto mínimo de facturación:</label>             
+                    <input id="colectiva" type="number" class="validate">
+                </div>
+                <div class="col col s12 m9">
+                    <label data-error="Campo obligatorio">*Correos para envío de orden de compra:</label> 
+                    <div id="emails" class="chips chips-initial"></div>
+                </div>
+            </div>      
+        </div><!--/aquí termina el contenido de un tab-->
+        <div id="contacts">
+          <div class="row">
+            <div class="card z-depth-0">
+                <div class="card-image">
+                    <form>
+                        <div class="row">
+                            <div class="row">
+                                <div class="col s12 m3">
+                                    <label>Tipo de contacto:</label>
+                                    <select>
+                                        <option value="" disabled selected>Selecciona...</option>
+                                        <option value="1">Crédito</option>
+                                        <option value="2">Cobranza</option>
+                                        <option value="3">Cotizaciones</option>
+                                        <option value="4">Venta gobiernos</option>
+                                        <option value="5">Venta privados</option>
+                                        <option value="6">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="input-field col s6 m3">
+                                    <label for="name">Nombre:</label>
+                                    <input id="name" type="text" class="validate">
+                                </div>
+                                <div class="input-field col s6 m3">
+                                    <input id="puesto" type="text" class="validate">
+                                    <label for="puesto">Puesto:</label>
+                                </div>
+                                <div class="input-field col s6 m3">
+                                    <input id="tel_office" type="tel" class="validate">
+                                    <label for="tel_office">Teléfono celular:</label>
+                                </div>
                             </div>
-                            <div class="input-field col s12 m6">
-                                <input id="tel_office" type="tel" class="validate">
-                                <label for="tel_office">Teléfono celular:</label>
-                            </div>
-                            <div class="input-field col s12 m8">
+                            <div class="input-field col s6 m3">
                                 <input id="tel_office" type="tel" class="validate">
                                 <label for="tel_office">Teléfono:</label>
                             </div>
-                            <div class="input-field col s12 m4">
+                            <div class="input-field col s6 m2">
                                 <input id="ext" type="number" class="validate">
                                 <label for="ext">Ext</label>
                             </div>
-                            <div class="col s12">
+                            <div class="col s12 m7">
                                 <label>Correo(s) electrónico(s):</label> 
                                 <div id="phones" class="chips chips-initial"></div>
                             </div>
@@ -265,46 +343,43 @@
                             <td>Venta gobiernos</td>
                             <td>Ana Lilia Gonzáles Pérez</td>
                             <td>3312345678 +524</td>
-                            <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i
-                                    class="material-icons">delete</i></a>
-                                <a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i
-                                    class="material-icons">edit</i></a></td>
+                            <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">edit</i></a><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
                         </tr>
                         <tr>
                             <td>Venta privados</td>
                             <td>Guillermo Miguel Hernández Domínguez</td>
                             <td>3312345678 +624</td>
-                            <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i
-                                    class="material-icons">delete</i></a></td>
+                            <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">edit</i></a><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
                         </tr>
                         </tbody>
                     </table>
                 </div><!--/here ends de down section-->
             </div>
-        </div><!--/Here ends the overall container-->
-        <div class="col s12 m6">
-            <h5>Direcciones</h5>
-            <div class="card">
-                <div class="card-image teal lighten-5">
+          </div>
+        </div><!--/aquí termina el contenido de un tab-->
+        <div id="directions" class="row">
+            <div class="card z-depth-0">
+                <div class="card-image">
                     <form>
                         <div class="row">
                             <div class="col s12">
                               <form action="#">
-                                <p class="col s4">
+                              <label>*Tipo de dirección:</label>
+                                <p>
                                   <input name="type_dom" type="radio" id="dom1" />
                                   <label for="dom1">Domicilio fiscal</label>
                                 </p>
-                                <p class="col s4">
+                                <p>
                                   <input name="type_dom" type="radio" id="dom2" />
                                   <label for="dom2">Domicilio de entrega</label>
                                 </p>
-                                <p class="col s4">
+                                <p>
                                   <input name="type_dom" type="radio" id="dom3" />
                                   <label for="dom3">Otro</label>
                                 </p>
                               </form>
                             </div>
-                            <div class="input-field col s12">
+                            <div class="input-field col s12 m6">
                                 <label for="name" data-error="Campo obligatorio">*Calle:</label>
                                 <input id="name" type="text" class="validate">
                             </div>
@@ -322,28 +397,28 @@
                                     <input id="cp" type="number" class="validate">
                                 </div>
                             </div>
-                            <div class="col s12 m6">
+                            <div class="col s6 m3">
                                 <label data-error="Campo obligatorio">*País:</label>
                                 <select>
                                     <option value="" disabled selected>Selecciona...</option>
                                     <option value="1">México</option>
                                 </select>
                             </div>
-                            <div class="col s12 m6">
+                            <div class="col s6 m3">
                                 <label data-error="Campo obligatorio">*Estado:</label>
                                 <select>
                                     <option value="" disabled selected>Selecciona...</option>
                                     <option value="1">Jalisco</option>
                                 </select>
                             </div>
-                            <div class="col s12 m6">
+                            <div class="col s6 m3">
                                 <label data-error="Campo obligatorio">*Municipio:</label>
                                 <select>
                                     <option value="" disabled selected>Selecciona...</option>
                                     <option value="1">Guadalajara</option>
                                 </select>
                             </div>
-                            <div class="col s12">
+                            <div class="col s6 m3">
                                 <label for="autocomplete-input">*Colonia:</label>
                                 <input type="text" id="autocomplete-input" class="autocomplete">
                             </div>
@@ -386,8 +461,151 @@
                     </table>
                 </div><!--/here ends de down section-->
             </div>
-        </div><!--/Here ends the overall container-->
+        </div><!--/aquí termina el contenido de un tab-->
+        <div id="licencias">
+            <div class="row">
+            <p>Agrega o elimina los documentos correspondientes de acuerdo al Proovedor</p>
+            <div class="col s12 m4">
+                <div class="card z-depth-0">
+                    <div class="card-image">
+                        <form>
+                            <div class="row">
+                                <div class="col s12">
+                                <label>Licencia Sanitaria</label>
+                                    <div class="file-field input-field">
+                                      <div class="btn">
+                                        <i class="material-icons">attach_file</i>
+                                        <input type="file" multiple>
+                                      </div>
+                                      <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text">
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-floating btn-large orange halfway-fab waves-effect waves-light tooltipped"
+                                    data-position="bottom" data-delay="50" data-tooltip="Agregar" type="submit"><i
+                                    class="material-icons">add</i></button>
+                        </form><!--/Here ends de form-->
+                        <div class="divider"></div>
+                    </div><!--/Here ends the up section-->
+                    <div class="card-content">
+                        <table class="responsive-table highlight">
+                            <thead>
+                            <tr>
+                                <th>Licencia(s)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><a href="#"><i class="material-icons">attach_file</i>AwesomeLicence.badass</a></td>
+                                <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="#"><i class="material-icons">attach_file</i>AwesomeLicence.badass</a></td>
+                                <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!--/here ends de down section-->
+                </div>
+            </div><!--/Aquí termina el componente para añadir-->
+            <div class="col s12 m4">
+                <div class="card z-depth-0">
+                    <div class="card-image">
+                        <form>
+                            <div class="row">
+                                <div class="col s12">
+                                <label>Aviso de Funcionamiento</label>
+                                    <div class="file-field input-field">
+                                      <div class="btn">
+                                        <i class="material-icons">attach_file</i>
+                                        <input type="file" multiple>
+                                      </div>
+                                      <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text">
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-floating btn-large orange halfway-fab waves-effect waves-light tooltipped"
+                                    data-position="bottom" data-delay="50" data-tooltip="Agregar" type="submit"><i
+                                    class="material-icons">add</i></button>
+                        </form><!--/Here ends de form-->
+                        <div class="divider"></div>
+                    </div><!--/Here ends the up section-->
+                    <div class="card-content">
+                        <table class="responsive-table highlight">
+                            <thead>
+                            <tr>
+                                <th>Aviso(s)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><a href="#"><i class="material-icons">attach_file</i>AwesomeStuff.badass</a></td>
+                                <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="#"><i class="material-icons">attach_file</i>AwesomeStuff.badass</a></td>
+                                <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!--/here ends de down section-->
+                </div>
+            </div><!--/Aquí termina el componente para añadir-->
+            <div class="col s12 m4">
+                <div class="card z-depth-0">
+                    <div class="card-image">
+                        <form>
+                            <div class="row">
+                                <div class="col s12">
+                                <label>Aviso de Responsable Sanitario</label>
+                                    <div class="file-field input-field">
+                                      <div class="btn">
+                                        <i class="material-icons">attach_file</i>
+                                        <input type="file" multiple>
+                                      </div>
+                                      <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text">
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-floating btn-large orange halfway-fab waves-effect waves-light tooltipped"
+                                    data-position="bottom" data-delay="50" data-tooltip="Agregar" type="submit"><i
+                                    class="material-icons">add</i></button>
+                        </form><!--/Here ends de form-->
+                        <div class="divider"></div>
+                    </div><!--/Here ends the up section-->
+                    <div class="card-content">
+                        <table class="responsive-table highlight">
+                            <thead>
+                            <tr>
+                                <th>Aviso(s)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><a href="#"><i class="material-icons">attach_file</i>AwesomeStuff.badass</a></td>
+                                <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="#"><i class="material-icons">attach_file</i>AwesomeStuff.badass</a></td>
+                                <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!--/here ends de down section-->
+                </div>
+            </div><!--/Aquí termina el componente para añadir-->
+            </div>      
+        </div><!--/aquí termina el contenido de un tab-->
+      </div>
     </div>
+</div>
+</div><!--/Aquí terminan las tabs (row)-->
 
     <!--Import jQuery before materialize.js-->
     <!--Script para hacer los datos ordenarse-->
