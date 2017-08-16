@@ -130,13 +130,17 @@ ul#dataTable-headings-selector {
 
 /* Smart view */
 #smart-view .single-check + label,
-.smart-actions > * {
+.smart-table tr > td:last-of-type > * {
     opacity: 0;
 }
 #smart-view tr:hover .single-check + label,
-#smart-view tr:hover .smart-actions > *,
+.smart-table tr:hover > td:last-of-type > *,
 #smart-view .single-check:checked + label {
     opacity: 1;
+}
+.smart-table tr > td:last-of-type {
+    width: 1px;
+    white-space: nowrap;
 }
 
 fieldset {

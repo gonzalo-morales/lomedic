@@ -5,7 +5,7 @@
 @section('fieldset', 'disabled')
 
 @section('form-header')
-    {!! Form::model($data, ['url' => '#', 'id' => 'form-model', 'class' => 'col s12 x18']) !!}
+    {!! Form::open(['url' => '#', 'id' => 'form-model', 'class' => 'col s12 x18']) !!}
 @endsection
 
 @section('form-actions')

@@ -48,7 +48,13 @@ class Diagnosticos extends Model
 	];
 
 	/**
-	 * Los atributos que seran visibles en index-datable
+	 * Atributos visibles en toArray/toJson
+	 * @var array
+	 */
+	protected $visible = ['id_diagnostico', 'clave_diagnostico', 'diagnostico','medicamento_sugerido'];
+
+	/**
+	 * Los atributos que seran visibles en smart-datatable
 	 * @var array
 	 */
 	protected $fields = [
@@ -57,6 +63,10 @@ class Diagnosticos extends Model
 		'medicamento_sugerido' => 'Medicamento Sugerido'
 	];
 
+	/**
+	 * Obtenemos atributos para smart-datatable
+	 * @return array
+	 */
 	public function getFields()
 	{
 		return $this->fields;

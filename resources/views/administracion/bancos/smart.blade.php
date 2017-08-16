@@ -2,6 +2,7 @@
 @section('content-width', 's12 m7 xl8 offset-xl2')
 
 @section('form-content')
+{{ Form::setModel($data) }}
 <div class="row">
 	<div class="input-field col s12">
 		{{ Form::text('razon_social', null, ['id'=>'razon_social','class'=>'validate']) }}

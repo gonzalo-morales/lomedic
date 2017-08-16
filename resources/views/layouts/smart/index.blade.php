@@ -21,9 +21,9 @@
 @section('content')
 <div class="row">
 	<div class="col s12">
-		<section id="smart-view" class="row">
-			<div class="col s3" hidden>
-				<table class="bordered striped highlight">
+		<section id="smart-view" class="row" data-primary-key="{{ $data->first()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}">
+			<div class="col s3">
+				<table class="bordered striped highlight" hidden>
 					<tr><td>isDownloading</td><td rv-text="status.isDownloading"></td></tr>
 					<tr><td>isAllChecked</td><td rv-text="status.isAllChecked"></td></tr>
 					<tr><td>items</td><td rv-text="collections.items"></td></tr>
@@ -104,20 +104,14 @@
 					@foreach ($data as $row)
 					<tr>
 						<td class="width-auto">
-							<input type="checkbox" id="check-{{$row->getKey()}}" class="single-check" data-id="{{$row->getKey()}}" rv-on-click="actions.itemsSync" rv-get-datarow>
+							<input type="checkbox" id="check-{{$row->getKey()}}" class="single-check" data-item-id="{{$row->getKey()}}" rv-on-click="actions.itemsSync" rv-get-datarow  name="check-{{$row->getKey()}}">
 							<label for="check-{{$row->getKey()}}"></label>
 						</td>
 						@foreach ($fields as $field => $label)
 						<td>{{ $row->{$field} }}</td>
 						@endforeach
-						<td class="width-auto smart-actions">
-							<a href="{{ companyRoute('show', ['id' => $row->getKey()]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-							@can('update', currentEntity())
-							<a href="{{ companyRoute('edit', ['id' => $row->getKey()]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
-							@endcan
-							@can('delete', currentEntity())
-							<a href="#" class="waves-effect waves-light btn btn-flat no-padding" rv-on-click="actions.showModalDelete" rv-get-datarow data-delete-type="single" data-delete-url="{{companyRoute('destroy', ['id' => $row->getKey()])}}"><i class="material-icons">delete</i></a>
-							@endcan
+						<td class="width-auto">
+							<span rv-get-item-id data-item-id="{{$row->getKey()}}"></span>
 						</td>
 					</tr>
 					@endforeach
@@ -136,6 +130,15 @@
 				</div>
 			</div>
 		</section>
+		<div class="smart-actions" hidden>
+			<a class="waves-effect waves-light btn btn-flat no-padding" data-item-id="#ID#" rv-get-show-url><i class="material-icons">visibility</i></a>
+			@can('update', currentEntity())
+			<a class="waves-effect waves-light btn btn-flat no-padding" data-item-id="#ID#" rv-get-edit-url><i class="material-icons">mode_edit</i></a>
+			@endcan
+			@can('delete', currentEntity())
+			<a href="#" class="waves-effect waves-light btn btn-flat no-padding" rv-on-click="actions.showModalDelete" rv-get-datarow rv-get-delete-url data-item-id="#ID#" data-delete-type="single"><i class="material-icons">delete</i></a>
+			@endcan
+		</div>
 	</div>
 </div>
 @endsection

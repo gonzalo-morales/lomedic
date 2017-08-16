@@ -14,21 +14,28 @@ class ControllerBase extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index($company)
+	public function index(Request $request, $company)
 	{
 		# ¿Usuario tiene permiso para ver?
 		$this->authorize('view', $this->entity);
 
-		// $r = $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->paginate(20);
-		// return \Response::JSON($r);
-
 		# Log
 		$this->log('index');
 
-		return view(currentRouteName('smart'), [
-			'fields' => $this->entity->getFields(),
-			'data' => $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->limit(500)->get(),
-		]);
+		if (!$request->ajax()) {
+			return view(currentRouteName('smart'), [
+				'fields' => $this->entity->getFields(),
+				'data' => $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->limit(20)->get(),
+			]);
+
+		# Ajax
+		} else {
+			$data = $this->entity->where('eliminar', '=','0')->orderby($this->entity->getKeyName(),'ASC')->paginate(4000);
+			if( $request->page && $request->page == 1) {
+				$data->setCollection($data->getCollection()->slice(20));
+			}
+			return response()->json($data);
+		}
 	}
 
 	/**

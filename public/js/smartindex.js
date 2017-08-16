@@ -77,8 +77,9 @@ let model = {
 			rv.collections.datarows = [];
 			rv.collections.items = [].slice.call(smartView.querySelectorAll('.single-check:checked')).reduce(function(acc, item){
 				rv.collections.datarows.push(item.dataset.datarow);
-				acc.push(item.dataset.id); return acc;
+				acc.push(item.dataset.itemId); return acc;
 			}, [])
+			console.log(rv.collections.items)
 			rv.status.isAllChecked = rv.actions.isAllChecked();
 		},
 		showModalDelete(e, rv) {
@@ -148,11 +149,69 @@ let model = {
 
 rivets.binders['get-datarow'] = {
 	bind: function(el) {
-		el.dataset['datarow'] = el.parentNode.parentNode.dataset.datarow;
+		el.dataset['datarow'] = $(el).parents('tr').data('datarow');
 	},
-	unbind: function(el) {
-		delete el.dataset['datarow'];
+};
+
+rivets.binders['get-item-id'] = {
+	bind: function(el) {
+		if (el.innerHTML == '') {
+			el.outerHTML = document.querySelector('.smart-actions').innerHTML.replace(/#ID#/g, el.dataset.itemId);
+		}
+	},
+};
+
+rivets.binders['get-show-url'] = {
+	bind: function(el) {
+		el.href = smartView.dataset.itemShowOrDeleteUrl.replace('#ID#', el.dataset.itemId);
+	},
+};
+
+rivets.binders['get-edit-url'] = {
+	bind: function(el) {
+		el.href = smartView.dataset.itemUpdateUrl.replace('#ID#', el.dataset.itemId);
+	},
+};
+
+rivets.binders['get-delete-url'] = {
+	bind: function(el) {
+		el.dataset.deleteUrl = smartView.dataset.itemShowOrDeleteUrl.replace('#ID#', el.dataset.itemId);
 	},
 };
 
 let view = rivets.bind(smartView, model);
+
+datatable.setMessage('Obteniendo elementos ...');
+getItems(1);
+
+/* */
+function getItems($page) {
+
+	let primary = smartView.dataset.primaryKey;
+	let columns = JSON.parse(smartView.dataset.columns);
+
+	$.getJSON(smartView.dataset.itemShowOrDeleteUrl.replace('#ID#', '') + '?page=' + $page, function(response){
+		// console.log(response.data)
+		let collection = [];
+		$.each(response.data, function(index, item){
+			let id = item[primary];
+			let collection_item = {};
+			collection_item['input'] = '<input type="checkbox" id="check-'+id+'" class="single-check" data-item-id="'+id+'" rv-on-click="actions.itemsSync" rv-get-datarow name="check-'+id+'"><label for="check-'+id+'"></label>';
+			$.each(columns, function(index, column){
+				collection_item[column] = item[column]
+			})
+			collection_item['actions'] = document.querySelector('.smart-actions').innerHTML.replace(/#ID#/g, id);
+			collection.push(collection_item);
+		})
+
+		datatable.import({
+			type: "json",
+			data: JSON.stringify(collection)
+		});
+
+		if (response.next_page_url) {
+			datatable.setMessage('Elementos restantes ... ' + (response.total - response.to) );
+			getItems(response.current_page + 1)
+		}
+	})
+}

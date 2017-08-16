@@ -3,7 +3,7 @@
 @section('title', currentEntityBaseName() . '@Nuevo')
 
 @section('form-header')
-	{!! Form::model($data, ['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col s12 x18']) !!}
+	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col s12 x18']) !!}
 @endsection
 
 @section('form-actions')
