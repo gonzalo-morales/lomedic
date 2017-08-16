@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use DB;
 use Excel;
+use PDF;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -247,27 +248,34 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para descargar?
 		#$this->authorize('download', $this->entity);
+		$type = strtolower($request->type);
+		$style = isset($request->style) ? $request->style : false;
 
 	    if (isset($request->ids)) {
 	        $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);
-	        $data = $this->entity->select(array_keys($this->entity->getFields()))->whereIn($this->entity->getKeyName(), $ids)->get()->toarray();
+	        $data = $this->entity->select(array_keys($this->entity->getFields()))->whereIn($this->entity->getKeyName(), $ids)->get();
 		}
 		else {
-		    $data = $this->entity->select(array_keys($this->entity->getFields()))->get()->toarray();
+		    $data = $this->entity->select(array_keys($this->entity->getFields()))->get();
 		}
 		
-		$type = $request->type;
-		    
-		Excel::create(currentEntityBaseName(), function($excel) use($data,$type) {
-		    $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$type) {
-		        if($type == 'pdf') {
-		            $sheet->setOrientation('landscape');
-		            $sheet->loadView(currentRouteName('smart'),$data);
-		        }
-		        else
-	               $sheet->fromArray($data);
-	        });
-	    })->download($request->type);
+		
+		
+		if($type == 'pdf') {
+		    $pdf = PDF::loadView(currentRouteName('smart'), ['fields' => $this->entity->getFields(), 'data' => $data]);
+		    return $pdf->download(currentEntityBaseName().'.pdf');
+		}
+		else {
+		    Excel::create(currentEntityBaseName(), function($excel) use($data,$type,$style) {
+		        $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$type,$style) {
+    		        if($style) {
+    		            $sheet->loadView(currentRouteName('smart'), ['fields' => $this->entity->getFields(), 'data' => $data]);
+    		        }
+    		        else
+    		          $sheet->fromArray($data->toarray());
+    	        });
+    	    })->download($request->type);
+		}
 	}
 
 	/**

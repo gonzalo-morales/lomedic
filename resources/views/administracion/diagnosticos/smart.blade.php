@@ -61,3 +61,7 @@
 @if (Route::currentRouteNamed(currentRouteName('show')))
     @include('layouts.smart.show')
 @endif
+
+@if (Route::currentRouteNamed(currentRouteName('export')))
+	@include('layouts.smart.export')
+@endif
