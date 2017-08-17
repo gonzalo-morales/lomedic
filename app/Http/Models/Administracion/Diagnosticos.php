@@ -2,14 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
+use App\Http\Models\ModelBase;
 
-class Diagnosticos extends Model
+class Diagnosticos extends ModelBase
 {
-	// use SoftDeletes;
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -62,33 +58,5 @@ class Diagnosticos extends Model
 		'diagnostico' => 'Diagnostico',
 		'medicamento_sugerido' => 'Medicamento Sugerido'
 	];
-
-	/**
-	 * Obtenemos atributos para smart-datatable
-	 * @return array
-	 */
-	public function getFields()
-	{
-		return $this->fields;
-	}
-
-	public function ColumnDefaultValues()
-	{
-		$schema = config('database.connections.'.$this->getConnection()->getName().'.schema');
-
-		$data = DB::table('information_schema.columns')
-			->select('column_name', 'data_type', DB::Raw("replace(replace(column_default, concat('::',data_type), ''),'''','') as column_default"))
-			->whereRaw('column_default is not null')
-			->whereRaw("column_default not ilike '%nextval%'")
-			->where('table_name','=',$this->table)
-			->where('table_schema','=',$schema)
-			->where('table_catalog','=',$this->getConnection()->getDatabaseName())->get();
-
-	   foreach ($data as $value) {
-		   $data->{$value->column_name} = $value->data_type == 'boolean' ? $value->column_default == 'true' : $value->column_default;
-	   }
-
-		return $data;
-	}
 
 }

@@ -2,13 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Models\ModelBase;
 
-class Tipocombustible extends Model
+class Tipocombustible extends ModelBase
 {
-	// use SoftDeletes;
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -40,5 +37,14 @@ class Tipocombustible extends Model
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = ['combustible' => 'required',];
+	public $rules = ['combustible' => 'required'];
+
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var array
+	 */
+	protected $fields = [
+	  'combustible' => 'Combustible',
+	];
+
 }

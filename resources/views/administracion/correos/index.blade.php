@@ -44,18 +44,10 @@
 		<tr>
 			<td>{{ $correo->correo}}</td>
 			<td>
-				@foreach($companies as $empresa)
-					@if($correo->fk_id_empresa==$empresa->id_empresa)
-						{{$empresa->nombre_comercial}}
-					@endif
-				@endforeach
+				{{ $correo->empresa->nombre_comercial }}
 			</td>
 			<td>
-				@foreach($users as $user)
-					@if($correo->fk_id_usuario==$user->id_usuario)
-						{{$user->usuario}}
-					@endif
-				@endforeach
+				{{ $correo->usuario->usuario }}
 			</td>
 			<td>
 				<p>

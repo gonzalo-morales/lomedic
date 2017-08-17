@@ -21,7 +21,7 @@
 @section('content')
 <div class="row">
 	<div class="col s12">
-		<section id="smart-view" class="row" data-primary-key="{{ $data->first()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}">
+		<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}">
 			<div class="col s3">
 				<table class="bordered striped highlight" hidden>
 					<tr><td>isDownloading</td><td rv-text="status.isDownloading"></td></tr>
@@ -116,7 +116,7 @@
 							<label for="check-{{$row->getKey()}}"></label>
 						</td>
 						@foreach ($fields as $field => $label)
-						<td>{{ $row->{$field} }}</td>
+						<td>{{ object_get($row , $field) }}</td>
 						@endforeach
 						<td class="width-auto">
 							<span rv-get-item-id data-item-id="{{$row->getKey()}}"></span>

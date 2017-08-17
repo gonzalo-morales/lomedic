@@ -2,17 +2,16 @@
 
 namespace App\Http\Models;
 
-use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ModelBase extends Model
 {
-
 	/**
 	 * Los atributos que seran visibles en index-datable
-	 * @var array
+	 * @var null|array
 	 */
-	protected $fields = [];
+	protected $fields = null;
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -21,11 +20,21 @@ class ModelBase extends Model
 	 */
 	public $timestamps = false;
 
+	/**
+	 * Obtenemos atributos para smart-datatable
+	 * @return array
+	 */
 	public function getFields()
 	{
+		if (!$this->fields) {
+			throw new \Exception('Undefined $fields in ' . class_basename($this) . ' model.');
+		}
 		return $this->fields;
 	}
 
+	/**
+	 * Obtenemos defaults de modelo
+	 */
 	public function ColumnDefaultValues()
 	{
 		$schema = config('database.connections.'.$this->getConnection()->getName().'.schema');
@@ -38,9 +47,9 @@ class ModelBase extends Model
 			->where('table_schema','=',$schema)
 			->where('table_catalog','=',$this->getConnection()->getDatabaseName())->get();
 
-	   foreach ($data as $value) {
-		   $data->{$value->column_name} = $value->data_type == 'boolean' ? $value->column_default == 'true' : $value->column_default;
-	   }
+			foreach ($data as $value) {
+				$data->{$value->column_name} = $value->data_type == 'boolean' ? $value->column_default == 'true' : $value->column_default;
+			}
 
 		return $data;
 	}

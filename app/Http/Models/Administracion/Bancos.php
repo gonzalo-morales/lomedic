@@ -2,13 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use DB;
 use App\Http\Models\ModelBase;
 
 class Bancos extends ModelBase
 {
-	// use SoftDeletes;
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -41,13 +38,6 @@ class Bancos extends ModelBase
 	];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
@@ -60,5 +50,4 @@ class Bancos extends ModelBase
 	{
 		return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
 	}
-
 }

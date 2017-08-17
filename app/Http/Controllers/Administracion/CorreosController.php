@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Administracion;
 
-use App\Http\Models\Administracion\Correos;
-use App\Http\Models\Administracion\Usuarios;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Administracion\Correos;
 use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Logs;
 use Auth;
 use DB;
-class CorreosController extends Controller
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+class CorreosController extends ControllerBase
 {
     /**
      * Create a new controller instance.
@@ -34,25 +36,22 @@ class CorreosController extends Controller
      */
 
 
-    public function index($company)
-    {
-        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
+    // public function index($company,  $attributes = [])
+    // {
+    //     Logs::createLog($this->entity->getTable(),$company,null,'index',null);
 
-        return view(Route::currentRouteName(), [
-            'entity' => $this->entity_name,
-            'data' => $this->entity->all()->where('eliminar', '=','0'),
-            'users' => $this->users,
-            'company' => $this->company,
-            'companies' => $this->companies
-        ]);
-    }
+    //     return view(Route::currentRouteName(), [
+    //         'entity' => $this->entity_name,
+    //         'data' => $this->entity->all()->where('eliminar', '=','0'),
+    //     ]);
+    // }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($company, $attributes = [])
     {
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
@@ -92,7 +91,7 @@ class CorreosController extends Controller
      * @param  integer $id
      * @return \Illuminate\Http\Response
      */
-    public function show($company,$id)
+    public function show($company,$id, $attributes = [])
     {
         $fk_id_usuario = $this->entity->findOrFail($id)->fk_id_usuario;
         $fk_id_empresa = $this->entity->findOrFail($id)->fk_id_empresa;
@@ -112,7 +111,7 @@ class CorreosController extends Controller
      * @param  integer $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($company,$id)
+    public function edit($company,$id, $attributes = [])
     {
         $fk_id_usuario = $this->entity->findOrFail($id)->fk_id_usuario;
         return view (Route::currentRouteName(), [
@@ -153,7 +152,7 @@ class CorreosController extends Controller
      * @param  integer 	$id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($company,$id)
+    public function destroy(Request $request, $company, $idOrIds)
     {
         /*$entity = $this->entity->findOrFail($id);
         $entity->delete();*/

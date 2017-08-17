@@ -3,12 +3,14 @@
 namespace App\Http\Models\Administracion;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Support\Collection;
+use App\Http\Models\ModelBase;
 
-class Usuarios extends Authenticatable
+class Usuarios extends ModelBase
 {
-	use Notifiable;
+    use Notifiable, Authenticatable, Authorizable;
 
 	/*
 	const CREATED_AT = 'fecha_crea';
