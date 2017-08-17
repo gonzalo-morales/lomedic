@@ -2,14 +2,19 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Collection;
 use App\Http\Models\ModelBase;
+use Illuminate\Support\Collection;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class Usuarios extends Authenticatable
+class Usuarios extends ModelBase implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
-    use Notifiable;
+    use Notifiable, Authenticatable, Authorizable, CanResetPassword;
 
 	/*
 	const CREATED_AT = 'fecha_crea';
@@ -118,10 +123,10 @@ class Usuarios extends Authenticatable
 		$modulos_empresa = method_exists($empresa, 'modulos_anidados') ? $empresa->modulos_anidados() : $empresa;
 
 		# Obtenemos modulos en base a ...
-		$modulos_usuario = Modulos::whereHas('permisos', function($q) {
+		$modulos_usuario = Modulos::where('eliminar','=',0)->where('activo','=',1)->whereHas('permisos', function($q) {
 			# Modulos relacionados a los permisos del usuario
 			$q->whereIn('id_permiso', $this->permisos()->pluck('id_permiso') );
-		})->get();
+		})->orderBy('nombre')->get();
 
 		# Recorremos modulos de la empresa
 		foreach ($modulos_empresa as $key => $modulo) {
