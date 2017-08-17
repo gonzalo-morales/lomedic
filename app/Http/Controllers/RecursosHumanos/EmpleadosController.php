@@ -9,6 +9,9 @@ use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\RecursosHumanos\Departamentos;
 use App\Http\Models\RecursosHumanos\Puestos;
 use App\Http\Models\Administracion\Sucursales;
+use Illuminate\Support\Facades\Response;
+use App\Http\Models\Administracion\Usuarios;
+use Illuminate\Support\Facades\Auth;
 
 
 class EmpleadosController extends ControllerBase
@@ -85,5 +88,21 @@ class EmpleadosController extends ControllerBase
         ]];
         return parent::edit($company, $id, $attributes);
     }
-    
+    public function obtenerEmpleados($company)
+    {
+        $empleados = Empleados::all()->where('activo','1');
+        foreach($empleados as $empleado){
+            $empleado_data['id'] = (int)$empleado->id_empleado;
+            $empleado_data['text'] = $empleado->nombre." ".$empleado->apellido_paterno." ".$empleado->apellido_materno;
+            $empleados_set[] = $empleado_data;
+        }
+        return Response::json($empleados_set);
+    }
+
+    public function obtenerEmpleado($company)
+    {
+        $fk_id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
+        $empleado = $this->entity->findOrFail($fk_id_empleado)->id_empleado;
+        return Response::json($empleado);
+    }
 }

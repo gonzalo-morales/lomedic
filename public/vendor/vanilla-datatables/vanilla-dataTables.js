@@ -385,8 +385,10 @@
 					util.append(ul, li);
 				}
 			}, this);
-			this.wrapper.querySelector('.dataTable-search').appendChild(btn)
-			this.wrapper.querySelector('.dataTable-search').appendChild(ul)
+			if (o.searchable) {
+                this.wrapper.querySelector('.dataTable-search').appendChild(btn)
+                this.wrapper.querySelector('.dataTable-search').appendChild(ul)
+            }
 		}
 
 
@@ -1772,7 +1774,13 @@
 			this.rows.splice(row, 1)
 		}, this);
 
+        if ( this.rows.length == 0 ) {
+            this.hasRows = false;
+            this.clear()
+        }
+
 		this.columns().rebuild();
+
 		this.update()
 	};
 
