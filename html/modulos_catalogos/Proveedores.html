@@ -605,80 +605,124 @@
         </div><!--/aquí termina el contenido de un tab-->
         <div id="prod_art">
             <div class="row">
-            <div class="row">
-                <div class="input-field col s12 m6">
-                    <label for="autocomplete-input">*SKU:</label>
-                    <input type="text" id="autocomplete-input" class="autocomplete">
+                <div class="card z-depth-0">
+                    <div class="card-image">
+                        <form>
+                            <div class="row">
+                                <div class="row">
+                                    <div class="input-field col s12 m6">
+                                        <label for="autocomplete-input">*SKU:</label>
+                                        <input type="text" id="autocomplete-input" class="autocomplete">
+                                    </div>
+                                    <div class="input-field col s12 m6">
+                                        <label for="autocomplete-input">UPC:</label>
+                                        <input type="text" id="autocomplete-input" class="autocomplete">
+                                    </div>
+                                    <div class="col s12 m6">
+                                        <p>(Selecciona...)</p><!--Aquí se muestra la información-->
+                                    </div>
+                                    <div class="col s12 m6">
+                                        <p>(Selecciona...)</p><!--Aquí se muestra la información-->
+                                    </div>
+                                </div>
+                                    <div class="input-field col s12 m3">
+                                        <label for="costo">*Costo:</label>             
+                                        <input id="costo" type="number" class="validate">
+                                    </div>
+                                    <div class="input-field col s12 m3">
+                                        <select>
+                                            <option value="" disabled selected>Selecciona...</option>
+                                            <option value="1">Option 1</option>
+                                            <option value="2">Option 2</option>
+                                            <option value="3">Option 3</option>
+                                        </select>
+                                        <label>*Impuesto:</label>
+                                    </div>
+                                    <div class="col s12 m6">
+                                        <label data-error="Campo obligatorio">*Descuentos:</label> 
+                                        <div id="emails" class="chips chips-initial"></div>
+                                    </div>
+                                    <div class="input-field col s6 m3">
+                                        <label for="porcentaje_impuesto">Porcentaje impuesto:</label>          
+                                        <input id="porcentaje_impuesto" type="number" class="validate">
+                                    </div>
+                                    <div class="input-field col s6 m3">
+                                        <label for="cnatidad_compra">Cantidad Unidad de Medida Compra:</label>
+                                        <input id="cnatidad_compra" type="number" class="validate">
+                                    </div>
+                                    <div class="input-field col s6 m3">
+                                        <label for="cnatidad_compra">Precio Base:</label>
+                                        <input id="cnatidad_compra" type="number" class="validate">
+                                    </div>
+                                    <div class="input-field col s6 m3">
+                                        <select>
+                                            <option value="" disabled selected>Selecciona...</option>
+                                            <option value="1">Option 1</option>
+                                            <option value="2">Option 2</option>
+                                            <option value="3">Option 3</option>
+                                        </select>
+                                        <label>*Unidad de Medida Compra</label>
+                                    </div>
+                                    <div class="input-field col s6 m3">
+                                        <label for="tiempo_entrega">Estimado tiempo de entrega: (días)</label>
+                                        <input id="tiempo_entrega" type="number" class="validate">
+                                    </div>
+                                    <div class="input-field col s6 m3">
+                                        <label for="porcentaje_traspaso">Porcentaje de Traspaso Empresa Corporativo:</label>
+                                        <input id="porcentaje_traspaso" type="number" class="validate">
+                                    </div>
+                                    <div class="input-field col s12 m6">
+                                        <select>
+                                            <option value="" disabled selected>Selecciona...</option>
+                                            <option value="1">Option 1</option>
+                                            <option value="2">Option 2</option>
+                                            <option value="3">Option 3</option>
+                                        </select>
+                                        <label>Empresa con Negociación</label>
+                                    </div>
+                                  <div class="col s6">
+                                    <label>Vigencia del costo: (inico)</label>
+                                    <input type="date" class="datepicker">
+                                  </div>
+                                  <div class="col s6">
+                                    <label>Vigencia del costo: (fin)</label>
+                                    <input type="date" class="datepicker">
+                                  </div>
+                            </div>
+                            <button class="btn-floating btn-large orange halfway-fab waves-effect waves-light tooltipped"
+                                    data-position="bottom" data-delay="50" data-tooltip="Agregar" type="submit"><i
+                                    class="material-icons">add</i></button>
+                        </form><!--/Here ends de form-->
+                        <div class="divider"></div>
+                    </div><!--/Here ends the up section-->
+                    <div class="card-content">
+                        <table class="responsive-table highlight">
+                            <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Descripción</th>
+                                <th>Nombre Comercial</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1234adsf</td>
+                                <td>Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit.</td>
+                                <td>Slipsum</td>
+                                <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">edit</i></a><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                            </tr>
+                            <tr>
+                                <td>1234adsf</td>
+                                <td>Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit.</td>
+                                <td>Slipsum</td>
+                                <td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">edit</i></a><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!--/here ends de down section-->
                 </div>
-                <div class="input-field col s12 m6">
-                    <label for="autocomplete-input">UPC:</label>
-                    <input type="text" id="autocomplete-input" class="autocomplete">
-                </div>
-            </div>
-                <div class="input-field col s12 m3">
-                    <label for="costo">*Costo:</label>             
-                    <input id="costo" type="number" class="validate">
-                </div>
-                <div class="input-field col s12 m3">
-                    <select>
-                        <option value="" disabled selected>Selecciona...</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                    </select>
-                    <label>*Impuesto:</label>
-                </div>
-                <div class="col s12 m6">
-                    <label data-error="Campo obligatorio">*Descuentos:</label> 
-                    <div id="emails" class="chips chips-initial"></div>
-                </div>
-                <div class="input-field col s6 m3">
-                    <label for="porcentaje_impuesto">Porcentaje impuesto:</label>          
-                    <input id="porcentaje_impuesto" type="number" class="validate">
-                </div>
-                <div class="input-field col s6 m3">
-                    <label for="cnatidad_compra">Cantidad Unidad de Medida Compra:</label>
-                    <input id="cnatidad_compra" type="number" class="validate">
-                </div>
-                <div class="input-field col s6 m3">
-                    <label for="cnatidad_compra">Precio Base:</label>
-                    <input id="cnatidad_compra" type="number" class="validate">
-                </div>
-                <div class="input-field col s6 m3">
-                    <select>
-                        <option value="" disabled selected>Selecciona...</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                    </select>
-                    <label>*Unidad de Medida Compra</label>
-                </div>
-                <div class="input-field col s6 m3">
-                    <label for="tiempo_entrega">Estimado tiempo de entrega: (días)</label>
-                    <input id="tiempo_entrega" type="number" class="validate">
-                </div>
-                <div class="input-field col s6 m3">
-                    <label for="porcentaje_traspaso">Porcentaje de Traspaso Empresa Corporativo:</label>
-                    <input id="porcentaje_traspaso" type="number" class="validate">
-                </div>
-                <div class="input-field col s12 m6">
-                    <select>
-                        <option value="" disabled selected>Selecciona...</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                    </select>
-                    <label>Empresa con Negociación</label>
-                </div>
-              <div class="col s6">
-                <label>Vigencia del costo: (inico)</label>
-                <input type="date" class="datepicker">
-              </div>
-              <div class="col s6">
-                <label>Vigencia del costo: (fin)</label>
-                <input type="date" class="datepicker">
-              </div>
-            </div>      
+            </div><!--/Aquí termina el componente para añadir-->
         </div><!--/aquí termina el contenido de un tab-->
       </div>
     </div>
