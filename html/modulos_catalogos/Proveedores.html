@@ -170,6 +170,7 @@
           <li class="tab"><a href="#contacts">Contactos</a></li>
           <li class="tab"><a href="#directions">Direcciones</a></li>
           <li class="tab"><a href="#licencias">Licencias</a></li>
+          <li class="tab"><a href="#prod_art">Productos/Artículos</a></li>
         </ul>
       </div>
       <div class="card-content teal lighten-5">
@@ -600,6 +601,83 @@
                     </div><!--/here ends de down section-->
                 </div>
             </div><!--/Aquí termina el componente para añadir-->
+            </div>      
+        </div><!--/aquí termina el contenido de un tab-->
+        <div id="prod_art">
+            <div class="row">
+            <div class="row">
+                <div class="input-field col s12 m6">
+                    <label for="autocomplete-input">*SKU:</label>
+                    <input type="text" id="autocomplete-input" class="autocomplete">
+                </div>
+                <div class="input-field col s12 m6">
+                    <label for="autocomplete-input">UPC:</label>
+                    <input type="text" id="autocomplete-input" class="autocomplete">
+                </div>
+            </div>
+                <div class="input-field col s12 m3">
+                    <label for="costo">*Costo:</label>             
+                    <input id="costo" type="number" class="validate">
+                </div>
+                <div class="input-field col s12 m3">
+                    <select>
+                        <option value="" disabled selected>Selecciona...</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                    </select>
+                    <label>*Impuesto:</label>
+                </div>
+                <div class="col s12 m6">
+                    <label data-error="Campo obligatorio">*Descuentos:</label> 
+                    <div id="emails" class="chips chips-initial"></div>
+                </div>
+                <div class="input-field col s6 m3">
+                    <label for="porcentaje_impuesto">Porcentaje impuesto:</label>          
+                    <input id="porcentaje_impuesto" type="number" class="validate">
+                </div>
+                <div class="input-field col s6 m3">
+                    <label for="cnatidad_compra">Cantidad Unidad de Medida Compra:</label>
+                    <input id="cnatidad_compra" type="number" class="validate">
+                </div>
+                <div class="input-field col s6 m3">
+                    <label for="cnatidad_compra">Precio Base:</label>
+                    <input id="cnatidad_compra" type="number" class="validate">
+                </div>
+                <div class="input-field col s6 m3">
+                    <select>
+                        <option value="" disabled selected>Selecciona...</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                    </select>
+                    <label>*Unidad de Medida Compra</label>
+                </div>
+                <div class="input-field col s6 m3">
+                    <label for="tiempo_entrega">Estimado tiempo de entrega: (días)</label>
+                    <input id="tiempo_entrega" type="number" class="validate">
+                </div>
+                <div class="input-field col s6 m3">
+                    <label for="porcentaje_traspaso">Porcentaje de Traspaso Empresa Corporativo:</label>
+                    <input id="porcentaje_traspaso" type="number" class="validate">
+                </div>
+                <div class="input-field col s12 m6">
+                    <select>
+                        <option value="" disabled selected>Selecciona...</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                    </select>
+                    <label>Empresa con Negociación</label>
+                </div>
+              <div class="col s6">
+                <label>Vigencia del costo: (inico)</label>
+                <input type="date" class="datepicker">
+              </div>
+              <div class="col s6">
+                <label>Vigencia del costo: (fin)</label>
+                <input type="date" class="datepicker">
+              </div>
             </div>      
         </div><!--/aquí termina el contenido de un tab-->
       </div>
