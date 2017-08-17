@@ -10,7 +10,7 @@
 
 @section('header-bottom')
     <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
-    <script src="{{ asset('js/bancos.js') }}"></script>
+    <script src="{{ asset('solicitudes') }}"></script>
     <!-- <script src="https://cdn.datatables.net/v/dt/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-colvis-1.2.2/b-html5-1.2.2/b-print-1.2.2/cr-1.3.2/r-2.1.0/datatables.min.js"></script> -->
 @endsection
 

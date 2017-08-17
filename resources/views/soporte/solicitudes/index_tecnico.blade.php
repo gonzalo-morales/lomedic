@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Solicitudes sin técnico asignado')
+@section('title', 'ImpuestosController')
 
 @section('header-top')
 	<!--dataTable.css-->

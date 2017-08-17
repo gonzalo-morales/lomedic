@@ -4,7 +4,7 @@ return [
 
 	'previous' => '&laquo; Previous',
 	'next' => 'Next &raquo;',
-	'bancos' => 'bancos|banco',
+	'solicitudes' => 'solicitudes|banco',
 	'modulos' => 'modulos|modulo',
     'sucursales' => 'sucursales|sucursal',
     'perfiles' => 'perfiles|perfil',
