@@ -11,7 +11,7 @@ class Empleados extends ModelBase
      *
      * @var string
      */
-    protected $table = 'rh_cat_empleados';
+    protected $table = 'maestro.rh_cat_empleados';
 
     /**
      * The primary key of the table

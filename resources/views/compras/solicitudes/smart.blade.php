@@ -99,21 +99,15 @@
 				<table id="productos" class="responsive-table highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}">
 					<thead>
 						<tr>
-							<th id="idsku">fk_id_sku</th>
-							<th>SKU</th>
-							<th id="idcodigobarras">fk_id_codigo_barras</th>
-							<th>Código de barras</th>
-							<th id="idproveedor">fk_id_proveedor</th>
-							<th>Proveedor</th>
+							<th id="idsku">SKU</th>
+							<th id="idcodigobarras">Código de Barras</th>
+							<th id="idproveedor">Proveedor</th>
 							<th>Cantidad</th>
-							<th id="idunidadmedida" >fk_id_unidad_medida</th>
-							<th>Unidad de medida</th>
-							<th id="idimpuesto" >fk_id_impuesto</th>
-							<th>Tipo de impuesto</th>
+							<th id="idunidadmedida" >Unidad de medida</th>
+							<th id="idimpuesto" >Tipo de impuesto</th>
 							<th>Precio unitario</th>
 							<th>Total</th>
-							<th id="idproyecto" >fk_id_proyecto</th>
-							<th>Proyecto</th>
+							<th id="idproyecto" >Proyecto</th>
 							<th>Fecha necesidad</th>
 							<th></th>
 						</tr>
@@ -121,12 +115,6 @@
 					<tbody>
 					{{--Columna dummy--}}
 					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>

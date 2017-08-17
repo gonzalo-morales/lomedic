@@ -48,15 +48,10 @@ $(document).ready(function () {
     $(':submit').attr('onclick','obtenerProductos()');
     //Inicializar tabla
     window.dataTable = new DataTable('#productos',{
-        columns:[
-            {
-                select: [0,2,4,7,9,13],
-                hidden: true,
-                type: 'number'
-            },
-        ],
         fixedHeight: true,
+        fixedColumns:true,
         searchable: false,
+        perPageSelect:false
     });
     dataTable.removeRows([0]);
 
@@ -204,6 +199,7 @@ function total_producto() {
 function agregarProducto() {
 
     var mensaje = '';
+    var row_id = dataTable.rows.length;
 
     if($('#fk_id_sku').data('id') == null || $('#fk_id_sku').data('id') < 1)
         mensaje = mensaje+"SKU\n";
@@ -221,18 +217,20 @@ function agregarProducto() {
         mensaje = mensaje+"Fecha";
 
     if(mensaje == '' || mensaje == null) {
+
         dataTable.import({
             type: "csv",
-            data: $('#fk_id_sku').data('id') + "," + $('#fk_id_sku').val() + "," +
-            $('#fk_id_codigo_barras').val() + "," + $('#fk_id_codigo_barras option:selected').html() + "," +
-            1+","+$('#fk_id_proveedor').val() + "," +
-            $('#cantidad').val() + "," +
-            $('#fk_id_unidad_medida').val() + "," + $('#fk_id_unidad_medida option:selected').html() + "," +
-            $('#fk_id_impuesto').val() + "," + $('#fk_id_impuesto option:selected').html() + "," +
-            $('#precio_unitario').val() + "," +
-            $('#total').val() + "," +
-            $('#fk_id_proyecto').data('id') + "," + $('#fk_id_proyecto').val() + "," +
-            $('#fecha_necesario').val() + "," +
+            data:
+            $('<input type="hidden" name="detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').data('id') + '" />')[0].outerHTML + $('#fk_id_sku').val() + ","+
+            $('<input type="hidden" name="detalles['+row_id+'][fk_id_codigo_barras]" value="' + $('#fk_id_codigo_barras').val() + '" />')[0].outerHTML + $('#fk_id_codigo_barras option:selected').html() + ","+
+            $('<input type="hidden" name="detalles['+row_id+'][fk_id_proveedor]" value="1"/>')[0].outerHTML+$('#fk_id_proveedor').val()+ "," +
+            $('<input type="hidden" name="detalles['+row_id+'][cantidad]" value="'+ $('#cantidad').val()+'"/>')[0].outerHTML +  $('#cantidad').val() + "," +
+            $('<input type="hidden" name="detalles['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />')[0].outerHTML + $('#fk_id_unidad_medida option:selected').html() + ","+
+            $('<input type="hidden" name="detalles['+row_id+'][fk_id_impuesto]" value="' + $('#fk_id_impuesto').val() + '" />')[0].outerHTML + $('#fk_id_impuesto option:selected').html() + ","+
+            $('<input type="hidden" name="detalles['+row_id+'][precio_unitario]" value="'+ $('#precio_unitario').val()+'"/>')[0].outerHTML +  $('#precio_unitario').val() + "," +
+            $('<input type="hidden" name="detalles['+row_id+'][total]" value="'+ $('#total').val()+'"/>')[0].outerHTML +  $('#total').val() + "," +
+            $('<input type="hidden" name="detalles['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').data('id') + '" />')[0].outerHTML + $('#fk_id_proyecto').val() + ","+
+            $('<input type="hidden" name="detalles['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val()+'"/>')[0].outerHTML +  $('#fecha_necesario').val() + "," +
             '<button class="tooltipped btn-flat teal lighten-5 halfway-fab waves-effect waves-light" ' +
             'type="button" data-tooltip="Eliminar" data-delay="50" onclick="borrarFila(this)">' +
             '<i class="material-icons">delete</i></button>'
@@ -261,22 +259,22 @@ function borrarFila(el) {
 
 function obtenerProductos() {
 
-    var columns = dataTable.columns([0, 2, 4, 7, 9, 13]);
-    columns.show();
-    var prueba = dataTable.export({
-        type: 'json',
-        download: false,
-        skipColumn: [1, 3, 5, 8, 10, 14, 15]//Se salta las columnas que no se necesitan en la base de datos
-    });
-    //Las vuelve a esconder para que el usuario no las vea si regresa a la página
-    dataTable.columns([0, 2, 4, 7, 9, 13]).hide();
+    // var columns = dataTable.columns([0, 2, 4, 7, 9, 13]);
+    // columns.show();
+    // var prueba = dataTable.export({
+    //     type: 'json',
+    //     download: false,
+    //     skipColumn: [1, 3, 5, 8, 10, 14, 15]//Se salta las columnas que no se necesitan en la base de datos
+    // });
+    // //Las vuelve a esconder para que el usuario no las vea si regresa a la página
+    // dataTable.columns([0, 2, 4, 7, 9, 13]).hide();
 
-    $.ajax({
-        type:'POST',
-        url: $('#productos').data('url'),
-        dataType: 'json',
-        data: prueba
-    })
+    // $.ajax({
+    //     type:'POST',
+    //     url: $('#productos').data('url'),
+    //     dataType: 'json',
+    //     data: {prueba:prueba}
+    // })
 }
 
 

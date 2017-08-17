@@ -85,11 +85,16 @@ class Solicitudes extends ModelCompany
 
     public function empleado()
     {
-        return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','id_empleado','fk_id_solicitante');
+        return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_solicitante','id_empleado');
     }
 
     public function estatus()
     {
         return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_solicitud');
+    }
+
+    public function detalleSolicitudes()
+    {
+        return $this->hasMany('App\Http\Models\Compras\DetalleSolicitudes','fk_id_solicitud', 'id_solicitud');
     }
 }

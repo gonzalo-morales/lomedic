@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Compras;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Solicitudes;
+use App\Http\Models\RecursosHumanos\Empleados;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +24,6 @@ class SolicitudesController extends ControllerBase
 
     public function store(Request $request, $company)
     {
-        dd($request);
         # ¿Usuario tiene permiso para crear?
         $this->authorize('create', $this->entity);
 
@@ -34,13 +34,15 @@ class SolicitudesController extends ControllerBase
         if($request->fk_id_estatus_solicitud == 3)//Si es cancelado
             {$request->request->set('fecha_cancelacion',DB::raw('now'));}
 
+
+        $request->request->set('fk_id_departamento',Empleados::where('id_empleado',$request->fk_id_solicitante)->first()->fk_id_departamento);
+
         $isSuccess = $this->entity->create($request->all());
         if ($isSuccess) {
+            foreach ($request->detalles as $detalle){
+                $isSuccess->detalleSolicitudes()->save(new DetalleSolicitudes($detalle));
+            }
             $this->log('store', $isSuccess->id_banco);
-//            $detalle = new DetalleSolicitudes;
-//            $b = $detalle::create([
-//                'prueba' => $request->all()
-//            ]);
             return $this->redirect('store');
         } else {
             $this->log('error_store');

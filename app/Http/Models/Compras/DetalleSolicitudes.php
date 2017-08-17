@@ -80,4 +80,9 @@ class DetalleSolicitudes extends ModelCompany
     {
         return $this->hasOne('App\Http\Models\Proyectos\Proyectos','id_proyecto','fk_id_proyecto');
     }
+
+    public function solicitudes()
+    {
+        return $this->belongsTo('App\Http\Models\Compras\Solicitudes','fk_id_solicitud','id_solicitud');
+    }
 }
