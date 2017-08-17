@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', currentEntityBaseName() . '@Nuevo')
+@section('title', currentEntityBaseName() . '@Agregar')
 
 @section('form-header')
 	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col s12 x18']) !!}
@@ -16,7 +16,7 @@
 @endsection
 
 @section('form-title')
-	{{ HTML::tag('h4','Nuevo '. str_singular(currentEntityBaseName())) }}
+	{{ HTML::tag('h4','Agregar '. str_singular(currentEntityBaseName())) }}
 @endsection
 
 @section('content')

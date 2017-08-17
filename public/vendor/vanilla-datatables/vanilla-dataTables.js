@@ -1052,6 +1052,29 @@
 	};
 
 	/**
+	 * Check column(s) case sensitive
+	 * @return {Boolean}
+	 */
+	Columns.prototype.caseSensitive = function() {
+		var columns;
+
+		if (util.isInt(this.columns)) {
+			columns = this.dt.headings[this.columns].dataset.case_sensitive ? true : false;
+		} else if (util.isArray(this.columns)) {
+			columns = [];
+			util.each(
+				this.columns,
+				function(i, column) {
+					columns.push(this.dt.headings[column].dataset.case_sensitive ? true : false);
+				},
+				this
+			);
+		}
+
+		return columns;
+	};
+
+	/**
 	 * Check column(s) visibility
 	 * @return {Boolean}
 	 */
@@ -1306,6 +1329,9 @@
 								if ( data.hasOwnProperty("sortable") ) {
 									th.setAttribute("data-sortable", data.sortable);
 								}
+								if ( data.hasOwnProperty("case_sensitive") ) {
+									th.setAttribute("data-case_sensitive", data.case_sensitive);
+								}
 
 								if ( data.hasOwnProperty("hidden") ) {
 										if ( data.hidden !== false ) {
@@ -1514,7 +1540,7 @@
 
 		var that = this;
 
-		query = query.toLowerCase();
+		// query = query.toLowerCase();
 
 		this.currentPage = 1;
 		this.searching = true;
@@ -1540,8 +1566,17 @@
 					var includes = false;
 
 					for (var x = 0; x < row.cells.length; x++) {
+
+						var textContent = row.cells[x].textContent;
+						var _word = word;
+
+						if (!that.columns(row.cells[x].cellIndex).caseSensitive()) {
+							textContent = textContent.toLowerCase();
+							_word = word.toLowerCase();
+						}
+
 						if (
-							util.includes(row.cells[x].textContent.toLowerCase(), word) &&
+							util.includes(textContent, _word) &&
 							that.columns(row.cells[x].cellIndex).visible()
 						) {
 							includes = true;
@@ -2135,6 +2170,9 @@
 	 */
 	DataTable.prototype.setMessage = function(message) {
 		var colspan = 1;
+		if (this.hasHeadings) {
+			colspan = this.headings.length;
+		}
 
 		if (this.hasRows) {
 			colspan = this.rows[0].cells.length;

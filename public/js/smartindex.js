@@ -22,12 +22,13 @@ function post_to_url(path, params, method) {
     document.body.appendChild(form);
     form._submit_function_(); //Call the renamed function.
 }
-    
+
 let datatable = new DataTable(".smart-table", {
 	perPageSelect: [20,30,50],
 	perPage: 20,
 	columns: [
 		{ select: [0], sortable: false },
+		{ select: [4], case_sensitive: true },
 	],
 	// data: data,
 	labels: {
@@ -103,7 +104,6 @@ let model = {
 				rv.collections.datarows.push(item.dataset.datarow);
 				acc.push(item.dataset.itemId); return acc;
 			}, [])
-			console.log(rv.collections.items)
 			rv.status.isAllChecked = rv.actions.isAllChecked();
 		},
 		showModalDelete(e, rv) {
@@ -192,8 +192,12 @@ rivets.binders['get-delete-url'] = {
 
 let view = rivets.bind(smartView, model);
 
-datatable.setMessage('Obteniendo elementos ...');
-getItems(1);
+if (datatable.hasRows) {
+	datatable.setMessage('Obteniendo elementos ...');
+	getItems(1);
+} else {
+	datatable.setMessage('Sin elementos.');
+}
 
 /* */
 function getItems($page) {
@@ -202,7 +206,6 @@ function getItems($page) {
 	let columns = JSON.parse(smartView.dataset.columns);
 
 	$.getJSON(smartView.dataset.itemShowOrDeleteUrl.replace('#ID#', '') + '?page=' + $page, function(response){
-		// console.log(response.data)
 		let collection = [];
 		$.each(response.data, function(index, item){
 			let id = item[primary];

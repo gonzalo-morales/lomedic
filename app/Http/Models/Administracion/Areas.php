@@ -2,13 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Models\ModelBase;
 
-class Areas extends Model
+class Areas extends ModelBase
 {
-	// use SoftDeletes;
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -43,4 +40,14 @@ class Areas extends Model
 	public $rules = [
 		'area' => 'required',
 	];
+
+	/**
+	 * Los atributos que seran visibles en smart-datatable
+	 * @var array
+	 */
+	protected $fields = [
+		'area' => 'Area',
+		'clave_area' => 'Clave',
+	];
+
 }
