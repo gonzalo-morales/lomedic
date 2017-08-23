@@ -11,7 +11,7 @@ class Sucursales extends Model
 	 *
 	 * @var string
 	 */
-	protected $table = 'ges_cat_sucursales';
+	protected $table = 'maestro.ges_cat_sucursales';
 
 	/**
 	 * The primary key of the table

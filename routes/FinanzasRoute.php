@@ -18,5 +18,6 @@ Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'finanzas', 'as' => 'finanzas.', 'middleware' => ['auth','share'] ], function() {
         Route::get('getPorcentaje/{id}','Finanzas\ImpuestosController@obtenerPorcentaje');
+        Route::get('getImpuestos','Finanzas\ImpuestosController@obtenerImpuestos');
     });
 });

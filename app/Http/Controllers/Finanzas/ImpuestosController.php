@@ -17,4 +17,11 @@ class ImpuestosController extends ControllerBase
     {
         return Response::json(Impuestos::where('id_impuesto',$id)->first()->porcentaje);
     }
+
+    public function obtenerImpuestos($company)
+    {
+        return Response::json(Impuestos::select('id_impuesto','impuesto')
+            ->where('activo',1)
+            ->get());
+    }
 }

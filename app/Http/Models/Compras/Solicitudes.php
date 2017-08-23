@@ -35,11 +35,11 @@ class Solicitudes extends ModelCompany
      */
     protected $fields = [
         'id_solicitud' => 'Número Solicitud',
-        'fk_id_solicitante' => 'Solicitante',
-        'fk_id_sucursal' => 'Sucursal',
+        'empleado.nombre'  => 'Solicitante',
+        'sucursales.nombre_sucursal' => 'Sucursal',
         'fecha_creacion' => 'Fecha de solicitud',
         'fecha_necesidad' => 'Fecha necesidad',
-        'fk_id_estatus_solicitud' => 'Estatus'
+        'estatus.estatus' => 'Estatus'
     ];
 
     /**
@@ -88,6 +88,11 @@ class Solicitudes extends ModelCompany
         return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_solicitante','id_empleado');
     }
 
+    public function sucursales()
+    {
+        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
+    }
+
     public function estatus()
     {
         return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_solicitud');
@@ -97,4 +102,9 @@ class Solicitudes extends ModelCompany
     {
         return $this->hasMany('App\Http\Models\Compras\DetalleSolicitudes','fk_id_solicitud', 'id_solicitud');
     }
+
+    public function getSolicitanteFormatedAttribute() {
+        return $this->empleado->nombre." ".$this->empleado->apellido_paterno." ".$this->empleado->apellido_materno;
+    }
+
 }

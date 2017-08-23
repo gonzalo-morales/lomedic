@@ -19,5 +19,6 @@ Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'compras', 'as' => 'compras.', 'middleware' => ['auth','share']], function(){
         Route::resource('solicitudes', 'Compras\SolicitudesController');
+        Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
     });
 });

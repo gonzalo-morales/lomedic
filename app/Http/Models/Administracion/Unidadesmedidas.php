@@ -11,7 +11,7 @@ class Unidadesmedidas extends Model
      *
      * @var string
      */
-    protected $table = 'gen_cat_unidades_medidas';
+    protected $table = 'maestro.gen_cat_unidades_medidas';
 
     /**
      * The primary key of the table

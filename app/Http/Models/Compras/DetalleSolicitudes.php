@@ -63,7 +63,7 @@ class DetalleSolicitudes extends ModelCompany
 
     public function codigo_barras()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\CodigosBarras','id_codigo_barra','fk_id_codigo_barras');
+        return $this->hasOne('App\Http\Models\Inventarios\CodigosBarras','id_codigo_barras','fk_id_codigo_barras');
     }
 
     public function unidad_medida()
