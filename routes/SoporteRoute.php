@@ -25,12 +25,12 @@ Route::prefix('{company}')->group(function () {
         Route::resource('modoscontacto', 'Soporte\ModosContactoController');
         Route::resource('prioridades', 'Soporte\PrioridadesController');
         Route::resource('seguimiento', 'Soporte\SeguimientoSolicitudesController');
-        Route::resource('solicitudes', 'Soporte\SolicitudesController');
         Route::get('solicitudes/asignadas', 'Soporte\SolicitudesController@index_tecnico')->name('solicitudes.index_tecnico');
         Route::get('solicitudes/disponibles', 'Soporte\SolicitudesController@index_tecnicos')->name('solicitudes.index_tecnicos');
         Route::get('solicitudes/{id}/acciones', 'Soporte\SolicitudesController@obtenerAcciones');
         Route::get('solicitudes/{id}/descargar', 'Soporte\SolicitudesController@descargarArchivosAdjuntos');
         Route::get('solicitudes/{id}/subcategorias', 'Soporte\SolicitudesController@obtenerSubcategorias');
+        Route::resource('solicitudes', 'Soporte\SolicitudesController');
         Route::resource('subcategorias', 'Soporte\SubcategoriasController');
         Route::resource('urgencias', 'Soporte\UrgenciasController');
     });

@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Soporte;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class Categorias extends Model
+class Categorias extends ModelBase
 {
 	// use SoftDeletes;
 
@@ -27,6 +27,15 @@ class Categorias extends Model
 	 * @var array
 	 */
 	protected $fillable = ['categoria', 'activo'];
+	
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var array
+	 */
+	protected $fields = [
+	    'categoria' => 'Categoria',
+	    'activo_span' => 'Activo'
+	];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -40,7 +49,7 @@ class Categorias extends Model
 	 * @var array
 	 */
 	public $rules = [
-		'categoria' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+		'categoria' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
 	];
 
 	public function solicitudes()

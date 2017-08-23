@@ -28,7 +28,7 @@ let datatable = new DataTable(".smart-table", {
 	perPage: 20,
 	columns: [
 		{ select: [0], sortable: false },
-		{ select: [4], case_sensitive: true },
+		//{ select: [2], case_sensitive: true },
 	],
 	// data: data,
 	labels: {

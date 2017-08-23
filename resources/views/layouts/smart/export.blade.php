@@ -38,7 +38,7 @@
 	@foreach ($data as $row)
 	<tr>
 		@foreach ($fields as $field => $label)
-		<td>{{ $row->{$field} }}</td>
+		<td>{{ isset($field) ? object_get($row , $field) : '' }}</td>
 		@endforeach
 	</tr>
 	@endforeach

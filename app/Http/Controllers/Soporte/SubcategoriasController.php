@@ -1,111 +1,51 @@
 <?php
-
 namespace App\Http\Controllers\Soporte;
 
+use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Soporte\Categorias;
 use App\Http\Models\Soporte\Subcategorias;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Route;
-use App\Http\Models\Logs;
 
-class SubcategoriasController extends Controller
+class SubcategoriasController extends ControllerBase
 {
+
     public function __construct(Subcategorias $entity)
     {
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
-        $this->categories = Categorias::all();
+        $this->categories = Categorias::select('id_categoria', 'categoria')->where('eliminar', '=', '0')
+            ->where('activo', '=', '1')
+            ->orderBy('categoria')
+            ->get()
+            ->pluck('categoria', 'id_categoria');
     }
 
-    public function index($company)
+    public function create($company, $attributes = [])
     {
-        // $this->authorize('view', $this->entity);
-        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
-
-        return view(Route::currentRouteName(), [
-            'entity' => $this->entity_name,
-            'company' => $company,
-            'data' => $this->entity->all()->where('eliminar', '=','0'),
-            'categories' => $this->categories,
-        ]);
+        $attributes = $attributes + [
+            'dataview' => [
+                'categorys' => $this->categories
+            ]
+        ];
+        return parent::create($company, $attributes);
     }
 
-    public function create($company)
+    public function show($company, $id, $attributes = [])
     {
-        return view(Route::currentRouteName(), [
-            'entity' => $this->entity_name,
-            'company' => $company,
-            'categories' => $this->categories,
-        ]);
+        $attributes = $attributes + [
+            'dataview' => [
+                'categorys' => $this->categories
+            ]
+        ];
+        return parent::show($company, $id, $attributes);
     }
 
-    public function store(Request $request, $company)
+    public function edit($company, $id, $attributes = [])
     {
-//        dd($request->all());
-
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
-
-        $created = $this->entity->create($request->all());
-        if($created)
-        {Logs::createLog($this->entity->getTable(),$company,$created->id_subcategoria,'crear','Registro insertado');}
-        else
-        {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
-
-        # Redirigimos a index
-        return redirect(companyRoute('index'));
-    }
-
-    public function show($company, $id)
-    {
-        Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
-
-        $categoria = $this->entity->where('id_subcategoria',$id)->first()->fk_id_categoria;
-
-        return view (Route::currentRouteName(), [
-            'entity' => $this->entity_name,
-            'company' => $company,
-            'data' => $this->entity->findOrFail($id),
-            'category' => $this->categories->find($categoria)->categoria,
-        ]);
-    }
-
-    public function edit($company, $id)
-    {
-        return view (Route::currentRouteName(), [
-            'entity' => $this->entity_name,
-            'company' => $company,
-            'data' => $this->entity->findOrFail($id),
-            'categories' => $this->categories,
-        ]);
-    }
-
-    public function update(Request $request, $company, $id)
-    {
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
-        $entity = $this->entity->findOrFail($id);
-        $entity->fill($request->all());
-        if($entity->save())
-        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
-        else
-        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
-
-        # Redirigimos a index
-        return redirect(companyRoute('index'));
-    }
-
-    public function destroy($company, $id)
-    {
-        $entity = $this->entity->findOrFail($id);
-        $entity->eliminar='t';
-        if($entity->save())
-        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
-        else
-        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
-
-        # Redirigimos a index
-        return redirect(companyRoute('index'));
+        $attributes = $attributes + [
+            'dataview' => [
+                'categorys' => $this->categories
+            ]
+        ];
+        return parent::edit($company, $id, $attributes);
     }
 }

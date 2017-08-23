@@ -11,8 +11,5 @@ $(document).ready(function () {
 });
 
 function descripcion() {
-    if ($('#solucion:checked').val() == 'on')
-    {$('#resolucion').prop('disabled',false);}
-    else
-    {$('#resolucion').prop('disabled',true);}
+	$('#resolucion').prop('readonly',$('#solucion:checked').val() != 'on');
 }

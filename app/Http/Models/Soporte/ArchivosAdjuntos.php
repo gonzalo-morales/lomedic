@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Soporte;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class ArchivosAdjuntos extends Model
+class ArchivosAdjuntos extends ModelBase
 {
     /**
      * The table associated with the model.

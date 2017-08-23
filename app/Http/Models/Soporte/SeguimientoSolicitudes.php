@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Soporte;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class SeguimientoSolicitudes extends Model
+class SeguimientoSolicitudes extends ModelBase
 {
     /**
      * The table associated with the model.

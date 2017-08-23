@@ -4,6 +4,7 @@ namespace App\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\HtmlString;
 
 class ModelBase extends Model
 {
@@ -12,6 +13,22 @@ class ModelBase extends Model
 	 * @var null|array
 	 */
 	protected $fields = null;
+	
+	protected $appends = ['activo_span', 'activo_text'];
+	
+	public function getActivoTextAttribute()
+	{
+	    return $this->activo ? 'Activo' : 'Inactivo';
+	}
+	
+	public function getActivoSpanAttribute()
+	{
+	    $format = new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_text&nbsp;</span>");
+	    if (request()->ajax()) {
+	        return $format->toHtml();
+	    }
+	    return $format;
+	}
 
 	/**
 	 * Indicates if the model should be timestamped.

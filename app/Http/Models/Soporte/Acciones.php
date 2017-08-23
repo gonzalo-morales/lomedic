@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Soporte;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class Acciones extends Model
+class Acciones extends ModelBase
 {
 	// use SoftDeletes;
 
@@ -27,6 +27,15 @@ class Acciones extends Model
 	 * @var array
 	 */
 	protected $fillable = ['accion','fk_id_subcategoria', 'activo'];
+	
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var array
+	 */
+	protected $fields = [
+	    'accion' => 'Accion',
+	    'activo' => 'Activo'
+	];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -40,7 +49,7 @@ class Acciones extends Model
 	 * @var array
 	 */
 	public $rules = [
-		'accion' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+		'accion' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
         'fk_id_subcategoria' => 'required',
 	];
 

@@ -3,7 +3,7 @@
 @section('title', currentEntityBaseName() . '@Editar')
 
 @section('form-header')
-    {!! Form::open(['method'=>'put', 'url' => companyRoute('update'), 'id' => 'form-model', 'class' => 'col s12 x18']) !!}
+    {!! Form::open(['method'=>'put', 'url' => companyRoute('update'), 'id' => 'form-model', 'class' => 'col s12 m12']) !!}
 @endsection
 
 @section('form-actions')

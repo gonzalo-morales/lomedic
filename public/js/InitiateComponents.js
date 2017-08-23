@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  $(".button-collapse").sideNav();// Inicia sideNav para navegación izquierdo
+  $(".button-collapse").sideNav();// Inicia sideNav para navegaciÃ³n izquierdo
   $('.tooltipped').tooltip({delay: 50}); // Iniciamos tooltips
   $('.chips-initial').material_chip({  //iniciamos chips
     data: [{
@@ -17,7 +17,7 @@ $(document).ready(function(){
     }],
   });
   $('select').material_select(); //iniciamos el select
-  $(".help-collapse").sideNav({ // Inicia sideNav para navegación derecho de ayuda
+  $(".help-collapse").sideNav({ // Inicia sideNav para navegaciÃ³n derecho de ayuda
     edge:'right', //para que lo muestre a la derecha
     }
   );
@@ -27,7 +27,7 @@ $(document).ready(function(){
     outDuration: 225,
     //hover: true, // Se activa al hacer hover
     click: true, // se activa al hacer clic
-    belowOrigin: true, // Se mostrará hacia abajo del elemento
+    belowOrigin: true, // Se mostrarÃ¡ hacia abajo del elemento
     alignment: 'right' // Alineado a la derecha
     }
   );
@@ -44,14 +44,14 @@ $(document).ready(function(){
     aftershow: function(){} //Function for after opening timepicker
   });
   $('#fecha_nacimiento.datepicker').pickadate({
-      //Cambiamos idiomas a español
+      //Cambiamos idiomas a espaÃ±ol
       labelMonthNext: 'Siguiente mes',
       labelMonthPrev: 'Regresar mes',
       labelMonthSelect: 'Selecciona el mes',
-      labelYearSelect: 'Selecciona el año',
+      labelYearSelect: 'Selecciona el aÃ±o',
       monthsFull: [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ],
       monthsShort: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
-      weekdaysFull: [ 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado' ],
+      weekdaysFull: [ 'Domingo', 'Lunes', 'Martes', 'MiÃ©rcoles', 'Jueves', 'Viernes', 'SÃ¡bado' ],
       weekdaysShort: [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab' ],
       weekdaysLetter: [ 'D', 'L', 'M', 'M', 'J', 'V', 'S' ],
       today: 'Hoy',
@@ -64,14 +64,14 @@ $(document).ready(function(){
       format: 'yyyy/mm/dd'
   });
   $('.datepicker').pickadate({
-    //Cambiamos idiomas a español
+    //Cambiamos idiomas a espaÃ±ol
     labelMonthNext: 'Siguiente mes',
     labelMonthPrev: 'Regresar mes',
     labelMonthSelect: 'Selecciona el mes',
-    labelYearSelect: 'Selecciona el año',
+    labelYearSelect: 'Selecciona el aÃ±o',
     monthsFull: [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ],
     monthsShort: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
-    weekdaysFull: [ 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado' ],
+    weekdaysFull: [ 'Domingo', 'Lunes', 'Martes', 'MiÃ©rcoles', 'Jueves', 'Viernes', 'SÃ¡bado' ],
     weekdaysShort: [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab' ],
     weekdaysLetter: [ 'D', 'L', 'M', 'M', 'J', 'V', 'S' ],
     today: 'Hoy',
@@ -81,7 +81,7 @@ $(document).ready(function(){
     selectYears: 15 // Creates a dropdown of 15 years to control year
   });
   $('input.autocomplete').autocomplete({ //Iniciamos el autocomplete
-    data: { //agregamos data de ejemplo, el null es para decir que no llevará una imagen o ícono a un lado del nombre...
+    data: { //agregamos data de ejemplo, el null es para decir que no llevarÃ¡ una imagen o Ã­cono a un lado del nombre...
       "Apple": null,
       "Microsoft": null,
       "Google": null,
@@ -115,4 +115,4 @@ $(document).ready(function(){
       });
     };
   });
-}); //aquí termina el function
+}); //aquÃ­ termina el function

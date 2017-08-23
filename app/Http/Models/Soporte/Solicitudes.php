@@ -2,9 +2,10 @@
 
 namespace App\Http\Models\Soporte;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
+use Illuminate\Support\HtmlString;
 
-class Solicitudes extends Model
+class Solicitudes extends ModelBase
 {
 	// use SoftDeletes;
 
@@ -30,6 +31,63 @@ class Solicitudes extends Model
         'fk_id_sucursal','fk_id_estatus_ticket','fk_id_categoria','fk_id_subcategoria','fk_id_accion',
         'fk_id_prioridad','fk_id_modo_contacto','fk_id_empleado_tecnico','fk_id_impacto','fk_id_urgencia',
         'resolucion','fecha_hora_resolucion','activo','nombre_solicitante','fk_id_departamento'];
+	
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var array
+	 */
+	protected $fields = [
+	    'a_solicitante'=>'Solicitante',
+	    'asunto' => 'Asunto',
+	    'fecha_hora_creacion' => 'Fecha Creacion',
+	    'a_tecnico' => 'Tecnico Asignado',
+	    'a_categoria' => 'Categoria',
+	    'prioridad_span' => 'Prioridad',
+	    'a_estatus'=> 'Estatus',
+	];
+	
+	/**
+	 * The accessors to append to the model's array form.
+	 *
+	 * @var array
+	 */
+	protected $appends = ['a_solicitante','a_estatus','a_tecnico','a_prioridad','a_categoria'];
+	
+	
+	public function getASolicitanteAttribute()
+	{
+	    return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
+	}
+	
+	public function getAEstatusAttribute()
+	{
+	    return $this->estatusTickets->estatus;
+	}
+	
+	public function getAPrioridadAttribute()
+	{
+	    return $this->prioridad->prioridad;
+	}
+	
+	public function getPrioridadSpanAttribute()
+	{
+	    $icon = !empty($this->prioridad->icono) ? new HtmlString("<i class=material-icons>".$this->prioridad->icono."</i>") :"";
+	    $format = new HtmlString("<span class=".(!empty($this->prioridad->color) ? $this->prioridad->color . "-text" :"").">$icon $this->a_prioridad&nbsp;</span>");
+	    if (request()->ajax()) {
+	        return $format->toHtml();
+	    }
+	    return $format;
+	}
+	
+	public function getACategoriaAttribute()
+	{
+	    return $this->categoria->categoria;
+	}
+	
+	public function getATecnicoAttribute()
+	{
+        return empty($this->empleadoTecnico) ? $this->fk_id_empleado_tecnico :$this->empleadoTecnico->nombre.' '.$this->empleadoTecnico->apellido_paterno.' '.$this->empleadoTecnico->apellido_materno;
+	}
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -56,7 +114,7 @@ class Solicitudes extends Model
     {
         return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_empleado_solicitud','id_empleado');
     }
-    public function empleado_tecnico()
+    public function empleadoTecnico()
     {
         return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_empleado_tecnico','id_empleado');
     }
@@ -105,7 +163,7 @@ class Solicitudes extends Model
         return $this->hasOne('App\Http\Models\Soporte\Urgencias','id_urgencia','fk_id_urgencia');
     }
 
-    public function archivos_adjuntos()
+    public function archivosAdjuntos()
     {
         return $this->hasMany('App\Http\Models\Soporte\ArchivosAdjuntos','fk_id_solicitud');
     }

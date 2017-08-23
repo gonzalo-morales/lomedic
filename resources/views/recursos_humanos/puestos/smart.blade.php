@@ -1,5 +1,5 @@
 
-@section('content-width', 's12 m7 xl8 offset-xl2')
+@section('content-width', 's12 ml2')
 
 @section('form-content')
 {{ Form::setModel($data) }}

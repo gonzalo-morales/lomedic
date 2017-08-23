@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Soporte;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class Prioridades extends Model
+class Prioridades extends ModelBase
 {
 	// use SoftDeletes;
 
@@ -26,7 +26,16 @@ class Prioridades extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['prioridad', 'activo'];
+	protected $fillable = ['prioridad','color','icono','activo'];
+	
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var array
+	 */
+	protected $fields = [
+	    'prioridad' => 'Prioridad',
+	    'activo' => 'Activo'
+	];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -39,7 +48,7 @@ class Prioridades extends Model
 	 * @var array
 	 */
 	public $rules = [
-		'prioridad' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+		'prioridad' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
 	];
 
     public function solicitudes()

@@ -19,12 +19,12 @@ class ControllerBase extends Controller
 	public function index($company, $attributes = ['where'=>['eliminar = 0']])
 	{
 		# ¿Usuario tiene permiso para ver?
-		#$this->authorize('view', $this->entity);
+		$this->authorize('view', $this->entity);
 
 		# Log
 		$this->log('index');
 
-		$query = $this->entity->orderby($this->entity->getKeyName(),'ASC');
+		$query = $this->entity->orderBy($this->entity->getKeyName(),'DESC');
 
 		if(isset($attributes['where'])) {
     		foreach ($attributes['where'] as $key=>$condition) {
@@ -42,7 +42,7 @@ class ControllerBase extends Controller
 
 		# Ajax
 		} else {
-			$data = $query->paginate(4000);
+		    $data = $query->paginate(4000);
 			if( request()->page && request()->page == 1) {
 				$data->setCollection($data->getCollection()->slice(20));
 			}
@@ -58,7 +58,7 @@ class ControllerBase extends Controller
 	public function create($company, $attributes =[])
 	{
 		# ¿Usuario tiene permiso para crear?
-		#$this->authorize('create', $this->entity);
+		$this->authorize('create', $this->entity);
 		$data = $this->entity->ColumnDefaultValues();
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
@@ -98,7 +98,7 @@ class ControllerBase extends Controller
 	public function show($company, $id, $attributes =[])
 	{
 		# ¿Usuario tiene permiso para ver?
-		#$this->authorize('view', $this->entity);
+		$this->authorize('view', $this->entity);
 
 		# Log
 		$this->log('show', $id);
@@ -117,7 +117,7 @@ class ControllerBase extends Controller
 	public function edit($company, $id, $attributes =[])
 	{
 		# ¿Usuario tiene permiso para actualizar?
-		#$this->authorize('update', $this->entity);
+		$this->authorize('update', $this->entity);
 		$data = $this->entity->findOrFail($id);
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
@@ -253,33 +253,40 @@ class ControllerBase extends Controller
 	 */
 	public function export(Request $request, $company)
 	{
-		# ¿Usuario tiene permiso para descargar?
-		#$this->authorize('download', $this->entity);
+		# ¿Usuario tiene permiso para exportar?
+		$this->authorize('download', $this->entity);
 		$type = strtolower($request->type);
-		$style = isset($request->style) ? $request->style : false;
+		$style = isset($request->style) ? $request->style : true;
 
 	    if (isset($request->ids)) {
 	        $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);
-	        $data = $this->entity->select(array_keys($this->entity->getFields()))->whereIn($this->entity->getKeyName(), $ids)->get();
+	        $data = $this->entity->whereIn($this->entity->getKeyName(), $ids)->get();
 		}
 		else {
-		    $data = $this->entity->select(array_keys($this->entity->getFields()))->get();
+		    $data = $this->entity->get();
 		}
 		
+		$fields = $this->entity->getFields();
 		
+		$alldata = $data->map(function ($data) use($fields) {
+		    $return = [];
+		    foreach ($fields as $field=>$lable)
+		        $return[$lable] = html_entity_decode(strip_tags($data->$field));
+		    return $return;
+		});
 		
 		if($type == 'pdf') {
-		    $pdf = PDF::loadView(currentRouteName('smart'), ['fields' => $this->entity->getFields(), 'data' => $data]);
+		    $pdf = PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
 		    return $pdf->download(currentEntityBaseName().'.pdf');
 		}
 		else {
-		    Excel::create(currentEntityBaseName(), function($excel) use($data,$type,$style) {
-		        $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$type,$style) {
+		    Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style) {
+		        $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style) {
     		        if($style) {
     		            $sheet->loadView(currentRouteName('smart'), ['fields' => $this->entity->getFields(), 'data' => $data]);
     		        }
     		        else
-    		          $sheet->fromArray($data->toarray());
+    		            $sheet->fromArray($alldata);
     	        });
     	    })->download($request->type);
 		}

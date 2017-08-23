@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-	{!! Form::open(['url' => companyRoute('index'),'class' => 'col s12 x18']) !!}
+	{!! Form::open(['url' => companyRoute('index'),'class' => 'col s12 m12']) !!}
 		{{ csrf_field() }}
 		{{ method_field('POST') }}
 		{{ Form::token() }}

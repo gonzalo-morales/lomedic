@@ -30,7 +30,7 @@
 					<tr><td>datarows</td><td rv-text="collections.datarows"></td></tr>
 				</table>
 			</div>
-			<div class="col s12 xl8 offset-xl2">
+			<div class="col s12 m12">
 				<div class="row" rv-hide="actions.countItems | call < collections.items">
 					<div class="right">
 						<a href="{{ companyRoute('create') }}" class="btn orange waves-effect waves-light">Crear</a>
@@ -97,7 +97,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col s12 xl8 offset-xl2">
+			<div class="col s12 ml2">
 				<table class="smart-table striped responsive-table highlight">
 					<thead>
 						<tr>
