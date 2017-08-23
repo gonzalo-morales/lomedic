@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Policies\Compras;
+namespace App\Policies\Soporte;
 
 use App\Http\Models\Administracion\Usuarios;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SolicitudesPolicy
+class ModosPolicy
 {
 	use HandlesAuthorization;
 

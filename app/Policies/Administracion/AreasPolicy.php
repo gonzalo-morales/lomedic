@@ -59,4 +59,17 @@ class AreasPolicy
         $permisos = $usuario->permisos()->pluck('descripcion');
         return $permisos->contains(currentRouteAction('delete'));
     }
+    
+    /**
+     * Determine whether the user can export the post.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Post  $post
+     * @return mixed
+     */
+    public function export(Usuarios $usuario)
+    {
+        $permisos = $usuario->permisos()->pluck('descripcion');
+        return $permisos->contains(currentRouteAction('export'));
+    }
 }

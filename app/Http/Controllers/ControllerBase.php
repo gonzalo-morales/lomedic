@@ -254,9 +254,9 @@ class ControllerBase extends Controller
 	public function export(Request $request, $company)
 	{
 		# ¿Usuario tiene permiso para exportar?
-		$this->authorize('download', $this->entity);
+		$this->authorize('export', $this->entity);
 		$type = strtolower($request->type);
-		$style = isset($request->style) ? $request->style : true;
+		$style = isset($request->style) ? $request->style : false;
 
 	    if (isset($request->ids)) {
 	        $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);
