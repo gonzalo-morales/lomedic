@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--meta para caracteres especiales-->
+    <meta charset="UTF-8">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <!--<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+    <!--estilo css personal-->
+    <link type="text/css" rel="stylesheet" href="../css/style.css" media="screen,projection"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Oferta de compra</title>
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav class="top-nav teal z-depth-0 nav-extended">
+        <div class="nav-wrapper">
+            <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+            <a href="#!" data-activates="enteDrop" data-beloworigin="true"
+               class="brand-logo dropdown-button logo-enterprise"><img
+                    src="http://www.technologytell.com/gaming/files/2013/02/twitch-logo.png" alt="Sesión activa"
+                    class="circle responsive-img"> Entreprise</a>
+            <ul class="right">
+                <li><a href="#" data-activates="slide-help" class="help-collapse"><i
+                        class="material-icons">live_help</i></a></li>
+                <li><a class="dropdown-button" href="#!" data-activates="notDrop" data-beloworigin="true"><i
+                        class="material-icons">add_alert</i></a></li>
+            </ul>
+        </div><!--/nav-wrapper-->
+    </nav><!--/nav-->
+</div>
+
+<div class="row teal">
+    <div class="col s12">
+        <a href="#!" class="breadcrumb">Home</a>
+        <a href="#!" class="breadcrumb">Section</a>
+    </div>
+</div><!--/breadcrum-->
+
+<div class="row">
+    <div class="right">
+        <button class="btn orange waves-effect waves-light" name="action">Guardar</button>
+        <button class="btn waves-effect waves-light" name="action">Imprimir</button>
+        <button class="waves-effect waves-teal btn-flat teal-text">Cancelar</button>
+    </div>
+</div><!--/row buttons-->
+
+<div class="row">
+    <div class="col s12">
+        <h5>Oferta de Compra</h5>
+        <div class="card">
+          <div class="card-image teal lighten-5">
+            <form>
+              <div class="row">
+                  <div class="input-field col s12 m3">
+                    <input type="text" id="autocomplete-input" class="autocomplete">
+                    <label for="autocomplete-input">*SKU:</label>
+                  </div>
+                  <div class="input-field col s12 m3">
+                    <input type="text" id="autocomplete-input" class="autocomplete">
+                    <label for="autocomplete-input">UPC:</label>
+                  </div>
+                  <div class="input-field col s4 m2">
+                      <label for="cantidad">*Cantidad:</label>
+                      <input id="cantidad" type="number" class="validate">
+                  </div>
+                <div class="input-field col s4 m2">
+                    <label for="tiempo_entrega">Tiempo de Entrega:</label>
+                    <input id="tiempo_entrega" type="number" class="validate">
+                </div>
+                <div class="input-field col s4 m2">
+                    <label>Fecha estimada entrega:</label>
+                    <input type="text" class="datepicker">
+                </div>
+               <div class="input-field col s12 m4">
+                  <input type="text" id="autocomplete-input" class="autocomplete">
+                  <label for="autocomplete-input">Nombre Comercial/Marca:</label>
+                </div>
+                <div class="input-field col s6 m4">
+                    <select>
+                      <option value="" disabled selected>Selecciona...</option>
+                      <option value="1">Option 1</option>
+                      <option value="2">Option 2</option>
+                      <option value="3">Option 3</option>
+                    </select>
+                    <label>Cliente:</label>
+                </div>
+                <div class="col s6 m4">
+                    <label>Descuentos:</label>
+                    <div class="chips chips-autocomplete"></div>
+                </div>
+                <div class="input-field col s12 m4">
+                  <input type="text" id="autocomplete-input" class="autocomplete">
+                  <label for="autocomplete-input">Proyecto:</label>
+                </div>
+                <div class="input-field col s3 m2">
+                    <label for="costo">Precio unitario:</label>
+                    <input id="costo" type="number" class="validate">
+                </div>
+                <div class="input-field col s3 m2">
+                    <label for="cantidad">Cantidad necesaria:</label>
+                    <input id="cantidad" type="number" class="validate">
+                </div>
+                <div class="input-field col s6 m2">
+                    <select>
+                      <option value="" disabled selected>Selecciona...</option>
+                      <option value="1">Option 1</option>
+                      <option value="2">Option 2</option>
+                      <option value="3">Option 3</option>
+                    </select>
+                    <label>Impuesto:</label>
+                </div>
+                <div class="input-field col s6 m2">
+                    <select>
+                      <option value="" disabled selected>Selecciona...</option>
+                      <option value="1">Option 1</option>
+                      <option value="2">Option 2</option>
+                      <option value="3">Option 3</option>
+                    </select>
+                    <label>Unidad de medida compra:</label>
+                </div>
+                <div class="input-field col s6 m4">
+                    <select>
+                      <option value="" disabled selected>Selecciona...</option>
+                      <option value="1">Option 1</option>
+                      <option value="2">Option 2</option>
+                      <option value="3">Option 3</option>
+                    </select>
+                    <label>*Proveedor:</label>
+                </div>
+                <div class="input-field col s6 m4">
+                    <select>
+                      <option value="" disabled selected>Selecciona...</option>
+                      <option value="1">Option 1</option>
+                      <option value="2">Option 2</option>
+                      <option value="3">Option 3</option>
+                    </select>
+                    <label>Empresa a la que se compra:</label>
+                </div>
+                <div class="input-field col s6 m4">
+                  <input type="text" id="autocomplete-input" class="autocomplete">
+                  <label for="autocomplete-input">*Sucursal de Entrega:</label>
+                </div>
+                <div class="input-field col s12">
+                  <textarea id="textarea1" class="materialize-textarea"></textarea>
+                  <label for="textarea1">Descripción:</label>
+                </div>
+              </div>
+              <button class="btn-floating btn-large orange halfway-fab waves-effect waves-light tooltipped" data-position="bottom" data-delay="50" data-tooltip="Agregar" type="submit"><i class="material-icons">add</i></button>
+            </form><!--/Here ends de form-->
+            <div class="divider"></div>
+          </div><!--/Here ends the up section-->
+            <div class="card-content">
+              <table class="responsive-table highlight">
+                <thead>
+                <tr>
+                    <th>SKU o UPC</th>
+                    <th>Descripción</th>
+                    <th>Nombre</th>
+                    <th>Proyecto</th>
+                    <th>Precio Unitario</th>
+                    <th>Impuesto</th>
+                    <th>Descuentos</th>
+                    <th>Can. Necesaria</th>
+                    <th>Fecha límite</th>
+                    <th>Proveedor</th>
+                    <th>Suc. Entrega</th>
+                </tr>
+                </thead>
+              </table>
+          </div>
+        </div><!--/here ends the card-->
+    </div><!--/col-12 m5-->
+</div><!--/row-->
+
+    <!--Import jQuery before materialize.js-->
+    <!--Script para hacer los datos ordenarse-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+    <script type="text/javascript" src="../js/initiateComponents.js"></script>
+</body>
+</html>
+        
