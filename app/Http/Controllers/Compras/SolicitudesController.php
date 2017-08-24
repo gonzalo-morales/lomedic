@@ -168,7 +168,10 @@ class SolicitudesController extends ControllerBase
     {
         if (!is_array($idOrIds)) {
 
-            $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)->update(['fk_id_estatus_solicitud' => 3]);
+            $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
+                ->update(['fk_id_estatus_solicitud' => 3,
+                    'motivo_cancelacion'=>$request->motivo_cancelacion,
+                    'fecha_cancelacion'=>DB::raw('now()')]);
             if ($isSuccess) {
 
                 $this->log('destroy', $idOrIds);
@@ -199,7 +202,10 @@ class SolicitudesController extends ControllerBase
             # Multiple
         } else {
 
-            $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)->update(['fk_id_estatus_solicitud' => 3]);
+            $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)
+                ->update(['fk_id_estatus_solicitud' => 3,
+                    'motivo_cancelacion'=>$request->motivo_cancelacion,
+                    'fecha_cancelacion'=>DB::raw('now()')]);
             if ($isSuccess) {
 
                 # Shorthand

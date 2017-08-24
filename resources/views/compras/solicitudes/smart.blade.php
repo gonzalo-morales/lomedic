@@ -45,8 +45,18 @@
 			{!! Form::text('estatus_solicitud','Abierto',['disabled']) !!}
 		@endif
 		{{ Form::label('estatus_solicitud', '* Estatus de la solicitud') }}
-
 	</div>
+	{{--Si la solicitud está cancelada--}}
+		@if(isset($data->fk_id_estatus_solicitud) && $data->fk_id_estatus_solicitud ==3)
+			<div class="input-field col s2 m2">
+				{!! Form::text('fecha_cancelacion',$data->fecha_cancelacion,['disabled']) !!}
+				{{ Form::label('fecha_cancelacion','Fecha de cancelación') }}
+			</div>
+			<div class="input-field col s10 m10">
+				{!! Form::text('motivo_cancelacion',$data->motivo_cancelacion,['disabled']) !!}
+				{{ Form::label('motivo_cancelacion','Motivo de la cancelación') }}
+			</div>
+		@endif
 </div>
 <div class="divider"></div>
 <div class="row">
@@ -79,7 +89,7 @@
 						{{Form::label('fk_id_proyecto','Proyecto')}}
 					</div>
 					<div class="input-field col s4">
-						{!! Form::text('cantidad','1',['id'=>'cantidad','min'=>'1','class'=>'validate cantidad','autocomplete'=>'off']) !!}
+						{!! Form::text('cantidad','1',['id'=>'cantidad','min'=>'1','class'=>'validate','onkeyup' =>'validateCantidad(this)','autocomplete'=>'off']) !!}
 						{{Form::label('cantidad','Cantidad')}}
 					</div>
 					<div class="input-field col s4">
@@ -96,7 +106,7 @@
 						{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}
 					</div>
 					<div class="input-field col s4">
-						{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','class'=>'validate precio_unitario','autocomplete'=>'off']) !!}
+						{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','class'=>'validate','onkeyup' =>'validatePrecioUnitario(this)','autocomplete'=>'off']) !!}
 						{{Form::label('precio_unitario','Precio unitario',['class'=>'validate'])}}
 					</div>
 					<button class="btn-floating btn-large orange halfway-fab waves-effect waves-light tooltipped"
@@ -162,9 +172,10 @@
 										{{$detalle->cantidad}}
 									@else
 										{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][cantidad]',$detalle->cantidad,
-										['class'=>'cantidad',
+										['class'=>'',
 										'id'=>'cantidad'.$detalle->id_solicitud_detalle,
-										'onkeyup'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")']) !!}
+										'onkeyup' =>'validateCantidad(this)',
+										'onkeypress'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")']) !!}
 									@endif
 								</td>
 								<td>
@@ -188,7 +199,7 @@
 										{{number_format($detalle->precio_unitario,2,'.','')}}
 									@else
 										{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][precio_unitario]',number_format($detalle->precio_unitario,2,'.','')
-										,['class'=>'precio_unitario','onkeyup'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")',
+										,['class'=>'','onkeyup' =>'validatePrecioUnitario(this)','onkeypress'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")',
 										'id'=>'precio_unitario'.$detalle->id_solicitud_detalle]) !!}
 									@endif
 								</td>
@@ -198,7 +209,7 @@
 										{{number_format($detalle->total,2,'.','')}}
 									@else
 										{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][total]',number_format($detalle->total,2,'.','')
-										,['class'=>'precio_unitario','id'=>'total'.$detalle->id_solicitud_detalle,'readonly'])!!}
+										,['class'=>'','id'=>'total'.$detalle->id_solicitud_detalle,'readonly'])!!}
 									@endif
 								<td>
 									{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
@@ -223,7 +234,7 @@
 
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
+	@include(currentRouteName('index'))
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))

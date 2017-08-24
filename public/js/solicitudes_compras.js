@@ -93,6 +93,24 @@ $(document).ready( function () {
     total_producto();//Obtiene el porcentaje del valor por defecto
 });
 
+function validateCantidad(element) {
+    var valid = /[^0-9]/g.test(element.value),
+        val = element.value;
+    if(valid)
+    {
+        element.value = val.substring(0, val.length - 1);
+    }
+}
+
+function validatePrecioUnitario(element) {
+    var valid = /^\d{0,10}(\.\d{0,2})?$/g.test(element.value),
+        val = element.value;
+    if(!valid)
+    {
+        element.value = val.substring(0, val.length - 1);
+    }
+}
+
 function getIdempleado()
 {
     var data_empleado = $('#solicitante').data('url2');
@@ -218,7 +236,6 @@ function total_producto() {
             let subtotal = cantidad*precio_unitario;
             let impuesto_producto = (subtotal*impuesto)/100;
             return subtotal + impuesto_producto;
-            // $('#total').val(subtotal + impuesto_producto);
         }
     });
 
@@ -327,10 +344,10 @@ function agregarProducto() {
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" />')[0].outerHTML+$('#fk_id_proveedor').val()+ "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val()+'"/>')[0].outerHTML +  $('#fecha_necesario').val() + "," +
             $('<select name="_detalles['+row_id+'][fk_id_proyecto]" id="fk_id_proyecto'+row_id+'">'+proyectos+'</select>')[0].outerHTML + ","+
-            $('<input type="text" name="_detalles['+row_id+'][cantidad]" onkeyup="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="cantidad"/>')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][cantidad]" onkeyup="validateCantidad(this)" onkeypress="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad"/>')[0].outerHTML + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />')[0].outerHTML + $('#fk_id_unidad_medida option:selected').html() + ","+
             $('<select name="_detalles['+row_id+'][fk_id_impuesto]" onchange="total_producto_row('+row_id+')" id="_fk_id_impuesto'+row_id+'">'+impuestos+'</select>')[0].outerHTML + ","+
-            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]" onkeyup="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio_unitario"/>')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]" onkeyup="validatePrecioUnitario(this)" onkeypress="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio_unitario"/>')[0].outerHTML + "," +
             $('<input type="text" name="_detalles['+row_id+'][total]" readonly id="_total'+row_id+'" value="'+ total+'" class="precio_unitario"/>')[0].outerHTML + "," +
             '<button class="btn-flat teal lighten-5 halfway-fab waves-effect waves-light" ' +
             'type="button" data-delay="50" onclick="borrarFila(this)">' +
@@ -343,8 +360,6 @@ function agregarProducto() {
     }else {
         Materialize.toast('<span><i class="material-icons">priority_high</i>Verifica los siguientes campos: <br/>'+mensaje+'</span>', 10000,'red rounded');
     }
-
-
 }
 
 function limpiarFormulario() {

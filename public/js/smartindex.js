@@ -124,6 +124,24 @@ let model = {
 				btn.dataset[key] = this.dataset[key];
 			}.bind(this))
 		},
+        showModalMotivoCancelacion(e, rv) {
+            e.preventDefault();
+
+            // Abrimos modal
+            $('#modal-delete').modal('open');
+
+            let btn = smartView.querySelector('[rv-on-click="actions.itemsCancelacion"]');
+
+            // Limpiamos data del elemento
+            Object.keys(btn.dataset).forEach(function(key) {
+                delete btn.dataset[key]
+            });
+
+            // Copiamos data a boton de modal
+            Object.keys(this.dataset).forEach(function(key) {
+                btn.dataset[key] = this.dataset[key];
+            }.bind(this))
+        },
 		itemsDelete(e, rv) {
 			e.preventDefault();
 
@@ -146,8 +164,32 @@ let model = {
 					datatable.removeRows(datarows)
 				}
 			});
-
 		},
+		itemsCancelacion(e, rv) {
+            e.preventDefault();
+
+            let data, datarows,motivo;
+			motivo = $('#motivo_cancelacion').val();
+            switch (this.dataset.deleteType) {
+                case 'multiple':
+                    data =  {ids: rv.collections.items,motivo_cancelacion: motivo};
+                    datarows = rv.collections.datarows;
+                    break;
+                case 'single':
+                    data =  {motivo_cancelacion: motivo};
+                    datarows = [this.dataset.datarow];
+                    break;
+            }
+
+            //
+            $.delete(this.dataset.deleteUrl, data, function(response){
+                if (response.success) {
+                    // datatable.removeRows(datarows)
+					location.reload();
+                }
+            });
+
+        },
 		itemsExport(e, rv) {
 			e.preventDefault();
 			//
@@ -171,6 +213,22 @@ rivets.binders['get-item-id'] = {
 		}
 	},
 };
+
+rivets.binders['get-item-id-and-estatus'] = {
+    bind: function(el) {
+        if (el.innerHTML == '') {
+            el.outerHTML = document.querySelector('.smart-actions').innerHTML.replace(/#ID#/g, el.dataset.itemId).replace(/#ESTATUS#/g, el.dataset.itemEstatus);
+        }
+    },
+};
+rivets.binders['hide-delete'] = {
+	bind: function (el) {
+		if(el.dataset.itemEstatus != 1)
+		{
+			$(el).hide();
+		}
+    }
+}
 
 rivets.binders['get-show-url'] = {
 	bind: function(el) {
@@ -209,6 +267,7 @@ function getItems($page) {
 		let collection = [];
 		$.each(response.data, function(index, item){
 			let id = item[primary];
+			let estatus = item['fk_id_estatus'];
 			let collection_item = {};
 			collection_item['input'] = '<input type="checkbox" id="check-'+id+'" class="single-check" data-item-id="'+id+'" rv-on-click="actions.itemsSync" rv-get-datarow name="check-'+id+'"><label for="check-'+id+'"></label>';
 			$.each(columns, function(index, column){
