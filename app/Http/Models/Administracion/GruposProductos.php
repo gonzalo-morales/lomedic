@@ -2,57 +2,72 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
+use Illuminate\Support\HtmlString;
 
-class GruposProductos extends Model
+class GruposProductos extends ModelBase
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'gen_cat_grupo_productos';
+	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'gen_cat_grupo_productos';
 
-    /**
-     * The primary key of the table
-     * @var string
-     */
-    protected $primaryKey = 'id_grupo';
+	/**
+	 * The primary key of the table
+	 * @var string
+	 */
+	protected $primaryKey = 'id_grupo';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['descripcion','descripcion_producto','nomenclatura','tipo','activo'];
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['descripcion','descripcion_producto','nomenclatura','tipo','activo'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+	/**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'descripcion' => 'required',
+		'descripcion_producto' => 'required',
+		'nomenclatura' => 'required',
+		'tipo' => 'required',
+	];
 
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var null|array
+	 */
+	protected $fields = [
+		'descripcion' => 'Descripción',
+		'estatus' => 'Estatus',
+		'descripcion_producto' => 'Descripción producto',
+		'nomenclatura' => 'Nomenclatura',
+		'tipo' => 'Tipo',
+		'activo_span' => 'Activo',
+	];
 
-        'descripcion' => 'required',
-        'descripcion_producto' => 'required',
-        'nomenclatura' => 'required',
-        'tipo' => 'required',
+	public function getActivoFormatedAttribute()
+	{
+		return $this->activo ? 'Activo' : 'Inactivo';
+	}
 
-    ];
+	public function getActivoSpanAttribute()
+	{
+		return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
+	}
 
-    public function usuario()
-    {
-        $this->hasOne('app\Http\Models\Administracion\Usuarios');
-    }
+	public function usuario()
+	{
+		$this->hasOne('app\Http\Models\Administracion\Usuarios');
+	}
 
-    public function empresa()
-    {
-        $this->$this->hasOne('app\Http\Models\Administracion\Empresas');
-    }
+	public function empresa()
+	{
+		$this->$this->hasOne('app\Http\Models\Administracion\Empresas');
+	}
 }

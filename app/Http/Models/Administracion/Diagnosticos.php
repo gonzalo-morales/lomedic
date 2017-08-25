@@ -24,14 +24,9 @@ class Diagnosticos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['clave_diagnostico', 'diagnostico', 'medicamento_sugerido',];
+	protected $fillable = ['clave_diagnostico', 'diagnostico', 'medicamento_sugerido'];
 
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
+	// protected $visible = ['clave_diagnostico', 'diagnostico', 'id_diagnostico'];
 
 	/**
 	 * The validation rules
@@ -42,12 +37,6 @@ class Diagnosticos extends ModelBase
 		'diagnostico' => 'required',
 		'medicamento_sugerido' => 'required',
 	];
-
-	/**
-	 * Atributos visibles en toArray/toJson
-	 * @var array
-	 */
-	protected $visible = ['id_diagnostico', 'clave_diagnostico', 'diagnostico','medicamento_sugerido'];
 
 	/**
 	 * Los atributos que seran visibles en smart-datatable

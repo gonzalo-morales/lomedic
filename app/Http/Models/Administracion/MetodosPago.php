@@ -2,12 +2,11 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
+use Illuminate\Support\HtmlString;
 
-class MetodosPago extends Model
+class MetodosPago extends ModelBase
 {
-    // use SoftDeletes;
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -29,28 +28,31 @@ class MetodosPago extends Model
 	protected $fillable = ['metodo_pago', 'descripcion', 'activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
 		'metodo_pago'	=> 'required',
 		'descripcion'	=> 'required',
-		// 'activo'		=> 'required',
 	];
 
+    /**
+     * Los atributos que seran visibles en index-datable
+     * @var array
+     */
+    protected $fields = [
+        'metodo_pago' => 'Metodo de pago',
+        'descripcion' => 'Descripción',
+        'activo_span' => 'Activo',
+    ];
 
-	/**
-	 * @return field name of table
-	 */
-	public function getTable(){
-	    return $this->table;
+    public function getActivoFormatedAttribute()
+    {
+        return $this->activo ? 'Activo' : 'Inactivo';
     }
 
+    public function getActivoSpanAttribute()
+    {
+        return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
+    }
 }

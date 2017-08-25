@@ -2,108 +2,59 @@
 
 namespace App\Http\Controllers\Administracion;
 
-use App\Http\Models\Administracion\Jurisdicciones;
+use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Estados;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Route;
-use App\Http\Models\Logs;
+use App\Http\Models\Administracion\Jurisdicciones;
 
-class JurisdiccionesController extends Controller
+class JurisdiccionesController extends ControllerBase
 {
     public function __construct(Jurisdicciones $entity)
     {
         $this->entity = $entity;
-        $this->entity_name = strtolower(class_basename($entity));
         $this->states = Estados::all();
     }
 
-    public function index($company)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create($company, $attributes = [])
     {
-        // $this->authorize('view', $this->entity);
-        Logs::createLog($this->entity->getTable(),$company,null,'index',null);
-
-        return view(Route::currentRouteName(), [
-            'entity' => $this->entity_name,
-            'company' => $company,
-            'data' => $this->entity->all()->where('eliminar', '=','0'),
-            'states' => $this->states,
+        return parent::create($company, [
+            'dataview' => [
+                'states' => $this->states,
+            ]
         ]);
     }
 
-    public function create($company)
+    /**
+     * Display the specified resource
+     *
+     * @param  integer $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($company, $id, $attributes = [])
     {
-        return view(Route::currentRouteName(), [
-            'entity' => $this->entity_name,
-            'company' => $company,
-            'states' => $this->states,
+        return parent::show($company, $id, [
+            'dataview' => [
+                'states' => $this->states,
+            ]
         ]);
     }
 
-    public function store(Request $request, $company)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  integer $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($company, $id, $attributes = [])
     {
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
-
-        $created = $this->entity->create($request->all());
-        if($created)
-        {Logs::createLog($this->entity->getTable(),$company,$created->id_jurisdiccion,'crear','Registro insertado');}
-        else
-        {Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');}
-
-        # Redirigimos a index
-        return redirect(companyRoute('index'));
-    }
-
-    public function show($company, $id)
-    {
-        Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
-
-        $state = $this->entity->findOrFail($id)->fk_id_estado;
-
-        return view (Route::currentRouteName(), [
-            'entity' => $this->entity_name,
-            'company' => $company,
-            'data' => $this->entity->findOrFail($id),
-            'state' => $this->states->find($state)->estado,
+        return parent::edit($company, $id, [
+            'dataview' => [
+                'states' => $this->states,
+            ]
         ]);
-    }
-
-    public function edit($company, $id)
-    {
-        return view (Route::currentRouteName(), [
-            'entity' => $this->entity_name,
-            'company' => $company,
-            'data' => $this->entity->findOrFail($id),
-            'states' => $this->states,
-        ]);
-    }
-
-    public function update(Request $request, $company, $id)
-    {
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
-        $entity = $this->entity->findOrFail($id);
-        $entity->fill($request->all());
-        if($entity->save())
-        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
-        else
-        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
-
-        # Redirigimos a index
-        return redirect(companyRoute('index'));
-    }
-
-    public function destroy($company, $id)
-    {
-        $entity = $this->entity->findOrFail($id);
-        $entity->eliminar='t';
-        if($entity->save())
-        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');}
-        else
-        {Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');}
-
-        # Redirigimos a index
-        return redirect(companyRoute('index'));
     }
 }

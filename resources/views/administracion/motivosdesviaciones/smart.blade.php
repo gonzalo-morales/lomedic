@@ -4,10 +4,16 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s12 m7">
-		{{ Form::text('combustible', null, ['id'=>'combustible','class'=>'validate']) }}
-		{{ Form::label('combustible', 'Combustible') }}
-		{{ $errors->has('combustible') ? HTML::tag('span', $errors->first('combustible'), ['class'=>'help-block deep-orange-text']) : '' }}
+	<div class="input-field col s6">
+		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'validate']) }}
+		{{ Form::label('descripcion', 'Descripción:') }}
+		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
+	</div>
+	<div class="input-field col s2">
+		{{ Form::hidden('activo', 0) }}
+		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
+		{{ Form::label('activo', 'Activo:') }}
+		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
 </div>
 @endsection

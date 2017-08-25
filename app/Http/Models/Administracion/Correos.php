@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
-use Illuminate\Support\HtmlString;
 
 class Correos extends ModelBase
 {
@@ -28,13 +27,6 @@ class Correos extends ModelBase
 	protected $fillable = ['correo', 'fk_id_empresa', 'fk_id_usuario','activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
@@ -53,15 +45,11 @@ class Correos extends ModelBase
 		'activo_span' => 'Estado',
 	];
 
-	public function getActivoFormatedAttribute()
-	{
-		return $this->activo ? 'Activo' : 'Inactivo';
-	}
-
-	public function getActivoSpanAttribute()
-	{
-		return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
-	}
+	/**
+	 * Atributos de carga optimizada
+	 * @var array
+	 */
+	protected $eagerLoaders = ['empresa', 'usuario'];
 
 	/**
 	 * Obtenemos usuario relacionado

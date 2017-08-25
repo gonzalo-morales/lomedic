@@ -59,6 +59,15 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 		'usuario' => 'required',
 	];
 
+	/**
+	 * Obtenemos usuarios activos
+	 * @return Collection
+	 */
+	public static function active()
+	{
+		return self::where('activo','=','1')->get();
+	}
+
 	public function mails(){
 		return $this->hasMany('app\Http\Models\Correos');
 	}

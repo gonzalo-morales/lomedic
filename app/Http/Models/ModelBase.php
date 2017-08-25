@@ -13,22 +13,12 @@ class ModelBase extends Model
 	 * @var null|array
 	 */
 	protected $fields = null;
-	
-	protected $appends = ['activo_span', 'activo_text'];
-	
-	public function getActivoTextAttribute()
-	{
-	    return $this->activo ? 'Activo' : 'Inactivo';
-	}
-	
-	public function getActivoSpanAttribute()
-	{
-	    $format = new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_text&nbsp;</span>");
-	    if (request()->ajax()) {
-	        return $format->toHtml();
-	    }
-	    return $format;
-	}
+
+	/**
+	 * Atributos de carga optimizada
+	 * @var array
+	 */
+	protected $eagerLoaders = [];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -36,6 +26,17 @@ class ModelBase extends Model
 	 * @var bool
 	 */
 	public $timestamps = false;
+
+	/**
+	 * Obtenemos atributos a incluir en append/appends()
+	 * @return array
+	 */
+	public function getAppendableFields()
+	{
+		return array_where(array_diff(array_keys($this->getFields()), array_keys($this->getColumnsDefaultsValues())), function ($value, $key) {
+			return !str_contains($value, '.');
+		});
+	}
 
 	/**
 	 * Obtenemos atributos para smart-datatable
@@ -50,24 +51,47 @@ class ModelBase extends Model
 	}
 
 	/**
-	 * Obtenemos defaults de modelo
+	 * Obtenemos Eager-Loaders
+	 * @return array
 	 */
-	public function ColumnDefaultValues()
+	public function getEagerLoaders()
 	{
-		$schema = config('database.connections.'.$this->getConnection()->getName().'.schema');
+		return $this->eagerLoaders;
+	}
 
-		$data = DB::table('information_schema.columns')
-			->select('column_name', 'data_type', DB::Raw("replace(replace(column_default, concat('::',data_type), ''),'''','') as column_default"))
-			->whereRaw('column_default is not null')
-			->whereRaw("column_default not ilike '%nextval%'")
-			->where('table_name','=',$this->table)
-			->where('table_schema','=',$schema)
-			->where('table_catalog','=',$this->getConnection()->getDatabaseName())->get();
+	/**
+	 * Accessor - Obtenemos columna 'activo' formateado en texto
+	 * @return string
+	 */
+	public function getActivoTextAttribute()
+	{
+		return $this->activo ? 'Activo' : 'Inactivo';
+	}
 
-			foreach ($data as $value) {
-				$data->{$value->column_name} = $value->data_type == 'boolean' ? $value->column_default == 'true' : $value->column_default;
-			}
+	/**
+	 * Accessor - Obtenemos columna 'activo' formateado en HTML
+	 * @return string
+	 */
+	public function getActivoSpanAttribute()
+	{
+		# Retornamos HTML-Element
+		$format = new HtmlString('<span class=' . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_text&nbsp;</span>");
+		# Si Ajax, retornamos HTML-String
+		if (request()->ajax()) {
+			return $format->toHtml();
+		}
+		return $format;
+	}
 
-		return $data;
+	/**
+	 * Obtenemos columnas-defaults de modelo
+	 * @return array
+	 */
+	public function getColumnsDefaultsValues()
+	{
+		$columns = $this->getConnection()->getDoctrineSchemaManager()->listTableDetails($this->getTable())->getColumns();
+		return array_map(function($column) {
+			return $column->getDefault();
+		}, $columns );
 	}
 }

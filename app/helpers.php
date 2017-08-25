@@ -133,3 +133,23 @@ function currentEntityBaseName()
 {
 	return class_basename(currentEntityName());
 }
+
+/**
+ * Obtenemos nombre llave para cache
+ * @return string
+ */
+function getCacheKey($route = '', $withPage = true)
+{
+	$keys = [request()->company, currentRouteName($route)];
+	if (request()->page && $withPage) $keys[] = request()->page;
+	return implode('.', $keys);
+}
+
+/**
+ * Obtenemos etiqueta para cache
+ * @return string
+ */
+function getCacheTag($route = '')
+{
+	return getCacheKey($route, false);
+}

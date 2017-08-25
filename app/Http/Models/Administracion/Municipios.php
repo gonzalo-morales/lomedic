@@ -2,12 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class Municipios extends Model
+class Municipios extends ModelBase
 {
-    // use SoftDeletes;
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -22,24 +20,11 @@ class Municipios extends Model
 	protected $primaryKey = 'id_municipio';
 
 	/**
-	 * The attribute activo
-	 * @var boolean
-	 */
-	// protected $activo = 'activo';
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
 	protected $fillable = ['municipio', 'fk_id_estado', 'activo'];
-
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
 
 	/**
 	 * The validation rules
@@ -48,24 +33,29 @@ class Municipios extends Model
 	public $rules = [
 		'municipio'     => 'required',
 		'fk_id_estado'	=> 'required',
-		// 'activo'		=> 'required',
 	];
 
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var array
+	 */
+	protected $fields = [
+		'municipio' => 'Municipio',
+		'estado.estado' => 'Estado',
+		'activo_span' => 'Activo',
+	];
 
 	/**
-	 * Un municipio pertenece a un estado
-	 *
+	 * Atributos de carga optimizada
+	 * @var array
+	 */
+	protected $eagerLoaders = ['estado'];
+
+	/**
+	 * Obtenemos estado relacionado
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
 	public function estado(){
-		return $this->belongsTo('App\Http\Models\Administracion\Estados');
+		return $this->belongsTo(Estados::class, 'fk_id_estado', 'id_estado')->select(['id_estado', 'estado']);
 	}
-
-	/**
-	 * @return field name of table
-	 */
-	public function getTable(){
-	    return $this->table;
-    }
-
 }

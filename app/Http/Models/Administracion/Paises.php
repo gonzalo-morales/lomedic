@@ -44,11 +44,4 @@ class Paises extends Model
 		// 'activo'	=> 'required',
 	];
 
-	/**
-	 * @return field name of table
-	 */
-	public function getTable(){
-	    return $this->table;
-    }
-
 }

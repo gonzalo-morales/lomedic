@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use DB;
-use Excel;
-use PDF;
+
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Models\Logs;
+use Barryvdh\DomPDF\PDF;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ControllerBase extends Controller
 {
@@ -24,29 +26,44 @@ class ControllerBase extends Controller
 		# Log
 		$this->log('index');
 
-		$query = $this->entity->orderBy($this->entity->getKeyName(),'DESC');
+		$query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
 
 		if(isset($attributes['where'])) {
-    		foreach ($attributes['where'] as $key=>$condition) {
-    			$query->where(DB::raw($condition));
-    		}
+			foreach ($attributes['where'] as $key=>$condition) {
+				$query->where(DB::raw($condition));
+			}
 		}
-		
+
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
-		
+
 		if (!request()->ajax()) {
-		    return view(currentRouteName('smart'), $dataview+[
+			return view(currentRouteName('smart'), $dataview+[
 				'fields' => $this->entity->getFields(),
 				'data' => $query->limit(20)->get(),
 			]);
 
 		# Ajax
 		} else {
-		    $data = $query->paginate(4000);
-			if( request()->page && request()->page == 1) {
-				$data->setCollection($data->getCollection()->slice(20));
-			}
-			return response()->json($data);
+			$appendable = $this->entity->getAppendableFields();
+
+			# Retorna resultados, los cache antes si no existen
+			$cache = Cache::tags(getCacheTag())->rememberForever(getCacheKey(), function() use ($query, $appendable) {
+
+				$all = $query->get();
+
+				$page = request()->page ?: 1;
+				$perPage = 4000;
+
+				$items = $all->forPage($page, $perPage)->each(function($item) use ($appendable) {
+					$item->setAppends($appendable);
+				});
+
+				# Eliminamos primeros 20 registros en pagina #1
+				if( $page == 1) $items = $items->slice(20);
+
+				return (new LengthAwarePaginator($items, $all->count(), $perPage, $page))->toJson();
+			});
+			return response()->json()->setJson($cache);
 		}
 	}
 
@@ -59,7 +76,9 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para crear?
 		$this->authorize('create', $this->entity);
-		$data = $this->entity->ColumnDefaultValues();
+
+		$data = $this->entity->getColumnsDefaultsValues();
+
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
 		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
@@ -81,6 +100,10 @@ class ControllerBase extends Controller
 
 		$isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
+
+			# Eliminamos cache
+			Cache::tags(getCacheTag('index'))->flush();
+
 			$this->log('store', $isSuccess->id_banco);
 			return $this->redirect('store');
 		} else {
@@ -118,6 +141,7 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);
+
 		$data = $this->entity->findOrFail($id);
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
@@ -142,6 +166,10 @@ class ControllerBase extends Controller
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
 		if ($entity->save()) {
+
+			# Eliminamos cache
+			Cache::tags(getCacheTag('index'))->flush();
+
 			$this->log('update', $id);
 			return $this->redirect('update');
 		} else {
@@ -168,6 +196,9 @@ class ControllerBase extends Controller
 			if ($isSuccess) {
 
 				$this->log('destroy', $idOrIds);
+
+				# Eliminamos cache
+				Cache::tags(getCacheTag('index'))->flush();
 
 				if ($request->ajax()) {
 					# Respuesta Json
@@ -200,6 +231,9 @@ class ControllerBase extends Controller
 
 				# Shorthand
 				foreach ($idOrIds as $id) $this->log('destroy', $id);
+
+				# Eliminamos cache
+				Cache::tags(getCacheTag('index'))->flush();
 
 				if ($request->ajax()) {
 					# Respuesta Json
@@ -265,16 +299,16 @@ class ControllerBase extends Controller
 		else {
 		    $data = $this->entity->get();
 		}
-		
+
 		$fields = $this->entity->getFields();
-		
+
 		$alldata = $data->map(function ($data) use($fields) {
 		    $return = [];
 		    foreach ($fields as $field=>$lable)
 		        $return[$lable] = html_entity_decode(strip_tags($data->$field));
 		    return $return;
 		});
-		
+
 		if($type == 'pdf') {
 		    $pdf = PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
 		    return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
