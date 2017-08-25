@@ -18,8 +18,7 @@ class ImpactosPolicy
 	 */
 	public function view(Usuarios $usuario)
 	{
-		$permisos = $usuario->permisos()->pluck('descripcion');
-		return $permisos->contains(currentRouteAction('view'));
+		return $usuario->checkAuthorization(currentRouteAction('view'));
 	}
 
 	/**
@@ -30,8 +29,7 @@ class ImpactosPolicy
 	 */
 	public function create(Usuarios $usuario)
 	{
-		$permisos = $usuario->permisos()->pluck('descripcion');
-		return $permisos->contains(currentRouteAction('create'));
+		return $usuario->checkAuthorization(currentRouteAction('create'));
 	}
 
 	/**
@@ -43,8 +41,7 @@ class ImpactosPolicy
 	 */
 	public function update(Usuarios $usuario)
 	{
-		$permisos = $usuario->permisos()->pluck('descripcion');
-		return $permisos->contains(currentRouteAction('update'));
+		return $usuario->checkAuthorization(currentRouteAction('update'));
 	}
 
 	/**
@@ -56,8 +53,7 @@ class ImpactosPolicy
 	 */
 	public function delete(Usuarios $usuario)
 	{
-		$permisos = $usuario->permisos()->pluck('descripcion');
-		return $permisos->contains(currentRouteAction('delete'));
+		return $usuario->checkAuthorization(currentRouteAction('delete'));
 	}
 	
 	/**
@@ -69,7 +65,6 @@ class ImpactosPolicy
 	 */
 	public function export(Usuarios $usuario)
 	{
-	    $permisos = $usuario->permisos()->pluck('descripcion');
-	    return $permisos->contains(currentRouteAction('export'));
+	    return $usuario->checkAuthorization(currentRouteAction('export'));
 	}
 }

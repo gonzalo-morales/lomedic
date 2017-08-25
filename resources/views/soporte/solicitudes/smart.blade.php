@@ -13,7 +13,19 @@
 @endsection
 
 @section('form-header')
+@if(Route::currentRouteNamed(currentRouteName('show')))
     {!! Form::open(['method'=>'put', 'url' => companyRoute('update'), 'id' => 'form-model', 'class' => 'col s12 m12']) !!}
+@endif
+@endsection
+
+@section('form-actions')
+@if(Route::currentRouteNamed(currentRouteName('show')))
+	<div class="row">
+		<div class="right">
+			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'waves-effect waves-teal btn']) }}
+		</div>
+	</div>
+@endif
 @endsection
 
 @section('form-content')
@@ -124,32 +136,59 @@
                 </div>
             	<div class="row">
                 	<div class="col s12 right-align">
-            			{{ Form::button('Guardar cambios', ['type' =>'submit', 'class'=>'waves-effect waves-light btn btn-flat teal-text']) }}
+            			{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'waves-effect waves-light btn orange']) }}
                 	</div>
             	</div>
         	</div>
+        	
+        	
+        	
         @elseif($employee_department != 18 || $data->fk_id_empleado_tecnico != Auth::id()) {{--Si no es el técnico asignado y no pertenece a sistemas, no podrá editar los valores--}}
-        	<div class="col s12 m8">
-        		<h5>Datos adicionales sobre la solución del ticket</h5>
-        		<div class="col s3 row">
-        			{{ Form::label('Asignado', 'Asignado a:') }}
-        			<p>{{ $data->a_tecnico }}</p>
-        		</div>
-        		<div class="col s3">
-        			{{ Form::label('Estatus', 'Estatus:') }}
-        			<p class="green-text"><i class="material-icons"></i>{{$data->estatusTickets->estatus}}</p>
-        		</div>
-        	</div>
-        	<div class="col s12 row m5">
-        		<h5>Solución:</h5>
-        		<div class="col s6">
-        			{{ Form::label('Fecha', 'Fecha') }}
-        			<p><i class="material-icons">event</i>{{$data->fecha_hora_resolucion}}</p>
-        		</div>
-        		<div class="col s12">
-        			{{ Form::label('descripcionresolucion:', 'Descripción de resolución:') }}
-        			<p>{{$data->resolucion ? $data->resolucion : 'Ticket sin resolver'}}</p>
-        		</div>
+        	<div class="col s7 m7">
+        		{{ HTML::tag('h5', 'Datos adicionales del ticket') }}
+        		<div class="row">
+            		<div class="col s6">
+                		{{ Form::label('fk_id_impacto', '* Impacto') }}
+                		{{ HTML::tag('h6', $data->impacto->impacto) }}
+            		</div>
+            		<div class="col s6">
+                		{{ Form::label('fk_id_urgencia', '* Urgencia') }}
+            			{{ HTML::tag('h6', $data->urgencia->urgencia) }}
+            		</div>
+            	</div>
+            	
+            	
+            	
+        	
+        		<div class="row">
+            		<div class="col s6">
+                		{{ Form::label('fk_id_empleado_tecnico', '* Tecnico Asignado') }}
+                		{{ HTML::tag('h6', $data->a_tecnico) }}
+            		</div>
+            		<div class="col s6">
+                		{{ Form::label('fk_id_categoria', '* Categoria') }}
+                		{{ HTML::tag('h6', $data->a_categoria) }}
+            		</div>
+            	</div>
+            	
+            	<div class="row">
+            		<div class="col s6">
+                		{{ Form::label('fk_id_subcategoria', '* Subcategoria') }}
+                		{{ HTML::tag('h6', $data->subcategoria->subcategoria) }}
+            		</div>
+            		<div class="col s6">
+                		{{ Form::label('fk_id_accion', '* Accion') }}
+                		{{ HTML::tag('h6', $data->accion->accion) }}
+            		</div>
+            	</div>
+            </div>
+            <div class="col s12 m12">
+            	<div class="row">
+                	<div class="col s12">
+                		{{ Form::label('resolucion', 'Descripción de resolución:') }}
+                		{{ HTML::tag('h6', isset($data->resolucion) ? $data->resolucion : '') }}
+                	</div>
+                </div>
         	</div>
         @endif
         
@@ -158,11 +197,13 @@
 
 @section('form-utils')
     @if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('export')))
-        {{--Conversacion--}}
         @if(Auth::id() == $data->fk_id_tecnico_asignado || Auth::id() == $data->fk_id_empleado_solicitud)
-        	<ul class="collection with-header" style="padding:10px; border:none;">
+        	<ul class="collection with-header" style="padding:10px; border:none;">{{--Conversacion--}}
+        		<a href="#modal-1" class="prefix btn-large blue right">Responder</a>
         		<li class="collection-header"><h4>Conversación.</h4></li>
+        		
         		<span style='display:none'>{{ $i = 0 }}</span> 
+        		
         		@foreach($conversations as $seguimiento)
         		<span style='display:none'>{{ $i++ }}</span>
         		<li class="collection-item avatar lighten-5 {{$i % 2 != 0 ? 'teal' : ''}}">
@@ -196,38 +237,41 @@
         			@endif
         		</li>
         		@endforeach
+        		<a href="#modal-1" class="prefix btn-large blue right">Responder</a>
         		
-        		<li class="collection-item avatar row">
-        		<i class="material-icons circle">person</i>
-        		<span class="title"><b>{{$data->empleado->nombre.' '.$data->empleado->apellido_paterno.' '.$data->empleado->apellido_materno}}</b></span>
-        		
-        		{!! Form::open(['url' => companyAction('Soporte\SeguimientoSolicitudesController@index'), 'id' => 'form-model', 'class' => 'col s12 m18','enctype'=>'multipart/form-data']) !!}
-        			{{ Form::hidden('fk_id_solicitud', $data->id_solicitud,['id'=>'fk_id_solicitud']) }}
-        			{{ Form::hidden('fk_id_empleado_comentario', Null,['id'=>'fk_id_empleado_comentario','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')]) }}
-            		<div class="input-field col s12">
-            			{{ Form::text('asunto', '', ['class'=>'validate']) }}
-                		{{ Form::label('asunto', 'Asunto') }}
-                		{{ $errors->has('asunto') ? HTML::tag('span', $errors->first('asunto'), ['class'=>'help-block deep-orange-text']) : '' }}
-    				</div>
-            		<div class="input-field col s12">
-            			{{ Form::textarea('comentario', null, ['class'=>'validate materialize-textarea']) }}
-                		{{ Form::label('comentario', 'Comentario') }}
-                		{{ $errors->has('comentario') ? HTML::tag('span', $errors->first('comentario'), ['class'=>'help-block deep-orange-text']) : '' }}
-            		</div>
-            		<div class="file-field input-field col s12">
-            			<div class="btn">
-            				<span><i class="material-icons">file_upload</i>Anexar archivos</span>
-            				{{ Form::file('archivo[]', ['id'=>'archivo','multiple']) }}
-            			</div>
-            			<div class="file-path-wrapper">
-            				<input class="file-path validate" type="text" placeholder="Anexa uno o más archivos">
-            			</div>
-            		</div>
-            		<div class="file-field input-field col s12">
-            			<button class="btn waves-effect waves-light right">Responder</button>
-            		</div>
-        		{!! Form::close() !!}
-        		</li>
+        		<div id="modal-1" class="modal bottom-sheet">
+            		<li class="collection-item avatar row">
+            		<i class="material-icons circle">person</i>
+            		<span class="title"><b>{{$data->empleado->nombre.' '.$data->empleado->apellido_paterno.' '.$data->empleado->apellido_materno}}</b></span>
+            		
+            		{!! Form::open(['url' => companyAction('Soporte\SeguimientoSolicitudesController@index'), 'id' => 'form-model', 'class' => 'col s12 m18','enctype'=>'multipart/form-data']) !!}
+            			{{ Form::hidden('fk_id_solicitud', $data->id_solicitud,['id'=>'fk_id_solicitud']) }}
+            			{{ Form::hidden('fk_id_empleado_comentario', Null,['id'=>'fk_id_empleado_comentario','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')]) }}
+                		<div class="input-field col s12">
+                			{{ Form::text('asunto', '', ['class'=>'validate']) }}
+                    		{{ Form::label('asunto', 'Asunto') }}
+                    		{{ $errors->has('asunto') ? HTML::tag('span', $errors->first('asunto'), ['class'=>'help-block deep-orange-text']) : '' }}
+        				</div>
+                		<div class="input-field col s12">
+                			{{ Form::textarea('comentario', null, ['class'=>'validate materialize-textarea']) }}
+                    		{{ Form::label('comentario', 'Comentario') }}
+                    		{{ $errors->has('comentario') ? HTML::tag('span', $errors->first('comentario'), ['class'=>'help-block deep-orange-text']) : '' }}
+                		</div>
+                		<div class="file-field input-field col s12">
+                			<div class="btn">
+                				<span><i class="material-icons">attach_file</i> Archivos</span>
+                				{{ Form::file('archivo[]', ['id'=>'archivo','multiple']) }}
+                			</div>
+                			<div class="file-path-wrapper">
+                				<input class="file-path validate" type="text" placeholder="Anexa uno o más archivos">
+                			</div>
+                		</div>
+                		<div class="file-field input-field col s12">
+                			<button class="btn waves-effect waves-light right blue darken-1">Enviar</button>
+                		</div>
+            		{!! Form::close() !!}
+            		</li>
+        		</div>
         	</ul>
         @endif
     @endif

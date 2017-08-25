@@ -1204,7 +1204,7 @@
         // Searchable
         if (o.searchable) {
             var form =
-                "<div class='dataTable-search'><input class='dataTable-input' placeholder='" +
+                "<div class='dataTable-search'>"+o.labels.icon+"<input class='dataTable-input' placeholder='" +
                 o.labels.placeholder +
                 "' type='text'></div>";
 

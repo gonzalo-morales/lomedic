@@ -72,6 +72,11 @@
 <div class="row {{ $empresa->color }}">
 	<div class="col s12">
 		{{ HTML::link(companyAction('HomeController@index', ['company' => $empresa->conexion]), 'Inicio', ['class'=>'breadcrumb']) }}
+		@foreach(routeNameReplace() as $key=>$item)
+			@if($item !== 'index' && !empty($item))
+				{{ HTML::link($key == 1 ? companyRoute('index') : '#', $item, ['class'=>'breadcrumb']) }}
+			@endif
+		@endforeach
 	</div>
 </div>
 
@@ -80,7 +85,7 @@
 @include('layouts.ticket')
 
 <!-- scripts -->
-{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js') }}
+{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js') }}
 {{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js') }}
 {{ HTML::script(asset('js/InitiateComponents.js')) }}
 @yield('header-bottom')

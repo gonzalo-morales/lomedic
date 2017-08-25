@@ -74,18 +74,48 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 	public function perfiles(){
 		return $this->belongsToMany(Perfiles::class, 'ges_det_perfiles_usuarios', 'fk_id_usuario', 'fk_id_perfil');
 	}
+	
+	public function permisos()
+	{
+	    return $this->belongsToMany(Permisos::class, 'ges_det_permisos_usuarios', 'fk_id_permiso', 'fk_id_usuario');
+	}
 
 	/**
 	 * Obtenemos permisos asignados al usuario
 	 * @return array
 	 */
-	public function permisos()
+	public function checkAuthorization($routeaction = Null)
+	{
+	    $allpermisos = new Collection();
+	    
+	    foreach ($this->perfiles as $perfil) {
+	        $permisoperfil = empty($routeaction) ? $perfil->permisos : $perfil->permisos->where('descripcion',$routeaction);
+	        
+	        if($allpermisos->isEmpty())
+	            $allpermisos = $permisoperfil;
+	        else
+	            $allpermisos->merge($permisoperfil); 
+	    }
+	    
+	    $permisousuario = empty($routeaction) ? $this->permisos : $this->permisos->where('descripcion',$routeaction);
+	    
+	    if($allpermisos->isEmpty())
+	        $allpermisos = $permisousuario;
+	    else
+	        $allpermisos->merge($permisousuario);
+	    
+	    return $allpermisos->pluck('descripcion','id_permiso')->contains($routeaction);
+	}
+	
+	
+	public function getpermisos()
 	{
 		$permisos = new Collection();
 		# Obtenemos permisos relacionados a perfiles del usuario
 		foreach ($this->perfiles as $perfil) {
 			$permisos = $permisos->merge( $perfil->permisos);
 		}
+
 		# Anexamos permisos relacionados al usuario
 		return $permisos->merge($this->belongsToMany(Permisos::class, 'ges_det_permisos_usuarios', 'fk_id_usuario', 'fk_id_permiso')->getResults());
 	}
@@ -99,7 +129,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 		# Obtenemos modulos en base a ...
 		return Modulos::whereHas('permisos', function($q) {
 			# Modulos relacionados a los permisos del usuario
-			$q->whereIn('id_permiso', $this->permisos()->pluck('id_permiso') );
+			$q->whereIn('id_permiso', $this->getpermisos()->pluck('id_permiso') );
 		})->get();
 	}
 
@@ -125,7 +155,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 		# Obtenemos modulos en base a ...
 		$modulos_usuario = Modulos::where('eliminar','=',0)->where('activo','=',1)->whereHas('permisos', function($q) {
 			# Modulos relacionados a los permisos del usuario
-			$q->whereIn('id_permiso', $this->permisos()->pluck('id_permiso') );
+			$q->whereIn('id_permiso', $this->getpermisos()->pluck('id_permiso') );
 		})->orderBy('nombre')->get();
 
 		# Recorremos modulos de la empresa

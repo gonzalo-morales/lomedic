@@ -34,15 +34,22 @@
 @endsection
 
 @section('form-utils')
-	<div id="modal-1" class="modal">
+	<div id="modal-1" class="modal bottom-sheet">
 		<div class="modal-content">
-			<h5>RFC:</h5>
-			<p>Publico General: XAXX010101000.</p>
-			<p>Extranjero: XEXX010101000.</p>
+			<h5 class="teal-text"><i class="material-icons">announcement</i></span> RFC:</h5>
+			<ul class="collection">
+            	<li class="collection-item">
+                	<i class="material-icons teal-text">info</i>
+                	<span class="title">Publico General: XAXX010101000.</span>
+                </li>
+                <li class="collection-item">
+                	<i class="material-icons teal-text">info</i>
+                  	<span class="title">Extranjero: XEXX010101000.</span>
+                </li>
+            </ul>
+			<br>
 		</div>
-		<div class="modal-footer">
-			<a href="#!" class="modal-action modal-close waves-effect waves-teal btn-flat teal-text">Cerrar</a>
-		</div>
+		
 	</div>
 @stop
 

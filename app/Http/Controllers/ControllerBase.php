@@ -277,7 +277,7 @@ class ControllerBase extends Controller
 		
 		if($type == 'pdf') {
 		    $pdf = PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
-		    return $pdf->download(currentEntityBaseName().'.pdf');
+		    return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
 		}
 		else {
 		    Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style) {
@@ -288,7 +288,7 @@ class ControllerBase extends Controller
     		        else
     		            $sheet->fromArray($alldata);
     	        });
-    	    })->download($request->type);
+		    })->download($type);
 		}
 	}
 

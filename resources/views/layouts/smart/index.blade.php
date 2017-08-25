@@ -20,6 +20,7 @@
 
 @section('content')
 <div class="row">
+	{{ HTML::tag('h4', currentEntityBaseName(),['class'=>'col s12 m12']) }}
 	<div class="col s12">
 		<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}">
 			<div class="col s3">
