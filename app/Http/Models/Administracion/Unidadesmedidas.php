@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class Unidadesmedidas extends Model
+class UnidadesMedidas extends ModelBase
 {
     /**
      * The table associated with the model.
@@ -27,13 +27,6 @@ class Unidadesmedidas extends Model
     protected $fillable = ['nombre', 'activo'];
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * The validation rules
      * @var array
      */
@@ -41,6 +34,21 @@ class Unidadesmedidas extends Model
 
         'nombre' => 'required',
     ];
+
+    /**
+     * Los atributos que seran visibles en index-datable
+     * @var null|array
+     */
+    protected $fields = [
+        'nombre' => 'Descripcion',
+        'activo_span' => 'Activo'
+    ];
+
+    /**
+     * Atributos de carga optimizada
+     * @var array
+     */
+    protected $eagerLoaders = [];
 
     public function usuario()
     {

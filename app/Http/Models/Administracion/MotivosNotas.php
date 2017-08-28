@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
-use Illuminate\Support\HtmlString;
 
 class MotivosNotas extends ModelBase
 {
@@ -50,15 +49,4 @@ class MotivosNotas extends ModelBase
 	{
 		return $this->tipo == 1 ? 'Cuentas por Pagar':'Cuentas por Cobrar';
 	}
-
-	public function getActivoFormatedAttribute()
-	{
-		return $this->activo ? 'Activo' : 'Inactivo';
-	}
-
-	public function getActivoSpanAttribute()
-	{
-		return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
-	}
-
 }

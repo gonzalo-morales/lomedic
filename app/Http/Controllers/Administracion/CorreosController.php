@@ -17,8 +17,14 @@ class CorreosController extends ControllerBase
 	public function __construct(Correos $entity)
 	{
 		$this->entity = $entity;
-		$this->companies = Empresas::active()->pluck('nombre_comercial','id_empresa');
-		$this->users = Usuarios::active()->pluck('nombre_corto','id_usuario');
+	}
+
+	public function getDataView()
+	{
+		return [
+			'companies' => Empresas::active()->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
+			'users' => Usuarios::active()->select(['nombre_corto','id_usuario'])->pluck('nombre_corto','id_usuario')
+		];
 	}
 
 	/**
@@ -29,10 +35,7 @@ class CorreosController extends ControllerBase
 	public function create($company, $attributes = [])
 	{
 		return parent::create($company, [
-			'dataview' => [
-				'companies' => $this->companies,
-				'users' => $this->users
-			]
+			'dataview' => $this->getDataView()
 		]);
 	}
 
@@ -45,10 +48,7 @@ class CorreosController extends ControllerBase
 	public function show($company, $id, $attributes = [])
 	{
 		return parent::show($company, $id, [
-			'dataview' => [
-				'companies' => $this->companies,
-				'users' => $this->users
-			]
+			'dataview' => $this->getDataView()
 		]);
 	}
 
@@ -61,10 +61,7 @@ class CorreosController extends ControllerBase
 	public function edit($company, $id, $attributes = [])
 	{
 		return parent::edit($company, $id, [
-			'dataview' => [
-				'companies' => $this->companies,
-				'users' => $this->users
-			]
+			'dataview' => $this->getDataView()
 		]);
 	}
 }

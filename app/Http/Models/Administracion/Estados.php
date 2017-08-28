@@ -3,12 +3,9 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
-use Illuminate\Support\HtmlString;
 
 class Estados extends ModelBase
 {
-    // use SoftDeletes;
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -44,14 +41,15 @@ class Estados extends ModelBase
 	 */
 	protected $fields = [
 		'estado' => 'Entidad',
-		'pais_pais' => 'País',
+		'pais.pais' => 'País',
 		'activo_span' => 'Estatus',
 	];
 
-	public function getPaisPaisAttribute()
-	{
-		return $this->pais ? $this->pais->pais : '';
-	}
+	/**
+	 * Atributos de carga optimizada
+	 * @var array
+	 */
+	protected $eagerLoaders = ['pais'];
 
 	/**
 	 * Obtenemos empresas activas

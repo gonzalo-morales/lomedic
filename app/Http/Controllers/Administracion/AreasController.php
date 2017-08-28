@@ -12,7 +12,7 @@ class AreasController extends ControllerBase
 	 *
 	 * @return void
 	 */
-    public function __construct(Areas $entity)
+	public function __construct(Areas $entity)
 	{
 		$this->entity = $entity;
 	}

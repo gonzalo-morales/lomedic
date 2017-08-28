@@ -2,48 +2,49 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class VehiculosMarcas extends Model
+class VehiculosMarcas extends ModelBase
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'gen_cat_vehiculos_marcas';
+	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'gen_cat_vehiculos_marcas';
 
-    /**
-     * The primary key of the table
-     * @var string
-     */
-    protected $primaryKey = 'id_marca';
+	/**
+	 * The primary key of the table
+	 * @var string
+	 */
+	protected $primaryKey = 'id_marca';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['marca', 'activo'];
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['marca', 'activo'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+	/**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'marca' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+	];
 
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-        'marca' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-    ];
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var null|array
+	 */
+	protected $fields = [
+		'marca' => 'Marca',
+		'activo_span' => 'Activo'
+	];
 
-    public function modelos()
-    {
-        return $this->hasMany('App\Http\Models\Administracion\VehiculosModelos');
-    }
-
+	public function modelos()
+	{
+		return $this->hasMany('App\Http\Models\Administracion\VehiculosModelos');
+	}
 }

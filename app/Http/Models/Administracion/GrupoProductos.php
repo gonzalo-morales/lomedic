@@ -5,7 +5,7 @@ namespace App\Http\Models\Administracion;
 use App\Http\Models\ModelBase;
 use Illuminate\Support\HtmlString;
 
-class GruposProductos extends ModelBase
+class GrupoProductos extends ModelBase
 {
 	/**
 	 * The table associated with the model.
@@ -50,16 +50,6 @@ class GruposProductos extends ModelBase
 		'tipo' => 'Tipo',
 		'activo_span' => 'Activo',
 	];
-
-	public function getActivoFormatedAttribute()
-	{
-		return $this->activo ? 'Activo' : 'Inactivo';
-	}
-
-	public function getActivoSpanAttribute()
-	{
-		return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
-	}
 
 	public function usuario()
 	{

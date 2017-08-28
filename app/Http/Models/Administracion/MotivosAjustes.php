@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
-use Illuminate\Support\HtmlString;
 
 class MotivosAjustes extends ModelBase
 {
@@ -43,14 +42,4 @@ class MotivosAjustes extends ModelBase
 		'descripcion' => 'Laboratorio',
 		'activo_span' => 'Activo',
 	];
-
-	public function getActivoFormatedAttribute()
-	{
-		return $this->activo ? 'Activo' : 'Inactivo';
-	}
-
-	public function getActivoSpanAttribute()
-	{
-		return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
-	}
 }

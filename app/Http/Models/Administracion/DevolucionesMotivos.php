@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
-use Illuminate\Support\HtmlString;
 
 class DevolucionesMotivos extends ModelBase
 {

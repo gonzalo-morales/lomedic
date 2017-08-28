@@ -45,14 +45,4 @@ class MetodosPago extends ModelBase
         'descripcion' => 'Descripción',
         'activo_span' => 'Activo',
     ];
-
-    public function getActivoFormatedAttribute()
-    {
-        return $this->activo ? 'Activo' : 'Inactivo';
-    }
-
-    public function getActivoSpanAttribute()
-    {
-        return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
-    }
 }

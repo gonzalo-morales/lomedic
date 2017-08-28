@@ -26,8 +26,6 @@ class Diagnosticos extends ModelBase
 	 */
 	protected $fillable = ['clave_diagnostico', 'diagnostico', 'medicamento_sugerido'];
 
-	// protected $visible = ['clave_diagnostico', 'diagnostico', 'id_diagnostico'];
-
 	/**
 	 * The validation rules
 	 * @var array

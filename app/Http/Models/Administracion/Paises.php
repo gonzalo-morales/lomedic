@@ -2,12 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class Paises extends Model
+class Paises extends ModelBase
 {
-    // use SoftDeletes;
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -41,7 +39,14 @@ class Paises extends Model
 	 */
 	public $rules = [
 		'pais'		=> 'required',
-		// 'activo'	=> 'required',
 	];
 
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var null|array
+	 */
+	protected $fields = [
+		'pais' => 'Pais',
+		'activo_span' => 'Activo'
+	];
 }

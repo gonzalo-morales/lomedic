@@ -2,12 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class Parentescos extends Model
+class Parentescos extends ModelBase
 {
-    // use SoftDeletes;
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -29,27 +27,19 @@ class Parentescos extends Model
 	protected $fillable = ['nombre', 'activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
 		'parentesco'	=> 'required',
-		// 'activo'		=> 'required',
 	];
 
-
 	/**
-	 * @return field name of table
+	 * Los atributos que seran visibles en index-datable
+	 * @var null|array
 	 */
-	public function getTable(){
-	    return $this->table;
-    }
-
+	protected $fields = [
+		'nombre' => 'Parentesco',
+		'activo_span' => 'Activo'
+	];
 }

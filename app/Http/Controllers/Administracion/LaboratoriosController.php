@@ -8,10 +8,21 @@ use App\Http\Models\Administracion\Laboratorios;
 
 class LaboratoriosController extends ControllerBase
 {
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
 	public function __construct(Laboratorios $entity)
 	{
 		$this->entity = $entity;
-		$this->companies = Empresas::active()->pluck('nombre_comercial','id_empresa');
+	}
+
+	public function getDataView()
+	{
+		return [
+			'companies' => Empresas::active()->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
+		];
 	}
 
 	/**
@@ -22,9 +33,7 @@ class LaboratoriosController extends ControllerBase
 	public function create($company, $attributes = [])
 	{
 		return parent::create($company, [
-			'dataview' => [
-				'companies' => $this->companies,
-			]
+			'dataview' => $this->getDataView()
 		]);
 	}
 
@@ -37,9 +46,7 @@ class LaboratoriosController extends ControllerBase
 	public function show($company, $id, $attributes = [])
 	{
 		return parent::show($company, $id, [
-			'dataview' => [
-				'companies' => $this->companies,
-			]
+			'dataview' => $this->getDataView()
 		]);
 	}
 
@@ -52,9 +59,7 @@ class LaboratoriosController extends ControllerBase
 	public function edit($company, $id, $attributes = [])
 	{
 		return parent::edit($company, $id, [
-			'dataview' => [
-				'companies' => $this->companies,
-			]
+			'dataview' => $this->getDataView()
 		]);
 	}
 }

@@ -44,16 +44,6 @@ class Laboratorios extends ModelBase
 		'activo_span' => 'Activo',
 	];
 
-	public function getActivoFormatedAttribute()
-	{
-		return $this->activo ? 'Activo' : 'Inactivo';
-	}
-
-	public function getActivoSpanAttribute()
-	{
-		return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
-	}
-
 	public function usuario()
 	{
 		$this->hasOne('app\Http\Models\Administracion\Usuarios');

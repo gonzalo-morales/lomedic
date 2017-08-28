@@ -2,16 +2,16 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class Sucursales extends Model
+class Sucursales extends ModelBase
 {
 	/**
 	 * The table associated with the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.ges_cat_sucursales';
+	protected $table = 'ges_cat_sucursales';
 
 	/**
 	 * The primary key of the table
@@ -25,17 +25,17 @@ class Sucursales extends Model
 	 * @var array
 	 */
 	protected $fillable = ['nombre_sucursal', 'fk_id_localidad', 'latitud', 'longitud',
-        'fk_id_tipo_sucursal','fk_id_red','fk_id_supervisor','fk_id_cliente','embarque','calle',
-        'no_interior','no_exterior','colonia','codigo_postal','fk_id_municipio','fk_id_estado',
-        'fk_id_pais','registro_sanitario','tipo_batallon','region','zona_militar','telefono1',
-        'telefono2','clave_presupuestal','fk_id_jurisdiccion','activo'];
+		'fk_id_tipo_sucursal','fk_id_red','fk_id_supervisor','fk_id_cliente','embarque','calle',
+		'no_interior','no_exterior','colonia','codigo_postal','fk_id_municipio','fk_id_estado',
+		'fk_id_pais','registro_sanitario','tipo_batallon','region','zona_militar','telefono1',
+		'telefono2','clave_presupuestal','fk_id_jurisdiccion','activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
 	 * @var bool
 	 */
-    public $timestamps = false;
+	public $timestamps = false;
 
 	/**
 	 * The validation rules
@@ -45,14 +45,32 @@ class Sucursales extends Model
 		'nombre_sucursal' => 'required|alpha_num',
 	];
 
-	public function empleados()
-    {
-	    return $this->hasMany('app\Http\Models\RecursosHumanos\Empleados');
-    }
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var null|array
+	 */
+	protected $fields = [
+		'nombre_sucursal' => 'Sucursal',
+		'fk_id_localidad' => 'Localidad',
+		'fk_id_tipo_sucursal' => 'Tipo de Sucursal',
+		'fk_id_supervisor' => 'Supervisor',
+		'activo_span' => 'Activo',
+	];
 
-    public function solicitudes()
-    {
-        return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_sucursal','id_sucursal');
-    }
+	/**
+	 * Atributos de carga optimizada
+	 * @var array
+	 */
+	protected $eagerLoaders = [];
+
+	public function empleados()
+	{
+		return $this->hasMany('app\Http\Models\RecursosHumanos\Empleados');
+	}
+
+	public function solicitudes()
+	{
+		return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_sucursal','id_sucursal');
+	}
 
 }

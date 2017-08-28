@@ -5,13 +5,9 @@ namespace App\Http\Controllers\Administracion;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Estados;
 use App\Http\Models\Administracion\Paises;
-use App\Http\Models\Logs;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 class EstadosController extends ControllerBase
 {
-
 	/**
 	 * Create a new controller instance.
 	 *
@@ -20,7 +16,13 @@ class EstadosController extends ControllerBase
 	public function __construct(Estados $entity)
 	{
 		$this->entity = $entity;
-		$this->paises = Paises::orderBy('pais')->get()->pluck('pais','id_pais');
+	}
+
+	public function getDataView()
+	{
+		return [
+			'paises' => Paises::select(['id_pais', 'pais'])->orderBy('pais')->pluck('pais','id_pais'),
+		];
 	}
 
 	/**
@@ -30,10 +32,9 @@ class EstadosController extends ControllerBase
 	 */
 	public function create($company, $attributes = [])
 	{
+		$this->loadResources();
 		return parent::create($company, [
-			'dataview' => [
-				'paises' => $this->paises,
-			]
+			'dataview' => $this->getDataView()
 		]);
 	}
 
@@ -45,10 +46,9 @@ class EstadosController extends ControllerBase
 	 */
 	public function show($company, $id, $attributes = [])
 	{
+		$this->loadResources();
 		return parent::show($company, $id, [
-			'dataview' => [
-				'paises' => $this->paises,
-			]
+			'dataview' => $this->getDataView()
 		]);
 	}
 
@@ -60,10 +60,9 @@ class EstadosController extends ControllerBase
 	 */
 	public function edit($company, $id, $attributes = [])
 	{
+		$this->loadResources();
 		return parent::edit($company, $id, [
-			'dataview' => [
-				'paises' => $this->paises,
-			]
+			'dataview' => $this->getDataView()
 		]);
 	}
 }

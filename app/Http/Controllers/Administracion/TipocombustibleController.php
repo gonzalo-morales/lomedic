@@ -7,7 +7,6 @@ use App\Http\Models\Administracion\Tipocombustible;
 
 class TipocombustibleController extends ControllerBase
 {
-
 	/**
 	 * Create a new controller instance.
 	 *

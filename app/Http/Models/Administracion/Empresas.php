@@ -41,7 +41,7 @@ class Empresas extends Model
 	 */
 	public static function active()
 	{
-		return self::where('activo','=','1')->get();
+		return self::where('activo','=','1');
 	}
 
 	/**

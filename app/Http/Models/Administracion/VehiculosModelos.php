@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class VehiculosModelos extends Model
+class VehiculosModelos extends ModelBase
 {
     /**
      * The table associated with the model.
@@ -27,13 +27,6 @@ class VehiculosModelos extends Model
     protected $fillable = ['modelo', 'fk_id_marca','activo'];
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * The validation rules
      * @var array
      */
@@ -42,8 +35,24 @@ class VehiculosModelos extends Model
         'fk_id_marca' => 'required|numeric'
     ];
 
-    public function marcas()
+    /**
+     * Los atributos que seran visibles en index-datable
+     * @var null|array
+     */
+    protected $fields = [
+        'modelo' => 'Modelo',
+        'marca.marca' => 'Marca',
+        'activo_span' => 'Activo'
+    ];
+
+    /**
+     * Atributos de carga optimizada
+     * @var array
+     */
+    protected $eagerLoaders = ['marca'];
+
+    public function marca()
     {
-        return $this->belongsTo('app\Http\Models\Administracion\VehiculosMarcas');
+        return $this->belongsTo(VehiculosMarcas::class, 'fk_id_marca', 'id_marca');
     }
 }
