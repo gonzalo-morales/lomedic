@@ -36,6 +36,15 @@ class Empresas extends Model
 	public $timestamps = false;
 
 	/**
+	 * Obtenemos empresas activas
+	 * @return Collection
+	 */
+	public static function active()
+	{
+		return self::where('activo','=','1')->get();
+	}
+
+	/**
 	 * Obtenemos los modulos relacionados a la empresa
 	 * @return array
 	 */

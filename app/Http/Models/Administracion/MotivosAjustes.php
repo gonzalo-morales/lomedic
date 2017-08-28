@@ -2,9 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
+use Illuminate\Support\HtmlString;
 
-class MotivosAjustes extends Model
+class MotivosAjustes extends ModelBase
 {
 	/**
 	 * The table associated with the model.
@@ -27,27 +28,29 @@ class MotivosAjustes extends Model
 	protected $fillable = ['descripcion', 'activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
 		'descripcion'	=> 'required',
-		// 'activo'		=> 'required',
 	];
 
-
 	/**
-	 * @return field name of table
+	 * Los atributos que seran visibles en index-datable
+	 * @var array
 	 */
-	public function getTable(){
-	    return $this->table;
-    }
+	protected $fields = [
+		'descripcion' => 'Laboratorio',
+		'activo_span' => 'Activo',
+	];
 
+	public function getActivoFormatedAttribute()
+	{
+		return $this->activo ? 'Activo' : 'Inactivo';
+	}
+
+	public function getActivoSpanAttribute()
+	{
+		return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
+	}
 }

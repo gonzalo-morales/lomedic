@@ -23,9 +23,9 @@
 <div class="row">
 	<div class="col @yield('content-width')">
 		@yield('form-header')
-    		@yield('form-actions')
     		<div class="row">
     			@yield('form-title')
+    			@yield('form-actions')
     			<fieldset @yield('fieldset')>
     				@yield('form-content')
     			</fieldset>

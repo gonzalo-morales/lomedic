@@ -1,20 +1,20 @@
 function post_to_url(path, params, method) {
-    method = method || "post";
+    method = method || 'post';
 
-    var form = document.createElement("form");
+    var form = document.createElement('form');
 
     //Move the submit function to another variable
     //so that it doesn't get overwritten.
     form._submit_function_ = form.submit;
 
-    form.setAttribute("method", method);
-    form.setAttribute("action", path);
+    form.setAttribute('method', method);
+    form.setAttribute('action', path);
 
     for(var key in params) {
-        var hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", key);
-        hiddenField.setAttribute("value", params[key]);
+        var hiddenField = document.createElement('input');
+        hiddenField.setAttribute('type', 'hidden');
+        hiddenField.setAttribute('name', key);
+        hiddenField.setAttribute('value', params[key]);
 
         form.appendChild(hiddenField);
     }
@@ -23,7 +23,7 @@ function post_to_url(path, params, method) {
     form._submit_function_(); //Call the renamed function.
 }
 
-let datatable = new DataTable(".smart-table", {
+let datatable = new DataTable('.smart-table', {
 	perPageSelect: [20,30,50],
 	perPage: 20,
 	columns: [
@@ -32,32 +32,32 @@ let datatable = new DataTable(".smart-table", {
 	],
 	// data: data,
 	labels: {
-		placeholder: "Buscar datos ...",
-		perPage: "Mostrar {select} datos por pagina",
-		noRows: "No hay datos que mostrar",
-		info: "Mostrando {start} a {end} de {rows} datos (Pagina {page} de {pages})",
-		icon:"<i class='material-icons prefix'>search</i>",
+		placeholder: 'Buscar datos ...',
+		perPage: 'Mostrar {select} datos por pagina',
+		noRows: 'No hay datos que mostrar',
+		info: 'Mostrando {start} a {end} de {rows} datos (Pagina {page} de {pages})',
+        icon:'<i class="material-icons prefix">search</i>',
 	},
 });
 
-datatable.on("datatable.update", function() {
+datatable.on('datatable.update', function() {
 	view.unbind();
 	view = rivets.bind(smartView, model);
 	view.models.actions.itemsSync({}, view.models);
 });
 
-datatable.on("datatable.page", function() {
+datatable.on('datatable.page', function() {
 	view.unbind();
 	view = rivets.bind(smartView, model);
 	view.models.actions.itemsSync({}, view.models);
 });
 
 // FIX Datatable-Materialize
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener('DOMContentLoaded', function(event) {
 	Array.prototype.forEach.call(document.querySelectorAll('.dataTable-selector .select-dropdown li'), function(item, index){
 		item.addEventListener('click', function(e){
 			e.preventDefault()
-			var evt = document.createEvent("HTMLEvents"); evt.initEvent('change', false, true);
+			var evt = document.createEvent('HTMLEvents'); evt.initEvent('change', false, true);
 			document.querySelector('select.dataTable-selector').dispatchEvent(evt);
 		}, false)
 	})
@@ -272,14 +272,14 @@ function getItems($page) {
 			let collection_item = {};
 			collection_item['input'] = '<input type="checkbox" id="check-'+id+'" class="single-check" data-item-id="'+id+'" rv-on-click="actions.itemsSync" rv-get-datarow name="check-'+id+'"><label for="check-'+id+'"></label>';
 			$.each(columns, function(index, column){
-				collection_item[column] = item[column]
+				collection_item[column] = (new Function('str', 'return eval("this." + str);')).call(item, column)
 			})
 			collection_item['actions'] = document.querySelector('.smart-actions').innerHTML.replace(/#ID#/g, id);
 			collection.push(collection_item);
 		})
 
 		datatable.import({
-			type: "json",
+			type: 'json',
 			data: JSON.stringify(collection)
 		});
 

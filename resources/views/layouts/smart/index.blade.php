@@ -117,7 +117,7 @@
 							<label for="check-{{$row->getKey()}}"></label>
 						</td>
 						@foreach ($fields as $field => $label)
-						<td>{{ object_get($row , $field) }}</td>
+						<td>{{ object_get($row, $field) }}</td>
 						@endforeach
 						<td class="width-auto">
 							<span rv-get-item-id data-item-id="{{$row->getKey()}}"></span>

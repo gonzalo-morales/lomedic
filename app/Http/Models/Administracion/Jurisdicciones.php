@@ -2,9 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
+use Illuminate\Support\HtmlString;
 
-class Jurisdicciones extends Model
+class Jurisdicciones extends ModelBase
 {
     /**
      * The table associated with the model.
@@ -41,8 +42,32 @@ class Jurisdicciones extends Model
         'jurisdiccion' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
     ];
 
+    /**
+     * Los atributos que seran visibles en index-datable
+     * @var null|array
+     */
+    protected $fields = [
+        'jurisdiccion' => 'Jurisdicción',
+        'estado.estado' => 'Estado',
+        'activo_span' => 'Activo',
+    ];
+
+    public function getActivoFormatedAttribute()
+    {
+        return $this->activo ? 'Activo' : 'Inactivo';
+    }
+
+    public function getActivoSpanAttribute()
+    {
+        return new HtmlString("<span class=" . ($this->activo ? 'toast_success' : 'toast_error') . ">&nbsp;$this->activo_formated&nbsp;</span>");
+    }
+
+    /**
+     * Obtenemos entidad federativa relacionada
+     * @return \Illuminate\Database\Eloquent\Concerns\belongsTo
+     */
     public function estado()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Estados');
+        return $this->belongsTo(Estados::class, 'fk_id_estado', 'id_estado');
     }
 }

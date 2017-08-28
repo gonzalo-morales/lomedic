@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers\Administracion;
 
-use App\Http\Models\Administracion\Municipios;
+use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Estados;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Models\Logs;
+use App\Http\Models\Administracion\Municipios;
+use Illuminate\Support\Facades\Schema;
 
-class MunicipiosController extends Controller
+class MunicipiosController extends ControllerBase
 {
-
 	/**
 	 * Create a new controller instance.
 	 *
@@ -20,23 +17,7 @@ class MunicipiosController extends Controller
 	public function __construct(Municipios $entity)
 	{
 		$this->entity = $entity;
-		$this->entity_name = strtolower(class_basename($entity));
-	}
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index(Estados $estados, $company)
-	{
-		Logs::createLog($this->entity->getTable(),$company,null,'index',null);
-
-		return view(Route::currentRouteName(), [
-			'entity' => $this->entity_name,
-			'company' => $company,
-			'data' => $this->entity->all()->where('eliminar','0'),
-		]);
+		$this->estados = Estados::active()->pluck('estado','id_estado');
 	}
 
 	/**
@@ -44,42 +25,13 @@ class MunicipiosController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create(Estados $estados, $company)
+	public function create($company, $attributes = [])
 	{
-		return view(Route::currentRouteName(), [
-			'entity'  => $this->entity_name,
-			'company' => $company,
-			'estados' => $estados->all(),
+		return parent::create($company, [
+			'dataview' => [
+				'estados' => $this->estados,
+			]
 		]);
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request, $company)
-	{
-		# Validamos request, si falla regresamos pagina
-		// $this->validate($request, $this->entity->rules);
-
-		if($request->activo == 'on'){
-			$request->activo=true;
-		}
-		$created = $this->entity->create([
-			'municipio'    	=> $request->municipio,
-			'fk_id_estado' 	=> $request->estados,
-			'activo'		=> $request->activo,
-		]);
-		if($created){
-			Logs::createLog($this->entity->getTable(),$company,$created->id_municipio,'crear','Registro insertado');
-		}else{
-			Logs::createLog($this->entity->getTable(),$company,null,'crear','Error al insertar');
-		}
-
-		# Redirigimos a index
-		return redirect(companyRoute('index'));
 	}
 
 	/**
@@ -88,14 +40,12 @@ class MunicipiosController extends Controller
 	 * @param  integer $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($company, $id)
+	public function show($company, $id, $attributes = [])
 	{
-		Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
-
-		return view (Route::currentRouteName(), [
-			'entity' => $this->entity_name,
-			'company' => $company,
-			'data' => $this->entity->findOrFail($id),
+		return parent::show($company, $id, [
+			'dataview' => [
+				'estados' => $this->estados,
+			]
 		]);
 	}
 
@@ -105,63 +55,12 @@ class MunicipiosController extends Controller
 	 * @param  integer $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit(Estados $estados, $company, $id)
+	public function edit($company, $id, $attributes = [])
 	{
-		return view (Route::currentRouteName(), [
-			'entity' => $this->entity_name,
-			'company' => $company,
-			'data' => $this->entity->findOrFail($id),
-			'estados' => $estados->all()->sortBy('estado'),
+		return parent::edit($company, $id, [
+			'dataview' => [
+				'estados' => $this->estados,
+			]
 		]);
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  integer	$id
-	 * @return \Illuminate\Http\Response
-	 *
-	 */
-	public function update(Request $request, $company, $id)
-	{
-		// $this->validate($request, $this->entity->rules);
-
-		if($request->activo == 'on'){
-			$request->activo=true;
-		}
-
-		$entity = $this->entity->findOrFail($id);
-		$entity->fill([
-			'municipio' 	=> $request->municipio,
-			'fk_id_estado'  => $request->estados,
-			'activo'  		=> $request->activo,
-		]);
-		if($entity->save()){
-			Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');
-		}else{
-			Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');
-		}
-
-		return redirect(companyRoute('index'));
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  integer 	$id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($company, $id)
-	{
-		$entity = $this->entity->findOrFail($id);
-		$entity->eliminar = 't';
-		if($entity->save()){
-			Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Registro eliminado');
-		}else{
-			Logs::createLog($this->entity->getTable(),$company,$id,'eliminar','Error al eliminar');
-		}
-
-		return redirect(companyRoute('index'));
 	}
 }

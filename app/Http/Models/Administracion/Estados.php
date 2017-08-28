@@ -2,9 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
+use Illuminate\Support\HtmlString;
 
-class Estados extends Model
+class Estados extends ModelBase
 {
     // use SoftDeletes;
 
@@ -29,21 +30,37 @@ class Estados extends Model
 	protected $fillable = ['estado', 'fk_id_pais', 'activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
 		'estado' => 'required',
 		'paises' => 'required',
-		// 'activo' => 'required',
 	];
+
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var null|array
+	 */
+	protected $fields = [
+		'estado' => 'Entidad',
+		'pais_pais' => 'País',
+		'activo_span' => 'Estatus',
+	];
+
+	public function getPaisPaisAttribute()
+	{
+		return $this->pais ? $this->pais->pais : '';
+	}
+
+	/**
+	 * Obtenemos empresas activas
+	 * @return Collection
+	 */
+	public static function active()
+	{
+		return self::where('activo','=','1')->get();
+	}
 
 	/**
 	 * Un estado puede tener muchos municipios
@@ -55,19 +72,10 @@ class Estados extends Model
 	}
 
 	/**
-	 * Un estado pertenece a un pais
-	 *
+	 * Obtenemos pais relacionado
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
-	public function paises(){
-		return $this->belongsTo('App\Http\Models\Administracion\Paises', 'fk_id_pais');
+	public function pais(){
+		return $this->belongsTo(Paises::class, 'fk_id_pais', 'id_pais');
 	}
-
-	/**
-	 * @return field name of table
-	 */
-	public function getTable(){
-	    return $this->table;
-    }
-
 }
