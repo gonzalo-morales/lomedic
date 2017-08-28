@@ -4,7 +4,6 @@ namespace App\Http\Models\Compras;
 
 use App\Http\Models\ModelCompany;
 use DB;
-use Illuminate\Database\Eloquent\Model;
 
 class Solicitudes extends ModelCompany
 {
@@ -35,12 +34,24 @@ class Solicitudes extends ModelCompany
      */
     protected $fields = [
         'id_solicitud' => 'Número Solicitud',
-        'empleado.nombre'  => 'Solicitante',
-        'sucursales.nombre_sucursal' => 'Sucursal',
+        'nombre_completo'  => 'Solicitante',
+        'nombre_sucursal' => 'Sucursal',
         'fecha_creacion' => 'Fecha de solicitud',
         'fecha_necesidad' => 'Fecha necesidad',
-        'estatus.estatus' => 'Estatus'
+        'estatus_solicitud' => 'Estatus'
     ];
+
+    function getNombreCompletoAttribute() {
+        return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
+    }
+
+    function getNombreSucursalAttribute(){
+        return $this->sucursales->nombre_sucursal;
+    }
+
+    function getEstatusSolicitudAttribute(){
+        return $this->estatus->estatus;
+    }
 
     /**
      * Indicates if the model should be timestamped.

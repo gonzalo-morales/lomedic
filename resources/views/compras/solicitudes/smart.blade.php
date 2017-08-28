@@ -7,6 +7,22 @@
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
 @endsection
+
+@section('form-actions')
+	<div class="row">
+		<div class="right">
+			{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'waves-effect waves-light btn orange']) }}
+			@if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('create')))
+				<form action="{{currentRouteName('imprimir')}}">
+					{{ Form::button('Imprimir', ['type' =>'button', 'class'=>'waves-effect waves-light btn']) }}
+				</form>
+			@endif
+			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'waves-effect waves-teal btn-flat teal-text']) }}
+		</div>
+	</div>
+@endsection
+
+
 @section('content-width', 's12')
 
 @section('form-content')

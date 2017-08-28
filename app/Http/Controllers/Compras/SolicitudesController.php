@@ -9,6 +9,7 @@ use App\Http\Models\Compras\Solicitudes;
 use App\Http\Models\Finanzas\Impuestos;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -235,5 +236,19 @@ class SolicitudesController extends ControllerBase
                 }
             }
         }
+    }
+
+    public function print_solicitud($company,$id)
+    {
+//        $numero = 123456.50;
+
+//        dd(\NumeroALetras::convertir(number_format($numero,2,',',''),'pesos'));
+//        dd(PDF::loadView(currentRouteName('imprimir')));
+        $pdf = PDF::loadView(currentRouteName('imprimir'));
+        $pdf->setPaper('letter','landscape');
+
+
+        return $pdf->stream('solicitud')->header('Content-Type',"application/pdf");
+//        return view(currentRouteName('imprimir'));
     }
 }
