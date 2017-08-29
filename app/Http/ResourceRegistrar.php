@@ -12,7 +12,7 @@ class ResourceRegistrar extends OriginalRegistrar
 	 *
 	 * @var array
 	 */
-    protected $resourceDefaults = ['export', 'destroyMultiple', 'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
+    protected $resourceDefaults = ['export', 'destroyMultiple', 'impress', 'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
 
 	/**
 	 * Add the export method for a resourceful route.
@@ -49,5 +49,14 @@ class ResourceRegistrar extends OriginalRegistrar
 
 		return $this->router->delete($uri, $action);
 	}
+
+    protected function addResourceImpress($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name).'/exportar';
+
+        $action = $this->getResourceAction($name, $controller, 'export', $options);
+
+        return $this->router->match(['GET', 'POST'], $uri, $action);
+    }
 
 }

@@ -13,11 +13,9 @@
 		<div class="right">
 			{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'waves-effect waves-light btn orange']) }}
 			@if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('create')))
-				<form action="{{currentRouteName('imprimir')}}">
-					{{ Form::button('Imprimir', ['type' =>'button', 'class'=>'waves-effect waves-light btn']) }}
-				</form>
+				{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'waves-effect waves-teal btn '])) !!}
 			@endif
-			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'waves-effect waves-teal btn-flat teal-text']) }}
+			{!! HTML::decode(link_to(companyRoute('index'), 'Cerrar', ['class'=>'waves-effect waves-teal btn-flat teal-text'])) !!}
 		</div>
 	</div>
 @endsection

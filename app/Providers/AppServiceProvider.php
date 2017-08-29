@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
 		\Route::resourceVerbs([
 			'create' => 'crear',
 			'edit' => 'editar',
+//            'impress'=>'imprimir',
 		]);
 	}
 

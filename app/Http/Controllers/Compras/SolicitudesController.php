@@ -12,6 +12,10 @@ use App\Http\Models\RecursosHumanos\Empleados;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
+use Milon\Barcode\DNS1D;
+use Milon\Barcode\DNS2D;
+use Illuminate\Support\HtmlString;
 
 class SolicitudesController extends ControllerBase
 {
@@ -238,15 +242,45 @@ class SolicitudesController extends ControllerBase
         }
     }
 
-    public function print_solicitud($company,$id)
+    public function impress($company,$id)
     {
-//        $numero = 123456.50;
+        $solicitud = Solicitudes::where('id_solicitud',$id)->first();
+        $detalles = DetalleSolicitudes::where('fk_id_solicitud',$id)
+            ->where('cerrado','f')->get();
+        $subtotal = 0;
+        $iva = 0;
+        $total = 0;
+        foreach ($detalles as $detalle)
+        {
+            $subtotal += $detalle->precio_unitario * $detalle->cantidad;
+            $iva += (($detalle->precio_unitario*$detalle->cantidad)*$detalle->impuesto->porcentaje)/100;
+            $total += $detalle->total;
+        }
+        $total = number_format($total,2,'.',',');
 
-//        dd(\NumeroALetras::convertir(number_format($numero,2,',',''),'pesos'));
-//        dd(PDF::loadView(currentRouteName('imprimir')));
-        $pdf = PDF::loadView(currentRouteName('imprimir'));
+        $barcode = DNS1D::getBarcodePNG($solicitud->id_solicitud,'EAN8');
+        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$solicitud->id_solicitud])), "QRCODE");
+//        $barcode = '<img src="data:image/png,base64,' . DNS1D::getBarcodePNG("$solicitud->id_solicitud", "EAN8") . '" alt="barcode"   />';
+//        $codigo = "<img width='150px' src='data:image/png;charset=binary;base64,".base64_encode($barcode)."' />";
+
+//        dd($barcode);
+        $pdf = PDF::loadView(currentRouteName('imprimir'),[
+            'solicitud' => $solicitud,
+            'detalles' => $detalles,
+            'subtotal' => $subtotal,
+            'iva' => $iva,
+            'total' => $total,
+            'total_letra' => num2letras($total),
+            'barcode' => $barcode,
+            'qr' => $qr
+        ]);
         $pdf->setPaper('letter','landscape');
-
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(38,580,"Página {PAGE_NUM} de {PAGE_COUNT}",null,8,array(0,0,0));
+        $canvas->text(665,580,'PSAI-PN06-F01 Rev. 01',null,8);
+//        $canvas->image('data:image/png;charset=binary;base64,'.$barcode,355,580,100,16);
 
         return $pdf->stream('solicitud')->header('Content-Type',"application/pdf");
 //        return view(currentRouteName('imprimir'));

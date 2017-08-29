@@ -18,7 +18,7 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'compras', 'as' => 'compras.', 'middleware' => ['auth','share']], function(){
-        Route::get('solicitudes/{id}/imprimir', 'Compras\SolicitudesController@print_solicitud')->name('solicitudes');
+        Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
         Route::resource('solicitudes', 'Compras\SolicitudesController');
         Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
     });
