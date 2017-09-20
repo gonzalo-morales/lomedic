@@ -142,7 +142,7 @@
 		<div class="smart-actions" hidden>
 			<a class="waves-effect waves-light btn btn-flat no-padding" data-item-id="#ID#" rv-get-show-url><i class="material-icons">visibility</i></a>
 			@can('update', currentEntity())
-			<a class="waves-effect waves-light btn btn-flat no-padding" data-item-id="#ID#" rv-get-edit-url><i class="material-icons">mode_edit</i></a>
+			<a class="waves-effect waves-light btn btn-flat no-padding" data-item-id="#ID#" rv-get-edit-url rv-hide-update data-item-estatus="#ESTATUS#"><i class="material-icons">mode_edit</i></a>
 			@endcan
 			@can('delete', currentEntity())
 			@endcan

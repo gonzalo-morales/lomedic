@@ -229,7 +229,15 @@ rivets.binders['hide-delete'] = {
 			$(el).hide();
 		}
     }
-}
+};
+rivets.binders['hide-update'] = {
+    bind: function (el) {
+        if(el.dataset.itemEstatus != 1)
+        {
+            $(el).hide();
+        }
+    }
+};
 
 rivets.binders['get-show-url'] = {
 	bind: function(el) {

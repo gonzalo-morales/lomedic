@@ -5,7 +5,9 @@
 	@parent
 	<script type="text/javascript" src="{{ asset('js/jquery.ui.autocomplete2.js') }}"></script>
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
+	@if(!Route::currentRouteNamed(currentRouteName('index')))
+		<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
+	@endif
 @endsection
 
 @section('form-actions')
@@ -13,7 +15,10 @@
 		<div class="right">
 			{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'waves-effect waves-light btn orange']) }}
 			@if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('create')))
-				{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'waves-effect waves-teal btn '])) !!}
+				{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'waves-effect waves-teal btn imprimir'])) !!}
+				@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))
+					{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'waves-effect waves-teal btn-flat teal-text'])) !!}
+				@endif
 			@endif
 			{!! HTML::decode(link_to(companyRoute('index'), 'Cerrar', ['class'=>'waves-effect waves-teal btn-flat teal-text'])) !!}
 		</div>

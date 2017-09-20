@@ -20,6 +20,7 @@ $('.datepicker').pickadate({
     format: 'yyyy/mm/dd'
 });
 $(document).ready( function () {
+
     $('#fk_id_solicitante').val(getIdempleado());
 
     $(':submit').attr('onclick','eliminarDetalle()');
@@ -91,6 +92,13 @@ $(document).ready( function () {
     });
 
     total_producto();//Obtiene el porcentaje del valor por defecto
+
+    $('.imprimir').on('click',function (e) {
+        if(dataTable.rows.length < 1 && $('.imprimir').length){
+            e.preventDefault();
+            Materialize.toast('<span><i class="material-icons">priority_high</i>Te recomendamos editar la solicitud ya que no cuenta con SKUs<br/></span>', 10000,'red rounded');
+        }
+    });
 });
 
 function validateCantidad(element) {
