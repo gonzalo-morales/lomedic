@@ -86,7 +86,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 
 	public function permisos()
 	{
-	    return $this->belongsToMany(Permisos::class, 'ges_det_permisos_usuarios', 'fk_id_permiso', 'fk_id_usuario');
+	    return $this->belongsToMany(Permisos::class, 'ges_det_permisos_usuarios', 'fk_id_usuario', 'fk_id_permiso');
 	}
 
 	/**
