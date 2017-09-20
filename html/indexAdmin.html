@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>Admin</title>
+  </head>
+  <body class="bg-light text-gray-dark">
+  <div class="fixed-top w-75 align-middle mx-auto" style="display: none;" id="greetingsAlert">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h4 class="alert-heading">¡Bienvenida!</h4>
+      <p>Generamos los siguientes analíticos de acuerdo a la información de tus usuarios.</p>
+    </div>
+  </div>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <img src="https://s-media-cache-ak0.pinimg.com/originals/70/64/21/706421dae0e4817c6b511982f346e1fd.jpg" width="40" height="auto" alt="Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Inicio <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Productos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Clientes</a>
+            </li>
+          </ul>
+          <span class="navbar-text">
+            Hernando Fernando Hernández Fernández 3ro
+            <a href="#" class="text-danger">
+              <span class="oi oi-power-standby" title="Cerrar sesión" aria-hidden="true"></span>
+            </a>
+          </span>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-3">
+      <div class="row">
+        <div class="w-100">
+          <div class="p-3 bg-white">
+            <div class="row">
+              <div class="col-md-6 col-xs-12">
+                <canvas id="chartLine" height="150"></canvas>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <table class="table table-hover table-stripped table-responsive">
+                  <thead class="">
+                    <tr>
+                      <th>#</th>
+                      <th>Número</th>
+                      <th>Nombre</th>
+                      <th>Cantidad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>1A2B3C</td>
+                      <td>Edición Limitada de la Bebida de Proteína en Polvo</td>
+                      <td>50</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>4C5D6F</td>
+                      <td>Ultimate Prostate Formula</td>
+                      <td>39</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td>123456789</td>
+                      <td>Solución de mujer</td>
+                      <td>21</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">4</th>
+                      <td>7G8H9I</td>
+                      <td>Complejo de Arándanos</td>
+                      <td>15</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">5</th>
+                      <td>987654321</td>
+                      <td>Guaraná Natural N-R-G en tabletas</td>
+                      <td>8</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="sep">
+                <hr><div class="sepText">
+                    Otros:
+                </div>
+            </div>
+            <div class="row" id="graphsOverall" style="display: none;">
+              <div class="col-12 col-md-4">
+                <canvas id="chart1"></canvas>
+              </div>
+              <div class="col-12 col-md-4">
+                <canvas id="chart2"></canvas>
+              </div>
+              <div class="col-12 col-md-4">
+                <canvas id="chart3"></canvas>
+              </div>
+            </div><!--/graphs-->
+            <div class="row mt-3">
+              <div class="col-md-12">
+                <h4 class="display-4">Mensajes:</h4>
+                <ul class="list-group">
+                  <li class="list-group-item messagesHome">
+                    <img src="https://vignette.wikia.nocookie.net/es.starwars/images/0/0b/Finn-TFATrailer.png/revision/latest?cb=20150430222613" alt="..." class="rounded-circle" width="50" height="auto"> Holy shit! I need this product to become a brave soldier
+                  </li>
+                  <li class="list-group-item messagesHome">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgJGQ338MLIEs84K7kv5CkaAioTgcryrwFZivUl-XM3YwpJuCO" alt="..." class="rounded-circle" width="50" height="auto"> I'm looking for this product: <a href="#">Traitor killing hammer</a> ¿Do you have it? We have a traitor over here.
+                  </li>
+                  <li class="list-group-item messagesHome">
+                    <img src="https://vignette4.wikia.nocookie.net/es.starwars/images/b/be/Jabba.jpg/revision/latest?cb=20060526055658" alt="..." class="rounded-circle" width="50" height="auto"> I would eat you... When I can of course...
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!--/row-->
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    $( document ).ready(function() {
+        $('#graphsOverall').addClass('animated zoomIn').show(4000);
+        $('#greetingsAlert').addClass('animated slideInDown').show();
+        setTimeout(function() {
+         $('#greetingsAlert').removeClass('slideInDown').addClass('fadeOutUp'); },
+         4000);
+    });
+      /*
+    $(document).ready(function(){
+      $('#welcomeAlert').addClass('animated fadeInDown');
+      var xSeconds = 5000; // 5 second
+
+      setTimeout(function() {
+        $('#welcomeAlert').fadeOut(500);
+      }, xSeconds);
+      $('#graphsOverall').hide();
+    });*/
+    </script>
+  </body>
+</html>
