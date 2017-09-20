@@ -1,0 +1,58 @@
+/*Agregamos typografía y sus características*/
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('../fonts/Material Icons'),
+       local('../fonts/MaterialIcons-Regular'),
+       url(../fonts/MaterialIcons-Regular.woff2) format('woff2'),
+       url(../fonts/MaterialIcons-Regular.woff) format('woff'),
+       url(../fonts/MaterialIcons-Regular.ttf) format('truetype');
+}
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+/*Estílo botones*/
+.btn {
+  padding: 0.85rem 2.13rem;
+  margin: 6px;
+  border-radius: 2px;
+  border: 0;
+  -webkit-transition: .2s ease-out;
+  transition: .2s ease-out;
+  text-transform: uppercase;
+  white-space: normal !important;
+  word-wrap: break-word;
+  cursor: pointer;
+  box-shadow: none;
+}
+.btn:hover, .btn:active, .btn:focus {
+  -webkit-transition: .2s ease-out;
+  transition: .2s ease-out;
+  text-transform: uppercase;
+  outline: 0;
+  box-shadow: 2px 1px 3px rgba(0,0,0,0.3);
+}
