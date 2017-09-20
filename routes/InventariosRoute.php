@@ -21,5 +21,6 @@ Route::prefix('{company}')->group(function () {
         Route::get('getSkus','Inventarios\SkusController@obtenerSkus');
         Route::resource('codigos_barras','Inventarios\CodigosBarrasController');
         Route::get('getCodigosBarras/{id}','Inventarios\CodigosBarrasController@obtenerCodigosBarras');
+        Route::resource('almacenes','Inventarios\AlmacenesController');
     });
 });

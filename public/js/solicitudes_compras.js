@@ -65,7 +65,7 @@ $(document).ready( function () {
         }
     });
     $('#fk_id_sku').on('change',function () {
-        codigosbarras();//Caga los nuevos datos del producto
+        codigosbarras();//Carga los nuevos datos del producto
     });
 
     let data_proveedores = $('#fk_id_proveedor').data('url');
@@ -382,7 +382,6 @@ function removerOpciones(id) {
 }
 
 function eliminarDetalle() {
-
     let url = $('#productos').data('delete');
     $.delete(url, {ids: a} );
 }
