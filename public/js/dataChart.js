@@ -1,39 +1,78 @@
-$(document).ready(function(){
-	var ctx = document.getElementById("myChart");
-	var myChart = new Chart(ctx, {
-	    type: 'bar', //tipo de chart
-	    data: {
-	        labels: ["IPEJAL", "SEGA", "Farmacia Rev", "GENE", "LoMedic", "TWITCH"],
-	        datasets: [{
-	            label: '$(k)',
-	            data: [12, 19, 3, 5, 2, 3],
-	            backgroundColor: [
-	                'rgba(255, 99, 132, 0.2)',
-	                'rgba(54, 162, 235, 0.2)',
-	                'rgba(255, 206, 86, 0.2)',
-	                'rgba(75, 192, 192, 0.2)',
-	                'rgba(153, 102, 255, 0.2)',
-	                'rgba(255, 159, 64, 0.2)'
-	            ],
-	            borderColor: [
-	                'rgba(255,99,132,1)',
-	                'rgba(54, 162, 235, 1)',
-	                'rgba(255, 206, 86, 1)',
-	                'rgba(75, 192, 192, 1)',
-	                'rgba(153, 102, 255, 1)',
-	                'rgba(255, 159, 64, 1)'
-	            ],
-	            borderWidth: 1
-	        }]
-	    },
-	    options: {
-	        scales: {
-	            yAxes: [{
-	                ticks: {
-	                    beginAtZero:true
-	                }
-	            }]
-	        }
-	    }
-	});
+
+$(document).ready(function() {
+var chart = AmCharts.makeChart( "pie", {
+"type": "pie",
+"theme": "light",
+"dataProvider": [ {
+  "country": "Lithuania",
+  "litres": 501.9
+}, {
+  "country": "Czech Republic",
+  "litres": 301.9
+}, {
+  "country": "Ireland",
+  "litres": 201.1
+}, {
+  "country": "UK",
+  "litres": 99
+}, {
+  "country": "Belgium",
+  "litres": 60
+}, {
+  "country": "The Netherlands",
+  "litres": 50
+} ],
+"valueField": "litres",
+"titleField": "country",
+ "balloon":{
+ "fixedPosition":true
+},
+"export": {
+  "enabled": true
+}
+});
+var chart2 = AmCharts.makeChart( "pie2", {
+"type": "pie",
+"theme": "light",
+"dataProvider": [ {
+  "country": "Lithuania",
+  "litres": 501.9
+}, {
+  "country": "Czech Republic",
+  "litres": 301.9
+}, {
+  "country": "The Netherlands",
+  "litres": 50
+} ],
+"valueField": "litres",
+"titleField": "country",
+ "balloon":{
+ "fixedPosition":true
+},
+"export": {
+  "enabled": true
+}
+});
+var chart3 = AmCharts.makeChart( "pie3", {
+"type": "pie",
+"theme": "light",
+"dataProvider": [ {
+  "country": "Lithuania",
+  "litres": 501.9
+}, {
+  "country": "Czech Republic",
+  "litres": 301.9
+}, {
+  "country": "The Netherlands",
+  "litres": 50
+} ],
+"valueField": "litres",
+"titleField": "country",
+ "balloon":{
+ "fixedPosition":true
+},
+"export": {
+  "enabled": true
+}
+});
 });
