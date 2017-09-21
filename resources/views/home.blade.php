@@ -1,13 +1,11 @@
 @extends('layouts.dashboard')
 
+@section('title', 'Inicio')
+
 @section('header-bottom2')
-	<!--amCharts-->
-	<script src="js/amcharts/amcharts.js"></script>
-	<script src="js/amcharts/pie.js"></script>
-	<script src="js/amcharts/plugins/export/export.min.js"></script>
-	<link rel="stylesheet" href="js/amcharts/export.css" type="text/css" media="all" />
-	<script src="js/amcharts/light.js"></script>
-	<script src="js/dataChart.js"></script>
+<!--CDN chartsJS, esta versión viene con http://momentjs.com/ incluído-->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+	<script src="{{ asset('js/dataChart.js') }}"></script>
 @endsection
 
 @section('content')
@@ -19,14 +17,14 @@
 	<div class="row">
 		<div class="col-md-8 col-xs-12">
 
-			<div id="accordion" role="tablist" class="mb-3">
+			<div id="accordion" role="tablist">
 			  <div class="card">
 			    <div class="card-header" role="tab" id="medicamentoCad">
-			      <div class="mb-0">
-			        <a class="d-flex align-items-center" data-toggle="collapse" href="#medCad" aria-expanded="true" aria-controls="medCad">
+			      <h5 class="mb-0 d-flex align-items-center">
+			        <a data-toggle="collapse" href="#medCad" aria-expanded="true" aria-controls="medCad">
 			          <i class="material-icons">info</i> El siguiente medicamento está a punto de caducar:
 			        </a>
-			      </div>
+			      </h5>
 			    </div>
 
 			    <div id="medCad" class="collapse show" role="tabpanel" aria-labelledby="medicamentoCad" data-parent="#accordion">
@@ -87,11 +85,11 @@
 			  </div>
 			  <div class="card">
 			    <div class="card-header" role="tab" id="procesoDes">
-			      <div class="mb-0 d-flex">
-			        <a class="collapsed d-flex align-items-center" data-toggle="collapse" href="#proDesv" aria-expanded="false" aria-controls="proDesv">
+			      <h5 class="mb-0 d-flex align-items-center">
+			        <a class="collapsed" data-toggle="collapse" href="#proDesv" aria-expanded="false" aria-controls="proDesv">
 			          <i class="material-icons">info</i> Se detectó medicamento en proceso de desviación:
 			        </a>
-			      </div>
+			      </h5>
 			    </div>
 			    <div id="proDesv" class="collapse" role="tabpanel" aria-labelledby="procesoDes" data-parent="#accordion">
 			      <div class="card-body">
@@ -145,11 +143,11 @@
 			  </div>
 			  <div class="card">
 			    <div class="card-header" role="tab" id="ipejal">
-			      <div class="mb-0">
-			        <a class="collapsed d-flex align-items-center" data-toggle="collapse" href="#proyIpejal" aria-expanded="false" aria-controls="proyIpejal">
+			      <h5 class="mb-0 d-flex align-items-center">
+			        <a class="collapsed" data-toggle="collapse" href="#proyIpejal" aria-expanded="false" aria-controls="proyIpejal">
 			          <i class="material-icons">info</i> El proyecto IPEJAL encontró los siguientes problemas:
 			        </a>
-			      </div>
+			      </h5>
 			    </div>
 			    <div id="proyIpejal" class="collapse" role="tabpanel" aria-labelledby="ipejal" data-parent="#accordion">
 			      <div class="card-body">
@@ -180,21 +178,20 @@
 			  <div class="card-header">
 			    <ul class="nav nav-pills card-header-pills">
 			      <li class="nav-item">
-			        <a class="nav-link active" href="#">IPEJAL</a>
+			        <a class="nav-link active" href="#"><i class="material-icons">star_rate</i></a>
 			      </li>
 			      <li class="nav-item">
-			        <a class="nav-link" href="#">Querétaro</a>
+			        <a class="nav-link" href="#">Link</a>
 			      </li>
 			      <li class="nav-item">
-			        <a class="nav-link" href="#">Abisalud</a>
+			        <a class="nav-link disabled" href="#">Disabled</a>
 			      </li>
 			    </ul>
 			  </div>
 			  <div class="card-body">
-	            <div class="charts">
-	            	<p>Medicamos más vendido:</p>
-	              <div id="pie" class="chart"></div>
-	            </div>
+			    <h4 class="card-title">Special title treatment</h4>
+			    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+			    <a href="#" class="btn btn-primary">Go somewhere</a>
 			  </div>
 			</div>
 		</div><!--/col aditional info-->

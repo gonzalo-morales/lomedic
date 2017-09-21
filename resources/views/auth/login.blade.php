@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Iniciar Sesion')
+
 @section('content')
 <div class="valign-wrapper" style="height: 100vh;"><br><br><br>
 	<div class="container-fluid col-sm-8 col-md-6 col-xl-3">

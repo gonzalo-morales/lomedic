@@ -4,7 +4,7 @@
 	<!--meta para caracteres especiales-->
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>{{ config('app.name', 'Laravel') }}</title>
+	<title>{{ config('app.name', '') }} - @yield('title')</title>
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
 	{{ HTML::meta('csrf-token', csrf_token()) }}
 	{{ HTML::favicon(asset("img/sim2.svg")) }}
