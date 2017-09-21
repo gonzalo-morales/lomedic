@@ -1,20 +1,5 @@
-/*
-    DEMO STYLE
-*/
-body {
-    font-family: 'Poppins', sans-serif;
-    background: #fafafa;
-}
 
-p {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.1em;
-    font-weight: 300;
-    line-height: 1.7em;
-    color: #999;
-}
-
-a, a:hover, a:focus {
+#sidebar a, #sidebar a:hover, #sidebar a:focus {
     color: inherit;
     text-decoration: none;
     transition: all 0.3s;
@@ -153,17 +138,17 @@ i, span {
     margin-right: 10px;
 }
 
-#sidebar ul li.active > a, a[aria-expanded="true"] {
+#sidebar ul li.active > a,#sidebar a[aria-expanded="true"] {
     color: #fff;
     background: #6d7fcc;
 }
 
 
-a[data-toggle="collapse"] {
+#sidebar a[data-toggle="collapse"] {
     position: relative;
 }
 
-a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
+#sidebar a[aria-expanded="false"]::before, #sidebar a[aria-expanded="true"]::before {
     /*content: '\e259';*/
     display: block;
     position: absolute;
@@ -171,12 +156,12 @@ a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
     font-family: 'Glyphicons Halflings';
     font-size: 0.6em;
 }
-a[aria-expanded="true"]::before {
+#sidebar a[aria-expanded="true"]::before {
     /*content: '\e260';*/
 }
 
 
-ul ul a {
+#sidebar ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
     background: #6d7fcc;
@@ -213,6 +198,7 @@ a.article, a.article:hover {
     padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
+    width: 100%;
 }
 
 
@@ -226,7 +212,7 @@ a.article, a.article:hover {
         text-align: center;
         margin-left: -80px !important ;
     }
-    a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
+    #sidebar a[aria-expanded="false"]::before, #sidebar a[aria-expanded="true"]::before {
         top: auto;
         bottom: 5px;
         right: 50%;
