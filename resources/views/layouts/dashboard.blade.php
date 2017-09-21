@@ -8,9 +8,8 @@
 	{{ HTML::meta('csrf-token', csrf_token()) }}
 	{{ HTML::favicon(asset("img/$empresa->logotipo")) }}
 	
-	{{ HTML::style(asset('css/bootstrap.min.css'), ['media'=>'screen,projection'])}}
-	{{ HTML::style('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css') }}
-	
+	<!-- Bootstrap CSS local fallback -->
+	{{ HTML::style(asset('css/bootstrap.min.css')) }}
 	
 	{{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
 	{{ HTML::style(asset('css/style-nav.css'), ['media'=>'screen,projection']) }}
@@ -100,12 +99,16 @@
     <nav id="sidebar" class="active bg-info">
     	<div id="sidebar-content">
             <div class="sidebar-header text-center" style="position: relative;">
-                <div class="title">
-                	<span class="white-text w-100"><object id="front-page-logo" class="Sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></span>
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text w-100">
-        				<i class="tiny material-icons">power_settings_new</i> CERRAR SESION
-        			</a>
-                    <a href="#"><span class="white-text w-100">{{ Auth::User()->nombre_corto }}</span></a>
+                <div class="title w-100">
+                	<div class="white-text w-100"><object id="front-page-logo" class="Sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></div>
+            		<div class="white-text w-100">
+                    	<a href="#"><span class="white-text w-100">{{ Auth::User()->nombre_corto }}</span></a>
+                    </div>
+                	<div class="white-text w-100">
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text">
+            				<i class="tiny material-icons">power_settings_new</i> CERRAR SESION
+            			</a>
+            		</div>
                 </div>
                 
                 <strong>
@@ -140,7 +143,7 @@
 <!-- jQuery CDN -->
 {{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js') }}
 <!-- jQuery local fallback -->
-<script>window.jQuery || document.write('<script src="{{asset('js/popper.min.js') }}"><\/script>')</script>
+<script>window.jQuery || document.write('<script src="{{asset('js/jquery.min.js') }}"><\/script>')</script>
 
 {{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js') }}
 {{ HTML::script(asset('js/popper.min.js')) }}
@@ -148,7 +151,7 @@
 <!-- Bootstrap JS CDN -->
 {{ HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js') }}
 <!-- Bootstrap JS local fallback -->
-<script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap.min.js') }}"><\/script>')</script>
+<script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap.min.js') }}"><\/script>')}</script>
 
 
 <script type="text/javascript">
