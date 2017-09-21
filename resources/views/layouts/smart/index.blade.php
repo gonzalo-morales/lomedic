@@ -20,7 +20,7 @@
 
 @section('content')
 <div class="container-fluid">
-	{{ HTML::tag('h4', currentEntityBaseName(),['class'=>'col-md-12']) }}
+	{{ HTML::tag('h1', currentEntityBaseName(),['class'=>'col-md-12']) }}
 <div class="row">
 	<div class="col">
 		<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}">
