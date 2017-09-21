@@ -7,28 +7,19 @@
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
 	{{ HTML::meta('csrf-token', csrf_token()) }}
 	{{ HTML::favicon(asset("img/$empresa->logotipo")) }}
+	
 	{{ HTML::style(asset('css/bootstrap.min.css'), ['media'=>'screen,projection'])}}
 	{{ HTML::style('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css') }}
+	
+	
 	{{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
+	{{ HTML::style(asset('css/style-nav.css'), ['media'=>'screen,projection']) }}
 	@yield('header-top')
 </head>
 <body>
 
-<!--<div class="navbar-fixed ">
-	<nav class="top-nav {{$empresa->color}} z-depth-0 nav-extended">
-		<div class="nav-wrapper">
-			<a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
-			<a href="#!" data-activates="enteDrop" data-beloworigin="true" class="brand-logo dropdown-button logo-enterprise">
-				{{ HTML::image(asset("img/$empresa->logotipo"), 'Logo', ['class'=>'circle responsive-img']) }} {{ $empresa->nombre_comercial }}
-			</a>
-			<ul class="right">
-				<li><a href="#" data-activates="slide-help" class="help-collapse"><i class="material-icons">live_help</i></a></li>
-				<li><a class="dropdown-button" href="#!" data-activates="notDrop" data-beloworigin="true"><i class="material-icons">add_alert</i></a></li>
-			</ul>
-		</div>
-	</nav>
-</div>
 
+<!--
 <ul id="slide-out" class="side-nav">
 	<li>
 		<div class="user-view center">
@@ -63,13 +54,37 @@
 	</ul>
 
 	<ul id='main-menu'>
-		@if(isset($menu))
-			@each('partials.menu', $menu, 'modulo')
-		@endif
+		
 	</ul>
 </ul>-->
 
-<div class="w-100">
+<!-- 
+<div class="navbar-fixed ">
+	<nav class="top-nav {{$empresa->color}} z-depth-0 nav-extended">
+		<div class="nav-wrapper">
+			<div class="nav-wrapper">
+        		<a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+        		<a href="#!" data-activates="enteDrop" data-beloworigin="true" class="brand-logo dropdown-button logo-enterprise">
+        			{{ HTML::image(asset("img/$empresa->logotipo"), 'Logo', ['class'=>'circle responsive-img']) }} {{ $empresa->nombre_comercial }}
+        		</a>
+        	</div>
+			<ul class="right">
+				<li><a href="#" data-activates="slide-help" class="help-collapse"><i class="material-icons">live_help</i></a></li>
+				<li><a class="dropdown-button" href="#!" data-activates="notDrop" data-beloworigin="true"><i class="material-icons">add_alert</i></a></li>
+			</ul>
+		</div>
+	</nav>
+</div>
+ -->
+ 
+<div class="w-100 fixed-top">
+	<nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" id="sidebarCollapse" class="btn-info navbar-btn"><i class="material-icons">menu</i></button>
+            </div>
+        </div>
+    </nav>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item">{{ HTML::link(companyAction('HomeController@index', ['company' => $empresa->conexion]), 'Inicio') }}</li>
 		@foreach(routeNameReplace() as $key=>$item)
@@ -80,15 +95,70 @@
 	</ol>
 </div>
 
+<div class="wrapper" style="margin-top: 90px;">
+    <!-- Sidebar Holder -->
+    <nav id="sidebar" class="active bg-info">
+    	<div id="sidebar-content">
+            <div class="sidebar-header text-center" style="position: relative;">
+                <div class="title">
+                	<span class="white-text w-100"><object id="front-page-logo" class="Sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></span>
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text w-100">
+        				<i class="tiny material-icons">power_settings_new</i> CERRAR SESION
+        			</a>
+                    <a href="#"><span class="white-text w-100">{{ Auth::User()->nombre_corto }}</span></a>
+                </div>
+                
+                <strong>
+                	<center><object id="front-page-logo" class="Sim w-100" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></center>
+    				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text name">
+        				<i class="tiny material-icons">power_settings_new</i>
+        			</a>
+    			</strong>
+    
+    			{!! Form::open(['route' => 'logout', 'before' => 'csrf', 'id' => 'logout-form', 'class' => 'hidden']) !!} {!! Form::close() !!}
+            </div>
+    
+            <ul class="list-unstyled components">
+                @if(isset($menu))
+    				@each('partials.menu', $menu, 'modulo')
+    			@endif
+            </ul>
+        </div>
+    </nav>
 
-@yield('content')
+    <!-- Page Content Holder -->
+    <div id="content">
+        @yield('content')
+    </div>
+</div>
 
-<!--@include('layouts.ticket')-->
 
-<!-- scripts -->
+
+
+<!--@ include('layouts.ticket')-->
+
+<!-- jQuery CDN -->
 {{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js') }}
+<!-- jQuery local fallback -->
+<script>window.jQuery || document.write('<script src="{{asset('js/popper.min.js') }}"><\/script>')</script>
+
+{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js') }}
+{{ HTML::script(asset('js/popper.min.js')) }}
+  
+<!-- Bootstrap JS CDN -->
 {{ HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js') }}
-{{ HTML::script(asset('js/bootstrap.min.js')) }}
+<!-- Bootstrap JS local fallback -->
+<script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap.min.js') }}"><\/script>')</script>
+
+
+<script type="text/javascript">
+     $(document).ready(function () {
+         $('#sidebarCollapse').on('click', function () {
+             $('#sidebar').toggleClass('active');
+         });
+     });
+</script>
+
 @yield('header-bottom')
 </body>
 </html>

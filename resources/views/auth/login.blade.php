@@ -1,46 +1,52 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="valign-wrapper">
-	<div class="col s12 center-block section center-align">
-	<h4>¡Bienvenido!</h4>
-		<div class="card-panel hoverable row">
-			<form class="section" method="POST" action="{{ route('login') }}">
-				{{ csrf_field() }}
-				<object id="front-page-logo" class="Sim" type="image/svg+xml" data="img/sim2.svg" name="SIM">Your browser does not support SVG</object>
-				<div class="row">
-					<div class="input-field col s12">
-						<i class="material-icons prefix">account_circle</i>
-						<input id="user" type="text" class="validate" name="usuario" value="{{ old('usuario') }}" autofocus>
-						<label for="user">Usuario:</label>
-						@if ($errors->has('usuario'))
-							<span class="help-block left red-text text-darken4">
-								<strong>{{ $errors->first('usuario') }}</strong>
-							</span>
-						@endif
+<div class="valign-wrapper" style="height: 100vh;"><br><br><br>
+	<div class="container-fluid col-sm-8 col-md-6 col-xl-3">
+		<div class="card card-block text-center"> <!-- class="card-panel hoverable row"> -->
+        	<h4 class="card-header text-info">¡Bienvenido!</h4>
+		
+			{!! Form::open(['route' => 'login', 'id' => 'form-login', 'class' => 'card-body center']) !!}
+			<div class="container-fluid col-sm-12">
+				<div class="form-group col-sm-12">
+					<object id="front-page-logo" class="Sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object>
+				</div>
+				
+				<div class="form-group col-sm-12">
+					<div class="input-group">
+						<span class="input-group-addon" id="username">
+							<i class="material-icons prefix">account_circle</i>
+                        	<span class="oi oi-person" title="Usuario o contrase�a" aria-hidden="true"></span>
+                        </span>
+						{{ Form::text('usuario', null, ['id'=>'usuario','class'=>'validate col-sm-10','placeholder'=>'* Usuario','autofocus'=>true]) }}
+                        {{ $errors->has('usuario') ? HTML::tag('small', $errors->first('usuario'), ['class'=>'form-text text-muted','style'=>'border:1px solid #f00']) : '' }}
 					</div>
 				</div>
-				<div class="row">
-					<div class="input-field col s12">
-						<i class="material-icons prefix">vpn_key</i>
-						<input id="password" type="password" class="validate" name="password">
-						<label for="password">Contraseña:</label>
-						@if ($errors->has('password'))
-							<span class="help-block left red-text text-darken4">
-								<strong>{{ $errors->first('password') }}</strong>
-							</span>
-						@endif
-						<a class='teal-text right' href="{{ route('password.request') }}"><b>¿Olvidaste contraseña?</b></a>
+				
+				<div class="form-group col-sm-12">
+					<div class="input-group">
+					<span class="input-group-addon" id="username">
+    						<i class="material-icons prefix">vpn_key</i>
+                        	<span class="oi oi-person" title="Usuario o contrase�a" aria-hidden="true"></span>
+                        </span>
+						{{ Form::password('password', ['id'=>'password','class'=>'validate col-sm-10','placeholder'=>'* Contraseña']) }}
+                        {{ $errors->has('password') ? HTML::tag('span', $errors->first('password'), ['class'=>'form-text text-muted']) : '' }}
 					</div>
 				</div>
-				<div class="row">
-						<div class="input-field col s12">
-						</div>
-					<div class="col s12">
-						<button class="btn orange waves-effect waves-light" type="submit" name="enter">Entrar</button>
+				
+				<div class="form-group col-sm-12">
+					<div class=" container">
+					{{ Form::button('Entrar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
 					</div>
 				</div>
-			</form><!--/section-->
+				
+				<div class="form-group col-sm-12">
+					<small><a class='card-link text-secondary' href="{{ route('password.request') }}"><b>¿Olvidaste contraseña?</b></a></small>
+				</div>
+				
+			</div>
+			{!! Form::close() !!}
+				
 		</div><!--/card-panel hoverable row-->
 	</div><!--/col s12 center-block-->
 </div><!--/valign-wrapper aquí termina el login-->
@@ -51,7 +57,7 @@
 		<h4>Ingresa tu correo:</h4>
 		<p>Te enviaremos al correo las instrucciones</p>
 			<div class="row">
-				<div class="input-field col s12">
+				<div class="input-group col s12">
 					<i class="material-icons prefix">mail</i>
 					<input id="email" type="email" class="validate">
 					<label for="email">Correo:</label>
@@ -64,5 +70,3 @@
 	</div>
 </div>
 @endsection
-
-
