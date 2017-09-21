@@ -19,9 +19,10 @@
 @endsection
 
 @section('content')
+<div class="container-fluid">
+	{{ HTML::tag('h4', currentEntityBaseName(),['class'=>'col-md-12']) }}
 <div class="row">
-	{{ HTML::tag('h4', currentEntityBaseName(),['class'=>'col s12 m12']) }}
-	<div class="col s12">
+	<div class="col">
 		<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}">
 			<div class="col s3">
 				<table class="bordered striped highlight" hidden>
@@ -31,7 +32,7 @@
 					<tr><td>datarows</td><td rv-text="collections.datarows"></td></tr>
 				</table>
 			</div>
-			<div class="col s12 m12">
+			<div class="col-md-12">
 				<div class="row" rv-hide="actions.countItems | call < collections.items">
 					<div class="right">
 						<a href="{{ companyRoute('create') }}" class="btn orange waves-effect waves-light">Crear</a>
@@ -98,8 +99,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="col s12 ml2">
-				<table class="smart-table striped responsive-table highlight">
+			<div class="col-md-12">
+				<table class="smart-table striped table-responsive highlight">
 					<thead>
 						<tr>
 							<th class="width-auto"><input type="checkbox" id="check-all" rv-on-click="actions.checkAll" rv-checked="status.isAllChecked"><label for="check-all"></label></th>
@@ -149,5 +150,6 @@
 			@endcan
 		</div>
 	</div>
+</div>
 </div>
 @endsection

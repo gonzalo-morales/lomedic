@@ -7,14 +7,14 @@
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
 	{{ HTML::meta('csrf-token', csrf_token()) }}
 	{{ HTML::favicon(asset("img/$empresa->logotipo")) }}
-	{{ HTML::style('https://fonts.googleapis.com/icon?family=Material+Icons') }}
-	{{ HTML::style('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css') }}
+	{{ HTML::style(asset('css/bootstrap.min.css'), ['media'=>'screen,projection'])}}
+	{{ HTML::style('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css') }}
 	{{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
 	@yield('header-top')
 </head>
 <body>
 
-<div class="navbar-fixed ">
+<!--<div class="navbar-fixed ">
 	<nav class="top-nav {{$empresa->color}} z-depth-0 nav-extended">
 		<div class="nav-wrapper">
 			<a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
@@ -67,27 +67,28 @@
 			@each('partials.menu', $menu, 'modulo')
 		@endif
 	</ul>
-</ul>
+</ul>-->
 
-<div class="row {{ $empresa->color }}">
-	<div class="col s12">
-		{{ HTML::link(companyAction('HomeController@index', ['company' => $empresa->conexion]), 'Inicio', ['class'=>'breadcrumb']) }}
+<div class="w-100">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item">{{ HTML::link(companyAction('HomeController@index', ['company' => $empresa->conexion]), 'Inicio') }}</li>
 		@foreach(routeNameReplace() as $key=>$item)
 			@if($item !== 'index' && !empty($item))
-				{{ HTML::link($key == 1 ? companyRoute('index') : '#', $item, ['class'=>'breadcrumb']) }}
+				<li class="breadcrumb-item active">{{ HTML::link($key == 1 ? companyRoute('index') : '#', $item) }}</li>
 			@endif
 		@endforeach
-	</div>
+	</ol>
 </div>
+
 
 @yield('content')
 
-@include('layouts.ticket')
+<!--@include('layouts.ticket')-->
 
 <!-- scripts -->
 {{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js') }}
-{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js') }}
-{{ HTML::script(asset('js/InitiateComponents.js')) }}
+{{ HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js') }}
+{{ HTML::script(asset('js/bootstrap.min.js')) }}
 @yield('header-bottom')
 </body>
 </html>
