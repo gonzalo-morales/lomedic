@@ -2,13 +2,13 @@ $(document).ready(function () {
     $('#fk_id_categoria option[value="0"]').prop('disabled',true);
     let data_empleados = $('#empleado_solicitud').data('url');
     $.ajax({
-       type:'GET',
-       url: data_empleados,
-       success: function (response) {
-           $('#empleado_solicitud').autocomplete2({
-               data: response
-           });
-       },
+        type:'GET',
+        url: data_empleados,
+        success: function (response) {
+            $('#empleado_solicitud').autocomplete2({
+                data: response
+            });
+        },
     });
 
     $('#empleado_solicitud').change(function () {
@@ -18,16 +18,16 @@ $(document).ready(function () {
     activar_empleado();
 
     $('#fk_id_categoria').on('change', function(){
-    	let data = $(this).data('url');
-    	let id = $('option:selected', this).val();
-        
+        let data = $(this).data('url');
+        let id = $('option:selected', this).val();
+
         $('#fk_id_accion option').remove();
         $('#fk_id_subcategoria option').remove();
         $('#fk_id_subcategoria').prop('disabled',true);
         $('#fk_id_accion').prop('disabled',true);
 
         $.ajax({
-        	url: data.replace('?id', $('option:selected', this).val()),
+            url: data.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
                 let option = $('<option/>');
@@ -57,7 +57,7 @@ $(document).ready(function () {
     });
 
     $('#fk_id_subcategoria').on('change', function(){
-    	let data = $(this).data('url');
+        let data = $(this).data('url');
         $('#fk_id_accion option').remove();
         $.ajax({
             url: data.replace('?id', $('option:selected', this).val()),
@@ -92,11 +92,11 @@ $(document).ready(function () {
 function activar_empleado(){
     $('#fk_id_sucursal').prop('disabled',true);//Deshabilitar
     if ($('#otherUser').prop('checked') == true)
-        {
-            $('#empleado_solicitud').prop('disabled',false);
-            removerOpciones('fk_id_sucursal');
-            $('select').material_select();
-        }
+    {
+        $('#empleado_solicitud').prop('disabled',false);
+        removerOpciones('fk_id_sucursal');
+        $('select').material_select();
+    }
     else
     {
         $('#empleado_solicitud').prop('disabled',true);

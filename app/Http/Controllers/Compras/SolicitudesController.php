@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Compras;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Unidadesmedidas;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Compras\DetalleSolicitudes;
@@ -19,6 +20,7 @@ use Illuminate\View\View;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
 use Illuminate\Support\HtmlString;
+use App\Http\Models\Inventarios\Skus;
 
 class SolicitudesController extends ControllerBase
 {
@@ -35,6 +37,14 @@ class SolicitudesController extends ControllerBase
 
     public function create($company,$attributes =[])
     {
+//        $impuestosSet = [];
+//        $impuestos = Impuestos::select('id_impuesto','impuesto','porcentaje')->where('activo',1)->get();
+//        foreach ($impuestos as $impuesto){
+//            $impuestosSet[] = ['id'=>$impuesto->id_impuesto,
+//                'text' => $impuesto->impuesto,
+//                'porcentaje' => $impuesto->porcentaje];
+//        }
+
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity->first()
                     ->empleado()->first()
@@ -50,7 +60,17 @@ class SolicitudesController extends ControllerBase
                 'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')
                     ->where('activo',1)
                     ->get()
-                    ->pluck('nombre','id_unidad_medida')
+                    ->pluck('nombre','id_unidad_medida'),
+                'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')
+                    ->where('activo',1)
+                    ->get()
+                    ->pluck('nombre','id_empleado'),
+                'skus' => Skus::where('activo','1')
+                    ->get()
+                    ->pluck('sku','id_sku'),
+                'proyectos' => Proyectos::where('activo',1)
+                    ->get()
+                    ->pluck('proyecto','id_proyecto')
             ]];
         return parent::create($company,$attributes);
     }

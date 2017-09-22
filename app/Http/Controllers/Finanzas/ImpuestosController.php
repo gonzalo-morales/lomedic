@@ -20,8 +20,15 @@ class ImpuestosController extends ControllerBase
 
     public function obtenerImpuestos($company)
     {
-        return Response::json(Impuestos::select('id_impuesto','impuesto')
-            ->where('activo',1)
-            ->get());
+        $impuestosSet = [];
+        $impuestosSet[] = ['id'=>'-1', 'text'=>'Selecciona un tipo de impuesto','disabled'=>'true','selected'=>'selected'];
+        $impuestos = Impuestos::select('id_impuesto','impuesto','porcentaje')->where('activo',1)->get();
+        foreach ($impuestos as $impuesto){
+            $impuestosSet[] = ['id'=>$impuesto->id_impuesto,
+                'text' => $impuesto->impuesto,
+                'porcentaje' => $impuesto->porcentaje];
+        }
+
+        return Response::json($impuestosSet);
     }
 }
