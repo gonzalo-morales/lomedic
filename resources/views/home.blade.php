@@ -10,12 +10,12 @@
 
 @section('content')
 <div class="text-center">
-<h2>¡Bienvenido!</h2>
+<h1 class="display-3">¡Bienvenido!</h1>
 <h6>Tenemos algunos elementos que necesitan de tu atención:</h6>
 </div>
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-md-8 col-xs-12">
+		<div class="col-md-8 col-sm-12 mb-3">
 
 			<div id="accordion" role="tablist">
 			  <div class="card">
@@ -173,7 +173,7 @@
 			</div>
 
 		</div><!--/col collapsibles-->
-		<div class="col-md-4 col-xs-12">
+		<div class="col-md-4 col-sm-12">
 			<div class="card text-center">
 			  <div class="card-header">
 			    <ul class="nav nav-pills card-header-pills">

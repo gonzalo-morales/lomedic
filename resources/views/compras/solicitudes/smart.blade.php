@@ -21,34 +21,31 @@
 @endsection
 
 @section('form-actions')
-	<div class="row">
-		<div class="col-md-12 col-xs-12">
-			{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
-			@if (Route::currentRouteNamed(currentRouteName('show')))
-				{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn nav-link imprimir'])) !!}
-				@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))
-					{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn nav-link'])) !!}
-				@endif
+	<div class="text-right">
+		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
+		@if (Route::currentRouteNamed(currentRouteName('show')))
+			{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
+			@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))
+				{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-default'])) !!}
 			@endif
-			{!! HTML::decode(link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn nav-link '])) !!}
-		</div>
+		@endif
+		{!! HTML::decode(link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default '])) !!}
 	</div>
 @endsection
 
-@section('content-width', 's12')
+@section('content-width','mt-3')
 
 @section('form-content')
 {{ Form::setModel($data) }}
-<div class="container-fluid">
 	<div class="row">
-		<div class="form-group col-md-4 col-xs-12">
+		<div class="form-group col-md-4 col-sm-6">
 	{{--		{!! Form::text(array_has($data,'fk_id_solicitante')?'solicitante_formated':'solicitante',null, ['id'=>'solicitante','autocomplete'=>'off','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados'),'data-url2'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')]) !!}--}}
 			{{ Form::label('fk_id_solicitante', '* Solicitante') }}
 			{!! Form::select('fk_id_solicitante',isset($empleados)?$empleados:[],null,['id'=>'fk_id_solicitante','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado'),'class'=>'form-control','style'=>'width:100%']) !!}
 			{{ $errors->has('fk_id_solicitante') ? HTML::tag('span', $errors->first('fk_id_solicitante'), ['class'=>'help-block deep-orange-text']) : '' }}
 			{{Form::hidden('id_solicitante',null,['id'=>'id_solicitante','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])])}}
 		</div>
-		<div class="form-group input-field col-md-4 col-xs-12">
+		<div class="form-group input-field col-md-4 col-sm-6">
 			{{--Se utilizan estas comprobaciones debido a que este campo se carga dinámicamente con base en el solicitante seleccionado y no se muestra el que está por defecto sin esto--}}
 			@if(Route::currentRouteNamed(currentRouteName('edit')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
@@ -63,11 +60,11 @@
 			@endif
 			{{ $errors->has('fk_id_sucursal') ? HTML::tag('span', $errors->first('fk_id_sucursal'), ['class'=>'help-block deep-orange-text']) : '' }}
 		</div>
-		<div class="form-group input-field col-md-4 col-xs-12">
+		<div class="form-group input-field col-md-2 col-sm-6">
 			{{ Form::label('fecha_necesidad', '* ¿Para cuándo se necesita?') }}
 			{!! Form::text('fecha_necesidad',null,['id'=>'fecha_necesidad','class'=>'datepicker form-control','value'=>old('fecha_necesidad')]) !!}
 		</div>
-		<div class="form-group input-field col-md-4 col-xs-12">
+		<div class="form-group input-field col-md-2 col-sm-6">
 			{{--{!! Form::select('fk_id_estatus_solicitud', \App\Http\Models\Compras\EstatusSolicitudes::all()->pluck('estatus','id_estatus'),null, ['id'=>'fk_id_sucursal']) !!}--}}
 			{{ Form::label('estatus_solicitud', '* Estatus de la solicitud') }}
 			@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('show')))
@@ -78,57 +75,55 @@
 		</div>
 		{{--Si la solicitud está cancelada--}}
 			@if(isset($data->fk_id_estatus_solicitud) && $data->fk_id_estatus_solicitud ==3)
-				<div class="form-group input-field col-md-4 col-xs-12">
+				<div class="form-group input-field col-md-3 col-sm-12">
 					{{ Form::label('fecha_cancelacion','Fecha de cancelación') }}
 					{!! Form::text('fecha_cancelacion',$data->fecha_cancelacion,['disabled','class'=>'form-control']) !!}
 				</div>
-				<div class="form-group input-field col-md-4 col-xs-12">
+				<div class="form-group input-field col-md-9 col-sm-12">
 					{{ Form::label('motivo_cancelacion','Motivo de la cancelación') }}
 					{!! Form::text('motivo_cancelacion',$data->motivo_cancelacion,['disabled','class'=>'form-control']) !!}
 				</div>
 			@endif
 	</div>
-<div class="divider"></div>
 	<div class="row">
-		<div class="col s12 m12">
-			<h5>Detalle de la solicitud</h5>
+		<div class="col-sm-12">
+			<h3>Detalle de la solicitud</h3>
 			<div class="card">
-				<div class="card-image teal lighten-5">
+				<div class="card-header">
 					<div class="row">
-						<div class="form-group input-field col-md-4 col-xs-12">
+						<div class="form-group input-field col-md-3 col-sm-6">
 							{{Form::label('fk_id_sku','SKU')}}
 							{!!Form::select('fk_id_sku',isset($skus)?$skus:[],null,['id'=>'fk_id_sku','class'=>'form-control','style'=>'width:100%'])!!}
 						</div>
-						<div class="form-group input-field col-md-4 col-xs-12">
+						<div class="form-group input-field col-md-3 col-sm-6">
 							{{Form::label('fk_id_codigo_barras','Código de barras')}}
 							{!! Form::select('fk_id_codigo_barras',[],null,['id'=>'fk_id_codigo_barras','disabled',
 							'data-url'=>companyAction('Inventarios\CodigosBarrasController@obtenerCodigosBarras',['id'=>'?id']),
 							'class'=>'form-control','style'=>'width:100%']) !!}
 						</div>
-						<div class="form-group input-field col-md-4 col-xs-12">
+						<div class="form-group input-field col-md-3 col-sm-6">
 							{{Form::label('fk_id_proveedor','Proveedor')}}
 							{!!Form::select('fk_id_proveedor',[],null,['id'=>'fk_id_proveedor','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%'])!!}
 						</div>
-						<div class="form-group input-field col-md-4 col-xs-12">
+						<div class="form-group input-field col-md-3 col-sm-6">
+							{{Form::label('fk_id_proyecto','Proyecto')}}
+							{!!Form::select('fk_id_proyecto',isset($proyectos)?$proyectos:[],null,['id'=>'fk_id_proyecto','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%',])!!}
+						</div>
+						<div class="form-group input-field col-md-2 col-sm-3">
 							{{ Form::label('fecha_necesario', '* ¿Para cuándo se necesita?') }}
 							{!! Form::text('fecha_necesario',null,['id'=>'fecha_necesario','class'=>'datepicker form-control','value'=>old('fecha_necesario')]) !!}
 						</div>
-						<div class="form-group input-field col-md-4 col-xs-12">
-							{{Form::label('fk_id_proyecto','Proyecto')}}
-							{!!Form::select('fk_id_proyecto',isset($proyectos)?$proyectos:[],null,['id'=>'fk_id_proyecto','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%',
-])!!}
-						</div>
-						<div class="form-group input-field col-md-4 col-xs-12">
+						<div class="form-group input-field col-md-2 col-sm-3">
 							{{Form::label('cantidad','Cantidad')}}
 							{!! Form::text('cantidad','1',['id'=>'cantidad','min'=>'1','class'=>'validate form-control cantidad','autocomplete'=>'off']) !!}
 						</div>
-						<div class="form-group input-field col-md-4 col-xs-12">
+						<div class="form-group input-field col-md-2 col-sm-3">
 							{{Form::label('fk_id_unidad_medida','Unidad de medida')}}
 							{!! Form::select('fk_id_unidad_medida',
 							isset($unidadesmedidas) ? $unidadesmedidas : [],
 							null,['id'=>'fk_id_unidad_medida','class'=>'form-control','style'=>'width:100%']) !!}
 						</div>
-						<div class="form-group input-field col-md-4 col-xs-12">
+						<div class="form-group input-field col-md-2 col-sm-3">
 							{{Form::label('fk_id_impuesto','Tipo de impuesto')}}
 							{{--{{dd($impuestos)}}--}}
 							{!! Form::select('fk_id_impuesto',[]
@@ -137,19 +132,24 @@
                             	'class'=>'form-control','style'=>'width:100%']) !!}
 							{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}
 						</div>
-						<div class="form-group input-field col-md-4 col-xs-12">
+						<div class="form-group input-field col-md-2 col-sm-3">
 							{{Form::label('precio_unitario','Precio unitario',['class'=>'validate'])}}
 
 							{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio','autocomplete'=>'off']) !!}
 						</div>
-						<button class="btn-floating btn-large orange halfway-fab waves-effect waves-light tooltipped"
-								data-position="bottom" data-delay="50" data-tooltip="Agregar" type="button" onclick="agregarProducto()"><i
-									class="material-icons">add</i></button>
+						<div class="col-sm-12">
+				            <div class="sep">
+				                <div class="sepBtn">
+							<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large tooltipped "
+									data-position="bottom" data-delay="50" data-tooltip="Agregar" type="button" onclick="agregarProducto()"><i
+										class="material-icons">add</i></button>
+				                </div>
+				            </div>
+			        	</div>
 					</div>
 				</div>
-				<div class="divider"></div>
-				<div class="table-responsive">
-					<table id="productos" class="responsive-table highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}"
+			    <div class="card-body">
+					<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}"
 					data-delete="{{companyAction('Compras\DetalleSolicitudesController@destroyMultiple')}}"
 					data-impuestos="{{companyAction('Finanzas\ImpuestosController@obtenerImpuestos')}}"
 							data-porcentaje="{{companyAction('Finanzas\ImpuestosController@obtenerPorcentaje',['id'=>'?id'])}}">
@@ -263,7 +263,6 @@
 			</div>
 		</div>
 	</div>
-</div>
 @endsection
 
 {{-- DONT DELETE --}}

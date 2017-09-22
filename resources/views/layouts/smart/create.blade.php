@@ -3,7 +3,7 @@
 @section('title', currentEntityBaseName() . '@Agregar')
 
 @section('form-header')
-	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col-md-12']) !!}
+	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model']) !!}
 @endsection
 
 @section('form-actions')
@@ -20,16 +20,14 @@
 @endsection
 
 @section('content')
-<div class="row">
-	<div class="col @yield('content-width')">
+<div class="container-fluid">
+	<div class="@yield('content-width')">
 		@yield('form-header')
-    		<div class="row">
-    			@yield('form-title')
-    			@yield('form-actions')
-    			<fieldset @yield('fieldset')>
-    				@yield('form-content')
-    			</fieldset>
-    		</div>
+			@yield('form-title')
+			@yield('form-actions')
+			<fieldset @yield('fieldset')>
+				@yield('form-content')
+			</fieldset>
 		{!! Form::close() !!}
 		@yield('form-utils')
 	</div>

@@ -20,7 +20,7 @@
 
 @section('content')
 <div class="row">
-	<div class="col s12">
+	<div class="col-sm-12">
 		<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}">
 			<div class="col s3">
 				<table class="bordered striped highlight" hidden>
@@ -30,7 +30,7 @@
 					<tr><td>datarows</td><td rv-text="collections.datarows"></td></tr>
 				</table>
 			</div>
-			<div class="col s12 m12">
+			<div class="col-sm-12">
 				<div class="row" rv-hide="actions.countItems | call < collections.items">
 					<div class="right">
 						<a href="{{ companyRoute('create') }}" class="btn orange waves-effect waves-light">Crear</a>
@@ -97,7 +97,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col s12 ml2">
+			<div class="col-sm-12">
 				<table class="smart-table striped responsive-table highlight">
 					<thead>
 						<tr>

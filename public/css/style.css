@@ -62,8 +62,9 @@
 .btn:hover, .btn:active, .btn:focus {
   -webkit-transition: .2s ease-out;
   transition: .2s ease-out;
-  outline: 0;
-  box-shadow: 2px 1px 3px rgba(0,0,0,0.3);
+}
+.btn:active, .btn:focus{
+  box-shadow: none !important;
 }
 /*estílos sombras*/
 .z-depth-1-half, .btn:hover, .btn:active, .btn:focus, .modal-dialog .modal-content, .modal-dialog.cascading-modal .modal-header, ul.instagram-photos li img, .media .media-left img {
@@ -104,4 +105,35 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
 .charts{
   width: 100%;
   height:100%;
+}
+/*separator*/
+.sep{
+  position: relative;
+}
+.sepText{
+  position: absolute;
+  top: -15px;
+  right: 45%;
+  left: 45%;
+  background: white;
+  padding: 0 10px;
+  color: #7d7d7d;
+  text-align:center;
+}
+.sepBtn {
+    position: absolute;
+    top: -15px;
+    right: 0;
+    left: 0;
+    text-align: center;
+}
+/*Select2*/
+.select2-container .select2-selection--single {
+  height: 38px !important;
+}
+.select2-selection__arrow {
+  top: 5px !important;
+}
+.select2-selection__rendered {
+  line-height: 34px !important;
 }
