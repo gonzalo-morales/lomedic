@@ -20,11 +20,11 @@
 			<div id="accordion" role="tablist">
 			  <div class="card">
 			    <div class="card-header" role="tab" id="medicamentoCad">
-			      <h5 class="mb-0 d-flex align-items-center">
-			        <a data-toggle="collapse" href="#medCad" aria-expanded="true" aria-controls="medCad">
+			      <div class="mb-0 d-flex align-items-center">
+			        <a class="mb-0 d-flex align-items-center" data-toggle="collapse" href="#medCad" aria-expanded="true" aria-controls="medCad">
 			          <i class="material-icons">info</i> El siguiente medicamento está a punto de caducar:
 			        </a>
-			      </h5>
+			      </div>
 			    </div>
 
 			    <div id="medCad" class="collapse show" role="tabpanel" aria-labelledby="medicamentoCad" data-parent="#accordion">
@@ -85,11 +85,11 @@
 			  </div>
 			  <div class="card">
 			    <div class="card-header" role="tab" id="procesoDes">
-			      <h5 class="mb-0 d-flex align-items-center">
-			        <a class="collapsed" data-toggle="collapse" href="#proDesv" aria-expanded="false" aria-controls="proDesv">
+			      <div class="mb-0 d-flex align-items-center">
+			        <a class="mb-0 d-flex align-items-center" class="collapsed" data-toggle="collapse" href="#proDesv" aria-expanded="false" aria-controls="proDesv">
 			          <i class="material-icons">info</i> Se detectó medicamento en proceso de desviación:
 			        </a>
-			      </h5>
+			      </div>
 			    </div>
 			    <div id="proDesv" class="collapse" role="tabpanel" aria-labelledby="procesoDes" data-parent="#accordion">
 			      <div class="card-body">
@@ -143,11 +143,11 @@
 			  </div>
 			  <div class="card">
 			    <div class="card-header" role="tab" id="ipejal">
-			      <h5 class="mb-0 d-flex align-items-center">
-			        <a class="collapsed" data-toggle="collapse" href="#proyIpejal" aria-expanded="false" aria-controls="proyIpejal">
+			      <div class="mb-0 d-flex align-items-center">
+			        <a class="collapsed mb-0 d-flex align-items-center" data-toggle="collapse" href="#proyIpejal" aria-expanded="false" aria-controls="proyIpejal">
 			          <i class="material-icons">info</i> El proyecto IPEJAL encontró los siguientes problemas:
 			        </a>
-			      </h5>
+			      </div>
 			    </div>
 			    <div id="proyIpejal" class="collapse" role="tabpanel" aria-labelledby="ipejal" data-parent="#accordion">
 			      <div class="card-body">
@@ -178,13 +178,13 @@
 			  <div class="card-header">
 			    <ul class="nav nav-pills card-header-pills">
 			      <li class="nav-item">
-			        <a class="nav-link active" href="#"><i class="material-icons">star_rate</i></a>
+			        <a class="nav-link active" href="#">IPEJAL</a>
 			      </li>
 			      <li class="nav-item">
-			        <a class="nav-link" href="#">Link</a>
+			        <a class="nav-link" href="#">Querétaro</a>
 			      </li>
 			      <li class="nav-item">
-			        <a class="nav-link disabled" href="#">Disabled</a>
+			        <a class="nav-link" href="#">Proyecto</a>
 			      </li>
 			    </ul>
 			  </div>

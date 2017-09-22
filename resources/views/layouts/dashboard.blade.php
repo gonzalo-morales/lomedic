@@ -77,14 +77,12 @@
  -->
  
 <div class="w-100 fixed-top">
-	<nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" id="sidebarCollapse" class="btn-info navbar-btn"><i class="material-icons">menu</i></button>
-            </div>
+	<nav class="navbar navbar-default bg-light">
+        <div class="navbar-header">
+            <button type="button" id="sidebarCollapse" class="btn-primary navbar-btn d-flex align-items-center"><i class="material-icons">menu</i></button>
         </div>
     </nav>
-	<ol class="breadcrumb">
+	<ol class="breadcrumb bg-light rounded-0 z-depth-1-half">
 		<li class="breadcrumb-item">{{ HTML::link(companyAction('HomeController@index', ['company' => $empresa->conexion]), 'Inicio') }}</li>
 		@foreach(routeNameReplace() as $key=>$item)
 			@if($item !== 'index' && !empty($item))
@@ -96,24 +94,19 @@
 
 <div class="wrapper" style="margin-top: 90px;">
     <!-- Sidebar Holder -->
-    <nav id="sidebar" class="active bg-info">
+    <nav id="sidebar" class="active bg-primary text-white">
     	<div id="sidebar-content">
             <div class="sidebar-header text-center" style="position: relative;">
-                <div class="title w-100">
-                	<div class="white-text w-100"><object id="front-page-logo" class="Sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></div>
-            		<div class="white-text w-100">
-                    	<a href="#"><span class="white-text w-100">{{ Auth::User()->nombre_corto }}</span></a>
-                    </div>
-                	<div class="white-text w-100">
-                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text">
-            				<i class="tiny material-icons">power_settings_new</i> CERRAR SESION
-            			</a>
-            		</div>
-                </div>
+                <div class="title">
+                	<div class="text-center"><object id="front-page-logo" class="sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></div>
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text w-100">
+        				<i class="tiny material-icons">power_settings_new</i> CERRAR SESION
+        			</a>
+                    <a href="#"><p class="d-flex justify-content-center"><small>{{ Auth::User()->nombre_corto }}</small></p></a>
                 
                 <strong>
                 	<center><object id="front-page-logo" class="Sim w-100" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></center>
-    				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text name">
+    				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center">
         				<i class="tiny material-icons">power_settings_new</i>
         			</a>
     			</strong>
