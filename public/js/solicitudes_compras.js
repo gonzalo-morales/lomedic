@@ -1,28 +1,25 @@
 var a=[];
-//Inicializar los datepicker para las fechas necesarias
-// $('.datepicker').pickadate({
-//     //Cambiamos idiomas a español
-//     labelMonthNext: 'Siguiente mes',
-//     labelMonthPrev: 'Regresar mes',
-//     labelMonthSelect: 'Selecciona el mes',
-//     labelYearSelect: 'Selecciona el año',
-//     monthsFull: [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ],
-//     monthsShort: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
-//     weekdaysFull: [ 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado' ],
-//     weekdaysShort: [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab' ],
-//     weekdaysLetter: [ 'D', 'L', 'M', 'M', 'J', 'V', 'S' ],
-//     today: 'Hoy',
-//     clear: 'Limpiar',
-//     close: 'Aceptar',
-//     selectMonths: true, // Creates a dropdown to control month
-//     selectYears: 3, // Creates a dropdown of 3 years to control year
-//     min: true,
-//     format: 'yyyy/mm/dd'
-// });
+// Inicializar los datepicker para las fechas necesarias
+$('.datepicker').pickadate({
+    //Cambiamos idiomas a español
+    labelMonthNext: 'Siguiente mes',
+    labelMonthPrev: 'Regresar mes',
+    labelMonthSelect: 'Selecciona el mes',
+    labelYearSelect: 'Selecciona el año',
+    monthsFull: [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ],
+    monthsShort: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
+    weekdaysFull: [ 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado' ],
+    weekdaysShort: [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab' ],
+    weekdaysLetter: [ 'D', 'L', 'M', 'M', 'J', 'V', 'S' ],
+    today: 'Hoy',
+    clear: 'Limpiar',
+    close: 'Aceptar',
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 3, // Creates a dropdown of 3 years to control year
+    min: true,
+    format: 'yyyy/mm/dd'
+});
 $(document).ready( function () {
-
-
-
     $.ajax({
         async: false,
         url: $('#fk_id_impuesto').data('url'),
@@ -38,7 +35,14 @@ $(document).ready( function () {
     select2Placeholder('fk_id_proveedor','Selecciona un proveedor');
 
     $('#id_solicitante').val(getIdempleado());
+    if(window.location.href.toString().indexOf('editar') > -1)
+    {
+        $('.detalle_select').select2();
+        $('#fk_id_solicitante').select2();
 
+    }else{
+        select2Placeholder('fk_id_solicitante','Yo solicito la compra');
+    }
     $(':submit').attr('onclick','eliminarDetalle()');
 
     if(window.location.href.toString().indexOf('crear')>-1 || window.location.href.toString().indexOf('editar') >-1)
@@ -47,8 +51,7 @@ $(document).ready( function () {
         sucursal();//Cargar las sucursales del usuario
     }
 
-    $('#fk_id_solicitante').select2();
-    select2Placeholder('fk_id_solicitante','Yo solicito la compra');
+    // $('#fk_id_solicitante').select2();
     $('#fk_id_solicitante').change(function () {
         $('#id_solicitante').val('');
         sucursal();//Caga los nuevos datos de la sucursal
@@ -133,7 +136,7 @@ function sucursal()
             $('#id_solicitante').val($('#fk_id_solicitante').select2('data')[0].id);
     }
     else
-        {var _url = data_empleado.replace('?id', $('#fk_id_solicitante').val());}
+        {var _url = data_empleado.replace('?id', $('#id_solicitante').val());}
 
     $.ajax({
         async:false,
@@ -260,6 +263,7 @@ function total_producto_row(id_detalle,tipo) {
 }
 
 function agregarProducto() {
+
     var mensaje = '';
     var row_id = dataTable.rows.length;
 
@@ -286,9 +290,9 @@ function agregarProducto() {
         let proyectos = '';
                 $.each($('#fk_id_proyecto option').clone(), function (key, proyecto) {
                     //Este if es para verificar la opción seleccionada por defecto
-                    if(proyecto.value == $('#fk_id_proyecto').select2('data')[0].id && proyecto.value != null)
+                    if(proyecto.value == $('#fk_id_proyecto').select2('data')[0].id && proyecto.value != '')
                         {proyectos += '<option value="'+proyecto.value+'" selected>'+proyecto.innerText+'</option>';}
-                    else
+                    else if(proyecto.value != '')
                         {proyectos += proyecto.outerHTML;}
                 });
     //Para obtener las opciones del select de impuestos en el detalle de la solicitud
@@ -304,38 +308,55 @@ function agregarProducto() {
                 });
 
         let total = total_producto();
-        //Para que se borren todos los selects
-        // $('select').material_select('destroy');
 
         dataTable.import({
             type: "csv",
             data:
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').data('id') + '" />')[0].outerHTML + $('#fk_id_sku').val() + ","+
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_codigo_barras]" value="' + $('#fk_id_codigo_barras').val() + '" />')[0].outerHTML + $('#fk_id_codigo_barras option:selected').html() + ","+
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text + ","+
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_codigo_barras]" value="' + $('#fk_id_codigo_barras').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_codigo_barras').select2('data')[0].text + ","+
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" />')[0].outerHTML+$('#fk_id_proveedor').val()+ "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val()+'"/>')[0].outerHTML +  $('#fecha_necesario').val() + "," +
-            $('<select name="_detalles['+row_id+'][fk_id_proyecto]" id="fk_id_proyecto'+row_id+'" style="width: 100%">'+proyectos+'</select>')[0].outerHTML + ","+
+            $('<select name="_detalles['+row_id+'][fk_id_proyecto]" id="fk_id_proyecto'+row_id+'" style="width: 100%" class="select">'+proyectos+'</select>')[0].outerHTML + ","+
             $('<input type="text" name="_detalles['+row_id+'][cantidad]" onchange="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad"/>')[0].outerHTML + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />')[0].outerHTML + $('#fk_id_unidad_medida option:selected').html() + ","+
-            $('<select name="_detalles['+row_id+'][fk_id_impuesto]" onchange="total_producto_row('+row_id+')" id="_fk_id_impuesto'+row_id+'" style="width: 100%">'+impuestos+'</select>')[0].outerHTML + ","+
+            $('<select name="_detalles['+row_id+'][fk_id_impuesto]" onchange="total_producto_row('+row_id+')" id="_fk_id_impuesto'+row_id+'" style="width: 100%" class="select">'+impuestos+'</select>')[0].outerHTML + ","+
             $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio"/>')[0].outerHTML + "," +
             $('<input type="text" name="_detalles['+row_id+'][total]" readonly id="_total'+row_id+'" value="'+ total+'" class="precio_unitario"/>')[0].outerHTML + "," +
             '<button class="btn-flat teal lighten-5 halfway-fab waves-effect waves-light" ' +
             'type="button" data-delay="50" onclick="borrarFila(this)">' +
             '<i class="material-icons">delete</i></button>'
         });
-        $('#fk_id_proyecto'+row_id).select2({
+        $('.select').select2({
             minimumResultsForSearch:'Infinity'
         });
-        $('#_fk_id_impuesto'+row_id).select2({
-            minimumResultsForSearch:'Infinity'
+        $.toaster({
+            priority : 'success',
+            title : '¡Éxito!',
+            message : 'Producto agregado con éxito',
+            settings:{
+                'timeout':10000,
+                'toaster':{
+                    'css':{
+                        'top':'5em'
+                    }
+                }
+            }
         });
-
-        // Materialize.toast('<span><i class="material-icons">done</i> ¡Detalle agregado con éxito!</span>', 3000,'green rounded');
         limpiarFormulario();//Limpiar el formulario de algunos de los valores
-
     }else {
-        // Materialize.toast('<span><i class="material-icons">priority_high</i>Verifica los siguientes campos: <br/>'+mensaje+'</span>', 10000,'red rounded');
+        $.toaster({
+            priority : 'danger',
+            title : 'Verifica los siguientes campos',
+            message : mensaje,
+            settings:{
+                'timeout':10000,
+                'toaster':{
+                    'css':{
+                        'top':'5em'
+                    }
+                }
+            }
+        });
     }
 }
 

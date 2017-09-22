@@ -77,22 +77,26 @@ class SolicitudesController extends ControllerBase
 
     public function store(Request $request, $company)
     {
+        $id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
         # ¿Usuario tiene permiso para crear?
         $this->authorize('create', $this->entity);
-
+        if(!isset($request->fk_id_solicitante)){
+            $request->request->set('fk_id_solicitante',$id_empleado);
+        }
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
 
         $request->request->set('fecha_creacion',DB::raw('now()'));
-        if($request->fk_id_estatus_solicitud === 3)//Si es cancelado
-        {$request->request->set('fecha_cancelacion',DB::raw('now'));}
+//        if($request->fk_id_estatus_solicitud === 3)//Si es cancelado
+//        {$request->request->set('fecha_cancelacion',DB::raw('now'));}
 
         $request->request
             ->set('fk_id_departamento',Empleados::where('id_empleado',$request->fk_id_solicitante)
                 ->first()
                 ->fk_id_departamento);
-        $request->request->set('fk_id_estatus_solicitud',1);
+        $request->request->set('fk_id_estatus_solicitud',1);//Al estarse creando por primer vez, tiene que estar activa
         $isSuccess = $this->entity->create($request->all());
+
         if ($isSuccess) {
             if(isset($request->_detalles)) {
                 foreach ($request->_detalles as $detalle) {
@@ -150,14 +154,21 @@ class SolicitudesController extends ControllerBase
                 'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')
                     ->where('activo',1)
                     ->get()
-                    ->pluck('nombre','id_unidad_medida')
+                    ->pluck('nombre','id_unidad_medida'),
+                'skus' => Skus::where('activo','1')
+                    ->get()
+                    ->pluck('sku','id_sku'),
+                'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')
+                    ->where('activo',1)
+                    ->get()
+                    ->pluck('nombre','id_empleado'),
             ]];
         return parent::edit($company, $id, $attributes);
     }
 
     public function update(Request $request, $company, $id)
     {
-//        dd($request->request);
+        dd($request->request);
         # ¿Usuario tiene permiso para actualizar?
         $this->authorize('update', $this->entity);
 
