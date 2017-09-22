@@ -20,8 +20,17 @@
 	<nav class="navbar navbar-default bg-light">
         <div class="navbar-header">
             <button type="button" id="sidebarCollapse" class="btn-primary navbar-btn d-flex align-items-center"><i class="material-icons">menu</i></button>
+            
+            <a href="#!" class="btn-link navbar-btn d-flex align-items-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    			{{ HTML::image(asset("img/$empresa->logotipo"), 'Logo', ['width'=>'25px']) }} {{ $empresa->nombre_comercial }}
+    		</a>
+            <ul id='enteDrop' class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        		@foreach($empresas as $_empresa)
+        		<li><a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">{{ HTML::image(asset("img/$_empresa->logotipo"), null, ['class'=>'circle responsive-img','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}</a></li>
+        		@endforeach
+        	</ul>
         </div>
-        <button type="button" id="rigth-sidebarCollapse" class="btn-primary navbar-btn d-flex align-items-center"><i class="material-icons">live_help</i></button>
+        <button type="button" id="rigth-sidebarCollapse" class="btn-light navbar-btn d-flex align-items-center text-primary"><i class="material-icons">live_help</i></button>
     </nav>
 	<ol class="breadcrumb bg-light rounded-0 z-depth-1-half">
 		<li class="breadcrumb-item">{{ HTML::link(companyAction('HomeController@index', ['company' => $empresa->conexion]), 'Inicio') }}</li>
