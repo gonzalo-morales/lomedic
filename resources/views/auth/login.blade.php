@@ -27,9 +27,9 @@
 				
 				<div class="form-group col-sm-12">
 					<div class="input-group">
-					<span class="input-group-addon" id="username">
+						<span class="input-group-addon" id="username">
     						<i class="material-icons prefix">vpn_key</i>
-                        	<span class="oi oi-person" title="Usuario o contraseña" aria-hidden="true"></span>
+                        	<span class="oi oi-person" title="Contraseña" aria-hidden="true"></span>
                         </span>
 						{{ Form::password('password', ['id'=>'password','class'=>'validate col-sm-10','placeholder'=>'* ContraseÃ±a']) }}
                         {{ $errors->has('password') ? HTML::tag('span', $errors->first('password'), ['class'=>'form-text text-muted']) : '' }}

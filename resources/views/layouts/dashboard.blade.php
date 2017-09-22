@@ -98,39 +98,78 @@
 <!-- Bootstrap JS local fallback -->
 <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap.min.js') }}"><\/script>')}</script>
 
-<!-- jQuery Nicescroll CDN -->
-{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js') }}
+<!-- jQuery Nicescroll local-->
+{{ HTML::script('js/jquery.nicescroll.min.js') }}
+
+{{ HTML::script(asset('js/select2.full.min.js')) }}
+{{ HTML::script(asset('js/pickadate/picker.js')) }}
+{{ HTML::script(asset('js/pickadate/picker.date.js')) }}
+{{ HTML::script(asset('js/ticket.js')) }}
+
+
+<script type="text/javascript" src="{{ asset('js/select2.full.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/pickadate/picker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/pickadate/picker.date.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('js/ticket.js') }}"></script>
 
 <script type="text/javascript">
      $(document).ready(function () {
-    	 $("#sidebar").niceScroll({
-             cursorcolor: '#26a69a',
-             cursorwidth: 5,
-             cursorborder: 'none'
-         });
 
-         $('#sidebarCollapse').on('click', function () {
-             $('#sidebar').toggleClass('active');
-         });
-
+    	 /* Nice Scroll */
+        $("body").niceScroll({
+        	cursorcolor: '#90caf9', 
+        	background:"#1565c0",
+        	cursorwidth: "8px",
+        	zindex:99999999,
+        	enablekeyboard:'true',
+        	smoothscroll:'false',
+        });
          
-         $("#rigth-sidebar").niceScroll({
-             cursorcolor: '#26a69a',
-             cursorwidth: 4,
-             cursorborder: 'none'
-         });
+        $("#sidebar").niceScroll({
+            cursorcolor: '#90caf9', 
+            background:"#1565c0",
+            cursorwidth: "8px",
+            zindex:99999999,
+            enablekeyboard:'true',
+            smoothscroll:'false',
+        });
 
-         $('.dismiss, .overlay').on('click', function () {
+        $("#rigth-sidebar").niceScroll({
+            cursorcolor: '#26a69a',
+            cursorwidth: 4,
+            cursorborder: 'none'
+        });
+        
+        $('#sidebarCollapse').on('click', function () {
+        	$('#sidebar').toggleClass('active');
+        });
+        
+        
+        /* Sidebar's */
+        $('.dismiss, .overlay').on('click', function () {
             $('#rigth-sidebar').removeClass('active');
             $('.overlay').fadeOut();
-         });
-
-         $('#rigth-sidebarCollapse').on('click', function () {
-             $('#rigth-sidebar').addClass('active');
-             $('.overlay').fadeIn();
-             $('.collapse.in').toggleClass('in');
-             $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-         });
+        });
+        
+        $('#rigth-sidebarCollapse').on('click', function () {
+            $('#rigth-sidebar').addClass('active');
+            $('.overlay').fadeIn();
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+        
+        /* Tickets */
+        $( ".select2-single" ).select2( {
+            //theme: "bootstrap",
+            placeholder: "Selecciona si la solicitud es para otra persona",
+            maximumSelectionSize: 6,
+            containerCssClass: ':all:'
+        });
+        
+        $( ":checkbox" ).on( "click", function() {
+        	$( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+        });
      });
 </script>
 
