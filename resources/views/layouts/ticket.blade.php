@@ -1,5 +1,8 @@
 @section('header-bottom')
 <script type="text/javascript" src="{{ asset('js/ticket.js') }}"></script>
+<script type="text/javascript">
+
+</script>
 @endsection
 
 <!-- Sidebar Holder -->
@@ -9,7 +12,7 @@
     	<div class="h-content">
         <span><i class="material-icons medium white-text">live_help</i></span>
         <a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
-        <a href="#ticketHelp" class="waves-effect waves-light btn-flat white-text">Crear ticket/solicitud</a>
+        <a href="#ticketHelp" class="waves-effect waves-light btn-flat white-text dismiss" data-toggle="modal" data-target="#ticketHelp">Crear ticket/solicitud</a>
         </div>
     </div>
 

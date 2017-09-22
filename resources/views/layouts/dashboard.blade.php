@@ -108,7 +108,7 @@
              cursorborder: 'none'
          });
 
-         $('#dismiss, .overlay').on('click', function () {
+         $('.dismiss, .overlay').on('click', function () {
             $('#rigth-sidebar').removeClass('active');
             $('.overlay').fadeOut();
          });
