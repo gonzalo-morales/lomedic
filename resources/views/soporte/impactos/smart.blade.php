@@ -4,14 +4,14 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s8">
-		{{ Form::text('impacto', null, ['id'=>'impacto','class'=>'validate']) }}
+	<div class="form-group col-md-11 col-xs-12">
 		{{ Form::label('impacto', '* Impacto') }}
+		{{ Form::text('impacto', null, ['id'=>'impacto','class'=>'form-control']) }}
 		{{ $errors->has('impacto') ? HTML::tag('span', $errors->first('impacto'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="input-field col s4">
+	<div class="form-check col-md-1 col-xs-12">
 		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
+		{{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo']) }}
 		{{ Form::label('activo', '¿Activo?') }}
 		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>

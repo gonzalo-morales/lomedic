@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administracion;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\GrupoProductos;
+use Illuminate\Http\Request;
 
 class GrupoProductosController extends ControllerBase
 {
@@ -37,7 +38,7 @@ class GrupoProductosController extends ControllerBase
 		]);
 	}
 
-	/**
+    /**
 	 * Display the specified resource
 	 *
 	 * @param  integer $id

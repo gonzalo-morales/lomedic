@@ -1,12 +1,12 @@
 
-@section('content-width', 's12 m7 xl8 offset-xl2')
+@section('content-width', 's12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s12 m7">
-		{{ Form::text('combustible', null, ['id'=>'combustible','class'=>'validate']) }}
+	<div class="form-group col-md-12 col-xs-12">
 		{{ Form::label('combustible', 'Combustible') }}
+		{{ Form::text('combustible', null, ['id'=>'combustible','class'=>'form-control']) }}
 		{{ $errors->has('combustible') ? HTML::tag('span', $errors->first('combustible'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
 </div>

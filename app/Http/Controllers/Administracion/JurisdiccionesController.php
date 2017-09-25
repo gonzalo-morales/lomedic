@@ -32,9 +32,11 @@ class JurisdiccionesController extends ControllerBase
 	 */
 	public function create($company, $attributes = [])
 	{
-		return parent::create($company, [
-			'dataview' => $this->getDataView()
-		]);
+	    $attributes = $attributes + ['dataview'=>[
+	        'states'=>Estados::where('activo',1)->pluck('estado','id_estado')
+            ]];
+
+		return parent::create($company, $attributes);
 	}
 
 	/**
@@ -45,9 +47,10 @@ class JurisdiccionesController extends ControllerBase
 	 */
 	public function show($company, $id, $attributes = [])
 	{
-		return parent::show($company, $id, [
-			'dataview' => $this->getDataView()
-		]);
+        $attributes = $attributes + ['dataview'=>[
+                'states'=>Estados::where('activo',1)->pluck('estado','id_estado')
+            ]];
+		return parent::show($company, $id, $attributes);
 	}
 
 	/**
@@ -58,8 +61,9 @@ class JurisdiccionesController extends ControllerBase
 	 */
 	public function edit($company, $id, $attributes = [])
 	{
-		return parent::edit($company, $id, [
-			'dataview' => $this->getDataView()
-		]);
+        $attributes = $attributes + ['dataview'=>[
+                'states'=>Estados::where('activo',1)->pluck('estado','id_estado')
+            ]];
+		return parent::edit($company, $id, $attributes);
 	}
 }

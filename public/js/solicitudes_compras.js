@@ -1,19 +1,6 @@
 var a=[];
 // Inicializar los datepicker para las fechas necesarias
 $('.datepicker').pickadate({
-    //Cambiamos idiomas a español
-    labelMonthNext: 'Siguiente mes',
-    labelMonthPrev: 'Regresar mes',
-    labelMonthSelect: 'Selecciona el mes',
-    labelYearSelect: 'Selecciona el año',
-    monthsFull: [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ],
-    monthsShort: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
-    weekdaysFull: [ 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado' ],
-    weekdaysShort: [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab' ],
-    weekdaysLetter: [ 'D', 'L', 'M', 'M', 'J', 'V', 'S' ],
-    today: 'Hoy',
-    clear: 'Limpiar',
-    close: 'Aceptar',
     selectMonths: true, // Creates a dropdown to control month
     selectYears: 3, // Creates a dropdown of 3 years to control year
     min: true,

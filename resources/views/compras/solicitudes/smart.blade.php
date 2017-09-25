@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="{{ asset('js/select2.full.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/pickadate/picker.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/pickadate/picker.date.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/pickadate/translations/es_Es.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/toaster.js') }}"></script>
 
 
@@ -65,7 +66,7 @@
 		</div>
 		<div class="form-group input-field col-md-4 col-xs-12">
 			{{ Form::label('fecha_necesidad', '* ¿Para cuándo se necesita?') }}
-			{!! Form::text('fecha_necesidad',null,['id'=>'fecha_necesidad','class'=>'datepicker form-control','value'=>old('fecha_necesidad')]) !!}
+			{!! Form::text('fecha_necesidad',null,['id'=>'fecha_necesidad','class'=>'datepicker form-control','value'=>old('fecha_necesidad'),'placeholder'=>'Selecciona una fecha']) !!}
 		</div>
 		<div class="form-group input-field col-md-4 col-xs-12">
 			{{--{!! Form::select('fk_id_estatus_solicitud', \App\Http\Models\Compras\EstatusSolicitudes::all()->pluck('estatus','id_estatus'),null, ['id'=>'fk_id_sucursal']) !!}--}}
@@ -111,7 +112,7 @@
 						</div>
 						<div class="form-group input-field col-md-4 col-xs-12">
 							{{ Form::label('fecha_necesario', '* ¿Para cuándo se necesita?') }}
-							{!! Form::text('fecha_necesario',null,['id'=>'fecha_necesario','class'=>'datepicker form-control','value'=>old('fecha_necesario')]) !!}
+							{!! Form::text('fecha_necesario',null,['id'=>'fecha_necesario','class'=>'datepicker form-control','value'=>old('fecha_necesario'),'placeholder'=>'Selecciona una fecha']) !!}
 						</div>
 						<div class="form-group input-field col-md-4 col-xs-12">
 							{{Form::label('fk_id_proyecto','Proyecto')}}

@@ -1,20 +1,23 @@
 
-@section('content-width', 's12 m7 xl8 offset-xl2')
+@section('content-width', 's12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s6">
-		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'validate']) }}
-		{{ Form::label('descripcion', 'Descripción:') }}
-		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
+	<div class="col-md-12 col-xs-12">
+		{{ Form::label('descripcion', '* Descripción') }}
+
+		<div class="input-group">
+			{{ Form::text('descripcion', 1, ['id'=>'descripcion','class'=>'form-control']) }}
+			<div class="input-group-addon">
+			{{ Form::hidden('activo', 0) }}
+			{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
+			{{ Form::label('activo', 'Activo') }}
+			</div>
+		</div>
 	</div>
-	<div class="input-field col s2">
-		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-		{{ Form::label('activo', 'Activo:') }}
-		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
-	</div>
+	{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
+	{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
 </div>
 @endsection
 

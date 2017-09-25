@@ -4,17 +4,19 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s8">
-		{{ Form::text('modo_contacto', null, ['id'=>'modo_contacto','class'=>'validate']) }}
+	<div class="form-group col-md-11 col-xs-12">
 		{{ Form::label('modo_contacto', '* Modo Contacto') }}
-		{{ $errors->has('modo_contacto') ? HTML::tag('span', $errors->first('modo_contacto'), ['class'=>'help-block deep-orange-text']) : '' }}
+		<div class="input-group">
+			{{ Form::text('modo_contacto', null, ['id'=>'modo_contacto','class'=>'form-control']) }}
+			<div class="input-group-addon">
+			{{ Form::hidden('activo', 0) }}
+			{{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo']) }}
+			{{ Form::label('activo', '¿Activo?') }}
+			</div>
+		</div>
 	</div>
-	<div class="input-field col s4">
-		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-		{{ Form::label('activo', '¿Activo?') }}
-		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
-	</div>
+	{{ $errors->has('modo_contacto') ? HTML::tag('span', $errors->first('modo_contacto'), ['class'=>'help-block deep-orange-text']) : '' }}
+	{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
 </div>
 @endsection
 

@@ -32,7 +32,7 @@ class EstadosController extends ControllerBase
 	 */
 	public function create($company, $attributes = [])
 	{
-		$this->loadResources();
+//		$this->loadResources();
 		return parent::create($company, [
 			'dataview' => $this->getDataView()
 		]);
@@ -46,7 +46,7 @@ class EstadosController extends ControllerBase
 	 */
 	public function show($company, $id, $attributes = [])
 	{
-		$this->loadResources();
+//		$this->loadResources();
 		return parent::show($company, $id, [
 			'dataview' => $this->getDataView()
 		]);
@@ -60,7 +60,7 @@ class EstadosController extends ControllerBase
 	 */
 	public function edit($company, $id, $attributes = [])
 	{
-		$this->loadResources();
+//		$this->loadResources();
 		return parent::edit($company, $id, [
 			'dataview' => $this->getDataView()
 		]);

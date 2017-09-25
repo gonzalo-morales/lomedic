@@ -1,19 +1,17 @@
 
-@section('content-width', 's12 m7 xl8 offset-xl2')
+@section('content-width', 's12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-    <div class="input-field col s12">
-        {{ Form::text('marca', null, ['id'=>'marca','class'=>'validate']) }}
+    <div class="form-group col-md-11 col-xs-12">
         {{ Form::label('marca', 'Marca:') }}
+        {{ Form::text('marca', null, ['id'=>'marca','class'=>'form-control']) }}
         {{ $errors->has('marca') ? HTML::tag('span', $errors->first('marca'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
-</div>
-<div class="row">
-    <div class="col s12">
+    <div class="form-check col-md-1 col-xs-12">
         {{ Form::hidden('activo', 0) }}
-        {{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
+        {{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo']) }}
         {{ Form::label('activo', '¿Activo?') }}
         {{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>

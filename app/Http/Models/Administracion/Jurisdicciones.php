@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
-use Illuminate\Support\HtmlString;
 
 class Jurisdicciones extends ModelBase
 {
@@ -60,10 +59,10 @@ class Jurisdicciones extends ModelBase
 
 	/**
 	 * Obtenemos entidad federativa relacionada
-	 * @return \Illuminate\Database\Eloquent\Concerns\belongsTo
+	 * @return \Illuminate\Database\Eloquent\Relations\belongsTo
 	 */
 	public function estado()
 	{
-		return $this->belongsTo(Estados::class, 'fk_id_estado', 'id_estado');
+		return $this->belongsTo('App\Http\Models\Administracion\Estados', 'fk_id_estado', 'id_estado');
 	}
 }

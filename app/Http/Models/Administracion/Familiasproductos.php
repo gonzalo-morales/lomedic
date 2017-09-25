@@ -24,7 +24,7 @@ class Familiasproductos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['descripcion', 'tipo_presentacion','nomenclatura','tipo','activo'];
+	protected $fillable = ['descripcion', 'tipo_presentacion','nomenclatura','fk_id_tipo_producto','estatus'];
 
 	/**
 	 * The validation rules
@@ -34,7 +34,7 @@ class Familiasproductos extends ModelBase
 		'descripcion' => 'required',
 		'tipo_presentacion' => 'required',
 		'nomenclatura' => 'required',
-		'tipo' => 'required',
+		'fk_id_tipo_producto' => 'required',
 	];
 
 	/**
@@ -44,18 +44,28 @@ class Familiasproductos extends ModelBase
 	protected $fields = [
 		'descripcion' => 'Familia',
 		'tipo_presentacion' => 'Presentación',
-		'tipo' => 'Tipo',
+		'tipo_producto_descripcion' => 'Tipo',
 		'nomenclatura' => 'Nomenclatura',
 		'activo_span' => 'Estatus',
 	];
 
+    public function getTipoProductoDescripcionAttribute()
+    {
+        return $this->tipo_producto->descripcion;
+    }
+
 	public function usuario()
 	{
-		$this->hasOne('app\Http\Models\Administracion\Usuarios');
+		return $this->hasOne('app\Http\Models\Administracion\Usuarios');
 	}
 
 	public function empresa()
 	{
-		$this->$this->hasOne('app\Http\Models\Administracion\Empresas');
+		return $this->hasOne('app\Http\Models\Administracion\Empresas');
 	}
+
+	public function tipo_producto()
+    {
+        return $this->belongsTo('App\Http\Models\Administracion\TiposProductos','fk_id_tipo_producto','id_tipo');
+    }
 }

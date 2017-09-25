@@ -155,7 +155,12 @@ function getCacheTag($route = '')
 }
 
 function num2letras($num, $fem = false, $dec = true,$moneda = 'pesos',$abreviaturaMoneda = 'M.N.') {
-    $num = number_format($num,'2','.','');
+
+    //En caso de que no esté formateado
+    if(!strpos($num,',')){
+        $num = number_format($num,'2','.','');
+    }
+
     $matuni[2]  = "dos";
     $matuni[3]  = "tres";
     $matuni[4]  = "cuatro";

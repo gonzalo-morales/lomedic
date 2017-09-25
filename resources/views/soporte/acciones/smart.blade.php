@@ -4,20 +4,20 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s6">
-		{{ Form::text('accion', null, ['id'=>'accion','class'=>'validate']) }}
-		{{ Form::label('accion', '* Accion') }}
+	<div class="form-group col-md-5 col-xs-12">
+		{{ Form::label('accion', '* Acción') }}
+		{{ Form::text('accion', null, ['id'=>'accion','class'=>'form-control']) }}
 		{{ $errors->has('accion') ? HTML::tag('span', $errors->first('accion'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="input-field col s4">
-		{{ Form::select('fk_id_subcategoria', (isset($subcategorys) ? $subcategorys : []), ['id'=>'fk_id_subcategoria','class'=>'validate']) }}
+	<div class="form-group col-md-4 col-xs-12">
 		{{ Form::label('fk_id_subcategoria', '* Subcategoria') }}
+		{{ Form::select('fk_id_subcategoria', (isset($subcategorys) ? $subcategorys : []),null, ['id'=>'fk_id_subcategoria','class'=>'form-control']) }}
 		{{ $errors->has('fk_id_subcategoria') ? HTML::tag('span', $errors->first('fk_id_subcategoria'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="input-field col s2">
+	<div class="form-check col-md-3 col-xs-12">
 		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-		{{ Form::label('activo', '¿Activo?') }}
+		{{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo','class'=>'']) }}
+		{{ Form::label('activo', 'Activo') }}
 		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
 </div>

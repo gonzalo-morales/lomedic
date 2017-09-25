@@ -9,7 +9,7 @@
 @endsection
 
 @section('form-actions')
-    <div class="col-md-12">
+    <div class="col-md-12 col-xs-12">
         <div class="text-right">
             {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-primary']) }}
             @can('update', currentEntity())

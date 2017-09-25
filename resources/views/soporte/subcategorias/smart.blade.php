@@ -8,22 +8,23 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s6">
-		{{ Form::text('subcategoria', null, ['id'=>'subcategoria','class'=>'validate']) }}
-		{{ Form::label('subcategoria', '* subcategoria') }}
-		{{ $errors->has('subcategoria') ? HTML::tag('span', $errors->first('subcategoria'), ['class'=>'help-block deep-orange-text']) : '' }}
+	<div class="form-group col-md-12 col-xs-12">
+		{{ Form::label('subcategoria', '* Subcategoria') }}
+		<div class="input-group">
+		{{ Form::text('subcategoria', null, ['id'=>'subcategoria','class'=>'form-control']) }}
+			<div class="input-group-addon">
+		{{ Form::select('fk_id_categoria', isset($categories) ? $categories : [], null,['id'=>'fk_id_categoria','class'=>'form-control']) }}
+			</div>
+			<div class="input-group-addon">
+				{{ Form::hidden('activo', 0) }}
+				{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo','class'=>'']) }}
+				{{ Form::label('activo', 'Activo') }}
+			</div>
+		</div>
 	</div>
-	<div class="input-field col s4">
-		{{ Form::select('fk_id_categoria', (isset($categorys) ? $categorys : []), ['id'=>'fk_id_categoria','class'=>'validate']) }}
-		{{ Form::label('fk_id_categoria', '* Categoria') }}
-		{{ $errors->has('fk_id_categoria') ? HTML::tag('span', $errors->first('fk_id_categoria'), ['class'=>'help-block deep-orange-text']) : '' }}
-	</div>
-	<div class="input-field col s2">
-		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-		{{ Form::label('activo', '¿Activo?') }}
-		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
-	</div>
+	{{ $errors->has('subcategoria') ? HTML::tag('span', $errors->first('subcategoria'), ['class'=>'help-block deep-orange-text']) : '' }}
+	{{ $errors->has('fk_id_categoria') ? HTML::tag('span', $errors->first('fk_id_categoria'), ['class'=>'help-block deep-orange-text']) : '' }}
+	{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
 </div>
 @endsection
 

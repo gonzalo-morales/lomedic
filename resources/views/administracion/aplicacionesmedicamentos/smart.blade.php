@@ -1,21 +1,19 @@
 
-@section('content-width', 's12 m7 xl8 offset-xl2')
+@section('content-width', 's12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
-<div class="row">
-    <div class="input-field col s12 m5">
-        {{ Form::text('aplicacion', null, ['id'=>'aplicacion','class'=>'validate']) }}
-        {{ Form::label('aplicacion', 'Aplicacion:') }}
-        {{ $errors->has('aplicacion') ? HTML::tag('span', $errors->first('aplicacion'), ['class'=>'help-block deep-orange-text']) : '' }}
+    <div class="row">
+        <div class="input-group col-md-12 col-xs-12">
+{{--                {{ Form::label('aplicacion', '',['class'=>'col-form-label']) }}--}}
+                {{ Form::text('aplicacion', '', ['id'=>'aplicacion','class'=>'form-control','placeholder'=>'Aplicacion']) }}
+                <span class="input-group-addon">
+                    {{ Form::hidden('activo', 0) }}
+                    {{ Form::label('activo', 'Activo',['class'=>'col-form-label']) }}
+                    {{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo','class'=>'']) }}
+                </span>
+            {{ $errors->has('aplicacion') ? HTML::tag('span', $errors->first('aplicacion'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
-    <div class="input-field col s12 m7">
-        {{ Form::hidden('activo', 0) }}
-        {{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-        {{ Form::label('activo', 'Estatus:') }}
-        {{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
-    </div>
-</div>
 @endsection
 
 {{-- DONT DELETE --}}

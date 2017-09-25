@@ -4,17 +4,19 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s8">
-		{{ Form::text('estatus', null, ['id'=>'estatus','class'=>'validate']) }}
+	<div class="form-group col-md-12 col-xs-12">
 		{{ Form::label('estatus', '* Estatus') }}
-		{{ $errors->has('estatus') ? HTML::tag('span', $errors->first('estatus'), ['class'=>'help-block deep-orange-text']) : '' }}
+		<div class="input-group">
+			{{ Form::text('estatus', null, ['id'=>'estatus','class'=>'form-control']) }}
+			<div class="input-group-addon">
+				{{ Form::hidden('activo', 0) }}
+				{{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo']) }}
+				{{ Form::label('activo', '¿Activo?') }}
+			</div>
+		</div>
 	</div>
-	<div class="input-field col s4">
-		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-		{{ Form::label('activo', '¿Activo?') }}
-		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
-	</div>
+	{{ $errors->has('estatus') ? HTML::tag('span', $errors->first('estatus'), ['class'=>'help-block deep-orange-text']) : '' }}
+	{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
 </div>
 @endsection
 

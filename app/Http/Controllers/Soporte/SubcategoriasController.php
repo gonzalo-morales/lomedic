@@ -23,7 +23,7 @@ class SubcategoriasController extends ControllerBase
     {
         $attributes = $attributes + [
             'dataview' => [
-                'categorys' => $this->categories
+                'categories' => $this->categories
             ]
         ];
         return parent::create($company, $attributes);
@@ -33,7 +33,7 @@ class SubcategoriasController extends ControllerBase
     {
         $attributes = $attributes + [
             'dataview' => [
-                'categorys' => $this->categories
+                'categories' => $this->categories
             ]
         ];
         return parent::show($company, $id, $attributes);
@@ -43,7 +43,7 @@ class SubcategoriasController extends ControllerBase
     {
         $attributes = $attributes + [
             'dataview' => [
-                'categorys' => $this->categories
+                'categories' => $this->categories
             ]
         ];
         return parent::edit($company, $id, $attributes);

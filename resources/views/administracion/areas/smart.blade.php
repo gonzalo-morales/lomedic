@@ -1,27 +1,28 @@
 
-@section('content-width', 's12 m7 xl8 offset-xl2')
+@section('content-width', 's12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s12 m12 l6">
-		{{ Form::text('area', null, ['id'=>'area','class'=>'validate']) }}
+	<div class="form-group col-md-6 col-xs-12">
 		{{ Form::label('area', '* Area') }}
-		{{ $errors->has('area') ? HTML::tag('span', $errors->first('area'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{{ Form::text('area', null, ['id'=>'area','class'=>'form-control']) }}
+		{{ $errors->has('area') ? HTML::tag('span', $errors->first('area'), ['class'=>'help-block deep-orange-text form-control']) : '' }}
 	</div>
-	<div class="input-field col s12 m8 l4">
-		{{ Form::text('clave_area', null, ['id'=>'clave_area','class'=>'validate']) }}
+	<div class="form-group col-md-5 col-xs-12">
 		{{ Form::label('clave_area', '* Clave') }}
+		{{ Form::text('clave_area', null, ['id'=>'clave_area','class'=>'form-control']) }}
 		{{ $errors->has('clave_area') ? HTML::tag('span', $errors->first('clave_area'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="input-field col s12 m4 l2">
+	<div class="form-group col-md-1 col-xs-12">
+		<div class="input-group-addon">
 		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-		{{ Form::label('activo', '¿Activo?') }}
+		{{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo','class'=>'']) }}
+		{{ Form::label('activo', '¿Activo?',['class'=>'']) }}
+		</div>
 	</div>
 </div>
 @endsection
-
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
 	@include('layouts.smart.index')

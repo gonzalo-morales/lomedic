@@ -4,12 +4,12 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s8">
-		{{ Form::text('causa_baja', null, ['id'=>'causa_baja','class'=>'validate']) }}
+	<div class="form-group col-md-8 col-xs-12">
 		{{ Form::label('causa_baja', '* Causa Baja') }}
+		{{ Form::text('causa_baja', null, ['id'=>'causa_baja','class'=>'form-control']) }}
 		{{ $errors->has('causa_baja') ? HTML::tag('span', $errors->first('causa_baja'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="input-field col s4">
+	<div class="form-check-label col-md-4 col-xs-12">
 		{{ Form::hidden('activo', 0) }}
 		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'nacional']) }}
 		{{ Form::label('activo', '¿Activo?') }}

@@ -4,19 +4,17 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s6">
-		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'validate']) }}
+	<div class="form-group col-md-12 col-xs-12">
 		{{ Form::label('descripcion', '* Descripcion') }}
+		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'validate']) }}
 		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="input-field col s6">
-		{{ Form::text('nomenclatura', null, ['id'=>'nomenclatura','class'=>'validate']) }}
+	<div class="form-group col-md-12 col-xs-12">
 		{{ Form::label('nomenclatura', '* Nomenclatura') }}
+		{{ Form::text('nomenclatura', null, ['id'=>'nomenclatura','class'=>'validate']) }}
 		{{ $errors->has('nomenclatura') ? HTML::tag('span', $errors->first('nomenclatura'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-</div>
-<div class="row">
-	<div class="input-field col s12">
+	<div class="form-check-label col-md-12 col-xs-12">
 		{{ Form::hidden('activo', 0) }}
 		{{ Form::checkbox('activo', null, old('nacional'), ['id'=>'activo']) }}
 		{{ Form::label('activo', '¿Activo?') }}

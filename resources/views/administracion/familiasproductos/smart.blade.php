@@ -1,33 +1,40 @@
 
-@section('content-width', 's12 m7 xl8 offset-xl2')
+@section('content-width', 's12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
+{{--{{dd($data)}}--}}
 <div class="row">
-    <div class="input-field col s12 m5">
-        {{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'validate']) }}
-        {{ Form::label('descripcion', 'Familia:') }}
+    <div class="form-group col-md-6 col-xs-12">
+        {{ Form::label('descripcion', 'Familia') }}
+        {{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'form-control']) }}
         {{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
-    <div class="input-field col s12 m4">
-        {{ Form::text('nomenclatura', null, ['id'=>'nomenclatura','class'=>'validate']) }}
-        {{ Form::label('nomenclatura', 'Nomenclatura:') }}
+    <div class="form-group col-md-6 col-xs-12">
+        {{ Form::label('nomenclatura', 'Nomenclatura') }}
+        {{ Form::text('nomenclatura', null, ['id'=>'nomenclatura','class'=>'form-control']) }}
         {{ $errors->has('nomenclatura') ? HTML::tag('span', $errors->first('nomenclatura'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
-    <div class="input-field col s12 m5">
-        {{ Form::text('tipo', null, ['id'=>'tipo','class'=>'validate']) }}
-        {{ Form::label('tipo', 'Tipo:') }}
+    <div class="form-group col-md-5 col-xs-12">
+        {{ Form::label('fk_id_tipo_producto', 'Tipo') }}
+{{--        {{ Form::text('tipo', null, ['id'=>'tipo','class'=>'form-control']) }}--}}
+        {{Form::select('fk_id_tipo_producto',isset($product_types)?$product_types:[],null,['class'=>'form-control'])}}
         {{ $errors->has('tipo') ? HTML::tag('span', $errors->first('tipo'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
-    <div class="input-field col s12 m4">
-        {{ Form::text('tipo_presentacion', null, ['id'=>'tipo_presentacion','class'=>'validate']) }}
-        {{ Form::label('tipo_presentacion', 'Presentacion:') }}
+    <div class="form-group col-md-5 col-xs-12">
+        {{ Form::label('tipo_presentacion', 'Presentacion') }}
+        {{ Form::select('tipo_presentacion',
+        ['1'=>'Cantidad',
+        '2'=>'Cantidad y Unidad',
+        '3'=>'Ampolletas (Ámpulas)',
+        '4'=>'Dosis'],
+        null, ['id'=>'tipo_presentacion','class'=>'form-control']) }}
         {{ $errors->has('tipo_presentacion') ? HTML::tag('span', $errors->first('tipo_presentacion'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
-    <div class="input-field col s12 m3">
+    <div class="form-check col-md-2 col-xs-12">
         {{ Form::hidden('activo', 0) }}
-        {{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-        {{ Form::label('activo', 'Activo:') }}
+        {{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo','class'=>'']) }}
+        {{ Form::label('activo', 'Activo') }}
         {{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
 </div>

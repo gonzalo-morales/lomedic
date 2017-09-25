@@ -13,6 +13,6 @@ jQuery.extend( jQuery.fn.pickadate.defaults, {
     formatSubmit: 'yyyy/mm/dd'
 });
 
-jQuery.extend( jQuery.fn.pickatime.defaults, {
-    clear: 'borrar'
-});
+// jQuery.extend( jQuery.fn.pickatime.defaults, {
+//     clear: 'borrar'
+// });

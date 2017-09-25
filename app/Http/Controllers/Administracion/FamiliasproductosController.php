@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Administracion;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\FamiliasProductos;
+use App\Http\Models\Administracion\TiposProductos;
+use Illuminate\Http\Request;
 
 class FamiliasproductosController extends ControllerBase
 {
@@ -32,13 +34,22 @@ class FamiliasproductosController extends ControllerBase
 	 */
 	public function create($company, $attributes = [])
 	{
-		$this->loadResources();
-		return parent::create($company, [
-			'dataview' => $this->getDataView()
-		]);
+//		$this->loadResources();
+        $attributes = $attributes+ $attributes+['dataview'=>[
+            'product_types'=>TiposProductos::where('estatus',1)->pluck('descripcion','id_tipo')
+        ]];
+		return parent::create($company,$attributes);
 	}
 
-	/**
+	public function store(Request $request, $company)
+    {
+        if($request->activo == 'on')
+            {$request->request->set('estatus',1);}
+
+        return parent::store($request, $company);
+    }
+
+    /**
 	 * Display the specified resource
 	 *
 	 * @param  integer $id
@@ -46,10 +57,11 @@ class FamiliasproductosController extends ControllerBase
 	 */
 	public function show($company, $id, $attributes = [])
 	{
-		$this->loadResources();
-		return parent::show($company, $id, [
-			'dataview' => $this->getDataView()
-		]);
+//		$this->loadResources();
+        $attributes = $attributes+ $attributes+['dataview'=>[
+                'product_types'=>TiposProductos::where('estatus',1)->pluck('descripcion','id_tipo'),
+            ]];
+		return parent::show($company, $id, $attributes);
 	}
 
 	/**
@@ -60,9 +72,10 @@ class FamiliasproductosController extends ControllerBase
 	 */
 	public function edit($company, $id, $attributes = [])
 	{
-		$this->loadResources();
-		return parent::edit($company, $id, [
-			'dataview' => $this->getDataView()
-		]);
+//		$this->loadResources();
+        $attributes = $attributes+ $attributes+['dataview'=>[
+                'product_types'=>TiposProductos::where('estatus',1)->pluck('descripcion','id_tipo'),
+            ]];
+		return parent::edit($company, $id, $attributes);
 	}
 }

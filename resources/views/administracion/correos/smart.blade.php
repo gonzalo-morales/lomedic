@@ -1,27 +1,25 @@
-
-@section('content-width', 's12 m7 xl8 offset-xl2')
+@section('content-width', 's12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s4">
-		{{ Form::text('correo', null, ['id'=>'correo','class'=>'validate']) }}
+	<div class="form-group col-md-4 col-xs-12">
 		{{ Form::label('correo', 'Correo:') }}
+		{{ Form::text('correo', null, ['id'=>'correo','class'=>'form-control']) }}
 		{{ $errors->has('correo') ? HTML::tag('span', $errors->first('correo'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="input-field col s4">
-		{{ Form::select('fk_id_empresa', (isset($companies) ? $companies : []), null, ['id'=>'fk_id_empresa','class'=>'validate']) }}
+	<div class="form-group col-md-4 col-xs-12">
 		{{ Form::label('fk_id_empresa', 'Empresa:') }}
+		{{ Form::select('fk_id_empresa', (isset($companies) ? $companies : []), null, ['id'=>'fk_id_empresa','class'=>'form-control select']) }}
 		{{ $errors->has('fk_id_empresa') ? HTML::tag('span', $errors->first('fk_id_empresa'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="input-field col s4">
-		{{ Form::select('fk_id_usuario', (isset($users) ? $users : []), null, ['id'=>'fk_id_usuario','class'=>'validate']) }}
+	<div class="form-group col-md-4 col-xs-12">
 		{{ Form::label('fk_id_usuario', 'Usuario:') }}
+		{{ Form::select('fk_id_usuario', (isset($users) ? $users : []), null, ['id'=>'fk_id_usuario','class'=>'form-control select']) }}
 		{{ $errors->has('fk_id_usuario') ? HTML::tag('span', $errors->first('fk_id_usuario'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
 </div>
 @endsection
-
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
 	@include('layouts.smart.index')

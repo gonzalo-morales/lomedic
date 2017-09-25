@@ -7,7 +7,7 @@
 @endsection
 
 @section('form-actions')
-	<div class="col-md-12">
+	<div class="col-md-12 col-xs-12">
 		<div class="text-right">
 			{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
 			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default']) }}
@@ -26,9 +26,11 @@
     		<div class="row">
     			@yield('form-title')
     			@yield('form-actions')
-    			<fieldset @yield('fieldset')>
-    				@yield('form-content')
-    			</fieldset>
+				<div class="col-md-12 col-xs-12">
+					<fieldset @yield('fieldset')>
+						@yield('form-content')
+					</fieldset>
+				</div>
     		</div>
 		{!! Form::close() !!}
 		@yield('form-utils')
