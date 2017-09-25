@@ -1,3 +1,14 @@
+.select2,  .select2-selection {
+	width: 100% !important;
+}
+
+.custom-file-control::after {
+	content: "Seleccionar archivo(s)...";
+}
+   
+.custom-file-control::before {
+	content: "Examinar";
+}
 
 #sidebar a, #sidebar a:hover, #sidebar a:focus {
     color: inherit;
@@ -189,7 +200,6 @@ a.article, a.article:hover {
     CONTENT STYLE
 ----------------------------------------------------- */
 #content {
-    padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
     width: 100%;
@@ -356,30 +366,6 @@ a.article, a.article:hover {
 #rigth-sidebar ul li a:hover {
     color: #333;
     background: #E8E8E8;
-}
-
-#rigth-sidebar ul li.active > a, a[aria-expanded="true"] {
-    color: #10A98D;
-    /*background: #6d7fcc;*/
-}
-
-
-a[data-toggle="collapse"] {
-    position: relative;
-}
-
-a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
-    display: block;
-    position: absolute;
-    right: 20px;
-    font-family: 'Glyphicons Halflings';
-    font-size: 0.6em;
-}
-
-ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    /*background: #6d7fcc;*/
 }
 
 ul.CTAs {
