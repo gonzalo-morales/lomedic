@@ -10,6 +10,7 @@ use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\RecursosHumanos\Puestos;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use DB;
 
 class EmpleadosController extends ControllerBase
 {
@@ -84,13 +85,7 @@ class EmpleadosController extends ControllerBase
 
     public function obtenerEmpleados($company)
     {
-        $empleados = Empleados::all()->where('activo', '1');
-        foreach ($empleados as $empleado) {
-            $empleado_data['id'] = (int) $empleado->id_empleado;
-            $empleado_data['text'] = $empleado->nombre . " " . $empleado->apellido_paterno . " " . $empleado->apellido_materno;
-            $empleados_set[] = $empleado_data;
-        }
-        return Response::json($empleados_set);
+        return Empleados::where('activo','1')->where('eliminar','0')->select("id_empleado as id",DB::Raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"))->get()->toJson();
     }
 
     public function obtenerEmpleado($company)

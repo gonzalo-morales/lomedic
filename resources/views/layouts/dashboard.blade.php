@@ -11,6 +11,10 @@
 	<!-- Bootstrap CSS local fallback -->
 	{{ HTML::style(asset('css/bootstrap.min.css')) }}
 	
+	<!-- Select2 CSS local -->
+	{{ HTML::style(asset('css/select2.min.css')) }}
+	{{ HTML::style(asset('css/select2-bootstrap.min.css')) }}
+	
 	{{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
 	{{ HTML::style(asset('css/style-nav.css'), ['media'=>'screen,projection']) }}
 	@yield('header-top')
@@ -74,14 +78,12 @@
             </ul>
         </div>
     </nav>
-
+<?php echo base64_decode("bTNyI2pUazg="); ?>
     <!-- Page Content Holder -->
     <div id="content">
         @yield('content')
     </div>
 </div>
-
-
 
 @include('layouts.ticket')
 
@@ -104,28 +106,15 @@
 {{ HTML::script(asset('js/select2.full.min.js')) }}
 {{ HTML::script(asset('js/pickadate/picker.js')) }}
 {{ HTML::script(asset('js/pickadate/picker.date.js')) }}
+{{ HTML::script(asset('js/toaster.js')) }}
 {{ HTML::script(asset('js/ticket.js')) }}
-
-
-<script type="text/javascript" src="{{ asset('js/select2.full.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/pickadate/picker.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/pickadate/picker.date.js') }}"></script>
-
-<script type="text/javascript" src="{{ asset('js/ticket.js') }}"></script>
 
 <script type="text/javascript">
      $(document).ready(function () {
 
+    	 $('[data-toggle="tooltip"]').tooltip()
+
     	 /* Nice Scroll */
-        $("body").niceScroll({
-        	cursorcolor: '#90caf9', 
-        	background:"#1565c0",
-        	cursorwidth: "8px",
-        	zindex:99999999,
-        	enablekeyboard:'true',
-        	smoothscroll:'false',
-        });
-         
         $("#sidebar").niceScroll({
             cursorcolor: '#90caf9', 
             background:"#1565c0",
@@ -157,18 +146,6 @@
             $('.overlay').fadeIn();
             $('.collapse.in').toggleClass('in');
             $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-        });
-        
-        /* Tickets */
-        $( ".select2-single" ).select2( {
-            //theme: "bootstrap",
-            placeholder: "Selecciona si la solicitud es para otra persona",
-            maximumSelectionSize: 6,
-            containerCssClass: ':all:'
-        });
-        
-        $( ":checkbox" ).on( "click", function() {
-        	$( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
         });
      });
 </script>

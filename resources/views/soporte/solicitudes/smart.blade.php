@@ -35,7 +35,7 @@
         		<h5 class="grey-text text-darken-2">{{ (isset($data->empleado) ? $data->empleado->nombre.' '.$data->empleado->apellido_paterno.' '.$data->empleado->apellido_materno : '') }}</h5>
         	</div>
         	<div class="col s6 m3">
-        		<h5 class="{{isset($data->prioridad->color) ? $data->prioridad->color.'-text': ''}} text-darken-2 facturas-line">
+        		<h5 class="{{isset($data->prioridad->color) ? 'text-'.$data->prioridad->color : ''}} text-darken-2 facturas-line">
         			Prioridad {{isset($data->prioridad->prioridad) ? $data->prioridad->prioridad : ''}} 
         			<i class="material-icons">{{isset($data->prioridad->icono) ? $data->prioridad->icono : ''}}</i><br>
         			<span class="green-text">Estatus. Abierto</span>

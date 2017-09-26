@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use App\Http\Models\RecursosHumanos\Empleados;
 
 class Usuarios extends ModelBase implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
@@ -70,6 +71,10 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 
 	public function mails(){
 		return $this->hasMany('app\Http\Models\Correos');
+	}
+	
+	public function empleado(){
+	    return $this->hasMany(Empleados::class,'fk_id_empleado','id_empleado');
 	}
 
 	public function branches(){

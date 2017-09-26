@@ -1,7 +1,12 @@
-.select2,  .select2-selection {
+.select2-container {
 	width: 100% !important;
 }
-
+.select2-selection {
+	width: 96% !important;
+}
+.select2 .selection {
+	width: 100% !important;
+}
 .custom-file-control::after {
 	content: "Seleccionar archivo(s)...";
 }
@@ -360,6 +365,7 @@ a.article, a.article:hover {
 
 #rigth-sidebar ul li a {
     padding: 10px;
+    font-size: 1.1em;
     display: block;
 }
 #rigth-sidebar ul li a:hover {

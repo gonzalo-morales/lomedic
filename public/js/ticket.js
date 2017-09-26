@@ -1,188 +1,191 @@
 $(document).ready(function () {
-    $('#fk_id_categoria option[value="0"]').prop('disabled',true);
-    let data_empleados = $('#empleado_solicitud').data('url');
-    $.ajax({
-        type:'GET',
-        url: data_empleados,
-        success: function (response) {
-            $('#empleado_solicitud').autocomplete2({
-                data: response
-            });
+	// check box para habilitar la seleccion de otro empleado
+	$( ":checkbox" ).on( "click", function() {
+    	$( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+    	if( !this.checked )
+    		$( this ).parent().nextAll( "select" ).empty().trigger('change');
+    });
+	
+	//cuando se habilita otro empledo carga los empleados disponibles
+	var options = new Option('Selecciona un empleado', '', true, false);
+    $('#empleado_solicitud').prepend(options);
+    $('#empleado_solicitud option:selected').prop('disabled', true);
+
+    $( "#empleado_solicitud" ).select2({
+    	theme: "bootstrap",
+        placeholder: "Selecciona si la solicitud es para otra persona",
+        maximumSelectionSize: 6,
+        containerCssClass: ':all:',
+        ajax: {
+            dataType: 'json',
+            url: $('#empleado_solicitud').data('url'),
+            delay:250,
+            data: function (params) {
+                return {q: params.term}
+            },
+            processResults: function (data) {
+                return {results: data}
+            }
         },
     });
-
-    $('#empleado_solicitud').change(function () {
-        sucursal();
+    
+    //Carga las sucursales del empleado que inicio sesion
+    var options = new Option('Selecciona una sucursal', '', true, false);
+    $('#fk_id_sucursal').prepend(options);
+    $('#fk_id_sucursal option:selected').prop('disabled', true);
+    id_empleado = $('#id_solicitante').val();
+    url_sucursal = $('#fk_id_sucursal').data('url');
+    
+    $( "#fk_id_sucursal" ).select2({
+    	theme: "bootstrap",
+        maximumSelectionSize: 6,
+        containerCssClass: ':all:',
+        ajax: {
+            dataType: 'json',
+            url: url_sucursal.replace('?id', id_empleado),
+            delay:250,
+            data: function (params) {
+                return {q: params.term}
+            },
+            processResults: function (data) {
+                return {results: data}
+            }
+        },
+    });
+    
+    //Carga las sucursales para el empleado seleccionado
+    $('#empleado_solicitud').bind('change', function(){
+    	$("#fk_id_sucursal").empty();
+    	var options = new Option('Selecciona una sucursal', '', true, false);
+        $('#fk_id_sucursal').prepend(options);
+        $('#fk_id_sucursal option:selected').prop('disabled', true);
+	    	    
+	    let url_sucursal = $('#fk_id_sucursal').data('url');
+	    let id_empleado = $('option:selected', this).val();
+	    
+	    if( !id_empleado ) {
+	    	id_empleado = $('#id_solicitante').val();
+	    }
+	    
+	    $( "#fk_id_sucursal" ).select2({
+	    	theme: "bootstrap",
+	        placeholder: "Sucursal",
+	        maximumSelectionSize: 6,
+	        containerCssClass: ':all:',
+	        ajax: {
+	            dataType: 'json',
+	            url: url_sucursal.replace('?id', id_empleado),
+	            delay:250,
+	            data: function (params) {
+	                return {q: params.term}
+	            },
+	            processResults: function (data) {
+	                return {results: data}
+	            }
+	        },
+	    });
     });
 
-    activar_empleado();
-
+    //Carga de subcategorias al elegir una categoria
+    var options = new Option('Selecciona una categoria', '', true, false);
+    $('#fk_id_categoria').prepend(options);
+    $('#fk_id_categoria').val('');
+    $('#fk_id_categoria option:selected').prop('disabled', true);
+    
     $('#fk_id_categoria').on('change', function(){
-        let data = $(this).data('url');
-        let id = $('option:selected', this).val();
+        let url = $(this).data('url');
 
-        $('#fk_id_accion option').remove();
-        $('#fk_id_subcategoria option').remove();
-        $('#fk_id_subcategoria').prop('disabled',true);
-        $('#fk_id_accion').prop('disabled',true);
+        $('#fk_id_subcategoria').empty();
+        $('#fk_id_accion').empty();
+        $('#fk_id_subcategoria').prop('disabled',!$('option:selected', this).val());
+        $('#fk_id_accion').prop('disabled',!$('#fk_id_subcategoria option:selected').val());
 
         $.ajax({
-            url: data.replace('?id', $('option:selected', this).val()),
+            url: url.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
-                let option = $('<option/>');
-                option.val(null);
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                option.text('Selecciona una subcategoría');
-                $('#fk_id_subcategoria').append(option);
-                $.each(data, function (key, subcategoria) {
-                    let option = $('<option/>');
-                    option.val(subcategoria.id_subcategoria);
-                    option.text(subcategoria.subcategoria);
-
-                    $('#fk_id_subcategoria').append(option);
-
+            	var options = new Option('Selecciona una subcategoria', '', true, false);
+                $('#fk_id_subcategoria').prepend(options);
+                $('#fk_id_subcategoria option:selected').prop('disabled', true);
+                $.each(data, function (key, data) {
+                	var option = new Option(data.subcategoria, data.id_subcategoria, false, false);
+                	$('#fk_id_subcategoria').append(option);
                 });
-                if(Object.keys(data).length ==0)
-                {$('#fk_id_subcategoria').prop('disabled',true)}
-                else{$('#fk_id_subcategoria').prop('disabled',false)}
-                $('select').material_select();
             },
             error: function () {
                 alert('error');
             }
         });
-
     });
-
+    
+    //Carga acciones segun al elegir una subcategoria
     $('#fk_id_subcategoria').on('change', function(){
-        let data = $(this).data('url');
-        $('#fk_id_accion option').remove();
+        let url = $(this).data('url');
+
+        $('#fk_id_accion').empty();
+        $('#fk_id_accion').prop('disabled',!$('option:selected', this).val());
+
         $.ajax({
-            url: data.replace('?id', $('option:selected', this).val()),
+            url: url.replace('?id', $('option:selected', this).val()),
             dataType: 'json',
             success: function (data) {
-                let option = $('<option/>');
-                option.val(null);
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                option.text('Selecciona una acción');
-                $('#fk_id_accion').append(option);
-                $.each(data, function (key, accion) {
-
-                    let option = $('<option/>');
-                    option.val(accion.id_accion);
-                    option.text(accion.accion);
-
-                    $('#fk_id_accion').append(option);
+            	var options = new Option('Selecciona una accion', '', true, false);
+                $('#fk_id_accion').prepend(options);
+                $('#fk_id_accion option:selected').prop('disabled', true);
+                $.each(data, function (key, data) {
+                	var option = new Option(data.accion, data.id_accion, false, false);
+                	$('#fk_id_accion').append(option);
                 });
-                if(Object.keys(data).length ==0)
-                {$('#fk_id_accion').prop('disabled',true)}
-                else{$('#fk_id_accion').prop('disabled',false)}
-                $('select').material_select();
             },
             error: function () {
                 alert('error');
             }
         });
     });
-});
-
-function activar_empleado(){
-    $('#fk_id_sucursal').prop('disabled',true);//Deshabilitar
-    if ($('#otherUser').prop('checked') == true)
-    {
-        $('#empleado_solicitud').prop('disabled',false);
-        removerOpciones('fk_id_sucursal');
-        $('select').material_select();
-    }
-    else
-    {
-        $('#empleado_solicitud').prop('disabled',true);
-        $('#empleado_solicitud').val('');
-        $('#nombre_solicitante').val('');
-        sucursal();
-    }
-}
-
-function sucursal()
-{
-    $('#nombre_solicitante').val($('#empleado_solicitud').val());
-    let url = $('#nombre_solicitante').data('url');
-    $('#fk_id_sucursal').prop('disabled',true);//Deshabilitar
-    if($('#forMe1').prop('checked')==true)//Si es para el usuario activo
-    {
-        let data_empleado = $('#forMe1').data('url');
-        $.ajax({
-            type:'GET',
-            url: data_empleado,
-            success: function (response) {
-                // $('#fk_id_sucursal option').remove();//Limpiar
-                $('#fk_id_sucursal').prop('disabled',true);//Deshabilitar
-
-                $.ajax({
-                    url: url.replace('?id', response),
-                    dataType: 'json',
-                    success: function (data) {
-                        removerOpciones('fk_id_sucursal');
-                        let option = $('<option/>');
-                        option.val(null);
-                        option.attr('disabled','disabled');
-                        option.attr('selected','selected');
-                        option.text('Selecciona una sucursal');
-                        $('#fk_id_sucursal').append(option);
-                        $.each(data, function (key, sucursal) {
-                            let option = $('<option/>');
-                            option.val(sucursal.id_sucursal);
-                            option.text(sucursal.nombre_sucursal);
-                            $('#fk_id_sucursal').append(option);
-                        });
-                        if(Object.keys(data).length ==0)
-                        {$('#fk_id_sucursal').prop('disabled',true)}
-                        else{$('#fk_id_sucursal').prop('disabled',false)}
-
-                        $('select').material_select();
-                    },
-                    error: function () {
-                        alert('error');
+    
+    //Selecciona Prioridad
+    var options = new Option('Selecciona una prioridad', '', true, false);
+    $('#fk_id_prioridad').prepend(options);
+    $('#fk_id_prioridad').val('');
+    $('#fk_id_prioridad option:selected').prop('disabled', true);
+    
+    //Validaciones antes del submit
+    $( "#form-ticket" ).submit(function( event ) {
+    	var mensaje = '';
+    	
+    	if($('#check_solicitante').is(":checked") && !$('#empleado_solicitud').val()) {
+    		mensaje = mensaje + '<br> Especifica el solicitante.';
+    	}
+    	if(!$('#fk_id_sucursal').val()) {
+    		mensaje = mensaje + '<br> Especifica una sucursal.';
+    	}
+    	if(!$('#fk_id_prioridad').val()) {
+    		mensaje = mensaje + '<br> Especifica una prioridad.';
+    	}
+    	
+    	if(!$('#asunto').val()) {
+    		mensaje = mensaje + '<br> Especifica un Asunto.';
+    	}
+    	
+    	if(!$('#descripcion').val()) {
+    		mensaje = mensaje + '<br> Especifica la descripcion del problema.';
+    	}
+    	
+    	if(mensaje.length >= 1) {
+    		event.preventDefault();
+    		$.toaster({
+                priority : 'danger',
+                title : 'Verifica los siguiente',
+                message : mensaje,
+                settings:{
+                    'timeout':10000,
+                    'toaster':{
+                        'css':{
+                            'top':'5em'
+                        }
                     }
-                });
-            }
-        });
-    }else if($('#empleado_solicitud').data('id')>0)//Si es para otra persona
-    {
-        $.ajax({
-            url: url.replace('?id', $('#empleado_solicitud').data('id')),
-            dataType: 'json',
-            success: function (data) {
-                removerOpciones('fk_id_sucursal');
-                let option = $('<option/>');
-                option.val(null);
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                option.text('Selecciona una sucursal');
-                $('#fk_id_sucursal').append(option);
-                $.each(data, function (key, sucursal) {
-                    let option = $('<option/>');
-                    option.val(sucursal.id_sucursal);
-                    option.text(sucursal.nombre_sucursal);
-
-                    $('#fk_id_sucursal').append(option);
-
-                });
-                if(Object.keys(data).length ==0)
-                {$('#fk_id_sucursal').prop('disabled',true)}
-                else{$('#fk_id_sucursal').prop('disabled',false)}
-                $('select').material_select();
-            },
-            error: function () {
-                alert('error');
-            }
-        });
-    }
-}
-
-function removerOpciones(id) {
-    document.getElementById(id).options.length = 0;
-}
+                }
+            });
+    	}
+	});
+});

@@ -95,6 +95,8 @@ class ControllerBase extends Controller
 		# ¿Usuario tiene permiso para crear?
 		$this->authorize('create', $this->entity);
 
+		$request->request->set('activo',!empty($request->request->get('activo')));
+		
 		# Validamos request, si falla regresamos pagina
 		$this->validate($request, $this->entity->rules);
 
@@ -159,6 +161,8 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);
+		
+		$request->request->set('activo',!empty($request->request->get('activo')));
 
 		# Validamos request, si falla regresamos atras
 		$this->validate($request, $this->entity->rules);
