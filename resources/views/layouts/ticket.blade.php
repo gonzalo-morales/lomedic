@@ -5,27 +5,27 @@
     	<div class="h-content">
         <span><i class="material-icons medium white-text">live_help</i></span>
         <a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
-        <a href="#ticketHelp" class="waves-effect waves-light btn-flat white-text dismiss" data-toggle="modal" data-target="#ticketHelp">Crear ticket/solicitud</a>
+        <a href="#ticketHelp" class="white-text dismiss" data-toggle="modal" data-target="#ticketHelp">Crear ticket/solicitud</a>
         </div>
     </div>
 
     <ul class="list-unstyled components bg-white">
     	<li>
-            <a class="collapsed" href="#tickets" data-toggle="collapse" aria-expanded="false">
+            <a class="collapsed d-flex" href="#tickets" data-toggle="collapse" aria-expanded="false">
             	<i class="material-icons">list</i>Tickets recientes
             	<i class="material-icons float-right grey-text">expand_more</i>
             </a>
             <ul id="tickets" class="list-unstyled collapse" aria-expanded="false">
                 @foreach($ultimos_tickets as $ticket)
                 <li>
-                	<a href="{{ companyAction('Soporte\SolicitudesController@show', ['id' => $ticket->id_solicitud]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">note</i>
+                	<a href="{{ companyAction('Soporte\SolicitudesController@show', ['id' => $ticket->id_solicitud]) }}" class="btn btn-default d-flex"><i class="material-icons">note</i>
                         {{$ticket->asunto}}
                     </a>
                 </li>
                 @endforeach
             </ul>
         </li>
-        <li><a href="{{ companyAction('Soporte\SolicitudesController@index') }}"><i class="material-icons">dvr</i>Todos mis tickets</a></li>
+        <li><a href="{{ companyAction('Soporte\SolicitudesController@index') }}" class="d-flex"><i class="material-icons">dvr</i> Todos mis tickets</a></li>
         <div class="divider"></div>
         <li><a href="#!">Gestion Estrategica (GE)</a></li>
         <li><a href="#!">Gestion de Negociacion (GN)</a></li>
