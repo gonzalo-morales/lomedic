@@ -78,7 +78,7 @@
             </ul>
         </div>
     </nav>
-<?php echo base64_decode("bTNyI2pUazg="); ?>
+
     <!-- Page Content Holder -->
     <div id="content">
         @yield('content')
