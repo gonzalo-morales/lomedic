@@ -22,7 +22,7 @@
 @endsection
 
 @section('form-actions')
-	<div class="text-right">
+	<div class="text-right col-md-12 mb-3">
 		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
 		@if (Route::currentRouteNamed(currentRouteName('show')))
 			{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
@@ -110,21 +110,21 @@
 							{{Form::label('fk_id_proyecto','Proyecto')}}
 							{!!Form::select('fk_id_proyecto',isset($proyectos)?$proyectos:[],null,['id'=>'fk_id_proyecto','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%',])!!}
 						</div>
-						<div class="form-group input-field col-md-2 col-sm-3">
+						<div class="form-group input-field col-md-2 col-sm-4">
 							{{ Form::label('fecha_necesario', '* ¿Para cuándo se necesita?') }}
 							{!! Form::text('fecha_necesario',null,['id'=>'fecha_necesario','class'=>'datepicker form-control','value'=>old('fecha_necesario'),'placeholder'=>'Selecciona una fecha']) !!}
 						</div>
-						<div class="form-group input-field col-md-2 col-sm-3">
+						<div class="form-group input-field col-md-2 col-sm-4">
 							{{Form::label('cantidad','Cantidad')}}
 							{!! Form::text('cantidad','1',['id'=>'cantidad','min'=>'1','class'=>'validate form-control cantidad','autocomplete'=>'off']) !!}
 						</div>
-						<div class="form-group input-field col-md-2 col-sm-3">
+						<div class="form-group input-field col-md-2 col-sm-4">
 							{{Form::label('fk_id_unidad_medida','Unidad de medida')}}
 							{!! Form::select('fk_id_unidad_medida',
 							isset($unidadesmedidas) ? $unidadesmedidas : [],
 							null,['id'=>'fk_id_unidad_medida','class'=>'form-control','style'=>'width:100%']) !!}
 						</div>
-						<div class="form-group input-field col-md-2 col-sm-3">
+						<div class="form-group input-field col-md-2 col-sm-6">
 							{{Form::label('fk_id_impuesto','Tipo de impuesto')}}
 							{{--{{dd($impuestos)}}--}}
 							{!! Form::select('fk_id_impuesto',[]
@@ -133,7 +133,7 @@
                             	'class'=>'form-control','style'=>'width:100%']) !!}
 							{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}
 						</div>
-						<div class="form-group input-field col-md-2 col-sm-3">
+						<div class="form-group input-field col-md-2 col-sm-6">
 							{{Form::label('precio_unitario','Precio unitario',['class'=>'validate'])}}
 
 							{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio','autocomplete'=>'off']) !!}
