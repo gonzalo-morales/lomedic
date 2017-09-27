@@ -5,27 +5,27 @@
     	<div class="h-content">
         <span><i class="material-icons medium white-text">live_help</i></span>
         <a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
-        <a href="#ticketHelp" class="white-text dismiss" data-toggle="modal" data-target="#ticketHelp">Crear ticket/solicitud</a>
+        <a href="#ticketHelp" class="waves-effect waves-light btn-flat white-text dismiss" data-toggle="modal" data-target="#ticketHelp">Crear ticket/solicitud</a>
         </div>
     </div>
 
     <ul class="list-unstyled components bg-white">
     	<li>
-            <a class="collapsed d-flex" href="#tickets" data-toggle="collapse" aria-expanded="false">
+            <a class="collapsed d-flex align-items-center" href="#tickets" data-toggle="collapse" aria-expanded="false">
             	<i class="material-icons">list</i>Tickets recientes
             	<i class="material-icons float-right grey-text">expand_more</i>
             </a>
             <ul id="tickets" class="list-unstyled collapse" aria-expanded="false">
                 @foreach($ultimos_tickets as $ticket)
                 <li>
-                	<a href="{{ companyAction('Soporte\SolicitudesController@show', ['id' => $ticket->id_solicitud]) }}" class="btn btn-default d-flex"><i class="material-icons">note</i>
+                	<a href="{{ companyAction('Soporte\SolicitudesController@show', ['id' => $ticket->id_solicitud]) }}" class="btn d-flex align-items-center"><i class="material-icons">note</i>
                         {{$ticket->asunto}}
                     </a>
                 </li>
                 @endforeach
             </ul>
         </li>
-        <li><a href="{{ companyAction('Soporte\SolicitudesController@index') }}" class="d-flex"><i class="material-icons">dvr</i> Todos mis tickets</a></li>
+        <li><a class="d-flex align-items-center" href="{{ companyAction('Soporte\SolicitudesController@index') }}"><i class="material-icons">dvr</i>Todos mis tickets</a></li>
         <div class="divider"></div>
         <li><a href="#!">Gestion Estrategica (GE)</a></li>
         <li><a href="#!">Gestion de Negociacion (GN)</a></li>
@@ -39,7 +39,7 @@
 <div id="ticketHelp" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-      		{!! Form::model(null,['url'=>companyAction('Soporte\SolicitudesController@store'), 'enctype'=>"multipart/form-data",'method'=>'post']) !!}
+      		{!! Form::model(null,['url'=>companyAction('Soporte\SolicitudesController@store'), 'enctype'=>"multipart/form-data",'method'=>'post','id'=>'form-ticket']) !!}
                 <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="exampleModalLabel">Nuevo Ticket:</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
@@ -49,48 +49,42 @@
               	
               	<div class="modal-body">
           			<div class="form-group">
-          				<span>Solicitante: <b>{{Auth::User()->nombre_corto}}</b></span>
-          				
-          				<div class="input-group input-group-sm">
-        					<span class="input-group-addon">
-        						<input type="checkbox">
-        					</span>
-        					<select id="empleado_solicitud" class="select2-single" placeholder="Selecciona si la solicitud es para otra persona" disabled>
-        					</select>
+          				<div style="padding:6px; width:100%; border-bottom:1px solid #eee;">
+          					Solicitante: <span><b>{{Auth::User()->nombre_corto}}</b></span>
+        					{{Form::hidden('id_solicitante',Auth::User()->fk_id_empleado,['id'=>'id_solicitante'])}}
           				</div>
-					
-						<!--
-                        {!! Form::text('empleado_solicitud',null,['id'=>'empleado_solicitud','class'=>'form-control','autocomplete'=>'off','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados')])!!}
-                        {{Form::hidden('nombre_solicitante',null,['id'=>'nombre_solicitante','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])])}} -->
+          				<div class="input-group input-group-sm w-100">
+        					<span class="input-group-addon">
+        						<input type="checkbox" id="check_solicitante">
+        					</span>
+        					{!! Form::select('empleado_solicitud',[],null,['id'=>'empleado_solicitud','class'=>'form-control select2-single select2-hidden-accessible','disabled'=>'true','style'=>'width: 96% !important;','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados')]) !!}
+          				</div>
           			</div>
           			<div class="form-group row">
-          				<div class="col-md-12 col-lg-6">
+          				<div class="col-md-12">
               				{{Form::label('fk_id_sucursal','Sucursal')}}
-                    		{!! Form::select('fk_id_sucursal',[],null,['id'=>'fk_id_sucursal','class'=>'form-control','disabled' => 'true'])!!}
+              				{!! Form::select('fk_id_sucursal',[],null,['id'=>'fk_id_sucursal','class'=>'form-control select2-single select2-hidden-accessible','style'=>'width: 96% !important;','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])]) !!}
           				</div>
+          			</div>
+          			<div class="form-group row">
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_categoria','Categoría')}}
                     		{!! Form::select('fk_id_categoria',$categories_tickets,null,['id'=>'fk_id_categoria','class'=>'form-control','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
           				</div>
-          			</div>
-          			<div class="form-group row">
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_subcategoria','Subategoría')}}
                 			{!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria','class'=>'form-control','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
           				</div>
+          			</div>
+          			<div class="form-group row">
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_accion','Acción')}}
-            			{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control','disabled'=>'disabled']) !!}
+	            			{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control','disabled'=>'disabled']) !!}
           				</div>
-          			</div>
-          			<div class="form-group">
-          				<p class="form-check form-check-inline">Prioridad:</p>
-                        @foreach($priorities_tickets as $priority_ticket)
-                            <p class="form-check form-check-inline">
-                                {!! Form::radio('fk_id_prioridad',$priority_ticket->id_prioridad,false,['id'=>'prioridad'.$priority_ticket->id_prioridad]) !!}
-                                {{ Form::label('prioridad'.$priority_ticket->id_prioridad,$priority_ticket->prioridad) }}
-                            </p>
-                        @endforeach
+          				<div class="col-md-12 col-lg-6">
+              				{{Form::label('fk_id_prioridad','Prioridad')}}
+	            			{!! Form::select('fk_id_prioridad',$priorities_tickets->pluck('prioridad','id_prioridad'),null,['id'=>'fk_id_prioridad','class'=>'form-control']) !!}
+          				</div>
           			</div>
           			<div class="form-group">
                 		{{Form::label('asunto','Asunto')}}

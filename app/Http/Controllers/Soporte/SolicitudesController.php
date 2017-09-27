@@ -56,22 +56,17 @@ class SolicitudesController extends ControllerBase
 
     public function store(Request $request, $company) // Para crear un nuevo ticket
     {
-        if ($request->nombre_solicitante == '' || $request->nombre_solicitante == null) { // Comprobar si es para otro usuario o no
-                                                                                          // Obtener nombre de empleado
-            $fk_id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
-            $nombre_empleado = Empleados::where('id_empleado', $fk_id_empleado)->first()->nombre;
-            $apellido_paterno = Empleados::where('id_empleado', $fk_id_empleado)->first()->apellido_paterno;
-            $apellido_materno = Empleados::where('id_empleado', $fk_id_empleado)->first()->apellido_materno;
-            $request->request->set('nombre_solicitante', $nombre_empleado . " " . $apellido_paterno . " " . $apellido_materno);
-        }
+        $id_solicitante = !empty($request->request->get('empleado_solicitud')) ? $request->request->get('empleado_solicitud') : $request->request->get('id_solicitante');
         
+        $request->request->set('fk_id_empleado_solicitud', $id_solicitante);
+        $request->request->set('fk_id_departamento', Empleados::find($id_solicitante)->first()->fk_id_departamento); //Busca departamento del empleado
+        $request->request->set('fk_id_empresa_empleado_solicitud', Empresas::where('conexion', $company)->first()->id_empresa); // Empresa del empleado que solicitó el ticket
         $request->request->set('fk_id_estatus_ticket', 2); // Estatus "Abierto"
         $request->request->set('fk_id_modo_contacto', 1); // Se contacó por medio del sistema de tickets
-        $request->request->set('fk_id_empleado_solicitud', Auth::id());
-        $request->request->set('fk_id_empresa_empleado_solicitud', Empresas::where('conexion', $company)->first()->id_empresa); // Empresa del empleado que solicitó el ticket
-                                                                                                                                // dd($request->request);
+                                                                                                                                
         $this->validate($request, $this->entity->rules);
         $created = $this->entity->create($request->all());
+        
         if ($created) {
             $files = Input::file('archivo');
             if (Input::hasFile('archivo')) {
@@ -118,7 +113,6 @@ class SolicitudesController extends ControllerBase
 
     public function update(Request $request, $company, $id)
     {
-        // dd($request->request);
         $entity = $this->entity->findOrFail($id);
         
         $entity->setAttribute('fecha_hora_resolucion', 'now()');
@@ -129,26 +123,17 @@ class SolicitudesController extends ControllerBase
             Logs::createLog($this->entity->getTable(), $company, $id, 'editar', 'Error al editar');
         }
         
-        // Redirigimos a index
-        return redirect(companyAction('index'));
+        return redirect(companyAction('index')); // Redirigimos a index
     }
 
     public function obtenerSubcategorias($company, $id)
     {
-        $subcategorias = Categorias::all()->find($id)->subcategorias->where('activo', '1');
-        foreach ($subcategorias as $subcategoria) {
-            $subcategoria->url = companyAction('obtenerAcciones', [
-                'id' => $subcategoria->id_subcategoria
-            ]);
-        }
-        
-        return Response::json($subcategorias->toArray());
+        return Categorias::all()->find($id)->subcategorias->where('activo', '1')->toJson();
     }
 
     public function obtenerAcciones($company, $id)
     {
-        $acciones = Subcategorias::all()->find($id)->acciones->where('activo', '1')->toArray();
-        return Response::json($acciones);
+        return Subcategorias::all()->find($id)->acciones->where('activo', '1')->toJson();
     }
 
     public function descargarArchivosAdjuntos($company, $id)

@@ -37,7 +37,8 @@ class Solicitudes extends ModelBase
 	 * @var array
 	 */
 	protected $fields = [
-	    'a_solicitante'=>'Solicitante',
+	    'a_solicitante' => 'Solicitante',
+	    'departamento.descripcion' => 'Departamento',
 	    'asunto' => 'Asunto',
 	    'fecha_hora_creacion' => 'Fecha Creacion',
 	    'a_tecnico' => 'Tecnico Asignado',
@@ -72,7 +73,7 @@ class Solicitudes extends ModelBase
 	public function getPrioridadSpanAttribute()
 	{
 	    $icon = !empty($this->prioridad->icono) ? new HtmlString("<i class=material-icons>".$this->prioridad->icono."</i>") :"";
-	    $format = new HtmlString("<span class=".(!empty($this->prioridad->color) ? $this->prioridad->color . "-text" :"").">$icon $this->a_prioridad&nbsp;</span>");
+	    $format = new HtmlString("<span class=".(!empty($this->prioridad->color) ? "text-".$this->prioridad->color : "").">$icon $this->a_prioridad&nbsp;</span>");
 	    if (request()->ajax()) {
 	        return $format->toHtml();
 	    }
@@ -113,6 +114,10 @@ class Solicitudes extends ModelBase
     public function empleado()
     {
         return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_empleado_solicitud','id_empleado');
+    }
+    public function departamento()
+    {
+        return $this->belongsTo('App\Http\Models\RecursosHumanos\Departamentos','fk_id_departamento','id_departamento');
     }
     public function empleadoTecnico()
     {

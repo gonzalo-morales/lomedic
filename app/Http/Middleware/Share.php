@@ -25,13 +25,10 @@ class Share
         View::share('empresa', Empresas::where('conexion', request()->company)->first());
         # Compartimos otras empresas
         View::share('empresas', Empresas::where('conexion', '!=', request()->company)->get());
-        #Las categorías utilizadas en el ticket. Esto es para inyectar la opción vacía
-        $categoria[0] = 'Selecciona una categoría';
-        $categoria = $categoria + Categorias::all()->pluck('categoria','id_categoria')->toArray();
         # Compartimos modulos de usuario para generar menu
         View::share('menu', Auth::user()->modulos_anidados());
         View::share('employees_tickets', Empleados::all());
-        View::share('categories_tickets', $categoria);
+        View::share('categories_tickets', Categorias::all()->pluck('categoria','id_categoria')->toArray());
         View::share('priorities_tickets', Prioridades::all());
         View::share('ultimos_tickets',Solicitudes::all()->where('fk_id_empleado_solicitud',Auth::id())
             ->where('fecha_hora_resolucion',null)->take(5));
