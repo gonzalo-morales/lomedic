@@ -22,13 +22,13 @@ $(document).ready( function () {
     select2Placeholder('fk_id_proveedor','Selecciona un proveedor');
 
     $('#id_solicitante').val(getIdempleado());
-    if(window.location.href.toString().indexOf('editar') > -1)
+    if(window.location.href.toString().indexOf('editar') > -1)//Si es editar
     {
         $('.detalle_select').select2();
         $('#fk_id_solicitante').select2();
 
     }else{
-        select2Placeholder('fk_id_solicitante','Yo solicito la compra');
+        select2Placeholder('fk_id_solicitante','Yo solicito la compra');//Si no es editar
     }
     $(':submit').attr('onclick','eliminarDetalle()');
 
@@ -46,15 +46,17 @@ $(document).ready( function () {
 
     //Inicializar tabla
     window.dataTable = new DataTable('#productos', {
+        footer : false,
         fixedHeight: true,
         fixedColumns: true,
         searchable: false,
         perPageSelect: false
     });
 
-    select2Placeholder('fk_id_codigo_barras','Selecciona código de barras');
+    select2Placeholder('fk_id_codigo_barras','Selecciona código de barras',5);
     $('#fk_id_sku').on('change',function () {
-        codigosbarras();//Carga los nuevos datos del producto
+        if($('#fk_id_sku').select2('data')[0].id)
+            codigosbarras();//Carga los nuevos datos del producto
     });
 
     total_producto();//Obtiene el porcentaje del valor por defecto
@@ -304,11 +306,11 @@ function agregarProducto() {
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" />')[0].outerHTML+$('#fk_id_proveedor').val()+ "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val()+'"/>')[0].outerHTML +  $('#fecha_necesario').val() + "," +
             $('<select name="_detalles['+row_id+'][fk_id_proyecto]" id="fk_id_proyecto'+row_id+'" style="width: 100%" class="select">'+proyectos+'</select>')[0].outerHTML + ","+
-            $('<input type="text" name="_detalles['+row_id+'][cantidad]" onchange="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad"/>')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][cantidad]" onchange="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad form-control" />')[0].outerHTML + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />')[0].outerHTML + $('#fk_id_unidad_medida option:selected').html() + ","+
             $('<select name="_detalles['+row_id+'][fk_id_impuesto]" onchange="total_producto_row('+row_id+')" id="_fk_id_impuesto'+row_id+'" style="width: 100%" class="select">'+impuestos+'</select>')[0].outerHTML + ","+
-            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio"/>')[0].outerHTML + "," +
-            $('<input type="text" name="_detalles['+row_id+'][total]" readonly id="_total'+row_id+'" value="'+ total+'" class="precio_unitario"/>')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio form-control"/>')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][total]" readonly id="_total'+row_id+'" value="'+ total+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
             '<button class="btn-flat teal lighten-5 halfway-fab waves-effect waves-light" ' +
             'type="button" data-delay="50" onclick="borrarFila(this)">' +
             '<i class="material-icons">delete</i></button>'
@@ -329,6 +331,7 @@ function agregarProducto() {
                 }
             }
         });
+        // window.dataTable.setMessage('Hola');
         limpiarFormulario();//Limpiar el formulario de algunos de los valores
     }else {
         $.toaster({
@@ -374,11 +377,11 @@ function eliminarDetalle() {
     $.delete(url, {ids: a} );
 }
 
-function select2Placeholder(id_select,text,searchable = 1) {
+function select2Placeholder(id_select,text,searchable = 1,selected = true, disabled = true,value = null) {
     let option = $('<option/>');
-    option.val(null);
-    option.attr('disabled','disabled');
-    option.attr('selected','selected');
+    option.val(value);
+    option.attr('disabled',disabled);
+    option.attr('selected',selected);
     option.text(text);
     $('#'+id_select).prepend(option).select2({
         minimumResultsForSearch:searchable

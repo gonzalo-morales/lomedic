@@ -34,7 +34,7 @@ class Acciones extends ModelBase
 	 */
 	protected $fields = [
 	    'accion' => 'Accion',
-	    'activo' => 'Activo'
+	    'activo_span' => 'Activo'
 	];
 
 	/**

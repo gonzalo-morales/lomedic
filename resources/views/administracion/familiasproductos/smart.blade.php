@@ -15,13 +15,13 @@
         {{ Form::text('nomenclatura', null, ['id'=>'nomenclatura','class'=>'form-control']) }}
         {{ $errors->has('nomenclatura') ? HTML::tag('span', $errors->first('nomenclatura'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
-    <div class="form-group col-md-5 col-xs-12">
+    <div class="form-group col-md-6 col-xs-12">
         {{ Form::label('fk_id_tipo_producto', 'Tipo') }}
 {{--        {{ Form::text('tipo', null, ['id'=>'tipo','class'=>'form-control']) }}--}}
         {{Form::select('fk_id_tipo_producto',isset($product_types)?$product_types:[],null,['class'=>'form-control'])}}
         {{ $errors->has('tipo') ? HTML::tag('span', $errors->first('tipo'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
-    <div class="form-group col-md-5 col-xs-12">
+    <div class="form-group col-md-6 col-xs-12">
         {{ Form::label('tipo_presentacion', 'Presentacion') }}
         {{ Form::select('tipo_presentacion',
         ['1'=>'Cantidad',
@@ -31,11 +31,16 @@
         null, ['id'=>'tipo_presentacion','class'=>'form-control']) }}
         {{ $errors->has('tipo_presentacion') ? HTML::tag('span', $errors->first('tipo_presentacion'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
-    <div class="form-check col-md-2 col-xs-12">
-        {{ Form::hidden('activo', 0) }}
-        {{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo','class'=>'']) }}
-        {{ Form::label('activo', 'Activo') }}
-        {{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
+    <div  class="col-md-12 text-center mt-2">
+        <div class="alert alert-warning" role="alert">
+            Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+        </div>
+        <div data-toggle="buttons">
+            <label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+                {{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+                Activo
+            </label>
+        </div>
     </div>
 </div>
 @endsection

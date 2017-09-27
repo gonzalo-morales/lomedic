@@ -4,19 +4,46 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-group col-md-12 col-xs-12">
+	<div class="form-group col-md-12 col-xs-12">
 		{{ Form::label('devolucion_motivo', 'Motivo de devolución') }}
 		{{ Form::text('devolucion_motivo', null, ['id'=>'devolucion_motivo','class'=>'form-control']) }}
-		<div class="input-group-btn" role="group" aria-label="solicitante_devolucion" data-toggle="buttons">
-			<label class="btn btn-check btn-secondary">
-				<input type="radio" name="solicitante_devolucion" id="localidad" autocomplete="off" value="0" class="btn btn-secondary">Localidad
+		{{ $errors->has('devolucion_motivo') ? HTML::tag('span', $errors->first('devolucion_motivo'), ['class'=>'help-block deep-orange-text']) : '' }}
+	</div>
+	<div  class="col-md-12 text-center">
+		@if(!Route::currentRouteNamed(currentRouteName('show'))?'disabled aria-disabled=true':'')
+		<div class="btn-group" data-toggle="buttons">
+			<label class="btn btn-check btn-secondary {{ old('solicitante_devolucion') === "0" || (isset($data->solicitante_devolucion) && $data->solicitante_devolucion === false)  ? 'active':''}}">
+				<input type="radio" name="solicitante_devolucion" id="localidad" autocomplete="off" value="0"
+						{{(old('solicitante_devolucion') === "0" || (!empty($data->solicitante_devolucion) && $data->solicitante_devolucion == 0) ? 'checked':'')}}>Solicitante
 			</label>
-			<label class="btn btn-check btn-secondary">
-				<input type="radio" name="solicitante_devolucion" id="proveedor" autocomplete="off" value="1"  class="btn btn-secondary">Proveedor
+			<label class="btn btn-check btn-secondary {{ !empty($data->solicitante_devolucion) || old('solicitante_devolucion') == 1 ? 'active':''}}">
+				<input type="radio" name="solicitante_devolucion" id="proveedor" autocomplete="off" value="1"
+						{{!empty($data->solicitante_devolucion) || old('solicitante_devolucion') == 1 ? 'checked':''}}>Proveedor
+			</label>
+		</div>
+		@else
+			<div class="btn-group">
+				<label class="btn btn-check btn-secondary {{ old('solicitante_devolucion') === "0" || $data->solicitante_devolucion == 0 ? 'active':''}}">
+					Solicitante
+				</label>
+				<label class="btn btn-check btn-secondary {{ !empty($data->solicitante_devolucion) || old('solicitante_devolucion') == 1 ? 'active':''}}">
+					Proveedor
+				</label>
+			</div>
+		@endif
+	</div>
+	<div class="col-md-12 text-center mt-2">{{ $errors->has('solicitante_devolucion') ? HTML::tag('span', $errors->first('solicitante_devolucion'), ['class'=>'help-block deep-orange-text']) : '' }}</div>
+	<div  class="col-md-12 text-center mt-2">
+		<div class="alert alert-warning" role="alert">
+			Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+		</div>
+		<div data-toggle="buttons">
+			<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+				{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+				Activo
 			</label>
 		</div>
 	</div>
-	{{ $errors->has('devolucion_motivo') ? HTML::tag('span', $errors->first('devolucion_motivo'), ['class'=>'help-block deep-orange-text']) : '' }}
 </div>
 @endsection
 

@@ -42,7 +42,7 @@ class Sucursales extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'nombre_sucursal' => 'required|alpha_num',
+		'nombre_sucursal' => 'required',
 	];
 
 	/**

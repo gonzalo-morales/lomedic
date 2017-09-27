@@ -91,21 +91,26 @@
 </div>
 
 <div class="row">
-	<div class="form-group col-md-4 col-xs-12">
+	<div class="form-group col-md-6 col-xs-12">
 		{{ Form::label('factor_descuento', 'Factor Descuento') }}
 		{{ Form::text('factor_descuento', null, ['id'=>'factor_descuento','class'=>'form-control']) }}
 		{{ $errors->has('factor_descuento') ? HTML::tag('span', $errors->first('factor_descuento'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="form-group col-md-4 col-xs-12">
+	<div class="form-group col-md-6 col-xs-12">
 		{{ Form::label('numero_infonavit', 'Numero Infonavit') }}
 		{{ Form::text('numero_infonavit', null, ['id'=>'numero_infonavit','class'=>'form-control']) }}
 		{{ $errors->has('numero_infonavit') ? HTML::tag('span', $errors->first('numero_infonavit'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="form-check-label col-md-4 col-xs-12">
-		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-		{{ Form::label('activo', '¿Activo?') }}
-		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
+</div>
+<div  class="col-md-12 text-center mt-4">
+	<div class="alert alert-warning" role="alert">
+		Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+	</div>
+	<div data-toggle="buttons">
+		<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+			{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+			Activo
+		</label>
 	</div>
 </div>
 

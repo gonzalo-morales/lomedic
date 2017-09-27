@@ -21,7 +21,7 @@ class VehiculosModelosController extends ControllerBase
     public function getDataView()
     {
         return [
-            'brands' => VehiculosMarcas::select(['marca', 'id_marca'])->pluck('marca', 'id_marca'),
+            'brands' => VehiculosMarcas::select(['marca', 'id_marca'])->where('activo',1)->pluck('marca', 'id_marca'),
         ];
     }
 

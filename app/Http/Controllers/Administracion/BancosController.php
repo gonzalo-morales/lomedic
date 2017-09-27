@@ -18,11 +18,4 @@ class BancosController extends ControllerBase
 		$this->entity = $entity;
 	}
 
-	public function store(Request $request, $company)
-    {
-        if($request->nacional == 'on')
-            {$request->request->set('nacional',1);}
-//        dd($request->request);
-        return parent::store($request, $company);
-    }
 }

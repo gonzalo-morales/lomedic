@@ -9,13 +9,16 @@
 		{{ Form::text('laboratorio', null, ['id'=>'laboratorio','class'=>'form-control']) }}
 		{{ $errors->has('laboratorio') ? HTML::tag('span', $errors->first('laboratorio'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-</div>
-<div class="row">
-	<div class="form-check col-md-12 col-xs-12">
-		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo']) }}
-		{{ Form::label('activo', 'Activo:') }}
-		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
+	<div  class="col-md-12 text-center mt-2">
+		<div class="alert alert-warning" role="alert">
+			Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+		</div>
+		<div data-toggle="buttons">
+			<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+				{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+				Activo
+			</label>
+		</div>
 	</div>
 </div>
 @endsection

@@ -31,7 +31,7 @@ class Parentescos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'parentesco'	=> 'required',
+		'nombre'	=> 'required',
 	];
 
 	/**

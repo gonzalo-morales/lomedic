@@ -22,7 +22,7 @@
 @endsection
 
 @section('form-actions')
-	<div class="text-right">
+	<div class="text-center">
 		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
 		@if (Route::currentRouteNamed(currentRouteName('show')))
 			{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
@@ -138,7 +138,7 @@
 
 							{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio','autocomplete'=>'off']) !!}
 						</div>
-						<div class="col-sm-12">
+						<div class="col-sm-12 text-center">
 				            <div class="sep">
 				                <div class="sepBtn">
 							<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large tooltipped "
@@ -206,7 +206,7 @@
 											{{$detalle->cantidad}}
 										@else
 											{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][cantidad]',$detalle->cantidad,
-											['class'=>'',
+											['class'=>'form-control',
 											'id'=>'cantidad'.$detalle->id_solicitud_detalle,
 											'onkeyup' =>'validateCantidad(this)',
 											'onkeypress'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")']) !!}
@@ -233,7 +233,7 @@
 											{{number_format($detalle->precio_unitario,2,'.','')}}
 										@else
 											{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][precio_unitario]',number_format($detalle->precio_unitario,2,'.','')
-											,['class'=>'','onkeyup' =>'validatePrecioUnitario(this)','onkeypress'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")',
+											,['class'=>'form-control','onkeyup' =>'validatePrecioUnitario(this)','onkeypress'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")',
 											'id'=>'precio_unitario'.$detalle->id_solicitud_detalle]) !!}
 										@endif
 									</td>
@@ -243,7 +243,7 @@
 											{{number_format($detalle->total,2,'.','')}}
 										@else
 											{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][total]',number_format($detalle->total,2,'.','')
-											,['class'=>'','id'=>'total'.$detalle->id_solicitud_detalle,'readonly'])!!}
+											,['class'=>'form-control','id'=>'total'.$detalle->id_solicitud_detalle,'readonly'])!!}
 										@endif
 									<td>
 										{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}

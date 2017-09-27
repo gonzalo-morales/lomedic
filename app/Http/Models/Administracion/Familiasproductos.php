@@ -24,7 +24,7 @@ class Familiasproductos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['descripcion', 'tipo_presentacion','nomenclatura','fk_id_tipo_producto','estatus'];
+	protected $fillable = ['descripcion', 'tipo_presentacion','nomenclatura','fk_id_tipo_producto','activo'];
 
 	/**
 	 * The validation rules
