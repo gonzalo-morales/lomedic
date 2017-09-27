@@ -62,7 +62,8 @@ class Solicitudes extends ModelBase
 	
 	public function getAEstatusAttribute()
 	{
-	    return $this->estatusTickets->estatus;
+	    $format = new HtmlString("<span class=".(!empty($this->estatusTickets->color) ? "text-".$this->estatusTickets->color : "").">".$this->estatusTickets->estatus."&nbsp;</span>");
+	    return $format; //$this->estatusTickets->estatus;
 	}
 	
 	public function getAPrioridadAttribute()

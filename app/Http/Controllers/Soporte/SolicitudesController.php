@@ -99,7 +99,7 @@ class SolicitudesController extends ControllerBase
             'attachments' => ArchivosAdjuntos::where('fk_id_solicitud',$id)->where('eliminar',false)->where('activo',true)->where(DB::RAW('fk_id_mensaje'))->get(),
             'employees' => Empleados::select('id_empleado',DB::raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) AS empleado"))
                 ->where('eliminar',false)->where('activo',true)->where('fk_id_departamento',18)->get()->pluck('empleado','id_empleado'),
-            'status' => EstatusTickets::select('id_estatus_ticket','estatus')->where('eliminar',false)->where('activo',true)->get()->pluck('estatus','id_estatus_ticket'),
+            'status' => EstatusTickets::where('eliminar',false)->where('activo',true)->get(),
             'impacts' => Impactos::select('id_impacto','impacto')->where('eliminar',false)->where('activo',true)->get()->pluck('impacto','id_impacto'),
             'urgencies' => Urgencias::select('id_urgencia','urgencia')->where('eliminar',false)->where('activo',true)->get()->pluck('urgencia','id_urgencia'),
             'categorys' => Categorias::select('id_categoria', 'categoria')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('categoria', 'id_categoria'),

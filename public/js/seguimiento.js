@@ -9,7 +9,7 @@ $(document).ready(function () {
         }
     });
 });
-
+/*
 function descripcion() {
 	$('#resolucion').prop('readonly',$('#solucion:checked').val() != 'on');
-}
+}*/
