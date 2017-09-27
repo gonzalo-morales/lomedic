@@ -27,7 +27,6 @@
 }
 .picker__year {
   color: #999999;
-  font-size: .8em;
   font-style: italic;
 }
 /**
@@ -35,23 +34,31 @@
  */
 .picker__select--month,
 .picker__select--year {
-  border: 1px solid #b7b7b7;
   height: 2em;
-  padding: .5em;
-  margin-left: .25em;
-  margin-right: .25em;
+  margin:0 auto;
+ border: 0 !important;  /*Removes border*/
+  -webkit-appearance: none;  /*Removes default chrome and safari style*/
+  -moz-appearance: none; /* Removes Default Firefox style*/
+  background-position: 80px 8px;  /*Position of the background-image*/
+  text-indent: 0.01px; /* Removes default arrow from firefox*/
+  text-overflow: "";  /*Removes default arrow from firefox*/
+  cursor: pointer;
+  display: block;
+  padding: 5px;
+  text-transform: uppercase;
+  /*My custom style for fonts*/
+  color: #0059bc;
+  text-align: center;
+  font-weight: 100;
+}
+ .picker__select--month{
+  font-weight: 800;
 }
 @media (min-width: 24.5em) {
   .picker__select--month,
   .picker__select--year {
     margin-top: -0.5em;
   }
-}
-.picker__select--month {
-  width: 35%;
-}
-.picker__select--year {
-  width: 22.5%;
 }
 .picker__select--month:focus,
 .picker__select--year:focus {
@@ -67,13 +74,7 @@
   width: 1em;
   height: 1em;
   box-sizing: content-box;
-  top: -0.25em;
-}
-@media (min-width: 24.5em) {
-  .picker__nav--prev,
-  .picker__nav--next {
-    top: -0.33em;
-  }
+  top: 1em;
 }
 .picker__nav--prev {
   left: -1em;
@@ -98,7 +99,7 @@
   content: " ";
   border-top: .5em solid transparent;
   border-bottom: .5em solid transparent;
-  border-right: 0.75em solid #000000;
+  border-right: 0.75em solid #c6c6c6;
   width: 0;
   height: 0;
   display: block;
@@ -106,12 +107,12 @@
 }
 .picker__nav--next:before {
   border-right: 0;
-  border-left: 0.75em solid #000000;
+  border-left: 0.75em solid #c6c6c6;
 }
 .picker__nav--prev:hover,
 .picker__nav--next:hover {
   cursor: pointer;
-  color: #000000;
+  color: #c6c6c6;
   background: #b1dcfb;
 }
 .picker__nav--disabled,
@@ -152,14 +153,13 @@
   width: 14.285714286%;
   font-size: .75em;
   padding-bottom: .25em;
-  color: #999999;
+  color: #fff;
   font-weight: 500;
+  text-transform: uppercase;
+  background-color: #dc3545;
   /* Increase the spacing a tad */
-}
-@media (min-height: 33.875em) {
-  .picker__weekday {
-    padding-bottom: .5em;
-  }
+  padding: .5em;
+  text-align: center;
 }
 /**
  * The days on the calendar
@@ -191,16 +191,13 @@
 .picker__day--infocus:hover,
 .picker__day--outfocus:hover {
   cursor: pointer;
-  color: #000000;
+  color: #343a40;
   background: #b1dcfb;
-}
-.picker__day--highlighted {
-  border-color: #0089ec;
 }
 .picker__day--highlighted:hover,
 .picker--focused .picker__day--highlighted {
   cursor: pointer;
-  color: #000000;
+  color: #343a40;
   background: #b1dcfb;
 }
 .picker__day--selected,
@@ -232,18 +229,19 @@
 .picker__button--close {
   border: 1px solid #ffffff;
   background: #ffffff;
-  font-size: .8em;
   padding: .66em 0;
   font-weight: bold;
   width: 33%;
   display: inline-block;
   vertical-align: bottom;
+  text-transform: capitalize;
+  color:#343a40;
 }
 .picker__button--today:hover,
 .picker__button--clear:hover,
 .picker__button--close:hover {
   cursor: pointer;
-  color: #000000;
+  color: #343a40;
   background: #b1dcfb;
   border-bottom-color: #b1dcfb;
 }
@@ -275,7 +273,7 @@
 .picker__button--clear:before {
   top: -0.25em;
   width: .66em;
-  border-top: 3px solid #ee2200;
+  border-top: 3px solid #dc3545;
 }
 .picker__button--close:before {
   content: "\D7";
