@@ -51,7 +51,7 @@
 
 <div class="wrapper" style="margin-top: 90px;">
     <!-- Sidebar Holder -->
-    <nav id="sidebar" class="active bg-primary text-white">
+    <nav id="sidebar" class="active bg-dark text-white">
     	<div id="sidebar-content">
             <div class="sidebar-header text-center" style="position: relative;">
                 <div class="title">
@@ -62,7 +62,7 @@
                     <a href="#"><p class="d-flex justify-content-center"><small>{{ Auth::User()->nombre_corto }}</small></p></a>
                 
                 <strong>
-                	<center><object id="front-page-logo" class="Sim w-100" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></center>
+                	<center><object id="front-page-logo" class="sim w-100" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></center>
     				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center">
         				<i class="tiny material-icons">power_settings_new</i>
         			</a>
