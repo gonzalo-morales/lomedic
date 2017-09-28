@@ -209,7 +209,7 @@
 				<div class="col-md-12">
 					<div class="float-right" rv-hide="collections.items | length">
 						<a href="{{ companyRoute('create') }}" class="btn btn-primary" role="button">Crear</a>
-						<button class="btn btn-secondary dropdown-toggle" type="button" id="export-all" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<button class="btn btn-secondary dropdown-toggle d-inline-flex" type="button" id="export-all" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<i class="material-icons left">file_download</i>Exportar
 						</button>
 						<div class="dropdown-menu" aria-labelledby="export-all">
@@ -222,11 +222,11 @@
 						</div>
 					</div>
 					<div class="float-right" rv-show="collections.items | length" style="display: none;">
-						<button class="btn" rv-on-click="actions.uncheckAll"><i class="material-icons left">select_all</i>Deseleccionar (<span rv-text="collections.items | length"></span>)</button>
+						<button class="btn d-inline-flex" rv-on-click="actions.uncheckAll"><i class="material-icons left">select_all</i>Deseleccionar (<span rv-text="collections.items | length"></span>)</button>
 						@can('delete', currentEntity())
-						<button class="btn" rv-on-click="actions.showModalDelete" data-delete-type="multiple" data-delete-url="{{companyRoute('destroyMultiple')}}"><i class="material-icons left">delete</i>Eliminar (<span rv-text="collections.items | length"></span>)</button>
+						<button class="btn d-inline-flex" rv-on-click="actions.showModalDelete" data-delete-type="multiple" data-delete-url="{{companyRoute('destroyMultiple')}}"><i class="material-icons left">delete</i>Eliminar (<span rv-text="collections.items | length"></span>)</button>
 						@endcan
-						<button class="btn btn-secondary dropdown-toggle" type="button" id="export-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<button class="btn btn-secondary dropdown-toggle d-inline-flex" type="button" id="export-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<i class="material-icons left">file_download</i>Exportar (<span rv-text="collections.items | length"></span>)
 						</button>
 						<div class="dropdown-menu" aria-labelledby="export-custom">
