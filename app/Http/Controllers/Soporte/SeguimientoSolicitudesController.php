@@ -8,6 +8,8 @@ use App\Http\Models\Soporte\SeguimientoSolicitudes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
+use App\Http\Models\Soporte\Solicitudes;
+use App\Http\Models\Soporte\EstatusTickets;
 
 class SeguimientoSolicitudesController extends ControllerBase
 {
@@ -20,8 +22,25 @@ class SeguimientoSolicitudesController extends ControllerBase
     public function store(Request $request, $company) // Para crear un nuevo ticket
     {
         $this->validate($request, $this->entity->rules);
+        
+        $id_estatus_ticket = $request->request->get('fk_id_estatus_ticket',null);
+        
+        if(!empty($id_estatus_ticket)) {
+            $estatus = EstatusTickets::findOrFail($id_estatus_ticket);
+            
+            $asunto = $request->request->get('asunto','');
+            $request->request->set('asunto',$asunto.". (Cambio estatus: $estatus->estatus)");
+        }
+        
+        //dd($request->request);
+        
         $created = $this->entity->create($request->all());
+        
         if ($created) {
+            if(!empty($id_estatus_ticket)) {
+                Solicitudes::where('id_solicitud', $created->fk_id_solicitud)->update(['fk_id_estatus_ticket' => $id_estatus_ticket]);
+            }
+            
             $files = Input::file('archivo');
             if (Input::hasFile('archivo')) {
                 foreach ($files as $file) {

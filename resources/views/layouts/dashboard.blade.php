@@ -77,7 +77,7 @@
     </nav>
 
     <!-- Page Content Holder -->
-    <div id="content">
+    <div id="content" class="pt-3">
         @yield('content')
     </div>
 </div>

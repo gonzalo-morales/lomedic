@@ -37,6 +37,11 @@ class SeguimientoSolicitudes extends ModelBase
         'asunto' => 'required',
         'comentario' => 'required'
     ];
+    
+    public function solicitud()
+    {
+        return $this->hasOne('App\Http\Models\Soporte\Solicitudes','id_solicitud', 'fk_id_solicitud');
+    }
 
     public function empleado()
     {
