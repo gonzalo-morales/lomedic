@@ -7,16 +7,13 @@
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
 	{{ HTML::meta('csrf-token', csrf_token()) }}
 	{{ HTML::favicon(asset("img/$empresa->logotipo")) }}
-	
 	<!-- Bootstrap CSS local fallback -->
 	{{ HTML::style(asset('css/bootstrap.min.css')) }}
-	
 	<!-- Select2 CSS local -->
 	{{ HTML::style(asset('css/select2.min.css')) }}
 	{{ HTML::style(asset('css/select2-bootstrap.min.css')) }}
-	
-	{{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
-	{{ HTML::style(asset('css/style-nav.css'), ['media'=>'screen,projection']) }}
+    {{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
+    {{ HTML::style(asset('css/style-nav.css'), ['media'=>'screen,projection']) }}
 	@yield('header-top')
 </head>
 <body>
@@ -24,8 +21,8 @@
 	<nav class="navbar navbar-default bg-light">
         <div class="navbar-header d-flex flex-row">
             <button type="button" id="sidebarCollapse" class="btn-primary navbar-btn d-flex align-items-center"><i class="material-icons">menu</i></button>
-        
-        <div class="btn-group">  
+
+        <div class="btn-group">
             <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     			{{ HTML::image(asset("img/$empresa->logotipo"), 'Logo', ['width'=>'25px']) }} {{ $empresa->nombre_comercial }}
     		</a>
@@ -60,17 +57,17 @@
         				<i class="tiny material-icons">power_settings_new</i> CERRAR SESION
         			</a>
                     <a href="#"><p class="d-flex justify-content-center"><small>{{ Auth::User()->nombre_corto }}</small></p></a>
-                
+                </div>
                 <strong>
                 	<center><object id="front-page-logo" class="sim w-100" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></center>
     				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center">
         				<i class="tiny material-icons">power_settings_new</i>
         			</a>
     			</strong>
-    
+
     			{!! Form::open(['route' => 'logout', 'before' => 'csrf', 'id' => 'logout-form', 'class' => 'hidden']) !!} {!! Form::close() !!}
             </div>
-    
+
             <ul class="list-unstyled components">
                 @if(isset($menu))
     				@each('partials.menu', $menu, 'modulo')
@@ -94,7 +91,7 @@
 
 {{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js') }}
 {{ HTML::script(asset('js/popper.min.js')) }}
-  
+
 <!-- Bootstrap JS CDN -->
 {{ HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js') }}
 <!-- Bootstrap JS local fallback -->
@@ -116,7 +113,7 @@
 
     	 /* Nice Scroll */
         $("#sidebar").niceScroll({
-            cursorcolor: '#90caf9', 
+            cursorcolor: '#90caf9',
             background:"#1565c0",
             cursorwidth: "8px",
             zindex:99999999,
@@ -129,18 +126,18 @@
             cursorwidth: 4,
             cursorborder: 'none'
         });
-        
+
         $('#sidebarCollapse').on('click', function () {
         	$('#sidebar').toggleClass('active');
         });
-        
-        
+
+
         /* Sidebar's */
         $('.dismiss, .overlay').on('click', function () {
             $('#rigth-sidebar').removeClass('active');
             $('.overlay').fadeOut();
         });
-        
+
         $('#rigth-sidebarCollapse').on('click', function () {
             $('#rigth-sidebar').addClass('active');
             $('.overlay').fadeIn();
