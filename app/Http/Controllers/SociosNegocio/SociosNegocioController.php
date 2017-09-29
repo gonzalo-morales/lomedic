@@ -68,7 +68,7 @@ class SociosNegocioController extends Controller
 			'data' => $this->entity->all()->where('eliminar','0'),
 		]);
 		return redirect(companyRoute('index'));
-		return dd($company);
+		// return dd($company);
 
 	}
 
@@ -112,6 +112,8 @@ class SociosNegocioController extends Controller
 		// 	'avisoFuncionamiento' => 'required|size:10240|mimes:pdf',
 		// 	'razonSocial' => 'required| min:10',
 		// ]);
+
+		// dd($request);
 		// print_r(json_decode($request->input('objectSocio'),true));
 		$objSocio = $request->input('objectSocio');
 		$validArray = [];
@@ -495,6 +497,20 @@ class SociosNegocioController extends Controller
 			// echo Storage::disk('licencias')->getVisibility("FZGabDmq2MjQF0Ull0eYQ48C9D3RJzam4MYzv8y7.png");
 			// echo Storage::disk('licencias')->delete("FZGabDmq2MjQF0Ull0eYQ48C9D3RJzam4MYzv8y7.png");
 
+	}
+	public function getData(){
+		$content=file_get_contents("https://jsonplaceholder.typicode.com/photos");
+		$data=json_decode($content);
+		$dataSelect2 = [];
+		$limit = 0;
+		foreach ($data as $key => $value) {
+			$dataSelect2[] = ['title'=> $value->id , 'label'=>  $value->title];
+			if ($limit == 300) {
+				break;
+			}
+			$limit++;
+		}
+        return Response::json($dataSelect2);
 	}
 
 

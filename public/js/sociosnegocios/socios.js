@@ -1,5 +1,30 @@
-// $(document.querySelector('table')).dataTable();
-// $(document.querySelector('table')).dataTable();
+
+// $(document).ready(function(){
+
+    // $('#sucursalNombre').select2({
+    //
+    //     placeholder: 'Escriba su descripción',
+    //        ajax: {
+    //            type: 'GET',
+    //            url: "http://localhost:82/abisa/sociosnegocio/getData",
+    //            dataType: 'json',
+    //         //    data: function (params) {
+    //         //         var queryParameters = {
+    //         //           q: params.term
+    //         //         }
+    //           //
+    //         //     return queryParameters;
+    //         //   },
+    //           processResults: function (data) {
+    //               console.log("qwertyu");
+    //                 return {
+    //                     results: data
+    //                 };
+    //             },
+    //         },
+    // });
+// });
+
 var socioTemplate = {
     'activo' : '',
     'razon_social' : '',
@@ -22,6 +47,7 @@ var socioTemplate = {
     'info_entrega' : {
         'tipo_entrega' : '',
         'sucursal' : '',
+        'pagoPaqueteria' : '',
         'monto_minimo_facturacion' : '',
         'correos' : [{}],
     },
@@ -84,6 +110,49 @@ var idTableAvisoRespEdit = 0;
 
 $(document).ready(function(){
 
+    /*$("#sucursalNombre").multiselect({
+        maxHeight:200,
+        enableFiltering: true,
+        buttonWidth: '300px',
+        includeSelectAllOption: true,
+        filterPlaceholder: 'Buscar...',
+        allSelectedText: 'Todo seleccionado ...',
+        nSelectedText: ' - opciones seleccionadas!',
+        nonSelectedText: 'Seleccione...',
+        selectAllText: 'Seleccionar todo',
+        buttonClass: 'form-control',
+        // templates: {
+        //   li: '<li><a tabindex="0" class="form-control"><label></label></a></li>',
+        //   li: '<li><a tabindex="0" class="form-control"><label></label></a></li>',
+        // },
+        templates: {
+            // button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"></button>',
+            // ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+            // filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+            filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" '+
+            'type="button"><i class="material-icons">backspace</i></button></span>',
+            // li: '<li><a href="javascript:void(0);"><label></label></a></li>',
+            // divider: '<li class="multiselect-item divider"></li>',
+            // liGroup: '<li class="multiselect-item group"><label class="multiselect-group"></label></li>'
+        },
+        numberDisplayed: 1
+    });
+    $.ajax({
+        type:'GET',
+        url: "http://localhost:82/abisa/sociosnegocio/getData",
+        // data: vars,
+        dataType: 'json',
+        success: function (data) {
+            $("#sucursalNombre").multiselect("dataprovider",data);
+        },
+        complete:function(data){
+
+        },
+        error: function () {
+            console.log('error');
+        }
+    });*/
+
     $("#guardarSocio").click(function(e){
         e.preventDefault();
         console.log("<<<-----");
@@ -133,14 +202,15 @@ $(document).ready(function(){
         // ****************************************************
         //  INFORMACION DE ENTREGA
         // ****************************************************
-        // console.log("TIPOS ENTREGA: " + $("input:radio[name='tipos_entrega']:checked").attr('id'));
-        // objectSocio.info_entrega.tipo_entrega               = $("input:radio[name='tipos_entrega']:checked").attr('id');
+
         if($("input:radio[name='tipos_entrega']:checked").data('idtipoentrega') === 'undefined'){
             objectSocio.info_entrega.tipos_entrega = 'null';
         }else{
             objectSocio.info_entrega.tipos_entrega = $("input:radio[name='tipos_entrega']:checked").data('idtipoentrega');
         }
         objectSocio.info_entrega.sucursal                   = $("#sucursalNombre").val();
+        // console.log($("#sucursalNombre").val());
+        objectSocio.info_entrega.pagoPaqueteria             = $("#pagoPaqueteria").val();
         objectSocio.info_entrega.monto_minimo_facturacion   = $("#monto_minimo_facturacion").val();
         if(arrayCorreos.length >= 1){
             objectSocio.info_entrega.correos                    = arrayCorreos;
@@ -222,7 +292,7 @@ $(document).ready(function(){
         // console.log($("#form-socios").serialize());
 
         $.ajax({
-            url: "http://localhost/abisa/sociosnegocio/store",
+            url: "/abisa/sociosnegocio/store",
             type: 'POST',
             data: {objectSocio:JSON.stringify(objectSocio)},
             cache: false,
@@ -422,19 +492,6 @@ $(document).ready(function(){
         loadMunicipios(url_municipio);
     });
 
-    $('#colonia').autocomplete({ //Iniciamos el autocomplete
-      data: { //agregamos data de ejemplo, el null es para decir que no llevará una imagen o ícono a un lado del nombre...
-        "Colonia 1": null,
-        "Colonia 2": null,
-        "Colonia 3": null,
-      },
-      limit: 5, // The max amount of results that can be shown at once. Default: Infinity.
-      onAutocomplete: function(val) {
-      // Callback function when value is autcompleted.
-      console.log("VALOR: "+val);
-      },
-      minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
-    });
 
     $("#agregarDireccion").click(function(event){
         event.preventDefault();
@@ -469,7 +526,6 @@ $(document).ready(function(){
         resetDireccion();
         if ($(this).data('action') == 'add') {
             idTableDirecciones++;
-        //     console.log("====ID===="+idTableCuentas);
             arrayTableDirecciones.push({'idTable':idTableDirecciones,'tipo_direccion':tipo_direccion,'id_tipo_direccion':id_tipo_direccion,'calle':calle, 'num_exterior':num_exterior,
             'num_interior':num_interior,'cp':cp,'pais':pais,'id_pais':id_pais,'estado':estado,'id_estado':id_estado,'municipio':municipio,
             'id_municipio':id_municipio,'colonia':colonia,'estatus':'new'});
@@ -520,82 +576,78 @@ $(document).ready(function(){
         switch($("input[name=tipos_entrega]:checked").data('idtipoentrega')){
             case 1:
                 console.log("--->>");
-                $("#sucursalBlock").show("slow");
-                break;
+                $("#sucursalBlock").show("slow").attr('hidden',false);
+                $("#paqueteriaBlock").hide();
+                $("#pagoPaqueteria").val('');
+            break;
+            case 2:
+                console.log("--->>");
+                $("#paqueteriaBlock").show("slow").attr('hidden',false);
+                $("#sucursalBlock").hide();
+                $("#sucursalNombre").val('');
+            break;
             default:
                 console.log("default");
                 console.log($("input[name=tipos_entrega]:checked").data('idtipoentrega'));
-                $("#sucursalBlock").hide('slow');
+                $("#sucursalBlock").hide();
                 $("#sucursalNombre").val('');
+                $("#paqueteriaBlock").hide();
+                $("#pagoPaqueteria").val('');
                 break;
         }
     });
 
-    // $('#correos').material_chip({  // precargar el componente con los datos de edición
-    //     data: [
-    //       {
-    //           tag: 'Maria Luisa',
-    //           id: '111',
-    //           estatus: 'loaded'
-    //       },
-    //       {
-    //           tag: 'Angela Mendoza',
-    //           id: '222',
-    //           estatus: 'loaded'
-    //       },
-    //     ],
-    // });
-
-
-    $("#correos").keyup(function(e){
-        var code = e.which;
-        if(code==13){
-            console.log("===========CORREOS=========");
-               var correos = $(this).material_chip('data');
-               console.log(JSON.stringify(correos));
-            console.log("===========================");
-        }
+//  TODO: cambiar este componente chip de materialize
+    $("#correos").select2({
+        tags: true,
+        multiple: true,
+        // insertTag: function (data, tag) {
+        //     // Insert the tag at the end of the results
+        //     data.push(tag);
+        // }
+        createSearchChoice:function(term, data) {
+            if ($(data).filter(function() {
+                return this.text.localeCompare(term)===0;
+            }).length===0) {
+                return {id:term, text:term};
+            }
+        },
+        // data: [{id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'}]
     });
 
-    $('#correos').on('chip.add', function(e, chip){
-        chip.id = 'none';
-        chip.estatus = 'new';
-        arrayCorreos.push({'correo':chip.tag, 'id':chip.id, 'estatus':'new'});
+    // $("#correos").keyup(function(e){
+    //     var code = e.which;
+    //     console.log("-----------"+e.params.data);
+    //     if(code==13){
+    //         console.log("===========CORREOS=========");
+    //            var correos = e.params.data;
+    //            console.log(JSON.stringify(correos));
+    //         console.log("===========================");
+    //     }
+    // });
+
+    $('#correos').on('select2:select', function (e) {
+        var data = e.params.data;
+        console.log(e.params);
+        console.log(data);
+
+        e.params.data.id = 'none';
+        e.params.data.estatus = 'new';
+        arrayCorreos.push({'correo':e.params.data.text, 'id':e.params.data.id, 'estatus':'new'});
         console.log("========ARRAY=CORREOS======");
         console.log(JSON.stringify(arrayCorreos));
         console.log("===========================");
     });
 
-    $('#correos').on('chip.delete', function(e, chip){
-        if (chip.estatus == 'loaded') {
-            console.log("LOADED-DELETED!");
-            chip.estatus = 'deleted';
-            for (var i = 0; i < arrayCorreos.length; i++) {
-                if(arrayCorreos[i]['id'] == chip.id){
-                    console.log(arrayCorreos[i] = {'correo':chip.tag, 'id':chip.id, 'estatus':'deleted'});
-                    console.log("[i]=>"+i);
-                }
-            }
-            console.log(JSON.stringify(arrayCorreos));
-            console.log("[id]=>"+chip.id);
-            console.log(e+"DELETE"+chip.tag+"<==>"+chip.id);
-        }else if(chip.estatus == 'new'){
+    $('#correos').on('select2:unselect', function(e){
             console.log("NEW-DELETED!");
             for (var i = 0; i < arrayCorreos.length; i++) {
-                if(arrayCorreos[i]['correo'] == chip.tag){
+                if(arrayCorreos[i]['correo'] == e.params.data.text){
                     console.log(arrayCorreos.splice(i,1));
                 }
             }
             console.log(JSON.stringify(arrayCorreos));
-        }
-
     });
-
-    $('#correos').on('chip.select', function(e, chip){
-        console.log(e+"SELECTED"+chip.tag+"<==>"+chip.id);
-    });
-
-
 
     $("#zz").click(function(){
         console.log("====ARRAY-CORREOS-LOADED====");
@@ -616,7 +668,7 @@ $(document).ready(function(){
         var celular = $("#celular").val();
         var telefonoOficina = $("#telefono_oficina").val();
         var extensionOficina = $("#extension_oficina").val();
-        // var arrayCorreosContacto = $("#correos_contacto").material_chip('data');
+
 
 
 
@@ -637,49 +689,72 @@ $(document).ready(function(){
 
     });
 
+    $("#select_all").click(function(){
+        var checkAll = $(this).is(":checked");
+        console.log(checkAll);
+        var check = $("#empresas > tbody > tr > td:nth-child(1)").children().find('input').each(function(e,v){
+                console.log($(v).is(':checked')+" =>>"+e);
+                // console.log($(v).is(':checked') ) ? 1 : 0;
+                $(v).prop('checked', checkAll).change();
 
+                if($(v).prop("checked")){
+                    // $(v).find('span').addClass('checked');
+                    console.log('checked');
+                  }else{
+                      console.log('unchecked');
+                    // $(v).find('span').removeClass('checked');
+                  }
+            });
 
-    $("#correos_contacto").keyup(function(e){
-        var code = e.which;
-        if(code==13){
-            console.log("===========CORREOS=========");
-               var correos = $(this).material_chip('data');
-               console.log(JSON.stringify(correos));
-            console.log("===========================");
-        }
     });
 
-    $('#correos_contacto').on('chip.add', function(e, chip){
-        chip.id = 'none';
-        chip.estatus = 'new';
-        correosContacto.push({'tag':chip.tag, 'id':chip.id, 'estatus':'new'});
+
+    // TODO: cambiar chip de materialize
+    // $("#correos_contacto").keyup(function(e){
+    //     var code = e.which;
+    //     if(code==13){
+    //         console.log("===========CORREOS=========");
+    //            var correos = $(this).material_chip('data');
+    //            console.log(JSON.stringify(correos));
+    //         console.log("===========================");
+    //     }
+    // });
+
+
+    $("#correos_contacto").select2({
+        tags: true,
+        multiple: true,
+        // insertTag: function (data, tag) {
+        //     // Insert the tag at the end of the results
+        //     data.push(tag);
+        // }
+        createSearchChoice:function(term, data) {
+            if ($(data).filter(function() {
+                return this.text.localeCompare(term)===0;
+            }).length===0) {
+                return {id:term, text:term};
+            }
+        },
+        // data: [{id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'}]
+    });
+    $('#correos_contacto').on('select2:select', function(e){
+        e.params.data.id = 'none';
+        e.params.data.estatus = 'new';
+        correosContacto.push({'correo':e.params.data.text, 'id':e.params.data.id, 'estatus':'new'});
         console.log("========ARRAY=CORREOS======");
         console.log(JSON.stringify(correosContacto));
         console.log("===========================");
     });
-
-    $('#correos_contacto').on('chip.delete', function(e, chip){
-        if (chip.estatus == 'loaded') {
-            console.log("LOADED-DELETED!");
-            chip.estatus = 'deleted';
-            for (var i = 0; i < correosContacto.length; i++) {
-                if(correosContacto[i]['id'] == chip.id){
-                    console.log(correosContacto[i] = {'tag':chip.tag, 'id':chip.id, 'estatus':'deleted'});
-                    console.log("[i]=>"+i);
-                }
-            }
-            console.log(JSON.stringify(correosContacto));
-            console.log("[id]=>"+chip.id);
-            console.log(e+"DELETE"+chip.tag+"<==>"+chip.id);
-        }else if(chip.estatus == 'new'){
+    $('#correos_contacto').on('select2:unselect', function(e){
+        // if(e.params.data.estatus == 'new'){
             console.log("NEW-DELETED!");
             for (var i = 0; i < correosContacto.length; i++) {
-                if(correosContacto[i]['tag'] == chip.tag){
+                if(correosContacto[i]['tag'] == e.params.data.text){
                     console.log(correosContacto.splice(i,1));
                 }
             }
             console.log(JSON.stringify(correosContacto));
-        }
+        // }
 
     });
 
@@ -731,21 +806,16 @@ function editRowDireccion(obj,idTable){
             $("#num_interior").val(arrayTableDirecciones[i]['num_interior']);
             $("#cp").val(arrayTableDirecciones[i]['cp']);
             $("#pais").val(arrayTableDirecciones[i]['id_pais']);
-            $("#pais").material_select();
+            // $("#pais").material_select();
             $("#estado").removeAttr('selected');
             $("#estado").val(arrayTableDirecciones[i]['id_estado']);
-            $("#estado").material_select();
+            // $("#estado").material_select();
 
             let url_municipio = $("#estado").data('url');
             url_municipio = url_municipio.replace('?id',$("#estado option:selected").val());
             console.log("editRow: "+url_municipio);
             loadMunicipios(url_municipio, arrayTableDirecciones[i]['id_municipio']);
 
-            // $("#municipio").removeAttr('selected');
-            // $("#municipio").material_select();
-            // $("#municipio").material_select();
-            // $("#municipio").val(arrayTableDirecciones[i]['id_municipio']);
-            // console.log($("#municipio option:selected").val());
             console.log(arrayTableDirecciones[i]['id_municipio']);
             $("#colonia").val(arrayTableDirecciones[i]['colonia']);
         }
@@ -836,7 +906,7 @@ function editRowCuenta(obj,idTable){
             $("#agregarCuenta").data('action','update');
             $("#no_cuenta").val(arrayTableCuentas[i]['no_cuenta']);
             $("#banco").val(arrayTableCuentas[i]['indexBanco']);
-            $("#banco").material_select();
+            // $("#banco").material_select();
         }
     }
 }
@@ -910,18 +980,18 @@ function deleteRowCuenta(obj,idTable){
 function resetCuentaBancaria(){
     $("#no_cuenta").val("");
     $("#banco").prop("selectedIndex",false);
-    $("#banco").material_select();
+    // $("#banco").material_select();
 }
 
-
-function loadArrayCorreos(){
-    var correos = $('#correos').material_chip('data');
-    arrayCorreos = [];
-    $.each(correos,function(elem,value){
-        arrayCorreos.push({'correo':value.tag, 'id':value.id, 'estatus':value.estatus});
-        console.log(elem+"----"+value.tag);
-    });
-}
+// TODO: cambiar chip de materialize
+// function loadArrayCorreos(){
+//     var correos = $('#correos').material_chip('data');
+//     arrayCorreos = [];
+//     $.each(correos,function(elem,value){
+//         arrayCorreos.push({'correo':value.tag, 'id':value.id, 'estatus':value.estatus});
+//         console.log(elem+"----"+value.tag);
+//     });
+// }
 
 
 function addContacto(idTableContactos){
@@ -967,7 +1037,8 @@ function updateContacto(idTableContacto,tipoContacto,tipoContactoIndex,nombreCon
 
                     console.log("ESTATUS:"+arrayTableContactos[i]['estatus']);
                     if (arrayTableContactos[i]['estatus'] == 'new'){
-                        console.log($("#correos_contacto").material_chip('data'));
+                        // TODO: cambiar chip de materialize
+                        // console.log($("#correos_contacto").material_chip('data'));
                         console.log(arrayTableContactos[i] = {'idTableContactos':idTableContacto,'tipoContacto':tipoContacto,'tipoContactoIndex':tipoContactoIndex,'nombreContacto':nombreContacto,'puesto':puesto,
                                             'celular':celular,'telefonoOficina':telefonoOficina,'extensionOficina':extensionOficina,'arrayCorreosContacto':correos,
                                             'estatus':'new'});
@@ -1000,7 +1071,7 @@ function editRowContacto(obj,idTableContactos){
             var update="update";
             $("#agregarContacto").data('action',update);
             $("#tipo_contacto").val(arrayTableContactos[i]['tipoContactoIndex']);
-            $("#tipo_contacto").material_select();
+            // $("#tipo_contacto").material_select();
             $("#nombre_contacto").val(arrayTableContactos[i]['nombreContacto']);
             $("#puesto").val(arrayTableContactos[i]['puesto']);
             $("#celular").val(arrayTableContactos[i]['celular']);
@@ -1018,7 +1089,8 @@ function editRowContacto(obj,idTableContactos){
             console.log(JSON.stringify(scorreos));
             var x = JSON.stringify(scorreos);
             console.log(JSON.parse(x));
-            $("#correos_contacto").material_chip(JSON.parse(x));
+            // TODO: cambiar chip de materialize
+            // $("#correos_contacto").material_chip(JSON.parse(x));
 
 
         }
@@ -1049,14 +1121,15 @@ function deleteRowContacto(obj,idTable){
 
 function resetContacto(){
     $("#tipo_contacto").prop("selectedIndex",false);
-    $("#tipo_contacto").material_select();
+    // $("#tipo_contacto").material_select();
     $("#nombre_contacto").val("");
     $("#puesto").val("");
     $("#celular").val("");
     $("#telefono_oficina").val("");
     $("#extension_oficina").val("");
     // $("#correos_contacto").val("");
-    $("#correos_contacto").material_chip("");
+    // TODO: cambiar chip
+    // $("#correos_contacto").material_chip("");
 }
 
 
@@ -1067,11 +1140,11 @@ function resetDireccion(){
     $("#num_interior").val("");
     $("#cp").val("");
     $("#pais").prop("selectedIndex",false);
-    $("#pais").material_select();
+    // $("#pais").material_select();
     $("#estado").prop("selectedIndex",false);
-    $("#estado").material_select();
+    // $("#estado").material_select();
     $("#municipio").prop("selectedIndex",false);
-    $("#municipio").material_select();
+    // $("#municipio").material_select();
     $("#colonia").val("");
 }
 
@@ -1114,12 +1187,12 @@ function loadEstados(url_estados){
                     $('#estado').append(option);
                 });
             }
-            $('#estado').material_select();
-            $('#municipio').material_select();
+            // $('#estado').material_select();
+            // $('#municipio').material_select();
         },
         error: function () {
             // alert('error');
-            Materialize.toast('<span><i class="material-icons">priority_high</i> No se pudieron cargar los estados</span>', 3000,'m_error');
+            // Materialize.toast('<span><i class="material-icons">priority_high</i> No se pudieron cargar los estados</span>', 3000,'m_error');
         }
     });
 }
@@ -1164,11 +1237,11 @@ function loadMunicipios(url_municipio, id_municipio ){
                 $("#municipio").val(id_municipio);
             }
 
-            $('#municipio').material_select();
+            // $('#municipio').material_select();
         },
         error: function () {
             // alert('error');
-              Materialize.toast('<span><i class="material-icons">priority_high</i> No se pudieron cargar los municipios</span>', 3000,'m_error');
+            //   Materialize.toast('<span><i class="material-icons">priority_high</i> No se pudieron cargar los municipios</span>', 3000,'m_error');
         }
     });
 }
@@ -1196,14 +1269,16 @@ function addLicencia(idTable){
         console.log(arrayTableSanitarias);
         console.log("==============================");
     }
-    $("#filesSanitarias").closest('form').trigger('reset');
+    // $("#filesSanitarias").closest('form').trigger('reset');
+    $("#filesSanitarias").val("");
 }
 
 
 function deleteRowSanitaria(obj,idTable){
     $(obj).parent().parent().hide('slow', function(){ this.remove(); });
     // TODO: reset input files for this field
-    $("#filesSanitarias").closest('form').trigger('reset');
+    // $("#filesSanitarias").closest('form').trigger('reset');
+    $("#filesSanitarias").val("");
     console.log("==========DELETE==============");
     console.log("ID-DELETE:"+idTable);
     for (var i = 0; i < arrayTableSanitarias.length; i++) {
@@ -1236,14 +1311,16 @@ function addAvisoFuncionamiento(idTable){
         console.log(arrayTableAvisoFuncionamiento);
         console.log("==============================");
     }
-    $("#filesAvisoFuncionamiento").closest('form').trigger('reset');
+    // $("#filesAvisoFuncionamiento").closest('form').trigger('reset');
+    $("#filesAvisoFuncionamiento").val("");
 }
 
 
 function deleteRowAvisoFuncionamiento(obj,idTable){
     $(obj).parent().parent().hide('slow', function(){ this.remove(); });
     // TODO: reset input fiules for this field
-    $("#filesAvisoFuncionamiento").closest('form').trigger('reset');
+    // $("#filesAvisoFuncionamiento").closest('form').trigger('reset');
+    $("#filesAvisoFuncionamiento").val("");
     console.log("==========DELETE==============");
     console.log("ID-DELETE:"+idTable);
     for (var i = 0; i < arrayTableAvisoFuncionamiento.length; i++) {
@@ -1275,7 +1352,8 @@ function addAvisoResponsable(idTable){
         console.log(arrayTableAvisoResponsable);
         console.log("==============================");
     }
-    $("#filesAvisoResponsable").closest('form').trigger('reset');
+    // $("#filesAvisoResponsable").closest('form').trigger('reset');
+    $("#filesAvisoResponsable").val("");
 }
 
 
@@ -1285,7 +1363,8 @@ function deleteRowAvisoResponsable(obj,idTable){
     // $("#filesAvisoResponsable").parent().siblings('.file-path-wrapper').wrap('<form>').closest('form').get(0).reset();
     // $("#filesAvisoResponsable").parent().siblings('form').children().unwrap();
     // var avisoRespToClone = $("#avisoRespToClone");
-    $("#filesAvisoResponsable").closest('form').trigger('reset');
+    $("#filesAvisoResponsable").val("");
+    // $("#filesAvisoResponsable").closest('form').trigger('reset');
 
     console.log("==========DELETE==============");
     console.log("ID-DELETE:"+idTable);

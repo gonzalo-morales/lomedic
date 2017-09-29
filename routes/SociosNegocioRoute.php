@@ -19,6 +19,7 @@ Route::prefix('{company}')->group(function () {
 
     Route::post('sociosnegocio/{id}/getEstados', 'SociosNegocio\SociosNegocioController@getEstados');
     Route::post('sociosnegocio/{id}/getMunicipios', 'SociosNegocio\SociosNegocioController@getMunicipios');
+    Route::get('sociosnegocio/getData', 'SociosNegocio\SociosNegocioController@getData'); // TODO: QUITAR --> TESTING
     // Route::post('sociosnegocio/uploadLicencias', 'SociosNegocio\SociosNegocioController@uploadLicencias');
     Route::post('sociosnegocio/store', 'SociosNegocio\SociosNegocioController@store');
     // Route::get('index', 'Socios\ProveedoresController@index');
@@ -26,7 +27,6 @@ Route::prefix('{company}')->group(function () {
     // Route::post('socios/crearContacto', 'Socios\ProveedoresController@crearContacto');
     Route::group(['prefix' => 'sociosnegocio', 'as' => 'sociosnegocio.', 'middleware' => ['auth','share'] ], function() {
         // Route::get('proveedores/crear', 'Socios\ProveedoresController@create')->name('proveedores.crear');
-        // Route::resource('proveedores', 'Socios\ProveedoresController');
         Route::resource('sociosnegocio', 'SociosNegocio\SociosNegocioController');
         Route::post('sociosnegocio/{id}/getEstados', 'SociosNegocio\SociosNegocioController@getEstados');
         Route::post('sociosnegocio/{id}/getMunicipios', 'SociosNegocio\SociosNegocioController@getMunicipios');
