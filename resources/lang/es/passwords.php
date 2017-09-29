@@ -17,6 +17,6 @@ return [
 	'reset' => '¡Tu contraseña ha sido reiniciada!',
 	'sent' => '¡Te hemos enviado el link para reiniciar tu contraseña!',
 	'token' => 'Este token para reiniciar la contraseña es inválido.',
-	'user' => "We can't find a user with that e-mail address.",
+	'user' => "No podemos encontrar un usuario que coincida con la dirección de correo electrónico.",
 
 ];
