@@ -6,6 +6,10 @@
 	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col-md-12 col-xs-12']) !!}
 @endsection
 
+@section('header-bottom')
+	{!! isset($validator) ? $validator->selector('#form-model') : '' !!}
+@endsection
+
 @section('form-actions')
 	<div class="col-md-12 col-xs-12">
 		<div class="text-right">

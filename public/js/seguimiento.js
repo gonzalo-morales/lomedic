@@ -16,6 +16,57 @@ $(document).ready(function () {
 			$('#id_estatus label span').text("Si");
 		}
 	});
+	
+	$('#fk_id_categoria').on('change', function(){
+        let url = $(this).data('url');
+
+        $('#fk_id_subcategoria').empty();
+        $('#fk_id_accion').empty();
+        $('#fk_id_subcategoria').prop('disabled',!$('option:selected', this).val());
+        $('#fk_id_accion').prop('disabled',!$('#fk_id_subcategoria option:selected').val());
+
+        $.ajax({
+            url: url.replace('?id', $('option:selected', this).val()),
+            dataType: 'json',
+            success: function (data) {
+            	var options = new Option('Selecciona una subcategoria', '', true, false);
+                $('#fk_id_subcategoria').prepend(options);
+                $('#fk_id_subcategoria option:selected').prop('disabled', true);
+                $.each(data, function (key, data) {
+                	var option = new Option(data.subcategoria, data.id_subcategoria, false, false);
+                	$('#fk_id_subcategoria').append(option);
+                });
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    });
+    
+    //Carga acciones segun al elegir una subcategoria
+    $('#fk_id_subcategoria').on('change', function(){
+        let url = $(this).data('url');
+
+        $('#fk_id_accion').empty();
+        $('#fk_id_accion').prop('disabled',!$('option:selected', this).val());
+
+        $.ajax({
+            url: url.replace('?id', $('option:selected', this).val()),
+            dataType: 'json',
+            success: function (data) {
+            	var options = new Option('Selecciona una accion', '', true, false);
+                $('#fk_id_accion').prepend(options);
+                $('#fk_id_accion option:selected').prop('disabled', true);
+                $.each(data, function (key, data) {
+                	var option = new Option(data.accion, data.id_accion, false, false);
+                	$('#fk_id_accion').append(option);
+                });
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    });
 
     var data_empleado = $('#fk_id_empleado_comentario').data('url');
     $.ajax({

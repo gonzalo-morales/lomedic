@@ -69,17 +69,17 @@
           			<div class="form-group row">
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_categoria','Categoría')}}
-                    		{!! Form::select('fk_id_categoria',$categories_tickets,null,['id'=>'fk_id_categoria','class'=>'form-control','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
+                    		{!! Form::select('fk_id_categoria',$categories_tickets,null,['id'=>'fk_id_categoria','class'=>'form-control fk_id_categoria','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
           				</div>
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_subcategoria','Subategoría')}}
-                			{!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria','class'=>'form-control','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
+                			{!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria','class'=>'form-control fk_id_subcategoria','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
           				</div>
           			</div>
           			<div class="form-group row">
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_accion','Acción')}}
-	            			{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control','disabled'=>'disabled']) !!}
+	            			{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control fk_id_accion','disabled'=>'disabled']) !!}
           				</div>
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_prioridad','Prioridad')}}
