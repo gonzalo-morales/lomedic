@@ -14,11 +14,16 @@
 		{{ Form::text('nomenclatura', null, ['id'=>'nomenclatura','class'=>'validate']) }}
 		{{ $errors->has('nomenclatura') ? HTML::tag('span', $errors->first('nomenclatura'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="form-check-label col-md-12 col-xs-12">
-		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('nacional'), ['id'=>'activo']) }}
-		{{ Form::label('activo', '¿Activo?') }}
-		{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
+	<div  class="col-md-12 text-center mt-4">
+		<div class="alert alert-warning" role="alert">
+			Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+		</div>
+		<div data-toggle="buttons">
+			<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+				{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+				Activo
+			</label>
+		</div>
 	</div>
 </div>
 @endsection

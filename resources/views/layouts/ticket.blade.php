@@ -104,7 +104,7 @@
     
                 <div class="modal-footer">
                     {!! Form::button('Enviar',['class'=>'btn btn-primary','type'=>'submit']) !!}
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>
       		{!! Form::close() !!}
         </div>

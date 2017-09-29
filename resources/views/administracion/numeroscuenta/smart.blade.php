@@ -7,7 +7,7 @@
 <div class="row">
 	<div class="form-group col-md-12 col-xs-12">
 		{{ Form::label('numero_cuenta', 'Número de cuenta') }}
-		{{ Form::text('numero_cuenta', null, ['id'=>'numero_cuenta','class'=>'form-control']) }}
+		{{ Form::text('numero_cuenta', null, ['id'=>'numero_cuenta','class'=>'form-control','placeholder'=>'No. de cuenta']) }}
 		{{ $errors->has('numero_cuenta') ? HTML::tag('span', $errors->first('numero_cuenta'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
 	<div class="form-group col-md-4 col-xs-12">
@@ -24,6 +24,17 @@
 		{{ Form::label('fk_id_empresa', 'Empresa') }}
 		{{ Form::select('fk_id_empresa', ($companies ?? []), null, ['id'=>'fk_id_empresa', 'class'=>'form-control']) }}
 		{{ $errors->has('fk_id_empresa') ? HTML::tag('span', $errors->first('fk_id_empresa'), ['class'=>'help-block deep-orange-text']) : '' }}
+	</div>
+	<div  class="col-md-12 text-center mt-4">
+		<div class="alert alert-warning" role="alert">
+			Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+		</div>
+		<div data-toggle="buttons">
+			<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+				{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+				Activo
+			</label>
+		</div>
 	</div>
 </div>
 @endsection

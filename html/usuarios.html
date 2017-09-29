@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <h1>Agregar usuario</h1>
+      <div class="col-md-12 text-right">
+        <a id="saveAll" class="btn btn-primary" href="#">Guardar</a>
+        <a class="btn" href="#">Cerrar</a>
+      </div>
+      <div class="row">
+        <div class="col-md-8 col-sm-12 mb-3">
+          <div class="card">
+            <h4 class="card-header">Nuevo usuario</h4>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 col-sm-6">
+                  <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" class="form-control" id="name" placeholder="Ejemplo: Juan">
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <div class="form-group">
+                    <label for="user">Usuario</label>
+                    <input type="text" class="form-control" id="user" placeholder="Ejemplo: Juan">
+                  </div>
+                </div>
+              </div><!--/row forms-->
+              <div class="row">
+                <div class="col-md-6 col-sm-6">
+                  <div class="form-group">
+                    <label for="pass">Contraseña</label>
+                    <input type="password" class="form-control" id="pass" placeholder="*****">
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <div class="form-group">
+                    <label for="empresa">Empresa</label>
+                    <select class="form-control" id="empresa">
+                      <option>Seleccione...</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                  </div>
+                </div>
+              </div><!--/row forms-->
+              <hr>
+              <h5>Correo Empresarial</h5>
+              <fieldset>
+                <div class="card">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                          <label for="empresa">Empresa</label>
+                          <select class="form-control" id="empresa">
+                            <option>Seleccione...</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <div class="form-group">
+                          <label for="correo">Correo</label>
+                          <input type="mail" class="form-control" id="correo" placeholder="micorreogenial@mail.com">
+                        </div>
+                      </div>
+                    </div><!--/row forms-->
+                  </div>
+                </div>
+                <div class="col-sm-12 text-center">
+                  <div class="sep">
+                    <div class="sepBtn">
+                      <button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <table class="table table-hover table-responsive">
+                    <thead>
+                      <tr>
+                        <th>Empresa</th>
+                        <th>Correo</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Coporativo</th>
+                        <td>uncorreomagico@mail.com</td>
+                        <td>
+                          <a href="#" data-toggle="Eliminar" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">ABIISA</th>
+                        <td>uncorreomagico@mail.com</td>
+                        <td>
+                          <a href="#" data-toggle="Eliminar" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">LoMedic</th>
+                        <td>uncorreomagico@mail.com</td>
+                        <td>
+                          <a href="#" data-toggle="Eliminar" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <h5>Perfiles</h5>
+          <div id="listProfiles" class="list-group">
+            <a href="#" class="list-group-item list-group-item-action" value=0>Compras</a>
+            <a href="#" class="list-group-item list-group-item-action" value=1>Administración</a>
+            <a href="#" class="list-group-item list-group-item-action" value=2>Ventas</a>
+            <a href="#" class="list-group-item list-group-item-action" value=3>Cuentas por pagar</a>
+            <a href="#" class="list-group-item list-group-item-action" value=4>Cuentas por cobrar</a>
+            <a href="#" class="list-group-item list-group-item-action" value=5>Sistemas</a>
+            <a href="#" class="list-group-item list-group-item-action" value=6>Facturación</a>
+            <a href="#" class="list-group-item list-group-item-action" value=7>Gerencia</a>
+            <a href="#" class="list-group-item list-group-item-action" value=8>Director</a>
+            <a href="#" class="list-group-item list-group-item-action" value=9>Cobranza</a>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3 mt-3">
+        <div class="col-md-12">
+          <div class="card">
+            <h4 class="card-header">Empresas</h4>
+            <div class="card-body">
+              <p class="text-center">Aquí va los tabs y sus tablas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!--/container-fluid-->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      //iniciamos tooltips
+      $(document).ready(function(){
+        $('[data-toggle]').tooltip();
+
+        var listvalues = [];
+        //función para clic en el listado
+        $(".list-group-item").click(function(){
+          $(this).toggleClass('active');
+          //alert($(this).attr('value'));
+          listvalues.push($(this).attr('value'));
+          console.log(listvalues);
+        })
+
+      });
+    </script>
+  </body>
+</html>

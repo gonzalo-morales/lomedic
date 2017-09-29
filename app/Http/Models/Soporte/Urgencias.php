@@ -34,7 +34,7 @@ class Urgencias extends ModelBase
 	 */
 	protected $fields = [
 	    'urgencia' => 'Urgencia',
-	    'activo' => 'Activo'
+	    'activo_span' => 'Activo'
 	];
 
 	/**

@@ -6,17 +6,21 @@
 <div class="row">
 	<div class="form-group col-md-12 col-xs-12">
 		{{ Form::label('estatus', '* Estatus') }}
-		<div class="input-group">
-			{{ Form::text('estatus', null, ['id'=>'estatus','class'=>'form-control']) }}
-			<div class="input-group-addon">
-				{{ Form::hidden('activo', 0) }}
-				{{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo']) }}
-				{{ Form::label('activo', '¿Activo?') }}
-			</div>
+		{{ Form::text('estatus', null, ['id'=>'estatus','class'=>'form-control']) }}
+		{{ $errors->has('estatus') ? HTML::tag('span', $errors->first('estatus'), ['class'=>'help-block deep-orange-text']) : '' }}
+	</div>
+	<div  class="col-md-12 text-center mt-4">
+		<div class="alert alert-warning" role="alert">
+			Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+		</div>
+		<div data-toggle="buttons">
+			<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+				{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+				Activo
+			</label>
 		</div>
 	</div>
-	{{ $errors->has('estatus') ? HTML::tag('span', $errors->first('estatus'), ['class'=>'help-block deep-orange-text']) : '' }}
-	{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
+
 </div>
 @endsection
 

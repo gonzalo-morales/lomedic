@@ -141,3 +141,38 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
 .select2-selection__rendered {
   line-height: 34px !important;
 }
+/* Smart vanilla-datable */
+.dataTable-table > tbody > tr > td,
+.dataTable-table > tbody > tr > th,
+.dataTable-table > tfoot > tr > td,
+.dataTable-table > tfoot > tr > th,
+.dataTable-table > thead > tr > td,
+.dataTable-table > thead > tr > th {
+  vertical-align: middle !important;
+}
+.dataTable-table .width-auto {
+  width: 1px !important;
+}
+.dataTable-table [data-sortable="false"] a {
+  pointer-events: none;
+}
+.dataTable-table [type="checkbox"] {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.dataTable-table .single-check,
+.dataTable-table tr > td:last-of-type > * {
+  opacity: 0;
+}
+.dataTable-table tr:hover .single-check,
+.dataTable-table tr:hover > td:last-of-type > *,
+.dataTable-table .single-check:checked {
+  opacity: 1;
+}
+.btn.is-icon {
+  padding: 0px;
+  box-shadow: none;
+}
+.not-wrap {
+  white-space: nowrap;
+}

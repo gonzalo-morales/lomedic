@@ -14,11 +14,15 @@
 		{{ Form::text('clave_area', null, ['id'=>'clave_area','class'=>'form-control']) }}
 		{{ $errors->has('clave_area') ? HTML::tag('span', $errors->first('clave_area'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="form-group col-md-1 col-xs-12">
-		<div class="input-group-addon">
-		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo','class'=>'']) }}
-		{{ Form::label('activo', '¿Activo?',['class'=>'']) }}
+	<div  class="col-md-12 text-center mt-4">
+		<div class="alert alert-warning" role="alert">
+			Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+		</div>
+		<div data-toggle="buttons">
+			<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+				{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+				Activo
+			</label>
 		</div>
 	</div>
 </div>

@@ -13,18 +13,22 @@
 		<div class="input-group">
 		{{ Form::text('subcategoria', null, ['id'=>'subcategoria','class'=>'form-control']) }}
 			<div class="input-group-addon">
-		{{ Form::select('fk_id_categoria', isset($categories) ? $categories : [], null,['id'=>'fk_id_categoria','class'=>'form-control']) }}
-			</div>
-			<div class="input-group-addon">
-				{{ Form::hidden('activo', 0) }}
-				{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo','class'=>'']) }}
-				{{ Form::label('activo', 'Activo') }}
+		{{ Form::select('fk_id_categoria', isset($categories) ? $categories : [], old('fk_id_categoria'),['id'=>'fk_id_categoria_','class'=>'form-control']) }}
 			</div>
 		</div>
+		{{ $errors->has('subcategoria') ? HTML::tag('span', $errors->first('subcategoria'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	{{ $errors->has('subcategoria') ? HTML::tag('span', $errors->first('subcategoria'), ['class'=>'help-block deep-orange-text']) : '' }}
-	{{ $errors->has('fk_id_categoria') ? HTML::tag('span', $errors->first('fk_id_categoria'), ['class'=>'help-block deep-orange-text']) : '' }}
-	{{ $errors->has('activo') ?  HTML::tag('span', $errors->first('activo'), ['class'=>'help-block deep-orange-text']) : '' }}
+	<div  class="col-md-12 text-center mt-4">
+		<div class="alert alert-warning" role="alert">
+			Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+		</div>
+		<div data-toggle="buttons">
+			<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+				{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+				Activo
+			</label>
+		</div>
+	</div>
 </div>
 @endsection
 

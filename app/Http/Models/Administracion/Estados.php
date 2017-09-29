@@ -32,7 +32,7 @@ class Estados extends ModelBase
 	 */
 	public $rules = [
 		'estado' => 'required',
-		'paises' => 'required',
+		'fk_id_pais' => 'required',
 	];
 
 	/**

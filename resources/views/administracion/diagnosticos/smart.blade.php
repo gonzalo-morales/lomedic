@@ -4,26 +4,31 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="form-group col-md-3 col-xs-12">
+	<div class="form-group col-md-4 col-xs-12">
 		{{ Form::label('clave_diagnostico', 'Clave') }}
 		{{ Form::text('clave_diagnostico', null, ['id'=>'clave_diagnostico','class'=>'form-control']) }}
 		{{ $errors->has('clave_diagnostico') ? HTML::tag('span', $errors->first('clave_diagnostico'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="form-group col-md-3 col-xs-12">
+	<div class="form-group col-md-4 col-xs-12">
 		{{ Form::label('diagnostico', 'Diagnostico') }}
 		{{ Form::text('diagnostico', null, ['id'=>'diagnostico','class'=>'form-control']) }}
 		{{ $errors->has('diagnostico') ? HTML::tag('span', $errors->first('diagnostico'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="form-group col-md-3 col-xs-12">
+	<div class="form-group col-md-4 col-xs-12">
 		{{ Form::label('medicamento_sugerido', 'Medicamento Sugerido') }}
 		{{ Form::text('medicamento_sugerido', null, ['id'=>'medicamento_sugerido','class'=>'form-control']) }}
 		{{ $errors->has('medicamento_sugerido') ? HTML::tag('span', $errors->first('medicamento_sugerido'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="form-check col-md-3 col-xs-12">
-		{{ Form::hidden('estatus', 0) }}
-		{{ Form::checkbox('estatus', 1, old('estatus'), ['id'=>'estatus']) }}
-		{{ Form::label('estatus', 'Estatus') }}
-		{{ $errors->has('estatus') ?  HTML::tag('span', $errors->first('estatus'), ['class'=>'help-block deep-orange-text']) : '' }}
+	<div  class="col-md-12 text-center mt-2">
+		<div class="alert alert-warning" role="alert">
+			Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+		</div>
+		<div data-toggle="buttons">
+			<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+				{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+				Activo
+			</label>
+		</div>
 	</div>
 </div>
 @endsection

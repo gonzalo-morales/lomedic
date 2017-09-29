@@ -20,12 +20,12 @@
 		{{ Form::text('rfc', null, ['id'=>'rfc','class'=>'form-control']) }}
 		{{ $errors->has('rfc') ? HTML::tag('span', $errors->first('rfc'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="form-check-label col-md-3 col-xs-12">
-		{{ Form::hidden('nacional', 0) }}
-		{{ Form::checkbox('nacional', 1, old('nacional'), ['id'=>'nacional','class'=>'']) }}
-		{{ Form::label('nacional', '¿Banco nacional?') }}
+	<div class="form-check col-md-3 col-xs-12 d-flex align-items-center">
+		<input type="hidden" name="nacional" value="0" />
+		{{ Form::checkbox('nacional', 1, old('nacional'), ['id'=>'nacional']) }}
+		<label for="nacional">¿Banco Nacional?</label>
+		{{ $errors->has('nacional') ?  HTML::tag('span', $errors->first('nacional'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	{{ $errors->has('nacional') ?  HTML::tag('span', $errors->first('nacional'), ['class'=>'help-block deep-orange-text']) : '' }}
 </div>
 @endsection
 

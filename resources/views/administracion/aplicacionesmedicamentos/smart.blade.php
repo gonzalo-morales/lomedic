@@ -4,15 +4,22 @@
 @section('form-content')
 {{ Form::setModel($data) }}
     <div class="row">
-        <div class="input-group col-md-12 col-xs-12">
-{{--                {{ Form::label('aplicacion', '',['class'=>'col-form-label']) }}--}}
-                {{ Form::text('aplicacion', '', ['id'=>'aplicacion','class'=>'form-control','placeholder'=>'Aplicacion']) }}
-                <span class="input-group-addon">
-                    {{ Form::hidden('activo', 0) }}
-                    {{ Form::label('activo', 'Activo',['class'=>'col-form-label']) }}
-                    {{ Form::checkbox('activo', 1, old('activo'), ['id'=>'activo','class'=>'']) }}
-                </span>
+        <div class="form-group col-md-12 col-xs-12">
+            {{Form::label('aplicacion','* Aplicación')}}
+            {{ Form::text('aplicacion', null, ['id'=>'aplicacion','class'=>'form-control','placeholder'=>'Aplicacion']) }}
             {{ $errors->has('aplicacion') ? HTML::tag('span', $errors->first('aplicacion'), ['class'=>'help-block deep-orange-text']) : '' }}
+        </div>
+        <div  class="col-md-12 text-center mt-4">
+            <div class="alert alert-warning" role="alert">
+                Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+            </div>
+            <div data-toggle="buttons">
+                <label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
+                    {{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
+                    Activo
+                </label>
+            </div>
+        </div>
     </div>
 @endsection
 

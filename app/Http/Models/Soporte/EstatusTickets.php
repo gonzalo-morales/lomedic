@@ -34,7 +34,7 @@ class EstatusTickets extends ModelBase
 	 */
 	protected $fields = [
 	    'estatus' => 'Estatus',
-	    'activo' => 'Activo'
+	    'activo_span' => 'Activo'
 	];
 
 	/**

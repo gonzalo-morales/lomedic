@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\AplicacionesMedicamentos;
+use Illuminate\Http\Request;
 
 class AplicacionesMedicamentosController extends ControllerBase
 {
@@ -16,4 +17,5 @@ class AplicacionesMedicamentosController extends ControllerBase
 	{
 		$this->entity = $entity;
 	}
+
 }

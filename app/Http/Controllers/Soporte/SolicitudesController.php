@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Soporte;
 use DB;
+use File;
+use App;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Logs;
 use App\Http\Models\Administracion\Empresas;
@@ -14,16 +16,15 @@ use App\Http\Models\Soporte\EstatusTickets;
 use App\Http\Models\Soporte\Impactos;
 use App\Http\Models\Soporte\Solicitudes;
 use App\Http\Models\Soporte\Urgencias;
-use Illuminate\Auth\Access\Response;
+use App\Http\Models\Soporte\SeguimientoSolicitudes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
-use App\Http\Models\Soporte\SeguimientoSolicitudes;
 
 class SolicitudesController extends ControllerBase
 {
-
     public function __construct(Solicitudes $entity)
     {
         $this->entity = $entity;
@@ -99,7 +100,7 @@ class SolicitudesController extends ControllerBase
             'attachments' => ArchivosAdjuntos::where('fk_id_solicitud',$id)->where('eliminar',false)->where('activo',true)->where(DB::RAW('fk_id_mensaje'))->get(),
             'employees' => Empleados::select('id_empleado',DB::raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) AS empleado"))
                 ->where('eliminar',false)->where('activo',true)->where('fk_id_departamento',18)->get()->pluck('empleado','id_empleado'),
-            'status' => EstatusTickets::select('id_estatus_ticket','estatus')->where('eliminar',false)->where('activo',true)->get()->pluck('estatus','id_estatus_ticket'),
+            'status' => EstatusTickets::where('eliminar',false)->where('activo',true)->get(),
             'impacts' => Impactos::select('id_impacto','impacto')->where('eliminar',false)->where('activo',true)->get()->pluck('impacto','id_impacto'),
             'urgencies' => Urgencias::select('id_urgencia','urgencia')->where('eliminar',false)->where('activo',true)->get()->pluck('urgencia','id_urgencia'),
             'categorys' => Categorias::select('id_categoria', 'categoria')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('categoria', 'id_categoria'),
@@ -139,7 +140,13 @@ class SolicitudesController extends ControllerBase
     public function descargarArchivosAdjuntos($company, $id)
     {
         $archivo = ArchivosAdjuntos::where('id_archivo_adjunto', $id)->first();
-        Logs::createLog($archivo->getTable(), $company, $archivo->id_archivo_adjunto, 'descargar', 'Archivo adjunto de ticket');
-        return Response::download($archivo->ruta_archivo . '/' . $archivo->nombre_archivo);
+        if (File::exists($archivo->ruta_archivo.'/'.$archivo->nombre_archivo))
+        {
+            Logs::createLog($archivo->getTable(), $company, $archivo->id_archivo_adjunto, 'descargar', 'Archivo adjunto de ticket');
+            return Response::download($archivo->ruta_archivo . '/' . $archivo->nombre_archivo);
+        }
+        else {
+            App::abort(404,'No se encontro el archivo o recurso que se solicito.');
+        }
     }
 }
