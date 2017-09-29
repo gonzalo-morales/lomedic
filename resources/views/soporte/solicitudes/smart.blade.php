@@ -24,8 +24,12 @@
 @section('form-actions')
 @if(Route::currentRouteNamed(currentRouteName('show')))
 	<div class="col-sm-12 text-right">
-			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-primary']) }}
+			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-light']) }}
+			@if(!in_array($data->fk_id_estatus_ticket, [3,4]) && $data->fk_id_empleado_tecnico == Auth::id() || $data->fk_id_empleado_tecnico == null)
+        		{{ Form::button('Actualizar', ['type' =>'submit', 'class'=>'waves-effect waves-light btn btn-info']) }}
+            @endif
 	</div>
+	
 @endif
 @endsection
 
@@ -179,11 +183,6 @@
                 </div>
                 @endif
     		</div>
-        </div>
-        <div class="card-footer text-right">
-        	@if(!in_array($data->fk_id_estatus_ticket, [3,4]))
-        		{{ Form::button('Actualizar', ['type' =>'submit', 'class'=>'waves-effect waves-light btn btn-info']) }}
-            @endif
         </div>
     </div>
 	@endif
