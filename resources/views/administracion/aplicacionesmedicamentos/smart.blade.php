@@ -1,6 +1,13 @@
 
 @section('content-width', 's12')
-
+@section('header-bottom')
+    {{--<script>--}}
+        {{--var rules = {{ $rules }}+'';--}}
+    {{--</script>--}}
+    {{--<script src="js/validatos.js"></script>--}}
+    @parent
+{{--    <script type="text/javascript" src="{{ asset('js/aplicacionesmedicamentos.js') }}"></script>--}}
+@endsection
 @section('form-content')
 {{ Form::setModel($data) }}
     <div class="row">
