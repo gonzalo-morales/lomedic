@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Soporte;
 use DB;
+use File;
+use App;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Logs;
 use App\Http\Models\Administracion\Empresas;
@@ -14,16 +16,15 @@ use App\Http\Models\Soporte\EstatusTickets;
 use App\Http\Models\Soporte\Impactos;
 use App\Http\Models\Soporte\Solicitudes;
 use App\Http\Models\Soporte\Urgencias;
-use Illuminate\Auth\Access\Response;
+use App\Http\Models\Soporte\SeguimientoSolicitudes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
-use App\Http\Models\Soporte\SeguimientoSolicitudes;
 
 class SolicitudesController extends ControllerBase
 {
-
     public function __construct(Solicitudes $entity)
     {
         $this->entity = $entity;
@@ -139,7 +140,13 @@ class SolicitudesController extends ControllerBase
     public function descargarArchivosAdjuntos($company, $id)
     {
         $archivo = ArchivosAdjuntos::where('id_archivo_adjunto', $id)->first();
-        Logs::createLog($archivo->getTable(), $company, $archivo->id_archivo_adjunto, 'descargar', 'Archivo adjunto de ticket');
-        return Response::download($archivo->ruta_archivo . '/' . $archivo->nombre_archivo);
+        if (File::exists($archivo->ruta_archivo.'/'.$archivo->nombre_archivo))
+        {
+            Logs::createLog($archivo->getTable(), $company, $archivo->id_archivo_adjunto, 'descargar', 'Archivo adjunto de ticket');
+            return Response::download($archivo->ruta_archivo . '/' . $archivo->nombre_archivo);
+        }
+        else {
+            App::abort(404,'No se encontro el archivo o recurso que se solicito.');
+        }
     }
 }

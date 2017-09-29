@@ -122,7 +122,7 @@
                     		</div>
                     		<div class="form-group col-md-12 col-lg-6">
                         		{{ Form::label('fk_id_categoria', '* Categoria') }}
-                    			{{ Form::select('fk_id_categoria', (isset($categorys) ? $categorys : []), null, ['id'=>'fk_id_categoria','class'=>'validate form-control','disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
+                    			{{ Form::select('fk_id_categoria', (isset($categorys) ? $categorys : []), null, ['id'=>'fk_id_categoria','class'=>'validate form-control','disabled'=>in_array($data->fk_id_estatus_ticket, [3,4]),'data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])]) }}
                         		{{ $errors->has('fk_id_categoria') ? HTML::tag('span', $errors->first('fk_id_categoria'), ['class'=>'help-block deep-orange-text']) : '' }}
                     		</div>
                     	</div>
@@ -130,7 +130,7 @@
                     	<div class="row">
                     		<div class="form-group col-md-12 col-lg-6">
                         		{{ Form::label('fk_id_subcategoria', '* Subcategoria') }}
-                    			{{ Form::select('fk_id_subcategoria', (isset($subcategorys) ? $subcategorys : []), null, ['id'=>'fk_id_subcategoria','class'=>'validate form-control','disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
+                    			{{ Form::select('fk_id_subcategoria', (isset($subcategorys) ? $subcategorys : []), null, ['id'=>'fk_id_subcategoria','class'=>'validate form-control','disabled'=>in_array($data->fk_id_estatus_ticket, [3,4]),'data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) }}
                         		{{ $errors->has('fk_id_subcategoria') ? HTML::tag('span', $errors->first('fk_id_subcategoria'), ['class'=>'help-block deep-orange-text']) : '' }}
                     		</div>
                     		<div class="form-group col-md-12 col-lg-6">

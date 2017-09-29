@@ -40,7 +40,11 @@ $Url = url()->previous() != URL('/') ? url()->previous() : url()->previous().'/'
         </div>
         <div class="test">
           <h3 class="center white-text">Error 404</h3>
-          <h6 class="center white-text">No pudimos encontrar la página. <a class="orange-text" href="{{ $Url }}">Clic aquí para volver</a><br></h6>
+          <h4></h4>
+          <h6 class="center white-text">
+          	{!! !empty($exception->getMessage()) ? $exception->getMessage() : 'No pudimos encontrar la página.' !!} 
+          	<a class="orange-text" href="{{ $Url }}">Clic aquí para volver</a><br>
+          </h6>
         </div>
       </div>
       </div>
