@@ -44,7 +44,6 @@ class SolicitudesController extends ControllerBase
 //                'text' => $impuesto->impuesto,
 //                'porcentaje' => $impuesto->porcentaje];
 //        }
-
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity->first()
                     ->empleado()->first()
@@ -70,13 +69,14 @@ class SolicitudesController extends ControllerBase
                     ->pluck('sku','id_sku'),
                 'proyectos' => Proyectos::where('activo',1)
                     ->get()
-                    ->pluck('proyecto','id_proyecto')
+                    ->pluck('proyecto','id_proyecto'),
             ]];
         return parent::create($company,$attributes);
     }
 
     public function store(Request $request, $company)
     {
+//        dd($request);
         $id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
         # ¿Usuario tiene permiso para crear?
         $this->authorize('create', $this->entity);
