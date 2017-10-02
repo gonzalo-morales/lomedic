@@ -2,12 +2,13 @@
 /* Extend jQuery with functions for PUT and DELETE requests. */
 function _ajax_request(e,t,u,r,a){return jQuery.isFunction(t)&&(u=t,t={}),jQuery.ajax({type:a,url:e,data:t,success:u,dataType:r})}jQuery.extend({put:function(e,t,u,r){return _ajax_request(e,t,u,r,"PUT")},delete:function(e,t,u,r){return _ajax_request(e,t,u,r,"DELETE")}});
 
-var _createElement = function(a) {
+var _createElement = function(a, b) {
 	var c = document;
 	if (a && "object" == typeof a) {
 		var e, i;
 		for (e in a) {
 			var d = c.createElement(e);
+			if (b) for (var ii in b) d.dataset[ii] = b[ii];
 			if (a[e] && "object" == typeof a[e]) {
 				for (i in a[e]) {
 					if ("html" === i) {
@@ -16,7 +17,7 @@ var _createElement = function(a) {
 						d.appendChild(c.createTextNode(a[e][i]));
 					} else if ('childs' == i) {
 						for (var x in a[e][i]) {
-							d.append(_createElement(a[e][i][x], true))
+							d.append(_createElement(a[e][i][x]))
 						}
 					} else {
 						d.setAttribute(i, a[e][i]);
@@ -380,7 +381,7 @@ rivets.binders['each-dynamics'] = {
 			return (typeof collection[item] !== 'function') ? acc.concat(collection[item]) : acc;
 		}, []);
 		for(var key in options) {
-			var template = _createElement(options[key], el);
+			var template = _createElement(options[key], el.dataset);
 			this.marker.parentNode.append(template);
 			this.iterated.push(rivets.bind(template, this.view.models))
 		}
@@ -480,12 +481,14 @@ function getItems($page) {
 		let collection = [];
 		$.each(response.data, function(index, item) {
 			let id = item[primary];
-			let estatus = item['fk_id_estatus'];
 			let collection_item = {};
 			collection_item['input'] = '<input type="checkbox" id="check-'+id+'" name="check-'+id+'" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="'+id+'">';
 			$.each(columns, function(index, column) {
-				collection_item[column] = (new Function('str', 'return eval("this." + str);')).call(item, column)
+				collection_item[column] = (new Function('str', 'return eval("this." + str);')).call(item, column);
+				if(item[column] == null) collection_item[column] = '';
 			})
+
+
 			collection_item['actions'] = '<a rv-each-dynamics="collections.itemsOptions" data-item-id="'+id+'"></a>';
 			collection.push(collection_item);
 		})
