@@ -59,8 +59,10 @@
                     <a href="#"><p class="d-flex justify-content-center"><small>{{ Auth::User()->nombre_corto }}</small></p></a>
                 </div>
                 <strong>
-                	<center><object id="front-page-logo" class="sim w-50" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></center>
-    				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center">
+                	<a href="#" title="{{ Auth::User()->nombre_corto }}" data-toggle="tooltip" data-placement="right">
+                		<object id="front-page-logo" class="sim w-50" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object>
+                	</a>
+    				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center" title="CERRAR SESION" data-toggle="tooltip" data-placement="right">
         				<i class="tiny material-icons">power_settings_new</i>
         			</a>
     			</strong>
@@ -96,6 +98,9 @@
 {{ HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js') }}
 <!-- Bootstrap JS local fallback -->
 <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap.min.js') }}"><\/script>')}</script>
+
+<!-- jQuery Nicescroll local-->
+{{ HTML::script('vendor/jsvalidation/js/jsvalidation.js') }}
 
 <!-- jQuery Nicescroll local-->
 {{ HTML::script('js/jquery.nicescroll.min.js') }}

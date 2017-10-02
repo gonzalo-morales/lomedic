@@ -7,12 +7,12 @@
 	<div class="form-group col-md-6 col-xs-12">
 		{{ Form::label('area', '* Area') }}
 		{{ Form::text('area', null, ['id'=>'area','class'=>'form-control']) }}
-		{{ $errors->has('area') ? HTML::tag('span', $errors->first('area'), ['class'=>'help-block deep-orange-text form-control']) : '' }}
+		{{ $errors->has('area') ? HTML::tag('span', $errors->first('area'), ['class'=>'help-block deep-orange-text text-danger']) : '' }}
 	</div>
 	<div class="form-group col-md-5 col-xs-12">
 		{{ Form::label('clave_area', '* Clave') }}
 		{{ Form::text('clave_area', null, ['id'=>'clave_area','class'=>'form-control']) }}
-		{{ $errors->has('clave_area') ? HTML::tag('span', $errors->first('clave_area'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{{ $errors->has('clave_area') ? HTML::tag('span', $errors->first('clave_area'), ['class'=>'help-block deep-orange-text text-danger']) : '' }}
 	</div>
 	<div  class="col-md-12 text-center mt-4">
 		<div class="alert alert-warning" role="alert">

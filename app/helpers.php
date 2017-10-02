@@ -39,10 +39,19 @@ function companyAction($action = '', $params = [])
 		}
 	}
 
+	$controllers = [];
+	foreach (Route::getRoutes()->getRoutes() as $route)
+	{
+	    $action = $route->getAction();
+	    if (array_key_exists('controller', $action))
+	        $controllers[] = $action['controller'];
+	}
+	
+	if(!in_array('App\Http\Controllers\\'.implode('@', $expected_action),$controllers))
+	    return '#';
+	
 	# Generamos URL
-	return action(implode('@', $expected_action), array_merge(
-		$autoparams, $params
-	));
+    return action(implode('@', $expected_action), array_merge($autoparams, $params));
 }
 
 /**

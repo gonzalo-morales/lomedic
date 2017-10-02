@@ -8,6 +8,7 @@ use Illuminate\Support\HtmlString;
 
 class ModelBase extends Model
 {
+    public $rulesjs = [];
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array
@@ -94,4 +95,14 @@ class ModelBase extends Model
 			return $column->getDefault();
 		}, $columns );
 	}
+
+	public function getRules($options = [])
+    {
+        if(!empty($this->rules)){//Si tiene reglas
+            foreach ($this->rules as $key => $rule){
+                explode($rule,'|');
+            }
+        }
+        return $this->rules;
+    }
 }

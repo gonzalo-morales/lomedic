@@ -77,7 +77,7 @@ return [
 	|
 	*/
 
-	'locale' => 'en',
+	'locale' => 'es',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ return [
 	|
 	*/
 
-	'fallback_locale' => 'en',
+	'fallback_locale' => 'es',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -180,6 +180,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
 	    Maatwebsite\Excel\ExcelServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
+	    Proengsoft\JsValidation\JsValidationServiceProvider::class,
 	],
 
 	/*
@@ -234,6 +235,7 @@ return [
 		'View' => Illuminate\Support\Facades\View::class,
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
+	    'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
 	],
 
 ];

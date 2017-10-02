@@ -38,7 +38,8 @@ class Areas extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'area' => 'required',
+		'area' => ['required'],
+        'clave_area'=>['required'],
 	];
 
 	/**

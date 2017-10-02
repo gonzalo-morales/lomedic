@@ -78,10 +78,12 @@ class ControllerBase extends Controller
 		$this->authorize('create', $this->entity);
 
 		$data = $this->entity->getColumnsDefaultsValues();
+		
+		$validator = \JsValidator::make($this->entity->rules);
 
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
+		return view(currentRouteName('smart'), $dataview+['data'=>$data,'validator'=>$validator]);
 	}
 
 	/**

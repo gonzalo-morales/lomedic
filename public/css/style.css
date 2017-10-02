@@ -69,6 +69,11 @@
 .btn-secondary.active, .btn-secondary:active, .show>.btn-secondary.dropdown-toggle, .btn-primary.active, .btn-primary:active, .show>.btn-primary.dropdown-toggle{
   background-color: rgba(0,0,0,0.8);
 }
+.input-group-btn .btn {
+    padding: .5rem .75rem;
+    margin: 0;
+    border: 1px solid transparent;
+}
 /*estílos sombras*/
 .z-depth-1-half, .btn:hover, .btn:active, .btn:focus, .modal-dialog .modal-content, .modal-dialog.cascading-modal .modal-header, ul.instagram-photos li img, .media .media-left img {
   -webkit-box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
@@ -175,4 +180,12 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
 }
 .not-wrap {
   white-space: nowrap;
+}
+.error-help-block {
+    color: #D00;
+}
+.error-help-block:before{
+    font-size: 19px;
+    font-family: "Material Icons";
+    content: "\E001 \00a0" ;
 }

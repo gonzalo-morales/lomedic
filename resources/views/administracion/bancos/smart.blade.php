@@ -32,7 +32,7 @@
 {{--@section('form-utils')--}}
 	{{--<div id="modal-1" class="modal bottom-sheet">--}}
 		{{--<div class="modal-content">--}}
-			{{--<h5 class="teal-text"><i class="material-icons">announcement</i></span> RFC:</h5>--}}
+			{{--<h5 class="teal-text"><i class="material-icons">announcement</i> RFC:</h5>--}}
 			{{--<ul class="collection">--}}
             	{{--<li class="collection-item">--}}
                 	{{--<i class="material-icons teal-text">info</i>--}}

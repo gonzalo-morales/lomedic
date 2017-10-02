@@ -152,7 +152,6 @@ function sucursal()
                     }
                 }
                 $('#fk_id_sucursal').append(option);
-
             });
             if(Object.keys(data).length ==0)
             {$('#fk_id_sucursal').prop('disabled',true)}
