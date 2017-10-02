@@ -110,7 +110,7 @@ var idTableAvisoRespEdit = 0;
 
 $(document).ready(function(){
 
-    /*$("#sucursalNombre").multiselect({
+    $("#sucursalNombre").multiselect({
         maxHeight:200,
         enableFiltering: true,
         buttonWidth: '300px',
@@ -135,23 +135,72 @@ $(document).ready(function(){
             // divider: '<li class="multiselect-item divider"></li>',
             // liGroup: '<li class="multiselect-item group"><label class="multiselect-group"></label></li>'
         },
-        numberDisplayed: 1
+        numberDisplayed: 1,
+        onChange: function(element, checked) {
+                if (checked === true) {
+                    console.log(element.val());
+                }
+                else if (checked === false) {
+                    console.log(element.val());
+                }
+            }
     });
-    $.ajax({
-        type:'GET',
-        url: "http://localhost:82/abisa/sociosnegocio/getData",
-        // data: vars,
-        dataType: 'json',
-        success: function (data) {
-            $("#sucursalNombre").multiselect("dataprovider",data);
+    $("#tipo_socio").multiselect({
+        maxHeight:200,
+        enableFiltering: true,
+        buttonWidth: '180px',
+        includeSelectAllOption: true,
+        filterPlaceholder: 'Buscar...',
+        allSelectedText: 'Todo seleccionado ...',
+        nSelectedText: ' - opciones seleccionadas!',
+        nonSelectedText: 'Seleccione...',
+        selectAllText: 'Seleccionar todo',
+        buttonClass: 'form-control',
+        // templates: {
+        //   li: '<li><a tabindex="0" class="form-control"><label></label></a></li>',
+        //   li: '<li><a tabindex="0" class="form-control"><label></label></a></li>',
+        // },
+        templates: {
+            // button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"></button>',
+            // ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+            // filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+            filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" '+
+            'type="button" style="margin:0px;"><i class="material-icons">backspace</i></button></span>',
+            // li: '<li><a href="javascript:void(0);"><label></label></a></li>',
+            // divider: '<li class="multiselect-item divider"></li>',
+            // liGroup: '<li class="multiselect-item group"><label class="multiselect-group"></label></li>'
         },
-        complete:function(data){
+        numberDisplayed: 1,
+        onChange: function(element, checked) {
+                if (checked === true) {
+                    console.log(element.val());
+                }
+                else if (checked === false) {
+                    console.log(element.val());
+                }
+            }
+    });
 
-        },
-        error: function () {
-            console.log('error');
-        }
-    });*/
+
+    // var url_estados = $("#sucursalNombre option:selected").data('url');
+    // console.log(url_estados);
+    // loadEstados(url_estados);
+    // $.ajax({
+    //     type:'POST',
+    //     url: url_estados,
+    //     // url: "http://localhost:82/abisa/sociosnegocio/getData",
+    //     // data: vars,
+    //     dataType: 'json',
+    //     success: function (data) {
+    //         $("#sucursalNombre").multiselect("dataprovider",data);
+    //     },
+    //     complete:function(data){
+    //
+    //     },
+    //     error: function () {
+    //         console.log('error');
+    //     }
+    // });
 
     $("#guardarSocio").click(function(e){
         e.preventDefault();
@@ -209,6 +258,7 @@ $(document).ready(function(){
             objectSocio.info_entrega.tipos_entrega = $("input:radio[name='tipos_entrega']:checked").data('idtipoentrega');
         }
         objectSocio.info_entrega.sucursal                   = $("#sucursalNombre").val();
+        // objectSocio.info_entrega.sucursal                   = $("#sucursalNombre").val();
         // console.log($("#sucursalNombre").val());
         objectSocio.info_entrega.pagoPaqueteria             = $("#pagoPaqueteria").val();
         objectSocio.info_entrega.monto_minimo_facturacion   = $("#monto_minimo_facturacion").val();
@@ -537,19 +587,22 @@ $(document).ready(function(){
 
     $("#agregarCuenta").click(function(event){
         event.preventDefault();
+        if($("#no_cuenta").val() != '' && $("#banco").val() != null ){
+            var banco = $("#banco option:selected:not([disabled])").text();
+            var indexBanco = $("#banco option:selected").val();
+            var no_cuenta = $("#no_cuenta").val();
 
-        var banco = $("#banco option:selected:not([disabled])").text();
-        var indexBanco = $("#banco option:selected").val();
-        var no_cuenta = $("#no_cuenta").val();
-
-        resetCuentaBancaria();
-        if ($(this).data('action') == 'add') {
-            idTableCuentas++;
-            console.log("====ID===="+idTableCuentas);
-            arrayTableCuentas.push({'idTable':idTableCuentas,'banco':banco,'indexBanco':indexBanco, 'no_cuenta':no_cuenta,'estatus':'new'});
-            addCuenta(idTableCuentas);
-        }else{
-            updateCuenta(idTableCuentasEdit,banco,indexBanco,no_cuenta);
+            resetCuentaBancaria();
+            if ($(this).data('action') == 'add') {
+                idTableCuentas++;
+                console.log("====ID===="+idTableCuentas);
+                arrayTableCuentas.push({'idTable':idTableCuentas,'banco':banco,'indexBanco':indexBanco, 'no_cuenta':no_cuenta,'estatus':'new'});
+                addCuenta(idTableCuentas);
+            }else{
+                updateCuenta(idTableCuentasEdit,banco,indexBanco,no_cuenta);
+            }
+        }else {
+            putToast('danger','Campos requeridos (*)','Cuenta bancaria <br> Banco');
         }
     });
 
@@ -669,23 +722,27 @@ $(document).ready(function(){
         var telefonoOficina = $("#telefono_oficina").val();
         var extensionOficina = $("#extension_oficina").val();
 
-
-
-
         console.log($(this).data('action'));
-
-        resetContacto();
-        if ($(this).data('action') == 'add') {
-            idTableContactos++;
-            console.log("====ID===="+idTableContactos);
-            arrayTableContactos.push({'idTableContactos':idTableContactos,'tipoContacto':tipoContacto, 'tipoContactoIndex':tipoContactoIndex,'nombreContacto':nombreContacto,'puesto':puesto,'celular':celular,'telefonoOficina':telefonoOficina,
-                                            'extensionOficina':extensionOficina,'arrayCorreosContacto':correosContacto.slice(),'estatus':'new'});
-            addContacto(idTableContactos);
-            correosContacto = [];
-        }else{
-            updateContacto(idTableContactosEdit,tipoContacto,tipoContactoIndex,nombreContacto,puesto,celular,telefonoOficina,extensionOficina,correosContacto.slice());
-            correosContacto = [];
+        console.log($("#correos_contacto").length);
+        if(tipoContacto != null && nombreContacto != '' && puesto != '' && celular != '' && telefonoOficina != '' && extensionOficina != '' && $("#correos_contacto").lenght > 0){
+            resetContacto();
+            if ($(this).data('action') == 'add') {
+                idTableContactos++;
+                console.log("====ID===="+idTableContactos);
+                arrayTableContactos.push({'idTableContactos':idTableContactos,'tipoContacto':tipoContacto, 'tipoContactoIndex':tipoContactoIndex,'nombreContacto':nombreContacto,'puesto':puesto,'celular':celular,'telefonoOficina':telefonoOficina,
+                'extensionOficina':extensionOficina,'arrayCorreosContacto':correosContacto.slice(),'estatus':'new'});
+                addContacto(idTableContactos);
+                correosContacto = [];
+            }else{
+                updateContacto(idTableContactosEdit,tipoContacto,tipoContactoIndex,nombreContacto,puesto,celular,telefonoOficina,extensionOficina,correosContacto.slice());
+                correosContacto = [];
+            }
+        }else {
+            putToast('danger','Campos requeridos (*)','Tipo Contacto <br> Nombre Contacto <br> Puesto <br> Celular <br> Tel Oficina <br> Ext Oficina <br> Correos');
         }
+
+
+
 
     });
 
@@ -759,6 +816,23 @@ $(document).ready(function(){
     });
 
 });
+
+
+function putToast(priority,title,message,timeout=3000){
+    $.toaster({
+        priority : priority, //danger || success
+        title : title,
+        message : message,
+        settings:{
+            'timeout':timeout,
+            'toaster':{
+                'css':{
+                    'top':'5em'
+                }
+            }
+        }
+    });
+}
 
 function addDireccion(idTable){
     for (var i = 0; i < arrayTableDirecciones.length; i++) {

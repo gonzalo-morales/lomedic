@@ -60,12 +60,14 @@ class SociosNegocioController extends Controller
 	 */
 	public function index($company)
 	{
-		Logs::createLog($this->entity->getTable(),$company,null,'index',null);
+		// Logs::createLog($this->entity->getTable(),$company,null,'index',null);
 
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
-			'data' => $this->entity->all()->where('eliminar','0'),
+			'data' => $this->entity->where('eliminar',0)->get(),
+			// 'data' => $this->entity->all()->where('eliminar','0')->get(),
+			// 'data' => $this->entity->all(),
 		]);
 		return redirect(companyRoute('index'));
 		// return dd($company);
@@ -114,7 +116,7 @@ class SociosNegocioController extends Controller
 		// ]);
 
 		// dd($request);
-		// print_r(json_decode($request->input('objectSocio'),true));
+		print_r(json_decode($request->input('objectSocio'),true));
 		$objSocio = $request->input('objectSocio');
 		$validArray = [];
 
@@ -134,11 +136,11 @@ class SociosNegocioController extends Controller
 				$validArray['razon_social'] = $objSocio->razon_social;
 			}
 
-			if (count($objSocio->tipo_socio) > 0) {
-				foreach ($objSocio->tipo_socio as $key => $value) {
-					// echo $objSocio->tipo_socio[$key];
-				}
-			}
+			// if (count($objSocio->tipo_socio) > 0) {
+			// 	foreach ($objSocio->tipo_socio as $key => $value) {
+			// 		// echo $objSocio->tipo_socio[$key];
+			// 	}
+			// }
 			// echo $objSocio->rfc;
 			// echo $objSocio->nombre_corto;
 			// echo $objSocio->telefono;
@@ -321,16 +323,16 @@ class SociosNegocioController extends Controller
 	 * @param  integer $id
 	 * @return \Illuminate\Http\Response
 	 */
-	// public function show($company, $id)
-	// {
-	// 	Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
-	//
-	// 	return view (Route::currentRouteName(), [
-	// 		'entity' => $this->entity_name,
-	// 		'company' => $company,
-	// 		'data' => $this->entity->findOrFail($id),
-	// 	]);
-	// }
+	public function show($company, $id)
+	{
+		// Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
+
+		return view (Route::currentRouteName(), [
+			'entity' => $this->entity_name,
+			'company' => $company,
+			'data' => $this->entity->findOrFail($id),
+		]);
+	}
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -437,13 +439,13 @@ class SociosNegocioController extends Controller
 	// }
 
 	public function getEstados($company, $id){
-		$estados = Estados::select('id_estado','estado')->where('fk_id_pais',$id)->where('activo','1')->where('eliminar','0')->orderBy('estado')->get();
-		if (count($estados) == 0) {
-			return Response::json(array(
-										'msg'=>'No se encontraron estados para el país seleccionado',
-										'cantidad'=>0)
-										);
-		}
+			$estados = Estados::select('id_estado','estado')->where('fk_id_pais',$id)->where('activo','1')->where('eliminar','0')->orderBy('estado')->get();
+			if (count($estados) == 0) {
+				return Response::json(array(
+											'msg'=>'No se encontraron estados para el país seleccionado',
+											'cantidad'=>0)
+											);
+			}
         return Response::json($estados->toArray());
 	}
 
