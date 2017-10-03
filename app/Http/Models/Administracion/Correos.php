@@ -11,7 +11,7 @@ class Correos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'ges_det_correos';
+	protected $table = 'adm_det_correos';
 
 	/**
 	 * The primary key of the table

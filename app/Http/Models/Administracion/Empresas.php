@@ -53,7 +53,40 @@ class Empresas extends Model
 		return $this->belongsToMany(Modulos::class, 'ges_det_modulos', 'fk_id_empresa', 'fk_id_modulo');
 	}
 
-	public function numeroscuenta()
+    public function modulos_empresa()
+    {
+        return $this->belongsToMany(Modulos::class, 'adm_det_modulo_accion', 'fk_id_empresa', 'fk_id_modulo');
+    }
+
+    public function accion_empresa($id_modulo)
+    {
+        return $this->belongsToMany(Acciones::class, 'adm_det_modulo_accion', 'fk_id_empresa', 'fk_id_accion')
+            ->select('id_modulo_accion','nombre')
+            ->where('fk_id_modulo','=',$id_modulo)->get();
+    }
+
+    public function modulos_usuario($id_usuario,$id_empresa)
+    {
+        return $this->belongsToMany(Modulos::class, 'adm_det_modulo_accion', 'fk_id_empresa', 'fk_id_modulo')
+            ->join('adm_det_permisos_usuarios','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_usuarios.fk_id_modulo_accion')
+            ->where('adm_det_permisos_usuarios.fk_id_usuario','=',$id_usuario)
+            ->where('adm_det_modulo_accion.fk_id_empresa','=',$id_empresa)
+            ->get();
+
+    }
+
+    public function accion_usuario($id_usuario,$id_empresa,$id_modulo)
+    {
+        return $this->belongsToMany(Acciones::class, 'adm_det_modulo_accion', 'fk_id_empresa', 'fk_id_accion')
+            ->join('adm_det_permisos_usuarios','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_usuarios.fk_id_modulo_accion')
+            ->select('id_modulo_accion','adm_cat_acciones.nombre')
+            ->where('adm_det_permisos_usuarios.fk_id_usuario','=',$id_usuario)
+            ->where('adm_det_modulo_accion.fk_id_empresa','=',$id_empresa)
+            ->where('adm_det_modulo_accion.fk_id_modulo','=',$id_modulo)
+            ->get();
+    }
+
+    public function numeroscuenta()
     {
         return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
     }
