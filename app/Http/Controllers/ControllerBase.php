@@ -79,7 +79,7 @@ class ControllerBase extends Controller
 
 		$data = $this->entity->getColumnsDefaultsValues();
 		
-		$validator = \JsValidator::make($this->entity->rules);
+		$validator = \JsValidator::make($this->entity->rules,[],[],'#form-model');
 
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
