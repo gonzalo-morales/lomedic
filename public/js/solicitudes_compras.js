@@ -24,17 +24,17 @@ $(document).ready( function () {
     $('#id_solicitante').val(getIdempleado());
     if(window.location.href.toString().indexOf('editar') > -1)//Si es editar
     {
-        $('.detalle_select').select2();
+        // $('.detalle_select').select2();
         $('#fk_id_solicitante').select2();
-
-    }else{
+    }else if(window.location.href.toString().indexOf('crear') > -1){
         select2Placeholder('fk_id_solicitante',
             'Yo solicito la compra',
             10,
             true,
             false,
-            $('#id_solicitante').val()
-        );//Si no es editar
+            $('#id_solicitante').val());
+    }else{
+        $('select').prop('disabled',true);
     }
     $(':submit').attr('onclick','eliminarDetalle()');
 
@@ -89,7 +89,7 @@ $(document).ready( function () {
             }
     });
 
-    $(document).on('keyup','.precio',function (e) {
+    $(document).on('keyup','.precio_unitario',function (e) {
         let valid = /^\d{0,10}(\.\d{0,2})?$/g.test(this.value),
             val = this.value;
         if(!valid)
@@ -97,7 +97,6 @@ $(document).ready( function () {
             this.value = val.substring(0, val.length - 1);
         }
     });
-    validateDetail();
 });
 
 function getIdempleado()
@@ -298,7 +297,7 @@ function agregarProducto() {
             $('<input type="text" name="_detalles['+row_id+'][cantidad]" onchange="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad form-control" />')[0].outerHTML + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />')[0].outerHTML + $('#fk_id_unidad_medida option:selected').html() + ","+
             $('<select name="_detalles['+row_id+'][fk_id_impuesto]" onchange="total_producto_row('+row_id+')" id="_fk_id_impuesto'+row_id+'" style="width: 100%" class="select">'+impuestos+'</select>')[0].outerHTML + ","+
-            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio form-control"/>')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
             $('<input type="text" name="_detalles['+row_id+'][total]" readonly id="_total'+row_id+'" value="'+ total+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
             '<button class="btn-flat teal lighten-5 halfway-fab waves-effect waves-light" ' +
             'type="button" data-delay="50" onclick="borrarFila(this)">' +
@@ -362,12 +361,16 @@ function limpiarFormulario() {
 }
 
 function borrarFila(el) {
-    console.log( $(el).parents('tr').data('datarow') );
-    dataTable.removeRows([$(el).parents('tr').data('datarow')]);
+    // console.log( $(el).parents('tr').data('datarow') );
+    dataTable.rows().remove([$(el).parents('tr').dataIndex]);
+    if(dataTable.rows.length()<1)
+        validateDetail();
 }
 function borrarFila_edit(el) {
     a.push(el.id);
-    dataTable.removeRows([$(el).parents('tr').data('datarow')]);
+    dataTable.rows().remove([$(el).parents('tr').dataIndex]);
+    if(dataTable.rows.length()<1)
+        validateDetail();
 }
 
 function eliminarDetalle() {

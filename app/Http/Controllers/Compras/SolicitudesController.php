@@ -127,6 +127,10 @@ class SolicitudesController extends ControllerBase
                     ->where('activo',1)
                     ->get()
                     ->pluck('impuesto','id_impuesto'),
+                'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')
+                    ->where('activo',1)
+                    ->get()
+                    ->pluck('nombre','id_empleado'),
             ]];
         return parent::show($company,$id,$attributes);
     }
@@ -206,10 +210,9 @@ class SolicitudesController extends ControllerBase
     public function destroy(Request $request, $company, $idOrIds)
     {
         if (!is_array($idOrIds)) {
-
             $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
                 ->update(['fk_id_estatus_solicitud' => 3,
-                    'motivo_cancelacion'=>$request->motivo_cancelacion,
+                    'motivo_cancelacion'=>$request->motivo['motivo_cancelacion'],
                     'fecha_cancelacion'=>DB::raw('now()')]);
             if ($isSuccess) {
 

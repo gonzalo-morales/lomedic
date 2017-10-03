@@ -145,11 +145,11 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);
-
+        $validator = \JsValidator::make($this->entity->rules);
 		$data = $this->entity->findOrFail($id);
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
+		return view(currentRouteName('smart'), $dataview+['data'=>$data,'validator'=>$validator]);
 	}
 
 	/**

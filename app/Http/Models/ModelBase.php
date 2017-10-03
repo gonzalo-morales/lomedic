@@ -60,6 +60,12 @@ class ModelBase extends Model
 		return $this->eagerLoaders;
 	}
 
+	public function getDataAttributes($row) {
+        return collect($this->dataColumns)->map(function ($name) use ($row) {
+            return "data-$name=\"{$row->{$name}}\"";
+        })->implode(' ');
+    }
+
 	/**
 	 * Accessor - Obtenemos columna 'activo' formateado en texto
 	 * @return string

@@ -11,11 +11,8 @@
 	<script type="text/javascript" src="{{ asset('js/pickadate/picker.date.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/pickadate/translations/es_Es.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/toaster.js') }}"></script>
-	{{--<script type="text/javascript" src="{{ asset('js/pickadate/translations/es_ES.js') }}"></script>--}}
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if(!Route::currentRouteNamed(currentRouteName('index')))
-		{{--{!!  !!}--}}
-		{{--{!! $reglasdetalles->selector('form') !!}--}}
 		<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
 	@endif
 @endsection
@@ -25,9 +22,11 @@
 		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
 		@if (Route::currentRouteNamed(currentRouteName('show')))
 			{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
-			@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))
-				{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-default'])) !!}
-			@endif
+			@can('edit', currentEntity())
+				@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))
+					{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-default'])) !!}
+				@endif
+			@endcan
 		@endif
 		{!! HTML::decode(link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default '])) !!}
 	</div>
@@ -138,7 +137,7 @@
 							<div class="form-group input-field col-md-2 col-sm-6">
 								{{Form::label('precio_unitario','Precio unitario',['class'=>'validate'])}}
 
-								{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio','autocomplete'=>'off']) !!}
+								{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio_unitario','autocomplete'=>'off']) !!}
 							</div>
 							<div class="col-sm-12 text-center">
 								<div class="sep">
@@ -199,7 +198,7 @@
 											{!! Form::select('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
 													isset($proyectos) ? $proyectos : null,
 													$detalle->id_proyecto,['id'=>'detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
-													'class'=>'detalle_row_select detalle_select','style'=>'width:100%'])
+													'class'=>'detalle_select','style'=>'width:100%'])
 											!!}
 										@endif
 									</td>
@@ -209,9 +208,8 @@
 											{{$detalle->cantidad}}
 										@else
 											{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][cantidad]',$detalle->cantidad,
-											['class'=>'form-control',
+											['class'=>'form-control cantidad',
 											'id'=>'cantidad'.$detalle->id_solicitud_detalle,
-											'onkeyup' =>'validateCantidad(this)',
 											'onkeypress'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")']) !!}
 										@endif
 									</td>
@@ -236,7 +234,7 @@
 											{{number_format($detalle->precio_unitario,2,'.','')}}
 										@else
 											{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][precio_unitario]',number_format($detalle->precio_unitario,2,'.','')
-											,['class'=>'form-control','onkeyup' =>'validatePrecioUnitario(this)','onkeypress'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")',
+											,['class'=>'form-control precio_unitario','onkeypress'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")',
 											'id'=>'precio_unitario'.$detalle->id_solicitud_detalle]) !!}
 										@endif
 									</td>
@@ -271,7 +269,130 @@
 
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
-	{{--@include(currentRouteName('index'))--}}
+	@section('smart-js')
+		<script type="text/javascript">
+            if ( sessionStorage.reloadAfterPageLoad ) {
+                sessionStorage.clear();
+                $.toaster({
+                    priority: 'success', title: 'Exito', message: 'Solicitud cancelada',
+                    settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
+                });
+            }
+		</script>
+	@parent
+	<script type="text/javascript">
+         rivets.binders['hide-delete'] = {
+         	bind: function (el) {
+         		if(el.dataset.fk_id_estatus_solicitud != 1)
+         		{
+         			$(el).hide();
+         		}
+         	}
+         };
+         rivets.binders['hide-update'] = {
+             bind: function (el) {
+                 if(el.dataset.fk_id_estatus_solicitud != 1)
+                 {
+                     $(el).hide();
+                 }
+             }
+         };
+		 @can('update', currentEntity())
+             window['smart-model'].collections.itemsOptions.edit = {a: {
+             'html': '<i class="material-icons">mode_edit</i>',
+             'class': 'btn is-icon',
+             'rv-get-edit-url': '',
+             'rv-hide-update':''
+         }};
+		 @endcan
+		@can('delete', currentEntity())
+		window['smart-model'].collections.itemsOptions.delete = {a: {
+			'html': '<i class="material-icons">not_interested</i>',
+			'href' : '#',
+			'class': 'btn is-icon',
+			'rv-on-click': 'actions.showModalCancelar',
+			'rv-get-delete-url': '',
+			'data-delete-type': 'single',
+			'rv-hide-delete':''
+		}};
+		@endcan
+		window['smart-model'].actions.itemsCancel = function(e, rv, motivo){
+		    if(!motivo.motivo_cancelacion){
+                $.toaster({
+                    priority : 'danger',
+                    title : '¡Error!',
+                    message : 'Por favor escribe un motivo por el que se está cancelando esta solicitud de compra',
+                    settings:{
+                        'timeout':10000,
+                        'toaster':{
+                            'css':{
+                                'top':'5em'
+                            }
+                        }
+                    }
+                });
+			}else{
+
+		        let data = {motivo};
+		        $.delete(this.dataset.deleteUrl,data,function (response) {
+					if(response.success){
+                        sessionStorage.reloadAfterPageLoad = true;
+                        location.reload();
+					}
+                })
+			}
+        };
+        window['smart-model'].actions.showModalCancelar = function(e, rv) {
+            e.preventDefault();
+
+            let modal = window['smart-modal'];
+            modal.view = rivets.bind(modal, {
+                title: '¿Estas seguro que deseas cancelar la solicitud?',
+                content: '<form  id="cancel-form">' +
+                '<div class="form-group">' +
+                '<label for="recipient-name" class="form-control-label">Motivo de cancelación:</label>' +
+                '<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +
+                '</div>' +
+                '</form>',
+                buttons: [
+                    {button: {
+                        'text': 'Cerrar',
+                        'class': 'btn btn-secondary',
+                        'data-dismiss': 'modal',
+                    }},
+                    {button: {
+                        'html': 'Cancelar',
+                        'class': 'btn btn-danger',
+                        'rv-on-click': 'action',
+                    }}
+                ],
+                action: function(e,rv) {
+                    var formData = new FormData(document.querySelector('#cancel-form')), convertedJSON = {}, it = formData.entries(), n;
+
+                    while(n = it.next()) {
+                        if(!n || n.done) break;
+                        convertedJSON[n.value[0]] = n.value[1];
+                    }
+                    console.log(convertedJSON);
+                    window['smart-model'].actions.itemsCancel.call(this, e, rv,convertedJSON);
+                }.bind(this),
+                // Opcionales
+                onModalShow: function() {
+
+                    let btn = modal.querySelector('[rv-on-click="action"]');
+
+                    // Copiamos data a boton de modal
+                    for (var i in this.dataset) btn.dataset[i] = this.dataset[i];
+
+                }.bind(this),
+                // onModalHide: function() {}
+            });
+            // Abrimos modal
+            $(modal).modal('show');
+        };
+	</script>
+	@endsection
+
 	@include('layouts.smart.index')
 @endif
 
