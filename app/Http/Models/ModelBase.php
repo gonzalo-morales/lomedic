@@ -33,6 +33,12 @@ class ModelBase extends Model
 	}
 
 	/**
+	 * Nice names to validator
+	 * @var array
+	 */
+	public $niceNames = [];
+
+	/**
 	 * Obtenemos atributos a incluir en append/appends()
 	 * @return array
 	 */
