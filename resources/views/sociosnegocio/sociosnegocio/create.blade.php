@@ -179,11 +179,11 @@
 											<div class="row">
 												<div class="col-md-4 col-xs-12 form-group">
 													<label for="monto_credito">Monto de crédito:</label>
-													<input id="monto_credito" name="monto_credito" type="number" class="form-control">
+													<input id="monto_credito" name="monto_credito" type="number" min="0" class="form-control">
 												</div>
 												<div class="col-md-4 col-xs-12 form-group">
 													<label for="dias_credito">Días de crédito:</label>
-													<input id="dias_credito" name="dias_credito" type="number" class="form-control">
+													<input id="dias_credito" name="dias_credito" type="number" min="0" class="form-control">
 												</div>
 												<div class="col-md-4 col-xs-12 form-group">
 													<label>Forma de pago:</label>
@@ -202,7 +202,7 @@
 												<div class="row">
 													<div class="form-group col-sm-6">
 														<label for="no_cuenta">Cuenta bancaria:</label>
-														<input id="no_cuenta" name="no_cuenta" type="number" class="form-control">
+														<input id="no_cuenta" name="no_cuenta" type="number" min="0" class="form-control">
 													</div>
 													<div class="form-group col-sm-6">
 														<label>Banco:</label>
@@ -250,7 +250,7 @@
 							</div>
 						</div><!--/aquí termina el contenido de un tab-->
 						<div id="info_entrega" class="tab-pane" role="tabpanel">
-							<div class="container">
+							{{-- <div class="container"> --}}
 							<div class="col-md-12">
 								{{-- <form action="#" class="col s12"> --}}
 								<label data-error="Campo obligatorio">*Tipo de Entrega:</label>
@@ -293,19 +293,23 @@
 										<label for="monto_minimo_facturacion">Monto mínimo de facturación:</label>
 										<input id="monto_minimo_facturacion" name="monto_minimo_facturacion" type="number" class="form-control">
 									</div>
+									<div class="form-group col-sm-4">
+										<label for="tiempo_entrega">Tiempo de Entrega:</label>
+										<input id="tiempo_entrega" name="tiempo_entrega" type="number" class="form-control">
+									</div>
 								</div>
 								{{-- <div class="col-sm-4">
 									<label data-error="Campo obligatorio">*Correos para envío de orden de compra:</label>
 									<div id="correos" name="correos[]" class="chips chips-initial" ></div>
 								</div> --}}
 								<div class="row">
-									<div class="col-sm-12 col-md-10">
+									<div class="col-sm-12 col-md-12">
 										<label data-error="Campo obligatorio">*Correos para envío de orden de compra:</label>
 										<select class="form-control" multiple="multiple" id="correos" name="correos[]"></select>
 									</div>
 								</div>
 							</div>
-							</div>
+							{{-- </div> --}}
 							{{-- <button type="button" id="yy">Y</button> --}}
 						</div><!--/aquí termina el contenido de un tab-->
 			<div id="contacts" class="tab-pane" role="tabpanel">
@@ -406,6 +410,11 @@
 							@endforeach
 							{{-- </form> --}}
 						</div>
+						{{-- <div class="col-md-12 text-center mt-4" id="alert-domicilio">
+							<div class="alert alert-warning" role="alert">
+								Ingresar al menos <b>1 domicilio fiscal</b> (debido a que seleccionó cliente en tipo de socio).
+							</div>
+						</div> --}}
 						<div class="row">
 							<div class="form-group col-sm-12 col-md-6">
 								<label for="calle" data-error="Campo obligatorio">*Calle:</label>
@@ -414,15 +423,15 @@
 						{{-- <div class="col-sm-12 col-md-6"> --}}
 							<div class="col-sm-2 ">
 								<label for="num_exterior">Número Ext.:</label>
-								<input id="num_exterior" name="num_exterior" type="number" class="form-control">
+								<input id="num_exterior" name="num_exterior" type="number" min="0" class="form-control">
 							</div>
 							<div class="col-sm-2 ">
 								<label for="num_interior">Interior:</label>
-								<input id="num_interior" name="num_interior" type="number" class="form-control">
+								<input id="num_interior" name="num_interior" type="number" min="0" class="form-control">
 							</div>
 							<div class="col-sm-2 ">
 								<label for="cp" data-error="Campo obligatorio">*C.P.:</label>
-								<input id="cp" name="cp" type="number" class="form-control">
+								<input id="cp" name="cp" type="number" min="0" class="form-control">
 							</div>
 						{{-- </div> --}}
 						</div>
@@ -448,10 +457,10 @@
 									<option value="" disabled >Selecciona...</option>
 								</select>
 							</div>
-							{{-- <div class="col-sm-6 col-md-3">
-								<label for="autocomplete-colonia">*Colonia:</label>
-								<input type="text" id="colonia" class="autocomplete form-control">
-							</div> --}}
+							<div class="col-sm-6 col-md-3">
+								<label for="colonia">*Colonia:</label>
+								<input type="text" id="colonia" class="form-control">
+							</div>
 						</div>
 					</div>
 					<div class="col-md-12">

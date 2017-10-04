@@ -62,12 +62,20 @@ class SociosNegocioController extends Controller
 	{
 		// Logs::createLog($this->entity->getTable(),$company,null,'index',null);
 
+// $account = Account::select(['id', 'is_sign_contract', 'restaurant_name', 'state', 'phone_no', 'email', 'one_time_pick_up', 'sign_contract_date', 'created_at', 'oil_on_hand', 'binsize'])
+// ->with(['completedservice' => function($c) {
+// 	$c->select('id', 'account_id');
+// }])->with(['accountService' => function($q) {
+// 	$q->with(['serviceProvider' => function($qs) {
+// 	$qs->select('id', 'company_name');
+// 	}])->select('account_id', 'service_provider_id', 'service_id');
+// }])->whereRaw($where)->orderBy('id', 'ASC')->offset(54)->limit(1)->get();
+
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
 			'data' => $this->entity->where('eliminar',0)->get(),
-			// 'data' => $this->entity->all()->where('eliminar','0')->get(),
-			// 'data' => $this->entity->all(),
+			'tiposSocios' => TiposSocios::all()->where('activo',1)->where('eliminar',0)->sortBy('tipo_socio')
 		]);
 		return redirect(companyRoute('index'));
 		// return dd($company);
@@ -116,7 +124,7 @@ class SociosNegocioController extends Controller
 		// ]);
 
 		// dd($request);
-		print_r(json_decode($request->input('objectSocio'),true));
+		// print_r(json_decode($request->input('objectSocio'),true));
 		$objSocio = $request->input('objectSocio');
 		$validArray = [];
 
@@ -234,13 +242,6 @@ class SociosNegocioController extends Controller
 			return response()->json(['success'=>'ALL OK','idInserted'=>$id]);
         }
     	return response()->json(['error'=>$validator->errors()->all()]);
-
-
-		// if ($isSuccess) {
-		// 	dd($isSuccess);
-		// } else {
-		// 	dd($isSuccess);
-		// }
 
 		// ***************************************************************
 		// ***************************************************************

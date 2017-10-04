@@ -5,11 +5,14 @@
 @section('header-top')
 	<!--dataTable.css-->
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
 @endsection
 
 @section('header-bottom')
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/rivets/0.9.6/rivets.bundled.min.js"></script> --}}
     <script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript" src="{{ asset('js/sociosnegocios/index-socios.js') }}"></script>
     {{-- <script src="{{ asset('js/smartindex.js') }}"></script> --}}
     {{-- @if (session('message'))
     <script type="text/javascript">
@@ -39,14 +42,14 @@
 								<i class="material-icons left">file_download</i>Exportar
 							</span>
 						</button>
-						{{-- <ul id="export-all" class="dropdown-content">
-							<li><a href="#" class="teal-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLSX'])}}">Libro Excel</a></li>
-							<li><a href="#" class="teal-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'PDF'])}}">Archivo Pdf</a></li>
-							<li class="divider"></li>
-							<li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLS'])}}">Excel 97-2003</a></li>
-							<li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'CSV'])}}">CSV</a></li>
-							<li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'TXT'])}}">TXT</a></li>
-						</ul> --}}
+						<ul id="export-all" class="dropdown-content">
+							{{-- <li><a href="#" class="teal-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLSX'])}}">Libro Excel</a></li> --}}
+							{{-- <li><a href="#" class="teal-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'PDF'])}}">Archivo Pdf</a></li> --}}
+							{{-- <li class="divider"></li> --}}
+							{{-- <li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLS'])}}">Excel 97-2003</a></li> --}}
+							{{-- <li><a href="#" class="blue-grey-text" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'CSV'])}}">CSV</a></li> --}}
+							<li><a href="#" class="blue-grey-text export" data-type="json"  data-export-url="{{companyRoute('export', ['type' => 'TXT'])}}">TXT</a></li>
+						</ul>
 					</div>
 				</div>
 			</div>
@@ -68,7 +71,7 @@
 					</thead>
 					<tbody>
     					@foreach ($data as $row)
-                            {{dd($data)}}
+                            {{-- {{dd($data)}} --}}
     					<tr>
     						{{-- <td class="width-auto">
     							<input type="checkbox" id="check-{{$row->getKey()}}" class="single-check" data-item-id="{{$row->getKey()}}" rv-on-click="actions.itemsSync" rv-get-datarow  name="check-{{$row->getKey()}}">
@@ -82,7 +85,27 @@
                             {{-- @if ($row->id_socio_negocio === 30)
                                 <td>{{ dd($row->tipoSocio) }}</td>
                             @endif --}}
-                            <td>{{ $row->id_socio_negocio }}</td>
+                            <td>
+                                {{-- <div class="col-sm-6 col-md-3"> --}}
+                                    <select id="tipo_socio" name="tipo_socio" multiple="multiple" class="form-control itipo_socios">
+
+                                        @foreach($row->tipoSocio as $tipo)
+                                            <option value="{{$tipo->id_tipo_socio}}"  disabled="true" data-select='unselected'>{{$tipo->tipo_socio}}</option>
+                                        @endforeach
+                                    </select>
+                                {{-- </div> --}}
+                            </td>
+                            <td>
+                                <a class="btn btn-flat no-padding" data-item-id="{{ companyRoute('show', ['id' => $row->id_socio_negocio]) }}"><i class="material-icons">visibility</i></a>
+                                <a class="btn btn-flat no-padding" data-item-id="{{ companyRoute('edit', ['id' => $row->id_socio_negocio]) }}"><i class="material-icons">edit</i></a>
+                            </td>
+
+                            {{-- @foreach ($row as $label)
+    						<td>{{ object_get($row , $label) }}</td>
+    						@endforeach
+    						<td class="width-auto">
+    							<span data-item-id="{{$row->getKey()}}" data-item-estatus="{{$row->estatus}}"></span>
+    						</td> --}}
     						<td class="width-auto"></td>
     					</tr>
     					@endforeach

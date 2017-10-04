@@ -1,30 +1,4 @@
 
-// $(document).ready(function(){
-
-    // $('#sucursalNombre').select2({
-    //
-    //     placeholder: 'Escriba su descripción',
-    //        ajax: {
-    //            type: 'GET',
-    //            url: "http://localhost:82/abisa/sociosnegocio/getData",
-    //            dataType: 'json',
-    //         //    data: function (params) {
-    //         //         var queryParameters = {
-    //         //           q: params.term
-    //         //         }
-    //           //
-    //         //     return queryParameters;
-    //         //   },
-    //           processResults: function (data) {
-    //               console.log("qwertyu");
-    //                 return {
-    //                     results: data
-    //                 };
-    //             },
-    //         },
-    // });
-// });
-
 var socioTemplate = {
     'activo' : '',
     'razon_social' : '',
@@ -104,8 +78,6 @@ var arrayTableAvisoResponsable = [];
 var idTableAvisoResp = 0;
 var avisoRespSelected = null;
 var idTableAvisoRespEdit = 0;
-
-
 // ****** Declaración de variables globales *******
 
 $(document).ready(function(){
@@ -132,6 +104,9 @@ $(document).ready(function(){
             filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" '+
             'type="button"><i class="material-icons">backspace</i></button></span>',
             // li: '<li><a href="javascript:void(0);"><label></label></a></li>',
+            // li: '<li class="checkList"><a tabindex="0"><div class="aweCheckbox aweCheckbox-danger"><label for=""></label></div></a></li>'
+            // li: '<li><a tabindex="0"><div class=""><label for=""></label></div></a></li>',
+            // li:'<li class="custom-control custom-checkbox"><a href="javascript:void(0);"><label></label></a></li>'
             // divider: '<li class="multiselect-item divider"></li>',
             // liGroup: '<li class="multiselect-item group"><label class="multiselect-group"></label></li>'
         },
@@ -230,8 +205,9 @@ $(document).ready(function(){
         $("#empresas tbody tr").find('td').each(function(i,e){
             $(this).find('input').each(function(){
                 // console.log(this.checked);
-                empresas.push({"checked": this.checked, "id": $(this).attr('id')});
+                empresas.push({"checked": '\''+this.checked+'\'', "id": $(this).attr('id')});
                 // console.log($(this).data('name'));
+                // console.log(JSON.stringify(empresas));
             });
         });
 
@@ -546,7 +522,7 @@ $(document).ready(function(){
     $("#agregarDireccion").click(function(event){
         event.preventDefault();
 
-        var tipo_direccion = $("input:radio[name='tipo_direccion']:checked").siblings('label').text();
+        var tipo_direccion = $("input:radio[name='tipo_direccion']:checked").siblings('span').text();
         var id_tipo_direccion = $("input:radio[name='tipo_direccion']:checked").attr('id');
         var calle = $("#calle").val();
         var num_exterior = $("#num_exterior").val();
@@ -581,13 +557,36 @@ $(document).ready(function(){
             'id_municipio':id_municipio,'colonia':colonia,'estatus':'new'});
             addDireccion(idTableDirecciones);
         }else{
+            $("#agregarDireccion i").text('add');
             updateDireccion(idTableDireccionesEdit,tipo_direccion,id_tipo_direccion,calle,num_exterior,num_interior,cp,pais,id_pais,estado,id_estado,municipio,id_municipio,colonia);
         }
     });
 
     $("#agregarCuenta").click(function(event){
         event.preventDefault();
-        if($("#no_cuenta").val() != '' && $("#banco").val() != null ){
+        var msg = '';
+        var errors = false;
+        if ($("#no_cuenta").val() == '') {
+            msg += '<br> Cuenta bancaria';
+            errors = true;
+        }
+        if ($("#banco").val() == null) {
+            msg += '<br> Banco';
+            errors = true;
+        }
+        // if ($("#forma_pago").val() == null) {
+        //     msg += '<br> Forma pago';
+        //     errors = true;
+        // }
+        // if ($("#monto_credito").val() == '' || $("#monto_credito").val() > 0) {
+        //     msg += '<br> Monto credito';
+        //     errors = true;
+        // }
+        // if ($("#dias_credito").val() == '' || $("#dias_credito").val() > 0) {
+        //     msg += '<br> Días credito';
+        //     errors = true;
+        // }
+        if (!errors){
             var banco = $("#banco option:selected:not([disabled])").text();
             var indexBanco = $("#banco option:selected").val();
             var no_cuenta = $("#no_cuenta").val();
@@ -599,10 +598,11 @@ $(document).ready(function(){
                 arrayTableCuentas.push({'idTable':idTableCuentas,'banco':banco,'indexBanco':indexBanco, 'no_cuenta':no_cuenta,'estatus':'new'});
                 addCuenta(idTableCuentas);
             }else{
+                $("#agregarCuenta i").text('add');
                 updateCuenta(idTableCuentasEdit,banco,indexBanco,no_cuenta);
             }
         }else {
-            putToast('danger','Campos requeridos (*)','Cuenta bancaria <br> Banco');
+            putToast('danger','Campos requeridos (*)', msg);
         }
     });
 
@@ -654,30 +654,19 @@ $(document).ready(function(){
     $("#correos").select2({
         tags: true,
         multiple: true,
-        // insertTag: function (data, tag) {
-        //     // Insert the tag at the end of the results
-        //     data.push(tag);
-        // }
-        createSearchChoice:function(term, data) {
-            if ($(data).filter(function() {
-                return this.text.localeCompare(term)===0;
-            }).length===0) {
-                return {id:term, text:term};
+        createTag: function(term, data) {
+            var value = term.term;
+            if(validateEmail(value)) {
+                return {
+                  id: value,
+                  text: value
+                };
+            }else {
+                console.log("FALSE");
+                return null;
             }
         },
-        // data: [{id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'}]
     });
-
-    // $("#correos").keyup(function(e){
-    //     var code = e.which;
-    //     console.log("-----------"+e.params.data);
-    //     if(code==13){
-    //         console.log("===========CORREOS=========");
-    //            var correos = e.params.data;
-    //            console.log(JSON.stringify(correos));
-    //         console.log("===========================");
-    //     }
-    // });
 
     $('#correos').on('select2:select', function (e) {
         var data = e.params.data;
@@ -724,7 +713,38 @@ $(document).ready(function(){
 
         console.log($(this).data('action'));
         console.log($("#correos_contacto").length);
-        if(tipoContacto != null && nombreContacto != '' && puesto != '' && celular != '' && telefonoOficina != '' && extensionOficina != '' && $("#correos_contacto").lenght > 0){
+
+        var msg = '';
+        var errors = false;
+        if (tipoContacto == null) {
+            msg += '<br> Tipo contacto';
+            errors = true;
+        }
+        if (nombreContacto == '') {
+            msg += '<br> Nombre contacto';
+            errors = true;
+        }
+        if (puesto == '') {
+            msg += '<br> Puesto';
+            errors = true;
+        }
+        if (celular == '') {
+            msg += '<br> Celular';
+            errors = true;
+        }
+        if (telefonoOficina == '') {
+            msg += '<br> Telefono oficina';
+            errors = true;
+        }
+        if (extensionOficina == '') {
+            msg += '<br> Extension oficina';
+            errors = true;
+        }
+        if ($("#correos_contacto").val().length <= 0) {
+            msg += '<br> Correos';
+            errors = true;
+        }
+        if(!errors){
             resetContacto();
             if ($(this).data('action') == 'add') {
                 idTableContactos++;
@@ -734,11 +754,12 @@ $(document).ready(function(){
                 addContacto(idTableContactos);
                 correosContacto = [];
             }else{
+                $("#agregarContacto i").text('add');
                 updateContacto(idTableContactosEdit,tipoContacto,tipoContactoIndex,nombreContacto,puesto,celular,telefonoOficina,extensionOficina,correosContacto.slice());
                 correosContacto = [];
             }
         }else {
-            putToast('danger','Campos requeridos (*)','Tipo Contacto <br> Nombre Contacto <br> Puesto <br> Celular <br> Tel Oficina <br> Ext Oficina <br> Correos');
+            putToast('danger','Campos requeridos (*)', msg);
         }
 
 
@@ -765,35 +786,23 @@ $(document).ready(function(){
 
     });
 
-
-    // TODO: cambiar chip de materialize
-    // $("#correos_contacto").keyup(function(e){
-    //     var code = e.which;
-    //     if(code==13){
-    //         console.log("===========CORREOS=========");
-    //            var correos = $(this).material_chip('data');
-    //            console.log(JSON.stringify(correos));
-    //         console.log("===========================");
-    //     }
-    // });
-
-
     $("#correos_contacto").select2({
         tags: true,
         multiple: true,
-        // insertTag: function (data, tag) {
-        //     // Insert the tag at the end of the results
-        //     data.push(tag);
-        // }
-        createSearchChoice:function(term, data) {
-            if ($(data).filter(function() {
-                return this.text.localeCompare(term)===0;
-            }).length===0) {
-                return {id:term, text:term};
+        createTag: function(term, data) {
+            var value = term.term;
+            if(validateEmail(value)) {
+                return {
+                  id: value,
+                  text: value
+                };
+            }else {
+                console.log("FALSE");
+                return null;
             }
         },
-        // data: [{id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'}]
     });
+
     $('#correos_contacto').on('select2:select', function(e){
         e.params.data.id = 'none';
         e.params.data.estatus = 'new';
@@ -802,22 +811,45 @@ $(document).ready(function(){
         console.log(JSON.stringify(correosContacto));
         console.log("===========================");
     });
+
     $('#correos_contacto').on('select2:unselect', function(e){
-        // if(e.params.data.estatus == 'new'){
             console.log("NEW-DELETED!");
             for (var i = 0; i < correosContacto.length; i++) {
-                if(correosContacto[i]['tag'] == e.params.data.text){
+                if(correosContacto[i]['correo'] == e.params.data.text){
                     console.log(correosContacto.splice(i,1));
                 }
             }
-            console.log(JSON.stringify(correosContacto));
-        // }
-
     });
+
 
 });
 
+// function validateEmail(elementValue){
+//    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+//    return emailPattern.test(elementValue);
+//  }
 
+/**
+ * Validar correos electronicos
+ * @param {string} sMail
+ * @returns {boolean}
+ */
+function validateEmail(sEmail) {
+    var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+    if (filter.test(sEmail)) {
+        return true;
+    }else {
+        return false;
+    }
+}
+
+/**
+ * Mostrar los mensajes de alert tipo Toast
+ * @param {string} priority  "danger" or "success"
+ * @param {string} title
+ * @param {string} message
+ * @param {integer }timeout in milliseconds
+ */
 function putToast(priority,title,message,timeout=3000){
     $.toaster({
         priority : priority, //danger || success
@@ -865,6 +897,7 @@ function addDireccion(idTable){
 }
 
 function editRowDireccion(obj,idTable){
+    $("#agregarDireccion i").text('save');
     for (var i = 0; i < arrayTableDirecciones.length; i++) {
         if(arrayTableDirecciones[i]['idTable'] ==  idTable){
             // console.log("ID-TABLE: "+idTable);
@@ -873,8 +906,9 @@ function editRowDireccion(obj,idTable){
             $("#agregarDireccion").data('action','update');
 
 
-            $("#"+arrayTableDirecciones[i]['id_tipo_direccion']).attr('checked','checked');
-            $("#"+arrayTableDirecciones[i]['id_tipo_direccion']).siblings('label').click();
+            // $("input:radio[name='tipo_direccion']:checked").prop('checked',false);
+            $("#"+arrayTableDirecciones[i]['id_tipo_direccion']).prop('checked',false);
+            $("#"+arrayTableDirecciones[i]['id_tipo_direccion']).siblings('span').click();
             $("#calle").val(arrayTableDirecciones[i]['calle']);
             $("#num_exterior").val(arrayTableDirecciones[i]['num_exterior']);
             $("#num_interior").val(arrayTableDirecciones[i]['num_interior']);
@@ -946,31 +980,32 @@ function deleteRowDireccion(obj,idTable){
     console.log("==============================");
 }
 
-function updateCuenta(idTable,banco,indexBanco,no_cuenta){
-    for (var i = 0; i < arrayTableCuentas.length; i++) {
-        if(arrayTableCuentas[i]['idTable'] ==  idTable){
-            $(elementSelected[2]).children().remove();
-            $(elementSelected[2]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-            "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
-            $(elementSelected[0]).text(banco);
-            $(elementSelected[1]).text(no_cuenta);
-
-            console.log("=========UPDATE===============");
-            console.log("ID-TABLE: "+idTable);
-            console.log(arrayTableCuentas);
-
-            console.log(arrayTableCuentas[i] = {'idTable':idTable,'banco':banco,'no_cuenta':no_cuenta,'indexBanco':indexBanco,'estatus':'new'});
-            console.log("[i]=>"+i);
-
-            console.log(arrayTableCuentas);
-            console.log("==============================");
-            $("#agregarCuenta").data('action',"add");
-        }
-    }
-}
+// function updateCuenta(idTable,banco,indexBanco,no_cuenta){
+//     for (var i = 0; i < arrayTableCuentas.length; i++) {
+//         if(arrayTableCuentas[i]['idTable'] ==  idTable){
+//             $(elementSelected[2]).children().remove();
+//             $(elementSelected[2]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
+//             "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
+//             $(elementSelected[0]).text(banco);
+//             $(elementSelected[1]).text(no_cuenta);
+//
+//             console.log("=========UPDATE===============");
+//             console.log("ID-TABLE: "+idTable);
+//             console.log(arrayTableCuentas);
+//
+//             console.log(arrayTableCuentas[i] = {'idTable':idTable,'banco':banco,'no_cuenta':no_cuenta,'indexBanco':indexBanco,'estatus':'new'});
+//             console.log("[i]=>"+i);
+//
+//             console.log(arrayTableCuentas);
+//             console.log("==============================");
+//             $("#agregarCuenta").data('action',"add");
+//         }
+//     }
+// }
 
 
 function editRowCuenta(obj,idTable){
+    $("#agregarCuenta i").text('save');
     for (var i = 0; i < arrayTableCuentas.length; i++) {
         if(arrayTableCuentas[i]['idTable'] ==  idTable){
             console.log("ID-TABLE: "+idTable);
@@ -1134,6 +1169,7 @@ function updateContacto(idTableContacto,tipoContacto,tipoContactoIndex,nombreCon
 
 
 function editRowContacto(obj,idTableContactos){
+    $("#agregarContacto i").text('save');
     for (var i = 0; i < arrayTableContactos.length; i++) {
         if(arrayTableContactos[i]['idTableContactos'] ==  idTableContactos){
 
@@ -1151,6 +1187,32 @@ function editRowContacto(obj,idTableContactos){
             $("#celular").val(arrayTableContactos[i]['celular']);
             $("#telefono_oficina").val(arrayTableContactos[i]['telefonoOficina']);
             $("#extension_oficina").val(arrayTableContactos[i]['extensionOficina']);
+            // $("#correos_contacto").select2('data',null);
+            $("#correos_contacto").select2('destroy').empty().select2({data: [],tags: true,multiple: true,
+                createTag: function(term, data) {
+                var value = term.term;
+                    if(validateEmail(value)) {
+                        return {
+                          id: value,
+                          text: value
+                        };
+                    }else {
+                        console.log("FALSE");
+                        return null;
+                    }
+                },
+            });
+            var tempData = [];
+            console.log(arrayTableContactos[i]['arrayCorreosContacto']);
+            $.each(arrayTableContactos[i]['arrayCorreosContacto'],function(k,v){
+                    console.log(v.correo +"----"+v.estatus);
+                    // tempData.push({'id': v.correo, 'text': v.correo , 'selected':'true'});
+                    tempData.push({'id': v.correo, 'text': v.correo });
+                    $("#correos_contacto").append('<option selected="selected" value="' + v.correo+ '">' + v.correo+ '</option>');
+            });
+            // $("#correos_contacto").select2('val',{data: tempData},true);
+
+
             // $("#correos_contacto").val();
             // $("#correos_contacto").material_select();
             // console.log(arrayTableContactos[i]['correosContacto']);
@@ -1158,11 +1220,11 @@ function editRowContacto(obj,idTableContactos){
             // for (var j = 0; j < arrayTableContactos[i]['arrayCorreosContacto'].length; j++) {
             //     console.log(arrayTableContactos[i]['arrayCorreosContacto']);
             // }
-            var scorreos = {};
-            scorreos.data = arrayTableContactos[i]['arrayCorreosContacto'];
-            console.log(JSON.stringify(scorreos));
-            var x = JSON.stringify(scorreos);
-            console.log(JSON.parse(x));
+            // var scorreos = {};
+            // scorreos.data = arrayTableContactos[i]['arrayCorreosContacto'];
+            // console.log(JSON.stringify(scorreos));
+            // var x = JSON.stringify(scorreos);
+            // console.log(JSON.parse(x));
             // TODO: cambiar chip de materialize
             // $("#correos_contacto").material_chip(JSON.parse(x));
 
@@ -1202,13 +1264,15 @@ function resetContacto(){
     $("#telefono_oficina").val("");
     $("#extension_oficina").val("");
     // $("#correos_contacto").val("");
+    $("#correos_contacto").select2('destroy').empty().select2({data: [],tags: true,multiple: true,});
     // TODO: cambiar chip
     // $("#correos_contacto").material_chip("");
 }
 
 
 function resetDireccion(){
-    $("input:radio[name='tipo_direccion']:checked").removeAttr('checked');
+    // $("input:radio[name='tipo_direccion']:checked").removeAttr('checked');
+    $("input:radio[name='tipo_direccion']:checked").prop('checked',false);
     $("#calle").val("");
     $("#num_exterior").val("");
     $("#num_interior").val("");
