@@ -18,7 +18,7 @@
     <div class="form-group col-md-6 col-xs-12">
         {{ Form::label('fk_id_tipo_producto', 'Tipo') }}
 {{--        {{ Form::text('tipo', null, ['id'=>'tipo','class'=>'form-control']) }}--}}
-        {{Form::select('fk_id_tipo_producto',isset($product_types)?$product_types:[],null,['class'=>'form-control'])}}
+        {{Form::select('fk_id_tipo_producto',isset($product_types)?$product_types:[],null,['id'=>'fk_id_tipo_producto','class'=>'form-control'])}}
         {{ $errors->has('tipo') ? HTML::tag('span', $errors->first('tipo'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
     <div class="form-group col-md-6 col-xs-12">

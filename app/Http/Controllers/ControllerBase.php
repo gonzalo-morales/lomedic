@@ -78,8 +78,7 @@ class ControllerBase extends Controller
 		$this->authorize('create', $this->entity);
 
 		$data = $this->entity->getColumnsDefaultsValues();
-		
-		$validator = \JsValidator::make($this->entity->rules);
+		$validator = \JsValidator::make($this->entity->rules, [], $this->entity->niceNames, '#form-model');
 
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
@@ -98,9 +97,9 @@ class ControllerBase extends Controller
 		$this->authorize('create', $this->entity);
 
 		$request->request->set('activo',!empty($request->request->get('activo')));
-		
+
 		# Validamos request, si falla regresamos pagina
-		$this->validate($request, $this->entity->rules);
+		$this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
 		$isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
@@ -145,11 +144,11 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);
-
+        $validator = \JsValidator::make($this->entity->rules);
 		$data = $this->entity->findOrFail($id);
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
+		return view(currentRouteName('smart'), $dataview+['data'=>$data,'validator'=>$validator]);
 	}
 
 	/**
@@ -163,11 +162,11 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);
-		
+
 		$request->request->set('activo',!empty($request->request->get('activo')));
 
 		# Validamos request, si falla regresamos atras
-		$this->validate($request, $this->entity->rules);
+		$this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());

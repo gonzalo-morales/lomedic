@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
 @endsection
 
-@push('smart-js')
+@section('smart-js')
 <script type="text/javascript">
 
 	@can('delete', currentEntity())
@@ -20,37 +20,34 @@
 	}});
 	@endcan
 
-	window['smart-model'].collections.itemsOptions = {
-		view: {a: {
-			'html': '<i class="material-icons">visibility</i>',
-			'class': 'btn is-icon',
-			'rv-get-show-url': '',
-		}},
-		@can('update', currentEntity())
-		edit: {a: {
-			'html': '<i class="material-icons">mode_edit</i>',
-			'class': 'btn is-icon',
-			'rv-get-edit-url': '',
-		}},
-		@endcan
-		@can('delete', currentEntity())
-		delete: {a: {
-			'html': '<i class="material-icons">delete</i>',
-			'href' : '#',
-			'class': 'btn is-icon',
-			'rv-on-click': 'actions.showModalDelete',
-			'rv-get-delete-url': '',
-			'data-delete-type': 'single',
-		}},
-		@endcan
-		dummyopt: {a: {
-			'html': '<i class="material-icons">visibility</i>',
-			'href' : '#',
-			'class': 'btn is-icon',
-			'rv-on-click': 'actions.showModalDummy',
-		}},
-	};
-
+	window['smart-model'].collections.itemsOptions.view = {a: {
+		'html': '<i class="material-icons">visibility</i>',
+		'class': 'btn is-icon',
+		'rv-get-show-url': '',
+	}};
+	@can('update', currentEntity())
+	window['smart-model'].collections.itemsOptions.edit = {a: {
+		'html': '<i class="material-icons">mode_edit</i>',
+		'class': 'btn is-icon',
+		'rv-get-edit-url': '',
+	}};
+	@endcan
+	@can('delete', currentEntity())
+	window['smart-model'].collections.itemsOptions.delete = {a: {
+		'html': '<i class="material-icons">delete</i>',
+		'href' : '#',
+		'class': 'btn is-icon',
+		'rv-on-click': 'actions.showModalDelete',
+		'rv-get-delete-url': '',
+		'data-delete-type': 'single',
+	}};
+	@endcan
+	window['smart-model'].collections.itemsOptions.dummyopt = {a: {
+		'html': '<i class="material-icons">visibility</i>',
+		'href' : '#',
+		'class': 'btn is-icon',
+		'rv-on-click': 'actions.showModalDummy',
+	}};
 	window['smart-model'].actions.showModalDummy = function(e, rv) {
 		e.preventDefault();
 
@@ -97,77 +94,8 @@
 
 	};
 
-// showModalMotivoCancelacion(e, rv) {
-// 	e.preventDefault();
-
-// 	// Abrimos modal
-// 	$('#smart-modal').modal('open');
-
-// 	let btn = smartView.querySelector('[rv-on-click="actions.itemsCancelacion"]');
-
-// 	// Limpiamos data del elemento
-// 	Object.keys(btn.dataset).forEach(function(key) {
-// 		delete btn.dataset[key]
-// 	});
-
-// 	// Copiamos data a boton de modal
-// 	Object.keys(this.dataset).forEach(function(key) {
-// 		btn.dataset[key] = this.dataset[key];
-// 	}.bind(this))
-// },
-
-
-// itemsCancelacion(e, rv) {
-// 	e.preventDefault();
-
-// 	let data, tablerows, motivo;
-// 	motivo = $('#motivo_cancelacion').val();
-// 	switch (this.dataset.deleteType) {
-// 		case 'multiple':
-// 		data =  {ids: rv.collections.items, motivo_cancelacion: motivo};
-// 		tablerows = rv.collections.tablerows;
-// 		break;
-// 		case 'single':
-// 		data =  {motivo_cancelacion: motivo};
-// 		tablerows = [this.parentNode.parentNode.dataIndex];
-// 		break;
-// 	}
-
-// 	//
-// 	$.delete(this.dataset.deleteUrl, data, function(response) {
-// 		if (response.success) {
-// 			location.reload();
-// 		}
-// 	});
-
-// },
-
-// rivets.binders['get-item-id-and-estatus'] = {
-// 	bind: function(el) {
-// 		if (el.innerHTML == '') {
-// 			el.outerHTML = document.querySelector('.smart-actions').innerHTML.replace(/#ID#/g, el.dataset.itemId).replace(/#ESTATUS#/g, el.dataset.itemEstatus);
-// 		}
-// 	},
-// };
-// rivets.binders['hide-delete'] = {
-// 	bind: function (el) {
-// 		if(el.dataset.itemEstatus != 1)
-// 		{
-// 			$(el).hide();
-// 		}
-// 	}
-// };
-// rivets.binders['hide-update'] = {
-// 	bind: function (el) {
-// 		if(el.dataset.itemEstatus != 1)
-// 		{
-// 			$(el).hide();
-// 		}
-// 	}
-// };
-
 </script>
-@endpush
+@endsection
 
 @section('header-bottom')
 <script src="{{ asset('vendor/rivets/rivets.js') }}"></script>
@@ -181,7 +109,7 @@
 	})
 </script>
 @endif
-@stack('smart-js')
+@yield('smart-js')
 @endsection
 
 @section('content')
@@ -228,7 +156,7 @@
 								<td>{{ object_get($row, $field) }}</td>
 								@endforeach
 								<td class="width-auto not-wrap">
-									<a rv-each-dynamics="collections.itemsOptions" data-item-id="{{$row->getKey()}}"></a>
+									<a rv-each-dynamics="collections.itemsOptions" data-item-id="{{$row->getKey()}}" {!!currentEntity()->getDataAttributes($row)!!}></a>
 								</td>
 							</tr>
 							@endforeach

@@ -4,198 +4,140 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="form-group col-md-6 col-xs-12">
-		<label for="nombre_sucursal">Sucursal</label>
-		{{Form::text('nombre_sucursal',null,['id'=>'sucursal','class'=>'form-control'])}}
-		{{--<input type="text" name="nombre_sucursal" id="nombre_sucursal" class="form-control" value="">--}}
-		@if ($errors->has('nombre_sucursal'))
-			<span class="help-block">
-				<strong>{{ $errors->first('nombre_sucursal') }}</strong>
-			</span>
-		@endif
-	</div>
-	<div class="form-group col-md-6 col-xs-12">
-		<label for="fk_id_supervisor">Supervisor</label>
-		<select name="fk_id_supervisor" id="fk_id_supervisor" class="form-control"></select>
-	</div>
-</div>
-<div class="row">
-	<div class="form-group col-md-6 col-xs-12">
-		<label for="latitud">Latitud</label>
-		{{--<input type="text" name="latitud" id="latitud" class="form-control">--}}
-		{{Form::text('latitud',null,['id'=>'latitud','class'=>'form-control'])}}
-		@if ($errors->has('latitud'))
-			<span class="help-block">
-				<strong>{{ $errors->first('latitud') }}</strong>
-			</span>
-		@endif
-	</div>
-	<div class="form-group col-md-6 col-xs-12">
-			<label for="longitud">Longitud</label>
-			{{--<input type="text" id="longitud" name="longitud" class="form-control"/>--}}
-		{{Form::text('longitud',null,['id'=>'longitud','class'=>'form-control'])}}
-	@if ($errors->has('longitud'))
-			<span class="help-block">
-				<strong>{{ $errors->first('longitud') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-<div class="row">
-	<div class="form-group col-md-6 col-xs-12">
-		<label for="fk_id_tipo_sucursal">Tipo Sucursal</label>
-		<select name="fk_id_tipo_sucursal" id="fk_id_tipo_sucursal" class="form-control"></select>
-	</div>
-	<div class="form-group col-md-6 col-xs-12">
-		<label for="registro_sanitario">Registro Sanitario</label>
-		{{--<input type="text" name="registro_sanitario" id="registro_sanitario" class="form-control">--}}
-		{{Form::text('registro_sanitario',null,['id'=>'registro_sanitario','class'=>'form-control'])}}
-	@if ($errors->has('registro_sanitario'))
-			<span class="help-block">
-				<strong>{{ $errors->first('registro_sanitario') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-<div class="row">
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="fk_id_cliente">Cliente</label>
-		<select name="fk_id_cliente" id="fk_id_cliente" class="form-control"></select>
-	</div>
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="fk_id_localidad">Localidad</label>
-		<select name="fk_id_localidad" id="fk_id_localidad" class="form-control"></select>
-	</div>
-	<div class="form-check col-md-4 col-xs-12 d-flex align-items-center">
-		<p>
-			<input type="hidden" name="embarque" value="0" />
-			<input type="checkbox" id="embarque" name="embarque" value="1" {{old('embarque') == true || isset($data->embarque)?'checked':''}}/>
-			<label for="embarque">Embarque</label>
-		</p>
-	</div>
-</div>
-<div class="row">
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="fk_id_municipio">Municipio</label>
-		<select name="fk_id_municipio" id="fk_id_municipio" class="form-control"></select>
-	</div>
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="fk_id_estado">Estado</label>
-		<select name="fk_id_estado" id="fk_id_estado" class="form-control"></select>
-	</div>
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="fk_id_pais">País</label>
-		<select name="fk_id_pais" id="fk_id_pais" class="form-control"></select>
-	</div>
-</div>
-<div class="row">
-	<div class="form-group col-md-6 col-xs-12">
-		<label for="calle">Calle</label>
-		{{--<input type="text" name="calle" id="calle" class="form-control">--}}
-		{{Form::text('calle',null,['id'=>'calle','class'=>'form-control'])}}
-	@if ($errors->has('calle'))
-			<span class="help-block">
-				<strong>{{ $errors->first('calle') }}</strong>
-			</span>
-		@endif
-	</div>
-	<div class="form-group col-md-3 col-xs-12">
-		<label for="no_exterior">Número exterior</label>
-		{{--<input type="text" name="no_exterior" id="no_exterior" class="form-control">--}}
-		{{Form::text('no_exterior',null,['id'=>'no_exterior','class'=>'form-control'])}}
-	@if ($errors->has('no_exterior'))
-			<span class="help-block">
-				<strong>{{ $errors->first('no_exterior') }}</strong>
-			</span>
-		@endif
-	</div>
-	<div class="form-group col-md-3 col-xs-12">
-		<label for="no_interior">Número Interior</label>
-		{{--<input type="text" name="no_interior" id="no_interior" class="form-control">--}}
-		{{Form::text('no_interior',null,['id'=>'no_interior','class'=>'form-control'])}}
-	@if ($errors->has('no_interior'))
-			<span class="help-block">
-				<strong>{{ $errors->first('no_interior') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-<div class="row">
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="telefono1">Teléfono 1</label>
-		{{--<input type="text" name="telefono1" id="telefono1" class="form-control">--}}
-		{{Form::text('telefono1',null,['id'=>'telefono1','class'=>'form-control'])}}
-	@if ($errors->has('telefono1'))
-			<span class="help-block">
-				<strong>{{ $errors->first('telefono1') }}</strong>
-			</span>
-		@endif
-	</div>
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="telefono2">Teléfono 2</label>
-		{{--<input type="text" name="telefono2" id="telefono2" class="form-control">--}}
-		{{Form::text('telefono2',null,['id'=>'telefono2','class'=>'form-control'])}}
-	@if ($errors->has('telefono2'))
-			<span class="help-block">
-				<strong>{{ $errors->first('telefono2') }}</strong>
-			</span>
-		@endif
-	</div>
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="clave_presupuestal">Clave Presupuestal</label>
-		{{--<input type="text" name="clave_presupuestal" id="clave_presupuestal" class="form-control">--}}
-		{{Form::text('clave_presupuestal',null,['id'=>'clave_presupuestal','class'=>'form-control'])}}
-	@if ($errors->has('clave_presupuestal'))
-			<span class="help-block">
-				<strong>{{ $errors->first('clave_presupuestal') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
-<div class="col-md-12 col-xs-12">
-	<h6>Datos militares</h6>
-</div>
-<div class="row">
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="tipo_batallon">Tipo de batallón</label>
-		{{--<input type="text" name="tipo_batallon" id="tipo_batallon" class="form-control">--}}
-		{{Form::text('tipo_batallon',null,['id'=>'tipo_batallon','class'=>'form-control'])}}
-	@if ($errors->has('tipo_batallon'))
-			<span class="help-block">
-				<strong>{{ $errors->first('tipo_batallon') }}</strong>
-			</span>
-		@endif
-	</div>
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="region">Región</label>
-		{{--<input type="text" name="region" id="region" class="form-control">--}}
-		{{Form::text('region',null,['id'=>'region','class'=>'form-control'])}}
-	@if ($errors->has('region'))
-			<span class="help-block">
-				<strong>{{ $errors->first('region') }}</strong>
-			</span>
-		@endif
-	</div>
-	<div class="form-group col-md-4 col-xs-12">
-		<label for="zona_militar">Zona Militar</label>
-		{{--<input type="text" name="zona_militar" id="zona_militar" class="form-control">--}}
-		{{Form::text('zona_militar',null,['id'=>'zona_militar','class'=>'form-control'])}}
-	@if ($errors->has('zona_militar'))
-			<span class="help-block">
-				<strong>{{ $errors->first('zona_militar') }}</strong>
-			</span>
-		@endif
-	</div>
-</div>
 
-
-<div class="row">
-	<div class="form-group col-md-12 col-xs-12">
-		{{ Form::label('nombre', 'Parentesco:') }}
-{{--		{{ Form::text('nombre', null, ['id'=>'nombre','class'=>'form-control']) }}--}}
-		{{Form::text('nombre',null,['id'=>'nombre','class'=>'form-control'])}}
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::cText('Sucursal', 'sucursal') }}
 	</div>
-	{{ $errors->has('nombre') ? HTML::tag('span', $errors->first('nombre'), ['class'=>'help-block deep-orange-text']) : '' }}
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::cSelect('Tipo de Sucursal', 'tipo', ['Matriz', 'Farmacia', 'CEDIS']) }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::cSelect('Localidad', 'fk_id_localidad') }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('fk_id_red', 'Red') }}
+		{{ Form::select('fk_id_red', (isset($users) ? $users : []), null, ['id'=>'fk_id_red','class'=>'form-control select']) }}
+		{{ $errors->has('fk_id_red') ? HTML::tag('span', $errors->first('fk_id_red'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('fk_id_cliente', 'Cliente') }}
+		{{ Form::select('fk_id_cliente', (isset($users) ? $users : []), null, ['id'=>'fk_id_cliente','class'=>'form-control select']) }}
+		{{ $errors->has('fk_id_cliente') ? HTML::tag('span', $errors->first('fk_id_cliente'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('responsable', 'Responsable') }}
+		{{ Form::text('responsable', null, ['id'=>'responsable','class'=>'form-control']) }}
+		{{ $errors->has('responsable') ? HTML::tag('span', $errors->first('responsable'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('telefono_1', 'Teléfono') }}
+		{{ Form::text('telefono_1', null, ['id'=>'telefono_1','class'=>'form-control']) }}
+		{{ $errors->has('telefono_1') ? HTML::tag('span', $errors->first('telefono_1'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('telefono_2', 'Teléfono alternativo') }}
+		{{ Form::text('telefono_2', null, ['id'=>'telefono_2','class'=>'form-control']) }}
+		{{ $errors->has('telefono_2') ? HTML::tag('span', $errors->first('telefono_2'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('calle', 'Calle') }}
+		{{ Form::text('calle', null, ['id'=>'calle','class'=>'form-control']) }}
+		{{ $errors->has('calle') ? HTML::tag('span', $errors->first('calle'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('numero_interior', 'Num. Interior') }}
+		{{ Form::text('numero_interior', null, ['id'=>'numero_interior','class'=>'form-control']) }}
+		{{ $errors->has('numero_interior') ? HTML::tag('span', $errors->first('numero_interior'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('numero_exterior', 'Num. Exterior') }}
+		{{ Form::text('numero_exterior', null, ['id'=>'numero_exterior','class'=>'form-control']) }}
+		{{ $errors->has('numero_exterior') ? HTML::tag('span', $errors->first('numero_exterior'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('colonia', 'Colonia') }}
+		{{ Form::text('colonia', null, ['id'=>'colonia','class'=>'form-control']) }}
+		{{ $errors->has('colonia') ? HTML::tag('span', $errors->first('colonia'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('codigo_postal', 'Codigo Postal') }}
+		{{ Form::text('codigo_postal', null, ['id'=>'codigo_postal','class'=>'form-control']) }}
+		{{ $errors->has('codigo_postal') ? HTML::tag('span', $errors->first('codigo_postal'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('fk_id_municipio', 'Municipio') }}
+		{{ Form::select('fk_id_municipio', (isset($users) ? $users : []), null, ['id'=>'fk_id_municipio','class'=>'form-control select']) }}
+		{{ $errors->has('fk_id_municipio') ? HTML::tag('span', $errors->first('fk_id_municipio'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('fk_id_estado', 'Estado') }}
+		{{ Form::select('fk_id_estado', (isset($users) ? $users : []), null, ['id'=>'fk_id_estado','class'=>'form-control select']) }}
+		{{ $errors->has('fk_id_estado') ? HTML::tag('span', $errors->first('fk_id_estado'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('fk_id_pais', 'Pais') }}
+		{{ Form::select('fk_id_pais', (isset($users) ? $users : []), null, ['id'=>'fk_id_pais','class'=>'form-control select']) }}
+		{{ $errors->has('fk_id_pais') ? HTML::tag('span', $errors->first('fk_id_pais'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('latitud', 'Latitud') }}
+		{{ Form::text('latitud', null, ['id'=>'latitud','class'=>'form-control']) }}
+		{{ $errors->has('latitud') ? HTML::tag('span', $errors->first('latitud'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('longitud', 'Longitud') }}
+		{{ Form::text('longitud', null, ['id'=>'longitud','class'=>'form-control']) }}
+		{{ $errors->has('longitud') ? HTML::tag('span', $errors->first('longitud'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-12">
+		{{ Form::label('registro_sanitario', 'Registro sanitario') }}
+		{{ Form::text('registro_sanitario', null, ['id'=>'registro_sanitario','class'=>'form-control']) }}
+		{{ $errors->has('registro_sanitario') ? HTML::tag('span', $errors->first('registro_sanitario'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::cCheckboxYesOrNo('¿Tiene inventario?', 'inventario') }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::cCheckboxYesOrNo('¿Tiene enbarque?', 'enbarque') }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('tipo_batallon', 'Tipo batallón') }}
+		{{ Form::text('tipo_batallon', null, ['id'=>'tipo_batallon','class'=>'form-control']) }}
+		{{ $errors->has('tipo_batallon') ? HTML::tag('span', $errors->first('tipo_batallon'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('region', 'Region') }}
+		{{ Form::text('region', null, ['id'=>'region','class'=>'form-control']) }}
+		{{ $errors->has('region') ? HTML::tag('span', $errors->first('region'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
+
+	<div class="form-group col-md-4 col-xs-12">
+		{{ Form::label('zona_militar', 'Zona militar') }}
+		{{ Form::text('zona_militar', null, ['id'=>'zona_militar','class'=>'form-control']) }}
+		{{ $errors->has('zona_militar') ? HTML::tag('span', $errors->first('zona_militar'), ['class'=>'help-block error-help-block']) : '' }}
+	</div>
 </div>
 <div  class="col-md-12 text-center mt-4">
 	<div class="alert alert-warning" role="alert">
@@ -212,21 +154,21 @@
 
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
+@include('layouts.smart.index')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
+@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
+@include('layouts.smart.edit')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
+@include('layouts.smart.show')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
+@include('layouts.smart.export')
 @endif

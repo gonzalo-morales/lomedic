@@ -3,7 +3,7 @@
  *
  * http://jqueryvalidation.org/
  *
- * Copyright (c) 2015 JÃ¶rn Zaefferer
+ * Copyright (c) 2015 Jörn Zaefferer
  * Released under the MIT license
  */
 (function( factory ) {
@@ -1499,14 +1499,14 @@ function strtotime (text, now) {
   // original by: Caio Ariede (http://caioariede.com)
   // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
   // improved by: Caio Ariede (http://caioariede.com)
-  // improved by: A. MatÃ­as Quezada (http://amatiasq.com)
+  // improved by: A. Matías Quezada (http://amatiasq.com)
   // improved by: preuter
   // improved by: Brett Zamir (http://brett-zamir.me)
   // improved by: Mirko Faber
   //    input by: David
   // bugfixed by: Wagner B. Soares
   // bugfixed by: Artur Tchernychev
-  // bugfixed by: Stephan BÃ¶sch-Plepelits (http://github.com/plepe)
+  // bugfixed by: Stephan Bösch-Plepelits (http://github.com/plepe)
   //        note: Examples all have a fixed timestamp to prevent tests to fail because of variable time(zones)
   //   example 1: strtotime('+1 day', 1129633200);
   //   returns 1: 1129719600

@@ -42,7 +42,34 @@ class Sucursales extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'nombre_sucursal' => 'required',
+		'sucursal' => 'required',
+		'tipo' => 'required',
+		'fk_id_localidad' => 'required',
+		'fk_id_red' => 'required',
+		'fk_id_cliente' => 'required',
+		'responsable' => 'required',
+		'telefono_1' => 'required',
+		'telefono_2' => 'required',
+		'calle' => 'required',
+		'numero_interior' => 'required',
+		'numero_exterior' => 'required',
+		'colonia' => 'required',
+		'codigo_postal' => 'required',
+		'fk_id_municipio' => 'required',
+		'fk_id_estado' => 'required',
+		'fk_id_pais' => 'required',
+		'latitud' => 'required',
+		'longitud' => 'required',
+		'registro_sanitario' => 'required',
+		'embarque' => 'required',
+		'inventario' => 'required',
+		'tipo_batallon' => 'required',
+		'region' => 'required',
+		'zona_militar' => 'required'
+	];
+
+	public $niceNames = [
+		'fk_id_localidad' => 'localidad',
 	];
 
 	/**

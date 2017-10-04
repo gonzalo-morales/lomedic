@@ -23,8 +23,11 @@ class AppServiceProvider extends ServiceProvider
 		\Route::resourceVerbs([
 			'create' => 'crear',
 			'edit' => 'editar',
-//            'impress'=>'imprimir',
+			// 'impress'=>'imprimir',
 		]);
+
+		// HTML Components
+		require_once __DIR__ . '/../components.php';
 	}
 
 	/**

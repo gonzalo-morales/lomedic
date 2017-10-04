@@ -100,7 +100,7 @@
 <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap.min.js') }}"><\/script>')}</script>
 
 <!-- jQuery Nicescroll local-->
-{{ HTML::script('vendor/jsvalidation/js/jsvalidation.js') }}
+{{ HTML::script('vendor/jsvalidation/js/jsvalidation.min.js') }}
 
 <!-- jQuery Nicescroll local-->
 {{ HTML::script('js/jquery.nicescroll.min.js') }}

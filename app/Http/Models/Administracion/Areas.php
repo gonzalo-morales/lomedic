@@ -37,10 +37,10 @@ class Areas extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [
-		'area' => ['required'],
-        'clave_area'=>['required'],
-	];
+	public $rules = [];
+	/*	'area' => ['required','max:50','unique','12'],
+        'clave_area'=>['numeric'],
+	];*/
 
 	/**
 	 * Los atributos que seran visibles en smart-datatable
@@ -49,6 +49,7 @@ class Areas extends ModelBase
 	protected $fields = [
 		'area' => 'Area',
 		'clave_area' => 'Clave',
+	    'activo_span' => 'Activo'
 	];
 
 }
