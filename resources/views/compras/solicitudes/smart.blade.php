@@ -21,10 +21,10 @@
 	<div class="text-right col-md-12 mb-3">
 		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
 		@if (Route::currentRouteNamed(currentRouteName('show')))
-			{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
-			@can('update', currentEntity())
+			{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
+			@can('edit', currentEntity())
 				@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))
-					{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-default'])) !!}
+					{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info'])) !!}
 				@endif
 			@endcan
 		@endif

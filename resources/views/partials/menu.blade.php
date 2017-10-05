@@ -9,7 +9,7 @@
 	<span title="{{ $modulo->nombre }}" data-toggle="tooltip" data-placement="right">
         <a class="collapsed" href="#submenu{{$modulo->id_modulo}}" data-toggle="collapse" aria-expanded="false" title="{{ $modulo->nombre }}">
             	<i class='material-icons left'>{{ $modulo->icono }}</i> {{ $modulo->nombre }}
-            	<i class="material-icons float-right grey-text">expand_more</i>
+            	<i class="material-icons grey-text">expand_more</i>
         </a>
 	</span>
     <ul id="submenu{{$modulo->id_modulo}}" class="list-unstyled collapse" aria-expanded="false">

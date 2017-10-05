@@ -26,11 +26,10 @@
 	@yield('header-top')
 </head>
 <body>
-
-    <div class="w-100 fixed-top" id="top-nav">
-    	<nav class="navbar navbar-default bg-light">
+    <div class="w-100 fixed-top z-depth-1-half" id="top-nav">
+    	<nav class="navbar navbar-default bg-white">
             <div class="navbar-header d-flex flex-row">
-                <button type="button" id="sidebarCollapse" class="btn-primary navbar-btn d-flex align-items-center"><i class="material-icons">menu</i></button>
+                <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">menu</i></button>
     
             <div class="btn-group">
                 <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -44,19 +43,19 @@
             </div>
     
             </div>
-            <button type="button" id="rigth-sidebarCollapse" class="btn-light navbar-btn d-flex align-items-center text-primary"><i class="material-icons">live_help</i></button>
+            <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">live_help</i></button>
         </nav>
-    	<ol class="breadcrumb bg-light rounded-0 z-depth-1-half">
+    	<!--<ol class="breadcrumb bg-light rounded-0 z-depth-1-half">
     		<li class="breadcrumb-item" id="bread-home">{{ HTML::link(companyAction('HomeController@index', ['company' => $empresa->conexion]), 'Inicio') }}</li>
     		@foreach(routeNameReplace() as $key=>$item)
     			@if($item !== 'index' && !empty($item))
     				<li class="breadcrumb-item active">{{ HTML::link($key == 1 ? companyRoute('index') : '#', $item) }}</li>
     			@endif
     		@endforeach
-    	</ol>
+    	</ol>-->
     </div>
 
-    <div class="wrapper" style="margin-top: 93px;">
+    <div class="wrapper" style="margin-top: 44.5px;">
     @if(!Request::ajax())
         <!-- Sidebar Holder -->
         <nav id="sidebar" class="active bg-dark text-white">
@@ -90,7 +89,7 @@
         </nav>
     @endif
         <!-- Page Content Holder -->
-        <div id="content" class="pt-3">
+        <div id="content" class="pt-3 bg-light">
             <div id="onload"></div>
             @yield('content')
         </div>
@@ -143,7 +142,18 @@
         
         /* Sidebar's */
         $('#sidebarCollapse').on('click', function () {
-        	$('#sidebar').toggleClass('active');
+            $('#sidebar').toggleClass('active');
+            //condiciones para cambiar el ícono de menú a x
+            if($('#sidebar').hasClass('active') && $(window).width() >= 768){
+                $(this).find("i").text("menu");
+            }
+            else if($('#sidebar').not('active') && $(window).width() >= 768){
+               $(this).find("i").text("close");
+            }
+            else{
+                $(this).find("i").text("menu"); 
+            }
+
         });
 
         $('#rigth-sidebarCollapse').on('click', function () {

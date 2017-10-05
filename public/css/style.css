@@ -59,6 +59,9 @@
   cursor: pointer;
   box-shadow: none;
 }
+.btn-default{
+  background: none;
+}
 .btn:hover, .btn:active, .btn:focus {
   -webkit-transition: .2s ease-out;
   transition: .2s ease-out;

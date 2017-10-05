@@ -66,10 +66,30 @@
 .btn:active, .btn:focus{
   box-shadow: none !important;
 }
-.btn-secondary.active, .btn-secondary:active, .show>.btn-secondary.dropdown-toggle, .btn-primary.active, .btn-primary:active, .show>.btn-primary.dropdown-toggle{
-  background-color: rgba(0,0,0,0.8);
+/*links*/
+a {
+    color: #FF9800;
+}
+a:hover {
+    color: #ffb23f;
+}
+a:active{
+    color: #c17400;
+}
+.a:hover, .a:active, .a:focus {
+  -webkit-transition: .2s ease-out;
+  transition: .2s ease-out;
+}
+/*Other components*/
+.list-group-item.active{
+  background-color: #ff9800;
+  color:#1F2D3D;
+  border-color: #ff9800;
 }
 /*estílos sombras*/
+.z-depth {
+  -webkit-box-shadow: 1px 0 4px 0 rgba(0, 0, 0, 0.24), 0 1px 0 8px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 1px 0 3px 0 rgba(0, 0, 0, 0.24), 1px 0 3px 0 rgba(0, 0, 0, 0.19); }
 .z-depth-1-half, .btn:hover, .btn:active, .btn:focus, .modal-dialog .modal-content, .modal-dialog.cascading-modal .modal-header, ul.instagram-photos li img, .media .media-left img {
   -webkit-box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
   box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15); }
@@ -140,4 +160,62 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
 }
 .select2-selection__rendered {
   line-height: 34px !important;
+}
+/* Smart vanilla-datable */
+.dataTable-table > tbody > tr > td,
+.dataTable-table > tbody > tr > th,
+.dataTable-table > tfoot > tr > td,
+.dataTable-table > tfoot > tr > th,
+.dataTable-table > thead > tr > td,
+.dataTable-table > thead > tr > th {
+  vertical-align: middle !important;
+}
+.dataTable-table .width-auto {
+  width: 1px !important;
+}
+.dataTable-table [data-sortable="false"] a {
+  pointer-events: none;
+}
+.dataTable-table [type="checkbox"] {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.dataTable-table .single-check,
+.dataTable-table tr > td:last-of-type > * {
+  opacity: 0;
+}
+.dataTable-table tr:hover .single-check,
+.dataTable-table tr:hover > td:last-of-type > *,
+.dataTable-table .single-check:checked {
+  opacity: 1;
+}
+.btn.is-icon {
+  padding: 0px;
+  box-shadow: none;
+}
+.not-wrap {
+  white-space: nowrap;
+}
+input.form-check-input.toggeable:after {
+  content: '');
+  position: absolute;
+  display: block;
+  width: 100%;
+  top: 0px;
+  left: 1.1rem;
+}
+input.form-check-input.toggeable:after {
+  content: attr(data-toggle-off);
+}
+input.form-check-input.toggeable:checked:after {
+  content: attr(data-toggle-on);
+}
+.error-help-block {
+    display: block;
+    color: #D00;
+}
+.error-help-block:not(:empty):before{
+    font-size: 19px;
+    font-family: "Material Icons";
+    content: "\E001 \00a0" ;
 }

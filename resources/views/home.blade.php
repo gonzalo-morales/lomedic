@@ -176,15 +176,15 @@
 		<div class="col-md-4 col-sm-12">
 			<div class="card text-center">
 			  <div class="card-header">
-			    <ul class="nav nav-pills card-header-pills">
+			    <ul class="nav nav-pills card-header-pills nav-justified">
 			      <li class="nav-item">
-			        <a class="nav-link active" href="#">IPEJAL</a>
+			        <a class="nav-link active" href="#"><i class="material-icons align-middle">pie_chart</i></a>
 			      </li>
 			      <li class="nav-item">
-			        <a class="nav-link" href="#">Querétaro</a>
+			        <a class="nav-link" href="#"><i class="material-icons align-middle">work</i></a>
 			      </li>
 			      <li class="nav-item">
-			        <a class="nav-link" href="#">Proyecto</a>
+			        <a class="nav-link" href="#"><i class="material-icons align-middle">notifications</i></a>
 			      </li>
 			    </ul>
 			  </div>
