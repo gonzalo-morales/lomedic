@@ -19,8 +19,8 @@ Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'inventarios', 'as' => 'inventarios.', 'middleware' => ['auth','share'] ], function() {
         Route::resource('skus', 'Inventarios\SkusController');
         Route::get('getSkus','Inventarios\SkusController@obtenerSkus');
-        Route::resource('codigos_barras','Inventarios\CodigosBarrasController');
-        Route::get('getCodigosBarras/{id}','Inventarios\CodigosBarrasController@obtenerCodigosBarras');
+        Route::resource('upcs','Inventarios\UpcsController');
+        Route::get('getUpcs/{id}','Inventarios\UpcsController@obtenerUpcs');
         Route::resource('almacenes','Inventarios\AlmacenesController');
     });
 });

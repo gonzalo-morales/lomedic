@@ -1,6 +1,6 @@
 $(document).ready(function () {
 	// check box para habilitar la seleccion de otro empleado
-	$( ":checkbox" ).on( "click", function() {
+	$( "#check_solicitante" ).on( "click", function() {
     	$( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
     	if( !this.checked )
     		$( this ).parent().nextAll( "select" ).empty().trigger('change');

@@ -22,7 +22,7 @@
 		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
 		@if (Route::currentRouteNamed(currentRouteName('show')))
 			{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
-			@can('edit', currentEntity())
+			@can('update', currentEntity())
 				@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))
 					{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-default'])) !!}
 				@endif
@@ -98,9 +98,9 @@
 								{!!Form::select('fk_id_sku',isset($skus)?$skus:[],null,['id'=>'fk_id_sku','class'=>'form-control','style'=>'width:100%'])!!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{{Form::label('fk_id_codigo_barras','Código de barras')}}
-								{!! Form::select('fk_id_codigo_barras',[],null,['id'=>'fk_id_codigo_barras','disabled',
-								'data-url'=>companyAction('Inventarios\CodigosBarrasController@obtenerCodigosBarras',['id'=>'?id']),
+								{{Form::label('fk_id_upc','Código de barras')}}
+								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
+								'data-url'=>companyAction('Inventarios\UpcsController@obtenerUpcs',['id'=>'?id']),
 								'class'=>'form-control','style'=>'width:100%']) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
@@ -130,7 +130,7 @@
 								{{--{{dd($impuestos)}}--}}
 								{!! Form::select('fk_id_impuesto',[]
 									,null,['id'=>'fk_id_impuesto',
-									'data-url'=>companyAction('Finanzas\ImpuestosController@obtenerImpuestos'),
+									'data-url'=>companyAction('Administracion\ImpuestosController@obtenerImpuestos'),
 									'class'=>'form-control','style'=>'width:100%']) !!}
 								{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}
 							</div>
@@ -154,12 +154,12 @@
 			    <div class="card-body">
 					<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}"
 					data-delete="{{companyAction('Compras\DetalleSolicitudesController@destroyMultiple')}}"
-					data-impuestos="{{companyAction('Finanzas\ImpuestosController@obtenerImpuestos')}}"
-							data-porcentaje="{{companyAction('Finanzas\ImpuestosController@obtenerPorcentaje',['id'=>'?id'])}}">
+					data-impuestos="{{companyAction('Administracion\ImpuestosController@obtenerImpuestos')}}"
+							data-porcentaje="{{companyAction('Administracion\ImpuestosController@obtenerPorcentaje',['id'=>'?id'])}}">
 						<thead>
 							<tr>
 								<th id="idsku">SKU</th>
-								<th id="idcodigobarras">Código de Barras</th>
+								<th id="idupc">Código de Barras</th>
 								<th id="idproveedor">Proveedor</th>
 								<th>Fecha necesidad</th>
 								<th id="idproyecto" >Proyecto</th>
@@ -181,8 +181,8 @@
 										{{$detalle->sku->sku}}
 									</td>
 									<td>
-										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_codigo_barras]',$detalle->fk_id_codigo_barras) !!}
-										{{$detalle->codigo_barras->descripcion}}
+										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+										{{$detalle->upc->descripcion}}
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proveedor]',$detalle->fk_id_proveedor) !!}

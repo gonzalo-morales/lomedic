@@ -12,13 +12,13 @@ class Ordenes extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'com_opr_solicitudes';
+    protected $table = 'com_opr_ordenes';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_solicitud';
+    protected $primaryKey = 'id_orden';
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +26,8 @@ class Ordenes extends ModelCompany
      * @var array
      */
     protected $fillable = ['fk_id_solicitante','fk_id_sucursal','fk_id_departamento','fecha_creacion','fecha_necesidad',
-        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_solicitud'];
+        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_solicitud','fk_id_socio_negocio','fk_id_condicion_pago',
+        'importe','fk_id_tipo_entrega'];
 
     /**
      * Los atributos que seran visibles en index-datable
@@ -54,54 +55,19 @@ class Ordenes extends ModelCompany
     }
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'fk_id_solicitante' => 'required',
+        'fk_id_socio_negocio' => 'required',
         'fk_id_sucursal' => 'required',
-        'fecha_necesidad' => 'required'
+        'fk_id_condicion_pago' => 'required',
+        'fk_id_tipo_entrega' => 'required'
     ];
-
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-    public function ColumnDefaultValues()
-    {
-        $schema = config('database.connections.'.$this->getConnection()->getName().'.schema');
-
-        $data = DB::table('information_schema.columns')
-            ->select('column_name', 'data_type', DB::Raw("replace(replace(column_default, concat('::',data_type), ''),'''','') as column_default"))
-            ->whereRaw('column_default is not null')
-            ->whereRaw("column_default not ilike '%nextval%'")
-            ->where('table_name','=',$this->table)
-            ->where('table_schema','=',$schema)
-            ->where('table_catalog','=',$this->getConnection()->getDatabaseName())->get();
-
-        foreach ($data as $value) {
-            $data->{$value->column_name} = $value->data_type == 'boolean' ? $value->column_default == 'true' : $value->column_default;
-        }
-
-        return $data;
-    }
-
-    public function empleado()
-    {
-        return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_solicitante','id_empleado');
-    }
 
     public function sucursales()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
+        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','id_sucursal','fk_id_sucursal');
     }
 
     public function estatus()
@@ -116,6 +82,21 @@ class Ordenes extends ModelCompany
 
     public function getSolicitanteFormatedAttribute() {
         return $this->empleado->nombre." ".$this->empleado->apellido_paterno." ".$this->empleado->apellido_materno;
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo('App\Http\Models\Administracion\Empresas','id_empresa','fk_id_empresa');
+    }
+
+    public function tipoEntrega()
+    {
+        return $this->hasOne('App\Http\Models\SociosNegocio\TiposEntrega','id_tipo_entrega','fk_id_tipo_entrega');
+    }
+
+    public function proveedor()
+    {
+        return $this->hasOne('App\Http\Models\SociosNegocio\TiposEntrega','id_socio_negocio','fk_id_proveedor');
     }
 
 }

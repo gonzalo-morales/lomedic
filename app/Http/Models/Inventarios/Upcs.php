@@ -4,36 +4,37 @@ namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
 
-class Skus extends ModelCompany
+class Upcs extends ModelCompany
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'maestro.inv_cat_skus';
+    protected $table = 'maestro.inv_cat_upcs';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_sku';
+    protected $primaryKey = 'id_upc';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['sku','descripcion'];
+    protected $fillable = ['upc','descripcion','fk_id_sku'];
 
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
     protected $fields = [
-        'id_sku' => 'ID',
-        'sku' => 'SKU',
-        'descripcion' => 'Descripcion'
+        'id_upc' => 'ID',
+        'upc' => 'UPC',
+        'descripcion' => 'Descripción',
+        'fk_id_sku' => 'SKU'
     ];
 
     /**
@@ -48,12 +49,13 @@ class Skus extends ModelCompany
      * @var array
      */
     public $rules = [
-        'sku' => 'required',
-        'descripcion' => 'required'
+        'upc' => 'required',
+        'descripcion' => 'required',
+        'fk_id_sku' => 'required'
     ];
 
-    public function upcs()
+    public function sku()
     {
-        return $this->hasMany('App\Http\Models\Inventarios\Upcs','id_upc');
+        return $this->belongsTo('App\Http\Models\Inventarios\Skus','id_sku','fk_id_sku');
     }
 }

@@ -21,5 +21,6 @@ Route::prefix('{company}')->group(function () {
         Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
         Route::resource('solicitudes', 'Compras\SolicitudesController');
         Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
+        Route::resource('ordenes','Compras\OrdenesController');
     });
 });

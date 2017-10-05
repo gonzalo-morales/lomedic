@@ -26,6 +26,9 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('estados', 'Administracion\EstadosController');
         Route::resource('familiasproductos', 'Administracion\FamiliasproductosController');
         Route::resource('grupoproductos', 'Administracion\GrupoProductosController');
+        Route::resource('impuestos', 'Administracion\ImpuestosController');
+        Route::get('getPorcentaje/{id}','Administracion\ImpuestosController@obtenerPorcentaje');
+        Route::get('getImpuestos','Administracion\ImpuestosController@obtenerImpuestos');
         Route::resource('jurisdicciones', 'Administracion\JurisdiccionesController');
         Route::resource('laboratorios', 'Administracion\LaboratoriosController');
 		Route::resource('metodospago', 'Administracion\MetodosPagoController');

@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Compras;
 
 use App\Http\Controllers\ControllerBase;
-use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Unidadesmedidas;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Solicitudes;
-use App\Http\Models\Finanzas\Impuestos;
+use App\Http\Models\Administracion\Impuestos;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
 use App\Policies\Compras\SolicitudesPolicy;
@@ -16,10 +15,8 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
-use Illuminate\Support\HtmlString;
 use App\Http\Models\Inventarios\Skus;
 
 class SolicitudesController extends ControllerBase
@@ -48,7 +45,7 @@ class SolicitudesController extends ControllerBase
                 'sucursalesempleado' => $this->entity->first()
                     ->empleado()->first()
                     ->sucursales()->get()
-                    ->pluck('nombre_sucursal','id_sucursal'),
+                    ->pluck('sucursal','id_sucursal'),
                 'detalles' => $this->entity
                     ->first()
                     ->detalleSolicitudes()->where('cerrado','0')->get(),

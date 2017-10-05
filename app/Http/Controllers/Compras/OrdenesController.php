@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Compras;
 
 use App\Http\Controllers\ControllerBase;
-use App\Http\Models\Administracion\Proveedores;
+use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\Unidadesmedidas;
 use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Ordenes;
-use App\Http\Models\Compras\Solicitudes;
-use App\Http\Models\Finanzas\Impuestos;
+use App\Http\Models\Administracion\Impuestos;
+use App\Http\Models\Finanzas\CondicionesPago;
+use App\Http\Models\Inventarios\Skus;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\SociosNegocio\TiposEntrega;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,14 +26,6 @@ class OrdenesController extends ControllerBase
 		$this->entity = $entity;
 	}
 
-	public function getDataView()
-	{
-		return [
-			'proveedores' => Proveedores::select(['nombre','id_proveedor'])->pluck('nombre','id_proveedor'),
-		];
-	}
-
-
 	public function index($company, $attributes = [])
 	{
 		$attributes = ['where'=>[]];
@@ -38,37 +34,31 @@ class OrdenesController extends ControllerBase
 
 	public function create($company, $attributes =[])
 	{
+	    $clientes = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
+	        $q->where('fk_id_tipo_socio', 1);
+        })->get()->pluck('nombre_corto','id_socio_negocio');
+        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
+            $q->where('fk_id_tipo_socio', 1);
+        })->get()->pluck('nombre_corto','id_socio_negocio');
 
-		// dump( $this->getDataView() );
-		// die();
-
-		$attributes = $attributes+['dataview'=>[
-				'sucursalesempleado' => $this->entity->first()
-					->empleado()->first()
-					->sucursales()->get()
-					->pluck('nombre_sucursal','id_sucursal'),
-				'detalles' => $this->entity
-					->first()
-					->detalleSolicitudes()->where('cerrado','0')->get(),
-				'impuestos'=> Impuestos::select('id_impuesto','impuesto')
-					->where('activo',1)
-					->get()
-					->pluck('impuesto','id_impuesto'),
-				'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')
-					->where('activo',1)
-					->get()
-					->pluck('nombre','id_unidad_medida')
-			]];
-		return parent::create($company, [
-			'dataview' => $this->getDataView()
-		]);
-		// return parent::create($company,$attributes);
+        $attributes = $attributes+['dataview'=>[
+                'proveedores' => $proveedores,
+                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->get()->pluck('nombre_comercial','id_empresa'),
+                'sucursales' => Sucursales::where('activo',1)->get()->pluck('sucursal','id_sucursal'),
+                'clientes' => $clientes,
+                'proyectos' => Proyectos::where('activo',1)->get()->pluck('proyecto','id_proyecto'),
+                'tiposEntrega' => TiposEntrega::where('activo',1)->get()->pluck('tipo_entrega','id_tipo_entrega'),
+                'condicionesPago' => CondicionesPago::where('activo',1)->get()->pluck('condicion_pago','id_condicion_pago'),
+            ]];
+		 return parent::create($company,$attributes);
 	}
 
 	public function store(Request $request, $company)
 	{
-		# ¿Usuario tiene permiso para crear?
-		$this->authorize('create', $this->entity);
+
+        # ¿Usuario tiene permiso para crear?
+//		$this->authorize('create', $this->entity);
+
 
 		# Validamos request, si falla regresamos pagina
 		$this->validate($request, $this->entity->rules);
@@ -77,12 +67,13 @@ class OrdenesController extends ControllerBase
 		if($request->fk_id_estatus_solicitud === 3)//Si es cancelado
 		{$request->request->set('fecha_cancelacion',DB::raw('now'));}
 
-		$request->request
-			->set('fk_id_departamento',Empleados::where('id_empleado',$request->fk_id_solicitante)
-				->first()
-				->fk_id_departamento);
+//		$request->request
+//			->set('fk_id_departamento',Empleados::where('id_empleado',$request->fk_id_solicitante)
+//				->first()
+//				->fk_id_departamento);
 		$request->request->set('fk_id_estatus_solicitud',1);
-		$isSuccess = $this->entity->create($request->all());
+        dd($request->request);
+        $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 			if(isset($request->_detalles)) {
 				foreach ($request->_detalles as $detalle) {
