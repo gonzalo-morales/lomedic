@@ -204,3 +204,19 @@ input.form-check-input.toggeable:checked:after {
     font-family: "Material Icons";
     content: "\E001 \00a0" ;
 }
+.k-window-titlebar, .k-header {
+	background: #00838f !important;
+}
+.k-window-content {
+	padding: 0.11em !important;
+}
+.window {
+	font-size: 1.5em !important;
+	color: #e0f2f1 !important;
+}
+a:hover .window {
+	color: #e65100 !important;
+}
+.k-window-maximized {
+	z-index: 30000 !important;
+}

@@ -170,7 +170,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 		$modulos_usuario = Modulos::where('eliminar','=',0)->where('activo','=',1)->whereHas('permisos', function($q) {
 			# Modulos relacionados a los permisos del usuario
 			$q->whereIn('id_permiso', $this->getpermisos()->pluck('id_permiso') );
-		})->orderBy('nombre')->get();
+		})->orderBy('id_modulo')->get();
 
 		# Recorremos modulos de la empresa
 		foreach ($modulos_empresa as $key => $modulo) {
@@ -183,8 +183,8 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 				$modulos_empresa->forget($key);
 			}
 		}
-
-		return $modulos_empresa;
+		
+		return $modulos_empresa->sortBy('id_modulo');
 	}
 
 }

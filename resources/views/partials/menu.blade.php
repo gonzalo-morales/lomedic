@@ -1,7 +1,9 @@
 <li>
     @if(!$modulo->submodulos->count())
-    <a href="{{ !empty($modulo->url) ? companyAction($modulo->url) : '#' }}" title="{{ $modulo->nombre }}" data-toggle="tooltip" data-placement="right">
-        <i class='material-icons'>{{ $modulo->icono }}</i> {{ $modulo->nombre }}
+    <a class="w-100" href="{{ !empty($modulo->url) ? companyAction($modulo->url) : '#' }}" title="{{ $modulo->nombre }}" data-toggle="tooltip" data-placement="right">
+        <i class='material-icons'>{{ $modulo->icono }}</i>
+        <span> {{ $modulo->nombre }} </span>
+        {!! !empty($modulo->url) ? "<i class='material-icons window p-2'>open_in_browser</i>" : '' !!}
     </a>
     @else
 	<span title="{{ $modulo->nombre }}" data-toggle="tooltip" data-placement="right">
