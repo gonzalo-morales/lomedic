@@ -18,14 +18,16 @@
     {{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
     {{ HTML::style(asset('css/style-nav.css'), ['media'=>'screen,projection']) }}
     
-    
-    {{ HTML::style(asset('css/kendo.common-material.min.css')) }}
-    {{ HTML::style(asset('css/kendo.rtl.min.css')) }}
-    {{ HTML::style(asset('css/kendo.material.min.css')) }}
-    {{ HTML::style(asset('css/kendo.material.mobile.min.css')) }}
+    @if(!isset(request()->kendoWindow))
+        {{ HTML::style(asset('css/kendo.common-material.min.css')) }}
+        {{ HTML::style(asset('css/kendo.rtl.min.css')) }}
+        {{ HTML::style(asset('css/kendo.material.min.css')) }}
+        {{ HTML::style(asset('css/kendo.material.mobile.min.css')) }}
+    @endif
 	@yield('header-top')
 </head>
 <body>
+@if(!isset(request()->kendoWindow))
     <div class="w-100 fixed-top z-depth-1-half" id="top-nav">
     	<nav class="navbar navbar-default bg-white">
             <div class="navbar-header d-flex flex-row">
@@ -55,9 +57,11 @@
     		@endforeach
     	</ol>-->
     </div>
-
+@endif
+    @if(isset(request()->kendoWindow))
+    <div class="wrapper">
+    @else
     <div class="wrapper" style="margin-top: 44.5px;">
-    @if(!Request::ajax())
         <!-- Sidebar Holder -->
         <nav id="sidebar" class="active bg-dark text-white">
         	<div id="sidebar-content">
@@ -124,86 +128,89 @@
 {{ HTML::script(asset('js/pickadate/picker.js')) }}
 {{ HTML::script(asset('js/pickadate/picker.date.js')) }}
 {{ HTML::script(asset('js/pickadate/translations/es_Es.js')) }}
-
 {{ HTML::script(asset('js/toaster.js')) }}
-{{ HTML::script(asset('js/ticket.js')) }}
 
-<script type="text/javascript">
-     $(document).ready(function () {
+@if(!isset(request()->kendoWindow))
+    {{ HTML::script(asset('js/ticket.js')) }}
+    
+    <script type="text/javascript">
+         $(document).ready(function () {
+    
+        	 $('[data-toggle="tooltip"]').tooltip()
+    
+        	 /* Nice Scroll */
+            $("#rigth-sidebar").niceScroll({
+                cursorcolor: '#26a69a',
+                cursorwidth: 4,
+                cursorborder: 'none'
+            });
+            
+            
+            /* Sidebar's */
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                //condiciones para cambiar el ícono de menú a x
+                if($('#sidebar').hasClass('active') && $(window).width() >= 768){
+                    $(this).find("i").text("menu");
+                }
+                else if($('#sidebar').not('active') && $(window).width() >= 768){
+                   $(this).find("i").text("close");
+                }
+                else{
+                    $(this).find("i").text("menu"); 
+                }
+    
+            });
+    
+            $('#rigth-sidebarCollapse').on('click', function () {
+                $('#rigth-sidebar').addClass('active');
+                $('.overlay').fadeIn();
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+            
+            $('.dismiss, .overlay').on('click', function () {
+                $('#rigth-sidebar').removeClass('active');
+                $('.overlay').fadeOut();
+            });
+    
+            
+    		/* Kendo */
+    		$(".window").click(function (e) {
+    	        e.preventDefault();
+    
+    			$("#onload").append("<div id='mywindow'></div>");
+    
+    	        var myWindow = $("#mywindow"),
+    	        href = $(this).parent().attr('href');
+    
+    		    if(href != '#') {
+        	        myWindow.kendoWindow({
+        	            width:  "60%",
+        	            height: "65%",
+        	            position:{
+                            top:"18%",
+                            left:"26%"
+                        },
+        	            actions: ["Refresh","Pin","Minimize", "Maximize", "Close"],
+        	            title:   $(this).parent().data('original-title'),
+        	            content: href+'?kendoWindow=1',
+        	            visible: true,
+        	        });
+        	    }
+            });
 
-    	 $('[data-toggle="tooltip"]').tooltip()
-
-    	 /* Nice Scroll */
-        $("#rigth-sidebar").niceScroll({
-            cursorcolor: '#26a69a',
-            cursorwidth: 4,
-            cursorborder: 'none'
-        });
-        
-        
-        /* Sidebar's */
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-            //condiciones para cambiar el ícono de menú a x
-            if($('#sidebar').hasClass('active') && $(window).width() >= 768){
-                $(this).find("i").text("menu");
-            }
-            else if($('#sidebar').not('active') && $(window).width() >= 768){
-               $(this).find("i").text("close");
-            }
-            else{
-                $(this).find("i").text("menu"); 
-            }
-
-        });
-
-        $('#rigth-sidebarCollapse').on('click', function () {
-            $('#rigth-sidebar').addClass('active');
-            $('.overlay').fadeIn();
-            $('.collapse.in').toggleClass('in');
-            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-        });
-        
-        $('.dismiss, .overlay').on('click', function () {
-            $('#rigth-sidebar').removeClass('active');
-            $('.overlay').fadeOut();
-        });
-
-        
-		/* Kendo */
-		$(".window").click(function (e) {
-	        e.preventDefault();
-
-			$("#onload").append("<div id='mywindow'></div>");
-
-	        var myWindow = $("#mywindow"),
-	        href = $(this).parent().attr('href');
-
-		    if(href != '#') {
-    	        myWindow.kendoWindow({
-    	            width:  "66%",
-    	            height: "66%",
-    	            position:{
-                        top:"15%",
-                        left:"20%"
-                    },
-    	            actions: ["Refresh","Pin","Minimize", "Maximize", "Close"],
-    	            title:   $(this).parent().data('original-title'),
-    	            content: href,
-    	            visible: true,
-    	        });
-    	    }
-        });
-
-		if(self !== top){
-			$("#sidebar").remove();
-			$("#top-nav").remove();
-			$("#content").removeClass('pt-3');
-			$(".wrapper").removeAttr("style");
-		}
-     });
-</script>
-	
+    		if(self !== top){
+    			$("#sidebar").remove();
+    			$("#top-nav").remove();
+    			$("#rigth-sidebar").remove();
+    			$("#ticketHelp").remove();
+    			$("#content").removeClass('pt-3');
+    			$(".wrapper").removeAttr("style");
+    		}
+         });
+    </script>
+@endif
 @yield('header-bottom')
 
 </body>

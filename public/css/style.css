@@ -208,7 +208,7 @@ input.form-check-input.toggeable:checked:after {
     content: "\E001 \00a0" ;
 }
 .k-window-titlebar, .k-header {
-	background: #00838f !important;
+	background: #3F729B !important;
 }
 .k-window-content {
 	padding: 0.11em !important;

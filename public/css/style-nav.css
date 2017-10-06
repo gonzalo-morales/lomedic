@@ -278,7 +278,7 @@ a.article, a.article:hover {
     top: 0;
     right: -250px;
     height: 100vh;
-    z-index: 9999;
+    z-index: 99999;
     background: #333;
     color: #fff;
     transition: all 0.3s;
@@ -317,7 +317,7 @@ a.article, a.article:hover {
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 9998;
+    z-index: 99998;
     display: none;
 }
 
