@@ -20,7 +20,7 @@ class FamiliasproductosController extends ControllerBase
 		$this->entity = $entity;
 	}
 
-	public function getDataView()
+	public function getDataView($entity = null)
 	{
 		return [
 			'companies' => Empresas::active()->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),

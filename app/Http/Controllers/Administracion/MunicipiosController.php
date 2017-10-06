@@ -18,10 +18,10 @@ class MunicipiosController extends ControllerBase
 		$this->entity = $entity;
 	}
 
-	public function getDataView()
+	public function getDataView($entity = null)
 	{
 		return [
-//			'estados' => Estados::active()->select(['estado','id_estado'])->pluck('estado','id_estado'),
+			'estados' => Estados::select(['estado','id_estado'])->pluck('estado','id_estado'),
 		];
 	}
 
@@ -32,11 +32,9 @@ class MunicipiosController extends ControllerBase
 	 */
 	public function create($company, $attributes = [])
 	{
-//		$this->loadResources();
-        $attributes=$attributes+['dataview'=>[
-            'estados' => Estados::select(['estado','id_estado'])->pluck('estado','id_estado'),
-                ]];
-		return parent::create($company, $attributes);
+		return parent::create($company, [
+			'dataview' => []
+		]);
 	}
 
 	/**
@@ -47,11 +45,9 @@ class MunicipiosController extends ControllerBase
 	 */
 	public function show($company, $id, $attributes = [])
 	{
-//		$this->loadResources();
-        $attributes=$attributes+['dataview'=>[
-                'estados' => Estados::select(['estado','id_estado'])->pluck('estado','id_estado'),
-            ]];
-		return parent::show($company, $id, $attributes);
+		return parent::show($company, $id, [
+			'dataview' => []
+		]);
 	}
 
 	/**
@@ -62,10 +58,8 @@ class MunicipiosController extends ControllerBase
 	 */
 	public function edit($company, $id, $attributes = [])
 	{
-//		$this->loadResources();
-        $attributes=$attributes+['dataview'=>[
-                'estados' => Estados::select(['estado','id_estado'])->pluck('estado','id_estado'),
-            ]];
-		return parent::edit($company, $id, $attributes);
+		return parent::edit($company, $id, [
+			'dataview' => []
+		]);
 	}
 }

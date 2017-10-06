@@ -13,6 +13,11 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ControllerBase extends Controller
 {
+	public function getDataView($entity = null)
+	{
+		return [];
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -34,10 +39,8 @@ class ControllerBase extends Controller
 			}
 		}
 
-		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
-
 		if (!request()->ajax()) {
-			return view(currentRouteName('smart'), $dataview+[
+			return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
 				'fields' => $this->entity->getFields(),
 				'data' => $query->limit(20)->get(),
 			]);
@@ -61,9 +64,9 @@ class ControllerBase extends Controller
 				# Eliminamos primeros 20 registros en pagina #1
 				if( $page == 1) $items = $items->slice(20);
 
-				return (new LengthAwarePaginator($items, $all->count(), $perPage, $page))->toJson();
+				return (new LengthAwarePaginator($items, $all->count(), $perPage, $page));
 			});
-			return response()->json()->setJson($cache);
+			return $cache;
 		}
 	}
 
@@ -80,9 +83,10 @@ class ControllerBase extends Controller
 		$data = $this->entity->getColumnsDefaultsValues();
 		$validator = \JsValidator::make($this->entity->rules, [], $this->entity->niceNames, '#form-model');
 
-		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
-
-		return view(currentRouteName('smart'), $dataview+['data'=>$data,'validator'=>$validator]);
+		return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
+			'data' => $data,
+			'validator' => $validator
+		] + $this->getDataView());
 	}
 
 	/**
@@ -128,10 +132,26 @@ class ControllerBase extends Controller
 
 		# Log
 		$this->log('show', $id);
-		$data = $this->entity->findOrFail($id);
-		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
+		try {
+			$data = $this->entity->findOrFail($id);
+		} catch (\Exception $e) {
+			return ['success' => false,'message' => $e->getMessage()];
+		}
+
+		if (!request()->ajax()) {
+			return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + ['data'=>$data] + $this->getDataView($data));
+
+		# Ajax
+		} else {
+
+			if (request()->with) {
+				$data->load(request()->with);
+			}
+
+			// return $['some' => 'haha'];
+			return ['success' => true, 'data' => $data->toArray()];
+		}
 	}
 
 	/**
@@ -146,9 +166,11 @@ class ControllerBase extends Controller
 		$this->authorize('update', $this->entity);
         $validator = \JsValidator::make($this->entity->rules);
 		$data = $this->entity->findOrFail($id);
-		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), $dataview+['data'=>$data,'validator'=>$validator]);
+		return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
+			'data' => $data,
+			'validator' => $validator
+		] + $this->getDataView($data));
 	}
 
 	/**
@@ -207,9 +229,7 @@ class ControllerBase extends Controller
 
 				if ($request->ajax()) {
 					# Respuesta Json
-					return response()->json([
-						'success' => true,
-					]);
+					return ['success' => true];
 				} else {
 					return $this->redirect('destroy');
 				}
@@ -220,9 +240,7 @@ class ControllerBase extends Controller
 
 				if ($request->ajax()) {
 					# Respuesta Json
-					return response()->json([
-						'success' => false,
-					]);
+					return ['success' => false];
 				} else {
 					return $this->redirect('error_destroy');
 				}
@@ -242,9 +260,7 @@ class ControllerBase extends Controller
 
 				if ($request->ajax()) {
 					# Respuesta Json
-					return response()->json([
-						'success' => true,
-					]);
+					return ['success' => true];
 				} else {
 					return $this->redirect('destroy');
 				}
@@ -256,9 +272,7 @@ class ControllerBase extends Controller
 
 				if ($request->ajax()) {
 					# Respuesta Json
-					return response()->json([
-						'success' => false,
-					]);
+					return ['success' => false];
 				} else {
 					return $this->redirect('error_destroy');
 				}
@@ -280,9 +294,7 @@ class ControllerBase extends Controller
 		# Shorthand
 		if ($request->ids) return $this->destroy($request, $company, $request->ids);
 
-		return response()->json([
-			'success' => false,
-		]);
+		return ['success' => false];
 	}
 
 	/**
@@ -295,7 +307,7 @@ class ControllerBase extends Controller
 		# ¿Usuario tiene permiso para exportar?
 		$this->authorize('export', $this->entity);
 		$type = strtolower($request->type);
-		$style = isset($request->style) ? $request->style : false;
+		$style = $request->style ?? false;
 
 	    if (isset($request->ids)) {
 	        $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);

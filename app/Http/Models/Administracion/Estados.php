@@ -61,12 +61,12 @@ class Estados extends ModelBase
 	}
 
 	/**
-	 * Un estado puede tener muchos municipios
+	 * Obtenemos municipios relacionados
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
-	public function municipios(){
-		return $this->hasMany('App\Http\Models\Administracion\Municipios');
+	public function municipios() {
+		return $this->hasMany(Municipios::class, 'fk_id_estado', 'id_estado');
 	}
 
 	/**

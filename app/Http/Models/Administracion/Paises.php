@@ -49,4 +49,14 @@ class Paises extends ModelBase
 		'pais' => 'Pais',
 		'activo_span' => 'Activo'
 	];
+
+	/**
+	 * Obtenemos estados relacionados
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function estados() {
+		return $this->hasMany(Estados::class, 'fk_id_pais', 'id_pais');
+	}
+
 }

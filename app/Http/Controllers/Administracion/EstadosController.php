@@ -18,7 +18,7 @@ class EstadosController extends ControllerBase
 		$this->entity = $entity;
 	}
 
-	public function getDataView()
+	public function getDataView($entity = null)
 	{
 		return [
 			'paises' => Paises::select(['id_pais', 'pais'])->orderBy('pais')->pluck('pais','id_pais'),
@@ -34,7 +34,7 @@ class EstadosController extends ControllerBase
 	{
 //		$this->loadResources();
 		return parent::create($company, [
-			'dataview' => $this->getDataView()
+			'dataview' => []
 		]);
 	}
 
@@ -48,7 +48,7 @@ class EstadosController extends ControllerBase
 	{
 //		$this->loadResources();
 		return parent::show($company, $id, [
-			'dataview' => $this->getDataView()
+			'dataview' => []
 		]);
 	}
 
@@ -62,7 +62,7 @@ class EstadosController extends ControllerBase
 	{
 //		$this->loadResources();
 		return parent::edit($company, $id, [
-			'dataview' => $this->getDataView()
+			'dataview' => []
 		]);
 	}
 }

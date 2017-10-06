@@ -26,7 +26,7 @@ class ModelBase extends Model
 	 * @var bool
 	 */
 	public $timestamps = false;
-	
+
 	public function __construct($attributes = []) {
 	    $this->rules = !empty($this->rules) ? $this->rules + $this->getRulesDefaults() : $this->getRulesDefaults();
         return parent::__construct($attributes);
@@ -111,7 +111,7 @@ class ModelBase extends Model
 			return $column->getDefault();
 		}, $columns );
 	}
-	
+
 	/**
 	 * Obtenemos informacion-base de modelo para las reglas
 	 * @return array
@@ -120,7 +120,7 @@ class ModelBase extends Model
 	{
 	    $types = ['Integer'=>'Integer','Decimal'=>'Digits','Date'=>'Date','Time'=>'Sometimes'];
 	    $columns = $this->getConnection()->getDoctrineSchemaManager()->listTableDetails($this->getTable())->getColumns();
-	    
+
 	    $propertys = array_map(function($column) {
 	        return [
 	            'required' => $column->getNotnull(),
@@ -130,14 +130,14 @@ class ModelBase extends Model
 	            'comment'  => $column->getComment(),
 	        ];
 	    }, $columns );
-	        
+
         $rules = [];
         foreach($propertys as $col=>$prop) {
             if(in_array($col, $this->fillable))
             {
                 $rules[$col] = [];
                 $type = (string)$prop['type'];
-                
+
                 if($type == 'Boolean')
                 {
                     array_push($rules[$col],'min:0');
@@ -149,7 +149,7 @@ class ModelBase extends Model
                 else {
                     array_push($rules[$col],'max:'.$prop['length']);
                 }
-                
+
                 if(isset($types[$type])) {
                     if($types[$type] == 'Digits') {
                         array_push($rules[$col],$types[$type].':'.$prop['decimal']);
@@ -158,11 +158,11 @@ class ModelBase extends Model
                         array_push($rules[$col],$types[$type]);
                     }
                 }
-                
+
                 if($prop['required'] == true && $type != 'Boolean') {
                     array_push($rules[$col],'required');
                 }
-                
+
                 if(!empty($prop['comment'])) {
                     array_push($rules[$col],$prop['comment']);
                 }
