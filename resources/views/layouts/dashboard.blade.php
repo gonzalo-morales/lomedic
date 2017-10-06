@@ -85,7 +85,8 @@
         			{!! Form::open(['route' => 'logout', 'before' => 'csrf', 'id' => 'logout-form', 'class' => 'hidden']) !!} {!! Form::close() !!}
                 </div>
     
-                <ul class="list-unstyled components">
+                <ul id="menu-conten" class="list-unstyled components text-center">
+                	{!! Form::text('filter',null,['id'=>'filter-menu','placeholder'=>'Buscar en menu.']) !!}
                     @if(isset($menu))
         				@each('partials.menu', $menu, 'modulo')
         			@endif
@@ -208,6 +209,34 @@
     			$("#content").removeClass('pt-3');
     			$(".wrapper").removeAttr("style");
     		}
+
+    		document.querySelector("#filter-menu").addEventListener("keyup", function(e) {
+                var filter = this.value.toLowerCase();
+                var count = 0;
+                document.querySelectorAll("#menu-conten li").forEach(function(li) {
+                    if (filter == "") {
+                    	li.style["display"] = "list-item";
+                    	li.querySelectorAll('.collapse').forEach(function(el) {
+                        	if($('.collapse:not(.in)')) {
+                                $(el).collapse('hide');
+                            }
+                        });
+                    }
+                    else {
+                        if (!li.textContent.toLowerCase().match(filter)) {
+                        	li.style["display"] = "none";
+                        }
+                        else {
+                        	li.style["display"] = "list-item";
+                        	li.querySelectorAll('.collapse').forEach(function(el) {
+                            	if($('.collapse:not(.in)')) {
+                                    $(el).collapse('show');
+                                }
+                            });
+                        }
+                    }
+                });
+			});
          });
     </script>
 @endif

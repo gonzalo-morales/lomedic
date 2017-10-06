@@ -229,3 +229,15 @@ a:hover .window {
 .k-window-maximized {
 	z-index: 30000 !important;
 }
+#filter-menu {
+	background: none;
+	color: #F5F5F5;
+	border: none;
+	border-bottom: 1px solid #777;
+	width: 94%;
+	margin: auto;
+	font-size: 15px !important;
+}
+.tag-menu {
+	display: none;
+}
