@@ -237,7 +237,74 @@
                     }
                 });
 			});
-         });
+
+/*
+        // $('#metro').find('a').each(function(i,elem){
+        //     var value = "(50%)";
+        //     $(elem).css({
+        //         'filter': 'brightness'+value,
+        //         '-webkit-filter': 'brightness'+value,
+        //         '-moz-filter': 'brightness'+value,
+        //         '-o-filter': 'brightness'+value,
+        //         '-ms-filter': 'brightness'+value
+        //     });
+        //     console.log(elem);
+        // })
+
+        /*
+        var value = 1.00;
+        mBlue = $('#metro').find('a.blue')
+        mGreen = $('#metro').find('a.green')
+        //Degradado azul
+        mBlue.each(function(i,elem){
+            $(elem).css({
+                'background-color': 'rgba(0,123,255,'+value+')',
+            });
+            value -= 0.10;
+        })
+        //Degradado verde
+        mGreen.each(function(i,elem){
+            $(elem).css({
+                'background-color': 'rgba(23,162,184,'+value+')',
+            });
+            value += 0.2;
+        })*/
+
+        /*var g = 122;
+        var b = 255;
+        mBlue = $('#metro').find('a.blue')
+        //Degradado azul
+        mBlue.each(function(i,elem){
+            $(elem).css({
+                'background-color': 'rgb(0,'+g+','+b+')',
+            })
+            g -= 8;
+            b -= 17;
+        })
+        var r = 23;
+        mGreen = $('#metro').find('a.green')
+        //Degradado azul
+        mGreen.each(function(i,elem){
+            $(elem).css({
+                'background-color': 'rgb('+r+','+g+','+b+')',
+            })
+            g += 58;
+            b += 17;
+        })*/
+
+        var rgbColor = [23,122,255]
+        mBlue = $('#metro').find('a.blue');
+        //Degradado azul
+        mBlue.each(function(i,elem){
+            $(elem).css({
+                'background-color': 'rgb('+rgbColor[0]+','+rgbColor[1]+','+rgbColor[2]+')'
+            })
+            rgbColor[1] -= 8;
+            rgbColor[2] -= 17;
+            return;
+        })
+
+    });
     </script>
 @endif
 @yield('header-bottom')
