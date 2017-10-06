@@ -36,8 +36,6 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
-{{--{{dd($validator->view('detalle-form'))}}--}}
-{{--{{dd($reglasdetalles->view('detalle-form'))}}--}}
 	<div class="row">
 		<div class="form-group col-md-4 col-sm-6">
 	{{--		{!! Form::text(array_has($data,'fk_id_solicitante')?'solicitante_formated':'solicitante',null, ['id'=>'solicitante','autocomplete'=>'off','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados'),'data-url2'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')]) !!}--}}
@@ -54,7 +52,8 @@
 				{!! Form::hidden('sucursal_defecto',$data->fk_id_sucursal,['id'=>'sucursal_defecto']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('show')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
-				{!! Form::text('sucursal',$data->sucursales->sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
+
+				{!! Form::text('sucursal',$data->sucursales->where('id_sucursal',$data->fk_id_sucursal)->first()->nombre_sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('create')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
 				{!! Form::select('fk_id_sucursal', isset($sucursalesempleado)?$sucursalesempleado:[],null, ['id'=>'fk_id_sucursal_','class'=>'form-control','style'=>'width:100%']) !!}
@@ -334,7 +333,6 @@
                     }
                 });
 			}else{
-
 		        let data = {motivo};
 		        $.delete(this.dataset.deleteUrl,data,function (response) {
 					if(response.success){

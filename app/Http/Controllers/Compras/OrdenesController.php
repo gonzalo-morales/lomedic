@@ -128,30 +128,41 @@ class OrdenesController extends ControllerBase
 
 	public function update(Request $request, $company, $id)
 	{
-//        dd($request->request);
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);
 
 		# Validamos request, si falla regresamos atras
 		$this->validate($request, $this->entity->rules);
-
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
+//		dd($entity);
 		if ($entity->save()) {
 			if(isset($request->detalles)) {
 				foreach ($request->detalles as $detalle) {
-						$solicitud_detalle = $entity
+						$orden_detalle = $entity
 							->findOrFail($id)
-							->detalleSolicitudes()
-							->where('id_solicitud_detalle', $detalle['id_solicitud_detalle'])
+							->detalleOrdenes()
+							->where('id_orden_detalle', $detalle['id_orden_detalle'])
 							->first();
-						$solicitud_detalle->fill($detalle);
-						$solicitud_detalle->save();
+						$orden_detalle->fill($detalle);
+						$orden_detalle->save();
 				}
 			}
 			if(isset($request->_detalles)){
 				foreach ($request->_detalles as $detalle){
-					$entity->detalleSolicitudes()->save(new DetalleSolicitudes($detalle));
+                    if(empty($detalle['fk_id_upc'])){
+                        $detalle['fk_id_upc'] = null;
+                    }
+                    if(empty($detalle['fk_id_cliente'])){
+                        $detalle['fk_id_cliente'] = null;
+                    }
+                    if(empty($detalle['fk_id_proyecto'])){
+                        $detalle['fk_id_proyecto'] = null;
+                    }
+                    if(empty($detalle['fecha_necesario'])){
+                        $detalle['fecha_necesario'] = null;
+                    }
+					$entity->detalleOrdenes()->save(new DetalleOrdenes($detalle));
 				}
 			}
 
@@ -165,75 +176,80 @@ class OrdenesController extends ControllerBase
 
 	public function destroy(Request $request, $company, $idOrIds)
 	{
-		if (!is_array($idOrIds)) {
+	    if($request->url() != companyAction('Compras\OrdenesController@destroyDetail')){
+            if (!is_array($idOrIds)) {
 
-			$isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
-				->update(['fk_id_estatus_solicitud' => 3,
-					'motivo_cancelacion'=>$request->motivo_cancelacion,
-					'fecha_cancelacion'=>DB::raw('now()')]);
-			if ($isSuccess) {
+                $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
+                    ->update(['fk_id_estatus_orden' => 3,
+                        'motivo_cancelacion'=>$request->motivo_cancelacion,
+                        'fecha_cancelacion'=>DB::raw('now()')]);
+                if ($isSuccess) {
 
-				$this->log('destroy', $idOrIds);
+                    $this->log('destroy', $idOrIds);
 
-				if ($request->ajax()) {
-					# Respuesta Json
-					return response()->json([
-						'success' => true,
-					]);
-				} else {
-					return $this->redirect('destroy');
-				}
+                    if ($request->ajax()) {
+                        # Respuesta Json
+                        return response()->json([
+                            'success' => true,
+                        ]);
+                    } else {
+                        return $this->redirect('destroy');
+                    }
 
-			} else {
+                } else {
 
-				$this->log('error_destroy', $idOrIds);
+                    $this->log('error_destroy', $idOrIds);
 
-				if ($request->ajax()) {
-					# Respuesta Json
-					return response()->json([
-						'success' => false,
-					]);
-				} else {
-					return $this->redirect('error_destroy');
-				}
-			}
+                    if ($request->ajax()) {
+                        # Respuesta Json
+                        return response()->json([
+                            'success' => false,
+                        ]);
+                    } else {
+                        return $this->redirect('error_destroy');
+                    }
+                }
 
-			# Multiple
-		} else {
+                # Multiple
+            } else {
 
-			$isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)
-				->update(['fk_id_estatus_solicitud' => 3,
-					'motivo_cancelacion'=>$request->motivo_cancelacion,
-					'fecha_cancelacion'=>DB::raw('now()')]);
-			if ($isSuccess) {
+                $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)
+                    ->update(['fk_id_estatus_orden' => 3,
+                        'motivo_cancelacion'=>$request->motivo_cancelacion,
+                        'fecha_cancelacion'=>DB::raw('now()')]);
+                if ($isSuccess) {
 
-				# Shorthand
-				foreach ($idOrIds as $id) $this->log('destroy', $id);
+                    # Shorthand
+                    foreach ($idOrIds as $id) $this->log('destroy', $id);
 
-				if ($request->ajax()) {
-					# Respuesta Json
-					return response()->json([
-						'success' => true,
-					]);
-				} else {
-					return $this->redirect('destroy');
-				}
+                    if ($request->ajax()) {
+                        # Respuesta Json
+                        return response()->json([
+                            'success' => true,
+                        ]);
+                    } else {
+                        return $this->redirect('destroy');
+                    }
 
-			} else {
+                } else {
 
-				# Shorthand
-				foreach ($idOrIds as $id) $this->log('error_destroy', $id);
+                    # Shorthand
+                    foreach ($idOrIds as $id) $this->log('error_destroy', $id);
 
-				if ($request->ajax()) {
-					# Respuesta Json
-					return response()->json([
-						'success' => false,
-					]);
-				} else {
-					return $this->redirect('error_destroy');
-				}
-			}
-		}
+                    if ($request->ajax()) {
+                        # Respuesta Json
+                        return response()->json([
+                            'success' => false,
+                        ]);
+                    } else {
+                        return $this->redirect('error_destroy');
+                    }
+                }
+            }
+        }else{
+            DetalleOrdenes::whereIn('id_orden_detalle', $request->ids)->update(['cerrado' => 't']);
+            return true;
+        }
 	}
 
 	public function print_solicitud($company,$id)

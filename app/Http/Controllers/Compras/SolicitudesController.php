@@ -34,13 +34,6 @@ class SolicitudesController extends ControllerBase
 
     public function create($company,$attributes =[])
     {
-//        $impuestosSet = [];
-//        $impuestos = Impuestos::select('id_impuesto','impuesto','porcentaje')->where('activo',1)->get();
-//        foreach ($impuestos as $impuesto){
-//            $impuestosSet[] = ['id'=>$impuesto->id_impuesto,
-//                'text' => $impuesto->impuesto,
-//                'porcentaje' => $impuesto->porcentaje];
-//        }
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity->first()
                     ->empleado()->first()
@@ -73,7 +66,6 @@ class SolicitudesController extends ControllerBase
 
     public function store(Request $request, $company)
     {
-//        dd($request);
         $id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
         # ¿Usuario tiene permiso para crear?
         $this->authorize('create', $this->entity);
@@ -84,8 +76,6 @@ class SolicitudesController extends ControllerBase
         $this->validate($request, $this->entity->rules);
 
         $request->request->set('fecha_creacion',DB::raw('now()'));
-//        if($request->fk_id_estatus_solicitud === 3)//Si es cancelado
-//        {$request->request->set('fecha_cancelacion',DB::raw('now'));}
 
         $request->request
             ->set('fk_id_departamento',Empleados::where('id_empleado',$request->fk_id_solicitante)

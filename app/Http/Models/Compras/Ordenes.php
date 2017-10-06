@@ -33,12 +33,21 @@ class Ordenes extends ModelCompany
         'fk_id_socio_negocio'=>'proveedor'
     ];
 
+    protected $dataColumns = [
+        'fk_id_estatus_orden'
+    ];
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
     protected $fields = [
         'id_orden' => 'Número Solicitud',
+        'proveedor.nombre_corto' => 'Proveedor',
+        'sucursales.sucursal' => 'Sucursal entrega',
+        'fecha_creacion' => 'Fecha del pedido',
+        'fecha_estimada_entrega' => 'Fecha de entrega',
+        'estatus.estatus' => 'Estatus de la orden',
+        'empresa.nombre_comercial' => 'Empresa'
     ];
 
     function getNombreCompletoAttribute() {
@@ -66,12 +75,12 @@ class Ordenes extends ModelCompany
 
     public function sucursales()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','id_sucursal','fk_id_sucursal');
+        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
     }
 
     public function estatus()
     {
-        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_solicitud');
+        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_orden');
     }
 
     public function detalleOrdenes()
@@ -81,7 +90,7 @@ class Ordenes extends ModelCompany
 
     public function empresa()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Empresas','id_empresa','fk_id_empresa');
+        return $this->belongsTo('App\Http\Models\Administracion\Empresas','fk_id_empresa','id_empresa');
     }
 
     public function tipoEntrega()

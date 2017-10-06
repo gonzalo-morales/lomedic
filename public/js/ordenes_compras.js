@@ -6,7 +6,7 @@ $('.datepicker').pickadate({
     min: true,
     format: 'yyyy/mm/dd'
 });
-jQuery(document).ready(function(){
+$(document).ready(function(){
     //Inicializar tabla
     window.dataTable = new DataTable('#productos', {
         fixedHeight: true,
@@ -17,12 +17,15 @@ jQuery(document).ready(function(){
     if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1)
     {
         initSelects();
-        //validateDetail();
+        if(window.location.href.toString().indexOf('crear') > -1){
+            validateDetail();
+        }
         //Por si se selecciona una empresa diferente
-        $('#otra_empresa').on('click',function () {
+        $('#otra_empresa').on('change',function () {
             $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
             if( !this.checked ){
-                $( this ).parent().nextAll( "select" ).val(0).trigger('change');
+                if(window.location.href.toString().indexOf('crear') > -1)
+                    $( this ).parent().nextAll( "select" ).val(0).trigger('change');
             }
         });
         //Por si se selecciona un UPC
@@ -67,6 +70,12 @@ jQuery(document).ready(function(){
             fecha.setDate(fecha.getDate()+$('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
             $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate());
         });
+        $(document).on('submit',function (e) {
+            if(a.length>0) {
+                let url = $('#productos').data('delete');
+                $.delete(url, {ids: a});
+            }
+        })
     }else{
         totalOrden();
     }
@@ -102,23 +111,32 @@ function initSelects() {
             }
         }
     });
-    select2Placeholder('fk_id_socio_negocio','Selecciona un proveedor',50,true,true,0,false);
+    if(window.location.href.toString().indexOf('editar') > -1){
+        $('#fk_id_condicion_pago').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
+        $('#fk_id_tipo_entrega').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
+        $('#fk_id_sucursal_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
+        $('#fk_id_empresa_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
+        totalOrden();
+    }else{
+        select2Placeholder('fk_id_socio_negocio','Selecciona un proveedor',50,true,true,0,false);
+        select2Placeholder('fk_id_empresa','Selecciona una empresa',null,true,true,0,false);
+        select2Placeholder('fk_id_sucursal_','Selecciona una sucursal',30,true,true);
+        select2Placeholder('fk_id_condicion_pago','Selecciona una condición de pago','Infinity',true,true);
+        select2Placeholder('fk_id_tipo_entrega','Selecciona una forma de entrega','Infinity',true,true);
+    }
     $.ajax({
         url: $('#fk_id_socio_negocio').data('url'),
         dataType:'json',
         success:function (data) {
             $('#fk_id_socio_negocio').select2({
+                theme:'bootstrap',
                 minimumResultsForSearch:'Infinity',
                 data:data,
             });
         }
     });
 
-    select2Placeholder('fk_id_empresa','Selecciona una empresa',null,true,true,0,false);
     select2Placeholder('fk_id_upc','UPC no seleccionado',null,true,true,0,false);
-    select2Placeholder('fk_id_sucursal_','Selecciona una sucursal',30,true,true);
-    select2Placeholder('fk_id_condicion_pago','Selecciona una condición de pago','Infinity',true,true);
-    select2Placeholder('fk_id_tipo_entrega','Selecciona una forma de entrega','Infinity',true,true);
     select2Placeholder('fk_id_cliente','Sin cliente',10,true,false);
     select2Placeholder('fk_id_proyecto','Sin proyecto',10,true,false);
     $('#fk_id_upc').select2();
@@ -263,4 +281,13 @@ function validateDetail() {
             precio: 'El precio no debe tener más de dos decimales'
         }
     });
+}
+
+function borrarFila_edit(el) {
+    a.push(el.id);
+    dataTable.rows().remove([$(el).parents('tr').dataIndex]);
+    if(dataTable.activeRows.length<1)
+        validateDetail();
+
+    totalOrden();
 }

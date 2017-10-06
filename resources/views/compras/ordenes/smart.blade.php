@@ -4,7 +4,9 @@
 @section('header-bottom')
 	@parent
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/ordenes_compras.js') }}"></script>
+	@if (!Route::currentRouteNamed(currentRouteName('index')))
+		<script type="text/javascript" src="{{ asset('js/ordenes_compras.js') }}"></script>
+	@endif
 @endsection
 
 @section('content-width', 's12')
@@ -33,9 +35,9 @@
 		{{ Form::label('fk_id_empresa', 'Otra empresa realiza la compra') }}
 		<div class="input-group">
 			<span class="input-group-addon">
-				<input type="checkbox" id="otra_empresa">
+				<input type="checkbox" id="otra_empresa" {{isset($data->fk_id_empresa)?'checked':''}}>
 			</span>
-			{!! Form::select('fk_id_empresa',isset($companies)?$companies:[],null,['id'=>'fk_id_empresa','class'=>'form-control','style'=>'width:100%','disabled']) !!}
+			{!! Form::select('fk_id_empresa',isset($companies)?$companies:[],null,['id'=>'fk_id_empresa_','class'=>'form-control','style'=>'width:100%',!isset($data->fk_id_empresa)?'disabled':'']) !!}
 		</div>
 		{{ $errors->has('fk_id_empresa') ? HTML::tag('span', $errors->first('fk_id_empresa'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
@@ -129,7 +131,9 @@
 			@endif
 			<div class="card-body">
 				<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\ordenesController@store')}}"
-					   data-delete="{{companyAction('Compras\DetalleordenesController@destroyMultiple')}}"
+					   @if(isset($data->id_orden))
+					   data-delete="{{companyAction('Compras\OrdenesController@destroyDetail')}}"
+					   @endif
 					   data-impuestos="{{companyAction('Administracion\ImpuestosController@obtenerImpuestos')}}"
 					   data-porcentaje="{{companyAction('Administracion\ImpuestosController@obtenerPorcentaje',['id'=>'?id'])}}">
 					<thead>
@@ -196,11 +200,11 @@
 								<td>
 									{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
 									@if(Route::currentRouteNamed(currentRouteName('edit')) && $data->fk_id_estatus_orden == 1)
-										<a href="#" class="btn-flat teal lighten-5 halfway-fab waves-effect waves-light"
+										<button class="btn is-icon text-primary bg-white "
 										   type="button" data-item-id="{{$detalle->id_orden_detalle}}"
 										   id="{{$detalle->id_orden_detalle}}" data-delay="50"
 										   onclick="borrarFila_edit(this)" data-delete-type="single">
-											<i class="material-icons">delete</i></a>
+											<i class="material-icons">delete</i></button>
 									@endif
 								</td>
 							</tr>
@@ -220,6 +224,128 @@
 
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
+	@section('smart-js')
+		<script type="text/javascript">
+            if ( sessionStorage.reloadAfterPageLoad ) {
+                sessionStorage.clear();
+                $.toaster({
+                    priority: 'success', title: 'Exito', message: 'Solicitud cancelada',
+                    settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
+                });
+            }
+		</script>
+		@parent
+		<script type="text/javascript">
+			rivets.binders['hide-delete'] = {
+				bind: function (el) {
+					if(el.dataset.fk_id_estatus_orden != 1)
+					{
+						$(el).hide();
+					}
+				}
+			};
+			rivets.binders['hide-update'] = {
+				bind: function (el) {
+					if(el.dataset.fk_id_estatus_orden != 1)
+					{
+						$(el).hide();
+					}
+				}
+			};
+			@can('update', currentEntity())
+				window['smart-model'].collections.itemsOptions.edit = {a: {
+				'html': '<i class="material-icons">mode_edit</i>',
+				'class': 'btn is-icon',
+				'rv-get-edit-url': '',
+				'rv-hide-update':''
+			}};
+			@endcan
+			@can('delete', currentEntity())
+				window['smart-model'].collections.itemsOptions.delete = {a: {
+				'html': '<i class="material-icons">not_interested</i>',
+				'href' : '#',
+				'class': 'btn is-icon',
+				'rv-on-click': 'actions.showModalCancelar',
+				'rv-get-delete-url': '',
+				'data-delete-type': 'single',
+				'rv-hide-delete':''
+			}};
+			@endcan
+				window['smart-model'].actions.itemsCancel = function(e, rv, motivo){
+				if(!motivo.motivo_cancelacion){
+					$.toaster({
+						priority : 'danger',
+						title : '¡Error!',
+						message : 'Por favor escribe un motivo por el que se está cancelando esta orden de compra',
+						settings:{
+							'timeout':10000,
+							'toaster':{
+								'css':{
+									'top':'5em'
+								}
+							}
+						}
+					});
+				}else{
+					let data = {motivo};
+					$.delete(this.dataset.deleteUrl,data,function (response) {
+						if(response.success){
+							sessionStorage.reloadAfterPageLoad = true;
+							location.reload();
+						}
+					})
+				}
+			};
+			window['smart-model'].actions.showModalCancelar = function(e, rv) {
+				e.preventDefault();
+
+				let modal = window['smart-modal'];
+				modal.view = rivets.bind(modal, {
+					title: '¿Estas seguro que deseas cancelar la orden?',
+					content: '<form  id="cancel-form">' +
+					'<div class="form-group">' +
+					'<label for="recipient-name" class="form-control-label">Motivo de cancelación:</label>' +
+					'<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +
+					'</div>' +
+					'</form>',
+					buttons: [
+						{button: {
+							'text': 'Cerrar',
+							'class': 'btn btn-secondary',
+							'data-dismiss': 'modal',
+						}},
+						{button: {
+							'html': 'Cancelar',
+							'class': 'btn btn-danger',
+							'rv-on-click': 'action',
+						}}
+					],
+					action: function(e,rv) {
+						var formData = new FormData(document.querySelector('#cancel-form')), convertedJSON = {}, it = formData.entries(), n;
+
+						while(n = it.next()) {
+							if(!n || n.done) break;
+							convertedJSON[n.value[0]] = n.value[1];
+						}
+						console.log(convertedJSON);
+						window['smart-model'].actions.itemsCancel.call(this, e, rv,convertedJSON);
+					}.bind(this),
+					// Opcionales
+					onModalShow: function() {
+
+						let btn = modal.querySelector('[rv-on-click="action"]');
+
+						// Copiamos data a boton de modal
+						for (var i in this.dataset) btn.dataset[i] = this.dataset[i];
+
+					}.bind(this),
+					// onModalHide: function() {}
+				});
+				// Abrimos modal
+				$(modal).modal('show');
+			};
+		</script>
+	@endsection
 	@include('layouts.smart.index')
 @endif
 
