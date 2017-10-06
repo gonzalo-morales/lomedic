@@ -53,7 +53,7 @@ class Almacenes extends ModelBase
     public $rules = [
         'codigo' => 'required',
         'nombre' => 'required',
-        'fk_id_sucursal' => 'required',
+        // 'fk_id_sucursal' => 'required',
     ];
 
     public function getFields()
