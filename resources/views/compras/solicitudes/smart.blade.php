@@ -54,7 +54,7 @@
 				{!! Form::hidden('sucursal_defecto',$data->fk_id_sucursal,['id'=>'sucursal_defecto']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('show')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
-				{!! Form::text('sucursal',$data->sucursales->where('id_sucursal',$data->fk_id_sucursal)->first()->nombre_sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
+				{!! Form::text('sucursal',$data->sucursales->sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('create')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
 				{!! Form::select('fk_id_sucursal', isset($sucursalesempleado)?$sucursalesempleado:[],null, ['id'=>'fk_id_sucursal_','class'=>'form-control','style'=>'width:100%']) !!}
@@ -90,6 +90,7 @@
 		<div class="col-sm-12">
 			<h3>Detalle de la solicitud</h3>
 			<div class="card">
+				@if(!Route::currentRouteNamed(currentRouteName('show')))
 				<div class="card-header">
 					<fieldset name="detalle-form" id="detalle-form">
 						<div class="row">
@@ -151,6 +152,7 @@
 						</div>
 					</fieldset>
 				</div>
+				@endif
 			    <div class="card-body">
 					<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}"
 					data-delete="{{companyAction('Compras\DetalleSolicitudesController@destroyMultiple')}}"

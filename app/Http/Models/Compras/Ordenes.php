@@ -25,21 +25,20 @@ class Ordenes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_solicitante','fk_id_sucursal','fk_id_departamento','fecha_creacion','fecha_necesidad',
-        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_solicitud','fk_id_socio_negocio','fk_id_condicion_pago',
-        'importe','fk_id_tipo_entrega'];
+    protected $fillable = ['fk_id_socio_negocio','fk_id_sucursal','fk_id_condicion_pago','fecha_creacion','fecha_estimada_entrega',
+        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_orden','fk_id_tipo_entrega','fk_id_empresa',
+        'tiempo_entrega'];
+
+    public $niceNames =[
+        'fk_id_socio_negocio'=>'proveedor'
+    ];
 
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
     protected $fields = [
-        'id_solicitud' => 'Número Solicitud',
-        'nombre_completo'  => 'Solicitante',
-        'nombre_sucursal' => 'Sucursal',
-        'fecha_creacion' => 'Fecha de solicitud',
-        'fecha_necesidad' => 'Fecha necesidad',
-        'estatus_solicitud' => 'Estatus'
+        'id_orden' => 'Número Solicitud',
     ];
 
     function getNombreCompletoAttribute() {
@@ -75,13 +74,9 @@ class Ordenes extends ModelCompany
         return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_solicitud');
     }
 
-    public function detalleSolicitudes()
+    public function detalleOrdenes()
     {
-        return $this->hasMany('App\Http\Models\Compras\DetalleSolicitudes','fk_id_solicitud', 'id_solicitud');
-    }
-
-    public function getSolicitanteFormatedAttribute() {
-        return $this->empleado->nombre." ".$this->empleado->apellido_paterno." ".$this->empleado->apellido_materno;
+        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_orden', 'id_orden');
     }
 
     public function empresa()
@@ -96,7 +91,6 @@ class Ordenes extends ModelCompany
 
     public function proveedor()
     {
-        return $this->hasOne('App\Http\Models\SociosNegocio\TiposEntrega','id_socio_negocio','fk_id_proveedor');
+        return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
     }
-
 }

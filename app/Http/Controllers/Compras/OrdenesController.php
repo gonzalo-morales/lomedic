@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Compras;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\Unidadesmedidas;
@@ -10,14 +11,14 @@ use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Administracion\Impuestos;
 use App\Http\Models\Finanzas\CondicionesPago;
-use App\Http\Models\Inventarios\Skus;
 use App\Http\Models\Proyectos\Proyectos;
-use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\SociosNegocio\TiposEntrega;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+
 
 class OrdenesController extends ControllerBase
 {
@@ -37,12 +38,8 @@ class OrdenesController extends ControllerBase
 	    $clientes = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
 	        $q->where('fk_id_tipo_socio', 1);
         })->get()->pluck('nombre_corto','id_socio_negocio');
-        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
-            $q->where('fk_id_tipo_socio', 1);
-        })->get()->pluck('nombre_corto','id_socio_negocio');
 
         $attributes = $attributes+['dataview'=>[
-                'proveedores' => $proveedores,
                 'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->get()->pluck('nombre_comercial','id_empresa'),
                 'sucursales' => Sucursales::where('activo',1)->get()->pluck('sucursal','id_sucursal'),
                 'clientes' => $clientes,
@@ -55,29 +52,37 @@ class OrdenesController extends ControllerBase
 
 	public function store(Request $request, $company)
 	{
-
         # ¿Usuario tiene permiso para crear?
-//		$this->authorize('create', $this->entity);
+		$this->authorize('create', $this->entity);
 
 
 		# Validamos request, si falla regresamos pagina
 		$this->validate($request, $this->entity->rules);
 
 		$request->request->set('fecha_creacion',DB::raw('now()'));
-		if($request->fk_id_estatus_solicitud === 3)//Si es cancelado
-		{$request->request->set('fecha_cancelacion',DB::raw('now'));}
 
-//		$request->request
-//			->set('fk_id_departamento',Empleados::where('id_empleado',$request->fk_id_solicitante)
-//				->first()
-//				->fk_id_departamento);
-		$request->request->set('fk_id_estatus_solicitud',1);
-        dd($request->request);
+		$request->request->set('fk_id_estatus_orden',1);
+		if(empty($request->fk_id_empresa)){
+		    $request->request->set('fk_id_empresa',Empresas::where('conexion','LIKE',$company)->first()->id_empresa);
+        }
+
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 			if(isset($request->_detalles)) {
 				foreach ($request->_detalles as $detalle) {
-					$isSuccess->detalleSolicitudes()->save(new DetalleSolicitudes($detalle));
+                    if(empty($detalle['fk_id_upc'])){
+                        $detalle['fk_id_upc'] = null;
+                    }
+                    if(empty($detalle['fk_id_cliente'])){
+                        $detalle['fk_id_cliente'] = null;
+                    }
+                    if(empty($detalle['fk_id_proyecto'])){
+                        $detalle['fk_id_proyecto'] = null;
+                    }
+                    if(empty($detalle['fecha_necesario'])){
+                        $detalle['fecha_necesario'] = null;
+                    }
+					$isSuccess->detalleOrdenes()->save(new DetalleOrdenes($detalle));
 				}
 				$this->log('store', $isSuccess->id_solicitud);
 			}
@@ -90,48 +95,33 @@ class OrdenesController extends ControllerBase
 
 	public function show($company,$id,$attributes = [])
 	{
+        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
+            $q->where('fk_id_tipo_socio', 2);
+        })->get()->pluck('nombre_corto','id_socio_negocio');
 		$attributes = $attributes+['dataview'=>[
-			'sucursalesempleado' => $this->entity
-				->where('id_solicitud',$id)->first()
-				->empleado()->first()
-				->sucursales()->get()
-				->pluck('nombre_sucursal','id_sucursal'),
-			'detalles' => $this->entity
-				->where('id_solicitud',$id)
-				->first()
-				->detalleSolicitudes()->where('cerrado','0')->get(),
-			'impuestos'=> Impuestos::select('id_impuesto','impuesto')
-				->where('activo',1)
-				->get()
-				->pluck('impuesto','id_impuesto'),
+                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->get()->pluck('nombre_comercial','id_empresa'),
+                'sucursales' => Sucursales::where('activo',1)->get()->pluck('sucursal','id_sucursal'),
+                'proveedores' => $proveedores,
+                'proyectos' => Proyectos::where('activo',1)->get()->pluck('proyecto','id_proyecto'),
+                'tiposEntrega' => TiposEntrega::where('activo',1)->get()->pluck('tipo_entrega','id_tipo_entrega'),
+                'condicionesPago' => CondicionesPago::where('activo',1)->get()->pluck('condicion_pago','id_condicion_pago'),
 			]];
 		return parent::show($company,$id,$attributes);
 	}
 
 	public function edit($company,$id,$attributes = [])
 	{
+        $clientes = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
+            $q->where('fk_id_tipo_socio', 1);
+        })->get()->pluck('nombre_corto','id_socio_negocio');
+
 		$attributes = $attributes+['dataview'=>[
-			'sucursalesempleado' => $this->entity
-				->where('id_solicitud',$id)->first()
-				->empleado()->first()
-				->sucursales()->get()
-				->pluck('nombre_sucursal','id_sucursal'),
-			'detalles' => $this->entity
-				->where('id_solicitud',$id)
-				->first()
-				->detalleSolicitudes()->where('cerrado','f')->get(),
-			'impuestos'=> Impuestos::select('id_impuesto','impuesto')
-				->where('activo',1)
-				->get()
-				->pluck('impuesto','id_impuesto'),
-			'proyectos'=> Proyectos::select('proyecto', 'id_proyecto')
-				->where('activo',1)
-				->get()
-				->pluck('proyecto','id_proyecto'),
-			'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')
-				->where('activo',1)
-				->get()
-				->pluck('nombre','id_unidad_medida')
+                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->get()->pluck('nombre_comercial','id_empresa'),
+                'sucursales' => Sucursales::where('activo',1)->get()->pluck('sucursal','id_sucursal'),
+                'clientes' => $clientes,
+                'proyectos' => Proyectos::where('activo',1)->get()->pluck('proyecto','id_proyecto'),
+                'tiposEntrega' => TiposEntrega::where('activo',1)->get()->pluck('tipo_entrega','id_tipo_entrega'),
+                'condicionesPago' => CondicionesPago::where('activo',1)->get()->pluck('condicion_pago','id_condicion_pago'),
 			]];
 		return parent::edit($company, $id, $attributes);
 	}
@@ -259,4 +249,11 @@ class OrdenesController extends ControllerBase
 		return $pdf->stream('solicitud')->header('Content-Type',"application/pdf");
 //        return view(currentRouteName('imprimir'));
 	}
+
+	public function getProveedores($company){
+	    $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
+            $q->where('fk_id_tipo_socio', 1);
+        })->select('id_socio_negocio as id','nombre_corto as text','tiempo_entrega')->get();
+	    return Response::json($proveedores);
+    }
 }
