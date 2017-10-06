@@ -304,6 +304,31 @@
             return;
         })
 
+        rgbColor = [23,162,184]
+        mGreen = $('#metro').find('a.green');
+        //Degradado azul
+        mGreen.each(function(i,elem){
+            $(elem).css({
+                'background-color': 'rgb('+rgbColor[0]+','+rgbColor[1]+','+rgbColor[2]+')'
+            })
+            rgbColor[1] -= 14;
+            rgbColor[2] -= 21;
+            return;
+        })
+
+        rgbColor = [255,193,7]
+        mYellow = $('#metro').find('a.yellow');
+        //Degradado azul
+        mYellow.each(function(i,elem){
+            $(elem).css({
+                'background-color': 'rgb('+rgbColor[0]+','+rgbColor[1]+','+rgbColor[2]+')'
+            })
+            rgbColor[0] -= 17;
+            rgbColor[1] -= 18;
+            rgbColor[2] -= 1;
+            return;
+        })
+
     });
     </script>
 @endif

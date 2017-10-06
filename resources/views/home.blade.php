@@ -37,30 +37,30 @@
 				</a>
 			</div>
 			<div class="row justify-content-end mx-2 mt-1">
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="PROYECTOS">
+				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="PROYECTOS">
 					<i class="material-icons align-self-center">grade</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="GESTIÓN DE BANCOS">
+				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="GESTIÓN DE BANCOS">
 					<i class="material-icons align-self-center">monetization_on</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="SERVICIOS">
+				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="SERVICIOS">
 					<i class="material-icons align-self-center">perm_phone_msg</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="INFORMES">
+				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="INFORMES">
 					<i class="material-icons align-self-center">equalizer</i>
 				</a>
 			</div>
 			<div class="row justify-content-end mx-2 mt-1">
-				<a class="col-6 m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="PROYECTOS">
+				<a class="col-6 m-2 d-inline-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="PROYECTOS">
 					<i class="material-icons align-self-center">grade</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="GESTIÓN DE BANCOS">
+				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="GESTIÓN DE BANCOS">
 					<i class="material-icons align-self-center">monetization_on</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="SERVICIOS">
+				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="SERVICIOS">
 					<i class="material-icons align-self-center">perm_phone_msg</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="INFORMES">
+				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="INFORMES">
 					<i class="material-icons align-self-center">equalizer</i>
 				</a>
 			</div>
