@@ -268,7 +268,6 @@ class SolicitudesController extends ControllerBase
 
     public function impress($company,$id)
     {
-
         $solicitud = Solicitudes::where('id_solicitud',$id)->first();
         $detalles = DetalleSolicitudes::where('fk_id_solicitud',$id)
             ->where('cerrado','f')->get();

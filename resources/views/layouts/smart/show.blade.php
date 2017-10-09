@@ -18,6 +18,7 @@
             @can('create', currentEntity())
             {{ link_to(companyRoute('create'), 'Nuevo', ['class'=>'btn btn-primary']) }}
             @endcan
+            @yield('extraButtons')
         </div>
     </div>
 @endsection

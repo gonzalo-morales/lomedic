@@ -30,4 +30,9 @@ class SkusController extends ControllerBase
         }
         return Response::json($skus_set);
     }
+
+    public function obtenerUpcs($company,$id){
+
+        return $this->entity->find($id)->upcs()->select('id_upc as id','nombre_comercial as text')->get();
+    }
 }

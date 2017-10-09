@@ -17,20 +17,19 @@
 	@endif
 @endsection
 
-@section('form-actions')
-	<div class="text-right col-md-12 mb-3">
-		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
-		@if (Route::currentRouteNamed(currentRouteName('show')))
-			{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
-			@can('update', currentEntity())
-				@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))
-					{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info'])) !!}
-				@endif
-			@endcan
-		@endif
-		{!! HTML::decode(link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default '])) !!}
-	</div>
-@endsection
+{{--@section('form-actions')--}}
+	{{--<div class="text-right col-md-12 mb-3">--}}
+		{{--{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}--}}
+		{{--@if (Route::currentRouteNamed(currentRouteName('show')))--}}
+			{{--@can('update', currentEntity())--}}
+				{{--@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))--}}
+					{{--{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info'])) !!}--}}
+				{{--@endif--}}
+			{{--@endcan--}}
+		{{--@endif--}}
+		{{--{!! HTML::decode(link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default '])) !!}--}}
+	{{--</div>--}}
+{{--@endsection--}}
 
 @section('content-width','mt-3')
 
@@ -100,7 +99,7 @@
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_upc','Código de barras')}}
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
-								'data-url'=>companyAction('Inventarios\UpcsController@obtenerUpcs',['id'=>'?id']),
+								'data-url'=>companyAction('Inventarios\SkusController@obtenerUpcs',['id'=>'?id']),
 								'class'=>'form-control','style'=>'width:100%']) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
@@ -405,5 +404,9 @@
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
+	@section('extraButtons')
+		@parent
+		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
+	@endsection
 	@include('layouts.smart.show')
 @endif

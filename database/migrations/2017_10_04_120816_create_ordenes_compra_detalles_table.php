@@ -33,6 +33,12 @@ class CreateOrdenesCompraDetallesTable extends Migration
                     ->on('pry_cat_proyectos');
             $table->decimal('precio_unitario',20,10);
             $table->smallInteger('cantidad');
+            $table->date('fecha_necesario')->nullable();
+            $table->decimal('total','20','10');
+            $table->integer('fk_id_impuesto')->default('1');
+                $table->foreign('fk_id_impuesto')->references('id_impuesto')->onUpdate('restrict')->onDelete('restrict')
+                    ->on('maestro.gen_cat_impuestos');
+            $table->boolean('cerrado')->default('f');
             });
         Schema::connection('lomedic')
             ->create('com_det_ordenes', function (Blueprint $table) {
@@ -54,6 +60,12 @@ class CreateOrdenesCompraDetallesTable extends Migration
                     ->on('pry_cat_proyectos');
                 $table->decimal('precio_unitario',20,10);
                 $table->smallInteger('cantidad');
+                $table->date('fecha_necesario')->nullable();
+                $table->decimal('total','20','10');
+                $table->integer('fk_id_impuesto')->default('1');
+                $table->foreign('fk_id_impuesto')->references('id_impuesto')->onUpdate('restrict')->onDelete('restrict')
+                    ->on('maestro.gen_cat_impuestos');
+                $table->boolean('cerrado')->default('f');
             });
     }
 

@@ -23,6 +23,7 @@ Route::prefix('{company}')->group(function () {
         Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
         Route::get('ordenes/getProveedores', 'Compras\OrdenesController@getProveedores')->name('ordenes');
         Route::post('ordenes/destroyDetail', 'Compras\OrdenesController@destroyDetail')->name('ordenes');
+        Route::get('ordenes/{id}/impress', 'Compras\OrdenesController@impress')->name('ordenes');
         Route::resource('ordenes','Compras\OrdenesController');
     });
 });

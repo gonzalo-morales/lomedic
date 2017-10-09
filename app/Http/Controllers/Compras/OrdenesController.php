@@ -6,10 +6,10 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Sucursales;
-use App\Http\Models\Administracion\Unidadesmedidas;
-use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Ordenes;
-use App\Http\Models\Administracion\Impuestos;
+use App\Http\Models\Compras\Solicitudes;
+use Milon\Barcode\DNS2D;
+use Milon\Barcode\DNS1D;
 use App\Http\Models\Finanzas\CondicionesPago;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
@@ -37,15 +37,15 @@ class OrdenesController extends ControllerBase
 	{
 	    $clientes = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
 	        $q->where('fk_id_tipo_socio', 1);
-        })->get()->pluck('nombre_corto','id_socio_negocio');
+        })->pluck('nombre_corto','id_socio_negocio');
 
         $attributes = $attributes+['dataview'=>[
-                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->get()->pluck('nombre_comercial','id_empresa'),
-                'sucursales' => Sucursales::where('activo',1)->get()->pluck('sucursal','id_sucursal'),
+                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'clientes' => $clientes,
-                'proyectos' => Proyectos::where('activo',1)->get()->pluck('proyecto','id_proyecto'),
-                'tiposEntrega' => TiposEntrega::where('activo',1)->get()->pluck('tipo_entrega','id_tipo_entrega'),
-                'condicionesPago' => CondicionesPago::where('activo',1)->get()->pluck('condicion_pago','id_condicion_pago'),
+                'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+                'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
+                'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
             ]];
 		 return parent::create($company,$attributes);
 	}
@@ -64,6 +64,10 @@ class OrdenesController extends ControllerBase
 		$request->request->set('fk_id_estatus_orden',1);
 		if(empty($request->fk_id_empresa)){
 		    $request->request->set('fk_id_empresa',Empresas::where('conexion','LIKE',$company)->first()->id_empresa);
+        }
+
+        if(!empty($request->importacion)){
+		    $request->request->set('importacion','t');
         }
 
         $isSuccess = $this->entity->create($request->all());
@@ -97,14 +101,14 @@ class OrdenesController extends ControllerBase
 	{
         $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
             $q->where('fk_id_tipo_socio', 2);
-        })->get()->pluck('nombre_corto','id_socio_negocio');
+        })->pluck('nombre_corto','id_socio_negocio');
 		$attributes = $attributes+['dataview'=>[
-                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->get()->pluck('nombre_comercial','id_empresa'),
-                'sucursales' => Sucursales::where('activo',1)->get()->pluck('sucursal','id_sucursal'),
+                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'proveedores' => $proveedores,
-                'proyectos' => Proyectos::where('activo',1)->get()->pluck('proyecto','id_proyecto'),
-                'tiposEntrega' => TiposEntrega::where('activo',1)->get()->pluck('tipo_entrega','id_tipo_entrega'),
-                'condicionesPago' => CondicionesPago::where('activo',1)->get()->pluck('condicion_pago','id_condicion_pago'),
+                'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+                'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
+                'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 			]];
 		return parent::show($company,$id,$attributes);
 	}
@@ -113,15 +117,15 @@ class OrdenesController extends ControllerBase
 	{
         $clientes = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
             $q->where('fk_id_tipo_socio', 1);
-        })->get()->pluck('nombre_corto','id_socio_negocio');
+        })->pluck('nombre_corto','id_socio_negocio');
 
 		$attributes = $attributes+['dataview'=>[
-                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->get()->pluck('nombre_comercial','id_empresa'),
-                'sucursales' => Sucursales::where('activo',1)->get()->pluck('sucursal','id_sucursal'),
+                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'clientes' => $clientes,
-                'proyectos' => Proyectos::where('activo',1)->get()->pluck('proyecto','id_proyecto'),
-                'tiposEntrega' => TiposEntrega::where('activo',1)->get()->pluck('tipo_entrega','id_tipo_entrega'),
-                'condicionesPago' => CondicionesPago::where('activo',1)->get()->pluck('condicion_pago','id_condicion_pago'),
+                'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+                'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
+                'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 			]];
 		return parent::edit($company, $id, $attributes);
 	}
@@ -252,21 +256,49 @@ class OrdenesController extends ControllerBase
         }
 	}
 
-	public function print_solicitud($company,$id)
-	{
-//        $numero = 123456.50;
+    public function impress($company,$id)
+    {
+        $orden = Ordenes::find($id);
+//        dd($orden->detalleOrdenes()->where('cerrado','f')->get());
 
-//        dd(\NumeroALetras::convertir(number_format($numero,2,',',''),'pesos'));
-//        dd(PDF::loadView(currentRouteName('imprimir')));
-		$pdf = PDF::loadView(currentRouteName('imprimir'));
-		$pdf->setPaper('letter','landscape');
+        $subtotal = 0;
+        $iva = 0;
+        $total = 0;
+        foreach ($orden->detalleOrdenes()->where('cerrado','f')->get() as $detalle)
+        {
+            $subtotal += $detalle->precio_unitario * $detalle->cantidad;
+            $iva += (($detalle->precio_unitario*$detalle->cantidad)*$detalle->impuesto->porcentaje)/100;
+            $total += $detalle->total;
+        }
+        $total = number_format($total,2,'.',',');
 
+        $barcode = DNS1D::getBarcodePNG($orden->id_orden,'EAN8');
+        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$orden->id_orden])), "QRCODE");
 
-		return $pdf->stream('solicitud')->header('Content-Type',"application/pdf");
+        $pdf = PDF::loadView(currentRouteName('imprimir'),[
+            'orden' => $orden,
+//            'detalles' => $detalles,
+            'subtotal' => $subtotal,
+            'iva' => $iva,
+            'total' => $total,
+            'total_letra' => num2letras($total),
+            'barcode' => $barcode,
+            'qr' => $qr
+        ]);
+
+        $pdf->setPaper('letter','landscape');
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(38,580,"Página {PAGE_NUM} de {PAGE_COUNT}",null,8,array(0,0,0));
+        $canvas->text(665,580,'PSAI-PN06-F01 Rev. 01',null,8);
+//        $canvas->image('data:image/png;charset=binary;base64,'.$barcode,355,580,100,16);
+
+        return $pdf->stream('orden')->header('Content-Type',"application/pdf");
 //        return view(currentRouteName('imprimir'));
-	}
+    }
 
-	public function getProveedores($company){
+    public function getProveedores($company){
 	    $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
             $q->where('fk_id_tipo_socio', 1);
         })->select('id_socio_negocio as id','nombre_corto as text','tiempo_entrega')->get();

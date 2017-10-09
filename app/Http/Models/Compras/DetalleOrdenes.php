@@ -26,7 +26,7 @@ class DetalleOrdenes extends ModelCompany
      * @var array
      */
     protected $fillable = ['fk_id_orden','fk_id_sku','fk_id_upc','fk_id_cliente','cantidad',
-        'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario'];
+        'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario','fk_id_solicitud'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -66,11 +66,6 @@ class DetalleOrdenes extends ModelCompany
         return $this->hasOne('App\Http\Models\Inventarios\Upcs','id_upc','fk_id_upc');
     }
 
-    public function unidad_medida()
-    {
-        return $this->hasOne('App\Http\Models\Administracion\Unidadesmedidas','id_unidad_medida','fk_id_unidad_medida');
-    }
-
     public function impuesto()
     {
         return $this->hasOne('App\Http\Models\Administracion\Impuestos','id_impuesto','fk_id_impuesto');
@@ -89,5 +84,10 @@ class DetalleOrdenes extends ModelCompany
     public function cliente()
     {
         return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_cliente');
+    }
+
+    public function solicitud()
+    {
+        return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_solicitud','fk_id_solicitud');
     }
 }

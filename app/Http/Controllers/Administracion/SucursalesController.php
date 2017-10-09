@@ -10,6 +10,7 @@ use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\TipoSucursal;
 use App\Http\Models\Administracion\Zonas;
+use App\Http\Models\RecursosHumanos\Empleados;
 
 class SucursalesController extends ControllerBase
 {
@@ -64,6 +65,6 @@ class SucursalesController extends ControllerBase
 
 	public function sucursalesEmpleado($company,$id)
 	{
-		return Empleados::where('id_empleado',$id)->first()->sucursales()->select('id_sucursal as id','nombre_sucursal as text')->get()->pluck('text','id')->toJson();
+		return Empleados::where('id_empleado',$id)->first()->sucursales()->select('id_sucursal as id','sucursal as text')->get()->pluck('text','id')->toJson();
 	}
 }

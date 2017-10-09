@@ -63,6 +63,9 @@
 		{!! Form::select('fk_id_tipo_entrega',isset($tiposEntrega)?$tiposEntrega:[],null,['id'=>'fk_id_tipo_entrega','class'=>'form-control select2','style'=>'width:100%']) !!}
 		{{ $errors->has('fk_id_tipo_entrega') ? HTML::tag('span', $errors->first('fk_id_tipo_entrega'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
+	<div class="form-group col-md-3 col-sm-6">
+		{{Form::cCheckboxYesOrNo('¿Importación?','importacion')}}
+	</div>
 </div>
 <div class="row">
 	<div class="col-sm-12">
@@ -83,7 +86,7 @@
 									<input type="checkbox" id="activo_upc">
 								</span>
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
-								'data-url'=>companyAction('Inventarios\UpcsController@obtenerUpcs',['id'=>'?id']),
+								'data-url'=>companyAction('Inventarios\SkusController@obtenerUpcs',['id'=>'?id']),
 								'class'=>'form-control','style'=>'width:100%']) !!}
 							</div>
 						</div>
@@ -113,7 +116,6 @@
 						</div>
 						<div class="form-group input-field col-md-2 col-sm-6">
 							{{Form::label('precio_unitario','Precio unitario',['class'=>'validate'])}}
-
 							{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio_unitario','autocomplete'=>'off']) !!}
 						</div>
 						<div class="col-sm-12 text-center">
@@ -229,7 +231,7 @@
             if ( sessionStorage.reloadAfterPageLoad ) {
                 sessionStorage.clear();
                 $.toaster({
-                    priority: 'success', title: 'Exito', message: 'Solicitud cancelada',
+                    priority: 'success', title: 'Exito', message: 'Orden cancelada',
                     settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
                 });
             }
@@ -358,5 +360,9 @@
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
+	@section('extraButtons')
+		@parent
+		{!!isset($data->id_orden) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_orden]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) : ''!!}
+	@endsection
 	@include('layouts.smart.show')
 @endif

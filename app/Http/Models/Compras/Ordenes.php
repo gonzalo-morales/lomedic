@@ -27,7 +27,7 @@ class Ordenes extends ModelCompany
      */
     protected $fillable = ['fk_id_socio_negocio','fk_id_sucursal','fk_id_condicion_pago','fecha_creacion','fecha_estimada_entrega',
         'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_orden','fk_id_tipo_entrega','fk_id_empresa',
-        'tiempo_entrega'];
+        'tiempo_entrega','importacion'];
 
     public $niceNames =[
         'fk_id_socio_negocio'=>'proveedor'
@@ -102,4 +102,5 @@ class Ordenes extends ModelCompany
     {
         return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
     }
+
 }

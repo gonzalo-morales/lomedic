@@ -56,6 +56,6 @@ class Upcs extends ModelCompany
 
     public function sku()
     {
-        return $this->belongsTo('App\Http\Models\Inventarios\Skus','id_sku','fk_id_sku');
+        return $this->belongsToMany('App\Http\Models\Inventarios\Skus','maestro.inv_det_sku_upc','fk_id_sku','fk_id_sku');
     }
 }

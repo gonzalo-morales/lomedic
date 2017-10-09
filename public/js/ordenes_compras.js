@@ -72,8 +72,10 @@ $(document).ready(function(){
         });
         $(document).on('submit',function (e) {
             if(a.length>0) {
+                e.preventDefault();
                 let url = $('#productos').data('delete');
                 $.delete(url, {ids: a});
+                a = [];
             }
         })
     }else{
@@ -111,15 +113,21 @@ function initSelects() {
             }
         }
     });
+
+    $('#fk_id_solicitud').select2({
+        minimumResultsForSearch:50,
+        theme:'bootstrap'
+    });
+
     if(window.location.href.toString().indexOf('editar') > -1){
         $('#fk_id_condicion_pago').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
         $('#fk_id_tipo_entrega').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
         $('#fk_id_sucursal_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        $('#fk_id_empresa_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
+        // $('#fk_id_empresa_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
         totalOrden();
     }else{
+        select2Placeholder('fk_id_empresa_','Selecciona una empresa',0,true,true,0,false);
         select2Placeholder('fk_id_socio_negocio','Selecciona un proveedor',50,true,true,0,false);
-        select2Placeholder('fk_id_empresa','Selecciona una empresa',null,true,true,0,false);
         select2Placeholder('fk_id_sucursal_','Selecciona una sucursal',30,true,true);
         select2Placeholder('fk_id_condicion_pago','Selecciona una condición de pago','Infinity',true,true);
         select2Placeholder('fk_id_tipo_entrega','Selecciona una forma de entrega','Infinity',true,true);
