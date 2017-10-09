@@ -25,10 +25,12 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('diagnosticos', 'Administracion\DiagnosticosController');
 		Route::resource('estados', 'Administracion\EstadosController');
 		Route::resource('familiasproductos', 'Administracion\FamiliasproductosController');
+		Route::resource('formafarmaceutica', 'Administracion\FormaFarmaceuticaController');
 		Route::resource('grupoproductos', 'Administracion\GrupoProductosController');
 		Route::resource('impuestos', 'Administracion\ImpuestosController');
 		Route::get('getPorcentaje/{id}','Administracion\ImpuestosController@obtenerPorcentaje');
 		Route::get('getImpuestos','Administracion\ImpuestosController@obtenerImpuestos');
+		Route::resource('indicacionterapeutica', 'Administracion\IndicacionTerapeuticaController');
 		Route::resource('jurisdicciones', 'Administracion\JurisdiccionesController');
 		Route::resource('laboratorios', 'Administracion\LaboratoriosController');
 		Route::resource('localidades', 'Administracion\LocalidadesController');
@@ -42,6 +44,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('paises', 'Administracion\PaisesController');
 		Route::resource('parentescos', 'Administracion\ParentescosController');
 		Route::resource('perfiles', 'Administracion\PerfilesController');
+		Route::resource('presentacionventa', 'Administracion\PresentacionVentaController');
 		Route::resource('sucursales', 'Administracion\SucursalesController');
 		Route::get('sucursalesautocomplete','Administracion\SucursalesController@obtenerSucursales');
 		Route::get('sucursalesempleado/{id}','Administracion\SucursalesController@sucursalesEmpleado');
@@ -54,6 +57,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('usuarios', 'Administracion\UsuariosController');
 		Route::resource('vehiculosmarcas', 'Administracion\VehiculosMarcasController');
 		Route::resource('vehiculosmodelos', 'Administracion\VehiculosModelosController');
+		Route::resource('viaadministracion', 'Administracion\ViaAdministracionController');
 		Route::resource('zonas', 'Administracion\ZonasController');
 	});
 });

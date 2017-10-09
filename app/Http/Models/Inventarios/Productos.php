@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ihernandezt
- * Date: 05/09/2017
- * Time: 11:20
- */
 
 namespace App\Http\Models\Inventarios;
 
@@ -17,61 +11,49 @@ class Productos extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'cat_producto_codigo_barras';
+    protected $table = 'maestro.inv_cat_skus';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'clave';
+    protected $primaryKey = 'id_sku';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['nombre_comercial'];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-        'nombre_comercial' => 'required',
-    ];
+    protected $fillable = ['sku','descripcion'];
 
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
     protected $fields = [
-        'id area' => 'id_area',
-        // 'empresa.nombre_comercial' => 'Empresa',
-        // 'usuario.usuario' => 'Usuario',
-        'area' => 'area',
+        'id_sku' => 'ID',
+        'sku' => 'SKU',
+        'descripcion' => 'Descripcion'
     ];
 
     /**
-     * Atributos de carga optimizada
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * The validation rules
      * @var array
      */
-    // protected $eagerLoaders = ['empresa', 'usuario'];
+    public $rules = [
+        'sku' => 'required',
+        'descripcion' => 'required'
+    ];
 
-    /**
-     * Obtenemos usuario relacionado
-     * @return Usuario
-     */
-    // public function usuario()
-    // {
-    //     return $this->belongsTo(Usuarios::class, 'fk_id_usuario', 'id_usuario');
-    // }
-
-    /**
-     * Obtenemos empresa relacionada
-     * @return Empresa
-     */
-    // public function empresa()
-    // {
-    //     return $this->belongsTo(Empresas::class, 'fk_id_empresa', 'id_empresa');
-    // }
+    public function upcs()
+    {
+        return $this->hasMany('App\Http\Models\Inventarios\Upcs','id_upc');
+    }
 }

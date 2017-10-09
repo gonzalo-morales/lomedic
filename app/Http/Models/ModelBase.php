@@ -118,7 +118,7 @@ class ModelBase extends Model
 	 */
 	public function getRulesDefaults()
 	{
-	    $types = ['Integer'=>'Integer','Decimal'=>'Digits','Date'=>'Date','Time'=>'Sometimes'];
+	    $types = ['Integer'=>'Integer','Numeric'=>'Digits','Date'=>'Date','Time'=>'Sometimes'];
 	    $columns = $this->getConnection()->getDoctrineSchemaManager()->listTableDetails($this->getTable())->getColumns();
 
 	    $propertys = array_map(function($column) {
@@ -144,7 +144,7 @@ class ModelBase extends Model
                     array_push($rules[$col],'max:1');
                 }
                 elseif(in_array($type,['Integer','Decimal'])) {
-                    array_push($rules[$col],'digits_between:1,'.$prop['length']);
+                    array_push($rules[$col],'digits_between:0,'.$prop['length']);
                 }
                 else {
                     array_push($rules[$col],'max:'.$prop['length']);
