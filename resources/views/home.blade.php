@@ -20,53 +20,57 @@
 </div>
 <div class="container-fluid">
 	<div class="row">
-		<div id="metro" class="col-md-8 col-sm-12 mb-3">
+		<div id="metro" class="col-md-8 col-sm-12 mb-3" style="opacity: 0; top:50px;">
 
-			<div class="row justify-content-end mx-2">
-				<a class="col-6 m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="ADMINISTRACIÓN">
-					<i class="material-icons align-self-center">web</i>
+			<div class="row mx-2">
+				<a class="col-6 m-2 metrOpt text-white blue d-flex justify-content-center" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="ADMINISTRACIÓN">
+					<div class="align-self-center d-flex">
+						<i class="material-icons">web</i>
+						<span class="badge badge-danger align-self-start">9</span>
+	  					<span class="sr-only align-self-start">unread messages</span>
+  					</div>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="FINANZAS">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="FINANZAS">
 					<i class="material-icons align-self-center">trending_up</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="FINANZAS">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="FINANZAS">
 					<i class="material-icons align-self-center">trending_up</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="COMPRAS">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="COMPRAS">
 					<i class="material-icons align-self-center">shopping_cart</i>
 				</a>
 			</div>
-			<div class="row justify-content-end mx-2 mt-1">
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="PROYECTOS">
+			<div class="row mx-2 mt-1">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="PROYECTOS">
 					<i class="material-icons align-self-center">grade</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="GESTIÓN DE BANCOS">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="GESTIÓN DE BANCOS">
 					<i class="material-icons align-self-center">monetization_on</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="SERVICIOS">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="SERVICIOS">
 					<i class="material-icons align-self-center">perm_phone_msg</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="INFORMES">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white green" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="INFORMES">
 					<i class="material-icons align-self-center">equalizer</i>
 				</a>
 			</div>
-			<div class="row justify-content-end mx-2 mt-1">
-				<a class="col-6 m-2 d-inline-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="PROYECTOS">
+			<div class="row mx-2 mt-1">
+				<a class="col-6 m-2 d-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="PROYECTOS">
 					<i class="material-icons align-self-center">grade</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="GESTIÓN DE BANCOS">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="GESTIÓN DE BANCOS">
 					<i class="material-icons align-self-center">monetization_on</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="SERVICIOS">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="SERVICIOS">
 					<i class="material-icons align-self-center">perm_phone_msg</i>
 				</a>
-				<a class="col m-2 d-inline-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="INFORMES">
+				<a class="col m-2 d-flex justify-content-center metrOpt text-white yellow" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="INFORMES">
 					<i class="material-icons align-self-center">equalizer</i>
 				</a>
 			</div>
 
 		</div><!--/col collapsibles-->
-		<div class="col-md-4 col-sm-12">
+		<div id="infoSections" class="col-md-4 col-sm-12"  style="opacity: 0; top:50px;">
 			<div class="card text-center z-depth-1-half">
 			  <div class="card-header">
 			    <ul class="nav nav-pills card-header-pills nav-justified">

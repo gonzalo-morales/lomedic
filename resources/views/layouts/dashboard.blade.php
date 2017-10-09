@@ -237,61 +237,16 @@
                     }
                 });
 			});
-
-/*
-        // $('#metro').find('a').each(function(i,elem){
-        //     var value = "(50%)";
-        //     $(elem).css({
-        //         'filter': 'brightness'+value,
-        //         '-webkit-filter': 'brightness'+value,
-        //         '-moz-filter': 'brightness'+value,
-        //         '-o-filter': 'brightness'+value,
-        //         '-ms-filter': 'brightness'+value
-        //     });
-        //     console.log(elem);
-        // })
-
-        /*
-        var value = 1.00;
-        mBlue = $('#metro').find('a.blue')
-        mGreen = $('#metro').find('a.green')
-        //Degradado azul
-        mBlue.each(function(i,elem){
-            $(elem).css({
-                'background-color': 'rgba(0,123,255,'+value+')',
-            });
-            value -= 0.10;
-        })
-        //Degradado verde
-        mGreen.each(function(i,elem){
-            $(elem).css({
-                'background-color': 'rgba(23,162,184,'+value+')',
-            });
-            value += 0.2;
-        })*/
-
-        /*var g = 122;
-        var b = 255;
-        mBlue = $('#metro').find('a.blue')
-        //Degradado azul
-        mBlue.each(function(i,elem){
-            $(elem).css({
-                'background-color': 'rgb(0,'+g+','+b+')',
-            })
-            g -= 8;
-            b -= 17;
-        })
-        var r = 23;
-        mGreen = $('#metro').find('a.green')
-        //Degradado azul
-        mGreen.each(function(i,elem){
-            $(elem).css({
-                'background-color': 'rgb('+r+','+g+','+b+')',
-            })
-            g += 58;
-            b += 17;
-        })*/
-
+        //Animaciones de inicio
+        $('#infoSections').animate({
+            top:'0',
+            opacity:1
+        },1000);
+        $('#metro').animate({
+            top:'0',
+            opacity:1
+        },1000);
+        //Script para las variaciones de color en los accesos directos
         var rgbColor = [23,122,255]
         mBlue = $('#metro').find('a.blue');
         //Degradado azul
@@ -306,7 +261,7 @@
 
         rgbColor = [23,162,184]
         mGreen = $('#metro').find('a.green');
-        //Degradado azul
+        //Degradado verde
         mGreen.each(function(i,elem){
             $(elem).css({
                 'background-color': 'rgb('+rgbColor[0]+','+rgbColor[1]+','+rgbColor[2]+')'
@@ -318,7 +273,7 @@
 
         rgbColor = [255,193,7]
         mYellow = $('#metro').find('a.yellow');
-        //Degradado azul
+        //Degradado amarillo
         mYellow.each(function(i,elem){
             $(elem).css({
                 'background-color': 'rgb('+rgbColor[0]+','+rgbColor[1]+','+rgbColor[2]+')'

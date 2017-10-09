@@ -66,26 +66,6 @@
 .btn:active, .btn:focus{
   box-shadow: none !important;
 }
-/*links*/
-a {
-    color: #FF9800;
-}
-a:hover {
-    color: #ffb23f;
-}
-a:active{
-    color: #c17400;
-}
-.a:hover, .a:active, .a:focus {
-  -webkit-transition: .2s ease-out;
-  transition: .2s ease-out;
-}
-/*Other components*/
-.list-group-item.active{
-  background-color: #ff9800;
-  color:#1F2D3D;
-  border-color: #ff9800;
-}
 /*estílos sombras*/
 .z-depth {
   -webkit-box-shadow: 1px 0 4px 0 rgba(0, 0, 0, 0.24), 0 1px 0 8px 0 rgba(0, 0, 0, 0.19);

@@ -36,15 +36,15 @@
 }
 /*Logo animation*/
 .sim {
-        -webkit-transition: -webkit-transform ease-in-out 0.3s, background 0.2s;
-        -moz-transition: -moz-transform ease-in-out 0.3s, background 0.2s;
-        transition: transform ease-in-out 0.3s, background 0.2s;
+  -webkit-transition: -webkit-transform ease-in-out 0.3s, background 0.2s;
+  -moz-transition: -moz-transform ease-in-out 0.3s, background 0.2s;
+  transition: transform ease-in-out 0.3s, background 0.2s;
 }
 .sim:hover {
-        -webkit-transform: scale(0.90);
-        -moz-transform: scale(0.90);
-        -ms-transform: scale(0.90);
-        transform: scale(0.90);
+  -webkit-transform: scale(0.90);
+  -moz-transform: scale(0.90);
+  -ms-transform: scale(0.90);
+  transform: scale(0.90);
 }
 /*Estílo botones*/
 .btn {
@@ -76,13 +76,13 @@
   -webkit-box-shadow:none;
 }
 .input-group-btn .btn {
-    padding: .5rem .75rem;
-    margin: 0;
-    border: 1px solid transparent;
+  padding: .5rem .75rem;
+  margin: 0;
+  border: 1px solid transparent;
 }
 /*Metro Design*/
 .metrOpt{
-  height: 6rem;
+  height: 6em;
 }
 .metrOpt i{
   font-size: 2em;
@@ -93,10 +93,10 @@
   text-decoration: none;
   cursor: pointer;
 }
-.metrOpt:nth-child{
-  font-size:4em;
-}
 /*Charts*/
+/*.chart:last-child {
+  display: none;
+}*/
 .chart {
   width: 100%;
   min-height: 300px;
