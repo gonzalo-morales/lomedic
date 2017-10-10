@@ -8,6 +8,7 @@
 			'data-toggle-off' => 'No',
 			'data-toggle-on' => 'Si'
 		]) }}
+		<span></span>
 	</label>
 </div>
 {{ $errors->has($name) ? HTML::tag('span', $errors->first($name), ['class'=>'help-block error-help-block']) : '' }}

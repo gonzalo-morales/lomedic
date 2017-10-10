@@ -216,23 +216,6 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
 .not-wrap {
   white-space: nowrap;
 }
-.form-check-label,
-.form-check-input.toggeable:after {
-  cursor: pointer;
-}
-.form-check-input.toggeable:after {
-  content: '');
-  position: relative;
-  top: -6px;
-  left: 1.1rem;
-  white-space: nowrap;
-}
-.form-check-input.toggeable:after {
-  content: attr(data-toggle-off);
-}
-.form-check-input.toggeable:checked:after {
-  content: attr(data-toggle-on);
-}
 .error-help-block {
     display: block;
     color: #D00;

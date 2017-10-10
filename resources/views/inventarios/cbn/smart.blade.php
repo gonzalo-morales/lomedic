@@ -1,5 +1,11 @@
 
 @section('content-width', 's12')
+@section('header-bottom')
+	@parent
+	<script type="text/javascript">
+        $('#vigencia').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' })
+	</script>
+@endsection
 
 @section('form-content')
 {{ Form::setModel($data) }}
@@ -44,7 +50,7 @@
     		<div class="alert alert-warning" role="alert">
                 Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
             </div>
-            {{ Form::cCheckboxBtn('Activo','activo', $data['activo'] ?? null) }}
+            {{ Form::cCheckboxBtn('','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
     	</div>
     </div>
 @endsection
