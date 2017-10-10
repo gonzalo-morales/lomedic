@@ -417,6 +417,9 @@
 	@section('extraButtons')
 		@parent
 		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
+		@if($data->fk_id_estatus_solicitud == 1)
+			{!! HTML::decode(link_to(companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>$data->id_solicitud]),'<i class="material-icons">shopping_cart</i> Ordenar',['class'=>'btn btn-default'])) !!}
+		@endif
 	@endsection
 	@include('layouts.smart.show')
 @endif
