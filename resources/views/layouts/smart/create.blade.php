@@ -7,7 +7,6 @@
 @endsection
 
 @section('header-bottom')
-	{{ HTML::script(asset('js/select2.full.min.js')) }}
     {{ HTML::script(asset('js/pickadate/picker.js')) }}
     {{ HTML::script(asset('js/pickadate/picker.date.js')) }}
     {{ HTML::script(asset('js/pickadate/translations/es_Es.js')) }}

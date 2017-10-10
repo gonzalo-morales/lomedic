@@ -10,7 +10,7 @@
 			'data-toggle-off' => $textoff ?? $text,
 			'data-toggle-on' => $text
         ]) }}
-        <span></span>
+        <span>{{(old($name) || $value ) ? $text : $textoff ?? $text}}</span>
     </label>
 </div>
 {{ $errors->has($name) ? HTML::tag('span', $errors->first($name), ['class'=>'help-block error-help-block']) : '' }}

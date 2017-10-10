@@ -159,4 +159,13 @@ $(document).ready(function(){
     	}
     });
     $('.toggeable').trigger('change');
+    
+    
+    
+    
+    
 });
+
+
+
+

@@ -100,7 +100,7 @@
             @yield('content')
         </div>
     </div>
-
+    
 @include('layouts.ticket')
 
 <!-- jQuery CDN -->
@@ -126,6 +126,7 @@
 {{ HTML::script('js/jquery.nicescroll.min.js') }}
 
 {{ HTML::script(asset('js/toaster.js')) }}
+{{ HTML::script(asset('js/select2.full.min.js')) }}
 {{ HTML::script(asset('js/app.js')) }}
 
 @if(!isset(request()->kendoWindow))

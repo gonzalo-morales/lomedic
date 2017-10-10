@@ -8,6 +8,9 @@
     {{ HTML::script(asset('js/amcharts/amcharts.js')) }}
     {{ HTML::script(asset('js/amcharts/pie.js')) }}
     {{ HTML::script(asset('js/amcharts/themes/light.js')) }}
+    {{ HTML::script(asset('js/pickadate/picker.js')) }}
+    {{ HTML::script(asset('js/pickadate/picker.date.js')) }}
+    {{ HTML::script(asset('js/pickadate/translations/es_Es.js')) }}
     
     <script type="text/javascript">
 		$(document).ready(function() {
