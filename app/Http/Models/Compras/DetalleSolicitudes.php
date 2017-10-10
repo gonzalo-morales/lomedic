@@ -58,7 +58,7 @@ class DetalleSolicitudes extends ModelCompany
 
     public function sku()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\Skus','id_sku','fk_id_sku');
+        return $this->hasOne('App\Http\Models\Inventarios\Productos','id_sku','fk_id_sku');
     }
 
     public function upc()

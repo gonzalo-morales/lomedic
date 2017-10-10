@@ -6,6 +6,7 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Sucursales;
+use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\Solicitudes;
 use Milon\Barcode\DNS2D;
@@ -55,7 +56,6 @@ class OrdenesController extends ControllerBase
         # ¿Usuario tiene permiso para crear?
 		$this->authorize('create', $this->entity);
 
-
 		# Validamos request, si falla regresamos pagina
 		$this->validate($request, $this->entity->rules);
 
@@ -69,7 +69,7 @@ class OrdenesController extends ControllerBase
         if(!empty($request->importacion)){
 		    $request->request->set('importacion','t');
         }
-
+//        dd($request->request);
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 			if(isset($request->_detalles)) {
@@ -88,9 +88,29 @@ class OrdenesController extends ControllerBase
                     }
 					$isSuccess->detalleOrdenes()->save(new DetalleOrdenes($detalle));
 				}
-				$this->log('store', $isSuccess->id_solicitud);
 			}
-			return $this->redirect('store');
+			if(isset($request->id_solicitud)){
+			    foreach ($request->detalles as $detalle){
+                    if(empty($detalle['fk_id_upc'])){
+                        $detalle['fk_id_upc'] = null;
+                    }
+                    if(empty($detalle['fk_id_cliente'])){
+                        $detalle['fk_id_cliente'] = null;
+                    }
+                    if(empty($detalle['fk_id_proyecto'])){
+                        $detalle['fk_id_proyecto'] = null;
+                    }
+                    if(empty($detalle['fecha_necesario'])){
+                        $detalle['fecha_necesario'] = null;
+                    }
+                    $isSuccess->detalleOrdenes()->save(new DetalleOrdenes($detalle));
+                }
+                $solicitud = Solicitudes::where('id_solicitud',$request->id_solicitud)->first();
+                $solicitud->fk_id_estatus_solicitud = 2;
+                $solicitud->save();
+            }
+            $this->log('store', $isSuccess->id_orden);
+            return $this->redirect('store');
 		} else {
 			$this->log('error_store');
 			return $this->redirect('error_store');
@@ -103,7 +123,7 @@ class OrdenesController extends ControllerBase
             $q->where('fk_id_tipo_socio', 2);
         })->pluck('nombre_corto','id_socio_negocio');
 		$attributes = $attributes+['dataview'=>[
-                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+                'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
                 'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'proveedores' => $proveedores,
                 'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
@@ -120,7 +140,7 @@ class OrdenesController extends ControllerBase
         })->pluck('nombre_corto','id_socio_negocio');
 
 		$attributes = $attributes+['dataview'=>[
-                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+                'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
                 'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'clientes' => $clientes,
                 'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
@@ -303,5 +323,29 @@ class OrdenesController extends ControllerBase
             $q->where('fk_id_tipo_socio', 1);
         })->select('id_socio_negocio as id','nombre_corto as text','tiempo_entrega')->get();
 	    return Response::json($proveedores);
+    }
+
+    public function createSolicitudOrden($company,$id){
+
+        $data = $this->entity->getColumnsDefaultsValues();
+        $validator = \JsValidator::make($this->entity->rules, [], $this->entity->niceNames, '#form-model');
+        $clientes = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
+            $q->where('fk_id_tipo_socio', 1);
+        })->pluck('nombre_corto','id_socio_negocio');
+        $attributes = ['dataview'=>[
+            'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+            'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
+            'clientes' => $clientes,
+            'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+            'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
+            'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
+            'solicitud'=>Solicitudes::where('id_solicitud',$id)->first(),
+            'detalleSolicitud' => DetalleSolicitudes::where('fk_id_solicitud',$id)->get(),
+        ]];
+//        dd(currentRouteName('solicitudOrden'));
+        return view(currentRouteName('solicitudOrden'),($attributes['dataview'] ?? []) + [
+            'data' => $data,
+            'validator' => $validator
+            ]+ $this->getDataView());
     }
 }

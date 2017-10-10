@@ -14,73 +14,58 @@ $(document).ready(function(){
         searchable: false,
         perPageSelect: false
     });
-    if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
-    {
-        initSelects();
-        if(window.location.href.toString().indexOf('crear') > -1){
-            validateDetail();
+
+    initSelects();
+    //Por si se selecciona una empresa diferente
+    $('#otra_empresa').on('change',function () {
+        $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+        if( !this.checked ){
+            $( this ).parent().nextAll( "select" ).val(0).trigger('change');
         }
-        //Por si se selecciona una empresa diferente
-        $('#otra_empresa').on('change',function () {
-            $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-            if( !this.checked ){
-                if(window.location.href.toString().indexOf('crear') > -1)
-                    $( this ).parent().nextAll( "select" ).val(0).trigger('change');
-            }
-        });
-        //Por si se selecciona un UPC
-        $('#activo_upc').on('change',function () {
-            $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-            if( !this.checked ){
-                $( this ).parent().nextAll( "select" ).val(0).trigger('change');
+    });
+    //Por si se selecciona un UPC
+    $('#activo_upc').on('change',function () {
+        $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+        if( !this.checked ){
+            $( this ).parent().nextAll( "select" ).val(0).trigger('change');
+        }else{
+            if($('#fk_id_sku').val()){
+                _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_sku').val());
+                $( this ).parent().nextAll( "select" ).select2({
+                    theme: "bootstrap",
+                    minimumResultsForSearch: Infinity,
+                    ajax:{
+                        url: _url,
+                        dataType: 'json',
+                        data: function (term) {
+                            return {term: term};
+                        },
+                        processResults: function (data) {
+                            return {results: data}
+                        },
+                        cache:true
+                    }
+                })
             }else{
-                if($('#fk_id_sku').val()){
-                    _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_sku').val());
-                    $( this ).parent().nextAll( "select" ).select2({
-                        theme: "bootstrap",
-                        minimumResultsForSearch: Infinity,
-                        ajax:{
-                            url: _url,
-                            dataType: 'json',
-                            data: function (term) {
-                                return {term: term};
-                            },
-                            processResults: function (data) {
-                                return {results: data}
-                            },
-                            cache:true
-                        }
-                    })
-                }else{
-                    $( this ).prop('checked',false);
-                    $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-                    $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes un SKU',
-                        settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-                }
+                $( this ).prop('checked',false);
+                $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+                $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes un SKU',
+                    settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             }
-        })//Fin UPC
+        }
+    })//Fin UPC
 
-        $('#agregar').on('click',function () {
-            agregarProducto();
-        });
+    $('#agregar').on('click',function () {
+        agregarProducto();
+    });
 
-        $('#fk_id_socio_negocio').on('change',function () {
-            $('#tiempo_entrega').val($('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
-            var fecha = new Date();
-            fecha.setDate(fecha.getDate()+$('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
-            $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate());
-        });
-        $(document).on('submit',function (e) {
-            if(a.length>0) {
-                e.preventDefault();
-                let url = $('#productos').data('delete');
-                $.delete(url, {ids: a});
-                a = [];
-            }
-        })
-    }else{
-        totalOrden();
-    }
+    $('#fk_id_socio_negocio').on('change',function () {
+        $('#tiempo_entrega').val($('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
+        var fecha = new Date();
+        fecha.setDate(fecha.getDate()+$('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
+        $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate());
+    });
+    totalOrden();
 });
 
 function select2Placeholder(id_select,text,searchable = 1,selected = true, disabled = true,value = 0,select2=true) {
@@ -119,19 +104,11 @@ function initSelects() {
         theme:'bootstrap'
     });
 
-    if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1){
-        $('#fk_id_condicion_pago').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        $('#fk_id_tipo_entrega').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        $('#fk_id_sucursal_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        // $('#fk_id_empresa_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        totalOrden();
-    }else{
-        select2Placeholder('fk_id_empresa_','Selecciona una empresa',0,true,true,0,false);
-        select2Placeholder('fk_id_socio_negocio','Selecciona un proveedor',50,true,true,0,false);
-        select2Placeholder('fk_id_sucursal_','Selecciona una sucursal',30,true,true);
-        select2Placeholder('fk_id_condicion_pago','Selecciona una condición de pago','Infinity',true,true);
-        select2Placeholder('fk_id_tipo_entrega','Selecciona una forma de entrega','Infinity',true,true);
-    }
+    select2Placeholder('fk_id_empresa_','Selecciona una empresa',0,true,true,0,false);
+    select2Placeholder('fk_id_socio_negocio','Selecciona un proveedor',50,true,true,0,false);
+    $('#fk_id_sucursal_').select2({theme:'bootstrap',minimumResultsForSearch:50});
+    select2Placeholder('fk_id_condicion_pago','Selecciona una condición de pago','Infinity',true,true);
+    select2Placeholder('fk_id_tipo_entrega','Selecciona una forma de entrega','Infinity',true,true);
     $.ajax({
         url: $('#fk_id_socio_negocio').data('url'),
         dataType:'json',
@@ -214,9 +191,9 @@ function totalOrden() {
 
 function borrarFila(el) {
     dataTable.rows().remove([$(el).parents('tr').dataIndex]);
-        $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
+        $.toaster({priority : 'warning',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-    if(dataTable.rows.length<1)
+    if(dataTable.activeRows.length<1)
         validateDetail();
 
     totalOrden();
@@ -290,13 +267,4 @@ function validateDetail() {
             precio: 'El precio no debe tener más de dos decimales'
         }
     });
-}
-
-function borrarFila_edit(el) {
-    a.push(el.id);
-    dataTable.rows().remove([$(el).parents('tr').dataIndex]);
-    if(dataTable.activeRows.length<1)
-        validateDetail();
-
-    totalOrden();
 }

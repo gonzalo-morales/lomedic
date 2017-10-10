@@ -20,7 +20,7 @@ Route::prefix('{company}')->group(function () {
         Route::resource('cbn','Inventarios\CbnController');
         Route::resource('productos', 'Inventarios\ProductosController');
         Route::get('getSkus','Inventarios\ProductosController@obtenerSkus');
-        Route::get('getUpcs/{id}','Inventarios\SkusController@obtenerUpcs');
+        Route::get('getUpcs/{id}','Inventarios\ProductosController@obtenerUpcs');
         Route::resource('upcs','Inventarios\UpcsController');
         Route::resource('almacenes','Inventarios\AlmacenesController');
     });

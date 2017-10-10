@@ -73,8 +73,8 @@ class Upcs extends ModelCompany
         return $this->belongsTo(Paises::class,'fk_id_pais_origen','id_pais');
     }
 
-    public function sku()
+    public function skus()
     {
-        return $this->belongsToMany('App\Http\Models\Inventarios\Skus','maestro.inv_det_sku_upc','fk_id_sku','fk_id_sku');
+        return $this->belongsToMany('App\Http\Models\Inventarios\Productos','maestro.inv_det_sku_upc','fk_id_upc','id_sku');
     }
 }

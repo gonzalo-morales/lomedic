@@ -8,16 +8,15 @@ use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Solicitudes;
 use App\Http\Models\Administracion\Impuestos;
+use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
-use App\Policies\Compras\SolicitudesPolicy;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
-use App\Http\Models\Inventarios\Skus;
 
 class SolicitudesController extends ControllerBase
 {
@@ -54,7 +53,7 @@ class SolicitudesController extends ControllerBase
                     ->where('activo',1)
                     ->get()
                     ->pluck('nombre','id_empleado'),
-                'skus' => Skus::where('activo','1')
+                'skus' => Productos::where('activo','1')
                     ->get()
                     ->pluck('sku','id_sku'),
                 'proyectos' => Proyectos::where('activo',1)
@@ -146,7 +145,7 @@ class SolicitudesController extends ControllerBase
                     ->where('activo',1)
                     ->get()
                     ->pluck('nombre','id_unidad_medida'),
-                'skus' => Skus::where('activo','1')
+                'skus' => Productos::where('activo','1')
                     ->get()
                     ->pluck('sku','id_sku'),
                 'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')

@@ -17,20 +17,6 @@
 	@endif
 @endsection
 
-{{--@section('form-actions')--}}
-	{{--<div class="text-right col-md-12 mb-3">--}}
-		{{--{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}--}}
-		{{--@if (Route::currentRouteNamed(currentRouteName('show')))--}}
-			{{--@can('update', currentEntity())--}}
-				{{--@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))--}}
-					{{--{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info'])) !!}--}}
-				{{--@endif--}}
-			{{--@endcan--}}
-		{{--@endif--}}
-		{{--{!! HTML::decode(link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default '])) !!}--}}
-	{{--</div>--}}
-{{--@endsection--}}
-
 @section('content-width','mt-3')
 
 @section('form-content')
@@ -99,7 +85,7 @@
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_upc','Código de barras')}}
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
-								'data-url'=>companyAction('Inventarios\SkusController@obtenerUpcs',['id'=>'?id']),
+								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'#ID#']),
 								'class'=>'form-control','style'=>'width:100%']) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
@@ -268,6 +254,9 @@
 @endsection
 
 {{-- DONT DELETE --}}
+
+
+
 @if (Route::currentRouteNamed(currentRouteName('index')))
 	@section('smart-js')
 		<script type="text/javascript">
@@ -297,8 +286,22 @@
                  }
              }
          };
+         rivets.binders['hide-comprar'] = {
+             bind: function (el) {
+				 if(el.dataset.fk_id_estatus_solicitud != 1)
+				 {
+				     $(el).hide();
+				 }
+             }
+		 };
+         rivets.binders['get-comprar-url'] = {
+             bind: function (el) {
+                 el.href = el.href.replace('#ID#',el.dataset.itemId);
+//				 el.href = window['smart-view'].dataset.itemSupplyUrl.replace('#ID#',el.dataset.itemId);
+             }
+		 };
 		 @can('update', currentEntity())
-             window['smart-model'].collections.itemsOptions.edit = {a: {
+             window['smart-model'].collections.itemsOptions.edit ={a: {
              'html': '<i class="material-icons">mode_edit</i>',
              'class': 'btn is-icon',
              'rv-get-edit-url': '',
@@ -316,6 +319,13 @@
 			'rv-hide-delete':''
 		}};
 		@endcan
+		window['smart-model'].collections.itemsOptions.supply = {a: {
+		'html': '<i class="material-icons">shopping_cart</i>',
+		'href' : '{!! companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>'#ID#']) !!}',
+		'class': 'btn is-icon',
+		'rv-hide-comprar':'',
+		'rv-get-comprar-url':''
+        }};
 		window['smart-model'].actions.itemsCancel = function(e, rv, motivo){
 		    if(!motivo.motivo_cancelacion){
                 $.toaster({
