@@ -25,44 +25,4 @@ class EstadosController extends ControllerBase
 		];
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create($company, $attributes = [])
-	{
-//		$this->loadResources();
-		return parent::create($company, [
-			'dataview' => []
-		]);
-	}
-
-	/**
-	 * Display the specified resource
-	 *
-	 * @param  integer $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($company, $id, $attributes = [])
-	{
-//		$this->loadResources();
-		return parent::show($company, $id, [
-			'dataview' => []
-		]);
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  integer $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($company, $id, $attributes = [])
-	{
-//		$this->loadResources();
-		return parent::edit($company, $id, [
-			'dataview' => []
-		]);
-	}
 }

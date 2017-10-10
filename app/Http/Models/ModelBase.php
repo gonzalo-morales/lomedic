@@ -28,8 +28,7 @@ class ModelBase extends Model
 	public $timestamps = false;
 
 	public function __construct($attributes = []) {
-	    $this->rules = !empty($this->rules) ? $this->rules + $this->getRulesDefaults() : $this->getRulesDefaults();
-        return parent::__construct($attributes);
+		return parent::__construct($attributes);
 	}
 
 	/**
@@ -71,10 +70,10 @@ class ModelBase extends Model
 	}
 
 	public function getDataAttributes($row) {
-        return collect($this->dataColumns)->map(function ($name) use ($row) {
-            return "data-$name=\"{$row->{$name}}\"";
-        })->implode(' ');
-    }
+		return collect($this->dataColumns)->map(function ($name) use ($row) {
+			return "data-$name=\"{$row->{$name}}\"";
+		})->implode(' ');
+	}
 
 	/**
 	 * Accessor - Obtenemos columna 'activo' formateado en texto

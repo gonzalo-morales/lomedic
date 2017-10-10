@@ -7,7 +7,7 @@
 			'class' => 'form-check-input toggeable',
 			'data-toggle-off' => 'No',
 			'data-toggle-on' => 'Si'
-		]) }}
+		] + ($attributes ?? [])) }}
 		<span></span>
 	</label>
 </div>
