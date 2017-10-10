@@ -97,5 +97,14 @@ class SociosNegocio extends Model
     public function usuario(){
         return $this->belongsTo('App\Http\Models\Administracion\Usuarios','fk_id_usuario_modificacion');
     }
+    public function ramo(){
+        return $this->belongsTo('App\Http\Models\SociosNegocio\RamosSocioNegocio','fk_id_ramo');
+    }
+    public function tipoSocio(){
+        // return $this->hasManyThrough('App\Http\Models\SociosNegocio\TipoToSocioNegocio','App\Http\Models\SociosNegocio\TiposSocioNegocio','id_tipo_socio','fk_id_tipo_socio');
+        // App\Group::with('comments')->get()
+        // return $this->belongsToMany('App\Http\Models\SociosNegocio\TiposSocioNegocio','sng_det_tipo_socio_negocio','fk_id_tipo_socio','fk_id_socio_negocio');
+        return $this->belongsToMany('App\Http\Models\SociosNegocio\TiposSocioNegocio','sng_det_tipo_socio_negocio','fk_id_socio_negocio','fk_id_tipo_socio');
+    }
 
 }

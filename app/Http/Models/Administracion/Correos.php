@@ -68,4 +68,6 @@ class Correos extends ModelBase
 	{
 		return $this->belongsTo(Empresas::class, 'fk_id_empresa', 'id_empresa');
 	}
+
+
 }

@@ -4,7 +4,7 @@ namespace App\Http\Models\SociosNegocio;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TiposSocioNegocio extends Model
+class TipoToSocioNegocio extends Model
 {
     // use SoftDeletes;
 
@@ -13,20 +13,20 @@ class TiposSocioNegocio extends Model
      *
      * @var string
      */
-    protected $table = 'sng_cat_tipos_socio_negocio';
+    protected $table = 'sng_det_tipo_socio_negocio';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_tipo_socio';
+    // protected $primaryKey = 'id_tipo_socio';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['tipo_socio', 'activo'];
+    protected $fillable = ['fk_id_socio_negocio', 'fk_id_tipo_socio'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -47,8 +47,11 @@ class TiposSocioNegocio extends Model
     public function getTable(){
 	    return $this->table;
     }
+    // public function sng(){
+    //     return $this->belongsToMany('App\Http\Models\SociosNegocio\TiposSocioNegocio','id_tipo_socio','fk_id_socio_negocio');
+    // }
     public function sng(){
-        return $this->belongsToMany('App\Http\Models\SociosNegocio\SocioNegocio','id_tipo_socio','id_socio_negocio');
-    }
+       return $this->belongsToMany('App\Http\Models\SociosNegocio\TiposSocioNegocio','fk_id_tipo_socio','id_socio_negocio');
+   }
 
 }

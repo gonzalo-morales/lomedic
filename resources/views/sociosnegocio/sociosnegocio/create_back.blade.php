@@ -3,29 +3,30 @@
 @section('title', 'Crear')
 
 @section('header-top')
+	{{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> --}}
+	{{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css"> --}}
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/pickadate/default.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/pickadate/default.date.css') }}">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
 @endsection
 
 @section('header-bottom')
-	<script type="text/javascript" src="{{ asset('js/sociosnegocios/socios.js') }}"></script>
+	{{-- <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script> --}}
+	<!-- Import js picker data and time -->
+	{{-- <script type="text/javascript" src="{{ asset('js/picker.date.js') }}"></script> --}}
+	{{-- <script type="text/javascript" src="{{ asset('js/picker.time.js') }}"></script> --}}
+	{{-- <script src="{{ asset('js/sociosnegocios/socios.js') }}"></script> --}}
 	<script type="text/javascript" src="{{ asset('js/select2.full.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/pickadate/picker.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/pickadate/picker.date.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/pickadate/translations/es_Es.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/toaster.js') }}"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 @endsection
 
 @section('content')
-	{{-- <style media="screen">
-	.select2-selection__rendered {
-		 line-height: 24px !important;
-		}
-	</style> --}}
+	{{-- <form action="{{ companyRoute("store", ['company'=> $company]) }}" method="post" class="col s12" enctype="multipart/form-data"> --}}
+	{{-- <form action="{{ companyRoute("Socios\ProveedoresController@create") }}" method="post" class="col s12" enctype="multipart/form-data"> --}}
 
 	<form action="{{ companyRoute("store",['company' => $company]) }}" method="post" class="col s12" enctype="multipart/form-data" id="form-socios">
 		{{ csrf_field() }}
@@ -79,38 +80,36 @@
 						<input id="sitio_web" name="sitio_web" type="text" class="form-control">
 					</div>
 				</div>
-				<div class="row">
-
-				<div class="col-sm-6 col-md-3">
+				<div class="col s6 m3">
 					<label>*Ramo(s):</label>
-					<select id="ramo" name="ramo" class="custom-select form-control">
+					<select id="ramo" name="ramo" class="custom-select">
 						<option disabled selected>Selecciona...</option>
 						@foreach ($ramos as $ramo)
 							<option value="{{$ramo->id_ramo}}" >{{$ramo->ramo}}</option>
 						@endforeach
 					</select>
 				</div>
-				<div class="col-sm-6 col-md-3">
+				<div class="col s6 m3">
 					<label>País de Orígen:</label>
-					<select id="pais_origen" name="pais_origen" class="custom-select form-control">
+					<select id="pais_origen" name="pais_origen" class="custom-select">
 						<option value="" disabled selected>Selecciona...</option>
 						@foreach ($paises as $pais)
 							<option value="{{$pais->id_pais}}" >{{$pais->pais}}</option>
 						@endforeach
 					</select>
 				</div>
-				<div class="col-sm-6 col-md-3">
+				<div class="col s6 m3">
 					<label data-error="Campo obligatorio">*Tipo de socio:</label>
-					<select id="tipo_socio" name="tipo_socio[]" multiple="multiple" class="form-control">
-						{{-- <option value="" disabled selected>Selecciona...</option> --}}
+					<select multiple id="tipo_socio" name="tipo_socio[]" class="custom-select">
+						<option value="" disabled selected>Selecciona...</option>
 						@foreach ($tiposSocios as $tipoSocio)
 							<option value="{{$tipoSocio->id_tipo_socio}}">{{$tipoSocio->tipo_socio}}</option>
 						@endforeach
 					</select>
 				</div>
-				<div class="col-sm-6 col-md-3">
+				<div class="col s6 m3">
 					<label data-error="Campo obligatorio">*Moneda:</label>
-					<select id="moneda" name="moneda" class="custom-select form-control">
+					<select id="moneda" name="moneda" class="custom-select">
 						<option value="" disabled selected>Selecciona...</option>
 						@foreach ($monedas as $moneda)
 							<option value="{{$moneda->id_moneda}}">{{$moneda->moneda}}</option>
@@ -118,33 +117,24 @@
 					</select>
 				</div>
 			</div>
-			</div>
-			<div class="col-sm-12 col-md-4">
+			<div class="col s12 m4">
 				<h5>Empresas</h5>
 				<div class="internSectionTable">
 					<table class="responsive-table highlight" id="empresas">
 						<thead>
 							<tr>
-								<th>
-									<label class="custom-control custom-checkbox">
-										<input class="custom-control-input" type="checkbox" id="select_all"/>
-										<span class="custom-control-indicator"></span>
-										<span class="custom-control-description">Seleccionar todo</span>
-									</label>
-								</th>
-								{{-- <th>Empresas:</th> --}}
+								<th><input type="checkbox" id="select_all" /><label for="select_all"></label></th>
+								<th>Empresas:</th>
 							</tr>
 						</thead>
 						<tbody>
 							@foreach ($empresas as $empresa)
 								<tr>
 									<td>
-										<label class="custom-control custom-checkbox">
-											<input class="custom-control-input" type="checkbox" id="{{$empresa->id_empresa}}" data-name="{{$empresa->nombre_comercial}}"/>
-											<span class="custom-control-indicator"></span>
-											<span class="custom-control-description">{{$empresa->nombre_comercial}}</span>
-										</label>
+										<input type="checkbox" id="{{$empresa->id_empresa}}" data-name="{{$empresa->nombre_comercial}}" />
+										<label for="{{$empresa->id_empresa}}"></label>
 									</td>
+									<td>{{$empresa->nombre_comercial}}</td>
 								</tr>
 							@endforeach
 						</tbody>
@@ -268,42 +258,18 @@
 									</div>
 								@endforeach
 								{{-- </form> --}}
-								{{-- // TODO: cambiar sucursalNombre por multiselect de los estados donde hay sucursales --}}
-								<div class="row">
-									{{-- <div class="form-group col-sm-4" id="sucursalBlock" hidden="true" >
-										<label for="">Sucursal:</label>
-										<input type="text" class="form-control" name="sucursalNombre" id="sucursalNombre" value="">
-									</div> --}}
-									<div class="form-group col-sm-4" id="sucursalBlock" hidden="true" >
-										<label for="">Sucursal:</label>
-										<select name="sucursalNombre" id="sucursalNombre" multiple="multiple"
-											{{-- data-url="{{companyAction('SociosNegocio\SociosNegocioController@getEstados',['id'=>42])}}" --}} >
-											@foreach ($estados as $estado)
-												<option value="{{$estado->id_estado}}">{{$estado->estado}}</option>
-											@endforeach
-										</select>
-									</div>
-
-
-									<div class="form-group col-sm-4" id="paqueteriaBlock" hidden="true" >
-										<label for="">Pago de Paquetería:</label>
-										<input type="text" class="form-control" name="pagoPaqueteria" id="pagoPaqueteria" value="">
-									</div>
-									<div class="form-group col-sm-4">
-										<label for="monto_minimo_facturacion">Monto mínimo de facturación:</label>
-										<input id="monto_minimo_facturacion" name="monto_minimo_facturacion" type="number" class="form-control">
-									</div>
+								<div class="form-group col-sm-4" id="sucursalBlock" hidden="true" >
+									<label for="">Sucursal:</label>
+									<input type="text" class="form-control" name="sucursalNombre" id="sucursalNombre" value="">
+								</div>
+								<div class="form-group col-sm-4">
+									<label for="monto_minimo_facturacion">Monto mínimo de facturación:</label>
+									<input id="monto_minimo_facturacion" name="monto_minimo_facturacion" type="number" class="form-control">
 								</div>
 								{{-- <div class="col-sm-4">
 									<label data-error="Campo obligatorio">*Correos para envío de orden de compra:</label>
-									<div id="correos" name="correos[]" class="chips chips-initial" ></div>
+									<div id="correos" name="correos[]" class="chips chips-initial"></div>
 								</div> --}}
-								<div class="row">
-									<div class="col-sm-12 col-md-10">
-										<label data-error="Campo obligatorio">*Correos para envío de orden de compra:</label>
-										<select class="form-control" multiple="multiple" id="correos" name="correos[]"></select>
-									</div>
-								</div>
 							</div>
 							</div>
 							{{-- <button type="button" id="yy">Y</button> --}}
@@ -348,11 +314,11 @@
 										<label for="extension_oficina">Ext</label>
 										<input id="extension_oficina" name="extension_oficina" type="text" class="form-control">
 									</div>
-									<div class="col-sm-10 col-md-6">
-										<label>Correo(s) electrónico(s):</label>
-										<select class="form-control" multiple="multiple" id="correos_contacto" name="correos_contacto[]"></select>
-									</div>
 								</div>
+								{{-- <div class="col s12 m7">
+									<label>Correo(s) electrónico(s):</label>
+									<div id="correos_contacto" name="correos_contacto[]" class="chips chips-initial"></div>
+								</div> --}}
 							</div>
 							<div class="col-md-12">
 								<div class="sep">
@@ -489,7 +455,7 @@
 			<div class="col-sm-12 col-md-4">
 				<div class="card z-depth-0">
 					<div class="card-image">
-						{{-- <form> --}}
+						<form>
 							{{-- <div class="row"> --}}
 								<div class="col-sm-12">
 									<label>Licencia Sanitaria</label>
@@ -507,7 +473,7 @@
 									</div>
 								</div>
 							</div>
-						{{-- </form><!--/Here ends de form--> --}}
+						</form><!--/Here ends de form-->
 					</div><!--/Here ends the up section-->
 					<div class="divider"></div>
 					<div class="card-content">
@@ -525,7 +491,7 @@
 			<div class="col-sm-12 col-md-4">
 				<div class="card z-depth-0">
 					<div class="card-image">
-						{{-- <form> --}}
+						<form>
 									<div class="col-sm-12">
 										<label>Aviso de Funcionamiento</label>
 										<label class="custom-file">
@@ -542,7 +508,7 @@
 									</div>
 								</div>
 							</div>
-						{{-- </form><!--/Here ends de form--> --}}
+						</form><!--/Here ends de form-->
 					</div><!--/Here ends the up section-->
 					<div class="divider"></div>
 					<div class="card-content">
@@ -560,7 +526,7 @@
 			<div class="col-sm-12 col-md-4">
 				<div class="card z-depth-0">
 					<div class="card-image">
-						{{-- <form> --}}
+						<form>
 								<div class="col-sm-12">
 									<label>Aviso de Responsable Sanitario</label>
 									<label class="custom-file">
@@ -577,7 +543,7 @@
 									</div>
 								</div>
 							</div>
-						{{-- </form><!--/Here ends de form--> --}}
+						</form><!--/Here ends de form-->
 					</div><!--/Here ends the up section-->
 					<div class="divider"></div>
 					<div class="card-content">
@@ -594,7 +560,127 @@
 			</div><!--/Aquí termina el componente para añadir-->
 		</div>
 	</div><!--/aquí termina el contenido de un tab-->
-
+	{{-- <div id="prod_art" class="tab-pane" role="tabpanel">
+		<div class="row">
+			<div class="card z-depth-0">
+				<div class="card-image">
+					<form>
+					<div class="row">
+						<div class="row">
+							<div class="input-field col s12 m6">
+								<label for="autocomplete-input">*SKU:</label>
+								<input type="text" id="autocomplete-input" class="autocomplete">
+							</div>
+							<div class="input-field col s12 m6">
+								<label for="autocomplete-input">UPC:</label>
+								<input type="text" id="autocomplete-input" class="autocomplete">
+							</div>
+							<div class="col s12 m6">
+								<p>(Selecciona...)</p><!--Aquí se muestra la información-->
+							</div>
+							<div class="col s12 m6">
+								<p>(Selecciona...)</p><!--Aquí se muestra la información-->
+							</div>
+						</div>
+						<div class="input-field col s12 m3">
+							<label for="costo">*Costo:</label>
+							<input id="costo" type="number" class="form-control">
+						</div>
+						<div class="input-field col s12 m3">
+							<select>
+								<option value="" disabled selected>Selecciona...</option>
+								<option value="1">Option 1</option>
+								<option value="2">Option 2</option>
+								<option value="3">Option 3</option>
+							</select>
+							<label>*Impuesto:</label>
+						</div>
+						<div class="col s12 m6">
+							<label data-error="Campo obligatorio">*Descuentos:</label>
+							<div id="emails" class="chips chips-initial"></div>
+						</div>
+						<div class="input-field col s6 m3">
+							<label for="porcentaje_impuesto">Porcentaje impuesto:</label>
+							<input id="porcentaje_impuesto" type="number" class="form-control">
+						</div>
+						<div class="input-field col s6 m3">
+							<label for="cnatidad_compra">Cantidad Unidad de Medida Compra:</label>
+							<input id="cnatidad_compra" type="number" class="form-control">
+						</div>
+						<div class="input-field col s6 m3">
+							<label for="cnatidad_compra">Precio Base:</label>
+							<input id="cnatidad_compra" type="number" class="form-control">
+						</div>
+						<div class="input-field col s6 m3">
+							<select>
+								<option value="" disabled selected>Selecciona...</option>
+								<option value="1">Option 1</option>
+								<option value="2">Option 2</option>
+								<option value="3">Option 3</option>
+							</select>
+							<label>*Unidad de Medida Compra</label>
+						</div>
+						<div class="input-field col s6 m3">
+							<label for="tiempo_entrega">Estimado tiempo de entrega: (días)</label>
+							<input id="tiempo_entrega" type="number" class="form-control">
+						</div>
+						<div class="input-field col s6 m3">
+							<label for="porcentaje_traspaso">Porcentaje de Traspaso Empresa Corporativo:</label>
+							<input id="porcentaje_traspaso" type="number" class="form-control">
+						</div>
+						<div class="input-field col s12 m6">
+							<select>
+								<option value="" disabled selected>Selecciona...</option>
+								<option value="1">Option 1</option>
+								<option value="2">Option 2</option>
+								<option value="3">Option 3</option>
+							</select>
+							<label>Empresa con Negociación</label>
+						</div>
+						<div class="col s6">
+							<label>Vigencia del costo: (inico)</label>
+							<input type="date" class="datepicker">
+						</div>
+						<div class="col s6">
+							<label>Vigencia del costo: (fin)</label>
+							<input type="date" class="datepicker">
+						</div>
+					</div>
+					<button class="btn btn-primary btn-large tooltipped" style="width: 4em; height:4em; border-radius:50%;"
+					data-position="bottom" data-delay="50" data-tooltip="Agregar" type="submit"><i
+					class="material-icons">add</i></button>
+					</form><!--/Here ends de form-->
+					<div class="divider"></div>
+				</div><!--/Here ends the up section-->
+				<div class="card-content">
+					<table class="responsive-table highlight">
+						<thead>
+							<tr>
+								<th>SKU</th>
+								<th>Descripción</th>
+								<th>Nombre Comercial</th>
+								<th>Acción</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1234adsf</td>
+								<td>Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit.</td>
+								<td>Slipsum</td>
+								<td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">edit</i></a><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+							</tr>
+							<tr>
+								<td>1234adsf</td>
+								<td>Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit.</td>
+								<td>Slipsum</td>
+								<td><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">edit</i></a><a class="eliminar btn btn_tables waves-effect btn-flat" href="#"><i class="material-icons">delete</i></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div><!--/here ends de down section-->
+			</div>
+		</div><!--/Aquí termina el componente para añadir-->
+	</div><!--/aquí termina el contenido de un tab--> --}}
 </div>
 </div>
 </div>

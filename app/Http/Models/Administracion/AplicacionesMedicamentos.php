@@ -31,7 +31,7 @@ class AplicacionesMedicamentos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'aplicacion' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+		'aplicacion' => ['required','min:2','regex:/^[a-zA-Z\s]+/']
 	];
 
 	/**

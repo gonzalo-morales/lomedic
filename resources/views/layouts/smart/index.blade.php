@@ -9,51 +9,46 @@
 
 @push('smart-js')
 <script type="text/javascript">
+
+	@can('delete', currentEntity())
+	window['smart-model'].collections.headerOptionsOnChecks.splice(1, 0, {button: {
+		'class': 'btn btn-danger',
+		'rv-on-click': 'actions.showModalDelete',
+		'data-delete-type': 'multiple',
+		'data-delete-url': '{{companyRoute('destroyMultiple')}}',
+		'html': '<i class="material-icons left align-middle">delete</i>Eliminar (<span rv-text="collections.items | length"></span>)'
+	}});
+	@endcan
+
 	window['smart-model'].collections.itemsOptions = {
-		view: {
-			props: {
-				'innerHTML': '<i class="material-icons">visibility</i>',
-			},
-			attrs: {
-				'class': 'btn is-icon',
-				'rv-get-show-url': '',
-			}
-		},
+		view: {a: {
+			'html': '<i class="material-icons">visibility</i>',
+			'class': 'btn is-icon',
+			'rv-get-show-url': '',
+		}},
 		@can('update', currentEntity())
-		edit: {
-			props: {
-				'innerHTML': '<i class="material-icons">mode_edit</i>',
-			},
-			attrs: {
-				'class': 'btn is-icon',
-				'rv-get-edit-url': '',
-			}
-		},
+		edit: {a: {
+			'html': '<i class="material-icons">mode_edit</i>',
+			'class': 'btn is-icon',
+			'rv-get-edit-url': '',
+		}},
 		@endcan
 		@can('delete', currentEntity())
-		delete: {
-			props: {
-				'innerHTML': '<i class="material-icons">delete</i>',
-			},
-			attrs: {
-				'href' : '#',
-				'class': 'btn is-icon',
-				'rv-on-click': 'actions.showModalDelete',
-				'rv-get-delete-url': '',
-				'data-delete-type': 'single',
-			}
-		},
+		delete: {a: {
+			'html': '<i class="material-icons">delete</i>',
+			'href' : '#',
+			'class': 'btn is-icon',
+			'rv-on-click': 'actions.showModalDelete',
+			'rv-get-delete-url': '',
+			'data-delete-type': 'single',
+		}},
 		@endcan
-		dummyopt: {
-			props: {
-				'innerHTML': '<i class="material-icons">visibility</i>',
-			},
-			attrs: {
-				'href' : '#',
-				'class': 'btn is-icon',
-				'rv-on-click': 'actions.showModalDummy',
-			}
-		},
+		dummyopt: {a: {
+			'html': '<i class="material-icons">visibility</i>',
+			'href' : '#',
+			'class': 'btn is-icon',
+			'rv-on-click': 'actions.showModalDummy',
+		}},
 	};
 
 	window['smart-model'].actions.showModalDummy = function(e, rv) {
@@ -72,23 +67,18 @@
 			'<textarea class="form-control" id="message-text" name="message"></textarea>' +
 			'</div>' +
 			'</form>',
-			buttons: [{
-				props: {
-					'innerHTML': 'Cancelar',
-				},
-				attrs: {
+			buttons: [
+				{button: {
+					'text': 'Cancelar',
 					'class': 'btn btn-secondary',
 					'data-dismiss': 'modal',
-				}
-			},{
-				props: {
-					'innerHTML': 'Aceptar',
-				},
-				attrs: {
+				}},
+				{button: {
+					'text': 'Aceptar',
 					'class': 'btn btn-primary',
 					'rv-on-click': 'action',
-				}
-			}],
+				}}
+			],
 			action: function(e, rv) {
 
 				var formData = new FormData(document.querySelector('#dummy-form')), convertedJSON = {}, it = formData.entries(), n;
@@ -102,10 +92,10 @@
 			},
 		})
 
-	// Abrimos modal
-	$(modal).modal('show');
+		// Abrimos modal
+		$(modal).modal('show');
 
-};
+	};
 
 // showModalMotivoCancelacion(e, rv) {
 // 	e.preventDefault();
@@ -185,7 +175,10 @@
 <script src="{{ asset('js/smartindex.js') }}"></script>
 @if (session('message'))
 <script type="text/javascript">
-	Materialize.toast('<span><i class="material-icons">priority_high</i>{{session('message.text')}}</span>', 4000, '{{session('message.type')}}' );
+	$.toaster({
+		priority: 'success', title: 'Exito', message: '{{session('message.type')}}',
+		settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
+	})
 </script>
 @endif
 @stack('smart-js')
@@ -196,7 +189,7 @@
 	{{ HTML::tag('h4', currentEntityBaseName(),['class'=>'col-md-12']) }}
 	<div class="row">
 		<div class="col">
-			<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}">
+			<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-create-url="{{ companyRoute('create') }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}" data-item-export-url="{{companyRoute('export', ['type' => '_ID_'])}}">
 				<div class="col-sm-6">
 					<table class=table bordered striped highlight" hidden>
 						<tr><td>items checked</td><td rv-text="collections.items | length"></td></tr>
@@ -208,35 +201,10 @@
 				</div>
 				<div class="col-md-12">
 					<div class="float-right" rv-hide="collections.items | length">
-						<a href="{{ companyRoute('create') }}" class="btn btn-primary" role="button">Crear</a>
-						<button class="btn btn-secondary dropdown-toggle d-inline-flex" type="button" id="export-all" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="material-icons left">file_download</i>Exportar
-						</button>
-						<div class="dropdown-menu" aria-labelledby="export-all">
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLSX'])}}">Libro Excel</a>
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'PDF'])}}">Archivo Pdf</a>
-							<div class="dropdown-divider"></div>
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLS'])}}">Excel 97-2003</a>
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'CSV'])}}">CSV</a>
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'TXT'])}}">TXT</a>
-						</div>
+						<a rv-each-dynamics="collections.headerOptions"></a>
 					</div>
 					<div class="float-right" rv-show="collections.items | length" style="display: none;">
-						<button class="btn d-inline-flex" rv-on-click="actions.uncheckAll"><i class="material-icons left">select_all</i>Deseleccionar (<span rv-text="collections.items | length"></span>)</button>
-						@can('delete', currentEntity())
-						<button class="btn d-inline-flex" rv-on-click="actions.showModalDelete" data-delete-type="multiple" data-delete-url="{{companyRoute('destroyMultiple')}}"><i class="material-icons left">delete</i>Eliminar (<span rv-text="collections.items | length"></span>)</button>
-						@endcan
-						<button class="btn btn-secondary dropdown-toggle d-inline-flex" type="button" id="export-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="material-icons left">file_download</i>Exportar (<span rv-text="collections.items | length"></span>)
-						</button>
-						<div class="dropdown-menu" aria-labelledby="export-custom">
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLSX'])}}">Libro Excel</a>
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'PDF'])}}">Archivo Pdf</a>
-							<div class="dropdown-divider"></div>
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'XLS'])}}">Excel 97-2003</a>
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'CSV'])}}">CSV</a>
-							<a href="#" class="dropdown-item" rv-on-click="actions.itemsExport" data-export-url="{{companyRoute('export', ['type' => 'TXT'])}}">TXT</a>
-						</div>
+						<a rv-each-dynamics="collections.headerOptionsOnChecks"></a>
 					</div>
 				</div>
 				<div class="col-md-12">
@@ -254,7 +222,7 @@
 							@foreach ($data as $row)
 							<tr>
 								<td class="width-auto">
-									<input type="checkbox" id="check-{{$row->getKey()}}" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="{{$row->getKey()}}">
+									<input type="checkbox" id="check-{{$row->getKey()}}" name="check-{{$row->getKey()}}" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="{{$row->getKey()}}">
 								</td>
 								@foreach ($fields as $field => $label)
 								<td>{{ object_get($row, $field) }}</td>

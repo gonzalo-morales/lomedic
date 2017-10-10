@@ -2,6 +2,33 @@
 /* Extend jQuery with functions for PUT and DELETE requests. */
 function _ajax_request(e,t,u,r,a){return jQuery.isFunction(t)&&(u=t,t={}),jQuery.ajax({type:a,url:e,data:t,success:u,dataType:r})}jQuery.extend({put:function(e,t,u,r){return _ajax_request(e,t,u,r,"PUT")},delete:function(e,t,u,r){return _ajax_request(e,t,u,r,"DELETE")}});
 
+var _createElement = function(a, b) {
+	var c = document;
+	if (a && "object" == typeof a) {
+		var e, i;
+		for (e in a) {
+			var d = c.createElement(e);
+			if (b) for (var ii in b) d.dataset[ii] = b[ii];
+			if (a[e] && "object" == typeof a[e]) {
+				for (i in a[e]) {
+					if ("html" === i) {
+						d.innerHTML = a[e][i];
+					} else if ("text" === i) {
+						d.appendChild(c.createTextNode(a[e][i]));
+					} else if ('childs' == i) {
+						for (var x in a[e][i]) {
+							d.append(_createElement(a[e][i][x]))
+						}
+					} else {
+						d.setAttribute(i, a[e][i]);
+					}
+				}
+			}
+		}
+	}
+	return d;
+}
+
 	function post_to_url(path, params, method) {
 		method = method || 'post';
 
@@ -32,7 +59,6 @@ let datatable = new DataTable('.smart-table', {
 	perPage: 20,
 	columns: [
 		{select: [0], sortable: false },
-		//{ select: [2], case_sensitive: true },
 	],
 	// data: data,
 	labels: {
@@ -85,6 +111,74 @@ window['smart-model'] = {
 	lastChecked: null,
 	// Colecciones de datos
 	collections: {
+		headerOptions: [
+			// Button
+			{a: {
+				href: '#',
+				class: 'btn btn-primary',
+				role: 'buttons',
+				'rv-get-create-url': '',
+				html: '<i class="material-icons left align-middle">add</i>Crear',
+			}},
+			// Dropdown
+			{div: {
+				class: 'dropdown d-inline',
+				childs: [
+					{button: {
+						class: 'btn btn-secondary dropdown-toggle',
+						type: 'button',
+						'data-toggle': 'dropdown',
+						'aria-haspopup': 'true',
+						'aria-expanded': 'false',
+						html: '<i class="material-icons left align-middle">file_download</i>Exportar'
+					}},
+					{div: {
+						class: 'dropdown-menu dropdown-menu-right',
+						childs: [
+							{a: {text: 'Libro Excel', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLSX'}},
+							{a: {text: 'Archivo Pdf', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'PDF'}},
+							{div: {class: 'dropdown-divider'}},
+							{a: {text: 'Excel 97-2003', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLS'}},
+							{a: {text: 'CSV', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'CSV'}},
+							{a: {text: 'TXT', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'TXT'}},
+						]
+					}}
+				]},
+			}
+		],
+		headerOptionsOnChecks: [
+			// Button
+			{button: {
+				html: '<i class="material-icons left align-middle">select_all</i>Deseleccionar (<span rv-text="collections.items | length"></span>)',
+				class: 'btn',
+				'rv-on-click': 'actions.uncheckAll'
+			}},
+			// Dropdown
+			{div: {
+				class: 'dropdown d-inline',
+				childs: [
+					{button: {
+						class: 'btn btn-secondary dropdown-toggle',
+						type: 'button',
+						'data-toggle': 'dropdown',
+						'aria-haspopup': 'true',
+						'aria-expanded': 'false',
+						html: '<i class="material-icons left align-middle">file_download</i>Exportar (<span rv-text="collections.items | length"></span>)'
+					}},
+					{div: {
+						class: 'dropdown-menu dropdown-menu-right',
+						childs: [
+							{a: {text: 'Libro Excel', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLSX'}},
+							{a: {text: 'Archivo Pdf', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'PDF'}},
+							{div: {class: 'dropdown-divider'}},
+							{a: {text: 'Excel 97-2003', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLS'}},
+							{a: {text: 'CSV', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'CSV'}},
+							{a: {text: 'TXT', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'TXT'}},
+						]
+					}}
+				]}
+			}
+		],
 		// {itemId : datatable row }
 		items: [],
 		// Opciones en item
@@ -138,23 +232,18 @@ window['smart-model'] = {
 			modal.view = rivets.bind(modal, {
 				title: '¿Estas seguro?',
 				content: 'Una vez eliminado(s) no podrás recuperarlo(s).',
-				buttons: [{
-					props: {
-						'innerHTML': 'Cancelar',
-					},
-					attrs: {
+				buttons: [
+					{button: {
+						'text': 'Cancelar',
 						'class': 'btn btn-secondary',
 						'data-dismiss': 'modal',
-					}
-				},{
-					props: {
-						'innerHTML': 'Eliminar',
-					},
-					attrs: {
+					}},
+					{button: {
+						'html': 'Eliminar',
 						'class': 'btn btn-danger',
 						'rv-on-click': 'action',
-					}
-				}],
+					}}
+				],
 				action: function(e) {
 					window['smart-model'].actions.itemsDelete.call(this, e, rv);
 				}.bind(this),
@@ -189,18 +278,22 @@ window['smart-model'] = {
 				break;
 			}
 
+			$(window['smart-modal']).modal('hide');
 			//
 			$.delete(this.dataset.deleteUrl, data, function(response) {
 				if (response.success) {
 					datatable.rows().remove(tablerows)
-					$(window['smart-modal']).modal('hide');
+					$.toaster({
+						priority: 'success', title: 'Exito', message: 'Registro(s) eliminado correctamente.',
+						settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
+					})
 				}
 			});
 		},
 		itemsExport(e, rv) {
 			e.preventDefault();
 			rv.status.isDownloading = true;
-			post_to_url(this.dataset.exportUrl, {'ids' : rivets.formatters.keys(rv.collections.items)});
+			post_to_url(window['smart-view'].dataset.itemExportUrl.replace('_ID_', this.dataset.exportType), {'ids' : rivets.formatters.keys(rv.collections.items)});
 			rv.status.isDownloading = false;
 		},
 	},
@@ -288,23 +381,17 @@ rivets.binders['each-dynamics'] = {
 			return (typeof collection[item] !== 'function') ? acc.concat(collection[item]) : acc;
 		}, []);
 		for(var key in options) {
-			var template = el.cloneNode(true);
-			if (options[key].props) {
-				let props = options[key].props;
-				for (let i in props) {
-					template[i] = (!!(props[i] && props[i].call && props[i].apply) ? props[i].bind(this.view.models) : props[i]);
-				}
-			}
-			if (options[key].attrs) {
-				let attrs = options[key].attrs;
-				for (let i in attrs) {
-					template.setAttribute(i, attrs[i])
-				}
-			}
-			this.marker.parentNode.append(template)
+			var template = _createElement(options[key], el.dataset);
+			this.marker.parentNode.append(template);
 			this.iterated.push(rivets.bind(template, this.view.models))
 		}
 	}
+};
+
+rivets.binders['get-create-url'] = {
+	bind: function(el) {
+		el.href = window['smart-view'].dataset.itemCreateUrl;
+	},
 };
 
 rivets.binders['get-show-url'] = {
@@ -325,6 +412,56 @@ rivets.binders['get-delete-url'] = {
 	},
 };
 
+rivets.binders['append-filters'] = function(el) {
+
+	el.removeAttribute([this.view.prefix, this.type].join('-').replace('--', '-'));
+	el.classList.add('form-control')
+
+	var row = _createElement({div: {class: 'row',
+		childs: [{div: {class:'col-md-12',
+			childs: [{div: {class:'input-group',
+				childs: [{div: {class:'input-group-btn',
+					childs: [
+						{button: {class: 'btn btn-secondary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false'}},
+						{div: {class: 'dropdown-menu dropdown-menu-right'}}
+					]
+				}}]
+			}}]
+		}}]
+	}})
+	el.parentNode.append(row)
+
+	var input_group = row.querySelector('.input-group');
+		input_group.insertBefore(el, input_group.firstChild)
+
+	//
+	for (var i in datatable.headings) {
+		var th = datatable.headings[i];
+		if (th.innerText || th.textContent) {
+			var a = _createElement({'a': {
+				class: 'dropdown-item',
+				href: "#",
+				html: '<input type="checkbox" value='+i+' checked> ' + (th.innerText || th.textContent),
+			}})
+			row.querySelector('.dropdown-menu').append(a)
+
+			$(a).on('click', function(e) {
+				e.preventDefault();
+				var selector = this.querySelector('[type="checkbox"]');
+				selector.checked = !selector.checked
+				if (selector.checked) {
+					datatable.columns().show([parseInt(selector.value)]);
+				} else {
+					datatable.columns().hide([parseInt(selector.value)]);
+				}
+			})
+		}
+	}
+};
+
+window['smart-view'].querySelector('.dataTable-selector').classList.add('custom-select');
+window['smart-view'].querySelector('.dataTable-input').setAttribute('rv-append-filters','')
+
 let view = rivets.bind(window['smart-view'], window['smart-model']);
 
 if (datatable.hasRows) {
@@ -344,12 +481,14 @@ function getItems($page) {
 		let collection = [];
 		$.each(response.data, function(index, item) {
 			let id = item[primary];
-			let estatus = item['fk_id_estatus'];
 			let collection_item = {};
-			collection_item['input'] = '<input type="checkbox" id="check-'+id+'" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="'+id+'">';
+			collection_item['input'] = '<input type="checkbox" id="check-'+id+'" name="check-'+id+'" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="'+id+'">';
 			$.each(columns, function(index, column) {
-				collection_item[column] = (new Function('str', 'return eval("this." + str);')).call(item, column)
+				collection_item[column] = (new Function('str', 'return eval("this." + str);')).call(item, column);
+				if(item[column] == null) collection_item[column] = '';
 			})
+
+
 			collection_item['actions'] = '<a rv-each-dynamics="collections.itemsOptions" data-item-id="'+id+'"></a>';
 			collection.push(collection_item);
 		})

@@ -7,7 +7,7 @@
 @endsection
 
 @section('header-bottom')
-	{!! isset($validator) ? $validator->selector('#form-model') : '' !!}
+	{!! isset($validator) ? $validator : '' !!}
 @endsection
 
 @section('form-actions')
