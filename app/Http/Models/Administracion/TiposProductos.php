@@ -11,7 +11,7 @@ class TiposProductos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_tipo_producto';
+	protected $table = 'maestro.gen_cat_tipo_producto';
 
 	/**
 	 * The primary key of the table
@@ -24,29 +24,23 @@ class TiposProductos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['descripcion', 'estatus','nomenclatura','prioridad'];
+	protected $fillable = ['tipo_producto','nomenclatura','prioridad', 'activo'];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [
-		'descripcion' => 'required',
-		'estatus' => 'required',
-		'nomenclatura' => 'required',
-		'prioridad' => 'required',
-	];
+	public $rules = [];
 
     /**
      * Los atributos que seran visibles en index-datable
      * @var null|array
      */
     protected $fields = [
-        'descripcion' => 'Tipo',
-        'tipo' => 'Tipo',
+        'tipo_producto' => 'Tipo',
         'nomenclatura' => 'Nomenclatura',
         'prioridad' => 'Prioridad',
-        'estatus' => 'Estatus',
+        'activo_span' => 'Estatus',
     ];
 
 }

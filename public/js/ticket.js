@@ -1,19 +1,22 @@
+/* Extend jQuery with functions for PUT and DELETE requests. */
+function _ajax_request(e,t,u,r,a){return jQuery.isFunction(t)&&(u=t,t={}),jQuery.ajax({type:a,url:e,data:t,success:u,dataType:r})}jQuery.extend({put:function(e,t,u,r){return _ajax_request(e,t,u,r,"PUT")},delete:function(e,t,u,r){return _ajax_request(e,t,u,r,"DELETE")}});
+
 $(document).ready(function () {
 	// check box para habilitar la seleccion de otro empleado
-	$( ":checkbox" ).on( "click", function() {
-    	$( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+	$('#check_solicitante').on('click', function() {
+    	$( this ).parent().nextAll('select').prop('disabled', !this.checked );
     	if( !this.checked )
-    		$( this ).parent().nextAll( "select" ).empty().trigger('change');
+    		$( this ).parent().nextAll('select').empty().trigger('change');
     });
-	
+
 	//cuando se habilita otro empledo carga los empleados disponibles
 	var options = new Option('Selecciona un empleado', '', true, false);
     $('#empleado_solicitud').prepend(options);
     $('#empleado_solicitud option:selected').prop('disabled', true);
 
-    $( "#empleado_solicitud" ).select2({
-    	theme: "bootstrap",
-        placeholder: "Selecciona si la solicitud es para otra persona",
+    $('#empleado_solicitud').select2({
+    	theme: 'bootstrap',
+        placeholder: 'Selecciona si la solicitud es para otra persona',
         maximumSelectionSize: 6,
         containerCssClass: ':all:',
         ajax: {
@@ -28,16 +31,16 @@ $(document).ready(function () {
             }
         },
     });
-    
+
     //Carga las sucursales del empleado que inicio sesion
     var options = new Option('Selecciona una sucursal', '', true, false);
-    $('#fk_id_sucursal').prepend(options);
-    $('#fk_id_sucursal option:selected').prop('disabled', true);
+    $('#ticketHelp #fk_id_sucursal').prepend(options);
+    $('#ticketHelp #fk_id_sucursal option:selected').prop('disabled', true);
     id_empleado = $('#id_solicitante').val();
-    url_sucursal = $('#fk_id_sucursal').data('url');
-    
-    $( "#fk_id_sucursal" ).select2({
-    	theme: "bootstrap",
+    url_sucursal = $('#ticketHelp #fk_id_sucursal').data('url');
+
+    $('#ticketHelp #fk_id_sucursal').select2({
+    	theme: 'bootstrap',
         maximumSelectionSize: 6,
         containerCssClass: ':all:',
         ajax: {
@@ -52,24 +55,24 @@ $(document).ready(function () {
             }
         },
     });
-    
+
     //Carga las sucursales para el empleado seleccionado
     $('#empleado_solicitud').bind('change', function(){
-    	$("#fk_id_sucursal").empty();
+    	$('#ticketHelp #fk_id_sucursal').empty();
     	var options = new Option('Selecciona una sucursal', '', true, false);
-        $('#fk_id_sucursal').prepend(options);
-        $('#fk_id_sucursal option:selected').prop('disabled', true);
-	    	    
-	    let url_sucursal = $('#fk_id_sucursal').data('url');
+        $('#ticketHelp #fk_id_sucursal').prepend(options);
+        $('#ticketHelp #fk_id_sucursal option:selected').prop('disabled', true);
+
+	    let url_sucursal = $('#ticketHelp #fk_id_sucursal').data('url');
 	    let id_empleado = $('option:selected', this).val();
-	    
+
 	    if( !id_empleado ) {
 	    	id_empleado = $('#id_solicitante').val();
 	    }
-	    
-	    $( "#fk_id_sucursal" ).select2({
-	    	theme: "bootstrap",
-	        placeholder: "Sucursal",
+
+	    $('#ticketHelp #fk_id_sucursal').select2({
+	    	theme: 'bootstrap',
+	        placeholder: 'Sucursal',
 	        maximumSelectionSize: 6,
 	        containerCssClass: ':all:',
 	        ajax: {
@@ -91,7 +94,7 @@ $(document).ready(function () {
     $('.fk_id_categoria').prepend(options);
     $('.fk_id_categoria').val('');
     $('.fk_id_categoria option:selected').prop('disabled', true);
-    
+
     $('.fk_id_categoria').on('change', function(){
         let url = $(this).data('url');
 
@@ -117,7 +120,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     //Carga acciones segun al elegir una subcategoria
     $('.fk_id_subcategoria').on('change', function(){
         let url = $(this).data('url');
@@ -142,35 +145,35 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     //Selecciona Prioridad
     var options = new Option('Selecciona una prioridad', '', true, false);
     $('#fk_id_prioridad').prepend(options);
     $('#fk_id_prioridad').val('');
     $('#fk_id_prioridad option:selected').prop('disabled', true);
-    
+
     //Validaciones antes del submit
-    $( "#form-ticket" ).submit(function( event ) {
+    $('#form-ticket').submit(function( event ) {
     	var mensaje = '';
-    	
-    	if($('#check_solicitante').is(":checked") && !$('#empleado_solicitud').val()) {
+
+    	if($('#check_solicitante').is(':checked') && !$('#empleado_solicitud').val()) {
     		mensaje = mensaje + '<br> Especifica el solicitante.';
     	}
-    	if(!$('#fk_id_sucursal').val()) {
+    	if(!$('#ticketHelp #fk_id_sucursal').val()) {
     		mensaje = mensaje + '<br> Especifica una sucursal.';
     	}
     	if(!$('#fk_id_prioridad').val()) {
     		mensaje = mensaje + '<br> Especifica una prioridad.';
     	}
-    	
+
     	if(!$('#asunto').val()) {
     		mensaje = mensaje + '<br> Especifica un Asunto.';
     	}
-    	
+
     	if(!$('#descripcion').val()) {
     		mensaje = mensaje + '<br> Especifica la descripcion del problema.';
     	}
-    	
+
     	if(mensaje.length >= 1) {
     		event.preventDefault();
     		$.toaster({

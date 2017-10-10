@@ -24,17 +24,17 @@ $(document).ready( function () {
     $('#id_solicitante').val(getIdempleado());
     if(window.location.href.toString().indexOf('editar') > -1)//Si es editar
     {
-        $('.detalle_select').select2();
+        // $('.detalle_select').select2();
         $('#fk_id_solicitante').select2();
-
-    }else{
+    }else if(window.location.href.toString().indexOf('crear') > -1){
         select2Placeholder('fk_id_solicitante',
             'Yo solicito la compra',
             10,
             true,
             false,
-            $('#id_solicitante').val()
-        );//Si no es editar
+            $('#id_solicitante').val());
+    }else{
+        $('select').prop('disabled',true);
     }
     $(':submit').attr('onclick','eliminarDetalle()');
 
@@ -59,7 +59,7 @@ $(document).ready( function () {
         perPageSelect: false
     });
 
-    select2Placeholder('fk_id_codigo_barras','Selecciona código de barras',5);
+    select2Placeholder('fk_id_upc','Selecciona UPC',5);
     $('#fk_id_sku').on('change',function () {
         if($('#fk_id_sku').select2('data')[0].id)
             codigosbarras();//Carga los nuevos datos del producto
@@ -89,7 +89,7 @@ $(document).ready( function () {
             }
     });
 
-    $(document).on('keyup','.precio',function (e) {
+    $(document).on('keyup','.precio_unitario',function (e) {
         let valid = /^\d{0,10}(\.\d{0,2})?$/g.test(this.value),
             val = this.value;
         if(!valid)
@@ -97,7 +97,6 @@ $(document).ready( function () {
             this.value = val.substring(0, val.length - 1);
         }
     });
-    validateDetail();
 });
 
 function getIdempleado()
@@ -174,8 +173,8 @@ function sucursal()
 function codigosbarras()
 {
     if($('#fk_id_sku').select2('data')[0].id != null) {
-        let data_codigo = $('#fk_id_codigo_barras').data('url');
-        $('#fk_id_codigo_barras').prop('disabled', true);//Deshabilitar
+        let data_codigo = $('#fk_id_upc').data('url');
+        $('#fk_id_upc').prop('disabled', true);//Deshabilitar
 
         var _url = data_codigo.replace('?id', $('#fk_id_sku').select2('data')[0].id);
 
@@ -183,35 +182,34 @@ function codigosbarras()
             url: _url,
             dataType: 'json',
             success: function (data) {
-                // removerOpciones('fk_id_codigo_barras');
-                $('#fk_id_codigo_barras').empty();
+                // removerOpciones('fk_id_upc');
+                $('#fk_id_upc').empty();
                 let option = $('<option/>');
                 option.val(null);
                 option.attr('disabled', 'disabled');
                 option.attr('selected', 'selected');
-                option.text('Selecciona un código de barras');
-                $('#fk_id_codigo_barras').append(option);
+                option.text('Selecciona un UPC');
+                $('#fk_id_upc').append(option);
                 $.each(data, function (key, codigo) {
                     let option = $('<option/>');
-                    option.val(codigo.id_codigo_barras);
-                    option.text(codigo.descripcion);
-                    $('#fk_id_codigo_barras').append(option);
+                    option.val(codigo.id);
+                    option.text(codigo.text);
+                    $('#fk_id_upc').append(option);
                 });
                 if (Object.keys(data).length == 0) {
-                    $('#fk_id_codigo_barras').prop('disabled', true)
+                    $('#fk_id_upc').prop('disabled', true)
                 }
                 else {
-                    $('#fk_id_codigo_barras').prop('disabled', false)
+                    $('#fk_id_upc').prop('disabled', false)
                 }
 
-                $('#fk_id_codigo_barras').select2();
+                $('#fk_id_upc').select2();
             },
         });
     }
 }
 
 function total_producto() {
-    let data_impuesto = $('#fk_id_impuesto').data('url');
     let impuesto = $('#fk_id_impuesto').select2('data')[0].porcentaje;
             let precio_unitario = $('#precio_unitario').val();
             let cantidad = $('#cantidad').val();
@@ -291,16 +289,16 @@ function agregarProducto() {
             type: "csv",
             data:
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text + ","+
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_codigo_barras]" value="' + $('#fk_id_codigo_barras').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_codigo_barras').select2('data')[0].text + ","+
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_upc').select2('data')[0].text + ","+
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" />')[0].outerHTML+$('#fk_id_proveedor').val()+ "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val()+'"/>')[0].outerHTML +  $('#fecha_necesario').val() + "," +
             $('<select name="_detalles['+row_id+'][fk_id_proyecto]" id="fk_id_proyecto'+row_id+'" style="width: 100%" class="select">'+proyectos+'</select>')[0].outerHTML + ","+
             $('<input type="text" name="_detalles['+row_id+'][cantidad]" onchange="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad form-control" />')[0].outerHTML + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />')[0].outerHTML + $('#fk_id_unidad_medida option:selected').html() + ","+
             $('<select name="_detalles['+row_id+'][fk_id_impuesto]" onchange="total_producto_row('+row_id+')" id="_fk_id_impuesto'+row_id+'" style="width: 100%" class="select">'+impuestos+'</select>')[0].outerHTML + ","+
-            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio form-control"/>')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
             $('<input type="text" name="_detalles['+row_id+'][total]" readonly id="_total'+row_id+'" value="'+ total+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
-            '<button class="btn-flat teal lighten-5 halfway-fab waves-effect waves-light" ' +
+            '<button class="btn is-icon text-primary bg-white" ' +
             'type="button" data-delay="50" onclick="borrarFila(this)">' +
             '<i class="material-icons">delete</i></button>'
         });
@@ -343,7 +341,7 @@ function limpiarFormulario() {
     // $('#fk_id_proveedor').val('');
     $('#fk_id_proveedor').val(null).trigger('change');
     $('#fk_id_sku').val(null).trigger('change');
-    $('#fk_id_codigo_barras').val(null).trigger('change');
+    $('#fk_id_upc').val(null).trigger('change');
     $('#fk_id_proyecto').val(null).trigger('change');
     $('#fk_id_unidad_medida').val(null).trigger('change');
     $('#fk_id_impuesto').val('-1').trigger('change');
@@ -352,7 +350,7 @@ function limpiarFormulario() {
     $('#precio_unitario').val('0');
     //Eliminar reglas de validación detalle
     $('#fk_id_sku').rules('remove');
-    $('#fk_id_codigo_barras').rules('remove');
+    $('#fk_id_upc').rules('remove');
     $('#fk_id_proyecto').rules('remove');
     $('#fecha_necesario').rules('remove');
     $('#cantidad').rules('remove');
@@ -362,12 +360,16 @@ function limpiarFormulario() {
 }
 
 function borrarFila(el) {
-    console.log( $(el).parents('tr').data('datarow') );
-    dataTable.removeRows([$(el).parents('tr').data('datarow')]);
+    // console.log( $(el).parents('tr').data('datarow') );
+    dataTable.rows().remove([$(el).parents('tr').dataIndex]);
+    if(dataTable.rows.length<1)
+        validateDetail();
 }
 function borrarFila_edit(el) {
     a.push(el.id);
-    dataTable.removeRows([$(el).parents('tr').data('datarow')]);
+    dataTable.rows().remove([$(el).parents('tr').dataIndex]);
+    if(dataTable.rows.length<1)
+        validateDetail();
 }
 
 function eliminarDetalle() {
@@ -395,10 +397,10 @@ function validateDetail() {
             required: 'Selecciona un SKU'
         }
     });
-    $('#fk_id_codigo_barras').rules('add',{
+    $('#fk_id_upc').rules('add',{
         required: true,
         messages:{
-            required: 'Selecciona un código de barras'
+            required: 'Selecciona un UPC'
         }
     });
     $('#fk_id_proyecto').rules('add',{

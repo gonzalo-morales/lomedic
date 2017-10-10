@@ -37,11 +37,11 @@ class EmpleadosController extends ControllerBase
             ->get()
             ->pluck('descripcion', 'id_puesto');
         
-        $this->offices = Sucursales::select('id_sucursal', 'nombre_sucursal')->where('eliminar', '=', '0')
+        $this->offices = Sucursales::select('id_sucursal', 'sucursal')->where('eliminar', '=', '0')
             ->where('activo', '=', '1')
-            ->orderBy('nombre_sucursal')
+            ->orderBy('sucursal')
             ->get()
-            ->pluck('nombre_sucursal', 'id_sucursal');
+            ->pluck('sucursal', 'id_sucursal');
     }
 
     public function create($company, $attributes = [])

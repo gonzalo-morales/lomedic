@@ -13,8 +13,8 @@ class Modulos extends Model
 	 *
 	 * @var string
 	 */
-//	protected $table = 'ges_cat_modulos';
-    protected $table = 'adm_cat_modulos';
+	protected $table = 'ges_cat_modulos';
+//    protected $table = 'adm_cat_modulos';
 	/**
 	 * The primary key of the table
 	 * @var string
@@ -70,10 +70,14 @@ class Modulos extends Model
 	 * Obtenemos los permisos relacionados al modulo
 	 * @return array
 	 */
-	public function permisos()
-	{
-		return $this->belongsToMany(Permisos::class, 'ges_det_permisos_modulos', 'fk_id_modulo', 'fk_id_permiso');
-	}
+//	public function permisos()
+//	{
+//		return $this->belongsTo(ModulosAcciones::class , 'id_modulo');
+//	}
+    public function permisos()
+    {
+        return $this->belongsToMany(Permisos::class, 'ges_det_permisos_modulos', 'fk_id_modulo', 'fk_id_permiso');
+    }
     public function modulos_acciones()
     {
         return $this->belongsToMany(Acciones::class,'adm_det_modulo_accion','fk_id_modulo','fk_id_accion');

@@ -25,7 +25,7 @@ class DetalleSolicitudes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_solicitud','fk_id_sku','fk_id_codigo_barras','fk_id_proveedor','cantidad',
+    protected $fillable = ['fk_id_solicitud','fk_id_sku','fk_id_upc','fk_id_proveedor','cantidad',
         'fk_id_unidad_medida','fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario'];
 
     /**
@@ -42,7 +42,7 @@ class DetalleSolicitudes extends ModelCompany
     public $rules = [
         'fk_id_solicitud' => 'required',
         'fk_id_sku' => 'required',
-        'fk_id_codigo_barras' => 'required',
+        'fk_id_upc' => 'required',
         'fk_id_proveedor' => 'required',
         'cantidad' => 'required',
         'fk_id_unidad_medida' => 'required',
@@ -58,12 +58,12 @@ class DetalleSolicitudes extends ModelCompany
 
     public function sku()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\Skus','id_sku','fk_id_sku');
+        return $this->hasOne('App\Http\Models\Inventarios\Productos','id_sku','fk_id_sku');
     }
 
-    public function codigo_barras()
+    public function upc()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\CodigosBarras','id_codigo_barras','fk_id_codigo_barras');
+        return $this->hasOne('App\Http\Models\Inventarios\Upcs','id_upc','fk_id_upc');
     }
 
     public function unidad_medida()
@@ -73,7 +73,7 @@ class DetalleSolicitudes extends ModelCompany
 
     public function impuesto()
     {
-        return $this->hasOne('App\Http\Models\Finanzas\Impuestos','id_impuesto','fk_id_impuesto');
+        return $this->hasOne('App\Http\Models\Administracion\Impuestos','id_impuesto','fk_id_impuesto');
     }
 
     public function proyecto()

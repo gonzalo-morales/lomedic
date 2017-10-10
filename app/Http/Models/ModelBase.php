@@ -26,11 +26,17 @@ class ModelBase extends Model
 	 * @var bool
 	 */
 	public $timestamps = false;
-	
+
 	public function __construct($attributes = []) {
 	    $this->rules = !empty($this->rules) ? $this->rules + $this->getRulesDefaults() : $this->getRulesDefaults();
         return parent::__construct($attributes);
 	}
+
+	/**
+	 * Nice names to validator
+	 * @var array
+	 */
+	public $niceNames = [];
 
 	/**
 	 * Obtenemos atributos a incluir en append/appends()
@@ -63,6 +69,12 @@ class ModelBase extends Model
 	{
 		return $this->eagerLoaders;
 	}
+
+	public function getDataAttributes($row) {
+        return collect($this->dataColumns)->map(function ($name) use ($row) {
+            return "data-$name=\"{$row->{$name}}\"";
+        })->implode(' ');
+    }
 
 	/**
 	 * Accessor - Obtenemos columna 'activo' formateado en texto
@@ -99,16 +111,16 @@ class ModelBase extends Model
 			return $column->getDefault();
 		}, $columns );
 	}
-	
+
 	/**
 	 * Obtenemos informacion-base de modelo para las reglas
 	 * @return array
 	 */
 	public function getRulesDefaults()
 	{
-	    $types = ['Integer'=>'Integer','Decimal'=>'Digits','Date'=>'Date','Time'=>'Sometimes'];
+	    $types = ['Integer'=>'Integer','Numeric'=>'Digits','Date'=>'Date','Time'=>'Sometimes'];
 	    $columns = $this->getConnection()->getDoctrineSchemaManager()->listTableDetails($this->getTable())->getColumns();
-	    
+
 	    $propertys = array_map(function($column) {
 	        return [
 	            'required' => $column->getNotnull(),
@@ -118,26 +130,26 @@ class ModelBase extends Model
 	            'comment'  => $column->getComment(),
 	        ];
 	    }, $columns );
-	        
+
         $rules = [];
         foreach($propertys as $col=>$prop) {
             if(in_array($col, $this->fillable))
             {
                 $rules[$col] = [];
                 $type = (string)$prop['type'];
-                
+
                 if($type == 'Boolean')
                 {
                     array_push($rules[$col],'min:0');
                     array_push($rules[$col],'max:1');
                 }
                 elseif(in_array($type,['Integer','Decimal'])) {
-                    array_push($rules[$col],'digits_between:1,'.$prop['length']);
+                    array_push($rules[$col],'digits_between:0,'.$prop['length']);
                 }
                 else {
                     array_push($rules[$col],'max:'.$prop['length']);
                 }
-                
+
                 if(isset($types[$type])) {
                     if($types[$type] == 'Digits') {
                         array_push($rules[$col],$types[$type].':'.$prop['decimal']);
@@ -146,11 +158,11 @@ class ModelBase extends Model
                         array_push($rules[$col],$types[$type]);
                     }
                 }
-                
+
                 if($prop['required'] == true && $type != 'Boolean') {
                     array_push($rules[$col],'required');
                 }
-                
+
                 if(!empty($prop['comment'])) {
                     array_push($rules[$col],$prop['comment']);
                 }
@@ -158,23 +170,4 @@ class ModelBase extends Model
         }
         return $rules;
 	}
-	/*
-	public function array_diff_assoc_recursive($array1, $array2) {
-	    $difference=array();
-	    foreach($array1 as $key => $value) {
-	        if( is_array($value) ) {
-	            if( !isset($array2[$key]) || !is_array($array2[$key]) ) {
-	                $difference[$key] = $value;
-	            } else {
-	                $new_diff = array_diff_assoc_recursive($value, $array2[$key]);
-	                if( !empty($new_diff) )
-	                    $difference[$key] = $new_diff;
-	            }
-	        } else if( !array_key_exists($key,$array2) || $array2[$key] !== $value ) {
-	            $difference[$key] = $value;
-	        }
-	    }
-	    return $difference;
-	}
-	*/
 }

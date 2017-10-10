@@ -5,7 +5,18 @@
 
 function accionesPerfil(profiel)
 {
+
     var profiel_id = profiel.split('_');
+
+    if($("#perfil_check_"+profiel_id[1]).attr('checked') )
+    {
+        $("#perfil_check_"+profiel_id[1]).attr('checked', false);
+    }
+    else
+    {
+        $("#perfil_check_"+profiel_id[1]).attr('checked', true);
+    }
+
 
     $.each(profiles_permissions,function ()
     {
@@ -24,45 +35,6 @@ function accionesPerfil(profiel)
     });
 
 }
-
-
-// $('.profiles_select').change(function(event) {
-//
-//     var profiles_no_select = [];
-//
-//     $.each(this,function(index,value)
-//     {
-//         profiles_no_select.push($(value).val());
-//     });
-//     $.each($( this ).val(),function(index,profiel_select)
-//     {
-//         $.each(profiles_permissions,function()
-//         {
-//             profiles_no_select = profiles_no_select.filter(function(item)
-//             {
-//                 return item !== profiel_select
-//             });
-//             if(this.fk_id_perfil == profiel_select)
-//             {
-//                 $('#accion_' + this.id_modulo_accion).prop('checked',true);
-//             }
-//         });
-//
-//     });
-//
-//     $.each(profiles_no_select,function(index,profiel_no_select)
-//     {
-//         $.each(profiles_permissions,function()
-//         {
-//             if(this.fk_id_perfil == profiel_no_select)
-//             {
-//                 $('#accion_' + this.id_modulo_accion).prop('checked',false);
-//             }
-//         });
-//     });
-// });
-
-// var cont_correo = 0;
 
 function agregarCorreo()
 {

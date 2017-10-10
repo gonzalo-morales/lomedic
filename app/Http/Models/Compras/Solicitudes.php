@@ -38,7 +38,11 @@ class Solicitudes extends ModelCompany
         'nombre_sucursal' => 'Sucursal',
         'fecha_creacion' => 'Fecha de solicitud',
         'fecha_necesidad' => 'Fecha necesidad',
-        'estatus_solicitud' => 'Estatus'
+        'estatus_solicitud' => 'Estatus',
+    ];
+
+    protected $dataColumns = [
+        'fk_id_estatus_solicitud'
     ];
 
     function getNombreCompletoAttribute() {

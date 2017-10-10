@@ -13,6 +13,11 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ControllerBase extends Controller
 {
+	public function getDataView($entity = null)
+	{
+		return [];
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -21,7 +26,7 @@ class ControllerBase extends Controller
 	public function index($company, $attributes = ['where'=>['eliminar = 0']])
 	{
 		# ¿Usuario tiene permiso para ver?
-		$this->authorize('view', $this->entity);
+//		$this->authorize('view', $this->entity);
 
 		# Log
 		$this->log('index');
@@ -34,10 +39,8 @@ class ControllerBase extends Controller
 			}
 		}
 
-		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
-
 		if (!request()->ajax()) {
-			return view(currentRouteName('smart'), $dataview+[
+			return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
 				'fields' => $this->entity->getFields(),
 				'data' => $query->limit(20)->get(),
 			]);
@@ -61,9 +64,9 @@ class ControllerBase extends Controller
 				# Eliminamos primeros 20 registros en pagina #1
 				if( $page == 1) $items = $items->slice(20);
 
-				return (new LengthAwarePaginator($items, $all->count(), $perPage, $page))->toJson();
+				return (new LengthAwarePaginator($items, $all->count(), $perPage, $page));
 			});
-			return response()->json()->setJson($cache);
+			return $cache;
 		}
 	}
 
@@ -75,15 +78,15 @@ class ControllerBase extends Controller
 	public function create($company, $attributes =[])
 	{
 		# ¿Usuario tiene permiso para crear?
-		$this->authorize('create', $this->entity);
+//		$this->authorize('create', $this->entity);
 
 		$data = $this->entity->getColumnsDefaultsValues();
-		
-		$validator = \JsValidator::make($this->entity->rules,[],[],'#form-model');
+		$validator = \JsValidator::make($this->entity->rules, [], $this->entity->niceNames, '#form-model');
 
-		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
-
-		return view(currentRouteName('smart'), $dataview+['data'=>$data,'validator'=>$validator]);
+		return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
+			'data' => $data,
+			'validator' => $validator
+		] + $this->getDataView());
 	}
 
 	/**
@@ -95,12 +98,12 @@ class ControllerBase extends Controller
 	public function store(Request $request, $company)
 	{
 		# ¿Usuario tiene permiso para crear?
-		$this->authorize('create', $this->entity);
+//		$this->authorize('create', $this->entity);
 
 		$request->request->set('activo',!empty($request->request->get('activo')));
-		
+
 		# Validamos request, si falla regresamos pagina
-		$this->validate($request, $this->entity->rules);
+		$this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
 		$isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
@@ -125,14 +128,30 @@ class ControllerBase extends Controller
 	public function show($company, $id, $attributes =[])
 	{
 		# ¿Usuario tiene permiso para ver?
-		$this->authorize('view', $this->entity);
+//		$this->authorize('view', $this->entity);
 
 		# Log
 		$this->log('show', $id);
-		$data = $this->entity->findOrFail($id);
-		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
+		try {
+			$data = $this->entity->findOrFail($id);
+		} catch (\Exception $e) {
+			return ['success' => false,'message' => $e->getMessage()];
+		}
+
+		if (!request()->ajax()) {
+			return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + ['data'=>$data] + $this->getDataView($data));
+
+		# Ajax
+		} else {
+
+			if (request()->with) {
+				$data->load(request()->with);
+			}
+
+			// return $['some' => 'haha'];
+			return ['success' => true, 'data' => $data->toArray()];
+		}
 	}
 
 	/**
@@ -144,12 +163,15 @@ class ControllerBase extends Controller
 	public function edit($company, $id, $attributes =[])
 	{
 		# ¿Usuario tiene permiso para actualizar?
-		$this->authorize('update', $this->entity);
-
+//		$this->authorize('update', $this->entity);
 		$data = $this->entity->findOrFail($id);
+        $validator = \JsValidator::make($this->entity->rules, [], $this->entity->niceNames, '#form-model');
 		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-		return view(currentRouteName('smart'), $dataview+['data'=>$data]);
+		return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
+			'data' => $data,
+			'validator' => $validator
+		] + $this->getDataView($data));
 	}
 
 	/**
@@ -162,12 +184,12 @@ class ControllerBase extends Controller
 	public function update(Request $request, $company, $id)
 	{
 		# ¿Usuario tiene permiso para actualizar?
-		$this->authorize('update', $this->entity);
-		
+//		$this->authorize('update', $this->entity);
+
 		$request->request->set('activo',!empty($request->request->get('activo')));
 
 		# Validamos request, si falla regresamos atras
-		$this->validate($request, $this->entity->rules);
+		$this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
@@ -193,7 +215,7 @@ class ControllerBase extends Controller
 	public function destroy(Request $request, $company, $idOrIds)
 	{
 		# ¿Usuario tiene permiso para eliminar?
-		$this->authorize('delete', $this->entity);
+//		$this->authorize('delete', $this->entity);
 
 		# Unico
 		if (!is_array($idOrIds)) {
@@ -208,9 +230,7 @@ class ControllerBase extends Controller
 
 				if ($request->ajax()) {
 					# Respuesta Json
-					return response()->json([
-						'success' => true,
-					]);
+					return ['success' => true];
 				} else {
 					return $this->redirect('destroy');
 				}
@@ -221,9 +241,7 @@ class ControllerBase extends Controller
 
 				if ($request->ajax()) {
 					# Respuesta Json
-					return response()->json([
-						'success' => false,
-					]);
+					return ['success' => false];
 				} else {
 					return $this->redirect('error_destroy');
 				}
@@ -243,9 +261,7 @@ class ControllerBase extends Controller
 
 				if ($request->ajax()) {
 					# Respuesta Json
-					return response()->json([
-						'success' => true,
-					]);
+					return ['success' => true];
 				} else {
 					return $this->redirect('destroy');
 				}
@@ -257,9 +273,7 @@ class ControllerBase extends Controller
 
 				if ($request->ajax()) {
 					# Respuesta Json
-					return response()->json([
-						'success' => false,
-					]);
+					return ['success' => false];
 				} else {
 					return $this->redirect('error_destroy');
 				}
@@ -276,14 +290,12 @@ class ControllerBase extends Controller
 	public function destroyMultiple(Request $request, $company)
 	{
 		# ¿Usuario tiene permiso para eliminar?
-		$this->authorize('delete', $this->entity);
+//		$this->authorize('delete', $this->entity);
 
 		# Shorthand
 		if ($request->ids) return $this->destroy($request, $company, $request->ids);
 
-		return response()->json([
-			'success' => false,
-		]);
+		return ['success' => false];
 	}
 
 	/**
@@ -294,7 +306,7 @@ class ControllerBase extends Controller
 	public function export(Request $request, $company)
 	{
 		# ¿Usuario tiene permiso para exportar?
-		$this->authorize('export', $this->entity);
+//		$this->authorize('export', $this->entity);
 		$type = strtolower($request->type);
 		$style = isset($request->style) ? $request->style : false;
 

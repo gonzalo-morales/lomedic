@@ -10,6 +10,8 @@ use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Administracion\Acciones;
 use App\Http\Models\Administracion\ModulosAcciones;
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Administracion\PermisosUsuarios;
+use App\Http\Models\Administracion\PerfilesUsuarios;
 
 
 use Illuminate\Http\Request;
@@ -30,7 +32,7 @@ class UsuariosController extends ControllerBase
     public function __construct(Usuarios $entity)
     {
         $this->entity = $entity;
-        $this->entity_name = strtolower(class_basename($entity));
+//        $this->entity_name = strtolower(class_basename($entity));
     }
 
     /**
@@ -64,18 +66,9 @@ class UsuariosController extends ControllerBase
 
     public function store(Request $request, $company)
     {
-        # ¿Usuario tiene permiso para crear?
-//        $this->authorize('create', $this->entity);
-
-        # Validamos request, si falla regresamos pagina
-//        $this->validate($request, $this->entity->rules);
-//        dd($request);
-
-//        dd($request->all());
 
         $isSuccess = $this->entity->create($request->all());
         if ($isSuccess) {
-//            $this->log('store', $isSuccess->id_usuario);
 
             foreach ( $request->input('correo_empresa') as $email_company )
             {
@@ -170,25 +163,20 @@ class UsuariosController extends ControllerBase
     {
         $companies = Empresas::all();
         $perfiles = Perfiles::all();
-        $acciones = Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')
-            ->join('adm_det_modulo_accion','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_perfiles.fk_id_modulo_accion')
-            ->select('adm_det_modulo_accion.*','adm_det_permisos_perfiles.fk_id_perfil')
-            ->get();
         $profiles_permissions = Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')
             ->join('adm_det_modulo_accion','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_perfiles.fk_id_modulo_accion')
             ->select('adm_det_modulo_accion.*','adm_det_permisos_perfiles.fk_id_perfil')
             ->get();
-
-//        $companies_user = Empresas::all();
         $correos_user = Correos::join('gen_cat_empresas','adm_det_correos.fk_id_empresa','=','gen_cat_empresas.id_empresa')
             ->where('fk_id_usuario','=',$id)
+            ->where('adm_det_correos.activo','=','true')
             ->get();
         $perfiles_usuario = Perfiles::join('adm_det_perfiles_usuarios','adm_cat_perfiles.id_perfil','=','adm_det_perfiles_usuarios.fk_id_perfil')
             ->where('fk_id_usuario','=',$id)
             ->get();
-
-
         $acciones_usuario = ModulosAcciones::join('adm_det_permisos_usuarios','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_usuarios.fk_id_modulo_accion')
+            ->join('adm_cat_acciones','adm_det_modulo_accion.fk_id_accion','=','adm_cat_acciones.id_accion')
+            ->select('id_modulo_accion','nombre')
             ->where('fk_id_usuario','=',$id)
             ->get();
 
@@ -204,35 +192,150 @@ class UsuariosController extends ControllerBase
                                                                     'correos'=>$correos_user,
                                                                     'profiles'=>$perfiles,
                                                                     'perfiles_usuario'=>$perfiles_usuario,
-                                                                    'acciones' => $acciones,
                                                                     'acciones_usuario' => $acciones_usuario,
                                                                     'profiles_permissions'=>$profiles_permissions]);
-//        return view(currentRouteName('smart'), $dataview+['data'=>$data,'companies'=>$companies,'profiles'=>$profiles,'profiles_permissions'=>$profiles_permissions]);
     }
 
+
+    public function update(Request $request, $company, $id)
+    {
+//        # ¿Usuario tiene permiso para actualizar?
+//        $this->authorize('update', $this->entity);
 //
-//    /**
-//     * Update the specified resource in storage.
-//     *
-//     * @param  \Illuminate\Http\Request  $request
-//     * @param  integer	$id
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function update(Request $request, $company, $id)
-//    {
-//        # Validamos request, si falla regresamos pagina
-//        //$this->validate($request, $this->entity->rules);
+//        $request->request->set('activo',!empty($request->request->get('activo')));
 //
-//        $entity = $this->entity->findOrFail($id);
-//        $entity->fill($request->all());
-//
-//        if($entity->save())
-//        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');}
-//        else
-//        {Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');}
-//        # Redirigimos a index
-//        return redirect(companyRoute('index'));
-//    }
+//        # Validamos request, si falla regresamos atras
+//        $this->validate($request, $this->entity->rules);
+
+//        dd($request->all());
+
+        $entity = $this->entity->findOrFail($id);
+        $entity->fill($request->all());
+        if ($entity->save()) {
+
+            $correos_usuario = Correos::where('fk_id_usuario','=',$id)->get()->toArray();
+
+            if( isset($request->correo_empresa ) )
+            {
+                foreach ($request->correo_empresa as $correo)
+                {
+                    if(array_search($correo['correo'], array_column($correos_usuario , 'correo')) === false)
+                    {
+                        Correos::create(['correo' => $correo['correo'],'fk_id_empresa'=>$correo['id_empresa'] ,'fk_id_usuario' => $id]);
+                    }
+                }
+            }
+
+            foreach ($correos_usuario as $correo)
+            {
+                if( isset($request->correo_empresa ) )
+                {
+                    if (array_search($correo['correo'], array_column($request->correo_empresa, 'correo')) === false)
+                    {
+                        Correos::where(['correo' => $correo['correo']])->update(['activo' => false]);
+                    }
+                }
+                else
+                {
+                    Correos::where(['correo' => $correo['correo']])->update(['activo' => false]);
+                }
+            }
+
+
+            $acciones_usuario = PermisosUsuarios::where('fk_id_usuario','=',$id)->get()->toArray();
+            if(isset($request->accion_modulo))
+            {
+                foreach ($request->accion_modulo as $accion)
+                {
+                    if (array_search($accion, array_column($acciones_usuario, 'fk_id_modulo_accion'))=== false)
+                    {
+                        if(PermisosUsuarios::where('fk_id_usuario',$id)->where('fk_id_modulo_accion',$accion)->first()== '')
+                        {
+                            PermisosUsuarios::create(['fk_id_usuario' => $id,'fk_id_modulo_accion' => $accion]);
+                        }
+                    }
+                }
+            }
+
+            if(isset($request->accion_modulo)){
+
+                foreach ($acciones_usuario as $accion)
+                {
+
+                    if (array_search($accion['fk_id_modulo_accion'], $request->accion_modulo) === false)
+                    {
+                        PermisosUsuarios::where('fk_id_usuario','=',$id)
+                            ->where('fk_id_modulo_accion','=',$accion['fk_id_modulo_accion'])
+                            ->delete();
+                    }
+                }
+
+            }
+            else
+            {
+                foreach ($acciones_usuario as $accion)
+                {
+                    PermisosUsuarios::where('fk_id_usuario','=',$id)
+                        ->where('fk_id_modulo_accion','=',$accion['fk_id_modulo_accion'])
+                        ->delete();
+                }
+            }
+
+            $perfiles_usuario = PerfilesUsuarios::where('fk_id_usuario','=',$id)->get()->toArray();
+            if(isset($request->perfil))
+            {
+
+                foreach ($request->perfil as $perfil)
+                {
+                    if (array_search($perfil, array_column($perfiles_usuario, 'fk_id_perfil')) === false)
+                    {
+                        if(PerfilesUsuarios::where('fk_id_usuario',$id)->where('fk_id_perfil',$perfil)->first()== '')
+                        {
+                            PerfilesUsuarios::create(['fk_id_usuario' => $id,'fk_id_perfil' => $perfil]);
+                        }
+                    }
+                }
+            }
+
+            if(isset($request->perfil)){
+
+                foreach ($perfiles_usuario as $perfil)
+                {
+//                    dump($perfil);
+//                    dump($request->perfil);
+//                    dump(array_search($perfil['fk_id_perfil'], $request->perfil));
+                    if (array_search($perfil['fk_id_perfil'], $request->perfil) === false)
+                    {
+                        PerfilesUsuarios::where('fk_id_usuario','=',$id)
+                            ->where('fk_id_perfil','=',$perfil['fk_id_perfil'])
+                            ->delete();
+                    }
+                }
+
+            }
+            else
+            {
+                foreach ($perfiles_usuario as $perfil)
+                {
+                    PerfilesUsuarios::where('fk_id_usuario','=',$id)
+                        ->where('fk_id_perfil','=',$perfil['fk_id_perfil'])
+                        ->delete();
+                }
+            }
+
+
+            # Eliminamos cache
+//            Cache::tags(getCacheTag('index'))->flush();
+
+            $this->log('update', $id);
+            return $this->redirect('update');
+        } else {
+            $this->log('error_update', $id);
+            return $this->redirect('error_update');
+        }
+    }
+
+
 //
 //    /**
 //     * Remove the specified resource from storage.

@@ -3,24 +3,20 @@
 namespace App\Http\Controllers\Compras;
 
 use App\Http\Controllers\ControllerBase;
-use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Unidadesmedidas;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Solicitudes;
-use App\Http\Models\Finanzas\Impuestos;
+use App\Http\Models\Administracion\Impuestos;
+use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
-use App\Policies\Compras\SolicitudesPolicy;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
-use Illuminate\Support\HtmlString;
-use App\Http\Models\Inventarios\Skus;
 
 class SolicitudesController extends ControllerBase
 {
@@ -37,18 +33,11 @@ class SolicitudesController extends ControllerBase
 
     public function create($company,$attributes =[])
     {
-//        $impuestosSet = [];
-//        $impuestos = Impuestos::select('id_impuesto','impuesto','porcentaje')->where('activo',1)->get();
-//        foreach ($impuestos as $impuesto){
-//            $impuestosSet[] = ['id'=>$impuesto->id_impuesto,
-//                'text' => $impuesto->impuesto,
-//                'porcentaje' => $impuesto->porcentaje];
-//        }
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity->first()
                     ->empleado()->first()
                     ->sucursales()->get()
-                    ->pluck('nombre_sucursal','id_sucursal'),
+                    ->pluck('sucursal','id_sucursal'),
                 'detalles' => $this->entity
                     ->first()
                     ->detalleSolicitudes()->where('cerrado','0')->get(),
@@ -64,7 +53,7 @@ class SolicitudesController extends ControllerBase
                     ->where('activo',1)
                     ->get()
                     ->pluck('nombre','id_empleado'),
-                'skus' => Skus::where('activo','1')
+                'skus' => Productos::where('activo','1')
                     ->get()
                     ->pluck('sku','id_sku'),
                 'proyectos' => Proyectos::where('activo',1)
@@ -76,7 +65,6 @@ class SolicitudesController extends ControllerBase
 
     public function store(Request $request, $company)
     {
-//        dd($request);
         $id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
         # ¿Usuario tiene permiso para crear?
         $this->authorize('create', $this->entity);
@@ -87,8 +75,6 @@ class SolicitudesController extends ControllerBase
         $this->validate($request, $this->entity->rules);
 
         $request->request->set('fecha_creacion',DB::raw('now()'));
-//        if($request->fk_id_estatus_solicitud === 3)//Si es cancelado
-//        {$request->request->set('fecha_cancelacion',DB::raw('now'));}
 
         $request->request
             ->set('fk_id_departamento',Empleados::where('id_empleado',$request->fk_id_solicitante)
@@ -127,6 +113,10 @@ class SolicitudesController extends ControllerBase
                     ->where('activo',1)
                     ->get()
                     ->pluck('impuesto','id_impuesto'),
+                'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')
+                    ->where('activo',1)
+                    ->get()
+                    ->pluck('nombre','id_empleado'),
             ]];
         return parent::show($company,$id,$attributes);
     }
@@ -155,7 +145,7 @@ class SolicitudesController extends ControllerBase
                     ->where('activo',1)
                     ->get()
                     ->pluck('nombre','id_unidad_medida'),
-                'skus' => Skus::where('activo','1')
+                'skus' => Productos::where('activo','1')
                     ->get()
                     ->pluck('sku','id_sku'),
                 'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')
@@ -206,10 +196,9 @@ class SolicitudesController extends ControllerBase
     public function destroy(Request $request, $company, $idOrIds)
     {
         if (!is_array($idOrIds)) {
-
             $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
                 ->update(['fk_id_estatus_solicitud' => 3,
-                    'motivo_cancelacion'=>$request->motivo_cancelacion,
+                    'motivo_cancelacion'=>$request->motivo['motivo_cancelacion'],
                     'fecha_cancelacion'=>DB::raw('now()')]);
             if ($isSuccess) {
 
@@ -278,7 +267,6 @@ class SolicitudesController extends ControllerBase
 
     public function impress($company,$id)
     {
-
         $solicitud = Solicitudes::where('id_solicitud',$id)->first();
         $detalles = DetalleSolicitudes::where('fk_id_solicitud',$id)
             ->where('cerrado','f')->get();

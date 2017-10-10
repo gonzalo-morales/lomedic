@@ -125,7 +125,7 @@ window['smart-model'] = {
 				class: 'dropdown d-inline',
 				childs: [
 					{button: {
-						class: 'btn btn-secondary dropdown-toggle',
+						class: 'btn btn-info dropdown-toggle',
 						type: 'button',
 						'data-toggle': 'dropdown',
 						'aria-haspopup': 'true',
@@ -150,7 +150,7 @@ window['smart-model'] = {
 			// Button
 			{button: {
 				html: '<i class="material-icons left align-middle">select_all</i>Deseleccionar (<span rv-text="collections.items | length"></span>)',
-				class: 'btn',
+				class: 'btn btn-default text-primary',
 				'rv-on-click': 'actions.uncheckAll'
 			}},
 			// Dropdown
@@ -158,7 +158,7 @@ window['smart-model'] = {
 				class: 'dropdown d-inline',
 				childs: [
 					{button: {
-						class: 'btn btn-secondary dropdown-toggle',
+						class: 'btn btn-info dropdown-toggle',
 						type: 'button',
 						'data-toggle': 'dropdown',
 						'aria-haspopup': 'true',
@@ -235,7 +235,7 @@ window['smart-model'] = {
 				buttons: [
 					{button: {
 						'text': 'Cancelar',
-						'class': 'btn btn-secondary',
+						'class': 'btn btn-default',
 						'data-dismiss': 'modal',
 					}},
 					{button: {
@@ -422,7 +422,7 @@ rivets.binders['append-filters'] = function(el) {
 			childs: [{div: {class:'input-group',
 				childs: [{div: {class:'input-group-btn',
 					childs: [
-						{button: {class: 'btn btn-secondary dropdown-toggle', type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false'}},
+						{button: {class: 'btn btn-info dropdown-toggle', type: 'button', 'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false'}},
 						{div: {class: 'dropdown-menu dropdown-menu-right'}}
 					]
 				}}]

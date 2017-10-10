@@ -171,12 +171,6 @@
 								</div>
 							</div><!--/row forms-->
 							<div class="row">
-								{{--<div class="col-md-6 col-sm-6">--}}
-									{{--<div class="form-group">--}}
-										{{--{{Form::label('password','Contraseña',['for'=>'password'])}}--}}
-										{{--{{Form::password('password',['class'=>'form-control','placeholder'=>'Contraseña'])}}--}}
-									{{--</div>--}}
-								{{--</div>--}}
 								<div class="col-md-6 col-sm-6">
 									<div class="form-group">
 										{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
@@ -226,18 +220,9 @@
 					<div class="card">
 						<h4 class="card-header">Empresas</h4>
 						<div class="card-body">
-							{{--<ul class="nav nav-tabs" role="tablist">--}}
-								{{--@foreach($companies as $data_company)--}}
-									{{--<li class="nav-item">--}}
-										{{--<a class="nav-link" data-toggle="tab" href="#empresa_{{$data_company->id_empresa}}" role="tab">{{$data_company->nombre_comercial}}</a>--}}
-									{{--</li>--}}
-								{{--@endforeach--}}
-
-							{{--</ul>--}}
 							<div class="tab-content">
 								@foreach($companies as $data_company)
-									{{--<div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">--}}
-										<h4>{{$data_company->nombre_comercial}}</h4>
+									<h4>{{$data_company->nombre_comercial}}</h4>
 										<table class="table table-hover">
 											<thead>
 											<tr>
@@ -252,14 +237,9 @@
 													<td>
 														{{$row_modul->nombre}}
 													</td>
-													{{--{{dd($data)}}--}}
-{{--													{{dump($row_modul->id_usuario.'-'.$row_modul->id_empresa.'-'.$row_modul->id_modulo)}}--}}
 													@foreach($data_company->accion_usuario($data->id_usuario,$data_company->id_empresa,$row_modul->id_modulo) as $row_accion)
-														{{--{{dump($row_accion)}}--}}
 														<td>
-															{{--{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,false,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}--}}
 															{{$row_accion->nombre}}
-															{{--{{Form::label('accion_modulo[]',$row_accion->nombre,array('for'=>'activo'))}}--}}
 														</td>
 													@endforeach
 												</tr>
@@ -303,12 +283,12 @@
 							</div>
 						</div><!--/row forms-->
 						<div class="row">
-							<div class="col-md-6 col-sm-6">
-								<div class="form-group">
-									{{Form::label('password','Contraseña',['for'=>'password'])}}
-									{{Form::password('password',['class'=>'form-control','placeholder'=>'Contraseño'],$data->password)}}
-								</div>
-							</div>
+							{{--<div class="col-md-6 col-sm-6">--}}
+								{{--<div class="form-group">--}}
+									{{--{{Form::label('password','Contraseña',['for'=>'password'])}}--}}
+									{{--{{Form::password('password',['class'=>'form-control','placeholder'=>'Contraseño'],$data->password)}}--}}
+								{{--</div>--}}
+							{{--</div>--}}
 							<div class="col-md-6 col-sm-6">
 								<div class="form-group">
 									{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
@@ -359,7 +339,7 @@
 											<tr id="correo_{{$cont}}">
 												<th scope="row">{{$correo->nombre_comercial}}</th>
 												<td>{{$correo->correo}}</td>
-												<td><a href="#" class="waves-effect " onclick="eliminarFila('correo_{{$cont}}')"><i class="material-icons">delete</i></a></td>
+												<td><a href="javascript:void(0)" class="waves-effect " onclick="eliminarFila('correo_{{$cont}}')"><i class="material-icons">delete</i></a></td>
 												<input type="hidden" value="{{$correo->fk_id_empresa}}" name="correo_empresa[{{$cont}}][id_empresa]">
 												<input type="hidden" value="{{$correo->correo}}" name="correo_empresa[{{$cont}}][correo]">
 
@@ -376,17 +356,20 @@
 			</div>
 			<div class="col-md-4 col-sm-12">
 				<h5>Perfiles</h5>
-				<div id="listProfiles" class="list-group">
-					{{--{{dd($profiles)}}--}}
-					@foreach( $profiles as $profile )
-						{{--{{ dump(array_intersect( $perfiles_usuario->pluck('nombre_perfil','id_perfil')->toArray() ,$profile->toArray() ) ) }}--}}
-						@if( array_intersect( $perfiles_usuario->pluck('nombre_perfil','id_perfil')->toArray() ,$profile->toArray() ) )
-							<a href="#" name="perfil[]"  class="list-group-item list-group-item-action active" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">{{$profile->nombre_perfil}}</a>
-						@else
-							<a href="#" name="perfil[]"  class="list-group-item list-group-item-action " id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">{{$profile->nombre_perfil}}</a>
-						@endif
 
+				<div class="btn-group list-group">
+					@foreach( $profiles as $profile )
+						@if( array_intersect( $perfiles_usuario->pluck('nombre_perfil','id_perfil')->toArray() ,$profile->toArray() ) )
+							<a href="#" class="list-group-item list-group-item-action active" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
+								<input type="checkbox"  name="perfil[]"  id="perfil_check_{{$profile->id_perfil}}" value="{{$profile->id_perfil}}" checked="checked" style="display: none">{{$profile->nombre_perfil}}
+							</a>
+						@else
+							<a href="#" name="perfil[]" class="list-group-item list-group-item-action " id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
+								<input type="checkbox" name="perfil[]" id="perfil_check_{{$profile->id_perfil}}" value="{{$profile->id_perfil}}"  style="display: none">{{$profile->nombre_perfil}}
+							</a>
+						@endif
 					@endforeach
+
 				</div>
 			</div>
 		</div>
@@ -422,7 +405,11 @@
 												</td>
 												@foreach($data_company->accion_empresa($row_modul->id_modulo) as $row_accion)
 													<td>
-														{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,false,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
+														@if(array_search($row_accion->id_modulo_accion, array_column($acciones_usuario->toArray(), 'id_modulo_accion')) !== false)
+															{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,true,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
+														@else
+															{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,false,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
+														@endif
 														{{Form::label('accion_modulo[]',$row_accion->nombre,array('for'=>'activo'))}}
 													</td>
 												@endforeach
@@ -450,7 +437,6 @@
 	@if (Route::currentRouteNamed(currentRouteName('create'))||Route::currentRouteNamed(currentRouteName('edit')) )
 		{{ HTML::script(asset('js/usuarios.js')) }}
 
-		<script src="js/popper.min.js"></script>
 		<script type="text/javascript">
             //iniciamos tooltips
             $(document).ready(function(){
@@ -459,8 +445,7 @@
                 //función para clic en el listado
                 $(".list-group-item").click(function(){
                     $(this).toggleClass('active');
-                    console.log(listvalues);
-                })
+                });
 
             });
 		</script>
@@ -468,8 +453,6 @@
             var profiles_permissions = {!!$profiles_permissions!!};
             console.info(profiles_permissions);
             var cont_correo = $('#lista_correo tr').length;
-
-//            alert(cont_correo);
 		</script>
 	@endif
 

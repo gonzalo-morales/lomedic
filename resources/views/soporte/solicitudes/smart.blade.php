@@ -23,10 +23,10 @@
 
 @section('form-actions')
 @if(Route::currentRouteNamed(currentRouteName('show')))
-	<div class="col-sm-12 text-right">
-			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-light']) }}
+	<div class="col-12 text-right">
+			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default']) }}
 			@if(!in_array($data->fk_id_estatus_ticket, [3,4]) && $data->fk_id_empleado_tecnico == Auth::id() || $data->fk_id_empleado_tecnico == null)
-        		{{ Form::button('Actualizar', ['type' =>'submit', 'class'=>'waves-effect waves-light btn btn-info']) }}
+        		{{ Form::button('Actualizar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
             @endif
 	</div>
 	
@@ -36,7 +36,6 @@
 @section('form-content')
 	@if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('export')))
 	{{ Form::setModel($data) }}
-	<div class="divider row"></div>
 	<div class="card row my-2">
 
         <div class="card-header py-2 text-info">

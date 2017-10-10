@@ -13,7 +13,7 @@ class Empresas extends Model
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_empresas';
+	protected $table = 'maestro.gen_cat_empresas';
 
 	/**
 	 * The primary key of the table

@@ -18,7 +18,7 @@ class JurisdiccionesController extends ControllerBase
 		$this->entity = $entity;
 	}
 
-	public function getDataView()
+	public function getDataView($entity = null)
 	{
 		return [
 			'states' => Estados::all(),
