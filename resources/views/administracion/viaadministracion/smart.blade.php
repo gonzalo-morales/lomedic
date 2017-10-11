@@ -11,14 +11,9 @@
     </div>
     <div  class="col-md-12 text-center mt-2">
         <div class="alert alert-warning" role="alert">
-            Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrarÃ¡ en los modulos correspondientes que se requieran.
+            Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
         </div>
-        <div data-toggle="buttons">
-            <label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
-                {{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
-                Activo
-            </label>
-        </div>
+        {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
     </div>
 </div>
 @endsection
