@@ -81,7 +81,7 @@ class ControllerBase extends Controller
 //		$this->authorize('create', $this->entity);
 
 		$data = $this->entity->getColumnsDefaultsValues();
-		$validator = \JsValidator::make($this->entity->rules, [], $this->entity->niceNames, '#form-model');
+		$validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 
 		return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
 			'data' => $data,
@@ -107,6 +107,16 @@ class ControllerBase extends Controller
 
 		$isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
+
+			# Si tienes relaciones
+			if ($request->relations) {
+				foreach ($request->relations as $relationType => $collections) {
+					# Relacion "HAS"
+					if ($relationType == 'has') {
+						foreach ($collections as $relationName => $relations) $isSuccess->{$relationName}()->createMany($relations);
+					}
+				}
+			}
 
 			# Eliminamos cache
 			Cache::tags(getCacheTag('index'))->flush();
@@ -164,10 +174,9 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 //		$this->authorize('update', $this->entity);
+		$this->authorize('update', $this->entity);
+		$validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames);
 		$data = $this->entity->findOrFail($id);
-        $validator = \JsValidator::make($this->entity->rules, [], $this->entity->niceNames, '#form-model');
-		$dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
-
 		return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
 			'data' => $data,
 			'validator' => $validator
@@ -194,6 +203,24 @@ class ControllerBase extends Controller
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
 		if ($entity->save()) {
+
+			# Si tienes relaciones
+			if ($request->relations) {
+				foreach ($request->relations as $relationType => $collections) {
+					# Relacion "HAS"
+					if ($relationType == 'has') {
+						foreach ($collections as $relationName => $relations) {
+							# Recorremos cada coleccion
+							$primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
+							foreach ($relations as $relation) {
+								if (array_key_exists($primaryKey, $relation)) {
+									$entity->{$relationName}()->updateOrCreate([$primaryKey => $relation[$primaryKey]], $relation);
+								}
+							}
+						}
+					}
+				}
+			}
 
 			# Eliminamos cache
 			Cache::tags(getCacheTag('index'))->flush();

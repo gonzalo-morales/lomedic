@@ -4,7 +4,7 @@
         {{ Form::checkbox($name, 1, old($name), [
             'id' => $name,
             'class' => 'form-check-input',
-        ]) }} {{$text}}
+        ] + ($attributes ?? [])) }} {{$text}}
     </label>
 </div>
 {{ $errors->has($name) ? HTML::tag('span', $errors->first($name), ['class'=>'help-block error-help-block']) : '' }}
