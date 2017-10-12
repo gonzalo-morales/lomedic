@@ -41,7 +41,7 @@
         <div class="modal-content">
       		{!! Form::model(null,['url'=>companyAction('Soporte\SolicitudesController@store'), 'enctype'=>"multipart/form-data",'method'=>'post','id'=>'form-ticket']) !!}
                 <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Nuevo Ticket:</h5>
+                	<h5 class="modal-title" id="exampleModalLabel">Nuevo Ticket:</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     	<span aria-hidden="true">&times;</span>
                     </button>

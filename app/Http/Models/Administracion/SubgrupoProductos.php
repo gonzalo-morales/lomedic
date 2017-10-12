@@ -4,27 +4,27 @@ namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 
-class GrupoProductos extends ModelBase
+class SubgrupoProductos extends ModelBase
 {
 	/**
 	 * The table associated with the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_grupo_productos';
+	protected $table = 'maestro.gen_cat_subgrupo_productos';
 
 	/**
 	 * The primary key of the table
 	 * @var string
 	 */
-	protected $primaryKey = 'id_grupo';
+	protected $primaryKey = 'id_subgrupo';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['grupo','activo'];
+	protected $fillable = ['subgrupo','fk_id_grupo','activo'];
 
 	/**
 	 * The validation rules
@@ -37,7 +37,13 @@ class GrupoProductos extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'grupo' => 'Grupo',
+	    'subgrupo' => 'Subgrupo',
+	    'grupo.grupo' => 'Grupo',
 		'activo_span' => 'Estatus',
 	];
+	
+	public function grupo()
+	{
+	    return $this->belongsTo(GrupoProductos::class,'fk_id_grupo','id_grupo');
+	}
 }

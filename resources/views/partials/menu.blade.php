@@ -8,7 +8,7 @@
     </a>
     @else
 	<span title="{{ $modulo->nombre }}" data-toggle="tooltip" data-placement="right">
-        <a class="collapsed" href="#submenu{{$modulo->id_modulo}}" data-toggle="collapse" aria-expanded="false" title="{{ $modulo->nombre }}">
+        <a class="collapsed url" href="#submenu{{$modulo->id_modulo}}" data-url="{{ !empty($modulo->descripcion) ? asset(request()->company.'/'.$modulo->descripcion) : '' }}" data-toggle="collapse" aria-expanded="false" title="{{ $modulo->nombre }}">
             	<i class='material-icons left'>{{ $modulo->icono }}</i> {{ $modulo->nombre }}
             	<span class="tag-menu">{{ $modulo->descripcion }}</span>
             	<i class="material-icons grey-text">expand_more</i>

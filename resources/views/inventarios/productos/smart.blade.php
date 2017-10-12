@@ -4,25 +4,67 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="col-md-4 col-sm-4">
+	<div class="col-sm-6 col-md-4 col-lg-2">
 		<div class="form-group">
-			{{ Form::cSelectWithDisabled('Sucursal', 'fk_id_sucursal', $sucursales ?? []) }}
+			{{ Form::cSelect('Serie Sku', 'fk_id_serie_sku', $seriesku ?? [0=>'Serie Manual']) }}
 		</div>
 	</div>
-	<div class="col-md-4 col-sm-4">
+	<div class="col-sm-6 col-md-4 col-lg-3">
 		<div class="form-group">
-			{{ Form::cText('Almacén', 'almacen', ['placeholder' => 'Ejemplo: Curación']) }}
+			{{ Form::cText('Sku', 'sku', ['placeholder' => 'Ejemplo: SO-1922-09']) }}
 		</div>
 	</div>
-	<div class="col-md-4 col-sm-4">
+	<div class="col-sm-12 col-md-4 col-lg-3">
 		<div class="form-group">
-			{{ Form::cSelectWithDisabled('Tipo almacén', 'fk_id_tipo_almacen', $tipos ?? []) }}
+			{{ Form::cText('Nombre Comercial', 'nombre_comercial') }}
 		</div>
 	</div>
-	<div class="col-md-12 col-sm-12 text-center">
-		{{ Form::cCheckbox('Almacén con Inventario (Podrás darlo de alta después)', 'inventario') }}
+	<div class="col-sm-12 col-md-6 col-lg-4">
+		<div class="form-group">
+			{{ Form::cText('Descripcion', 'descripcion') }}
+		</div>
+	</div>
+	<div class="col-sm-12 col-md-6 col-lg-2 text-center">
+		{{ Form::cText('Presentacion', 'presentacion') }}
+	</div>
+	<div class="col-sm-12 col-md-6 col-lg-2">
+		<div class="form-group">
+			{{ Form::cSelect('Unidad Medida', 'fk_id_unidad_medida', $unidadmedida ?? []) }}
+		</div>
+	</div>
+	<div class="col-sm-12 col-md-6 col-lg-4">
+		<div class="form-group">
+			{{ Form::cSelect('Grupo', 'fk_id_grupo', $grupo ?? []) }}
+		</div>
+	</div>
+	<div class="col-sm-12 col-md-6 col-lg-4">
+		<div class="form-group">
+			{{ Form::cSelect('Subgrupo', 'fk_id_subgrupo', $subgrupo ?? []) }}
+		</div>
+	</div>
+	
+	<div class="col-sm-6 col-md-3 col-lg-2">
+		<div class="form-group">
+			{{ Form::cCheckboxBtn('Maneja Lote', 'Si','maneja_lote', 1, 'No') }}
+		</div>
+	</div>
+	<div class="col-sm-6 col-md-3 col-lg-2">
+		<div class="form-group">
+			{{ Form::cCheckboxBtn('Se Vende', 'Si','articulo_venta', 1, 'No') }}
+		</div>
+	</div>
+	<div class="col-sm-6 col-md-3 col-lg-2">
+		<div class="form-group">
+			{{ Form::cCheckboxBtn('Se Compra', 'Si','articulo_compra', 1, 'No') }}
+		</div>
+	</div>
+	<div class="col-sm-6 col-md-3 col-lg-2">
+		<div class="form-group">
+			{{ Form::cCheckboxBtn('Maneja Inventario', 'Si','articulo_inventario', 1, 'No') }}
+		</div>
 	</div>
 </div>
+<!--
 <div class="row">
 	<div class="col-md-12 col-sm-12 mb-3">
 		<div class="card">
@@ -116,28 +158,27 @@
 			</fieldset>
 		</div>
 	</div>
+ -->
 
+@endsection
 
+{{-- DONT DELETE --}}
+@if (Route::currentRouteNamed(currentRouteName('index')))
+@include('layouts.smart.index')
+@endif
 
-	@endsection
+@if (Route::currentRouteNamed(currentRouteName('create')))
+@include('layouts.smart.create')
+@endif
 
-	{{-- DONT DELETE --}}
-	@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-	@endif
+@if (Route::currentRouteNamed(currentRouteName('edit')))
+@include('layouts.smart.edit')
+@endif
 
-	@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-	@endif
+@if (Route::currentRouteNamed(currentRouteName('show')))
+@include('layouts.smart.show')
+@endif
 
-	@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-	@endif
-
-	@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-	@endif
-
-	@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
-	@endif
+@if (Route::currentRouteNamed(currentRouteName('export')))
+@include('layouts.smart.export')
+@endif

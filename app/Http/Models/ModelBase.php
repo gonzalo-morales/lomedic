@@ -29,6 +29,7 @@ class ModelBase extends Model
 
 	public function __construct($attributes = []) {
 		return parent::__construct($attributes);
+		#$this->rules = array_merge_recursive_simple($this->rules,$this->getRulesDefaults());
 	}
 
 	/**
