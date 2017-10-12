@@ -4,20 +4,20 @@ var chart = AmCharts.makeChart( "pie", {
 "type": "pie",
 "theme": "light",
 "minWidth": 200,
-"maxWidth": 400,
-"maxHeight": 400,
+"maxWidth": 'auto',
+"maxHeight": 'auto',
 "minHeight": 200,
 "dataProvider": [ {
-  "country": "Lithuania",
+  "country": "Paracetamol",
   "litres": 501.9
 }, {
-  "country": "Czech Republic",
+  "country": "Riopan",
   "litres": 301.9
 }, {
-  "country": "Ireland",
+  "country": "Omeprazol",
   "litres": 201.1
 }, {
-  "country": "UK",
+  "country": "Ranitidína inyectable",
   "litres": 99
 }, {
   "country": "Belgium",

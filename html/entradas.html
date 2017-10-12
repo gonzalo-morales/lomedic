@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <h1>Entradas del producto</h1>
+      <div class="col-md-12 text-right">
+        <a id="saveAll" class="btn btn-primary" href="#">Guardar</a>
+        <a class="btn" href="#">Cerrar</a>
+      </div>
+      <div class="row">
+        <div class="col-12 mb-3">
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label for="localidad">Localidad</label>
+                <select class="form-control" id="localidad">
+                  <option>Seleccione...</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label for="localidadOrigin">Localidad origen</label>
+                <select class="form-control" id="localidadOrigin">
+                  <option>Seleccione...</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label for="documents">Documento</label>
+                <input type="text" class="form-control" id="documents" placeholder="ABC1234">
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label for="proveedor">Proveedor</label>
+                <select class="form-control" id="proveedor">
+                  <option>Seleccione...</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+            </div>
+          </div><!--/row forms-->
+          <div class="row">
+            <div class="col-12 text-center">
+              <p>Tipo de <b>captura</b> para el producto</p>
+
+              <ul class="nav btn-group justify-content-center" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a class="btn btn-info active" data-toggle="tab" href="#scanner" role="tab"><i class="material-icons align-middle">settings_remote</i> Captura con scanner</a>
+                </li>
+                <li class="nav-item">
+                  <a class="btn btn-info" data-toggle="tab" href="#manual" role="tab"><i class="material-icons align-middle">keyboard</i> Captura manual</a>
+                </li>
+                <li class="nav-item">
+                  <a class="btn btn-info" data-toggle="tab" href="#importar" role="tab"><i class="material-icons align-middle">get_app</i> Importar Excel</a>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+      </div><!--/row-->
+      <div class="row">
+        <div class="col-12 mb-3">
+          <div class="tab-content">
+            <div class="tab-pane active" id="scanner" role="tabpanel">
+              <div class="row justify-content-center">
+                <div class="col-12 col-md-6 col-lg-4">
+                  <div class="form-group">
+                    <label for="scanCode">Código de barras</label>
+                    <input type="text" class="form-control" id="scanCode">
+                  </div>
+                </div>
+              </div><!--/row forms-->
+            </div>
+            <div class="tab-pane" id="manual" role="tabpanel">
+              <div class="row">
+                <div class="col-12 col-md-4 col-sm-6 col-lg-3">
+                  <div class="form-group">
+                    <label for="codebars">Código de barras</label>
+                    <input type="number" class="form-control" id="codebars">
+                  </div>
+                </div>
+                <div class="col-4 col-md-4 col-sm-6 col-lg-3">
+                  <div class="form-group">
+                    <label for="cantidad">Cantidad</label>
+                    <input type="number" class="form-control" id="cantidad">
+                  </div>
+                </div>
+                <div class="col-4 col-md-4 col-sm-6 col-lg-3">
+                  <div class="form-group">
+                    <label for="lote">Lote</label>
+                    <input type="text" class="form-control" id="lote">
+                  </div>
+                </div>
+                <div class="col-4 col-md-4 col-sm-6 col-lg-3">
+                  <div class="form-group">
+                    <label for="caducidad">Caducidad</label>
+                    <input type="date" class="form-control" id="caducidad">
+                  </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-lg-3">
+                  <div class="form-group">
+                    <label for="almacen">Almacén</label>
+                    <select class="form-control" id="almacen">
+                      <option>Seleccione...</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-lg-3">
+                  <div class="form-group">
+                    <label for="ubicacion">Ubicación</label>
+                    <select class="form-control" id="ubicacion">
+                      <option>Seleccione...</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <div class="form-group">
+                    <label for="observaciones">Observaciones</label>
+                    <textarea class="form-control" id="observaciones" rows="2"></textarea>
+                  </div>
+                </div>
+                <div class="col-sm-12 text-center">
+                  <div class="sep">
+                    <div class="sepBtn">
+                      <button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                    </div>
+                  </div>
+                </div>
+              </div><!--/row forms-->
+            </div>
+            <div class="tab-pane" id="importar" role="tabpanel">
+              <div class="row">
+                <div class="col-sm-12 col-md-4">
+                  <div class="form-group">
+                    <label for="importExcel">Selecciona el archivo <b>Excel</b> a importar</label>
+                    <input type="file" class="form-control-file btn" id="importExcel">
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-8">
+                  <p>Formato del archivo <b>Excel:</b></p>
+                  <img src="img/índice.png" class="img-fluid float-left" alt="Formato de ejemplo">
+              </div><!--/row forms-->
+            </div>
+          </div>
+        </div><!--/row-->
+        <div class="row mt-5">
+          <div class="col-12">
+            <table class="table table-hover table-responsive">
+              <thead>
+                <tr>
+                  <th>Empresa</th>
+                  <th>Correo</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Coporativo</th>
+                  <td>uncorreomagico@mail.com</td>
+                  <td>
+                    <a href="#" data-toggle="Eliminar" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">ABIISA</th>
+                  <td>uncorreomagico@mail.com</td>
+                  <td>
+                    <a href="#" data-toggle="Eliminar" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">LoMedic</th>
+                  <td>uncorreomagico@mail.com</td>
+                  <td>
+                    <a href="#" data-toggle="Eliminar" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!--/container-fluid-->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      //iniciamos tooltips
+      $(document).ready(function(){
+        $('[data-toggle]').tooltip();
+      });
+    </script>
+  </body>
+</html>
