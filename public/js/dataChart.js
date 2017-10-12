@@ -3,17 +3,21 @@ $(document).ready(function() {
 var chart = AmCharts.makeChart( "pie", {
 "type": "pie",
 "theme": "light",
+"minWidth": 200,
+"maxWidth": 'auto',
+"maxHeight": 'auto',
+"minHeight": 200,
 "dataProvider": [ {
-  "country": "Lithuania",
+  "country": "Paracetamol",
   "litres": 501.9
 }, {
-  "country": "Czech Republic",
+  "country": "Riopan",
   "litres": 301.9
 }, {
-  "country": "Ireland",
+  "country": "Omeprazol",
   "litres": 201.1
 }, {
-  "country": "UK",
+  "country": "Ranitidína inyectable",
   "litres": 99
 }, {
   "country": "Belgium",
@@ -29,11 +33,18 @@ var chart = AmCharts.makeChart( "pie", {
 },
 "export": {
   "enabled": true
+},
+  "responsive": {
+    "enabled": true
 }
 });
 var chart2 = AmCharts.makeChart( "pie2", {
 "type": "pie",
 "theme": "light",
+"minWidth": 200,
+"maxWidth": 400,
+"maxHeight": 400,
+"minHeight": 200,
 "dataProvider": [ {
   "country": "Lithuania",
   "litres": 501.9
@@ -51,11 +62,18 @@ var chart2 = AmCharts.makeChart( "pie2", {
 },
 "export": {
   "enabled": true
+},
+  "responsive": {
+    "enabled": true
 }
 });
 var chart3 = AmCharts.makeChart( "pie3", {
 "type": "pie",
 "theme": "light",
+"minWidth": 200,
+"maxWidth": 400,
+"maxHeight": 400,
+"minHeight": 200,
 "dataProvider": [ {
   "country": "Lithuania",
   "litres": 501.9
@@ -73,6 +91,9 @@ var chart3 = AmCharts.makeChart( "pie3", {
 },
 "export": {
   "enabled": true
+},
+  "responsive": {
+    "enabled": true
 }
 });
 });

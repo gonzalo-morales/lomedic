@@ -11,7 +11,7 @@ class Jurisdicciones extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_jurisdicciones';
+	protected $table = 'maestro.gen_cat_jurisdicciones';
 
 	/**
 	 * The primary key of the table
@@ -38,7 +38,7 @@ class Jurisdicciones extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'jurisdiccion' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+		'jurisdiccion' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
 	];
 
 	/**
@@ -46,7 +46,7 @@ class Jurisdicciones extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'jurisdiccion' => 'Jurisdicción',
+		'jurisdiccion' => 'JurisdicciÃ³n',
 		'estado.estado' => 'Estado',
 		'activo_span' => 'Activo',
 	];
@@ -64,5 +64,9 @@ class Jurisdicciones extends ModelBase
 	public function estado()
 	{
 		return $this->belongsTo('App\Http\Models\Administracion\Estados', 'fk_id_estado', 'id_estado');
+	}
+	
+	public function sucursales() {
+	    return $this->hasOne(Sucursales::class, 'fk_id_jurisdiccion', 'id_jurisdiccion');
 	}
 }

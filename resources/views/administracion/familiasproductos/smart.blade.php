@@ -3,7 +3,6 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
-{{--{{dd($data)}}--}}
 <div class="row">
     <div class="form-group col-md-6 col-xs-12">
         {{ Form::label('descripcion', 'Familia') }}
@@ -17,7 +16,6 @@
     </div>
     <div class="form-group col-md-6 col-xs-12">
         {{ Form::label('fk_id_tipo_producto', 'Tipo') }}
-{{--        {{ Form::text('tipo', null, ['id'=>'tipo','class'=>'form-control']) }}--}}
         {{Form::select('fk_id_tipo_producto',isset($product_types)?$product_types:[],null,['id'=>'fk_id_tipo_producto','class'=>'form-control'])}}
         {{ $errors->has('tipo') ? HTML::tag('span', $errors->first('tipo'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
@@ -26,21 +24,16 @@
         {{ Form::select('tipo_presentacion',
         ['1'=>'Cantidad',
         '2'=>'Cantidad y Unidad',
-        '3'=>'Ampolletas (Ámpulas)',
+        '3'=>'Ampolletas (Ã�mpulas)',
         '4'=>'Dosis'],
         null, ['id'=>'tipo_presentacion','class'=>'form-control']) }}
         {{ $errors->has('tipo_presentacion') ? HTML::tag('span', $errors->first('tipo_presentacion'), ['class'=>'help-block deep-orange-text']) : '' }}
     </div>
     <div  class="col-md-12 text-center mt-2">
         <div class="alert alert-warning" role="alert">
-            Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrará en los modulos correspondientes que se requieran.
+            Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
         </div>
-        <div data-toggle="buttons">
-            <label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
-                {{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
-                Activo
-            </label>
-        </div>
+        {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
     </div>
 </div>
 @endsection

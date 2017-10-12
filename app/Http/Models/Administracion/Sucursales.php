@@ -24,49 +24,35 @@ class Sucursales extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre_sucursal', 'fk_id_localidad', 'latitud', 'longitud',
-		'fk_id_tipo_sucursal','fk_id_red','fk_id_supervisor','fk_id_cliente','embarque','calle',
-		'no_interior','no_exterior','colonia','codigo_postal','fk_id_municipio','fk_id_estado',
-		'fk_id_pais','registro_sanitario','tipo_batallon','region','zona_militar','telefono1',
-		'telefono2','clave_presupuestal','fk_id_jurisdiccion','activo'];
-
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
+	protected $fillable = ['sucursal', 'fk_id_tipo', 'fk_id_localidad', 'fk_id_zona',
+		'fk_id_cliente', 'responsable', 'telefono_1', 'telefono_2', 'calle',
+		'numero_interior', 'numero_exterior', 'colonia', 'codigo_postal',
+		'fk_id_pais', 'fk_id_estado', 'fk_id_municipio', 'latitud', 'longitud',
+		'registro_sanitario', 'inventario', 'embarque', 'tipo_batallon', 'region',
+		'zona_militar', 'clave_presupuestal', 'id_localidad_proveedor', 'id_jurisdiccion','activo'
+	];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [
-		'sucursal' => 'required',
-		'tipo' => 'required',
-		'fk_id_localidad' => 'required',
-		'fk_id_red' => 'required',
-		'fk_id_cliente' => 'required',
-		'responsable' => 'required',
-		'telefono_1' => 'required',
-		'telefono_2' => 'required',
-		'calle' => 'required',
-		'numero_interior' => 'required',
-		'numero_exterior' => 'required',
-		'colonia' => 'required',
-		'codigo_postal' => 'required',
-		'fk_id_municipio' => 'required',
-		'fk_id_estado' => 'required',
-		'fk_id_pais' => 'required',
-		'latitud' => 'required',
-		'longitud' => 'required',
-		'registro_sanitario' => 'required',
-		'embarque' => 'required',
-		'inventario' => 'required',
-		'tipo_batallon' => 'required',
-		'region' => 'required',
-		'zona_militar' => 'required'
-	];
+	// public $rules = [
+	// 	'sucursal' => 'required',
+	// 	'fk_id_tipo' => 'required',
+	// 	'fk_id_localidad' => 'required',
+	// 	'responsable' => 'required',
+	// 	'telefono_1' => 'required',
+	// 	'calle' => 'required',
+	// 	'numero_interior' => 'required',
+	// 	'numero_exterior' => 'required',
+	// 	'colonia' => 'required',
+	// 	'codigo_postal' => 'required',
+	// 	'fk_id_pais' => 'required',
+	// 	'fk_id_estado' => 'required',
+	// 	'fk_id_municipio' => 'required',
+	// 	'inventario' => 'required',
+	// 	'embarque' => 'required',
+	// ];
 
 	public $niceNames = [
 		'fk_id_localidad' => 'localidad',
@@ -77,10 +63,9 @@ class Sucursales extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'nombre_sucursal' => 'Sucursal',
-		'fk_id_localidad' => 'Localidad',
-		'fk_id_tipo_sucursal' => 'Tipo de Sucursal',
-		'fk_id_supervisor' => 'Supervisor',
+		'sucursal' => 'Sucursal',
+		'localidad.localidad' => 'Localidad',
+		'tiposucursal.tipo' => 'Tipo de Sucursal',
 		'activo_span' => 'Activo',
 	];
 
@@ -88,11 +73,14 @@ class Sucursales extends ModelBase
 	 * Atributos de carga optimizada
 	 * @var array
 	 */
-	protected $eagerLoaders = [];
+	protected $eagerLoaders = ['localidad','tiposucursal'];
 
-	public function empleados()
-	{
-		return $this->hasMany('app\Http\Models\RecursosHumanos\Empleados');
+	public function tiposucursal() {
+		return $this->hasOne(TipoSucursal::class, 'id_tipo', 'fk_id_tipo');
+	}
+
+	public function localidad() {
+		return $this->hasOne(Localidades::class, 'id_localidad', 'fk_id_localidad');
 	}
 
 	public function solicitudes()

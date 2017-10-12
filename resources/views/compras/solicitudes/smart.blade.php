@@ -17,27 +17,10 @@
 	@endif
 @endsection
 
-@section('form-actions')
-	<div class="text-right col-md-12 mb-3">
-		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
-		@if (Route::currentRouteNamed(currentRouteName('show')))
-			{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
-			@can('edit', currentEntity())
-				@if($data->fk_id_estatus_solicitud == 1 && !Route::currentRouteNamed(currentRouteName('edit')))
-					{!! HTML::decode(link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-default'])) !!}
-				@endif
-			@endcan
-		@endif
-		{!! HTML::decode(link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default '])) !!}
-	</div>
-@endsection
-
 @section('content-width','mt-3')
 
 @section('form-content')
 {{ Form::setModel($data) }}
-{{--{{dd($validator->view('detalle-form'))}}--}}
-{{--{{dd($reglasdetalles->view('detalle-form'))}}--}}
 	<div class="row">
 		<div class="form-group col-md-4 col-sm-6">
 	{{--		{!! Form::text(array_has($data,'fk_id_solicitante')?'solicitante_formated':'solicitante',null, ['id'=>'solicitante','autocomplete'=>'off','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados'),'data-url2'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')]) !!}--}}
@@ -54,6 +37,7 @@
 				{!! Form::hidden('sucursal_defecto',$data->fk_id_sucursal,['id'=>'sucursal_defecto']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('show')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
+
 				{!! Form::text('sucursal',$data->sucursales->where('id_sucursal',$data->fk_id_sucursal)->first()->nombre_sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('create')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
@@ -90,6 +74,7 @@
 		<div class="col-sm-12">
 			<h3>Detalle de la solicitud</h3>
 			<div class="card">
+				@if(!Route::currentRouteNamed(currentRouteName('show')))
 				<div class="card-header">
 					<fieldset name="detalle-form" id="detalle-form">
 						<div class="row">
@@ -98,9 +83,9 @@
 								{!!Form::select('fk_id_sku',isset($skus)?$skus:[],null,['id'=>'fk_id_sku','class'=>'form-control','style'=>'width:100%'])!!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{{Form::label('fk_id_codigo_barras','Código de barras')}}
-								{!! Form::select('fk_id_codigo_barras',[],null,['id'=>'fk_id_codigo_barras','disabled',
-								'data-url'=>companyAction('Inventarios\CodigosBarrasController@obtenerCodigosBarras',['id'=>'?id']),
+								{{Form::label('fk_id_upc','Código de barras')}}
+								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
+								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'#ID#']),
 								'class'=>'form-control','style'=>'width:100%']) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
@@ -130,7 +115,7 @@
 								{{--{{dd($impuestos)}}--}}
 								{!! Form::select('fk_id_impuesto',[]
 									,null,['id'=>'fk_id_impuesto',
-									'data-url'=>companyAction('Finanzas\ImpuestosController@obtenerImpuestos'),
+									'data-url'=>companyAction('Administracion\ImpuestosController@obtenerImpuestos'),
 									'class'=>'form-control','style'=>'width:100%']) !!}
 								{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}
 							</div>
@@ -151,15 +136,16 @@
 						</div>
 					</fieldset>
 				</div>
+				@endif
 			    <div class="card-body">
 					<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}"
 					data-delete="{{companyAction('Compras\DetalleSolicitudesController@destroyMultiple')}}"
-					data-impuestos="{{companyAction('Finanzas\ImpuestosController@obtenerImpuestos')}}"
-							data-porcentaje="{{companyAction('Finanzas\ImpuestosController@obtenerPorcentaje',['id'=>'?id'])}}">
+					data-impuestos="{{companyAction('Administracion\ImpuestosController@obtenerImpuestos')}}"
+							data-porcentaje="{{companyAction('Administracion\ImpuestosController@obtenerPorcentaje',['id'=>'?id'])}}">
 						<thead>
 							<tr>
 								<th id="idsku">SKU</th>
-								<th id="idcodigobarras">Código de Barras</th>
+								<th id="idupc">Código de Barras</th>
 								<th id="idproveedor">Proveedor</th>
 								<th>Fecha necesidad</th>
 								<th id="idproyecto" >Proyecto</th>
@@ -181,8 +167,8 @@
 										{{$detalle->sku->sku}}
 									</td>
 									<td>
-										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_codigo_barras]',$detalle->fk_id_codigo_barras) !!}
-										{{$detalle->codigo_barras->descripcion}}
+										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+										{{$detalle->upc->descripcion}}
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proveedor]',$detalle->fk_id_proveedor) !!}
@@ -268,6 +254,9 @@
 @endsection
 
 {{-- DONT DELETE --}}
+
+
+
 @if (Route::currentRouteNamed(currentRouteName('index')))
 	@section('smart-js')
 		<script type="text/javascript">
@@ -297,8 +286,22 @@
                  }
              }
          };
+         rivets.binders['hide-comprar'] = {
+             bind: function (el) {
+				 if(el.dataset.fk_id_estatus_solicitud != 1)
+				 {
+				     $(el).hide();
+				 }
+             }
+		 };
+         rivets.binders['get-comprar-url'] = {
+             bind: function (el) {
+                 el.href = el.href.replace('#ID#',el.dataset.itemId);
+//				 el.href = window['smart-view'].dataset.itemSupplyUrl.replace('#ID#',el.dataset.itemId);
+             }
+		 };
 		 @can('update', currentEntity())
-             window['smart-model'].collections.itemsOptions.edit = {a: {
+             window['smart-model'].collections.itemsOptions.edit ={a: {
              'html': '<i class="material-icons">mode_edit</i>',
              'class': 'btn is-icon',
              'rv-get-edit-url': '',
@@ -316,6 +319,13 @@
 			'rv-hide-delete':''
 		}};
 		@endcan
+		window['smart-model'].collections.itemsOptions.supply = {a: {
+		'html': '<i class="material-icons">shopping_cart</i>',
+		'href' : '{!! companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>'#ID#']) !!}',
+		'class': 'btn is-icon',
+		'rv-hide-comprar':'',
+		'rv-get-comprar-url':''
+        }};
 		window['smart-model'].actions.itemsCancel = function(e, rv, motivo){
 		    if(!motivo.motivo_cancelacion){
                 $.toaster({
@@ -332,7 +342,6 @@
                     }
                 });
 			}else{
-
 		        let data = {motivo};
 		        $.delete(this.dataset.deleteUrl,data,function (response) {
 					if(response.success){
@@ -405,5 +414,12 @@
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
+	@section('extraButtons')
+		@parent
+		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
+		@if($data->fk_id_estatus_solicitud == 1)
+			{!! HTML::decode(link_to(companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>$data->id_solicitud]),'<i class="material-icons">shopping_cart</i> Ordenar',['class'=>'btn btn-default'])) !!}
+		@endif
+	@endsection
 	@include('layouts.smart.show')
 @endif

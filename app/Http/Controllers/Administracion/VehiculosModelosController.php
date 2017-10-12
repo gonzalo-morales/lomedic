@@ -18,7 +18,7 @@ class VehiculosModelosController extends ControllerBase
         $this->entity = $entity;
     }
 
-    public function getDataView()
+    public function getDataView($entity = null)
     {
         return [
             'brands' => VehiculosMarcas::select(['marca', 'id_marca'])->where('activo',1)->pluck('marca', 'id_marca'),
@@ -33,7 +33,7 @@ class VehiculosModelosController extends ControllerBase
     public function create($company, $attributes = [])
     {
         return parent::create($company, [
-            'dataview' => $this->getDataView()
+            'dataview' => []
         ]);
     }
 
@@ -46,7 +46,7 @@ class VehiculosModelosController extends ControllerBase
     public function show($company, $id, $attributes = [])
     {
         return parent::show($company, $id, [
-            'dataview' => $this->getDataView()
+            'dataview' => []
         ]);
     }
 
@@ -59,7 +59,7 @@ class VehiculosModelosController extends ControllerBase
     public function edit($company, $id, $attributes = [])
     {
         return parent::edit($company, $id, [
-            'dataview' => $this->getDataView()
+            'dataview' => []
         ]);
     }
 }

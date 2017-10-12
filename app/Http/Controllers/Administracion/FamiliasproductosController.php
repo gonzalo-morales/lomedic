@@ -20,7 +20,7 @@ class FamiliasproductosController extends ControllerBase
 		$this->entity = $entity;
 	}
 
-	public function getDataView()
+	public function getDataView($entity = null)
 	{
 		return [
 			'companies' => Empresas::active()->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
@@ -36,7 +36,7 @@ class FamiliasproductosController extends ControllerBase
 	{
 //		$this->loadResources();
         $attributes = $attributes+ $attributes+['dataview'=>[
-            'product_types'=>TiposProductos::where('estatus',1)->pluck('descripcion','id_tipo')
+            'product_types'=>TiposProductos::where('activo',1)->pluck('tipo_producto','id_tipo')
         ]];
 		return parent::create($company,$attributes);
 	}
@@ -44,7 +44,7 @@ class FamiliasproductosController extends ControllerBase
 	public function store(Request $request, $company)
     {
         if($request->activo == 'on')
-            {$request->request->set('estatus',1);}
+            {$request->request->set('activo',1);}
 
         return parent::store($request, $company);
     }
@@ -59,7 +59,7 @@ class FamiliasproductosController extends ControllerBase
 	{
 //		$this->loadResources();
         $attributes = $attributes+ $attributes+['dataview'=>[
-                'product_types'=>TiposProductos::where('estatus',1)->pluck('descripcion','id_tipo'),
+                'product_types'=>TiposProductos::where('activo',1)->pluck('tipo_producto','id_tipo'),
             ]];
 		return parent::show($company, $id, $attributes);
 	}
@@ -74,7 +74,7 @@ class FamiliasproductosController extends ControllerBase
 	{
 //		$this->loadResources();
         $attributes = $attributes+ $attributes+['dataview'=>[
-                'product_types'=>TiposProductos::where('estatus',1)->pluck('descripcion','id_tipo'),
+                'product_types'=>TiposProductos::where('activo',1)->pluck('tipo_producto','id_tipo'),
             ]];
 		return parent::edit($company, $id, $attributes);
 	}

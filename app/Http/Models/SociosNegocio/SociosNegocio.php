@@ -14,7 +14,7 @@ class SociosNegocio extends Model
      *
      * @var string
      */
-    protected $table = 'gen_cat_socios_negocio';
+    protected $table = 'maestro.gen_cat_socios_negocio';
 
     /**
      * The primary key of the table

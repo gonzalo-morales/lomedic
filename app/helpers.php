@@ -156,6 +156,21 @@ function getCacheTag($route = '')
 	return getCacheKey($route, false);
 }
 
+
+function array_merge_recursive_simple($paArray1, $paArray2)
+{
+    if (!is_array($paArray1) or !is_array($paArray2)) { return $paArray2; }
+    foreach ($paArray2 AS $sKey2 => $sValue2)
+    {
+        if(!is_array($paArray1[$sKey2]) && !is_array($paArray2[$sKey2]) &&isset($paArray1[$sKey2]))
+            $paArray1[$sKey2] = $paArray1[$sKey2].' '.array_merge_recursive_simple(@$paArray1[$sKey2], $sValue2);
+        else
+            $paArray1[$sKey2] = array_merge_recursive_simple(@$paArray1[$sKey2], $sValue2);
+    }
+    return $paArray1;
+}
+
+
 function num2letras($num, $fem = false, $dec = true,$moneda = 'pesos',$abreviaturaMoneda = 'M.N.') {
 
 	//En caso de que no esté formateado

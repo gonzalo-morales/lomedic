@@ -12,33 +12,42 @@ class Ordenes extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'com_opr_solicitudes';
+    protected $table = 'com_opr_ordenes';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_solicitud';
+    protected $primaryKey = 'id_orden';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['fk_id_solicitante','fk_id_sucursal','fk_id_departamento','fecha_creacion','fecha_necesidad',
-        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_solicitud'];
+    protected $fillable = ['fk_id_socio_negocio','fk_id_sucursal','fk_id_condicion_pago','fecha_creacion','fecha_estimada_entrega',
+        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_orden','fk_id_tipo_entrega','fk_id_empresa',
+        'tiempo_entrega','importacion'];
 
+    public $niceNames =[
+        'fk_id_socio_negocio'=>'proveedor'
+    ];
+
+    protected $dataColumns = [
+        'fk_id_estatus_orden'
+    ];
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
     protected $fields = [
-        'id_solicitud' => 'Número Solicitud',
-        'nombre_completo'  => 'Solicitante',
-        'nombre_sucursal' => 'Sucursal',
-        'fecha_creacion' => 'Fecha de solicitud',
-        'fecha_necesidad' => 'Fecha necesidad',
-        'estatus_solicitud' => 'Estatus'
+        'id_orden' => 'Número Solicitud',
+        'proveedor.nombre_corto' => 'Proveedor',
+        'sucursales.sucursal' => 'Sucursal entrega',
+        'fecha_creacion' => 'Fecha del pedido',
+        'fecha_estimada_entrega' => 'Fecha de entrega',
+        'estatus.estatus' => 'Estatus de la orden',
+        'empresa.nombre_comercial' => 'Empresa'
     ];
 
     function getNombreCompletoAttribute() {
@@ -54,50 +63,15 @@ class Ordenes extends ModelCompany
     }
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'fk_id_solicitante' => 'required',
+        'fk_id_socio_negocio' => 'required',
         'fk_id_sucursal' => 'required',
-        'fecha_necesidad' => 'required'
+        'fk_id_condicion_pago' => 'required',
+        'fk_id_tipo_entrega' => 'required'
     ];
-
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-    public function ColumnDefaultValues()
-    {
-        $schema = config('database.connections.'.$this->getConnection()->getName().'.schema');
-
-        $data = DB::table('information_schema.columns')
-            ->select('column_name', 'data_type', DB::Raw("replace(replace(column_default, concat('::',data_type), ''),'''','') as column_default"))
-            ->whereRaw('column_default is not null')
-            ->whereRaw("column_default not ilike '%nextval%'")
-            ->where('table_name','=',$this->table)
-            ->where('table_schema','=',$schema)
-            ->where('table_catalog','=',$this->getConnection()->getDatabaseName())->get();
-
-        foreach ($data as $value) {
-            $data->{$value->column_name} = $value->data_type == 'boolean' ? $value->column_default == 'true' : $value->column_default;
-        }
-
-        return $data;
-    }
-
-    public function empleado()
-    {
-        return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_solicitante','id_empleado');
-    }
 
     public function sucursales()
     {
@@ -106,16 +80,27 @@ class Ordenes extends ModelCompany
 
     public function estatus()
     {
-        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_solicitud');
+        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_orden');
     }
 
-    public function detalleSolicitudes()
+    public function detalleOrdenes()
     {
-        return $this->hasMany('App\Http\Models\Compras\DetalleSolicitudes','fk_id_solicitud', 'id_solicitud');
+        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_orden', 'id_orden');
     }
 
-    public function getSolicitanteFormatedAttribute() {
-        return $this->empleado->nombre." ".$this->empleado->apellido_paterno." ".$this->empleado->apellido_materno;
+    public function empresa()
+    {
+        return $this->belongsTo('App\Http\Models\Administracion\Empresas','fk_id_empresa','id_empresa');
+    }
+
+    public function tipoEntrega()
+    {
+        return $this->hasOne('App\Http\Models\SociosNegocio\TiposEntrega','id_tipo_entrega','fk_id_tipo_entrega');
+    }
+
+    public function proveedor()
+    {
+        return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
     }
 
 }

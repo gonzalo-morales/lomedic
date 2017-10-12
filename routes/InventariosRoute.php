@@ -17,10 +17,11 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'inventarios', 'as' => 'inventarios.', 'middleware' => ['auth','share'] ], function() {
-        Route::resource('skus', 'Inventarios\SkusController');
-        Route::get('getSkus','Inventarios\SkusController@obtenerSkus');
-        Route::resource('codigos_barras','Inventarios\CodigosBarrasController');
-        Route::get('getCodigosBarras/{id}','Inventarios\CodigosBarrasController@obtenerCodigosBarras');
+        Route::resource('cbn','Inventarios\CbnController');
+        Route::resource('productos', 'Inventarios\ProductosController');
+        Route::get('getSkus','Inventarios\ProductosController@obtenerSkus');
+        Route::get('getUpcs/{id}','Inventarios\ProductosController@obtenerUpcs');
+        Route::resource('upcs','Inventarios\UpcsController');
         Route::resource('almacenes','Inventarios\AlmacenesController');
     });
 });

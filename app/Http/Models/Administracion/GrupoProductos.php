@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
-use Illuminate\Support\HtmlString;
 
 class GrupoProductos extends ModelBase
 {
@@ -12,7 +11,7 @@ class GrupoProductos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_grupo_productos';
+	protected $table = 'maestro.gen_cat_grupo_productos';
 
 	/**
 	 * The primary key of the table
@@ -25,39 +24,20 @@ class GrupoProductos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['descripcion','descripcion_producto','nomenclatura','tipo','activo'];
+	protected $fillable = ['grupo','activo'];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [
-		'descripcion' => 'required',
-		'descripcion_producto' => 'required',
-		'nomenclatura' => 'required',
-		'tipo' => 'required',
-	];
+	public $rules = [];
 
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array
 	 */
 	protected $fields = [
-		'descripcion' => 'Descripción',
-		'estatus' => 'Estatus',
-		'descripcion_producto' => 'Descripción producto',
-		'nomenclatura' => 'Nomenclatura',
-		'tipo' => 'Tipo',
-		'activo_span' => 'Activo',
+		'grupo' => 'Grupo',
+		'activo_span' => 'Estatus',
 	];
-
-	public function usuario()
-	{
-		$this->hasOne('app\Http\Models\Administracion\Usuarios');
-	}
-
-	public function empresa()
-	{
-		$this->$this->hasOne('app\Http\Models\Administracion\Empresas');
-	}
 }

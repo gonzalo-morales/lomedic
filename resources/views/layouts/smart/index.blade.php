@@ -42,57 +42,6 @@
 		'data-delete-type': 'single',
 	}};
 	@endcan
-	window['smart-model'].collections.itemsOptions.dummyopt = {a: {
-		'html': '<i class="material-icons">visibility</i>',
-		'href' : '#',
-		'class': 'btn is-icon',
-		'rv-on-click': 'actions.showModalDummy',
-	}};
-	window['smart-model'].actions.showModalDummy = function(e, rv) {
-		e.preventDefault();
-
-		let modal = window['smart-modal'];
-		modal.view = rivets.bind(modal, {
-			title: 'Dummy title',
-			content: '<form  id="dummy-form">' +
-			'<div class="form-group">' +
-			'<label for="recipient-name" class="form-control-label">Recipient:</label>' +
-			'<input type="text" class="form-control" id="recipient-name" name="recipient">' +
-			'</div>' +
-			'<div class="form-group">' +
-			'<label for="message-text" class="form-control-label">Message:</label>' +
-			'<textarea class="form-control" id="message-text" name="message"></textarea>' +
-			'</div>' +
-			'</form>',
-			buttons: [
-				{button: {
-					'text': 'Cancelar',
-					'class': 'btn btn-secondary',
-					'data-dismiss': 'modal',
-				}},
-				{button: {
-					'text': 'Aceptar',
-					'class': 'btn btn-primary',
-					'rv-on-click': 'action',
-				}}
-			],
-			action: function(e, rv) {
-
-				var formData = new FormData(document.querySelector('#dummy-form')), convertedJSON = {}, it = formData.entries(), n;
-
-				while(n = it.next()) {
-					if(!n || n.done) break;
-					convertedJSON[n.value[0]] = n.value[1];
-				}
-
-				console.log(convertedJSON)
-			},
-		})
-
-		// Abrimos modal
-		$(modal).modal('show');
-
-	};
 
 </script>
 @endsection
@@ -104,7 +53,7 @@
 @if (session('message'))
 <script type="text/javascript">
 	$.toaster({
-		priority: 'success', title: 'Exito', message: '{{session('message.type')}}',
+		priority: 'success', title: 'Exito', message: '{{session('message.text')}}',
 		settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
 	})
 </script>
@@ -114,7 +63,7 @@
 
 @section('content')
 <div class="container-fluid">
-	{{ HTML::tag('h4', currentEntityBaseName(),['class'=>'col-md-12']) }}
+	<h4 class="col-md-12">@yield('title')</h4>
 	<div class="row">
 		<div class="col">
 			<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-create-url="{{ companyRoute('create') }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}" data-item-export-url="{{companyRoute('export', ['type' => '_ID_'])}}">

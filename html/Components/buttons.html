@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+    .loading{
+        animation: spin 0.5s infinite linear;
+        -webkit-animation: spin 0.5s infinite linear;
+        -moz-animation: spin 0.5s infinite linear;
+        -o-animation: spin 0.5s infinite linear;
+        -ms-animation: spin 0.5s infinite linear;
+    }
+    @keyframes spin {
+        from { transform: scale(1) rotate(360deg); }
+        to { transform: scale(1) rotate(0deg); }
+    }
+
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <h1 class="text-center">Buttons</h1>
+      <button type="button" class="btn btn-primary">Primary</button>
+      <button type="button" class="btn btn-info">Info</button>
+      <button type="button" class="btn btn-danger">Danger</button>
+      <button id="pageLoader" type="button" class="btn btn-default">Guardar y salir</button>
+    </div><!--/container-fluid-->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      //iniciamos tooltips
+      $(document).ready(function(){
+        $('[data-toggle]').tooltip();
+        //estado en loading para el botón
+        $('.btn').click(function(){
+          $(this).attr("disabled",true).text("Cargando...").addClass('d-inline-flex').html('Cargando... <i class="material-icons align-self-center loading">cached</i>');
+        });
+        //estado en loading para el botón al momento de salir
+        $('#pageLoader').click(function(){
+          //Agregamos barra de carga
+          $('body').append('<div class="progress fixed-top rounded-0"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div>')
+            var progress = setInterval(function () {
+                var $bar = $('.progress-bar');
+
+                if ($bar.width() >= $bar.parent().width()) {
+                    clearInterval(progress);
+                    $('.progress-bar').removeClass('progress-bar-animated');
+                } else {
+                    $bar.width($bar.width() + "1%");
+                }
+            }, 1000);
+        });
+      });
+    </script>
+  </body>
+</html>
