@@ -4,7 +4,7 @@
 
 @section('header-bottom')
 	<script type="text/javascript">
-		$('a').click( function() {
+		$('.wmenu').click( function() {
 			if($(this).attr('aria-expanded') == 'false')
 				$(this).parent().addClass('col-sm-4').removeClass('col-sm-2');
 			else

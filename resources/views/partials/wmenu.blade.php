@@ -1,6 +1,6 @@
 @if($modulo->submodulos->count())
 	<div class="col-sm-2 d-flex text-white metrOpt green m-2 p-0 row" style="height:auto;">
-    		<a class="pt-4 col-sm-12 text-center justify-content-center metrOpt text-white green collapsed" href="#wsubmenu{{$modulo->id_modulo}}" data-toggle="collapse" aria-expanded="false" title="{{ $modulo->nombre }}">
+    		<a class="wmenu pt-4 col-sm-12 text-center justify-content-center metrOpt text-white green collapsed" href="#wsubmenu{{$modulo->id_modulo}}" data-toggle="collapse" aria-expanded="false" title="{{ $modulo->nombre }}">
             	<i class='material-icons left'>{{ $modulo->icono }}</i> {{ $modulo->nombre }}
             	<span class="tag-menu">{{ $modulo->descripcion }}</span>
         	</a>

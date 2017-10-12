@@ -73,22 +73,33 @@
 		<div id="infoSections" class="col-md-4 col-sm-12"  style="opacity: 0; top:50px;">
 			<div class="card text-center z-depth-1-half">
 			  <div class="card-header">
-			    <ul class="nav nav-pills card-header-pills nav-justified">
+			    <ul class="nav nav-tabs card-header-pills nav-justified" role="tabslist">
 			      <li class="nav-item">
-			        <a class="nav-link active" href="#"><i class="material-icons align-middle">pie_chart</i></a>
+			        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-expanded="true">
+			        	<i class="material-icons align-middle">pie_chart</i>
+			        </a>
 			      </li>
 			      <li class="nav-item">
-			        <a class="nav-link" href="#"><i class="material-icons align-middle">grade</i></a>
+			        <a class="nav-link" id="proyectos-tab" data-toggle="tab" href="#proyectos" role="tab" aria-controls="proyectos" aria-expanded="true">
+			        	<i class="material-icons align-middle">grade</i>
+			        </a>
 			      </li>
 			      <li class="nav-item">
-			        <a class="nav-link" href="#"><i class="material-icons align-middle">notifications</i></a>
+			        <a class="nav-link" id="notificaciones-tab" data-toggle="tab" href="#notificaciones" role="tab" aria-controls="notificaciones" aria-expanded="true">
+			        	<i class="material-icons align-middle">notifications</i>
+			        </a>
 			      </li>
 			    </ul>
 			  </div>
 			  <div class="card-body">
-			  	<div class="charts">
-			    	<div class="chart" id="pie"></div>
-				</div>
+			  	<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+				  	<div class="charts">
+				  		<h4>Medicamento <b>más</b> vendido del mes</h4>
+				    	<div class="chart" id="pie"></div>
+					</div>
+			  	</div>
+			  	<div class="tab-pane fade" id="proyectos" role="tabpanel" aria-labelledby="proyectos-tab">...</div>
+			  	<div class="tab-pane fade" id="notificationes" role="tabpanel" aria-labelledby="notificaciones-tab">...</div>
 			  </div>
 			</div>
 		</div><!--/col aditional info-->

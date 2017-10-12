@@ -33,7 +33,7 @@
         <div class="alert alert-warning" role="alert">
             Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
         </div>
-        {{ Form::cCheckboxBtn('Activo','activo', $data['activo'] ?? null) }}
+        {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
     </div>
 </div>
 @endsection

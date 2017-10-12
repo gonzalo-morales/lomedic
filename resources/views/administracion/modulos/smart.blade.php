@@ -44,9 +44,10 @@
 		{{ Form::label('accion_tabla', '¿Accion Menu?') }}
 	</div>
 	<div class="input-field col s2">
-		{{ Form::hidden('activo', 0) }}
-		{{ Form::checkbox('activo', null, old('activo'), ['id'=>'activo']) }}
-		{{ Form::label('activo', '¿Activo?') }}
+		<div class="alert alert-warning" role="alert">
+            Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
+        </div>
+        {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
 	</div>
 </div>
 @endsection
