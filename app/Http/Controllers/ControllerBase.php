@@ -80,7 +80,7 @@ class ControllerBase extends Controller
 		# ¿Usuario tiene permiso para crear?
 //		$this->authorize('create', $this->entity);
 
-		$data = $this->entity->getColumnsDefaultsValues();
+	    $data = $this->entity->getColumnsDefaultsValues();
 		$validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 
 		return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [

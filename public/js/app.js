@@ -12,7 +12,7 @@ $(document).ready(function(){
    /* Sidebar's */
    $('#sidebarCollapse').on('click', function () {
        $('#sidebar').toggleClass('active');
-       //condiciones para cambiar el Ã­cono de menÃº a x
+       //condiciones para cambiar el ÃƒÂ­cono de menÃƒÂº a x
        if($('#sidebar').hasClass('active') && $(window).width() >= 768){
            $(this).find("i").text("menu");
        }
@@ -160,12 +160,12 @@ $(document).ready(function(){
     });
     $('.toggeable').trigger('change');
     
-    
-    
-    
-    
+    //Submenu en pantalla completa
+    $('#menu-conten .url').bind('dblclick', function () {
+    	var url = $(this).attr('data-url');
+    	if(url) {
+    		location = $(this).attr('data-url');
+    	}
+    });
 });
-
-
-
 

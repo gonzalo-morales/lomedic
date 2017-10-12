@@ -45,7 +45,7 @@
             </div>
     
             </div>
-            <a class="d-flex align-items-center" href="{{asset('/')}}" title="ADMINISTRACION"><i class='material-icons left'>home</i></a>
+            <a class="d-flex align-items-center" href="{{asset(request()->company)}}" title="ADMINISTRACION"><i class='material-icons left'>home</i></a>
             <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">live_help</i></button>
         </nav>
     	<!--<ol class="breadcrumb bg-light rounded-0 z-depth-1-half">

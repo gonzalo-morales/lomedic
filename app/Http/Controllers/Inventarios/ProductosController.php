@@ -6,12 +6,24 @@ use App\Http\Controllers\ControllerBase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Http\Models\Inventarios\Productos;
+use App\Http\Models\Administracion\GrupoProductos;
+use App\Http\Models\Administracion\SubgrupoProductos;
+use App\Http\Models\Administracion\UnidadesMedidas;
 
 class ProductosController extends ControllerBase
 {
     public function __construct(Productos $entity)
     {
         $this->entity = $entity;
+    }
+    
+    public function getDataView($entity = null)
+    {
+        return [
+            'unidadmedida' => UnidadesMedidas::where('eliminar',0)->where('activo',1)->pluck('nombre','id_unidad_medida'),
+            'grupo' => GrupoProductos::where('eliminar',0)->where('activo',1)->pluck('grupo','id_grupo'),
+            'subgrupo' => SubgrupoProductos::where('eliminar',0)->where('activo',1)->pluck('subgrupo','id_subgrupo'),
+        ];
     }
 
     public function obtenerSkus($company,Request $request)

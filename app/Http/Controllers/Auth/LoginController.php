@@ -49,6 +49,13 @@ class LoginController extends Controller
         $this->validate($request, [$field => 'required', 'password' => 'required',]);
     }
 
+    public function intended($default, $status = 302, $headers = array(), $secure = null)
+    {
+        $path = $this->session->get('url.intended', $default);
+        $this->session->forget('url.intended');
+        return $this->to($path, $status, $headers, $secure);
+    }
+    
     /**
      * Redirige a usuario una nez iniciada la session
      * @param  Request $request
@@ -58,7 +65,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $usuario)
     {
         $empresa = Empresas::findOrFail($usuario->fk_id_empresa_default);
-        return redirect("/$empresa->conexion");
+        
+        return \Redirect::intended("/$empresa->conexion");
     }
-
 }

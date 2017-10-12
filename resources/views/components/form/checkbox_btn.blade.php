@@ -1,5 +1,5 @@
 @if(!empty($label))
-<label>{{$label}}</label>
+<label class="text-center w-100">{{$label}}</label>
 @endif
 <div data-toggle="buttons" class="text-center">
 	{{ Form::hidden($name, 0) }}

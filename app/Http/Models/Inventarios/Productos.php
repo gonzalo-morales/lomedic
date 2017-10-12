@@ -3,6 +3,8 @@
 namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Administracion\GrupoProductos;
+use App\Http\Models\Administracion\SubgrupoProductos;
 
 class Productos extends ModelCompany
 {
@@ -11,7 +13,7 @@ class Productos extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'maestro.inv_cat_skus';
+    protected $table = 'inv_cat_skus';
 
     /**
      * The primary key of the table
@@ -33,7 +35,10 @@ class Productos extends ModelCompany
     protected $fields = [
         'id_sku' => 'ID',
         'sku' => 'SKU',
-        'descripcion' => 'Descripcion'
+        'descripcion' => 'Descripcion',
+        'presentacion' => 'Presentacion',
+        'grupo.grupo' => 'Grupo',
+        'subgrupo.subgrupo' => 'Subgrupo',
     ];
 
     /**
@@ -54,6 +59,16 @@ class Productos extends ModelCompany
 
     public function upcs()
     {
-        return $this->belongsToMany('App\Http\Models\Inventarios\Upcs','maestro.inv_det_sku_upc','fk_id_sku','fk_id_upc');
+        return $this->belongsToMany(Upcs::class,'inv_det_sku_upc','fk_id_sku','fk_id_upc');
+    }
+    
+    public function grupo()
+    {
+        return $this->belongsTo(GrupoProductos::class,'fk_id_grupo','id_grupo');
+    }
+    
+    public function subgrupo()
+    {
+        return $this->belongsTo(SubgrupoProductos::class,'fk_id_subgrupo','id_subgrupo');
     }
 }

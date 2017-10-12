@@ -6,13 +6,14 @@
 @section('header-bottom')
 	@parent
 	<script type="text/javascript" src="{{ asset('js/seguimiento.js') }}"></script>
-	<script type="text/javascript">
-		
-	</script>
 @endsection
 
 @section('form-title')
-    {{ HTML::tag('h4', 'Datos de la Solicitud') }}
+	@if(Route::currentRouteNamed(currentRouteName('create')))
+		{{ HTML::tag('h4', 'Nueva Solicitud') }}
+	@else
+    	{{ HTML::tag('h4', 'Datos de la Solicitud') }}
+    @endif
 @endsection
 
 @section('form-header')
@@ -29,15 +30,15 @@
         		{{ Form::button('Actualizar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
             @endif
 	</div>
-	
+@else
+	@parent
 @endif
 @endsection
 
 @section('form-content')
-	@if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('export')))
+	@if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('export')) && !Route::currentRouteNamed(currentRouteName('create')))
 	{{ Form::setModel($data) }}
 	<div class="card row my-2">
-
         <div class="card-header py-2 text-info">
             <div class="row">
             	<div class="col-md-12 col-lg-6">
@@ -65,6 +66,7 @@
             	</div>
         	</div>
         </div>
+
         <div class="card-body">
         
             <div class="row px-2">
@@ -184,11 +186,66 @@
     		</div>
         </div>
     </div>
+    @elseif(Route::currentRouteNamed(currentRouteName('create')))
+      	<div class="modal-body">
+  			<div class="form-group">
+  				<div style="padding:6px; width:100%; border-bottom:1px solid #eee;">
+  					Solicitante: <span><b>{{Auth::User()->nombre_corto}}</b></span>
+					{{Form::hidden('id_solicitante',Auth::User()->fk_id_empleado,['id'=>'id_solicitante'])}}
+  				</div>
+  				<div class="input-group input-group-sm w-100">
+					<span class="input-group-addon">
+						<input type="checkbox" id="check_solicitante">
+					</span>
+					{!! Form::select('empleado_solicitud',[],null,['id'=>'empleado_solicitud','class'=>'form-control select2-single select2-hidden-accessible','disabled'=>'true','style'=>'width: 96% !important;','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados')]) !!}
+  				</div>
+  			</div>
+  			<div class="form-group row">
+  				<div class="col-md-12">
+      				{{Form::label('fk_id_sucursal','Sucursal')}}
+      				{!! Form::select('fk_id_sucursal',[],null,['id'=>'fk_id_sucursal','class'=>'form-control select2-single select2-hidden-accessible','style'=>'width: 96% !important;','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])]) !!}
+  				</div>
+  			</div>
+  			<div class="form-group row">
+  				<div class="col-md-12 col-lg-6">
+      				{{Form::label('fk_id_categoria','Categoría')}}
+            		{!! Form::select('fk_id_categoria',$categories_tickets,null,['id'=>'fk_id_categoria','class'=>'form-control fk_id_categoria','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
+  				</div>
+  				<div class="col-md-12 col-lg-6">
+      				{{Form::label('fk_id_subcategoria','Subategoría')}}
+        			{!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria','class'=>'form-control fk_id_subcategoria','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
+  				</div>
+  			</div>
+  			<div class="form-group row">
+  				<div class="col-md-12 col-lg-6">
+      				{{Form::label('fk_id_accion','Acción')}}
+        			{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control fk_id_accion','disabled'=>'disabled']) !!}
+  				</div>
+  				<div class="col-md-12 col-lg-6">
+      				{{Form::label('fk_id_prioridad','Prioridad')}}
+        			{!! Form::select('fk_id_prioridad',$priorities_tickets->pluck('prioridad','id_prioridad'),null,['id'=>'fk_id_prioridad','class'=>'form-control']) !!}
+  				</div>
+  			</div>
+  			<div class="form-group">
+        		{{Form::label('asunto','Asunto')}}
+  				{!! Form::text('asunto',old('asunto'),['class'=>'form-control validate','id'=>'asunto']) !!}
+  			</div>
+  			<div class="form-group">
+  				{{Form::label('descripción','Descripción')}}
+        		{!! Form::textarea('descripcion',old('descripcion'),['id'=>'descripcion','class'=>'form-control']) !!}
+  			</div>
+  			<div class="form-group">
+      			<label class="custom-file w-100">
+                    <span class="custom-file-control"></span>
+                	{!! Form::file('archivo[]',['id'=>'archivo','class'=>'form-control-file','multiple'=>'multiple']) !!}
+                </label>
+  			</div>
+      	</div>
 	@endif
 @endsection
 
 @section('form-utils')
-    @if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('export')))
+    @if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('export')) && !Route::currentRouteNamed(currentRouteName('create')))
         @if(Auth::id() == $data->fk_id_tecnico_asignado || Auth::id() == $data->fk_id_empleado_solicitud)
     		<!--Conversacion-->
     		<div class="divider mt-2"></div>
