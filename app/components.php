@@ -1,6 +1,7 @@
 <?php
 
 Form::component('cText', 'components.form.text', ['text' , 'name', 'attributes']);
+Form::component('cTextArea', 'components.form.textarea', ['text' , 'name', 'attributes']);
 Form::component('cSelect', 'components.form.select', ['text' , 'name', 'options', 'attributes']);
 Form::component('cSelectWithDisabled', 'components.form.select_disabled', ['text' , 'name', 'options', 'attributes']);
 Form::component('cCheckbox', 'components.form.checkbox', ['text' , 'name', 'attributes']);

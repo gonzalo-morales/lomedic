@@ -9,6 +9,7 @@ use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Administracion\GrupoProductos;
 use App\Http\Models\Administracion\SubgrupoProductos;
 use App\Http\Models\Administracion\UnidadesMedidas;
+use App\Http\Models\Administracion\SeriesSkus;
 
 class ProductosController extends ControllerBase
 {
@@ -19,10 +20,18 @@ class ProductosController extends ControllerBase
     
     public function getDataView($entity = null)
     {
+        $grupos = GrupoProductos::where('eliminar',0)->where('activo',1)->pluck('grupo','id_grupo')->sortBy('grupo');
+
+        foreach ($grupos as $id => $grupo) {
+            $subgrupo = SubgrupoProductos::where('fk_id_grupo',$id)->where('eliminar',0)->where('activo',1)->pluck('subgrupo','id_subgrupo')->sortBy('subgrupo')->toArray();
+            if(!empty($subgrupo))
+            { $subgrupos[$grupo] = $subgrupo; }
+        }
+
         return [
-            'unidadmedida' => UnidadesMedidas::where('eliminar',0)->where('activo',1)->pluck('nombre','id_unidad_medida'),
-            'grupo' => GrupoProductos::where('eliminar',0)->where('activo',1)->pluck('grupo','id_grupo'),
-            'subgrupo' => SubgrupoProductos::where('eliminar',0)->where('activo',1)->pluck('subgrupo','id_subgrupo'),
+            'seriesku' => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('Selecciona una opcion...',''),
+            'unidadmedida' => UnidadesMedidas::where('eliminar',0)->where('activo',1)->pluck('nombre','id_unidad_medida')->sortBy('nombre')->prepend('Selecciona una unidad de medida',''),
+            'subgrupo' => collect($subgrupos ?? [])->prepend('Selecciona un subgrupo','')->toArray(),
         ];
     }
 
@@ -30,7 +39,7 @@ class ProductosController extends ControllerBase
     {
         $term = $request->term;
         $skus = Productos::where('activo','1')->where('sku','LIKE',$term.'%')->orWhere('nombre_comercial','LIKE','%'.$term.'%')->orWhere('descripcion','LIKE','%'.$term.'%')->get();
-//        dd($skus);
+
         $skus_set = [];
         foreach ($skus as $sku)
         {
