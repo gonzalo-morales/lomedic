@@ -260,3 +260,9 @@ a:hover .window {
 	height:4em;
 	border-radius:50%;
 }
+.list-left{
+  border-left: 4px solid #007bff;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}

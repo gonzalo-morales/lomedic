@@ -73,33 +73,68 @@
 		<div id="infoSections" class="col-md-4 col-sm-12"  style="opacity: 0; top:50px;">
 			<div class="card text-center z-depth-1-half">
 			  <div class="card-header">
-			    <ul class="nav nav-tabs card-header-pills nav-justified" role="tabslist">
-			      <li class="nav-item">
-			        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-expanded="true">
-			        	<i class="material-icons align-middle">pie_chart</i>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link" id="proyectos-tab" data-toggle="tab" href="#proyectos" role="tab" aria-controls="proyectos" aria-expanded="true">
-			        	<i class="material-icons align-middle">grade</i>
-			        </a>
-			      </li>
-			      <li class="nav-item">
-			        <a class="nav-link" id="notificaciones-tab" data-toggle="tab" href="#notificaciones" role="tab" aria-controls="notificaciones" aria-expanded="true">
-			        	<i class="material-icons align-middle">notifications</i>
-			        </a>
-			      </li>
-			    </ul>
+				<ul class="nav nav-pills nav-justified" id="myTab" role="tablist">
+				  <li class="nav-item">
+				    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-expanded="true"><i class="material-icons align-middle">pie_chart</i></a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"><i class="material-icons align-middle">event_note</i></a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" id="dropdown1-tab" data-toggle="tab" href="#dropdown1" role="tab" aria-controls="dropdown1"><i class="material-icons align-middle">notifications</i></a>
+				  </li>
+				</ul>
 			  </div>
 			  <div class="card-body">
-			  	<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+				<div class="tab-content" id="myTabContent">
+				  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 				  	<div class="charts">
 				  		<h4>Medicamento <b>más</b> vendido del mes</h4>
 				    	<div class="chart" id="pie"></div>
 					</div>
-			  	</div>
-			  	<div class="tab-pane fade" id="proyectos" role="tabpanel" aria-labelledby="proyectos-tab">...</div>
-			  	<div class="tab-pane fade" id="notificationes" role="tabpanel" aria-labelledby="notificaciones-tab">...</div>
+				  </div>
+				  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+					<div class="list-group border-0 text-left">
+					  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start list-left">
+					    <div class="d-flex w-100 justify-content-between">
+					      <small class="text-muted d-flex"><i class="material-icons">insert_invitation</i> 24/12/2017</small>
+					    </div>
+					    <p class="mb-1"><strong>QUERÉTARO</strong></p>
+					    <small class="text-muted">4 Incidente(s)</small>
+					  </a>
+					  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start list-left">
+					    <div class="d-flex w-100 justify-content-between">
+					      <small class="text-muted d-flex"><i class="material-icons">insert_invitation</i> 24/12/2017</small>
+					    </div>
+					    <p class="mb-1"><strong>IPEJAL</strong></p>
+					    <small class="text-muted">1 Incidente(s)</small>
+					  </a>
+					  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start list-left">
+					    <div class="d-flex w-100 justify-content-between">
+					      <small class="text-muted d-flex"><i class="material-icons">insert_invitation</i> 24/12/2017</small>
+					    </div>
+					    <p class="mb-1"><strong>CHIAPAS</strong></p>
+					    <small class="text-muted">2 Incidente(s)</small>
+					  </a>
+					</div>
+				  </div>
+				  <div class="tab-pane fade" id="dropdown1" role="tabpanel" aria-labelledby="dropdown1-tab">
+					<div class="list-group border-0 text-left">
+					  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start list-left">
+					    <div class="d-flex w-100 justify-content-between">
+					      <small class="text-muted d-flex"><i class="material-icons">insert_invitation</i> 24/12/2017</small>
+					    </div>
+					    <p class="mb-1">Tienes programado una junta a las 12:00pm</p>
+					  </a>
+					  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start list-left">
+					    <div class="d-flex w-100 justify-content-between">
+					      <small class="text-muted d-flex"><i class="material-icons">insert_invitation</i> 24/12/2017</small>
+					    </div>
+					    <p class="mb-1">Revisar inventario</p>
+					  </a>
+					</div>
+				  </div>
+				</div>
 			  </div>
 			</div>
 		</div><!--/col aditional info-->
