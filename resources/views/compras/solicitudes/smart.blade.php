@@ -85,7 +85,7 @@
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_upc','Código de barras')}}
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
-								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'#ID#']),
+								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
 								'class'=>'form-control','style'=>'width:100%']) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">

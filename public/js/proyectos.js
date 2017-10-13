@@ -2,8 +2,8 @@ var a=[];
 // Inicializar los datepicker para las fechas necesarias
 $('.datepicker').pickadate({
     selectMonths: true, // Creates a dropdown to control month
-    selectYears: 3, // Creates a dropdown of 3 years to control year
-    min: true,
+    selectYears: 2, // Creates a dropdown of 2 years to control year
+    min: new Date(2017,0,1),//Primero de enero del 2017
     format: 'yyyy-mm-dd'
 });
 $(document).ready(function(){
@@ -12,75 +12,75 @@ $(document).ready(function(){
         fixedHeight: true,
         fixedColumns: true,
         searchable: false,
-        perPageSelect: false,
+        perPageSelect: false
     });
-    if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
-    {
-        initSelects();
-        if(window.location.href.toString().indexOf('crear') > -1){
-            validateDetail();
-        }
-        //Por si se selecciona una empresa diferente
-        $('#otra_empresa').on('change',function () {
-            $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-            if( !this.checked ){
-                if(window.location.href.toString().indexOf('crear') > -1)
-                    $( this ).parent().nextAll( "select" ).val(0).trigger('change');
-            }
-        });
-        //Por si se selecciona un UPC
-        $('#activo_upc').on('change',function () {
-            $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-            if( !this.checked ){
-                $( this ).parent().nextAll( "select" ).val(0).trigger('change');
-            }else{
-                if($('#fk_id_sku').val()){
-                    _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_sku').val());
-                    $( this ).parent().nextAll( "select" ).select2({
-                        theme: "bootstrap",
-                        minimumResultsForSearch: Infinity,
-                        ajax:{
-                            url: _url,
-                            dataType: 'json',
-                            data: function (term) {
-                                return {term: term};
-                            },
-                            processResults: function (data) {
-                                return {results: data}
-                            },
-                            cache:true
-                        }
-                    })
-                }else{
-                    $( this ).prop('checked',false);
-                    $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-                    $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes un SKU',
-                        settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-                }
-            }
-        })//Fin UPC
-
-        $('#agregar').on('click',function () {
-            agregarProducto();
-        });
-
-        $('#fk_id_socio_negocio').on('change',function () {
-            $('#tiempo_entrega').val($('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
-            var fecha = new Date();
-            fecha.setDate(fecha.getDate()+$('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
-            $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate());
-        });
-        $(document).on('submit',function (e) {
-            if(a.length>0) {
-                e.preventDefault();
-                let url = $('#productos').data('delete');
-                $.delete(url, {ids: a});
-                a = [];
-            }
-        })
-    }else{
-        totalOrden();
-    }
+    // if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
+    // {
+    //     initSelects();
+    //     if(window.location.href.toString().indexOf('crear') > -1){
+    //         validateDetail();
+    //     }
+    //     //Por si se selecciona una empresa diferente
+    //     $('#otra_empresa').on('change',function () {
+    //         $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+    //         if( !this.checked ){
+    //             if(window.location.href.toString().indexOf('crear') > -1)
+    //                 $( this ).parent().nextAll( "select" ).val(0).trigger('change');
+    //         }
+    //     });
+    //     //Por si se selecciona un UPC
+    //     $('#activo_upc').on('change',function () {
+    //         $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+    //         if( !this.checked ){
+    //             $( this ).parent().nextAll( "select" ).val(0).trigger('change');
+    //         }else{
+    //             if($('#fk_id_sku').val()){
+    //                 _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_sku').val());
+    //                 $( this ).parent().nextAll( "select" ).select2({
+    //                     theme: "bootstrap",
+    //                     minimumResultsForSearch: Infinity,
+    //                     ajax:{
+    //                         url: _url,
+    //                         dataType: 'json',
+    //                         data: function (term) {
+    //                             return {term: term};
+    //                         },
+    //                         processResults: function (data) {
+    //                             return {results: data}
+    //                         },
+    //                         cache:true
+    //                     }
+    //                 })
+    //             }else{
+    //                 $( this ).prop('checked',false);
+    //                 $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+    //                 $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes un SKU',
+    //                     settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    //             }
+    //         }
+    //     })//Fin UPC
+    //
+    //     $('#agregar').on('click',function () {
+    //         agregarProducto();
+    //     });
+    //
+    //     $('#fk_id_socio_negocio').on('change',function () {
+    //         $('#tiempo_entrega').val($('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
+    //         var fecha = new Date();
+    //         fecha.setDate(fecha.getDate()+$('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
+    //         $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+fecha.getMonth()+'-'+fecha.getDate());
+    //     });
+    //     $(document).on('submit',function (e) {
+    //         if(a.length>0) {
+    //             e.preventDefault();
+    //             let url = $('#productos').data('delete');
+    //             $.delete(url, {ids: a});
+    //             a = [];
+    //         }
+    //     })
+    // }else{
+    //     totalOrden();
+    // }
 });
 
 function select2Placeholder(id_select,text,searchable = 1,selected = true, disabled = true,value = 0,select2=true) {

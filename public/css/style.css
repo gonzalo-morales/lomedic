@@ -166,7 +166,7 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
     right: 0;
     left: 0;
     text-align: center;
-    z-index: 9999;
+    z-index: 100;
 }
 /*Select2*/
 .select2-container .select2-selection--single {

@@ -45,5 +45,6 @@ class ProductosController extends ControllerBase
 
     public function obtenerUpcs($company, $id)
     {
-        return $this->entity->find($id)->upcs()->select('id_upc as id','upc as text')->get();    }
+        return $this->entity->find($id)->upcs()->select('id_upc as id','upc as text','descripcion')->get();
+    }
 }
