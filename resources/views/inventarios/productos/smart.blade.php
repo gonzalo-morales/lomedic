@@ -96,11 +96,6 @@
 <div class="divider"></div>
 
 <h4 class="w-100 text-center my-2">Datos del producto</h4>
-    
-	
-    
-    
-
 
 <div id="detallesku" class="container-fluid">
     <div class="card text-center z-depth-1-half" style="min-height: 555px">
@@ -130,7 +125,6 @@
         
         <!-- Content Panel -->
         <div id="clothing-nav-content" class="card-body tab-content">
-        
             <div role="tabpanel" class="tab-pane fade show active" id="tab-general" aria-labelledby="general-tab">
             	<div class="row">
         	  		<div class="col-sm-12 col-md-6 col-lg-4">
@@ -167,8 +161,6 @@
                 	</div>
             	</div>
             </div>
-
-
             <div role="tabpanel" class="tab-pane fade" id="tab-upcs" aria-labelledby="upcs-tab">
             	<div class="row">
             		<div class="card col-md-12 col-sm-12 mb-3 p-0">
@@ -236,7 +228,6 @@
             		</div>
         		</div>
             </div>
-            
             <div role="tabpanel" class="tab-pane fade" id="tab-venta" aria-labelledby="venta-tab">
             	<div class="row">
     	  			<div class="form-group">
@@ -244,7 +235,6 @@
             		</div>
     	  		</div>
             </div>
-            
             <div role="tabpanel" class="tab-pane fade" id="tab-compra" aria-labelledby="compra-tab">
             	<div class="row">
     	  			<div class="form-group">
@@ -255,7 +245,6 @@
             		</div>
     	  		</div>
             </div>
-            
             <div role="tabpanel" class="tab-pane fade" id="tab-inventario" aria-labelledby="inventario-tab">
             	<div class="row">
     	  			<div class="col-sm-12 col-md-6 col-lg-2 text-center">
@@ -269,7 +258,6 @@
                 	</div>
     	  		</div>
             </div>
-            
             <div role="tabpanel" class="tab-pane fade" id="tab-planificacion" aria-labelledby="planificacion-tab">
             	<div class="row">
     	  			<div class="form-group">
@@ -280,7 +268,6 @@
                 	</div>
     	  		</div>
             </div>
-            
             <div role="tabpanel" class="tab-pane fade" id="tab-propiedades" aria-labelledby="propiedades-tab">
             	<div class="row">
         			<div class="col-sm-12">
@@ -290,7 +277,6 @@
                 	</div>
                 </div>
             </div>
-        
         </div>
     	<!-- End Content Panel -->
 	</div>
