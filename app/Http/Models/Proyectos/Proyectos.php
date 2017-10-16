@@ -69,9 +69,14 @@ class Proyectos extends ModelCompany
         'fecha_fin_contrato' => 'Fin de contrato',
         'activo_span' => 'Estatus'
     ];
-    
+
     function cliente()
     {
         return $this->hasOne(SociosNegocio::class,'id_socio_negocio','fk_id_cliente');
+    }
+
+    function ProyectosProductos()
+    {
+        return $this->hasMany(ProyectosProductos::class,'fk_id_proyecto','id_proyecto');
     }
 }

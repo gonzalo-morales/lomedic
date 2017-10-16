@@ -18,7 +18,7 @@ class ClaveClienteProductosController extends ControllerBase
 
     public function obtenerClavesCliente($company,$id)
     {
-        return Response::json(ClaveClienteProductos::where('fk_id_sku',$id)
+        return Response::json(ClaveClienteProductos::where('fk_id_cliente',$id)
             ->select('id_clave_cliente_producto as id','clave_producto_cliente as text',
                 'descripcion as descripcionClave','fk_id_sku')
             ->get());

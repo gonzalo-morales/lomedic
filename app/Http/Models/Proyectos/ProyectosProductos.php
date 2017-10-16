@@ -26,7 +26,7 @@ class ProyectosProductos extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_clave_cliente_producto','fk_id_upc','prioridad','cantidad','precio_sugerido','activo'];
+    protected $fillable = ['fk_id_clave_cliente_producto','fk_id_upc','prioridad','cantidad','precio_sugerido','activo','fk_id_proyecto'];
 
     public $niceNames =[
         'fk_id_clave_cliente_producto'=>'clave cliente producto',

@@ -15,46 +15,40 @@ class ProyectosProductosController extends ControllerBase
         $this->entity = $entity;
     }
 
-    public function create($company, $attributes = [])
+    public function destroy(Request $request, $company, $idOrIds)
     {
-        $attributes += ['dataview'=>[
-            'clientes' => SociosNegocio::where('activo', 1)
-                ->whereHas('tipoSocio',
-                    function($q) {
-                        $q->where('fk_id_tipo_socio', 1);
-                    })->pluck('nombre_corto','id_socio_negocio'),
-        ]];
-        return parent::create($company, $attributes);
-    }
+        # ¿Usuario tiene permiso para eliminar?
+//        $this->authorize('delete', $this->entity);
 
-    public function store(Request $request, $company)
-    {
-        # ¿Usuario tiene permiso para crear?
-//		$this->authorize('create', $this->entity);
+        $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $request->ids)->update(['eliminar' => 't']);
+        if ($isSuccess) {
 
-        $guardados = 0;
+            # Shorthand
+            foreach ($request->ids as $id) $this->log('destroy', $id);
 
-        foreach ($request->_detalles as $proyecto_producto) {
-            if(empty($proyecto_producto['fk_id_upc'])){
-                $proyecto_producto['fk_id_upc'] = null;
-            }
-            if(!isset($proyecto_producto['activo'])){
-                $proyecto_producto['activo'] = '0';
-            }
-            $isSuccess = $this->entity->create($proyecto_producto);
-            if ($isSuccess) {
-                # Eliminamos cache
-                $this->log('store', $isSuccess->id_proyecto_producto);
-
-                $guardados++;
+            if ($request->ajax()) {
+                # Respuesta Json
+                return response()->json([
+                    'success' => true,
+                ]);
             } else {
-                $this->log('error_store');
-                return $this->redirect('error_store');
+                return $this->redirect('destroy');
+            }
+
+        } else {
+
+            # Shorthand
+            foreach ($request->ids as $id) $this->log('error_destroy', $id);
+
+            if ($request->ajax()) {
+                # Respuesta Json
+                return response()->json([
+                    'success' => false,
+                ]);
+            } else {
+                return $this->redirect('error_destroy');
             }
         }
-        if($guardados>0){
-            Cache::tags(getCacheTag('index'))->flush();
-            return $this->redirect('store');
-        }
     }
+
 }

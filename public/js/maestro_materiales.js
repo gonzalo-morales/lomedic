@@ -1,8 +1,8 @@
-var a=[];
+var eliminarProyectoProducto=[];
 // Inicializar los datepicker para las fechas necesarias
 $(document).ready(function(){
     //Inicializar tabla
-    window.dataTable = new DataTable('#productos', {
+    window.proyectoProducto = new DataTable('#productosproyectos', {
         fixedHeight: true,
         fixedColumns: true,
         searchable: false,
@@ -11,16 +11,20 @@ $(document).ready(function(){
     initSelects();
 
     $('#fk_id_cliente').on('change',function () {
-        dataTable.destroy();
-        $('#tbody').empty();
-        dataTable.init({
+        proyectoProducto.destroy();
+        $('#tbodyproductosproyectos tr').each(function (e) {
+            if($(this).closest('tr').attr('id')){
+                eliminarProyectoProducto.push($(this).closest('tr').attr('id'));
+            }
+        });
+        $('#tbodyproductosproyectos').empty();
+        proyectoProducto.init({
             fixedHeight: true,
             fixedColumns: true,
             searchable: false,
             perPageSelect: false,
         });
-        let _url = $('#fk_id_proyecto').data('url').replace('?id',$('#fk_id_cliente').val());
-        $('#fk_id_proyecto').empty();
+        let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
         $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
         $.ajax({
             url: _url,
@@ -31,28 +35,8 @@ $(document).ready(function(){
                 option.attr('disabled','disabled');
                 option.attr('selected','selected');
                 option.text('...');
-                $('#fk_id_proyecto').select2({
-                    minimumResultsForSearch:'50',
-                    data:data,
-                }).attr('disabled',false).prepend(option);
-            }
-        });
-    });
-
-    $('#fk_id_proyecto').on('change',function () {
-        let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_proyecto').val());
-        $('#fk_id_clave_cliente_producto').empty();
-        $.ajax({
-            url: _url,
-            dataType:'json',
-            success:function (data) {
-                let option = $('<option/>');
-                option.val(0);
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                option.text('...');
                 $('#fk_id_clave_cliente_producto').select2({
-                    minimumResultsForSearch:'15',
+                    minimumResultsForSearch:'50',
                     data:data,
                 }).attr('disabled',false).prepend(option);
             }
@@ -101,17 +85,17 @@ $(document).ready(function(){
             return value > param;
         },'El número debe ser mayor a 0');
 
-        $.validator.addMethod('cRequerido',$.validator.methods.required,'Escrible la prioridad');
-        $.validator.addMethod('cNumber',$.validator.methods.number,'El campo debe ser numérico');
+        $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
+        $.validator.addMethod('cDigits',$.validator.methods.digits,'El campo debe ser entero');
         $.validator.addClassRules('prioridad',{
             cRequerido: true,
-            cNumber: true,
+            cDigits: true,
             minStrict: 0
         });
 
         $.validator.addClassRules('cantidad',{
             cRequerido: true,
-            cNumber: true,
+            cDigits: true,
             minStrict: 0
         });
         $.validator.addMethod('precio',function (value,element) {
@@ -124,11 +108,10 @@ $(document).ready(function(){
         });
 
         if($('#form-model').valid()){
-            if(dataTable.activeRows.length>0){
-                if(a.length>0) {
-                    let url = $('#productos').data('delete');
-                    $.delete(url, {ids: a});
-                    a = [];
+            if(proyectoProducto.activeRows.length>0){
+                if(eliminarProyectoProducto.length>0) {
+                    let url = $('#productosproyectos').data('delete');
+                    $.delete(url, {ids: eliminarProyectoProducto});
                 }
             }else{
                 e.preventDefault();
@@ -141,61 +124,107 @@ $(document).ready(function(){
             $('.cantidad').rules('remove');
             $('.precio_sugerido').rules('remove');
         }
-    })
+    });
+
+    if($('#fk_id_cliente').val()){
+        let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
+        $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
+        $.ajax({
+            url: _url,
+            dataType:'json',
+            success:function (data) {
+                let option = $('<option/>');
+                option.val(0);
+                option.attr('disabled','disabled');
+                option.attr('selected','selected');
+                option.text('...');
+                $('#fk_id_clave_cliente_producto').select2({
+                    minimumResultsForSearch:'50',
+                    data:data,
+                }).attr('disabled',false).prepend(option);
+            }
+        });
+    }
 });
 
 function initSelects() {
-
-    let option = $('<option/>');
-    option.val(0);
-    option.attr('disabled','disabled');
-    option.attr('selected','selected');
-    option.text('...');
     $('#fk_id_cliente').select2({
         minimumResultsForSearch:50,
-    }).prepend(option);
+    });
     $('#fk_id_upc').select2();
 }
 
 function agregarProducto() {
-    validateDetail();
-    if($('#form-model').valid()){
-        let row_id = dataTable.activeRows.length;
-
-        let id_upc = 0;
-        let text_upc = 'UPC no seleccionado';
-        let descripcion_upc = '';
-        if($('#fk_id_upc').val()){
-            id_upc = $('#fk_id_upc').select2('data')[0].id;
-            text_upc = $('#fk_id_upc').select2('data')[0].text;
-            descripcion_upc = $('#fk_id_upc').select2('data')[0].descripcion;
+    if($('#file_csv').val()){
+        if($('#file_csv').val().substring($('#file_csv').val().lastIndexOf(".")) != '.csv'){
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Por favor verifica que el archivo sea .csv',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+            $('#file_csv').val('');
+        }else{
+            var csv = $('#file_csv');
+            var _url = csv.data('url');
+            $.ajax({
+                url: _url,
+                type: 'POST',
+                data: new FormData($('#form-model')[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    
+                }
+            })
         }
+    }else {
+        validateDetail();
+        if ($('#form-model').valid()) {
+            let row_id = proyectoProducto.activeRows.length;
 
-        dataTable.insert( {
-            data:[
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_clave_cliente_producto]" value="'+$("#fk_id_clave_cliente_producto").select2("data")[0].id+'" />')[0].outerHTML + $('#fk_id_clave_cliente_producto').select2('data')[0].text,
-            $('#fk_id_clave_cliente_producto').select2('data')[0].descripcionClave,
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc,
-            descripcion_upc,
-            $('<input type="text" class="form-control prioridad" name="_detalles['+row_id+'][prioridad]" />')[0].outerHTML,
-            $('<input type="text" class="form-control cantidad" name="_detalles['+row_id+'][cantidad]" />')[0].outerHTML,
-            $('<input type="text" class="form-control precio_sugerido" name="_detalles['+row_id+'][precio_sugerido]" />')[0].outerHTML,
-            $('<input type="checkbox" class="form-control" checked value="1" name="_detalles['+row_id+'][activo]" />')[0].outerHTML,
-            '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
-            ]
-        });
-        $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
-            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
-        });
-        limpiarCampos();
-    }else{
-        $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
-            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            let id_upc = 0;
+            let text_upc = 'UPC no seleccionado';
+            let descripcion_upc = 'Sin descripción';
+            if ($('#fk_id_upc').val()) {
+                id_upc = $('#fk_id_upc').select2('data')[0].id;
+                text_upc = $('#fk_id_upc').select2('data')[0].text;
+                descripcion_upc = $('#fk_id_upc').select2('data')[0].descripcion;
+            }
+
+            proyectoProducto.insert({
+                data: [
+                    $('<input type="hidden" name="_productoProyecto[' + row_id + '][fk_id_clave_cliente_producto]" value="' + $("#fk_id_clave_cliente_producto").select2("data")[0].id + '" />')[0].outerHTML + $('#fk_id_clave_cliente_producto').select2('data')[0].text,
+                    $('#fk_id_clave_cliente_producto').select2('data')[0].descripcionClave,
+                    $('<input type="hidden" name="_productoProyecto[' + row_id + '][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc,
+                    descripcion_upc,
+                    $('<input type="text" class="form-control prioridad" name="_productoProyecto[' + row_id + '][prioridad]" />')[0].outerHTML,
+                    $('<input type="text" class="form-control cantidad" name="_productoProyecto[' + row_id + '][cantidad]" />')[0].outerHTML,
+                    $('<input type="text" class="form-control precio_sugerido" name="_productoProyecto[' + row_id + '][precio_sugerido]" />')[0].outerHTML,
+                    $('<div class="form-check">' +
+                        '<label class="form-check-label custom-control custom-checkbox">' +
+                        '<input type="checkbox" class="form-check-input custom-control-input" checked value="1" name="_productoProyecto[' + row_id + '][activo]" />' +
+                        '<span class="custom-control-indicator"></span>' +
+                        '</label>' +
+                        '</div>')[0].outerHTML,
+                    '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFilaProyectoProducto(this)"> <i class="material-icons">delete</i></button>'
+                ]
+            });
+            $.toaster({
+                priority: 'success', title: '¡Éxito!', message: 'Producto agregado con éxito',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+            limpiarCampos();
+        } else {
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atención',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }
     }
 }
 
-function borrarFila(element) {
-    dataTable.rows().remove([$(element).parents('tr').dataIndex]);
+function borrarFilaProyectoProducto(element) {
+    proyectoProducto.rows().remove([$(element).parents('tr').dataIndex]);
         $.toaster({priority : 'warning',title : '¡Advertencia!',message : 'Se ha eliminado la fila',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
@@ -214,12 +243,6 @@ function validateDetail() {
         required: true,
         messages:{
             required: 'Selecciona un cliente'
-        }
-    });
-    $('#fk_id_proyecto').rules('add',{
-        required: true,
-        messages:{
-            required: 'Selecciona un proyecto'
         }
     });
     $('#fk_id_clave_cliente_producto').rules('add',{
@@ -241,7 +264,7 @@ function validateDetail() {
     }
 }
 
-function borrarFila_edit(element) {
-    a.push(element.id);
-    dataTable.rows().remove([$(element).parents('tr').dataIndex]);
+function borrarFilaProyectoProducto_edit(element) {
+    eliminarProyectoProducto.push(element.id);
+    proyectoProducto.rows().remove([$(element).parents('tr').dataIndex]);
 }
