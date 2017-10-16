@@ -174,9 +174,8 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 //		$this->authorize('update', $this->entity);
-		$this->authorize('update', $this->entity);
-		$validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 
+	    $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 		$data = $this->entity->findOrFail($id);
 		return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
 			'data' => $data,
@@ -335,7 +334,8 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para exportar?
 //		$this->authorize('export', $this->entity);
-		$type = strtolower($request->type);
+		
+	    $type = strtolower($request->type);
 		$style = isset($request->style) ? $request->style : false;
 
 	    if (isset($request->ids)) {
