@@ -58,11 +58,11 @@
 		</div><!--/row forms-->
 {{--{{dd($sucursales)}}--}}
 <div class="row">
-	<div class="form-group col-md-3 col-sm-12">
-		{{ Form::label('fk_id_socio_negocio', '* Sucursal') }}
-		{!! Form::select('fk_id_socio_negocio',isset($sucursales)?$sucursales:[],null,['id'=>'fk_id_socio_negocio','class'=>'form-control select2','style'=>'width:100%']) !!}
-		{{ $errors->has('fk_id_socio_negocio') ? HTML::tag('span', $errors->first('fk_id_socio_negocio'), ['class'=>'help-block deep-orange-text']) : '' }}
-	</div>
+	{{--<div class="form-group col-md-3 col-sm-12">--}}
+		{{--{{ Form::label('fk_id_socio_negocio', '* Sucursal') }}--}}
+		{{--{!! Form::select('fk_id_socio_negocio',isset($sucursales)?$sucursales:[],null,['id'=>'fk_id_socio_negocio','class'=>'form-control select2','style'=>'width:100%']) !!}--}}
+		{{--{{ $errors->has('fk_id_socio_negocio') ? HTML::tag('span', $errors->first('fk_id_socio_negocio'), ['class'=>'help-block deep-orange-text']) : '' }}--}}
+	{{--</div>--}}
 
 	<div class="form-group col-md-3 col-sm-12">
 		{{ Form::label('no_orden', '* Orden') }}
@@ -76,11 +76,11 @@
 			{!! Form::text('fecha_estimada_entrega', null,['id'=>'fecha_estimada_entrega','class'=>'form-control','readonly','placeholder'=>'Fecha estimada']) !!}
 		</div>
 	</div>
-	<div class="form-group col-md-3 col-sm-6">
-		{{ Form::label('fk_id_sucursal', '* Sucursal de entrega') }}
-		{!! Form::select('fk_id_sucursal',isset($sucursales)?$sucursales:[],null,['id'=>'fk_id_sucursal_','class'=>'form-control select2','style'=>'width:100%']) !!}
-		{{ $errors->has('fk_id_sucursal') ? HTML::tag('span', $errors->first('fk_id_sucursal'), ['class'=>'help-block deep-orange-text']) : '' }}
-	</div>
+	{{--<div class="form-group col-md-3 col-sm-6">--}}
+		{{--{{ Form::label('fk_id_sucursal', '* Sucursal de entrega') }}--}}
+		{{--{!! Form::select('fk_id_sucursal',isset($sucursales)?$sucursales:[],null,['id'=>'fk_id_sucursal_','class'=>'form-control select2','style'=>'width:100%']) !!}--}}
+		{{--{{ $errors->has('fk_id_sucursal') ? HTML::tag('span', $errors->first('fk_id_sucursal'), ['class'=>'help-block deep-orange-text']) : '' }}--}}
+	{{--</div>--}}
 	<div class="form-group col-md-3 col-sm-6">
 		{{ Form::label('fk_id_condicion_pago', '* Condición de pago') }}
 		{!! Form::select('fk_id_condicion_pago',isset($condicionesPago)?$condicionesPago:[],null,['id'=>'fk_id_condicion_pago','class'=>'form-control select2','style'=>'width:100%']) !!}
