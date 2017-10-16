@@ -108,12 +108,12 @@
 									</div>
 									<div class="row mt-3">
 										<div class="form-goup col-md-6 text-center">
-											<a href="{{companyAction('layoutProtudctosProyecto')}}" id="layout" class="btn btn-primary">Descargar Layout</a>
+											<a href="{{companyAction('layoutProductosProyecto')}}" id="layout" class="btn btn-primary">Descargar Layout</a>
 {{--												{!! Form::button('Descargar Layout',['id'=>'layout','class'=>'btn btn-primary','name'=>'layout','href'=>])!!}--}}
 											</div>
 											<div class="form-goup col-md-6">
 												<label class="custom-file">
-													<input type="file" id="file_csv" name="file_csv" data-url="{{companyAction('loadLayoutProductosProyectos')}}">
+													<input type="file" id="file_xlsx" name="file_xlsx" data-url="{{companyAction('loadLayoutProductosProyectos')}}">
 													<span class="custom-file-control"></span>
 												</label>
 											</div>
@@ -146,6 +146,9 @@
 									<th>Prioridad</th>
 									<th>Cantidad</th>
 									<th>Precio sugerido</th>
+									<th>Máximo</th>
+									<th>Mínimo</th>
+									<th>Número de reorden</th>
 									<th>Estatus</th>
 									<th></th>
 								</tr>
@@ -186,6 +189,27 @@
 													Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][precio_sugerido]',
 													bcdiv($ProyectoProducto->precio_sugerido,'1',2),
 													['class'=>'form-control precio_sugerido'])
+												!!}
+											</td>
+											<td>
+												{!!
+													Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][maximo]',
+													$ProyectoProducto->maximo,
+													['class'=>'form-control maximo'])
+												!!}
+											</td>
+											<td>
+												{!!
+													Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][minimo]',
+													$ProyectoProducto->minimo,
+													['class'=>'form-control minimo'])
+												!!}
+											</td>
+											<td>
+												{!!
+													Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][numero_reorden]',
+													$ProyectoProducto->numero_reorden,
+													['class'=>'form-control numero_reorden'])
 												!!}
 											</td>
 											<td>

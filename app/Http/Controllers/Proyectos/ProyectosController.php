@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Proyectos;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Inventarios\Upcs;
 use App\Http\Models\Proyectos\ClasificacionesProyectos;
+use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\Proyectos\ProyectosProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
@@ -164,23 +166,65 @@ class ProyectosController extends ControllerBase
         }
     }
 
-    public function layoutProtudctosProyecto()
+    public function layoutProductosProyecto()
     {
         Excel::create('producto_proyecto_layout', function($excel){
             $excel->sheet(currentEntityBaseName(), function($sheet){
-                $sheet->fromArray(['*Clave cliente producto','UPC','*Prioridad','*Cantidad','Precio sugerido']);
+                $sheet->fromArray(['*Clave cliente producto','UPC','*Prioridad','*Cantidad','*Precio sugerido',
+                    '*Máximo','*Mínimo','*Número reorden']);
             });
-        })->download('csv');
+        })->download('xlsx');
     }
 
     public function loadLayoutProductosProyectos($company,Request $request)
     {
+        $respuesta = [];
+        $data_xlsx = Excel::load($request->file('file')->getRealPath(), function($reader) {
+//            return $reader->takeRows(10);
+        })->get();
 
-        dd($request);
-        $data_csv = Excel::load('file.xls', function($reader) {
+        $data_xlsx = $data_xlsx->toArray();
+        $data = [];
+        $errores_clave = [];
+        $errores_upc = [];
+        $index = 1;
+        foreach ($data_xlsx as $row){
+            $index++;
+            $success_clave = false;
+            $success_upc = false;
+            $proyecto = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)
+                ->where('clave_producto_cliente','LIKE',$row['clave_cliente_producto'])->first();
+            if(empty($proyecto)){
+                $errores_clave[$index] = $row['clave_cliente_producto'];
+            }else{
+                $row['id_clave_cliente_producto'] = $proyecto->id_clave_cliente_producto;
+                $row['descripcion_clave'] = $proyecto->descripcion;
+                $success_clave = true;
+            }
 
-            return $reader;
-        });
-
+            if(!empty($row['upc']) && $success_clave){
+                $upc = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)
+                    ->where('clave_producto_cliente','LIKE',$row['clave_cliente_producto'])->first()->sku()->first()->upcs()->where('upc',$row['upc'])->first();
+//                dump($upc);
+//                $row['fk_id_upc'] = ->id_upc;
+//                $row['descripcion_upc'] = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)
+//                    ->where('clave_producto_cliente','LIKE',$row['clave_cliente_producto'])->first()->sku()->first()->upcs()->where('upc',$row['upc'])->first()->descripcion;
+                if(empty($upc)){
+                    $errores_upc[$index] = $row['upc'];
+                }else{
+                    $row['fk_id_upc'] = $upc->id_upc;
+                    $row['descripcion_upc'] = $upc->descripcion;
+                    $success_upc = true;
+                }
+            }else{
+                $success_upc = true;
+            }
+            if(($success_clave && $success_upc)){
+                $data[] = $row;
+            }}
+            $respuesta[0] = $data;//Filas que sí se encontraron al final
+            $respuesta[1] = $errores_clave;//Filas con error en la clave
+            $respuesta[2] = $errores_upc;//Filas con error en el UPC
+        return Response::json($respuesta);
     }
 }
