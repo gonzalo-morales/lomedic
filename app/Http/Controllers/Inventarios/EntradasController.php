@@ -15,7 +15,7 @@ use App\Http\Models\Administracion\Proveedores;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Compras\DetalleSolicitudes;
-use App\Http\Models\Compras\Ordenes;
+use App\Http\Models\Inventarios\Entradas;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 //use App\Http\Models\Compras\Solicitudes;
 //use Milon\Barcode\DNS2D;
@@ -32,7 +32,7 @@ use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class EntradasController extends ControllerBase
 {
-    public function __construct(Ordenes $entity)
+    public function __construct(Entradas $entity)
     {
         $this->entity = $entity;
     }

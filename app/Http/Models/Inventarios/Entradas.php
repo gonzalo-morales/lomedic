@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Models\Compras;
+namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
 use DB;
 
-class Ordenes extends ModelCompany
+class Entradas extends ModelCompany
 {
     /**
      * The table associated with the model.
