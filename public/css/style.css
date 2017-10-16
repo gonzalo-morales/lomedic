@@ -218,6 +218,12 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
 .not-wrap {
   white-space: nowrap;
 }
+.form-group.full-height {
+  height: calc(100% - 1rem);
+}
+.form-group.full-height .form-control {
+  height: calc(100% - 2.5rem);
+}
 .error-help-block {
     display: block;
     color: #D00;

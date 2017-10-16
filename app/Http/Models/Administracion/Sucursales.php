@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Administracion;
 
+use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\ModelBase;
 
 class Sucursales extends ModelBase
@@ -86,6 +87,15 @@ class Sucursales extends ModelBase
 	public function solicitudes()
 	{
 		return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_sucursal','id_sucursal');
+	}
+
+	/**
+	 * Obtenemos almacenes relacionados a sucursal
+	 * @return @hasMany
+	 */
+	public function almacenes()
+	{
+		return $this->hasMany(Almacenes::class, 'fk_id_sucursal', 'id_sucursal');
 	}
 
 }

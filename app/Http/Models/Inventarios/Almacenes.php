@@ -81,9 +81,9 @@ class Almacenes extends ModelBase
 
 	/**
 	 * Obtenemos sucursal relacionada a almacen
-	 * @return @hasOne
+	 * @return @belongsTo
 	 */
 	public function sucursal() {
-		return $this->hasOne(Sucursales::class, 'id_sucursal', 'fk_id_sucursal');
+		return $this->belongsTo(Sucursales::class, 'fk_id_sucursal', 'id_sucursal');
 	}
 }
