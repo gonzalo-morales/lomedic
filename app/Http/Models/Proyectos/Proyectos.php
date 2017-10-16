@@ -4,6 +4,7 @@ namespace App\Http\Models\Proyectos;
 
 use App\Http\Models\ModelCompany;
 use DB;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Proyectos extends ModelCompany
 {
@@ -63,8 +64,14 @@ class Proyectos extends ModelCompany
     public $fields = [
         'proyecto' => 'Proyecto',
         'cliente.nombre_corto' => 'Cliente',
+        'numero_contrato' => 'No. Contrato',
         'fecha_inicio_contrato' => 'Inicio de contrato',
         'fecha_fin_contrato' => 'Fin de contrato',
         'activo_span' => 'Estatus'
     ];
+    
+    function cliente()
+    {
+        return $this->hasOne(SociosNegocio::class,'id_socio_negocio','fk_id_cliente');
+    }
 }

@@ -1,12 +1,12 @@
 @if(!empty($label))
 <label class="text-center w-100">{{$label}}</label>
 @endif
-<div data-toggle="buttons" class="text-center">
+<div class="text-center">
 	{{ Form::hidden($name, 0) }}
-    <label class="btn btn-secondary form-check-label {{ (old($name) ?? $value ) ? 'active':''}}"> 
+    <label class="btn form-check-label {{ (old($name) ?? $value ) ? 'btn-success':'btn-secondary'}}"> 
         {{ Form::checkbox($name, 1, old($name), [
             'id' => $name,
-            'class' => 'form-check-input toggeable',
+            'class' => 'd-none toggeable',
 			'data-toggle-off' => $textoff ?? $text,
 			'data-toggle-on' => $text
         ]) }}

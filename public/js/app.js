@@ -12,7 +12,7 @@ $(document).ready(function(){
    /* Sidebar's */
    $('#sidebarCollapse').on('click', function () {
        $('#sidebar').toggleClass('active');
-       //condiciones para cambiar el ÃƒÂ­cono de menÃƒÂº a x
+       //condiciones para cambiar el ÃƒÆ’Ã‚Â­cono de menÃƒÆ’Ã‚Âº a x
        if($('#sidebar').hasClass('active') && $(window).width() >= 768){
            $(this).find("i").text("menu");
        }
@@ -150,15 +150,35 @@ $(document).ready(function(){
 	
 	
 	//Cambio de text para checkbox toggeable
+    $('.toggeable').bind('click', function () {
+    	$(this).attr('checked',!$(this).is(':checked'));
+    }).trigger('change');
+    
     $('.toggeable').bind('change', function () {
     	if (!$(this).is(':checked')) {
     		$(this).parent().find( "span" ).html($(this).attr('data-toggle-off'))
+    		if($(this).parent().hasClass("btn-success"))
+    			$(this).parent().removeClass('btn-success').addClass('btn-secondary');
     	}
     	else {
     		$(this).parent().find( "span" ).html($(this).attr('data-toggle-on'))
+    		if($(this).parent().hasClass("btn-secondary"))
+    			$(this).parent().addClass('btn-success').removeClass('btn-secondary');
     	}
     });
+    
     $('.toggeable').trigger('change');
+    
+    
+    $('.switch .inputSlider').click(function(){
+        if($(this).is(':checked')){
+        	$(".switch-text").text('Activo').removeClass('text-danger').addClass('text-success');
+        }
+        else{
+        	$(".switch-text").text('Inactivo').removeClass('text-success').addClass('text-danger');
+        }
+    });
+    
     
     //Submenu en pantalla completa
     $('#menu-conten .url').bind('dblclick', function () {

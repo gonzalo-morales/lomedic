@@ -95,11 +95,11 @@
 <!--/Inicio Tabs-->
 <div class="divider"></div>
 
-<h4 class="w-100 text-center my-2">Datos del producto</h4>
+<h4 class="w-100 text-center my-2">Informacion de producto</h4>
 
 <div id="detallesku" class="container-fluid">
     <div class="card text-center z-depth-1-half" style="min-height: 555px">
-        <div class="card-header">
+        <div class="card-header py-2">
         <ul id="clothing-nav" class="nav nav-pills nav-justified" role="tablist">
             <li class="nav-item">
             	<a class="nav-link active" role="tab" data-toggle="tab" href="#tab-general" id="general-tab" aria-controls="general" aria-expanded="true">General</a>
