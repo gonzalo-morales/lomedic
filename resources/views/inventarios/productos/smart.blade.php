@@ -1,11 +1,16 @@
-
 @section('content-width', 's12')
 @section('header-bottom')
 	@parent
 	<script type="text/javascript">
 		//$('#fk_id_serie_sku').select2();
 		$('#fk_id_unidad_medida').select2();
+		$('#fk_id_unidad_medida_venta').select2();
+		$('#fk_id_unidad_medida_compra').select2();
 		$('#fk_id_subgrupo').select2();
+		$('#fk_id_impuesto').select2();
+		$('#fk_id_familia').select2();
+		$('#fk_id_proveedor').select2();
+		$('#fk_id_metodo_valoracion').select2();
 
 		var from_$input = $('#activo_desde').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }),
     	from_picker = from_$input.pickadate('picker')
@@ -38,68 +43,77 @@
 	    from_picker.set('max', false)
 	  }
 	});
+
+	$('#detallesku a[data-toggle="tab"]').click(function (e) {
+		e.preventDefault()
+	  	$(this).tab('show')
+	});
 	</script>
 @endsection
 @section('form-content')
 {{ Form::setModel($data) }}
-<div class="row">
-	<div class="col-sm-6 col-md-8 col-lg-9 row">
-    	<div class="col-sm-12 col-md-6 col-lg-2">
-    		<div class="form-group">
-    			{{ Form::cSelect('Serie Sku', 'fk_id_serie_sku', $seriesku ?? [], !Route::currentRouteNamed(currentRouteName('create')) ? ['disabled'=>true] : []) }}
-    		</div>
+<div class="card z-depth-1-half">
+	<div class="card-header py-2 text-center">
+        <h4 class="card-title text-danger">Datos del producto</h4>
+    </div>
+    <div class="card-body row">
+    	<div class="col-sm-6 col-md-8 col-lg-9 row">
+        	<div class="col-sm-12 col-md-6 col-lg-2">
+        		<div class="form-group">
+        			{{ Form::cSelect('Serie Sku', 'fk_id_serie_sku', $seriesku ?? [], !Route::currentRouteNamed(currentRouteName('create')) ? ['disabled'=>true] : []) }}
+        		</div>
+        	</div>
+        	<div class="col-sm-12 col-md-6 col-lg-3">
+        		<div class="form-group">
+        			{{ Form::cText('Sku', 'sku', ['placeholder'=>'Ejemplo: SO-1922-09','disabled'=>true]) }}
+        		</div>
+        	</div>
+        	<div class="col-sm-12 col-md-12 col-lg-7">
+        		<div class="form-group">
+        			{{ Form::cText('Descripcion Corta', 'descripcion_corta') }}
+        		</div>
+        	</div>
+        	<div class="col-sm-12 col-md-6 col-lg-2">
+        		{{ Form::cText('Presentacion', 'presentacion') }}
+        	</div>
+        	<div class="col-sm-12 col-md-6 col-lg-3">
+        		<div class="form-group">
+        			{{ Form::cSelect('Unidad Medida', 'fk_id_unidad_medida', $unidadmedida ?? []) }}
+        		</div>
+        	</div>
     	</div>
-    	<div class="col-sm-12 col-md-6 col-lg-3">
-    		<div class="form-group">
-    			{{ Form::cText('Sku', 'sku', ['placeholder'=>'Ejemplo: SO-1922-09','disabled'=>true]) }}
-    		</div>
-    	</div>
-    	<div class="col-sm-12 col-md-12 col-lg-7">
-    		<div class="form-group">
-    			{{ Form::cText('Descripcion Corta', 'descripcion_corta') }}
-    		</div>
-    	</div>
-    	<div class="col-sm-12 col-md-6 col-lg-2">
-    		{{ Form::cText('Presentacion', 'presentacion') }}
-    	</div>
-    	<div class="col-sm-12 col-md-6 col-lg-3">
-    		<div class="form-group">
-    			{{ Form::cSelect('Unidad Medida', 'fk_id_unidad_medida', $unidadmedida ?? []) }}
-    		</div>
-    	</div>
-	</div>
-	<div class="col-sm-6 col-md-4 col-lg-3 row">
-    	<div class="col-sm-12">
-    		<div class="form-group">
-    			{{ Form::cCheckbox('Articulo de Venta', 'articulo_venta') }}
-    		</div>
-    	</div>
-    	<div class="col-sm-12">
-    		<div class="form-group">
-    			{{ Form::cCheckbox('Articulo de Compra', 'articulo_compra') }}
-    		</div>
-    	</div>
-    	<div class="col-sm-12">
-    		<div class="form-group">
-    			{{ Form::cCheckbox('Articulo de Inventario', 'articulo_inventario') }}
-    		</div>
-    	</div>
-    	<div class="col-sm-12">
-    		<div class="form-group">
-    			{{ Form::cCheckbox('Maneja Lote', 'maneja_lote') }}
-    		</div>
-    	</div>
+    	<div class="col-sm-6 col-md-4 col-lg-3 row">
+        	<div class="col-sm-12">
+        		<div class="form-group">
+        			{{ Form::cCheckbox('Articulo de Venta', 'articulo_venta') }}
+        		</div>
+        	</div>
+        	<div class="col-sm-12">
+        		<div class="form-group">
+        			{{ Form::cCheckbox('Articulo de Compra', 'articulo_compra') }}
+        		</div>
+        	</div>
+        	<div class="col-sm-12">
+        		<div class="form-group">
+        			{{ Form::cCheckbox('Articulo de Inventario', 'articulo_inventario') }}
+        		</div>
+        	</div>
+        	<div class="col-sm-12">
+        		<div class="form-group">
+        			{{ Form::cCheckbox('Maneja Lote', 'maneja_lote') }}
+        		</div>
+        	</div>
+        </div>
     </div>
 </div>
-
 <!--/Inicio Tabs-->
-<div class="divider"></div>
 
-<h4 class="w-100 text-center my-2">Informacion de producto</h4>
-
-<div id="detallesku" class="container-fluid">
-    <div class="card text-center z-depth-1-half" style="min-height: 555px">
+<div id="detallesku" class="w-100 container-fluid z-depth-1-half mt-2 px-0">
+    <div class="card text-center" style="min-height: 555px">
         <div class="card-header py-2">
+        <h4 class="card-title text-info">Informacion del producto</h4>
+        <div class="divider my-2"></div>
+        
         <ul id="clothing-nav" class="nav nav-pills nav-justified" role="tablist">
             <li class="nav-item">
             	<a class="nav-link active" role="tab" data-toggle="tab" href="#tab-general" id="general-tab" aria-controls="general" aria-expanded="true">General</a>
@@ -240,10 +254,10 @@
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-compra" aria-labelledby="compra-tab">
             	<div class="row">
-    	  			<div class="form-group">
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
             			{{ Form::cSelect('Proveedor Predeterminado', 'fk_id_proveedor', $sociosnegocio ?? []) }}
             		</div>
-    	  			<div class="form-group">
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
             			{{ Form::cSelect('Unidad Medida Compra', 'fk_id_unidad_medida_compra', $unidadmedida ?? []) }}
             		</div>
     	  		</div>
@@ -251,23 +265,23 @@
             <div role="tabpanel" class="tab-pane fade" id="tab-inventario" aria-labelledby="inventario-tab">
             	<div class="row">
     	  			<div class="col-sm-12 col-md-6 col-lg-2 text-center">
-                		{{ Form::cText('Necesario', 'necesario') }}
+                		{{ Form::cText('Necesario', 'necesario',['placeholder'=>'Ejm: 40']) }}
                 	</div>
                 	<div class="col-sm-12 col-md-6 col-lg-2 text-center">
-                		{{ Form::cText('Minimo', 'minimo') }}
+                		{{ Form::cText('Minimo', 'minimo',['placeholder'=>'Ejm: 10']) }}
                 	</div>
     	  			<div class="col-sm-12 col-md-6 col-lg-2 text-center">
-                		{{ Form::cText('Maximo', 'maximo') }}
+                		{{ Form::cText('Maximo', 'maximo',['placeholder'=>'Ejm: 90']) }}
                 	</div>
     	  		</div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-planificacion" aria-labelledby="planificacion-tab">
             	<div class="row">
     	  			<div class="form-group">
-            			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $sociosnegocio ?? []) }}
+            			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $metodovaloracion ?? ['Costos estimados','Costo estandar','Costos promedio','PEPS','UEPS','Lotes específico']) }}
             		</div>
     	  			<div class="col-sm-12 col-md-6 col-lg-2 text-center">
-                		{{ Form::cText('Punto Reorden', 'punto_reorden') }}
+                		{{ Form::cText('Punto Reorden', 'punto_reorden',['placeholder'=>'Ejm: 15']) }}
                 	</div>
     	  		</div>
             </div>
