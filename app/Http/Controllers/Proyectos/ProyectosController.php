@@ -125,8 +125,6 @@ class ProyectosController extends ControllerBase
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
-        dd($request);
-
         if ($entity->save()) {
             # Si tienes relaciones
             if (isset($request->productoProyecto)) {
@@ -138,23 +136,23 @@ class ProyectosController extends ControllerBase
                         ->first();
                     $productoProyecto->fill($detalle);
                     $productoProyecto->save();
+                    dump('Actualizado');
                 }
             }
             if(isset($request->_productoProyecto)){
                 foreach ($request->_productoProyecto as $detalle){
-                    if(empty($proyecto_producto['fk_id_upc'])){
-                        $proyecto_producto['fk_id_upc'] = null;
+                    if(empty($detalle['fk_id_upc'])){
+                        $detalle['fk_id_upc'] = null;
                     }
-                    if(!isset($proyecto_producto['activo'])){
-                        $proyecto_producto['activo'] = '0';
+                    if(!isset($detalle['activo'])){
+                        $detalle['activo'] = '0';
                     }
-                    $proyecto_producto['fk_id_proyecto'] = $id;
+                    $detalle['fk_id_proyecto'] = $id;
                     $ProyectosProductos = new ProyectosProductos();
-                    $ProyectosProductos->create($proyecto_producto);
+                    $ProyectosProductos->create($detalle);
+                    dump('Creado');
                 }
             }
-
-
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
