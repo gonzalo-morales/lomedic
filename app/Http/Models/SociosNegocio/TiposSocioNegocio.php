@@ -48,7 +48,7 @@ class TiposSocioNegocio extends Model
 	    return $this->table;
     }
     public function sng(){
-        return $this->belongsToMany('App\Http\Models\SociosNegocio\SocioNegocio','id_tipo_socio','id_socio_negocio');
+        return $this->belongsToMany(SociosNegocio::class,'sng_det_tipo_socio_negocio','fk_id_tipo_socio','fk_id_socio_negocio');
     }
 
 }

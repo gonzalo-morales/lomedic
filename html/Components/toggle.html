@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container-fluid text-center mt-4"> 
+
+    <label class="switch">
+      <input name="slider" type="checkbox" class="inputSlider">
+      <span class="slider round"></span>
+    </label>
+
+    <p class="text-danger h1">Inactivo</p>
+    </div><!--/container-fluid-->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      //función para mostrar el demo como funciona
+      $('input[name="slider"]').click(function(){
+        if($(this).is(':checked')){
+        $('p').text('Activo').removeClass('text-danger').addClass('text-success');
+      } else{
+        $('p').text('Inactivo').removeClass('text-success').addClass('text-danger');
+      }
+      });
+    </script>
+  </body>
+</html>

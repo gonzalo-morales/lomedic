@@ -38,7 +38,7 @@ function companyAction($action = '', $params = [])
 			$autoparams['id'] =  head($_params);
 		}
 	}
-
+	
 	try {
 		# Generamos URL
 		return action(implode('@', $expected_action), array_merge($autoparams, $params));
@@ -166,7 +166,12 @@ function array_merge_recursive_simple($paArray1, $paArray2)
             $paArray1[$sKey2] = $sValue2;
         
         if(!is_array($paArray1[$sKey2]) && !is_array($paArray2[$sKey2]) &&isset($paArray1[$sKey2]))
-            $paArray1[$sKey2] = $paArray1[$sKey2].' '.array_merge_recursive_simple(@$paArray1[$sKey2], $sValue2);
+        {
+            if($paArray1[$sKey2] != array_merge_recursive_simple(@$paArray1[$sKey2], $sValue2))
+                $paArray1[$sKey2] = $paArray1[$sKey2].' '.array_merge_recursive_simple(@$paArray1[$sKey2], $sValue2);
+            else
+                $paArray1[$sKey2] = $paArray1[$sKey2];
+        }
         else
             $paArray1[$sKey2] = array_merge_recursive_simple(@$paArray1[$sKey2], $sValue2);
     }

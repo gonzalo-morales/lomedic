@@ -68,7 +68,7 @@ class Almacenes extends ModelBase
 	 * @return string
 	 */
 	public function getUbicacionesTotalAttribute() {
-		return $this->ubicaciones->count();
+		return $this->ubicaciones->where('eliminar', 0)->count();
 	}
 
 	/**

@@ -95,11 +95,12 @@
 <!--/Inicio Tabs-->
 <div class="divider"></div>
 
-<h4 class="w-100 text-center my-2">Datos del producto</h4>
+<h4 class="w-100 text-center my-2">Informacion de producto</h4>
 
 <div id="detallesku" class="container-fluid">
     <div class="card text-center z-depth-1-half" style="min-height: 555px">
-        <ul id="clothing-nav" class="nav nav-pills nav-justified card-header pb-0" role="tablist">
+        <div class="card-header py-2">
+        <ul id="clothing-nav" class="nav nav-pills nav-justified" role="tablist">
             <li class="nav-item">
             	<a class="nav-link active" role="tab" data-toggle="tab" href="#tab-general" id="general-tab" aria-controls="general" aria-expanded="true">General</a>
             </li>
@@ -122,9 +123,11 @@
             	<a class="nav-link" role="tab" data-toggle="tab" href="#tab-propiedades" id="propiedades-tab" aria-controls="propiedades" aria-expanded="true">Propiedades</a>
             </li>
         </ul>
+        </div>
         
         <!-- Content Panel -->
-        <div id="clothing-nav-content" class="card-body tab-content">
+    <div class="card-body">
+        <div id="clothing-nav-content" class="tab-content">
             <div role="tabpanel" class="tab-pane fade show active" id="tab-general" aria-labelledby="general-tab">
             	<div class="row">
         	  		<div class="col-sm-12 col-md-6 col-lg-4">
@@ -278,6 +281,7 @@
                 </div>
             </div>
         </div>
+    </div>
     	<!-- End Content Panel -->
 	</div>
 </div>
