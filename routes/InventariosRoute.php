@@ -23,5 +23,8 @@ Route::prefix('{company}')->group(function () {
         Route::get('getUpcs/{id}','Inventarios\ProductosController@obtenerUpcs');
         Route::resource('upcs','Inventarios\UpcsController');
         Route::resource('almacenes','Inventarios\AlmacenesController');
+        Route::resource('entradas','Inventarios\EntradasController');
+        Route::post('getOrdenes','Inventarios\EntradasController@getOrdenes')->name('entradas.getOrdenes');
+        Route::post('getDetalleOrden','Inventarios\EntradasController@getDetalleOrden')->name('entradas.getDetalleOrden');
     });
 });
