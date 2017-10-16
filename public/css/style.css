@@ -323,3 +323,6 @@ a:hover .window {
 .slider.round:before {
   border-radius: 50%;
 } 
+.dataTable-wrapper.no-footer .dataTable-container{
+  border:none !important;
+}
