@@ -106,7 +106,7 @@ class SolicitudesController extends ControllerBase
             'categorys' => Categorias::select('id_categoria', 'categoria')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('categoria', 'id_categoria'),
             'subcategorys' => Subcategorias::select('id_subcategoria', 'subcategoria')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('subcategoria', 'id_subcategoria'),
             'acctions' => Acciones::select('id_accion', 'accion')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('accion', 'id_accion'),
-            'employee_department' => Empleados::findOrFail(Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado)->fk_id_departamento
+            #'employee_department' => Empleados::findOrFail(Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado)->fk_id_departamento
         ];
         
         return parent::show($company, $id, $attributes);
