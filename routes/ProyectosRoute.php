@@ -19,5 +19,12 @@ Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'proyectos', 'as' => 'proyectos.', 'middleware' => ['auth','share'] ], function() {
         Route::resource('proyectos', 'Proyectos\ProyectosController');
         Route::get('getProyectos','Proyectos\ProyectosController@obtenerProyectos');
+        Route::get('getProyectosCliente/{id}','Proyectos\ProyectosController@obtenerProyectosCliente');
+        Route::resource('tipos_proyectos','Proyectos\TiposProyectosController');
+        Route::resource('clasificaciones_proyectos','Proyectos\ClasificacionesProyectosController');
+        Route::resource('tipos_productos','Proyectos\TiposProductosProyectosController');
+        Route::resource('maestro_materiales','Proyectos\ProyectosProductosController');
+        Route::resource('clave_cliente_productos','Proyectos\ClaveClienteProductosController');
+        Route::get('getClavesClientes/{id}','Proyectos\ClaveClienteProductosController@obtenerClavesCliente');
     });
 });

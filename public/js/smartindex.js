@@ -15,9 +15,9 @@ var _createElement = function(a, b) {
 						d.innerHTML = a[e][i];
 					} else if ("text" === i) {
 						d.appendChild(c.createTextNode(a[e][i]));
-					} else if ('childs' == i) {
+					} else if ("childs" == i) {
 						for (var x in a[e][i]) {
-							d.append(_createElement(a[e][i][x]))
+							d.append(_createElement(a[e][i][x]));
 						}
 					} else {
 						d.setAttribute(i, a[e][i]);
@@ -27,7 +27,7 @@ var _createElement = function(a, b) {
 		}
 	}
 	return d;
-}
+};
 
 	function post_to_url(path, params, method) {
 		method = method || 'post';

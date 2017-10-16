@@ -234,7 +234,7 @@
             if ( sessionStorage.reloadAfterPageLoad ) {
                 sessionStorage.clear();
                 $.toaster({
-                    priority: 'success', title: 'Exito', message: 'Orden cancelada',
+                    priority: 'success', title: '¡Éxito!', message: 'Orden cancelada',
                     settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
                 });
             }

@@ -33,34 +33,27 @@
 				<div class="row">
 					<div class="col-md-2 col-sm-2 col-3">
 						<div class="form-group">
-							{{ Form::cText('Rack', 'rack', ['v-model' => 'temp.rack']) }}
+							{{ Form::cText('Rack', 'rack', ['ref' => 'rack']) }}
 						</div>
 					</div>
 					<div class="col-md-2 col-sm-2 col-3">
 						<div class="form-group">
-							{{ Form::cText('Ubicación', 'ubicacion', ['v-model' => 'temp.ubicacion']) }}
+							{{ Form::cText('Ubicación', 'ubicacion', ['ref' => 'ubicacion']) }}
 						</div>
 					</div>
 					<div class="col-md-2 col-sm-2 col-3">
 						<div class="form-group">
-							{{ Form::cText('Posición', 'posicion', ['v-model' => 'temp.posicion']) }}
+							{{ Form::cText('Posición', 'posicion', ['ref' => 'posicion']) }}
 						</div>
 					</div>
 					<div class="col-md-2 col-sm-2 col-3">
 						<div class="form-group">
-							{{ Form::cText('Nivel', 'nivel', ['v-model' => 'temp.nivel']) }}
+							{{ Form::cText('Nivel', 'nivel', ['ref' => 'nivel']) }}
 						</div>
 					</div>
 					<div class="col-md-4 col-sm-4 col-12 text-center">
-						{{ Form::cCheckboxYesOrNo('Estatus', 'activo', ['v-model' => 'temp.activo']) }}
+						{{ Form::cCheckboxYesOrNo('Estatus', 'activo', ['ref' => 'activo']) }}
 					</div>
-				</div>
-				<div class="row" hidden>
-					<div v-text="temp.rack" class="col-md-2 col-sm-2 col-3"></div>
-					<div v-text="temp.ubicacion" class="col-md-2 col-sm-2 col-3"></div>
-					<div v-text="temp.posicion" class="col-md-2 col-sm-2 col-3"></div>
-					<div v-text="temp.nivel" class="col-md-2 col-sm-2 col-3"></div>
-					<div v-text="temp.activo" class="col-md-4 col-sm-4 col-12"></div>
 				</div>
 			</div>
 			<div class="col-sm-12 text-center my-3">
@@ -149,21 +142,29 @@
 var app = new Vue({
 	el: '#app',
 	data: {
-		settings: {
-			softDelete: {{ Route::currentRouteNamed(currentRouteName('create')) ? 'false' : 'true' }}
-		},
-		temp: {id_ubicacion: null, rack: '', ubicacion: '', posicion: '', nivel: '', activo: 0, eliminar: 0},
+		buffer: {id_ubicacion: null, rack: '', ubicacion: '', posicion: '', nivel: '', activo: 0, eliminar: 0},
 		ubicaciones: @json($ubicaciones ?? []),
 	},
 	methods: {
 		append: function(e) {
-			this.ubicaciones.push(JSON.parse(JSON.stringify(this.temp)))
+			var data, isValid = true, valid;
+			// Recorremos referencias
+			data = Object.keys(this.$refs).reduce(function(acc, item){
+				// Validamos campo
+				var valid = $('#form-model').validate().element( '#' + item );
+				if (!valid) isValid = valid;
+				acc[item] = (this.$refs[item].type === 'checkbox') ? this.$refs[item].checked : this.$refs[item].value;
+				return acc;
+			}.bind(this), {});
+			if (!isValid) { return; }
+			Object.keys(this.$refs).forEach(function(key){ this.$refs[key].value = '' }.bind(this));
+			this.ubicaciones.push(JSON.parse(JSON.stringify($.extend(this.buffer, data))))
 		},
 		editOrDone: function(index) {
 			this.ubicaciones[index].editar = !this.ubicaciones[index].editar;
 		},
 		removeOrUndo: function(index) {
-			if (!this.settings.softDelete) {
+			if (!this.ubicaciones[index].id_ubicacion) {
 				this.ubicaciones.splice(index ,1); return;
 			}
 			this.ubicaciones[index].eliminar = !this.ubicaciones[index].eliminar;
@@ -172,43 +173,57 @@ var app = new Vue({
 	computed: {
 		computedUbicaciones: function() {
 			return this.ubicaciones.reduce(function(acc, item){
-				if (!item.editar) {
-					Vue.set(item, 'editar', false)
-				}
+				if (!item.editar) { Vue.set(item, 'editar', false)}
 				return acc.concat(item)
 			}, []);
 		}
 	}
 });
-
 jQuery(document).ready(function(){
+	function addRules() {
+		$('#rack').rules('add',{
+			required: true,
+			messages:{
+				required: 'El campo rack es requerido.'
+			}
+		});
+		$('#ubicacion').rules('add',{
+			required: true,
+			messages:{
+				required: 'El campo ubicacion es requerido.'
+			}
+		});
+		$('#posicion').rules('add',{
+			required: true,
+			messages:{
+				required: 'El campo posicion es requerido.'
+			}
+		});
+		$('#nivel').rules('add',{
+			required: true,
+			messages:{
+				required: 'El campo nivel es requerido.'
+			}
+		});
+	}
+	$('#form-model').on('submit', function(e) {
+		e.preventDefault();
 
-	$('#rack').rules('add',{
-		required: true,
-		messages:{
-			required: 'El campo rack es requerido.'
+		Object.keys(app.$refs).forEach(function(key){
+			$(app.$refs[key]).rules('remove')
+		});
+
+		if ($(this).validate().form()) {
+			$(this).validate().destroy();
+			this.submit();
+		} else {
+			addRules();
 		}
 	});
-	$('#ubicacion').rules('add',{
-		required: true,
-		messages:{
-			required: 'El campo ubicacion es requerido.'
-		}
-	});
-	$('#posicion').rules('add',{
-		required: true,
-		messages:{
-			required: 'El campo posicion es requerido.'
-		}
-	});
-	$('#nivel').rules('add',{
-		required: true,
-		messages:{
-			required: 'El campo nivel es requerido.'
-		}
-	});
+	if ($('#form-model').length) {
+		addRules();
+	}
 })
-
 </script>
 @endsection
 

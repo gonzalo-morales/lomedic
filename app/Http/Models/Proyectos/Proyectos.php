@@ -4,6 +4,7 @@ namespace App\Http\Models\Proyectos;
 
 use App\Http\Models\ModelCompany;
 use DB;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Proyectos extends ModelCompany
 {
@@ -25,7 +26,22 @@ class Proyectos extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['proyecto'];
+    protected $fillable = ['proyecto','activo','fk_id_cliente','fecha_contrato','fecha_inicio_contrato',
+        'fecha_fin_contrato','numero_contrato','numero_proyecto','monto_adjudicado','fk_id_clasificacion_proyecto',
+        'plazo','representante_legal','numero_fianza'];
+
+    public $niceNames =[
+        'fk_id_cliente'=>'cliente',
+        'fecha_contrato' =>'fecha de contrato',
+        'fecha_inicio_contrato' => 'fecha de inicio de contrato',
+        'fecha_fin_contrato' => 'fecha de fin de contrato',
+        'numero_contrato' => 'número de contrato',
+        'numero_proyecto' => 'número de proyecto',
+        'monto_adjudicado' => 'monto adjudicado',
+        'fk_id_clasificacion_proyecto' => 'clasificación proyecto',
+        'representante_legal' => 'representante legal',
+        'numero_fianza' => 'número de fianza'
+    ];
 
     /**
      * Indicates if the model should be timestamped.
@@ -39,30 +55,23 @@ class Proyectos extends ModelCompany
      * @var array
      */
     public $rules = [
-        'proyecto' => 'required'
+        'proyecto' => 'required',
+        'fk_id_cliente' => 'required',
+        'fecha_contrato' => 'required',
+        'fk_id_clasificacion_proyecto' => 'required',
     ];
 
-    public function getFields()
+    public $fields = [
+        'proyecto' => 'Proyecto',
+        'cliente.nombre_corto' => 'Cliente',
+        'numero_contrato' => 'No. Contrato',
+        'fecha_inicio_contrato' => 'Inicio de contrato',
+        'fecha_fin_contrato' => 'Fin de contrato',
+        'activo_span' => 'Estatus'
+    ];
+    
+    function cliente()
     {
-        return $this->fields;
-    }
-
-    public function ColumnDefaultValues()
-    {
-        $schema = config('database.connections.'.$this->getConnection()->getName().'.schema');
-
-        $data = DB::table('information_schema.columns')
-            ->select('column_name', 'data_type', DB::Raw("replace(replace(column_default, concat('::',data_type), ''),'''','') as column_default"))
-            ->whereRaw('column_default is not null')
-            ->whereRaw("column_default not ilike '%nextval%'")
-            ->where('table_name','=',$this->table)
-            ->where('table_schema','=',$schema)
-            ->where('table_catalog','=',$this->getConnection()->getDatabaseName())->get();
-
-        foreach ($data as $value) {
-            $data->{$value->column_name} = $value->data_type == 'boolean' ? $value->column_default == 'true' : $value->column_default;
-        }
-
-        return $data;
+        return $this->hasOne(SociosNegocio::class,'id_socio_negocio','fk_id_cliente');
     }
 }
