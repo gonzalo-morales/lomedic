@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Proyectos;
 
+use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\ModelCompany;
 
 class ClaveClienteProductos extends ModelCompany
@@ -46,4 +47,9 @@ class ClaveClienteProductos extends ModelCompany
 
 	public $niceNames = [
     ];
+
+	function sku()
+    {
+        return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
+    }
 }
