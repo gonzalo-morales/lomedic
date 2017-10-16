@@ -129,13 +129,31 @@ class ProyectosController extends ControllerBase
 
         if ($entity->save()) {
             # Si tienes relaciones
-//            if (isset($request->productoProyecto)) {
-//                foreach ($request->productoProyecto as $detalle) {
-//                    $productoProyecto = $entity
-//                        ->findOrFail($id)
-//                        ->
-//                }
-//            }
+            if (isset($request->productoProyecto)) {
+                foreach ($request->productoProyecto as $detalle) {
+                    $productoProyecto = $entity
+                        ->findOrFail($id)
+                        ->ProyectosProductos()
+                        ->where('id_proyecto_producto',$detalle['id_proyecto_producto'])
+                        ->first();
+                    $productoProyecto->fill($detalle);
+                    $productoProyecto->save();
+                }
+            }
+            if(isset($request->_productoProyecto)){
+                foreach ($request->_productoProyecto as $detalle){
+                    if(empty($proyecto_producto['fk_id_upc'])){
+                        $proyecto_producto['fk_id_upc'] = null;
+                    }
+                    if(!isset($proyecto_producto['activo'])){
+                        $proyecto_producto['activo'] = '0';
+                    }
+                    $proyecto_producto['fk_id_proyecto'] = $id;
+                    $ProyectosProductos = new ProyectosProductos();
+                    $ProyectosProductos->create($proyecto_producto);
+                }
+            }
+
 
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();

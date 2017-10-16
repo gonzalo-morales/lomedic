@@ -64,6 +64,12 @@
 				<li class="nav-item">
 					<a class="nav-link active" role="tab" data-toggle="tab" href="#tab-productosProyectos" id="productosProyectos-tab" aria-controls="productosProyectos" aria-expanded="true">Productos-Proyectos</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-general" id="General-tab" aria-controls="general" aria-expanded="true">General</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-finanzas" id="finanzas-tab" aria-controls="finanzas" aria-expanded="true">Finanzas</a>
+				</li>
 			</ul>
 			<!-- Content Panel -->
 			<div id="clothing-nav-content" class="card-body tab-content">
@@ -202,6 +208,12 @@
 							</table>
 						</div>
 					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane fade" id="tab-general" aria-labelledby="general-tab">
+					Datos generales del proyecto
+				</div>
+				<div role="tabpanel" class="tab-pane fade" id="tab-finanzas" aria-labelledby="finanzas-tab">
+					Información financiera del proyecto
 				</div>
 			</div>
 			<!-- End Content Panel -->
