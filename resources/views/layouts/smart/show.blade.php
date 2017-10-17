@@ -24,5 +24,5 @@
 @endsection
 
 @section('form-title')
-    {{ HTML::tag('h1', 'Datos del '. str_singular(currentEntityBaseName())) }}
+    {{ HTML::tag('h1', 'Datos del '. str_singular(currentEntityBaseName()),['class' => 'display-4']) }}
 @endsection
