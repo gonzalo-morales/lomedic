@@ -55,7 +55,9 @@ class Inventarios extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		// 'fk_id_sucursal' => 'required',
+		'fk_tipo_inventario' => 'required',
+		'fk_id_sucursal' => 'required',
+		'fk_id_almacen' => 'required',
 		// 'almacen' => 'required',
 		// 'fk_id_tipo_almacen' => 'required',
 	];

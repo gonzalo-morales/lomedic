@@ -6,18 +6,19 @@
 <div class="row">
 	<div class="col-md-4 col-sm-4">
 		<div class="form-group">
-			{{ Form::cSelectWithDisabled('Tipo de inventario', 'fk_id_sucursal', [
+			{{ Form::cSelectWithDisabled('Tipo de inventario', 'fk_tipo_inventario', [
 			'1' => 'Periodico',
 			'2' => 'Ciclico',
 			'3' => 'Extraordinario',
-			]) }}
+			], ['class' => 'select2']) }}
 		</div>
 	</div>
 	<div class="col-md-4 col-sm-4">
 		<div class="form-group">
 			{{ Form::cSelectWithDisabled('Sucursal', 'fk_id_sucursal', $sucursales ?? [], [
+				'class' => 'select2 select-cascade',
 				'data-target-url' => companyRoute('administracion.sucursales.show', ['id' => '#ID#']),
-				'data-target-el' => 'fk_id_estado',
+				'data-target-el' => '[targeted="fk_id_almacen"]',
 				'data-target-with' => '["almacenes:id_almacen,fk_id_sucursal,almacen"]',
 				'data-target-value' => 'almacenes,id_almacen,almacen'
 			]) }}
@@ -25,27 +26,21 @@
 	</div>
 	<div class="col-md-4 col-sm-4">
 		<div class="form-group">
-			{{ Form::cSelect('Almacén', 'fk_id_almacen', $almacenes ?? []) }}
+			{{ Form::cSelect('Almacén', 'fk_id_almacen', $almacenes ?? [], ['id' => 'some','class' => 'select2', 'targeted' => 'fk_id_almacen']) }}
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12 col-sm-12 mb-3">
-		<div id="app" class="card">
+		<div id="app" class="card z-depth-1-half">
 			<div class="card-header text-center">
 				<div class="row">
 					<div class="col-sm-12">
 						<p>Tipo de <b>captura</b> para el producto</p>
-						<ul class="nav btn-group justify-content-center" id="myTab" role="tablist">
-							<li class="nav-item">
-								<a class="btn btn-info active" data-toggle="tab" href="#scanner" role="tab"><i class="material-icons align-middle">settings_remote</i> Captura con scanner</a>
-							</li>
-							<li class="nav-item">
-								<a class="btn btn-info" data-toggle="tab" href="#manual" role="tab"><i class="material-icons align-middle">keyboard</i> Captura manual</a>
-							</li>
-							<li class="nav-item">
-								<a class="btn btn-info" data-toggle="tab" href="#importar" role="tab"><i class="material-icons align-middle">get_app</i> Importar Excel</a>
-							</li>
+						<ul class="nav nav-tabs btn-group justify-content-center border-0 mb-3" role="tablist">
+							<a class="btn m-0 btn-info active" data-toggle="tab" href="#scanner" role="tab" aria-expanded="true"><i class="material-icons align-middle">settings_remote</i> Captura con scanner</a>
+							<a class="btn m-0 btn-info" data-toggle="tab" href="#manual" role="tab"><i class="material-icons align-middle">keyboard</i> Captura manual</a>
+							<a class="btn m-0 btn-info" data-toggle="tab" href="#importar" role="tab"><i class="material-icons align-middle">get_app</i> Importar Excel</a>
 						</ul>
 					</div>
 					<div class="col-sm-12">
@@ -80,24 +75,34 @@
 											</div>
 											<div class="col-12 col-md-4 col-sm-6">
 												<div class="form-group">
-													{{ Form::cDate('Caducidad', 'caducidad', ['ref' => 'caducidad']) }}
+													{{ Form::cText('Caducidad', 'caducidad', ['ref' => 'caducidad']) }}
 												</div>
 											</div>
 											<div class="col-12 col-md-4 col-sm-6">
 												<div class="form-group">
-													{{ Form::cSelectWithDisabled('Almacén', 'almacen', []) }}
+													{{ Form::cSelectWithDisabled('Almacén', 'almacen', [], [
+														'targeted' => 'fk_id_almacen',
+														'data-target-url' => companyRoute('almacenes.show', ['id' => '#ID#']),
+														'data-target-el' => '[targeted="fk_id_ubicacion"]',
+														'data-target-with' => '["ubicaciones:id_ubicacion,fk_id_almacen,ubicacion"]',
+														'data-target-value' => 'ubicaciones,id_ubicacion,ubicacion',
+														'ref' => 'almacen'
+													]) }}
 												</div>
 											</div>
 											<div class="col-12 col-md-4 col-sm-6">
 												<div class="form-group">
-													{{ Form::cSelectWithDisabled('Ubicación', 'ubicacion', []) }}
+													{{ Form::cSelectWithDisabled('Ubicación', 'ubicacion', [], ['
+														targeted' => 'fk_id_ubicacion',
+														'ref' => 'ubicacion'
+													]) }}
 												</div>
 											</div>
 										</div>
 									</div>
 									<div class="col-12 col-lg-4">
 										<div class="form-group full-height">
-											{{ Form::cTextArea('Observaciones', 'observaciones', ['rows' => 2]) }}
+											{{ Form::cTextArea('Observaciones', 'observaciones', ['ref' => 'observaciones', 'rows' => 2]) }}
 										</div>
 									</div>
 									<div class="col-sm-12 text-center">
@@ -120,7 +125,7 @@
 									<div class="col-sm-12 col-md-8">
 										<p>Formato del archivo <b>Excel:</b></p>
 										<img src="img/índice.png" class="img-fluid float-left" alt="Formato de ejemplo">
-									</div><!--/row forms-->
+									</div>
 								</div>
 							</div>
 						</div>
@@ -132,11 +137,13 @@
 					<thead>
 						<tr>
 							<th>#</th>
-							<th>Rack</th>
+							<th>Código de barras</th>
+							<th>Cantidad</th>
+							<th>Lote</th>
+							<th>Caducidad</th>
+							<th>Almacén</th>
 							<th>Ubicación</th>
-							<th>Posición</th>
-							<th>Nivel</th>
-							<th>Estatus</th>
+							<th>Observaciones</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -148,29 +155,32 @@
 								<input type="hidden" v-bind:name="'relations[has][ubicaciones]['+index+'][eliminar]'" v-bind:value="ubicacion.eliminar">
 							</th>
 							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.rack"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][rack]'" v-model="ubicacion.rack">
+								<span v-if="!ubicacion.editar" v-text="ubicacion.codebar"></span>
+								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][codebar]'" v-model="ubicacion.codebar">
+							</td>
+							<td>
+								<span v-if="!ubicacion.editar" v-text="ubicacion.cantidad"></span>
+								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][cantidad]'" v-model="ubicacion.cantidad">
+							</td>
+							<td>
+								<span v-if="!ubicacion.editar" v-text="ubicacion.lote"></span>
+								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][lote]'" v-model="ubicacion.lote">
+							</td>
+							<td>
+								<span v-if="!ubicacion.editar" v-text="ubicacion.caducidad"></span>
+								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][caducidad]'" v-model="ubicacion.caducidad">
+							</td>
+							<td>
+								<span v-if="!ubicacion.editar" v-text="ubicacion.almacen"></span>
+								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][almacen]'" v-model="ubicacion.almacen">
 							</td>
 							<td>
 								<span v-if="!ubicacion.editar" v-text="ubicacion.ubicacion"></span>
 								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][ubicacion]'" v-model="ubicacion.ubicacion">
 							</td>
 							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.posicion"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][posicion]'" v-model="ubicacion.posicion">
-							</td>
-							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.nivel"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][nivel]'" v-model="ubicacion.nivel">
-							</td>
-							<td>
-								<input type="hidden" v-bind:name="'relations[has][ubicaciones]['+index+'][activo]'" v-bind:value="ubicacion.activo">
-								<div class="form-check">
-									<label class="form-check-label">
-										<input class="form-check-input" type="checkbox" v-if="ubicacion.editar" v-model="ubicacion.activo" value="1">
-										<span v-bind:class="ubicacion.activo?'text-success':'text-danger'" v-text="ubicacion.activo?'Activo':'Inactivo'"></span>
-									</label>
-								</div>
+								<span v-if="!ubicacion.editar" v-text="ubicacion.observaciones"></span>
+								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][observaciones]'" v-model="ubicacion.observaciones">
 							</td>
 							<td style="width: 1px !important;">
 								@if (!Route::currentRouteNamed(currentRouteName('show')))
@@ -202,26 +212,16 @@
 @parent
 <script src="{{ asset('vendor/vue/vue.2.4.4.min.js') }}"></script>
 <script type="text/javascript">
-	$('[data-target-url]').on('change', function() {
-		let data = $(this).data(), values = data.targetValue.split(',');
-		$.get(data.targetUrl.replace('#ID#', this.value), {with: data.targetWith} , function(request){
-			let target = $('#'+data.targetEl).empty(), options = [];
-			options.push('<option value="0" selected disabled>Seleccione una opcion ...</option>')
-			if (request.success) {
-				let i, estados = request.data[values[0]];
-				for (i in estados) {
-					options.push('<option value="'+estados[i][values[1]]+'">'+estados[i][values[2]]+'</option>')
-				}
-			}
-			target.append(options.join())
-		})
-	});
-
-
+	// $('[name="caducidad"]').pickadate({
+	//     selectMonths: true, // Creates a dropdown to control month
+	//     selectYears: 3, // Creates a dropdown of 3 years to control year
+	//     min: true,
+	//     format: 'yyyy/mm/dd'
+	// });
 	var app = new Vue({
 		el: '#app',
 		data: {
-			buffer: {id_ubicacion: null, rack: '', ubicacion: '', posicion: '', nivel: '', activo: 0, eliminar: 0},
+			buffer: {id_ubicacion: null, codebar: '', cantidad: '', lote: '', caducidad: '', almacen: '', ubicacion: '', observaciones: '', eliminar: 0},
 			ubicaciones: @json($ubicaciones ?? []),
 		},
 		methods: {
@@ -230,9 +230,9 @@
 				// Recorremos referencias
 				data = Object.keys(this.$refs).reduce(function(acc, item){
 					// Validamos campo
-					var valid = $('#form-model').validate().element( '#' + item );
-					if (!valid) isValid = valid;
-					acc[item] = (this.$refs[item].type === 'checkbox') ? this.$refs[item].checked : this.$refs[item].value;
+					// var valid = $('#form-model').validate().element( '#' + item );
+					// if (!valid) isValid = valid;
+					acc[item] = this.$refs[item].value;
 					return acc;
 				}.bind(this), {});
 				if (!isValid) { return; }
@@ -256,34 +256,44 @@
 						return acc.concat(item)
 				}, []);
 			}
+		},
+		mounted: function(e) {
+
+			$('[name="caducidad"]').pickadate({
+				selectMonths: true, // Creates a dropdown to control month
+				selectYears: 3, // Creates a dropdown of 3 years to control year
+				min: true,
+				format: 'yyyy/mm/dd'
+			});
+
 		}
 	});
 	jQuery(document).ready(function(){
 		function addRules() {
-			$('#rack').rules('add',{
-				required: true,
-				messages:{
-					required: 'El campo rack es requerido.'
-				}
-			});
-			$('#ubicacion').rules('add',{
-				required: true,
-				messages:{
-					required: 'El campo ubicacion es requerido.'
-				}
-			});
-			$('#posicion').rules('add',{
-				required: true,
-				messages:{
-					required: 'El campo posicion es requerido.'
-				}
-			});
-			$('#nivel').rules('add',{
-				required: true,
-				messages:{
-					required: 'El campo nivel es requerido.'
-				}
-			});
+			// $('#rack').rules('add',{
+			// 	required: true,
+			// 	messages:{
+			// 		required: 'El campo rack es requerido.'
+			// 	}
+			// });
+			// $('#ubicacion').rules('add',{
+			// 	required: true,
+			// 	messages:{
+			// 		required: 'El campo ubicacion es requerido.'
+			// 	}
+			// });
+			// $('#posicion').rules('add',{
+			// 	required: true,
+			// 	messages:{
+			// 		required: 'El campo posicion es requerido.'
+			// 	}
+			// });
+			// $('#nivel').rules('add',{
+			// 	required: true,
+			// 	messages:{
+			// 		required: 'El campo nivel es requerido.'
+			// 	}
+			// });
 		}
 		$('#form-model').on('submit', function(e) {
 			e.preventDefault();
