@@ -63,7 +63,7 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<h3>Detalle de la solicitud</h3>
-			<div class="card">
+			<div class="card z-depth-1-half">
 				@if(!Route::currentRouteNamed(currentRouteName('show')))
 				<div class="card-header">
 					<fieldset name="detalle-form" id="detalle-form">
@@ -74,6 +74,9 @@
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_upc','Código de barras')}}
+								<div id="loadingUPC" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+									Cargando datos... <i class="material-icons align-middle loading">cached</i>
+								</div>
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
 								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
 								'class'=>'form-control','style'=>'width:100%']) !!}

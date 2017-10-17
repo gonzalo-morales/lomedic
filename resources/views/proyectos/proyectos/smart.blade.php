@@ -52,12 +52,13 @@
 			{{Form::cText('Número de fianza','numero_fianza')}}
 		</div>
 		<div class="form-group col-md-1 col-xs-12">
-			<div data-toggle="buttons">
-				<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">
-					{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}
-					Activo
-				</label>
-			</div>
+            {{Form::cCheckboxSwitch('Activo','activo','1')}}
+			{{--<div data-toggle="buttons">--}}
+				{{--<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">--}}
+					{{--{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}--}}
+					{{--Activo--}}
+				{{--</label>--}}
+			{{--</div>--}}
 		</div>
 	</div>
 </div>
@@ -88,11 +89,17 @@
 								<fieldset name="detalle-form" id="detalle-form">
 									<div class="row">
 										<div class="form-group input-field col-md-6 col-sm-6">
+                                            <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+                                                Cargando datos... <i class="material-icons align-middle loading">cached</i>
+                                            </div>
 											{{Form::label('fk_id_clave_cliente_producto','* Clave cliente producto')}}
 											{!!Form::select('fk_id_clave_cliente_producto',[],null,['id'=>'fk_id_clave_cliente_producto','disabled','class'=>'form-control','style'=>'width:100%','data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])!!}
 											{{--								{{Form::cSelect('Clave cliente producto','fk_id_clave_cliente_producto',[],['disabled'])}}--}}
 										</div>
 										<div class="form-group input-field col-md-6 col-sm-6">
+                                            <div id="loadingfk_id_upc" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+                                                Cargando datos... <i class="material-icons align-middle loading">cached</i>
+                                            </div>
 											{{Form::label('fk_id_upc','UPC')}}
 											<div class="input-group">
 												<span class="input-group-addon">
@@ -162,6 +169,9 @@
 							</tr>
 							</thead>
 							<tbody id="tbodyproductosproyectos">
+                            <div class="w-100 h-100 text-center text-white align-middle loadingData loadingtabla" style="display: none;">
+                                Cargando datos... <i class="material-icons align-middle loading">cached</i>
+                            </div>
 							@if( isset( $data->ProyectosProductos ) )
 								@foreach( $data->ProyectosProductos->where('eliminar',false) as $ProyectoProducto )
 									<tr id="{{$ProyectoProducto->id_proyecto_producto}}">
@@ -182,42 +192,42 @@
 											{!!
 												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][prioridad]',
 												$ProyectoProducto->prioridad,
-												['class'=>'form-control prioridad'])
+												['class'=>'form-control prioridad','maxlength'=>'2'])
 											!!}
 										</td>
 										<td>
 											{!!
 												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][cantidad]',
 												$ProyectoProducto->cantidad,
-												['class'=>'form-control cantidad'])
+												['class'=>'form-control cantidad','maxlength'=>'3'])
 											!!}
 										</td>
 										<td>
 											{!!
 												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][precio_sugerido]',
 												bcdiv($ProyectoProducto->precio_sugerido,'1',2),
-												['class'=>'form-control precio_sugerido'])
+												['class'=>'form-control precio_sugerido','maxlength'=>'13'])
 											!!}
 										</td>
 										<td>
 											{!!
 												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][maximo]',
 												$ProyectoProducto->maximo,
-												['class'=>'form-control maximo'])
+												['class'=>'form-control maximo','maxlength'=>'4'])
 											!!}
 										</td>
 										<td>
 											{!!
 												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][minimo]',
 												$ProyectoProducto->minimo,
-												['class'=>'form-control minimo'])
+												['class'=>'form-control minimo','maxlength'=>'4'])
 											!!}
 										</td>
 										<td>
 											{!!
 												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][numero_reorden]',
 												$ProyectoProducto->numero_reorden,
-												['class'=>'form-control numero_reorden'])
+												['class'=>'form-control numero_reorden','maxlength'=>'4'])
 											!!}
 										</td>
 										<td>

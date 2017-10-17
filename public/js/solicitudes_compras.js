@@ -65,8 +65,10 @@ $(document).ready( function () {
 
     select2Placeholder('fk_id_upc','Selecciona UPC',5);
     $('#fk_id_sku').on('change',function () {
-        if($('#fk_id_sku').select2('data')[0].id)
+        if($('#fk_id_sku').select2('data')[0].id){
+            $('#loadingUPC').show();
             codigosbarras();//Carga los nuevos datos del producto
+        }
     });
 
     $('.imprimir').on('click',function (e) {
@@ -187,12 +189,6 @@ function codigosbarras()
             success: function (data) {
                 // removerOpciones('fk_id_upc');
                 $('#fk_id_upc').empty();
-                let option = $('<option/>');
-                option.val(null);
-                option.attr('disabled', 'disabled');
-                option.attr('selected', 'selected');
-                option.text('Selecciona un UPC');
-                $('#fk_id_upc').append(option);
                 $.each(data, function (key, codigo) {
                     let option = $('<option/>');
                     option.val(codigo.id);
@@ -200,11 +196,24 @@ function codigosbarras()
                     $('#fk_id_upc').append(option);
                 });
                 if (Object.keys(data).length == 0) {
+                    let option = $('<option/>');
+                    option.val(null);
+                    option.attr('disabled', 'disabled');
+                    option.attr('selected', 'selected');
+                    option.text('UPC no encontrado');
+                    $('#fk_id_upc').prepend(option);
                     $('#fk_id_upc').prop('disabled', true)
                 }
                 else {
+                    let option = $('<option/>');
+                    option.val(null);
+                    option.attr('disabled', 'disabled');
+                    option.attr('selected', 'selected');
+                    option.text('Selecciona un UPC');
+                    $('#fk_id_upc').prepend(option);
                     $('#fk_id_upc').prop('disabled', false)
                 }
+                $('#loadingUPC').hide();
 
                 $('#fk_id_upc').select2();
             },

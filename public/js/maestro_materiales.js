@@ -31,6 +31,7 @@ $(document).ready(function(){
         });
         let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
         $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
+        $('#loadingfk_id_clave_cliente_producto').show();
         $.ajax({
             url: _url,
             dataType:'json',
@@ -39,11 +40,16 @@ $(document).ready(function(){
                 option.val(0);
                 option.attr('disabled','disabled');
                 option.attr('selected','selected');
-                option.text('...');
+                if (Object.keys(data).length == 0)
+                    option.text('No se encontraron elementos');
+                else
+                    option.text('...');
+
                 $('#fk_id_clave_cliente_producto').select2({
                     minimumResultsForSearch:'50',
                     data:data,
                 }).attr('disabled',false).prepend(option);
+                $('#loadingfk_id_clave_cliente_producto').hide();
             }
         });
     });
@@ -53,6 +59,7 @@ $(document).ready(function(){
             $( this ).parent().nextAll( "select" ).val(0).trigger('change').prop( "disabled", !this.checked ).empty();
         }else{
             if($('#fk_id_clave_cliente_producto').val()){
+                $('#loadingfk_id_upc').show();
                 let _url = $('#fk_id_upc').data('url').replace('?id',
                 $('#fk_id_clave_cliente_producto').select2('data')[0].fk_id_sku);
                 $('#fk_id_upc').empty();
@@ -64,11 +71,15 @@ $(document).ready(function(){
                         option.val(0);
                         option.attr('disabled','disabled');
                         option.attr('selected','selected');
-                        option.text('...');
+                        if (Object.keys(data).length == 0)
+                            option.text('No se encontraron elementos');
+                        else
+                            option.text('...');
                         $('#fk_id_upc').attr('disabled',false).select2({
                             minimumResultsForSearch: 15,
                             data: data
                         }).prepend(option);
+                        $('#loadingfk_id_upc').hide();
                     }
                 });
             }else{
@@ -122,7 +133,7 @@ $(document).ready(function(){
 
         $.validator.addMethod('precio',function (value,element) {
             return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-        },'El precio no debe tener más de dos decimales');
+        },'Verifica la cantidad. Ej. 9999999999.00');
         $.validator.addClassRules('precio_sugerido',{
             cRequerido: true,
             precio: true,
@@ -149,6 +160,10 @@ $(document).ready(function(){
             $('.maximo').rules('remove');
             $('.minimo').rules('remove');
             $('.numero_reorden').rules('remove');
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atención',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
         }
     });
 
@@ -170,6 +185,13 @@ $(document).ready(function(){
                 }).attr('disabled',false).prepend(option);
             }
         });
+    }else{
+        let option = $('<option/>');
+        option.val(0);
+        option.attr('disabled','disabled');
+        option.attr('selected','selected');
+        option.text('Cliente no seleccionado');
+        $('#fk_id_clave_cliente_producto').empty().prop('disabled',true).prepend(option);
     }
 });
 
@@ -190,6 +212,8 @@ function agregarProducto() {
                 });
                 $('#file_xlsx').val('');
             } else {
+                $('.loadingtabla').show();
+                // $('.loadingtabla').attr('style','display:block');
                 var xlsx = $('#file_xlsx').prop('files')[0];
                 var formData = new FormData();
                 formData.append('file', xlsx);
@@ -243,12 +267,12 @@ function agregarProducto() {
                                 value['descripcion_clave'],
                                 $('<input type="hidden" name="_productoProyecto[' + row_id + '][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc,
                                 descripcion_upc,
-                                $('<input type="text" class="form-control prioridad" value="' + value['prioridad'] + '" name="_productoProyecto[' + row_id + '][prioridad]" />')[0].outerHTML,
-                                $('<input type="text" class="form-control cantidad" value="' + value['cantidad'] + '" name="_productoProyecto[' + row_id + '][cantidad]" />')[0].outerHTML,
-                                $('<input type="text" class="form-control precio_sugerido" value="' + value['precio_sugerido'] + '" name="_productoProyecto[' + row_id + '][precio_sugerido]" />')[0].outerHTML,
-                                $('<input type="text" class="form-control maximo" value="' + value['maximo'] + '" name="_productoProyecto[' + row_id + '][maximo]" />')[0].outerHTML,
-                                $('<input type="text" class="form-control minimo" value="' + value['minimo'] + '" name="_productoProyecto[' + row_id + '][minimo]" />')[0].outerHTML,
-                                $('<input type="text" class="form-control numero_reorden" value="' + value['numero_reorden'] + '" name="_productoProyecto[' + row_id + '][numero_reorden]" />')[0].outerHTML,
+                                $('<input type="text" class="form-control prioridad" maxlength="2" value="' + value['prioridad'] + '" name="_productoProyecto[' + row_id + '][prioridad]" />')[0].outerHTML,
+                                $('<input type="text" class="form-control cantidad" maxlength="4" value="' + value['cantidad'] + '" name="_productoProyecto[' + row_id + '][cantidad]" />')[0].outerHTML,
+                                $('<input type="text" class="form-control precio_sugerido" maxlength="13" value="' + value['precio_sugerido'] + '" name="_productoProyecto[' + row_id + '][precio_sugerido]" />')[0].outerHTML,
+                                $('<input type="text" class="form-control maximo" maxlength="4" value="' + value['maximo'] + '" name="_productoProyecto[' + row_id + '][maximo]" />')[0].outerHTML,
+                                $('<input type="text" class="form-control minimo" maxlength="4" value="' + value['minimo'] + '" name="_productoProyecto[' + row_id + '][minimo]" />')[0].outerHTML,
+                                $('<input type="text" class="form-control numero_reorden" maxlength="4" value="' + value['numero_reorden'] + '" name="_productoProyecto[' + row_id + '][numero_reorden]" />')[0].outerHTML,
                                 $('<div class="form-check">' +
                                     '<label class="form-check-label custom-control custom-checkbox">' +
                                     '<input type="checkbox" class="form-check-input custom-control-input" checked value="1" name="_productoProyecto[' + row_id + '][activo]" />' +
@@ -264,6 +288,14 @@ function agregarProducto() {
                             priority: 'success', title: '¡Éxito!', message: 'Productos importados con éxito',
                             settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}},
                         });
+                        $('.loadingtabla').hide();
+                    },
+                    error: function () {
+                        $.toaster({
+                            priority: 'danger', title: '¡Error!', message: 'Por favor verifica que el layout sea correcto',
+                            settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                        });
+                        $('.loadingtabla').hide();
                     }
                 });
                 $('#file_xlsx').val('');
@@ -294,12 +326,12 @@ function agregarProducto() {
                     $('#fk_id_clave_cliente_producto').select2('data')[0].descripcionClave,
                     $('<input type="hidden" name="_productoProyecto[' + row_id + '][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc,
                     descripcion_upc,
-                    $('<input type="text" class="form-control prioridad" name="_productoProyecto[' + row_id + '][prioridad]" />')[0].outerHTML,
-                    $('<input type="text" class="form-control cantidad" name="_productoProyecto[' + row_id + '][cantidad]" />')[0].outerHTML,
-                    $('<input type="text" class="form-control precio_sugerido" name="_productoProyecto[' + row_id + '][precio_sugerido]" />')[0].outerHTML,
-                    $('<input type="text" class="form-control maximo" name="_productoProyecto[' + row_id + '][maximo]" />')[0].outerHTML,
-                    $('<input type="text" class="form-control minimo" name="_productoProyecto[' + row_id + '][minimo]" />')[0].outerHTML,
-                    $('<input type="text" class="form-control numero_reorden" name="_productoProyecto[' + row_id + '][numero_reorden]" />')[0].outerHTML,
+                    $('<input type="text" class="form-control prioridad" maxlength="2" name="_productoProyecto[' + row_id + '][prioridad]" />')[0].outerHTML,
+                    $('<input type="text" class="form-control cantidad" maxlength="3" name="_productoProyecto[' + row_id + '][cantidad]" />')[0].outerHTML,
+                    $('<input type="text" class="form-control precio_sugerido" maxlength="13" name="_productoProyecto[' + row_id + '][precio_sugerido]" />')[0].outerHTML,
+                    $('<input type="text" class="form-control maximo" maxlength="4" name="_productoProyecto[' + row_id + '][maximo]" />')[0].outerHTML,
+                    $('<input type="text" class="form-control minimo" maxlength="4" name="_productoProyecto[' + row_id + '][minimo]" />')[0].outerHTML,
+                    $('<input type="text" class="form-control numero_reorden" maxlength="4" name="_productoProyecto[' + row_id + '][numero_reorden]" />')[0].outerHTML,
                     $('<div class="form-check">' +
                         '<label class="form-check-label custom-control custom-checkbox">' +
                         '<input type="checkbox" class="form-check-input custom-control-input" checked value="1" name="_productoProyecto[' + row_id + '][activo]" />' +

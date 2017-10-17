@@ -69,7 +69,7 @@
 <div class="row">
 	<div class="col-sm-12">
 		<h3>Detalle de la orden</h3>
-		<div class="card">
+		<div class="card z-depth-1-half">
 			@if(!Route::currentRouteNamed(currentRouteName('show')))
 			<div class="card-header">
 				<fieldset name="detalle-form" id="detalle-form">
@@ -221,7 +221,7 @@
 		</div>
 	</div>
 </div>
-<div class="form-group col-md-2 col-sm-6 float-right">
+<div class="form-group col-md-2 col-sm-6 float-right mt-3">
 	{{ Form::label('total_orden', 'Total de la orden') }}
 	{!! Form::text('total_orden', null,['class'=>'form-control','disabled','placeholder'=>'Total']) !!}
 </div>

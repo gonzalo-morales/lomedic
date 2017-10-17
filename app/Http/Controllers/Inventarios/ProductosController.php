@@ -47,7 +47,7 @@ class ProductosController extends ControllerBase
     public function obtenerSkus($company,Request $request)
     {
         $term = $request->term;
-        $skus = Productos::where('activo','1')->where('sku','LIKE',$term.'%')->orWhere('nombre_comercial','LIKE','%'.$term.'%')->orWhere('descripcion','LIKE','%'.$term.'%')->get();
+        $skus = Productos::where('activo','1')->where('sku','LIKE','%'.$term.'%')->orWhere('descripcion_corta','LIKE','%'.$term.'%')->orWhere('descripcion','LIKE','%'.$term.'%')->get();
 
         $skus_set = [];
         foreach ($skus as $sku)
