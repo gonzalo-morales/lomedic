@@ -165,7 +165,7 @@
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proveedor]',$detalle->fk_id_proveedor) !!}
-										{{$detalle->proveedor->nombre_corto}}
+										{{$detalle->proveedor->nombre_corto ?? 'Sin proveedor'}}
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
