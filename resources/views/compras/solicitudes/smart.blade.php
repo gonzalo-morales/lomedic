@@ -1,20 +1,11 @@
 @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/pickadate/default.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/pickadate/default.date.css') }}">
 @endsection
 @section('header-bottom')
 	@parent
 	{{--<script type="text/javascript" src="{{ asset('js/jquery.ui.autocomplete2.js') }}"></script>--}}
-	<script type="text/javascript" src="{{ asset('js/pickadate/picker.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/pickadate/picker.date.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/pickadate/translations/es_Es.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/toaster.js') }}"></script>
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
-	@if(!Route::currentRouteNamed(currentRouteName('index')))
 		<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
-	@endif
 @endsection
 
 @section('content-width','mt-3')
@@ -182,8 +173,8 @@
 											{{$detalle->proyecto->proyecto}}
 										@else
 											{!! Form::select('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
-													isset($proyectos) ? $proyectos : null,
-													$detalle->id_proyecto,['id'=>'detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
+													isset($proyectos) ? $proyectos->prepend('...','0') : null,
+													$detalle->fk_id_proyecto,['id'=>'detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
 													'class'=>'detalle_select','style'=>'width:100%'])
 											!!}
 										@endif

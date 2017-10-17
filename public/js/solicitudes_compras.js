@@ -24,9 +24,10 @@ $(document).ready( function () {
     $('#id_solicitante').val(getIdempleado());
     if(window.location.href.toString().indexOf('editar') > -1)//Si es editar
     {
-        // $('.detalle_select').select2();
+        total_producto();//Obtiene el porcentaje del valor por defecto
         $('#fk_id_solicitante').select2();
     }else if(window.location.href.toString().indexOf('crear') > -1){
+        total_producto();//Obtiene el porcentaje del valor por defecto
         select2Placeholder('fk_id_solicitante',
             'Yo solicito la compra',
             10,
@@ -67,8 +68,6 @@ $(document).ready( function () {
         if($('#fk_id_sku').select2('data')[0].id)
             codigosbarras();//Carga los nuevos datos del producto
     });
-
-    total_producto();//Obtiene el porcentaje del valor por defecto
 
     $('.imprimir').on('click',function (e) {
         if(dataTable.rows.length < 1 && $('.imprimir').length){

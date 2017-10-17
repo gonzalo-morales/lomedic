@@ -149,6 +149,9 @@ class ControllerBase extends Controller
 			return ['success' => false,'message' => $e->getMessage()];
 		}
 
+        header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+
 		if (!request()->ajax()) {
 			return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + ['data'=>$data] + $this->getDataView($data));
 
@@ -160,7 +163,8 @@ class ControllerBase extends Controller
 			}
 
 			// return $['some' => 'haha'];
-			return ['success' => true, 'data' => $data->toArray()];
+			//return ['success' => true, 'data' => $data->toArray()];
+            return response()->json(['success' => true, 'data' => $data->toArray()])->header("Vary", "Accept");
 		}
 	}
 

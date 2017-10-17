@@ -181,7 +181,6 @@ class SolicitudesController extends ControllerBase
 
     public function update(Request $request, $company, $id)
     {
-        dd($request->request);
         # ¿Usuario tiene permiso para actualizar?
         $this->authorize('update', $this->entity);
 
