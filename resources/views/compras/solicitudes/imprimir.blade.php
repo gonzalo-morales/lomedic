@@ -77,7 +77,7 @@
             @foreach($detalles as $detalle)
             <tr>
                 <td>{{$detalle->sku->sku}}</td>
-                <td>{{$detalle->upc->codigo_barras}}</td>
+                <td>{{$detalle->upc->upc}}</td>
                 <td>proveedor</td>
                 <td>{{$detalle->fecha_necesario}}</td>
                 <td>{{$detalle->proyecto->proyecto}}</td>
