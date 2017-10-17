@@ -7,10 +7,10 @@
                 <h4 align="center">Solicitud de compra</h4>
                 <h6 align="center">
                     {{$empresa->razon_social}}
-                    <br><b>Dirección</b>
-                    <br><b>Municipio, Est.</b>
-                    <br><b>Tel:</b>
-                    <br><b>RFC:</b>{{$empresa->rfc}}
+                    <br><b>Calle Chicle 234, Col. El coli industrial</b>
+                    <br><b>Zapopan, Jalisco, CP 45069</b>
+                    <br><b>Tel: (33) 1002-1130</b>
+                    <br><b>RFC: AIS091015H50</b>{{$empresa->rfc}}
                 </h6>
             </div>
             <div style="width: 20%; float: left">
@@ -64,6 +64,7 @@
             <tr>
                 <th><h5>SKU</h5></th>
                 <th><h5>Código de barras</h5></th>
+                <th><h5>Producto</h5></th>
                 <th><h5>Proveedor</h5></th>
                 <th><h5>Fecha necesario</h5></th>
                 <th><h5>Proyecto</h5></th>
@@ -77,10 +78,11 @@
             @foreach($detalles as $detalle)
             <tr>
                 <td>{{$detalle->sku->sku}}</td>
-                <td>{{$detalle->upc->upc}}</td>
-                <td>proveedor</td>
+                <td>{{$detalle->upc->upc ?? ''}}</td>
+                <td>{{$detalle->sku->descripcion_corta}}</td>
+                <td>{{$detalle->proveedor->nombre_corto ?? ''}}</td>
                 <td>{{$detalle->fecha_necesario}}</td>
-                <td>{{$detalle->proyecto->proyecto}}</td>
+                <td>{{$detalle->proyecto->id_proyecto.' - '.$detalle->proyecto->proyecto}}</td>
                 <td>{{$detalle->cantidad}}</td>
                 <td>{{$detalle->unidad_medida->nombre}}</td>
                 <td>{{$detalle->impuesto->impuesto}}</td>
@@ -91,6 +93,7 @@
             {{--End for each detalle--}}
             <tr><td style="border: hidden">&nbsp;</td></tr>
             <tr style="border: hidden">
+                <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
@@ -111,11 +114,12 @@
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
                 <td>IVA:</td>
                 <td>${{$iva}}</td>
             </tr>
             <tr style="border: hidden">
-                <td colspan="8"><h3>*** {{$total_letra}} ***</h3></td>
+                <td colspan="9"><h3>*** {{$total_letra}} ***</h3></td>
                 <td>Total</td>
                 <td>${{$total}}</td>
             </tr>

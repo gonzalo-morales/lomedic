@@ -161,7 +161,7 @@
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
-										{{$detalle->upc->upc}}
+										{{$detalle->upc->upc ?? ''}}
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proveedor]',$detalle->fk_id_proveedor) !!}
@@ -173,7 +173,7 @@
 									<td>
 										@if(!Route::currentRouteNamed(currentRouteName('edit')))
 											{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
-											{{$detalle->proyecto->proyecto}}
+											{{$detalle->proyecto->proyecto ?? ''}}
 										@else
 											{!! Form::select('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
 													isset($proyectos) ? $proyectos->prepend('...','0') : null,
