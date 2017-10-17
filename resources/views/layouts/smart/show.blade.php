@@ -11,14 +11,14 @@
 @section('form-actions')
     <div class="col-md-12 col-xs-12">
         <div class="text-right">
-            {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default']) }}
+            @can('create', currentEntity())
+                {{ link_to(companyRoute('create'), 'Nuevo', ['class'=>'btn btn-primary']) }}
+            @endcan
             @can('update', currentEntity())
             {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info']) }}
             @endcan
-            @can('create', currentEntity())
-            {{ link_to(companyRoute('create'), 'Nuevo', ['class'=>'btn btn-primary']) }}
-            @endcan
             @yield('extraButtons')
+            {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default']) }}
         </div>
     </div>
 @endsection

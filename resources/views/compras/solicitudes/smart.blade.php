@@ -34,7 +34,7 @@
 			@if(Route::currentRouteNamed(currentRouteName('edit')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
 				{!! Form::select('fk_id_sucursal', isset($sucursalesempleado)?$sucursalesempleado:[],null, ['id'=>'fk_id_sucursal_','class'=>'form-control','style'=>'width:100%']) !!}
-				{!! Form::hidden('sucursal_defecto',$data->fk_id_sucursal,['id'=>'sucursal_defecto']) !!}
+				{!! Form::hidden('sucursal_defecto',null,['id'=>'sucursal_defecto']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('show')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
 				{!! Form::text('sucursal',$data->sucursales->sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
@@ -52,7 +52,7 @@
 			{{--{!! Form::select('fk_id_estatus_solicitud', \App\Http\Models\Compras\EstatusSolicitudes::all()->pluck('estatus','id_estatus'),null, ['id'=>'fk_id_sucursal']) !!}--}}
 			{{ Form::label('estatus_solicitud', '* Estatus de la solicitud') }}
 			@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('show')))
-				{!! Form::text('estatus_solicitud',$data->estatus->estatus,['disabled','class'=>'form-control']) !!}
+				{!! Form::text('estatus_solicitud',null,['disabled','class'=>'form-control']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('create')))
 				{!! Form::text('estatus_solicitud','Abierto',['disabled','class'=>'form-control']) !!}
 			@endif
@@ -61,11 +61,11 @@
 			@if(isset($data->fk_id_estatus_solicitud) && $data->fk_id_estatus_solicitud ==3)
 				<div class="form-group input-field col-md-3 col-sm-12">
 					{{ Form::label('fecha_cancelacion','Fecha de cancelación') }}
-					{!! Form::text('fecha_cancelacion',$data->fecha_cancelacion,['disabled','class'=>'form-control']) !!}
+					{!! Form::text('fecha_cancelacion',null,['disabled','class'=>'form-control']) !!}
 				</div>
 				<div class="form-group input-field col-md-9 col-sm-12">
 					{{ Form::label('motivo_cancelacion','Motivo de la cancelación') }}
-					{!! Form::text('motivo_cancelacion',$data->motivo_cancelacion,['disabled','class'=>'form-control']) !!}
+					{!! Form::text('motivo_cancelacion',null,['disabled','class'=>'form-control']) !!}
 				</div>
 			@endif
 	</div>
@@ -406,20 +406,29 @@
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
+	@section('form-title')
+		<h1>Agregar Solicitud</h1>
+	@endsection
 	@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
+	@section('form-title')
+		<h1>Editar Solicitud</h1>
+	@endsection
 	@include('layouts.smart.edit')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('extraButtons')
 		@parent
-		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
+		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
 		@if($data->fk_id_estatus_solicitud == 1)
-			{!! HTML::decode(link_to(companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>$data->id_solicitud]),'<i class="material-icons">shopping_cart</i> Ordenar',['class'=>'btn btn-default'])) !!}
+			{!! HTML::decode(link_to(companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>$data->id_solicitud]),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
 		@endif
+	@endsection
+	@section('form-title')
+		<h1>Datos de la Solicitud</h1>
 	@endsection
 	@include('layouts.smart.show')
 @endif
