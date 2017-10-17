@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class SolicitudesController extends ControllerBase
 {
@@ -33,6 +34,9 @@ class SolicitudesController extends ControllerBase
 
     public function create($company,$attributes =[])
     {
+        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
+            $q->where('fk_id_tipo_socio', 2);
+        })->pluck('nombre_corto','id_socio_negocio');
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity->first()
                     ->empleado()->first()
@@ -59,6 +63,7 @@ class SolicitudesController extends ControllerBase
                 'proyectos' => Proyectos::where('activo',1)
                     ->get()
                     ->pluck('proyecto','id_proyecto'),
+                'proveedores' => $proveedores,
             ]];
         return parent::create($company,$attributes);
     }
@@ -86,6 +91,15 @@ class SolicitudesController extends ControllerBase
         if ($isSuccess) {
             if(isset($request->_detalles)) {
                 foreach ($request->_detalles as $detalle) {
+                    if(empty($detalle->fk_id_upc)){
+                        $detalle['fk_id_upc'] = null;
+                    }
+                    if(empty($detalle->fk_id_proyecto)){
+                        $detalle['fk_id_proyecto'] = null;
+                    }
+                    if(empty($detalle->fk_id_proveedor)){
+                        $detalle['fk_id_proveedor'] = null;
+                    }
                     $isSuccess->detalleSolicitudes()->save(new DetalleSolicitudes($detalle));
                 }
                 $this->log('store', $isSuccess->id_solicitud);
@@ -99,6 +113,9 @@ class SolicitudesController extends ControllerBase
 
     public function show($company,$id,$attributes = [])
     {
+        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
+            $q->where('fk_id_tipo_socio', 2);
+        })->pluck('nombre_corto','id_socio_negocio');
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity
                     ->where('id_solicitud',$id)->first()
@@ -117,12 +134,17 @@ class SolicitudesController extends ControllerBase
                     ->where('activo',1)
                     ->get()
                     ->pluck('nombre','id_empleado'),
+                'proveedores' => $proveedores
             ]];
         return parent::show($company,$id,$attributes);
     }
 
     public function edit($company,$id,$attributes = [])
     {
+        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
+            $q->where('fk_id_tipo_socio', 2);
+        })->pluck('nombre_corto','id_socio_negocio');
+
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity
                     ->where('id_solicitud',$id)->first()
@@ -152,6 +174,7 @@ class SolicitudesController extends ControllerBase
                     ->where('activo',1)
                     ->get()
                     ->pluck('nombre','id_empleado'),
+                'proveedores' => $proveedores
             ]];
         return parent::edit($company, $id, $attributes);
     }
@@ -175,12 +198,24 @@ class SolicitudesController extends ControllerBase
                         ->detalleSolicitudes()
                         ->where('id_solicitud_detalle', $detalle['id_solicitud_detalle'])
                         ->first();
+                    if(empty($detalle->fk_id_proyecto)){
+                        $detalle['fk_id_proyecto'] = null;
+                    }
                     $solicitud_detalle->fill($detalle);
                     $solicitud_detalle->save();
                 }
             }
             if(isset($request->_detalles)){
                 foreach ($request->_detalles as $detalle){
+                    if(empty($detalle->fk_id_upc)){
+                        $detalle['fk_id_upc'] = null;
+                    }
+                    if(empty($detalle->fk_id_proyecto)){
+                        $detalle['fk_id_proyecto'] = null;
+                    }
+                    if(empty($detalle->fk_id_proveedor)){
+                        $detalle['fk_id_proveedor'] = null;
+                    }
                     $entity->detalleSolicitudes()->save(new DetalleSolicitudes($detalle));
                 }
             }

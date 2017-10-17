@@ -85,7 +85,11 @@ class EmpleadosController extends ControllerBase
 
     public function obtenerEmpleados($company)
     {
-        return Empleados::where('activo','1')->where('eliminar','0')->select("id_empleado as id",DB::Raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"))->get()->toJson();
+        return Empleados::where('activo','1')
+            ->where('eliminar','0')
+            ->select("id_empleado as id",DB::Raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"))
+            ->get()
+            ->toJson();
     }
 
     public function obtenerEmpleado($company)

@@ -8,6 +8,9 @@ $(document).ready(function(){
     window.proyectoProducto = new DataTable('#productosproyectos', {
         fixedHeight: true,
         fixedColumns: true,
+        labels:{
+            info: "Mostrando del registro {start} al {end} de {rows}"
+        }
     });
     initSelects();
 
@@ -22,6 +25,9 @@ $(document).ready(function(){
         proyectoProducto.init({
             fixedHeight: true,
             fixedColumns: true,
+            labels:{
+                info: "Mostrando del registro {start} al {end} de {rows}"
+            }
         });
         let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
         $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);

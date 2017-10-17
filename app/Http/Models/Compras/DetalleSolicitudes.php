@@ -85,4 +85,9 @@ class DetalleSolicitudes extends ModelCompany
     {
         return $this->belongsTo('App\Http\Models\Compras\Solicitudes','fk_id_solicitud','id_solicitud');
     }
+
+    public function proveedor()
+    {
+        return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_proveedor');
+    }
 }

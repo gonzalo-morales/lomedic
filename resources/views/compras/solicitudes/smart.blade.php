@@ -37,8 +37,7 @@
 				{!! Form::hidden('sucursal_defecto',$data->fk_id_sucursal,['id'=>'sucursal_defecto']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('show')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
-
-				{!! Form::text('sucursal',$data->sucursales->where('id_sucursal',$data->fk_id_sucursal)->first()->nombre_sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
+				{!! Form::text('sucursal',$data->sucursales->sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('create')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
 				{!! Form::select('fk_id_sucursal', isset($sucursalesempleado)?$sucursalesempleado:[],null, ['id'=>'fk_id_sucursal_','class'=>'form-control','style'=>'width:100%']) !!}
@@ -90,7 +89,7 @@
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_proveedor','Proveedor')}}
-								{!!Form::select('fk_id_proveedor',[],null,['id'=>'fk_id_proveedor','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%'])!!}
+								{!!Form::select('fk_id_proveedor',isset($proveedores)?$proveedores:[],null,['id'=>'fk_id_proveedor','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%'])!!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_proyecto','Proyecto')}}
@@ -168,10 +167,11 @@
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
-										{{$detalle->upc->descripcion}}
+										{{$detalle->upc->upc}}
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proveedor]',$detalle->fk_id_proveedor) !!}
+										{{$detalle->proveedor->nombre_corto}}
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
@@ -230,7 +230,7 @@
 											{{number_format($detalle->total,2,'.','')}}
 										@else
 											{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][total]',number_format($detalle->total,2,'.','')
-											,['class'=>'form-control','id'=>'total'.$detalle->id_solicitud_detalle,'readonly'])!!}
+											,['class'=>'form-control','id'=>'total'.$detalle->id_solicitud_detalle,'readonly','style'=>'min-width:100px'])!!}
 										@endif
 									<td>
 										{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}

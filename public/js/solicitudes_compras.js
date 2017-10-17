@@ -19,7 +19,7 @@ $(document).ready( function () {
         }
     });
     select2Placeholder('fk_id_sku','Selecciona un SKU');
-    select2Placeholder('fk_id_proveedor','Selecciona un proveedor');
+    select2Placeholder('fk_id_proveedor','Proveedor no seleccionado',50,true,false);
 
     $('#id_solicitante').val(getIdempleado());
     if(window.location.href.toString().indexOf('editar') > -1)//Si es editar
@@ -56,7 +56,10 @@ $(document).ready( function () {
         fixedHeight: true,
         fixedColumns: true,
         searchable: false,
-        perPageSelect: false
+        perPageSelect: false,
+        labels:{
+            info: "Mostrando del registro {start} al {end} de {rows}"
+        }
     });
 
     select2Placeholder('fk_id_upc','Selecciona UPC',5);
@@ -75,7 +78,7 @@ $(document).ready( function () {
     });
 
     select2Placeholder('fk_id_unidad_medida','Selecciona una unidad de medida','Infinity');
-    select2Placeholder('fk_id_proyecto','Selecciona un proyecto');
+    select2Placeholder('fk_id_proyecto','Proyecto no seleccionado',50,true,false);
 
     $(document).on('keyup','.cantidad',function (e) {
             let valid = /[^0-9]/g.test(this.value),
@@ -83,10 +86,11 @@ $(document).ready( function () {
             if(valid)
             {
                 this.value = val.substring(0, val.length - 1);
-            }else
-            {
-                total_producto_row(this.id);
             }
+            // else
+            // {
+            //     total_producto_row(this.id);
+            // }
     });
 
     $(document).on('keyup','.precio_unitario',function (e) {
@@ -266,9 +270,9 @@ function agregarProducto() {
         let proyectos = '';
                 $.each($('#fk_id_proyecto option').clone(), function (key, proyecto) {
                     //Este if es para verificar la opción seleccionada por defecto
-                    if(proyecto.value == $('#fk_id_proyecto').select2('data')[0].id && proyecto.value != '')
+                    if(proyecto.value == $('#fk_id_proyecto').select2('data')[0].id)
                         {proyectos += '<option value="'+proyecto.value+'" selected>'+proyecto.innerText+'</option>';}
-                    else if(proyecto.value != '')
+                    else
                         {proyectos += proyecto.outerHTML;}
                 });
     //Para obtener las opciones del select de impuestos en el detalle de la solicitud
@@ -284,20 +288,26 @@ function agregarProducto() {
                 });
 
         let total = total_producto();
+        let id_upc = 0;
+        let text_upc = 'UPC no seleccionado';
+        if ($('#fk_id_upc').val()) {
+            id_upc = $('#fk_id_upc').select2('data')[0].id;
+            text_upc = $('#fk_id_upc').select2('data')[0].text;
+        }
 
         dataTable.import({
             type: "csv",
             data:
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text + ","+
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_upc').select2('data')[0].text + ","+
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" />')[0].outerHTML+$('#fk_id_proveedor').val()+ "," +
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc + ","+
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" value="'+$('#fk_id_proveedor').val()+'"/>')[0].outerHTML+$('#fk_id_proveedor').select2('data')[0].text+ "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val()+'"/>')[0].outerHTML +  $('#fecha_necesario').val() + "," +
             $('<select name="_detalles['+row_id+'][fk_id_proyecto]" id="fk_id_proyecto'+row_id+'" style="width: 100%" class="select">'+proyectos+'</select>')[0].outerHTML + ","+
             $('<input type="text" name="_detalles['+row_id+'][cantidad]" onchange="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad form-control" />')[0].outerHTML + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />')[0].outerHTML + $('#fk_id_unidad_medida option:selected').html() + ","+
             $('<select name="_detalles['+row_id+'][fk_id_impuesto]" onchange="total_producto_row('+row_id+')" id="_fk_id_impuesto'+row_id+'" style="width: 100%" class="select">'+impuestos+'</select>')[0].outerHTML + ","+
             $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
-            $('<input type="text" name="_detalles['+row_id+'][total]" readonly id="_total'+row_id+'" value="'+ total+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][total]" id="_total'+row_id+'" class="form-control" style="min-width: 100px" readonly value="'+ total+'" />')[0].outerHTML +"," +
             '<button class="btn is-icon text-primary bg-white" ' +
             'type="button" data-delay="50" onclick="borrarFila(this)">' +
             '<i class="material-icons">delete</i></button>'
@@ -318,7 +328,6 @@ function agregarProducto() {
                 }
             }
         });
-        // window.dataTable.setMessage('Hola');
         limpiarFormulario();//Limpiar el formulario de algunos de los valores
     }else {
         $.toaster({
@@ -395,18 +404,6 @@ function validateDetail() {
         required: true,
         messages:{
             required: 'Selecciona un SKU'
-        }
-    });
-    $('#fk_id_upc').rules('add',{
-        required: true,
-        messages:{
-            required: 'Selecciona un UPC'
-        }
-    });
-    $('#fk_id_proyecto').rules('add',{
-        required: true,
-        messages:{
-            required: 'Selecciona un proyecto'
         }
     });
     $('#fecha_necesario').rules('add',{

@@ -13,6 +13,9 @@ $(document).ready(function(){
         fixedColumns: true,
         searchable: false,
         perPageSelect: false,
+        labels:{
+            info: "Mostrando del registro {start} al {end} de {rows}"
+        }
     });
     if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
     {
