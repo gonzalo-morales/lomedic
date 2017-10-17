@@ -142,7 +142,7 @@
 						<th>Solicitud</th>
 						<th id="idsku">SKU</th>
 						<th id="idupc">UPC</th>
-						<th id="nombrecomercial">Nombre comercial</th>
+						<th id="descripcioncorta">Producto</th>
 						<th id="descripcion">Descripción</th>
 						<th id="idcliente">Cliente</th>
 						<th id="idproyecto" >Proyecto</th>

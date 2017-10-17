@@ -54,7 +54,7 @@ class ProductosController extends ControllerBase
         {
             $sku_data['id'] = (int)$sku->id_sku;
             $sku_data['text'] = $sku->sku;
-            $sku_data['nombre_comercial'] = $sku->nombre_comercial;
+            $sku_data['descripcion_corta'] = $sku->descripcion_corta;
             $sku_data['descripcion'] = $sku->descripcion;
             $skus_set[] = $sku_data;
         }

@@ -30,7 +30,10 @@ class Ordenes extends ModelCompany
         'tiempo_entrega','importacion'];
 
     public $niceNames =[
-        'fk_id_socio_negocio'=>'proveedor'
+        'fk_id_socio_negocio'=>'proveedor',
+        'fk_id_sucursal'=>'sucursal',
+        'fk_id_condicion_pago'=>'condición pago',
+        'fk_id_tipo_entrega'=>'tipo entrega'
     ];
 
     protected $dataColumns = [

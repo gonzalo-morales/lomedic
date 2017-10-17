@@ -32,11 +32,15 @@
 			{{Form::label('fecha_fin_contrato','Fecha fin del contrato')}}
 			{{Form::text('fecha_fin_contrato',null,['id'=>'fecha_fin_contrato',"class"=>'form-control datepicker'])}}
 		</div>
+        <div class="form-group col-md-3 col-xs-12">
+            {{Form::cText('Número de proyecto','numero_proyecto',['maxlength'=>'50'])}}
+        </div>
 		<div class="form-group col-md-3 col-xs-12">
 			{{Form::cText('Número de contrato','numero_contrato',['maxlength'=>'200'])}}
 		</div>
 		<div class="form-group col-md-3 col-xs-12">
 			{{Form::label('monto_adjudicado','Monto adjudicado')}}
+            <i class="material-icons" data-toggle="tooltip" data-placement="top" title="Ej. 9999999999.00">help</i>
 			{{Form::text('monto_adjudicado',isset($data->monto_adjudicado)?number_format($data->monto_adjudicado,2,'.',''):null,['id'=>'monto_adjudicado','class'=>'form-control','maxlength'=>'13'])}}
 		</div>
 		<div class="form-group col-md-3 col-xs-12">
@@ -48,10 +52,10 @@
 		<div class="form-group col-md-6 col-xs-12">
 			{{Form::cText('Representante legal','representante_legal',['maxlength'=>'200'])}}
 		</div>
-		<div class="form-group col-md-5 col-xs-12">
+		<div class="form-group col-md-3 col-xs-12">
 			{{Form::cText('Número de fianza','numero_fianza',['maxlength'=>'60'])}}
 		</div>
-		<div class="form-group col-md-1 col-xs-12">
+		<div class="form-group col-md-12 col-xs-12 text-center">
             {{Form::cCheckboxSwitch('Activo','activo','1')}}
 			{{--<div data-toggle="buttons">--}}
 				{{--<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">--}}
