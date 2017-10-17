@@ -401,14 +401,14 @@
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
 	@section('form-title')
-		<h1>Agregar Solicitud</h1>
+		<h1 class="display-4">Agregar Solicitud</h1>
 	@endsection
 	@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
 	@section('form-title')
-		<h1>Editar Solicitud</h1>
+		<h1 class="display-4">Editar Solicitud</h1>
 	@endsection
 	@include('layouts.smart.edit')
 @endif
@@ -422,7 +422,7 @@
 		@endif
 	@endsection
 	@section('form-title')
-		<h1>Datos de la Solicitud</h1>
+		<h1 class="display-4">Datos de la Solicitud</h1>
 	@endsection
 	@include('layouts.smart.show')
 @endif
