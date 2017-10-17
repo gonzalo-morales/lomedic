@@ -358,9 +358,11 @@ class ControllerBase extends Controller
 		        $return[$lable] = html_entity_decode(strip_tags($data->$field));
 		    return $return;
 		});
+		$data = $alldata;
+		
 
 		if($type == 'pdf') {
-		    $pdf = PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
+		    $pdf= \PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
 		    return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
 		}
 		else {
