@@ -16,7 +16,7 @@ Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
 
-    Route::group(['prefix' => 'finanzas', 'as' => 'finanzas.', 'middleware' => ['auth','share'] ], function() {
-        Route::get("/", function(){ return View::make("finanzas.index"); });
+    Route::group(['prefix' => 'gestionbancos', 'as' => 'gestionbancos.', 'middleware' => ['auth','share'] ], function() {
+        Route::get("/", function(){ return View::make("gestionbancos.index"); });
     });
 });

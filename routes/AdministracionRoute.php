@@ -15,13 +15,8 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-
-
 	Route::group(['prefix' => 'administracion', 'as' => 'administracion.', 'middleware' => ['auth','share'] ], function() {
-        //Route::resource('/', 'HomeController');
-        Route::get("/", function(){
-            return View::make("administracion.index");
-        });
+        Route::get("/", function(){ return View::make("administracion.index"); });
         
 		Route::resource('aplicacionesmedicamentos', 'Administracion\AplicacionesMedicamentosController');
 		Route::resource('areas', 'Administracion\AreasController');

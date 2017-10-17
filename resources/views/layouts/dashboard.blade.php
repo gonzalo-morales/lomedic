@@ -132,6 +132,7 @@
 @if(!isset(request()->kendoWindow))
     {{ HTML::script(asset('js/ticket.js')) }}
 @endif
+
 @yield('header-bottom')
 
 </body>

@@ -12,7 +12,7 @@ $(document).ready(function(){
    /* Sidebar's */
    $('#sidebarCollapse').on('click', function () {
        $('#sidebar').toggleClass('active');
-       //condiciones para cambiar el ÃƒÆ’Ã‚Â­cono de menÃƒÆ’Ã‚Âº a x
+       //condiciones para cambiar el ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­cono de menÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âº a x
        if($('#sidebar').hasClass('active') && $(window).width() >= 768){
            $(this).find("i").text("menu");
        }
@@ -70,36 +70,38 @@ $(document).ready(function(){
 		$("#ticketHelp").remove();
 		$("#content").removeClass('pt-3');
 		$(".wrapper").removeAttr("style");
+	
 	}
-
-	// Busqueda para menu
-	document.querySelector("#filter-menu").addEventListener("keyup", function(e) {
-       var filter = this.value.toLowerCase();
-       var count = 0;
-       document.querySelectorAll("#menu-conten li").forEach(function(li) {
-           if (filter == "") {
-           	li.style["display"] = "list-item";
-           	li.querySelectorAll('.collapse').forEach(function(el) {
-               	if($('.collapse:not(.in)')) {
-                       $(el).collapse('hide');
-                   }
-               });
-           }
-           else {
-               if (!li.textContent.toLowerCase().match(filter)) {
-               	li.style["display"] = "none";
-               }
-               else {
-               	li.style["display"] = "list-item";
-               	li.querySelectorAll('.collapse').forEach(function(el) {
-                   	if($('.collapse:not(.in)')) {
-                           $(el).collapse('show');
-                       }
-                   });
-               }
-           }
-       });
-	});
+	else {
+		// Busqueda para menu
+		document.querySelector("#filter-menu").addEventListener("keyup", function(e) {
+	       var filter = this.value.toLowerCase();
+	       var count = 0;
+	       document.querySelectorAll("#menu-conten li").forEach(function(li) {
+	           if (filter == "") {
+	           	li.style["display"] = "list-item";
+	           	li.querySelectorAll('.collapse').forEach(function(el) {
+	               	if($('.collapse:not(.in)')) {
+	                       $(el).collapse('hide');
+	                   }
+	               });
+	           }
+	           else {
+	               if (!li.textContent.toLowerCase().match(filter)) {
+	               	li.style["display"] = "none";
+	               }
+	               else {
+	               	li.style["display"] = "list-item";
+	               	li.querySelectorAll('.collapse').forEach(function(el) {
+	                   	if($('.collapse:not(.in)')) {
+	                           $(el).collapse('show');
+	                       }
+	                   });
+	               }
+	           }
+	       });
+		});
+	}
 
 	//Animaciones de inicio
     $('#infoSections').animate({

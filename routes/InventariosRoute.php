@@ -17,6 +17,7 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'inventarios', 'as' => 'inventarios.', 'middleware' => ['auth','share'] ], function() {
+        Route::get("/", function(){ return View::make("inventarios.index"); });
         Route::resource('cbn','Inventarios\CbnController');
         Route::resource('productos', 'Inventarios\ProductosController');
         Route::get('getSkus','Inventarios\ProductosController@obtenerSkus');
