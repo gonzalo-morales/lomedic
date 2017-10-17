@@ -333,3 +333,21 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 } 
+.loading{
+    animation: spin 0.5s infinite linear;
+    -webkit-animation: spin 0.5s infinite linear;
+    -moz-animation: spin 0.5s infinite linear;
+    -o-animation: spin 0.5s infinite linear;
+    -ms-animation: spin 0.5s infinite linear;
+}
+@keyframes spin {
+    from { transform: scale(1) rotate(360deg); }
+    to { transform: scale(1) rotate(0deg); }
+}
+.loadingData{
+  position:absolute;z-index:999;
+  background:rgba(0,0,0,0.5);
+  top:0;
+  left:0;
+  min-height: 30px;
+}
