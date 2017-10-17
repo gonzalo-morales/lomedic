@@ -6,7 +6,7 @@
 
 <div class="container">
 	<div class="row justify-content-center">
-	<div class="col-md-5 mt-5">
+	<div class="col-sm-10 col-md-8 col-lg-5 mt-5">
 		<div class="card card-block text-center" style="background: rgba(0,0,0,0.3);"> <!-- class="card-panel hoverable row"> -->
         	<h4 class="mt-3 text-white">¡Bienvenido!</h4>
 		
