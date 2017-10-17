@@ -12,7 +12,7 @@
     </div>
     <div class="card-body row">
 		<div class="form-group col-md-6 col-xs-12">
-			{{Form::cText('Proyecto','proyecto',['id'=>'proyecto','data-url'=>companyAction('Proyectos\ProyectosController@obtenerProyectosCliente',['id'=>'?id'])])}}
+			{{Form::cText('Proyecto','proyecto',['id'=>'proyecto','maxlength'=>'255','data-url'=>companyAction('Proyectos\ProyectosController@obtenerProyectosCliente',['id'=>'?id'])])}}
 		</div>
 		<div class="form-group col-md-6 col-xs-12">
 			{{Form::cSelectWithDisabled('Cliente','fk_id_cliente',isset($clientes)?$clientes:[])}}
@@ -33,11 +33,11 @@
 			{{Form::text('fecha_fin_contrato',null,['id'=>'fecha_fin_contrato',"class"=>'form-control datepicker'])}}
 		</div>
 		<div class="form-group col-md-3 col-xs-12">
-			{{Form::cText('Número de contrato','numero_contrato')}}
+			{{Form::cText('Número de contrato','numero_contrato',['maxlength'=>'200'])}}
 		</div>
 		<div class="form-group col-md-3 col-xs-12">
 			{{Form::label('monto_adjudicado','Monto adjudicado')}}
-			{{Form::text('monto_adjudicado',isset($data->monto_adjudicado)?number_format($data->monto_adjudicado,2,'.',''):null,['id'=>'monto_adjudicado','class'=>'form-control'])}}
+			{{Form::text('monto_adjudicado',isset($data->monto_adjudicado)?number_format($data->monto_adjudicado,2,'.',''):null,['id'=>'monto_adjudicado','class'=>'form-control','maxlength'=>'13'])}}
 		</div>
 		<div class="form-group col-md-3 col-xs-12">
 			{{Form::cSelectWithDisabled('Clasificación','fk_id_clasificacion_proyecto',isset($clasificaciones)?$clasificaciones:[])}}
@@ -46,10 +46,10 @@
 			{{Form::cText('Plazo','plazo')}}
 		</div>
 		<div class="form-group col-md-6 col-xs-12">
-			{{Form::cText('Representante legal','representante_legal')}}
+			{{Form::cText('Representante legal','representante_legal',['maxlength'=>'200'])}}
 		</div>
 		<div class="form-group col-md-5 col-xs-12">
-			{{Form::cText('Número de fianza','numero_fianza')}}
+			{{Form::cText('Número de fianza','numero_fianza',['maxlength'=>'60'])}}
 		</div>
 		<div class="form-group col-md-1 col-xs-12">
             {{Form::cCheckboxSwitch('Activo','activo','1')}}
