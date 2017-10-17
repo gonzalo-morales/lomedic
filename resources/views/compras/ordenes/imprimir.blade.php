@@ -75,7 +75,7 @@
             @foreach($orden->detalleOrdenes()->where('cerrado','f')->get() as $detalle)
             <tr>
                 <td>{{$detalle->sku->sku}}</td>
-                <td>{{isset($detalle->upc) ? $detalle->upc->codigo_barras : 'UPC no seleccionado'}}</td>
+                <td>{{isset($detalle->upc) ? $detalle->upc->upc : 'UPC no seleccionado'}}</td>
                 <td>{{isset($detalle->fecha_necesario) ? $detalle->fecha_necesario : 's.f.'}}</td>
                 <td>{{isset($detalle->cliente) ? $detalle->cliente->nombre_corto : 'Sin cliente'}}</td>
                 <td>{{isset($detalle->proyecto) ? $detalle->proyecto->proyecto : 'sin proyecto'}}</td>
