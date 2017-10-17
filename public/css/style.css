@@ -34,6 +34,26 @@
   /* Support for IE. */
   font-feature-settings: 'liga';
 }
+.pace {
+  -webkit-pointer-events: none;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  opacity: 1;
+  transition: opacity 0.5s linear;
+}
+.pace-inactive {
+  opacity: 0;
+}
+.pace .pace-progress {
+  position: fixed;
+  z-index: 2000;
+  right: 100%;
+  width: 100%;
+  height: 4px;
+  background-color: #007bff;
+}
 /*Logo animation*/
 .sim {
   -webkit-transition: -webkit-transform ease-in-out 0.3s, background 0.2s;
@@ -322,7 +342,7 @@ a:hover .window {
 }
 .slider.round:before {
   border-radius: 50%;
-} 
+}
 .dataTable-wrapper.no-footer .dataTable-container{
   border:none !important;
 }

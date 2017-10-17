@@ -338,7 +338,7 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para exportar?
 //		$this->authorize('export', $this->entity);
-		
+
 	    $type = strtolower($request->type);
 		$style = isset($request->style) ? $request->style : false;
 
