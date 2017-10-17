@@ -12,24 +12,24 @@
     </div>
     <div class="card-body row">
 		<div class="form-group col-md-6 col-xs-12">
-			{{Form::cText('Proyecto','proyecto',['id'=>'proyecto','maxlength'=>'255','data-url'=>companyAction('Proyectos\ProyectosController@obtenerProyectosCliente',['id'=>'?id'])])}}
+			{{Form::cText('* Proyecto','proyecto',['id'=>'proyecto','maxlength'=>'255','data-url'=>companyAction('Proyectos\ProyectosController@obtenerProyectosCliente',['id'=>'?id'])])}}
 		</div>
 		<div class="form-group col-md-6 col-xs-12">
-			{{Form::cSelectWithDisabled('Cliente','fk_id_cliente',isset($clientes)?$clientes:[])}}
+			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',isset($clientes)?$clientes:[])}}
 			{{--{{Form::cSelectWithDisabled('Cliente','fk_id_cliente',isset($clientes)?$clientes:[],['id'=>'fk_id_cliente'])}}--}}
 			{{--{{Form::label('fk_id_cliente','Cliente')}}--}}
 			{{--{{Form::select('fk_id_cliente',isset($clientes)?$clientes->prepend('...',null):[],null,['id'=>'fk_id_cliente','class'=>'form-control'])}}--}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
-			{{Form::label('fecha_contrato','Fecha de creación del contrato')}}
+			{{Form::label('fecha_contrato','* Fecha de creación del contrato')}}
 			{{Form::text('fecha_contrato',null,['id'=>'fecha_contrato',"class"=>'form-control datepicker'])}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
-			{{Form::label('fecha_inicio_contrato','Fecha inicio del contrato')}}
+			{{Form::label('fecha_inicio_contrato','* Fecha inicio del contrato')}}
 			{{Form::text('fecha_inicio_contrato',null,['id'=>'fecha_inicio_contrato',"class"=>'form-control datepicker'])}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
-			{{Form::label('fecha_fin_contrato','Fecha fin del contrato')}}
+			{{Form::label('fecha_fin_contrato','* Fecha fin del contrato')}}
 			{{Form::text('fecha_fin_contrato',null,['id'=>'fecha_fin_contrato',"class"=>'form-control datepicker'])}}
 		</div>
         <div class="form-group col-md-3 col-xs-12">
@@ -44,7 +44,7 @@
 			{{Form::text('monto_adjudicado',isset($data->monto_adjudicado)?number_format($data->monto_adjudicado,2,'.',''):null,['id'=>'monto_adjudicado','class'=>'form-control','maxlength'=>'13'])}}
 		</div>
 		<div class="form-group col-md-3 col-xs-12">
-			{{Form::cSelectWithDisabled('Clasificación','fk_id_clasificacion_proyecto',isset($clasificaciones)?$clasificaciones:[])}}
+			{{Form::cSelectWithDisabled('* Clasificación','fk_id_clasificacion_proyecto',isset($clasificaciones)?$clasificaciones:[])}}
 		</div>
 		<div class="form-group col-md-3 col-xs-12">
 			{{Form::cText('Plazo','plazo')}}

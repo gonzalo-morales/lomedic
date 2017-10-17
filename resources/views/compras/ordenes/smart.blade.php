@@ -355,10 +355,16 @@
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
+@section('form-title')
+	<h1>Agregar Orden de Compra</h1>
+@endsection
 	@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
+	@section('form-title')
+		<h1>Editar Orden de Compra</h1>
+	@endsection
 	@include('layouts.smart.edit')
 @endif
 
@@ -366,6 +372,9 @@
 	@section('extraButtons')
 		@parent
 		{!!isset($data->id_orden) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_orden]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
+	@endsection
+	@section('form-title')
+		<h1>Datos de la Orden de Compra</h1>
 	@endsection
 	@include('layouts.smart.show')
 @endif
