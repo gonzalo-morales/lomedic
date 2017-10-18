@@ -17,11 +17,16 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'inventarios', 'as' => 'inventarios.', 'middleware' => ['auth','share'] ], function() {
+        Route::get("/", function(){ return View::make("inventarios.index"); });
         Route::resource('cbn','Inventarios\CbnController');
         Route::resource('productos', 'Inventarios\ProductosController');
         Route::get('getSkus','Inventarios\ProductosController@obtenerSkus');
         Route::get('getUpcs/{id}','Inventarios\ProductosController@obtenerUpcs');
         Route::resource('upcs','Inventarios\UpcsController');
         Route::resource('almacenes','Inventarios\AlmacenesController');
+        Route::resource('entradas','Inventarios\EntradasController');
+        Route::post('getOrdenes','Inventarios\EntradasController@getOrdenes')->name('entradas.getOrdenes');
+        Route::post('getDetalleOrden','Inventarios\EntradasController@getDetalleOrden')->name('entradas.getDetalleOrden');
+        Route::resource('inventarios','Inventarios\InventariosController');
     });
 });

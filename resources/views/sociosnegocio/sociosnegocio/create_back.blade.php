@@ -34,9 +34,9 @@
 
 		<div class="row">
 			<div class="right">
-				<button class="btn btn-success" type="submit" name="action" id="guardarSocio">Guardar {{ trans_choice('messages.'.$entity, 0) }}</button>
-				<button class="btn btn-primary waves-effect waves-light" name="action">Imprimir</button>
-				<button class="btn btn-warning waves-effect waves-teal btn-flat teal-text">Cancelar</button>
+				<button class="btn btn-primary" type="submit" name="action" id="guardarSocio">Guardar {{ trans_choice('messages.'.$entity, 0) }}</button>
+				<button class="btn btn-info" name="action"><i class="material-icons align-middle">print</i> Imprimir</button>
+				<button class="btn btn-default text-primary">Cancelar</button>
 			</div>
 		</div><!--/row buttons-->
 

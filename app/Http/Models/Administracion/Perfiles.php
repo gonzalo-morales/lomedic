@@ -11,7 +11,7 @@ class Perfiles extends Model
      *
      * @var string
      */
-    protected $table = 'ges_cat_perfiles';
+    protected $table = 'adm_cat_perfiles';
 
     /**
      * The primary key of the table
@@ -57,6 +57,11 @@ class Perfiles extends Model
     public function permisos()
     {
         return $this->belongsToMany(Permisos::class, 'ges_det_permisos_perfiles', 'fk_id_perfil', 'fk_id_permiso');
+    }
+
+    public function permisos_perfiles()
+    {
+        return $this->hasMany('adm_det_permisos_perfiles');
     }
 
 }

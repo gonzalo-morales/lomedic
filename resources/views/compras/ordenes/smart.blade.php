@@ -69,7 +69,7 @@
 <div class="row">
 	<div class="col-sm-12">
 		<h3>Detalle de la orden</h3>
-		<div class="card">
+		<div class="card z-depth-1-half">
 			@if(!Route::currentRouteNamed(currentRouteName('show')))
 			<div class="card-header">
 				<fieldset name="detalle-form" id="detalle-form">
@@ -142,7 +142,7 @@
 						<th>Solicitud</th>
 						<th id="idsku">SKU</th>
 						<th id="idupc">UPC</th>
-						<th id="nombrecomercial">Nombre comercial</th>
+						<th id="descripcioncorta">Producto</th>
 						<th id="descripcion">Descripción</th>
 						<th id="idcliente">Cliente</th>
 						<th id="idproyecto" >Proyecto</th>
@@ -221,7 +221,7 @@
 		</div>
 	</div>
 </div>
-<div class="form-group col-md-2 col-sm-6 float-right">
+<div class="form-group col-md-2 col-sm-6 float-right mt-3">
 	{{ Form::label('total_orden', 'Total de la orden') }}
 	{!! Form::text('total_orden', null,['class'=>'form-control','disabled','placeholder'=>'Total']) !!}
 </div>
@@ -234,7 +234,7 @@
             if ( sessionStorage.reloadAfterPageLoad ) {
                 sessionStorage.clear();
                 $.toaster({
-                    priority: 'success', title: 'Exito', message: 'Orden cancelada',
+                    priority: 'success', title: '¡Éxito!', message: 'Orden cancelada',
                     settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
                 });
             }
@@ -355,17 +355,26 @@
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
+@section('form-title')
+	<h1 class="display-4">Agregar Orden de Compra</h1>
+@endsection
 	@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
+	@section('form-title')
+		<h1 class="display-4">Editar Orden de Compra</h1>
+	@endsection
 	@include('layouts.smart.edit')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('extraButtons')
 		@parent
-		{!!isset($data->id_orden) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_orden]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) : ''!!}
+		{!!isset($data->id_orden) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_orden]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
+	@endsection
+	@section('form-title')
+		<h1 class="display-4">Datos de la Orden de Compra</h1>
 	@endsection
 	@include('layouts.smart.show')
 @endif

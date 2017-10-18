@@ -22,7 +22,7 @@ class UpcsController extends ControllerBase
     
     public function obtenerUpcs($company,$id)
     {
-        return Upcs::where('fk_id_sku',$id)->select('id_upc as id','descripcion as text')->get();
+        return Upcs::where('fk_id_sku',$id)->select('id_upc as id','upc as text')->get();
     }
     
     public function create($company, $attributes = [])

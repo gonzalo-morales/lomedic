@@ -12,7 +12,10 @@ $(document).ready(function(){
         fixedHeight: true,
         fixedColumns: true,
         searchable: false,
-        perPageSelect: false
+        perPageSelect: false,
+        labels:{
+            info: "Mostrando del registro {start} al {end} de {rows}"
+        }
     });
     if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
     {
@@ -166,12 +169,12 @@ function agregarProducto() {
         let row_id = dataTable.activeRows.length;
         let total = totalProducto();
 
-        dataTable.insert( {
-            data:[
+        var data = [];
+        data.push([
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_solicitud]"/>')[0].outerHTML + 'N/A',
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text,
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_upc').select2('data')[0].text,
-            $('#fk_id_sku').select2('data')[0].nombre_comercial,
+            $('#fk_id_sku').select2('data')[0].descripcion_corta,
             $('#fk_id_sku').select2('data')[0].descripcion,
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_cliente]" value="' + $('#fk_id_cliente').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_cliente').select2('data')[0].text,
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_proyecto').select2('data')[0].text,
@@ -181,7 +184,10 @@ function agregarProducto() {
             $('<input type="hidden" name="_detalles['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />')[0].outerHTML + $('#precio_unitario').val(),
             $('<input type="text" value="'+ total +'" name="_detalles['+row_id+'][total]" class="form-control total" readonly>')[0].outerHTML,
             '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
-            ]
+        ]);
+
+        dataTable.insert( {
+            data:data
         });
         $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}

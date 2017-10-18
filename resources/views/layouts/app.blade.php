@@ -14,7 +14,7 @@
 	
 	{{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
 </head>
-<body class="bg-light">
+<body  style="background-image: url('../img/pills2.jpg');-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-repeat: no-repeat;">
 
 @yield('content')
 

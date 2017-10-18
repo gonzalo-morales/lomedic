@@ -149,6 +149,9 @@ class ControllerBase extends Controller
 			return ['success' => false,'message' => $e->getMessage()];
 		}
 
+        header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+
 		if (!request()->ajax()) {
 			return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + ['data'=>$data] + $this->getDataView($data));
 
@@ -160,7 +163,8 @@ class ControllerBase extends Controller
 			}
 
 			// return $['some' => 'haha'];
-			return ['success' => true, 'data' => $data->toArray()];
+			//return ['success' => true, 'data' => $data->toArray()];
+            return response()->json(['success' => true, 'data' => $data->toArray()])->header("Vary", "Accept");
 		}
 	}
 
@@ -174,8 +178,8 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 //		$this->authorize('update', $this->entity);
-		$this->authorize('update', $this->entity);
-		$validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames);
+
+	    $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 		$data = $this->entity->findOrFail($id);
 		return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
 			'data' => $data,
@@ -334,7 +338,8 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para exportar?
 //		$this->authorize('export', $this->entity);
-		$type = strtolower($request->type);
+
+	    $type = strtolower($request->type);
 		$style = isset($request->style) ? $request->style : false;
 
 	    if (isset($request->ids)) {
@@ -353,9 +358,11 @@ class ControllerBase extends Controller
 		        $return[$lable] = html_entity_decode(strip_tags($data->$field));
 		    return $return;
 		});
+		$data = $alldata;
+		
 
 		if($type == 'pdf') {
-		    $pdf = PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
+		    $pdf= \PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
 		    return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
 		}
 		else {

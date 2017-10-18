@@ -3,8 +3,9 @@
 namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
-use App\Http\Models\Administracion\GrupoProductos;
 use App\Http\Models\Administracion\SubgrupoProductos;
+use App\Http\Models\Administracion\SeriesSkus;
+use App\Http\Models\Administracion\UnidadesMedidas;
 
 class Productos extends ModelCompany
 {
@@ -26,7 +27,11 @@ class Productos extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['sku','descripcion'];
+    protected $fillable = [
+        "sku","activo","descripcion_corta","descripcion","presentacion","fk_id_unidad_medida","articulo_venta","articulo_compra","articulo_inventario","maneja_lote","fk_id_subgrupo",
+        "fk_id_serie_sku","fk_id_impuesto","fk_id_familia","activo_desde","activo_hasta","fk_id_unidad_medida_venta","fk_id_presentacion_venta","fk_id_proveedor_predeterminado",
+        "fk_id_unidad_medida_compra","necesario","maximo","minimo","punto_reorden","fk_id_metodo_valoracion"
+    ];
 
     /**
      * Los atributos que seran visibles en index-datable
@@ -35,10 +40,12 @@ class Productos extends ModelCompany
     protected $fields = [
         'id_sku' => 'ID',
         'sku' => 'SKU',
-        'descripcion' => 'Descripcion',
+        'descripcion_corta' => 'Descripcion',
         'presentacion' => 'Presentacion',
-        'grupo.grupo' => 'Grupo',
+        'unidadmedida.nombre' => 'Unidad de Medida',
+        'subgrupo.grupo.grupo' => 'Grupo',
         'subgrupo.subgrupo' => 'Subgrupo',
+        'activo_span' => 'Estatus',
     ];
 
     /**
@@ -52,19 +59,21 @@ class Productos extends ModelCompany
      * The validation rules
      * @var array
      */
-    public $rules = [
-        'sku' => 'required',
-        'descripcion' => 'required'
-    ];
+    public $rules = [];
 
     public function upcs()
     {
         return $this->belongsToMany(Upcs::class,'inv_det_sku_upc','fk_id_sku','fk_id_upc');
     }
     
-    public function grupo()
+    public function serie()
     {
-        return $this->belongsTo(GrupoProductos::class,'fk_id_grupo','id_grupo');
+        return $this->belongsTo(SeriesSkus::class,'fk_id_serie_sku','id_serie_sku');
+    }
+    
+    public function unidadmedida()
+    {
+        return $this->belongsTo(UnidadesMedidas::class,'fk_id_unidad_medida','id_unidad_medida');
     }
     
     public function subgrupo()

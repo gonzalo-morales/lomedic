@@ -23,7 +23,7 @@
 @endsection
 
 @section('form-title')
-	{{ HTML::tag('h1','Agregar '. str_singular(currentEntityBaseName())) }}
+	{{ HTML::tag('h1','Agregar '. str_singular(currentEntityBaseName()),['class' => 'display-4']) }}
 @endsection
 
 @section('content')

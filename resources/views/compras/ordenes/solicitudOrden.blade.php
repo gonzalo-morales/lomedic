@@ -214,6 +214,9 @@
 {{-- DONT DELETE --}}
 
 @if (currentRouteName('solicitudOrden'))
+@section('form-title')
+	<h1 class="display-4">Agregar Orden de Compra</h1>
+@endsection
 	@include('layouts.smart.create')
 @endif
 
