@@ -16,9 +16,9 @@
 @section('content')
 	<div class="row">
 	    <div class="right">
-	        <button class="btn orange waves-effect waves-light" name="action">Guardar</button>
-	        <button class="btn waves-effect waves-light" name="action">Imprimir</button>
-	        <button class="waves-effect waves-teal btn-flat teal-text">Cancelar</button>
+	        <button class="btn btn-primary" name="action">Guardar</button>
+	        <button class="btn btn-info" name="action"><i class="material-icons align-middle">print</i> Imprimir</button>
+	        <button class="btn btn-default text-primary">Cancelar</button>
 	    </div>
 	</div><!--/row buttons-->
 

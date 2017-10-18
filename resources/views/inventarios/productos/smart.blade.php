@@ -52,11 +52,8 @@
 @endsection
 @section('form-content')
 {{ Form::setModel($data) }}
-<div class="card z-depth-1-half">
-	<div class="card-header py-2 text-center">
-        <h4 class="card-title text-danger">Datos del producto</h4>
-    </div>
-    <div class="card-body row">
+    <h4>Datos del producto</h4>
+    <div class="row">
     	<div class="col-sm-6 col-md-8 col-lg-9 row">
         	<div class="col-sm-12 col-md-6 col-lg-2">
         		<div class="form-group">
@@ -111,7 +108,7 @@
 <div id="detallesku" class="w-100 container-fluid z-depth-1-half mt-2 px-0">
     <div class="card text-center" style="min-height: 555px">
         <div class="card-header py-2">
-        <h4 class="card-title text-info">Informacion del producto</h4>
+        <h4>Informacion del producto</h4>
         <div class="divider my-2"></div>
         
         <ul id="clothing-nav" class="nav nav-pills nav-justified" role="tablist">

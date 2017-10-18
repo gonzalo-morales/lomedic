@@ -6,11 +6,8 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
-<div class="card z-depth-1-half">
-	<div class="card-header py-2 text-center">
-        <h4 class="card-title text-danger">Datos del proyecto</h4>
-    </div>
-    <div class="card-body row">
+    <h4>Datos del proyecto</h4>
+    <div class="row">
 		<div class="form-group col-md-6 col-xs-12">
 			{{Form::cText('* Proyecto','proyecto',['id'=>'proyecto','maxlength'=>'255','data-url'=>companyAction('Proyectos\ProyectosController@obtenerProyectosCliente',['id'=>'?id'])])}}
 		</div>
@@ -65,12 +62,11 @@
 			{{--</div>--}}
 		</div>
 	</div>
-</div>
 
 <div id="detallesku" class="container-fluid w-100 mt-2 px-0">
 	<div class="card text-center z-depth-1-half" style="min-height: 555px">
 		<div class="card-header py-2">
-    		<h4 class="card-title text-info">Informacion del Proyecto</h4>
+    		<h4 class="card-title">Informacion del Proyecto</h4>
             <div class="divider my-2"></div>
 			<ul id="clothing-nav" class="nav nav-pills nav-justified" role="tablist">
 				<li class="nav-item">

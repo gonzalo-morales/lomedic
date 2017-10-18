@@ -33,8 +33,8 @@
 			<div class="col-sm-12">
 				<div class="row" rv-hide="actions.countItems | call < collections.items">
 					<div class="right">
-						<a href="{{ companyRoute('create') }}" class="btn btn-primary orange waves-effect waves-light">Crear</a>
-						<button class="btn waves-effect waves-light dropdown-button" data-activates="export-all">
+						<a href="{{ companyRoute('create') }}" class="btn btn-primary">Crear</a>
+						<button class="btn btn-info dropdown-button" data-activates="export-all">
 							<span rv-hide="status.isDownloading">
 								<i class="material-icons left">file_download</i>Exportar
 							</span>
