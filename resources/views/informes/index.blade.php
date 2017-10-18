@@ -17,11 +17,13 @@
 <div class="text-center">
 	<h4 class="display-4">INFORMES</h4>
 </div>
-<div class="container-fluid"> <!--
+<div class="container-fluid">
 	<div id="metro" class="row col-sm-12 mb-3" style="opacity: 0; top:50px;">
-		@if(isset($menu) && !empty($menu->where('id_modulo',5)[0]->submodulos))
-			@each('partials.wmenu', $menu->where('id_modulo',5)[0]->submodulos , 'modulo')
+		@if(isset($menu) && !empty($menu->where('id_modulo',11)))
+			@foreach($menu->where('id_modulo',11) as $key=>$values)
+				@each('partials.wmenu', $menu->where('id_modulo',11)[$key]->submodulos , 'modulo')
+			@endforeach
 		@endif
-	</div>-->
+	</div>
 </div>
 @endsection

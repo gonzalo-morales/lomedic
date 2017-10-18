@@ -19,8 +19,10 @@
 </div>
 <div class="container-fluid">
 	<div id="metro" class="row col-sm-12 mb-3" style="opacity: 0; top:50px;">
-		@if(isset($menu) && !empty($menu->where('id_modulo',1)[0]->submodulos))
-			@each('partials.wmenu', $menu->where('id_modulo',1)[0]->submodulos , 'modulo')
+		@if(isset($menu) && !empty($menu->where('id_modulo',1)))
+			@foreach($menu->where('id_modulo',1) as $key=>$values)
+				@each('partials.wmenu', $menu->where('id_modulo',1)[$key]->submodulos , 'modulo')
+			@endforeach
 		@endif
 	</div>
 </div>

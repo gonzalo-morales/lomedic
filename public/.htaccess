@@ -1,7 +1,9 @@
 # Use UTF-8 encoding for anything served text/plain or text/html
 AddDefaultCharset utf-8
 
+php_value output_buffering Off
 php_value zlib.output_compression On
+php_value zlib.output_compression_level 7
 
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>

@@ -1,6 +1,4 @@
 
-@section('content-width')
-
 @section('fieldset', '')
 
 @section('header-bottom')
@@ -35,9 +33,10 @@
 @endif
 @endsection
 
-@section('form-content')
+@section('form-content') 
 	@if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('export')) && !Route::currentRouteNamed(currentRouteName('create')))
 	{{ Form::setModel($data) }}
+	
     <div class="row">
         <div class="col-md-12 text-center">
             <h5><strong>{{ (isset($data->empleado) ? $data->empleado->nombre.' '.$data->empleado->apellido_paterno.' '.$data->empleado->apellido_materno : '') }}</strong></h5>
@@ -50,7 +49,7 @@
             </span>
             </h5>
         </div>
-    </div>
+    </div> 
 	<div class="card my-2 z-depth-1-half">
         <div class="card-header">
     		<h5 class="text-center">
