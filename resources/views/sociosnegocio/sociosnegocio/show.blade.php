@@ -14,8 +14,8 @@
 @endsection
 
 @section('content')
-	<div class="row">
-	    <div class="right">
+	<div class="col-12">
+	    <div class="text-right">
 	        <button class="btn btn-primary" name="action">Guardar</button>
 	        <button class="btn btn-info" name="action"><i class="material-icons align-middle">print</i> Imprimir</button>
 	        <button class="btn btn-default text-primary">Cancelar</button>

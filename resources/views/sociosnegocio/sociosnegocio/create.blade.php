@@ -31,97 +31,115 @@
 		{{ csrf_field() }}
 		{{ method_field('POST') }}
 
-		<div class="row">
-			<div class="right">
+		<div class="col-12">
+			<div class="text-right">
 				<button class="btn btn-primary" type="submit" name="action" id="guardarSocio">Guardar {{ trans_choice('messages.'.$entity, 0) }}</button>
 				<button class="btn btn-info" name="action"><i class="material-icons align-middle">print</i> Imprimir</button>
 				<button class="btn btn-default text-primary">Cancelar</button>
 			</div>
 		</div><!--/row buttons-->
 
-		<div class="row">
-			<div class="col s12 m8">
+		<div class="row my-3">
+			<div class="col-sm-12 col-md-9">
 				<h5>Información general</h5>
-				<label class="custom-control custom-checkbox">
-					<input class="custom-control-input" type="checkbox" id="activo" name="activo" />
-					<span class="custom-control-indicator"></span>
-					<span class="custom-control-description">Activo</span>
-				</label>
-				<div class="row">
-					<div class="input-field col s6 m4">
-						<label for="razon_social" data-error="Campo obligatorio">*Razón social:</label>
-						<input id="razon_social" name="razon_social" type="text" class="form-control active">
-						{{-- <p class="help-block deep-orange-text">Este es un error</p> --}}
-						{{-- TODO: averiguar como mostrar los errores desde el ajax response --}}
-					</div>
-					<div class="input-field col s6 m4">
-						<label for="rfc" data-error="Campo obligatorio">*RFC:</label>
-						<input id="rfc" name="rfc" type="text" class="form-control">
-					</div>
+				<div class="form-group">
+					<label class="custom-control custom-checkbox">
+						<input class="custom-control-input" type="checkbox" id="activo" name="activo" />
+						<span class="custom-control-indicator"></span>
+						<span class="custom-control-description">Activo</span>
+					</label>
 				</div>
 				<div class="row">
-					<div class="input-field col s6 m4">
-						<label for="nombre_corto">Nombre Comercial:</label>
-						<input id="nombre_corto" name="nombre_corto" type="text" class="form-control">
+					<div class="col-sm-6 col-md-4">
+						<div class="form-group">
+							<label for="razon_social" data-error="Campo obligatorio">*Razón social:</label>
+							<input id="razon_social" name="razon_social" type="text" class="form-control active">
+							{{-- <p class="help-block deep-orange-text">Este es un error</p> --}}
+							{{-- TODO: averiguar como mostrar los errores desde el ajax response --}}
+						</div>
 					</div>
-					<div class="input-field col s6 m4">
-						<label for="ejecutivo_venta">Ejecutivo de venta:</label>
-						<input id="ejecutivo_venta" name="ejecutivo_venta" type="text" class="form-control">
+					<div class="col-sm-6 col-md-4">
+						<div class="form-group">
+							<label for="rfc" data-error="Campo obligatorio">*RFC:</label>
+							<input id="rfc" name="rfc" type="text" class="form-control">
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="input-field col s6 m4">
-						<label for="telefono">Teléfono:</label>
-						<input id="telefono" name="telefono" type="tel" class="form-control">
+					<div class="col-sm-6 col-md-4">
+						<div class="form-group">
+							<label for="nombre_corto">Nombre Comercial:</label>
+							<input id="nombre_corto" name="nombre_corto" type="text" class="form-control">
+						</div>
 					</div>
-					<div class="input-field col s6 m4">
-						<label for="sitio_web">Sitio web:</label>
-						<input id="sitio_web" name="sitio_web" type="text" class="form-control">
+					<div class="col-sm-6 col-md-4">
+						<div class="form-group">
+							<label for="ejecutivo_venta">Ejecutivo de venta:</label>
+							<input id="ejecutivo_venta" name="ejecutivo_venta" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-4">
+						<div class="form-group">
+							<label for="telefono">Teléfono:</label>
+							<input id="telefono" name="telefono" type="tel" class="form-control">
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-4">
+						<div class="form-group">
+							<label for="sitio_web">Sitio web:</label>
+							<input id="sitio_web" name="sitio_web" type="text" class="form-control">
+						</div>
 					</div>
 				</div>
 				<div class="row">
 
 				<div class="col-sm-6 col-md-3">
-					<label>*Ramo(s):</label>
-					<select id="ramo" name="ramo" class="custom-select form-control">
-						<option disabled selected>Selecciona...</option>
-						@foreach ($ramos as $ramo)
-							<option value="{{$ramo->id_ramo}}" >{{$ramo->ramo}}</option>
-						@endforeach
-					</select>
+					<div class="form-group">
+						<label>*Ramo(s):</label>
+						<select id="ramo" name="ramo" class="custom-select form-control">
+							<option disabled selected>Selecciona...</option>
+							@foreach ($ramos as $ramo)
+								<option value="{{$ramo->id_ramo}}" >{{$ramo->ramo}}</option>
+							@endforeach
+						</select>
+					</div>
 				</div>
 				<div class="col-sm-6 col-md-3">
-					<label>País de Orígen:</label>
-					<select id="pais_origen" name="pais_origen" class="custom-select form-control">
-						<option value="" disabled selected>Selecciona...</option>
-						@foreach ($paises as $pais)
-							<option value="{{$pais->id_pais}}" >{{$pais->pais}}</option>
-						@endforeach
-					</select>
+					<div class="form-group">
+						<label>País de Orígen:</label>
+						<select id="pais_origen" name="pais_origen" class="custom-select form-control">
+							<option value="" disabled selected>Selecciona...</option>
+							@foreach ($paises as $pais)
+								<option value="{{$pais->id_pais}}" >{{$pais->pais}}</option>
+							@endforeach
+						</select>
+					</div>
 				</div>
 				<div class="col-sm-6 col-md-3">
-					<label data-error="Campo obligatorio">*Tipo de socio:</label>
-					<select id="tipo_socio" name="tipo_socio[]" multiple="multiple" class="form-control">
-						{{-- <option value="" disabled selected>Selecciona...</option> --}}
-						@foreach ($tiposSocios as $tipoSocio)
-							<option value="{{$tipoSocio->id_tipo_socio}}">{{$tipoSocio->tipo_socio}}</option>
-						@endforeach
-					</select>
+					<div class="form-group">
+						<label data-error="Campo obligatorio">*Tipo de socio:</label><br>
+						<select id="tipo_socio" name="tipo_socio[]" multiple="multiple" class="form-control">
+							{{-- <option value="" disabled selected>Selecciona...</option> --}}
+							@foreach ($tiposSocios as $tipoSocio)
+								<option value="{{$tipoSocio->id_tipo_socio}}">{{$tipoSocio->tipo_socio}}</option>
+							@endforeach
+						</select>
+					</div>
 				</div>
 				<div class="col-sm-6 col-md-3">
-					<label data-error="Campo obligatorio">*Moneda:</label>
-					<select id="moneda" name="moneda" class="custom-select form-control">
-						<option value="" disabled selected>Selecciona...</option>
-						@foreach ($monedas as $moneda)
-							<option value="{{$moneda->id_moneda}}">{{$moneda->moneda}}</option>
-						@endforeach
-					</select>
+					<div class="form-group">
+						<label data-error="Campo obligatorio">*Moneda:</label>
+						<select id="moneda" name="moneda" class="custom-select form-control">
+							<option value="" disabled selected>Selecciona...</option>
+							@foreach ($monedas as $moneda)
+								<option value="{{$moneda->id_moneda}}">{{$moneda->moneda}}</option>
+							@endforeach
+						</select>
+					</div>
 				</div>
 			</div>
 			</div>
-			<div class="col-sm-12 col-md-4">
+			<div class="col-sm-12 col-md-3">
 				<h5>Empresas</h5>
-				<div class="internSectionTable">
+				<div class="card card-body">
 					<table class="responsive-table highlight" id="empresas">
 						<thead>
 							<tr>
@@ -153,15 +171,13 @@
 			</div>
 		</div>
 
-		<div class="row">
+		<div class="row mb-3">
 			<div class="col-md-12">
-				<h5>Datos adicionales</h5>
-				<div class="card teal">
-					<div class="card-content white-text">
-						<p>Ingresa la información de acuerdo a las categorías:</p>
-					</div>
-					<div >
-						<ul class="nav nav-tabs">
+				<div class="card z-depth-1-half">
+					<div class="card-header">
+						<h4 class="card-title text-center">Datos adicionales</h4>
+						<p class="text-center">Ingresa la información de acuerdo a las categorías:</p>
+						<ul class="nav nav-pills nav-justified">
 							<li class="nav-item"><a class="nav-link active"  role="tab" data-toggle="tab"  href="#con_pago">Condiciones de pago</a></li>
 							<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#info_entrega">Información de entrega</a></li>
 							<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#contacts">Contactos</a></li>
@@ -170,80 +186,75 @@
 							<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#prod_art">Productos/Artículos</a></li>
 						</ul>
 					</div>
+					<div class="card-body">
 					<div class="tab-content">
 						<div  class="tab-pane active" id="con_pago" role="tabpanel">
 							<div class="row">
 								<div class="col-md-12">
+									<div class="row mb-4">
+										<div class="col-md-4 col-xs-12 form-group">
+											<label for="monto_credito">Monto de crédito:</label>
+											<input id="monto_credito" name="monto_credito" type="number" min="0" class="form-control">
+										</div>
+										<div class="col-md-4 col-xs-12 form-group">
+											<label for="dias_credito">Días de crédito:</label>
+											<input id="dias_credito" name="dias_credito" type="number" min="0" class="form-control">
+										</div>
+										<div class="col-md-4 col-xs-12 form-group">
+											<label>Forma de pago:</label>
+											<select id="forma_pago" name="forma_pago" class="custom-select form-control">
+												<option value="" disabled selected>Selecciona...</option>
+												@foreach ($formasPago as $formaPago)
+													<option value="{{$formaPago->id_forma_pago}}">{{$formaPago->descripcion}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
 									<div class="card">
 										<div class="card-header">
+											{{-- <form> --}}
 											<div class="row">
-												<div class="col-md-4 col-xs-12 form-group">
-													<label for="monto_credito">Monto de crédito:</label>
-													<input id="monto_credito" name="monto_credito" type="number" min="0" class="form-control">
+												<div class="form-group col-sm-6">
+													<label for="no_cuenta">Cuenta bancaria:</label>
+													<input id="no_cuenta" name="no_cuenta" type="number" min="0" class="form-control">
 												</div>
-												<div class="col-md-4 col-xs-12 form-group">
-													<label for="dias_credito">Días de crédito:</label>
-													<input id="dias_credito" name="dias_credito" type="number" min="0" class="form-control">
-												</div>
-												<div class="col-md-4 col-xs-12 form-group">
-													<label>Forma de pago:</label>
-													<select id="forma_pago" name="forma_pago" class="custom-select">
+												<div class="form-group col-sm-6">
+													<label>Banco:</label>
+													<select id="banco" name="banco" class="custom-select form-control">
 														<option value="" disabled selected>Selecciona...</option>
-														@foreach ($formasPago as $formaPago)
-															<option value="{{$formaPago->id_forma_pago}}">{{$formaPago->descripcion}}</option>
+														@foreach ($bancos as $banco)
+															<option value="{{$banco->id_banco}}">{{$banco->banco}}</option>
 														@endforeach
 													</select>
 												</div>
 											</div>
-										</div>
-										<div class="col-md-12">
-											<div class="card-image">
-												{{-- <form> --}}
-												<div class="row">
-													<div class="form-group col-sm-6">
-														<label for="no_cuenta">Cuenta bancaria:</label>
-														<input id="no_cuenta" name="no_cuenta" type="number" min="0" class="form-control">
-													</div>
-													<div class="form-group col-sm-6">
-														<label>Banco:</label>
-														<select id="banco" name="banco" class="custom-select form-control">
-															<option value="" disabled selected>Selecciona...</option>
-															@foreach ($bancos as $banco)
-																<option value="{{$banco->id_banco}}">{{$banco->banco}}</option>
-															@endforeach
-														</select>
+
+											<div class="col-md-12 my-3">
+												<div class="sep">
+													<div class="sepBtn">
+														<button class="btn btn-primary btn-large tooltipped" style="width: 4em; height:4em; border-radius:50%;"
+														data-position="bottom" data-delay="50" data-tooltip="Agregar" type="submit" id="agregarCuenta" data-action="add"><i
+														class="material-icons">add</i></button>
 													</div>
 												</div>
+											</div>
 
-												<div class="col-md-12">
-													<div class="sep">
-														<div class="sepBtn">
-															<button class="btn btn-primary btn-large tooltipped" style="width: 4em; height:4em; border-radius:50%;"
-															data-position="bottom" data-delay="50" data-tooltip="Agregar" type="submit" id="agregarCuenta" data-action="add"><i
-															class="material-icons">add</i></button>
-														</div>
-													</div>
-												</div>
-
-												{{-- </form><!--/Here ends de form--> --}}
-											</div><!--/Here ends the up section-->
+											{{-- </form><!--/Here ends de form--> --}}
 										</div>
-										<div class="divider"></div>
-										<div class="row">
-											<div class="card-body">
-												<table class="table responsive-table highlight" id="tableCuentas">
-													<thead>
-														<tr>
-															<th>Banco</th>
-															<th>Cuenta bancaria</th>
-															<th>Acción</th>
-														</tr>
-													</thead>
-													<tbody>
-														{{-- Here going to be the new rows --}}
-													</tbody>
-												</table>
-											</div><!--/here ends de down section-->
+
+										<div class="card-body">
+											<table class="table responsive-table highlight" id="tableCuentas">
+												<thead>
+													<tr>
+														<th>Banco</th>
+														<th>Cuenta bancaria</th>
+														<th>Acción</th>
+													</tr>
+												</thead>
+												<tbody>
+													{{-- Here going to be the new rows --}}
+												</tbody>
+											</table>
 										</div>
 									</div>
 								</div>
@@ -317,7 +328,7 @@
 					<div class="col-md-12">
 						<div class="card">
 							{{-- <form> --}}
-							<div class="card-body">
+							<div class="card-header">
 								<div class="row">
 									<div class="col-sm-6 col-md-3">
 										<div class="form-group">
@@ -358,7 +369,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-12 my-3">
 								<div class="sep">
 									<div class="sepBtn">
 										<button class="btn btn-primary btn-large tooltipped" style="width: 4em; height:4em; border-radius:50%;"
@@ -368,8 +379,6 @@
 								</div>
 							</div>
 							{{-- </form><!--/Here ends de form--> --}}
-						</div><!--/Here ends the up section-->
-						<div class="divider"></div>
 						<div class="card-body">
 							<table class="table responsive-table highlight" id="tableContactos">
 								<thead>
@@ -381,14 +390,15 @@
 									</tr>
 								</thead>
 								<tbody></tbody>
-						</table>
-					</div><!--/here ends de down section-->
+							</table>
+						</div><!--/here ends de down section-->
+					</div><!--/Here ends card-->
 				</div>
 			</div>
 		</div><!--/aquí termina el contenido de un tab-->
 		<div id="directions" class="tab-pane" role="tabpanel">
-			<div class="card z-depth-0">
-				<div class="card-image">
+			<div class="card">
+				<div class="card-header">
 					{{-- <form> --}}
 					<div class="col-md-12">
 
@@ -463,7 +473,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-12">
+					<div class="col-md-12 my-3">
 						<div class="sep">
 							<div class="sepBtn">
 								<button class="btn btn-primary btn-large tooltipped" style="width: 4em; height:4em; border-radius:50%;"
@@ -475,7 +485,6 @@
 
 					{{-- </form><!--/Here ends de form--> --}}
 				</div><!--/Here ends the up section-->
-				<div class="divider"></div>
 				<div class="card-body">
 					<table class="table responsive-table highlight" id="tableDirecciones" name="tableDirecciones">
 						<thead>
@@ -486,8 +495,8 @@
 							</tr>
 						</thead>
 						<tbody></tbody>
-				</table>
-			</div><!--/here ends de down section-->
+					</table>
+				</div><!--/here ends de down section-->
 		</div>
 	</div><!--/aquí termina el contenido de un tab-->
 	<div id="licencias" class="tab-pane" role="tabpanel">
@@ -496,18 +505,18 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-12 col-md-4">
-				<div class="card z-depth-0">
-					<div class="card-image">
+				<div class="card">
+					<div class="card-header">
 						{{-- <form> --}}
 							{{-- <div class="row"> --}}
 								<div class="col-sm-12">
-									<label>Licencia Sanitaria</label>
+									<label>Licencia Sanitaria</label><br>
 									<label class="custom-file">
 									  <input type="file" multiple id="filesSanitarias" class="custom-file-input" >
 									  <span class="custom-file-control"></span>
 									</label>
 								</div>
-							<div class="col-md-12">
+							<div class="col-md-12 my-3">
 								<div class="sep">
 									<div class="sepBtn">
 										<button class="btn btn-primary btn-large tooltipped" style="width: 4em; height:4em; border-radius:50%;"
@@ -518,8 +527,7 @@
 							</div>
 						{{-- </form><!--/Here ends de form--> --}}
 					</div><!--/Here ends the up section-->
-					<div class="divider"></div>
-					<div class="card-content">
+					<div class="card-body">
 						<table class="table responsive-table highlight" id="tableSanitaria" name="tableSanitaria">
 							<thead>
 								<tr>
@@ -532,17 +540,17 @@
 				</div>
 			</div><!--/Aquí termina el componente para añadir-->
 			<div class="col-sm-12 col-md-4">
-				<div class="card z-depth-0">
-					<div class="card-image">
+				<div class="card">
+					<div class="card-header">
 						{{-- <form> --}}
 									<div class="col-sm-12">
-										<label>Aviso de Funcionamiento</label>
+										<label>Aviso de Funcionamiento</label><br>
 										<label class="custom-file">
 										  <input type="file" multiple id="filesAvisoFuncionamiento" class="custom-file-input" >
 										  <span class="custom-file-control"></span>
 										</label>
 									</div>
-							<div class="col-md-12">
+							<div class="col-md-12 my-3">
 								<div class="sep">
 									<div class="sepBtn">
 										<button class="btn btn-primary btn-large tooltipped" style="width: 4em; height:4em; border-radius:50%;"
@@ -553,8 +561,7 @@
 							</div>
 						{{-- </form><!--/Here ends de form--> --}}
 					</div><!--/Here ends the up section-->
-					<div class="divider"></div>
-					<div class="card-content">
+					<div class="card-body">
 						<table class="table responsive-table highlight" id="tableAvisosFuncionamiento">
 							<thead>
 								<tr>
@@ -567,17 +574,17 @@
 				</div>
 			</div><!--/Aquí termina el componente para añadir-->
 			<div class="col-sm-12 col-md-4">
-				<div class="card z-depth-0">
-					<div class="card-image">
+				<div class="card">
+					<div class="card-header">
 						{{-- <form> --}}
 								<div class="col-sm-12">
-									<label>Aviso de Responsable Sanitario</label>
+									<label>Aviso de Responsable Sanitario</label><br>
 									<label class="custom-file">
 									  <input type="file" multiple id="filesAvisoResponsable" class="custom-file-input" >
 									  <span class="custom-file-control"></span>
 									</label>
 								</div>
-							<div class="col-md-12">
+							<div class="col-md-12 my-3">
 								<div class="sep">
 									<div class="sepBtn">
 										<button class="btn btn-primary btn-large tooltipped" style="width: 4em; height:4em; border-radius:50%;"
@@ -588,8 +595,7 @@
 							</div>
 						{{-- </form><!--/Here ends de form--> --}}
 					</div><!--/Here ends the up section-->
-					<div class="divider"></div>
-					<div class="card-content">
+					<div class="card-body">
 						<table class="table responsive-table highlight" id="tableAvisosResponsable">
 							<thead>
 								<tr>
@@ -604,7 +610,9 @@
 		</div>
 	</div><!--/aquí termina el contenido de un tab-->
 
-</div>
+	</div><!--/aquí termina el tab content-->
+</div><!--/aquí termina el card content-->
+
 </div>
 </div>
 </div><!--/Aquí terminan las tabs (row)-->

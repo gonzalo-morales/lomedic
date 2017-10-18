@@ -18,8 +18,8 @@
 	<form action="{{ companyRoute("store",['company' => $company]) }}" method="post" class="col s12" enctype="multipart/form-data">
 		{{ csrf_field() }}
 		{{ method_field('POST') }}
-	<div class="row">
-	    <div class="right">
+	<div class="col-12">
+	    <div class="text-right">
 	        <button class="btn btn-primary" type="submit" name="action" id="guardarProveedor">Guardar {{ trans_choice('messages.'.$entity, 0) }}</button>
 	        <button class="btn btn-info" name="action"><i class="material-icons align-middle">print</i> Imprimir</button>
 	        <button class="btn btn-default">Cancelar</button>

@@ -123,7 +123,7 @@ $(document).ready(function(){
     $("#tipo_socio").multiselect({
         maxHeight:200,
         enableFiltering: true,
-        buttonWidth: '180px',
+        buttonWidth: '100%',
         includeSelectAllOption: true,
         filterPlaceholder: 'Buscar...',
         allSelectedText: 'Todo seleccionado ...',
@@ -885,8 +885,8 @@ function addDireccion(idTable){
                 .append("<tr>"+
                 "<td>"+arrayTableDirecciones[i]['tipo_direccion']+"</td>"+
                 "<td>"+arrayTableDirecciones[i]['calle']+ext+int+"</td>"+
-                "<td><a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowDireccion(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-                "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowDireccion(this,"+idTable+");'><i class=\"material-icons\">delete</i></a></td>"+
+                "<td><a class=\"editar btn is-icon text-primary\" onclick='editRowDireccion(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
+                "<a class=\"eliminar btn is-icon text-primary\" onclick='deleteRowDireccion(this,"+idTable+");'><i class=\"material-icons\">delete</i></a></td>"+
                 "</tr>");
         }
         console.log("============ADD===============");
@@ -934,8 +934,8 @@ function updateDireccion(idTable,tipo_direccion,id_tipo_direccion,calle,num_exte
     for (var i = 0; i < arrayTableDirecciones.length; i++) {
         if(arrayTableDirecciones[i]['idTable'] ==  idTable){
             $(direccionSelected[2]).children().remove();
-            $(direccionSelected[2]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowDireccion(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-            "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowDireccion(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
+            $(direccionSelected[2]).html("<a class=\"editar btn is-icon text-primary\" onclick='editRowDireccion(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
+            "<a class=\"eliminar btn is-icon text-primary\" onclick='deleteRowDireccion(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
 
             let ext = num_exterior=="" ? '' : " #"+num_exterior;
             let int = num_interior=="" ? '' : " INT. "+num_interior;
@@ -984,8 +984,8 @@ function deleteRowDireccion(obj,idTable){
 //     for (var i = 0; i < arrayTableCuentas.length; i++) {
 //         if(arrayTableCuentas[i]['idTable'] ==  idTable){
 //             $(elementSelected[2]).children().remove();
-//             $(elementSelected[2]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-//             "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
+//             $(elementSelected[2]).html("<a class=\"editar btn is-icon text-primary\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
+//             "<a class=\"eliminar btn is-icon text-primary\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
 //             $(elementSelected[0]).text(banco);
 //             $(elementSelected[1]).text(no_cuenta);
 //
@@ -1031,8 +1031,8 @@ function addCuenta(idTable){
                     .append("<tr>"+
                     "<td>"+arrayTableCuentas[i]['banco']+"</td>"+
                     "<td>"+arrayTableCuentas[i]['no_cuenta']+"</td>"+
-                    "<td><a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-                    "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a></td>"+
+                    "<td><a class=\"editar btn is-icon text-primary\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
+                    "<a class=\"eliminar btn is-icon text-primary\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a></td>"+
                     "</tr>");
             }
             console.log("============ADD===============");
@@ -1046,8 +1046,8 @@ function updateCuenta(idTable,banco,indexBanco,no_cuenta){
     for (var i = 0; i < arrayTableCuentas.length; i++) {
         if(arrayTableCuentas[i]['idTable'] ==  idTable){
             $(elementSelected[2]).children().remove();
-            $(elementSelected[2]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-            "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
+            $(elementSelected[2]).html("<a class=\"editar btn is-icon text-primary\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
+            "<a class=\"eliminar btn is-icon text-primary\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
             $(elementSelected[0]).text(banco);
             $(elementSelected[1]).text(no_cuenta);
 
@@ -1112,8 +1112,8 @@ function addContacto(idTableContactos){
                     "<td>"+arrayTableContactos[i]['tipoContacto']+"</td>"+
                     "<td>"+arrayTableContactos[i]['nombreContacto']+"</td>"+
                     "<td>"+arrayTableContactos[i]['telefonoOficina']+" +"+arrayTableContactos[i]['extensionOficina']+"</td>"+
-                    "<td><a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowContacto(this,"+idTableContactos+");'><i class=\"material-icons\">edit</i></a>"+
-                    "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowContacto(this,"+idTableContactos+");'><i class=\"material-icons\">delete</i></a></td>"+
+                    "<td><a class=\"editar btn is-icon text-primary\" onclick='editRowContacto(this,"+idTableContactos+");'><i class=\"material-icons\">edit</i></a>"+
+                    "<a class=\"eliminar btn is-icon text-primary\" onclick='deleteRowContacto(this,"+idTableContactos+");'><i class=\"material-icons\">delete</i></a></td>"+
                     "</tr>");
                 console.log("=========ADD==CONTACTO========");
                 console.log("ID-TABLE: "+idTableContactos);
@@ -1134,9 +1134,9 @@ function updateContacto(idTableContacto,tipoContacto,tipoContactoIndex,nombreCon
         if(arrayTableContactos[i]['idTableContactos'] ==  idTableContacto){
             console.log(arrayTableContactos[i]);
             $(contactoSelected[3]).children().remove();
-            $(contactoSelected[3]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowContacto(this,"+idTableContacto+
+            $(contactoSelected[3]).html("<a class=\"editar btn is-icon text-primary\" onclick='editRowContacto(this,"+idTableContacto+
                                         ");'><i class=\"material-icons\">edit</i></a>"+
-            "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowContacto(this,"+idTableContacto+");'><i class=\"material-icons\">delete</i></a>");
+            "<a class=\"eliminar btn is-icon text-primary\" onclick='deleteRowContacto(this,"+idTableContacto+");'><i class=\"material-icons\">delete</i></a>");
             $(contactoSelected[0]).text(tipoContacto);
             $(contactoSelected[1]).text(nombreContacto);
             $(contactoSelected[2]).text(telefonoOficina+" +"+extensionOficina); // no cuenta
@@ -1399,7 +1399,7 @@ function addLicencia(idTable){
                 .append("<tr>"+
                 "<td><a ><i class=\"material-icons\">attach_file</i>"+
                 arrayTableSanitarias[i]['archivo']['nombreArchivo']+"</a></td>"+
-                "<td><a class='eliminar btn btn_tables waves-effect btn-flat' onclick='deleteRowSanitaria(this,"+
+                "<td><a class='eliminar btn is-icon text-primary' onclick='deleteRowSanitaria(this,"+
                 idTable+");'><i class='material-icons'>delete</i></a></td></tr>");
         }
         console.log("============ADD===============");
@@ -1441,7 +1441,7 @@ function addAvisoFuncionamiento(idTable){
                 .append("<tr>"+
                 "<td><a ><i class=\"material-icons\">attach_file</i>"+
                 arrayTableAvisoFuncionamiento[i]['archivo']['nombreArchivo']+"</a></td>"+
-                "<td><a class='eliminar btn btn_tables waves-effect btn-flat' onclick='deleteRowAvisoFuncionamiento(this,"+
+                "<td><a class='eliminar btn is-icon text-primary' onclick='deleteRowAvisoFuncionamiento(this,"+
                 idTable+");'><i class='material-icons'>delete</i></a></td></tr>");
         }
         console.log("============ADD===============");
@@ -1482,7 +1482,7 @@ function addAvisoResponsable(idTable){
                 .append("<tr>"+
                 "<td><a ><i class=\"material-icons\">attach_file</i>"+
                 arrayTableAvisoResponsable[i]['archivo']['nombreArchivo']+"</a></td>"+
-                "<td><a class='eliminar btn btn_tables waves-effect btn-flat' onclick='deleteRowAvisoResponsable(this,"+
+                "<td><a class='eliminar btn is-icon text-primary' onclick='deleteRowAvisoResponsable(this,"+
                 idTable+");'><i class='material-icons'>delete</i></a></td></tr>");
         }
         console.log("============ADD===============");
