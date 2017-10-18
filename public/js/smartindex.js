@@ -230,8 +230,8 @@ window['smart-model'] = {
 
 			let modal = window['smart-modal'];
 			modal.view = rivets.bind(modal, {
-				title: '¿Estas seguro?',
-				content: 'Una vez eliminado(s) no podrás recuperarlo(s).',
+				title: 'Â¿Estas seguro?',
+				content: 'Una vez eliminado(s) no podrÃ¡s recuperarlo(s).',
 				buttons: [
 					{button: {
 						'text': 'Cancelar',
@@ -477,7 +477,7 @@ function getItems($page) {
 	let primary = window['smart-view'].dataset.primaryKey;
 	let columns = JSON.parse(window['smart-view'].dataset.columns);
 
-	$.getJSON(window['smart-view'].dataset.itemShowOrDeleteUrl.replace('#ID#', '') + '?page=' + $page, function(response) {
+	$.getJSON(window['smart-view'].dataset.itemShowOrDeleteUrl.replace('/#ID#', '') + '?page=' + $page, function(response) {
 		let collection = [];
 		$.each(response.data, function(index, item) {
 			let id = item[primary];
