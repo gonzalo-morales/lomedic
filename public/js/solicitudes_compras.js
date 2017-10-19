@@ -378,13 +378,13 @@ function limpiarFormulario() {
 
 function borrarFila(el) {
     // console.log( $(el).parents('tr').data('datarow') );
-    dataTable.rows().remove([$(el).parents('tr').dataIndex]);
+    dataTable.rows().remove([$(el).parents('tr').index()]);
     if(dataTable.rows.length<1)
         validateDetail();
 }
 function borrarFila_edit(el) {
     a.push(el.id);
-    dataTable.rows().remove([$(el).parents('tr').dataIndex]);
+    dataTable.rows().remove([$(el).parents('tr').index()]);
     if(dataTable.rows.length<1)
         validateDetail();
 }

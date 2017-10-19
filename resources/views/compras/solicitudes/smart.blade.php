@@ -5,7 +5,9 @@
 	@parent
 	{{--<script type="text/javascript" src="{{ asset('js/jquery.ui.autocomplete2.js') }}"></script>--}}
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
-		<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
+	@if(!Route::currentRouteNamed(currentRouteName('index')))
+	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
+	@endif
 @endsection
 
 @section('content-width','mt-3')
@@ -294,6 +296,11 @@
 //				 el.href = window['smart-view'].dataset.itemSupplyUrl.replace('#ID#',el.dataset.itemId);
              }
 		 };
+         rivets.binders['get-offer-url'] = {
+             bind: function (el) {
+				 el.href = el.href.replace('#','/'+el.dataset.itemId+'/ofertas/crear');
+             }
+		 };
 		 @can('update', currentEntity())
              window['smart-model'].collections.itemsOptions.edit ={a: {
              'html': '<i class="material-icons">mode_edit</i>',
@@ -313,6 +320,12 @@
 			'rv-hide-delete':''
 		}};
 		@endcan
+        window['smart-model'].collections.itemsOptions.offer = {a: {
+        'html': '<i class="material-icons">attach_money</i>',
+        'class': 'btn is-icon',
+		'href':'#',
+		'rv-get-offer-url':''
+        }};
 		window['smart-model'].collections.itemsOptions.supply = {a: {
 		'html': '<i class="material-icons">shopping_cart</i>',
 		'href' : '{!! companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>'#ID#']) !!}',

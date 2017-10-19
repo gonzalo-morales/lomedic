@@ -171,7 +171,7 @@
 									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>
-									{{$detalle->sku->nombre_comercial}}
+									{{$detalle->sku->descripcion_corta}}
 								</td>
 								<td>
 									{{$detalle->sku->descripcion}}

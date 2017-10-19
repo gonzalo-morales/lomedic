@@ -27,5 +27,10 @@ Route::prefix('{company}')->group(function () {
         Route::get('ordenes/{id}/impress', 'Compras\OrdenesController@impress')->name('ordenes');
         Route::get('ordenes/{id}/solicitudOrden','Compras\OrdenesController@createSolicitudOrden')->name('ordenes');
         Route::resource('ordenes','Compras\OrdenesController');
+        Route::group(['prefix' => 'solicitudes/{id_solicitud}'], function(){
+            Route::resource('ofertas','Compras\OfertasController');
+        });
+        Route::resource('ofertas','Compras\OfertasController');
+        Route::get('ofertas/{id}/impress', 'Compras\OfertasController@impress')->name('ofertas');
     });
 });
