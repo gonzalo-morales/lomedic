@@ -60,8 +60,9 @@
 
 			<div class="form-group col-md-4">
 				{{ Form::cSelectWithDisabled('Pais', 'fk_id_pais', $paises ?? [], [
+					'class' => 'select2 select-cascade',
 					'data-target-url' => companyRoute('paises.show', ['id' => '#ID#']),
-					'data-target-el' => 'fk_id_estado',
+					'data-target-el' => '[targeted="fk_id_estado"]',
 					'data-target-with' => '["estados:id_estado,fk_id_pais,estado"]',
 					'data-target-value' => 'estados,id_estado,estado'
 				]) }}
@@ -69,15 +70,20 @@
 
 			<div class="form-group col-md-4">
 				{{ Form::cSelect('Estado', 'fk_id_estado', $estados ?? [], [
+					'class' => 'select2 select-cascade',
+					'targeted' => 'fk_id_estado',
 					'data-target-url' => companyRoute('estados.show', ['id' => '#ID#']),
-					'data-target-el' => 'fk_id_municipio',
+					'data-target-el' => '[targeted="fk_id_municipio"]',
 					'data-target-with' => '["municipios:id_municipio,fk_id_estado,municipio"]',
 					'data-target-value' => 'municipios,id_municipio,municipio'
 				]) }}
 			</div>
 
 			<div class="form-group col-md-4">
-				{{ Form::cSelect('Municipio', 'fk_id_municipio', $municipios ?? []) }}
+				{{ Form::cSelect('Municipio', 'fk_id_municipio', $municipios ?? [], [
+					'class' => 'select2',
+					'targeted' => 'fk_id_municipio',
+				]) }}
 			</div>
 
 			<div class="form-group col-md-4">
@@ -138,26 +144,6 @@
         {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
 	</div>
 </div>
-@endsection
-
-@section('header-bottom')
-@parent
-<script type="text/javascript">
-	$('[data-target-url]').on('change', function() {
-		let data = $(this).data(), values = data.targetValue.split(',');
-		$.get(data.targetUrl.replace('#ID#', this.value), {with: data.targetWith} , function(request){
-			let target = $('#'+data.targetEl).empty(), options = [];
-			options.push('<option value="0" selected disabled>Seleccione una opcion ...</option>')
-			if (request.success) {
-				let i, estados = request.data[values[0]];
-				for (i in estados) {
-					options.push('<option value="'+estados[i][values[1]]+'">'+estados[i][values[2]]+'</option>')
-				}
-			}
-			target.append(options.join())
-		})
-	});
-</script>
 @endsection
 
 {{-- DONT DELETE --}}

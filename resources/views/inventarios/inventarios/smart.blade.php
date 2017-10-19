@@ -49,7 +49,11 @@
 								<div class="row justify-content-center">
 									<div class="col-12 col-md-6 col-lg-4">
 										<div class="form-group">
-											{{ Form::cText('Código de barras', 'codebar-only', ['ref' => 'codeba']) }}
+											{{ Form::cText('Código de barras', 'codebar-only', [
+												'ref' => 'codeba',
+												'v-on:keydown' => 'onKeydownCodebar',
+												'v-on:keyup.enter' => 'onEnterCodebar'
+											]) }}
 										</div>
 									</div>
 								</div>
@@ -81,6 +85,7 @@
 											<div class="col-12 col-md-4 col-sm-6">
 												<div class="form-group">
 													{{ Form::cSelectWithDisabled('Almacén', 'almacen', [], [
+														'class' => 'select2 select-cascade',
 														'targeted' => 'fk_id_almacen',
 														'data-target-url' => companyRoute('almacenes.show', ['id' => '#ID#']),
 														'data-target-el' => '[targeted="fk_id_ubicacion"]',
@@ -92,8 +97,9 @@
 											</div>
 											<div class="col-12 col-md-4 col-sm-6">
 												<div class="form-group">
-													{{ Form::cSelectWithDisabled('Ubicación', 'ubicacion', [], ['
-														targeted' => 'fk_id_ubicacion',
+													{{ Form::cSelectWithDisabled('Ubicación', 'ubicacion', [], [
+														'class' => 'select2',
+														'targeted' => 'fk_id_ubicacion',
 														'ref' => 'ubicacion'
 													]) }}
 												</div>
@@ -225,6 +231,15 @@
 			ubicaciones: @json($ubicaciones ?? []),
 		},
 		methods: {
+			onKeydownCodebar: function(e) {
+				if (!new RegExp('^[a-zA-Z0-9]+$').test(e.key) || e.ctrlKey || e.keyCode == 13) {
+					e.preventDefault();
+				}
+			},
+			onEnterCodebar: function(e) {
+				e.preventDefault();
+				console.log('onEnterCodebar')
+			},
 			append: function(e) {
 				var data, isValid = true, valid;
 				// Recorremos referencias

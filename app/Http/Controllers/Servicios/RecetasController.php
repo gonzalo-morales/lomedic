@@ -41,7 +41,7 @@ class RecetasController extends ControllerBase
         return parent::index($company, $attributes);
     }
 
-    public function getDataView()
+    public function getDataView($entity =  null)
     {
         return [
 //             'companies' => Empresas::active()->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
