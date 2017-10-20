@@ -8,7 +8,7 @@
 	{{ HTML::meta('csrf-token', csrf_token()) }}
 	{{ HTML::favicon(asset("img/$empresa->logotipo")) }}
 	<!-- Bootstrap CSS local fallback -->
-	{{ HTML::style(asset('css/bootstrap.min.css')) }}
+	{{ HTML::style(asset('css/bootstrap/dist/css/bootstrap.min.css')) }}
 	<!-- Select2 CSS local -->
 	{{ HTML::style(asset('css/select2.min.css')) }}
 	{{ HTML::style(asset('css/select2-bootstrap.min.css')) }}
@@ -19,10 +19,9 @@
     {{ HTML::style(asset('css/style-nav.css'), ['media'=>'screen,projection']) }}
 
     @if(!isset(request()->kendoWindow))
-        {{ HTML::style(asset('css/kendo.common-material.min.css')) }}
-        {{ HTML::style(asset('css/kendo.rtl.min.css')) }}
-        {{ HTML::style(asset('css/kendo.material.min.css')) }}
-        {{ HTML::style(asset('css/kendo.material.mobile.min.css')) }}
+        {{ HTML::style(asset('css/kendo/web/kendo.common-material.min.css')) }}
+        {{ HTML::style(asset('css/kendo/web/kendo.material.min.css')) }}
+        {{ HTML::style(asset('css/kendo/web/kendo.material.mobile.min.css')) }}
     @endif
 	@yield('header-top')
     <script type="text/javascript">
@@ -118,10 +117,10 @@
 <!-- Bootstrap JS CDN -->
 {{ HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js') }}
 <!-- Bootstrap JS local fallback -->
-<script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap.min.js') }}"><\/script>')}</script>
+<script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap/bootstrap.min.js') }}"><\/script>')}</script>
 
 <!-- Kendo UI -->
-{{ HTML::script(asset('js/kendo.all.min.js')) }}
+{{ HTML::script(asset('js/kendo/kendo.all.min.js')) }}
 
 <!-- jQuery js Validation local-->
 {{ HTML::script('vendor/jsvalidation/js/jsvalidation.min.js') }}

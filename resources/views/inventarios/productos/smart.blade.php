@@ -1,67 +1,24 @@
 @section('content-width', 's12')
 @section('header-bottom')
-	@parent
-	<script type="text/javascript">
-		//$('#fk_id_serie_sku').select2();
-		$('#fk_id_unidad_medida').select2();
-		$('#fk_id_unidad_medida_venta').select2();
-		$('#fk_id_unidad_medida_compra').select2();
-		$('#fk_id_subgrupo').select2();
-		$('#fk_id_impuesto').select2();
-		$('#fk_id_familia').select2();
-		$('#fk_id_proveedor').select2();
-		$('#fk_id_metodo_valoracion').select2();
-
-		var from_$input = $('#activo_desde').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }),
-    	from_picker = from_$input.pickadate('picker')
-
-	var to_$input = $('#activo_hasta').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }),
-	    to_picker = to_$input.pickadate('picker')
-
-
-	if ( from_picker.get('value') ) {
-	  to_picker.set('min', from_picker.get('select'))
-	}
-	if ( to_picker.get('value') ) {
-	  from_picker.set('max', to_picker.get('select'))
-	}
-
-	// When something is selected, update the “from” and “to” limits.
-	from_picker.on('set', function(event) {
-	  if ( event.select ) {
-	    to_picker.set('min', from_picker.get('select'))    
-	  }
-	  else if ( 'clear' in event ) {
-	    to_picker.set('min', false)
-	  }
-	})
-	to_picker.on('set', function(event) {
-	  if ( event.select ) {
-	    from_picker.set('max', to_picker.get('select'))
-	  }
-	  else if ( 'clear' in event ) {
-	    from_picker.set('max', false)
-	  }
-	});
-
-	$('#detallesku a[data-toggle="tab"]').click(function (e) {
-		e.preventDefault()
-	  	$(this).tab('show')
-	});
-	</script>
+    @parent
+    @if(!Route::currentRouteNamed(currentRouteName('index')))
+    	{{ HTML::script(asset('js/inventarios/productos.js')) }}
+    @endif
 @endsection
+
 @section('form-content')
 {{ Form::setModel($data) }}
-    <h4>Datos del producto</h4>
+<div class="card container-fluid z-depth-1-half p-3 my-2">
     <div class="row">
     	<div class="col-sm-6 col-md-8 col-lg-9 row">
         	<div class="col-sm-12 col-md-6 col-lg-2">
         		<div class="form-group">
-        			{{ Form::cSelect('Serie Sku', 'fk_id_serie_sku', $seriesku ?? [], !Route::currentRouteNamed(currentRouteName('create')) ? ['disabled'=>true] : []) }}
+        			{{ Form::cSelect('Serie Sku', 'fk_id_serie_sku', $seriesku ?? [], !Route::currentRouteNamed(currentRouteName('create')) ? ['disabled'=>true] : ['data-url'=>companyAction('Administracion\SeriesSkusController@getSerie',['id'=>'?id'])]) }}
         		</div>
         	</div>
         	<div class="col-sm-12 col-md-6 col-lg-3">
         		<div class="form-group">
+        			<i class="material-icons text-danger float-left" data-toggle="tooltip" data-placement="top" title="El numero de serie puede cambiar si otro usuario genero un sku antes de que se guardara este. Verificalo despues de guardarlo.">warning</i>
         			{{ Form::cText('Sku', 'sku', ['placeholder'=>'Ejemplo: SO-1922-09','disabled'=>true]) }}
         		</div>
         	</div>
@@ -103,11 +60,11 @@
         </div>
     </div>
 </div>
-<!--/Inicio Tabs-->
 
+<!--/Inicio Tabs-->
 <div id="detallesku" class="w-100 container-fluid z-depth-1-half mt-2 px-0">
-    <div class="card text-center" style="min-height: 555px">
-        <div class="card-header py-2">
+    <div class="card" style="min-height: 555px">
+        <div class="card-header text-center py-2">
         <h4>Informacion del producto</h4>
         <div class="divider my-2"></div>
         
@@ -131,12 +88,12 @@
             	<a class="nav-link" role="tab" data-toggle="tab" href="#tab-planificacion" id="planificacion-tab" aria-controls="planificacion" aria-expanded="true">Planificacion</a>
             </li>
             <li class="nav-item">
-            	<a class="nav-link" role="tab" data-toggle="tab" href="#tab-propiedades" id="propiedades-tab" aria-controls="propiedades" aria-expanded="true">Propiedades</a>
+            	<a class="nav-link" role="tab" data-toggle="tab" href="#tab-especificaciones" id="especificaciones-tab" aria-controls="especificaciones" aria-expanded="true">Especificaciones</a>
             </li>
         </ul>
         </div>
         
-        <!-- Content Panel -->
+    <!-- Content Panel -->
     <div class="card-body">
         <div id="clothing-nav-content" class="tab-content">
             <div role="tabpanel" class="tab-pane fade show active" id="tab-general" aria-labelledby="general-tab">
@@ -177,7 +134,7 @@
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-upcs" aria-labelledby="upcs-tab">
             	<div class="row">
-            		<div class="card col-md-12 col-sm-12 mb-3 p-0">
+            		<div class="card col-sm-12 mb-3 p-0">
             			<div class="card-header">
             				<h4>Relacion Sku - Upc's</h4>
             				<p>AquÃ­ puedes relacionar los codigos de barra correspondientes al Sku</p>
@@ -189,14 +146,14 @@
     								{{ Form::cText('Cantidad', 'cantidad') }}
         						</div>
         					</div>
+                			<div class="col-sm-12 text-center my-3">
+            					<div class="sep sepBtn">
+            						<button class="btn btn-primary btn-large btn-circle" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+            					</div>
+            				</div>
             			</div>
-            			<div class="col-sm-12 text-center my-3">
-        					<div class="sep sepBtn">
-        						<button class="btn btn-primary btn-large btn-circle" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
-        					</div>
-        				</div>
         				<div class="card-body">
-        					<table class="table table-hover table-responsive table-striped">
+        					<table id="upcs" class="table table-responsive table-hover">
         						<thead>
         							<tr>
         								<th>#</th>
@@ -244,7 +201,7 @@
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-venta" aria-labelledby="venta-tab">
             	<div class="row">
-    	  			<div class="form-group">
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
             			{{ Form::cSelect('Unidad Medida Venta', 'fk_id_unidad_medida_venta', $unidadmedida ?? []) }}
             		</div>
     	  		</div>
@@ -261,43 +218,64 @@
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-inventario" aria-labelledby="inventario-tab">
             	<div class="row">
-    	  			<div class="col-sm-12 col-md-6 col-lg-2 text-center">
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-2">
                 		{{ Form::cText('Necesario', 'necesario',['placeholder'=>'Ejm: 40']) }}
                 	</div>
-                	<div class="col-sm-12 col-md-6 col-lg-2 text-center">
+                	<div class="form-group col-sm-12 col-md-6 col-lg-2">
                 		{{ Form::cText('Minimo', 'minimo',['placeholder'=>'Ejm: 10']) }}
                 	</div>
-    	  			<div class="col-sm-12 col-md-6 col-lg-2 text-center">
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-2">
                 		{{ Form::cText('Maximo', 'maximo',['placeholder'=>'Ejm: 90']) }}
                 	</div>
+                	<div class="form-group col-sm-12 col-md-6 col-lg-2">
+            			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $metodovaloracion ?? ['Costos estimados','Costo estandar','Costos promedio','PEPS','UEPS','Lotes especï¿½fico']) }}
+            		</div>
     	  		</div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-planificacion" aria-labelledby="planificacion-tab">
             	<div class="row">
-    	  			<div class="form-group">
-            			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $metodovaloracion ?? ['Costos estimados','Costo estandar','Costos promedio','PEPS','UEPS','Lotes específico']) }}
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-2">
+            			{{ Form::cText('Punto Reorden', 'punto_reorden',['placeholder'=>'Ejm: 15']) }}
             		</div>
-    	  			<div class="col-sm-12 col-md-6 col-lg-2 text-center">
-                		{{ Form::cText('Punto Reorden', 'punto_reorden',['placeholder'=>'Ejm: 15']) }}
+            		<div class="form-group col-sm-12 col-md-6 col-lg-2">
+            			{{ Form::cSelect('Intervalo del periodo', 'fk_id_intervalo', $intervaloperiodo?? ['Diario','Semanal','Quincenal','Menual','Trimestral','Semestral']) }}
+            		</div>
+            		<div class="form-group col-sm-12 col-md-6 col-lg-2">
+            			{{ Form::cText('Cantidad minima por periodo', 'minima_periodo',['placeholder'=>'Ejm: 5']) }}
+            		</div>
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-2">
+                		{{ Form::cText('Tiempo lead (DÃ­as)', 'tiempo_lead',['placeholder'=>'Ejm: 7']) }}
+                	</div>
+                	<div class="form-group col-sm-12 col-md-6 col-lg-2">
+                		{{ Form::cText('DÃ­as de tolerancia', 'dias_tolerancia',['placeholder'=>'Ejm: 3']) }}
                 	</div>
     	  		</div>
             </div>
-            <div role="tabpanel" class="tab-pane fade" id="tab-propiedades" aria-labelledby="propiedades-tab">
+            <div role="tabpanel" class="tab-pane fade" id="tab-especificaciones" aria-labelledby="especificaciones-tab">
             	<div class="row">
-        			<div class="col-sm-12">
-                		<div class="form-group">
-                			{{ Form::cTextArea('Descripcion', 'descripcion') }}
-                		</div>
+        			<div class="col-sm-6 form-group">
+                		{{ Form::cTextArea('Descripcion', 'descripcion') }}
+                	</div>
+                	<div class="col-sm-6 form-group">
+                		{{ Form::cTextArea('Descripcion de Cenefas', 'descripcion_cenefas') }}
+                	</div>
+                	<div class="col-sm-6 form-group">
+                		{{ Form::cTextArea('Descripcion en Ticket', 'descripcion_ticket') }}
+                	</div>
+                	<div class="col-sm-6 form-group">
+                		{{ Form::cTextArea('Descripcion en Rack', 'descripcion_rack') }}
+                	</div>
+                	<div class="col-sm-6 form-group">
+                		{{ Form::cTextArea('Descripcion Cuadro Basico Nacional', 'descripcion_cbn') }}
                 	</div>
                 </div>
             </div>
         </div>
     </div>
-    	<!-- End Content Panel -->
+    <!-- End Content Panel -->
 	</div>
 </div>
 <!--/Fin Tabs-->
-
 @endsection
 
 {{-- DONT DELETE --}}

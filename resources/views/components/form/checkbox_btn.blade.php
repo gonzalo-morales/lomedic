@@ -1,5 +1,5 @@
 @if(!empty($label))
-<label class="text-center w-100">{{$label}}</label>
+<label class="text-center mb-0 w-100">{{$label}}</label>
 @endif
 <div class="text-center">
 	{{ Form::hidden($name, 0) }}

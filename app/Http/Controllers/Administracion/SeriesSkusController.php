@@ -24,6 +24,6 @@ class SeriesSkusController extends ControllerBase
 	
 	public function getSerie($company, $id)
 	{
-	    return $this->entity->select('prefijo','numero_siguiente','sufijo')->findOrFail($id)->toJson();
+	    return $this->entity->select('prefijo','numero_siguiente','sufijo')->whereRaw('ultimo_numero < numero_siguiente OR ultimo_numero is null')->findOrFail($id)->toJson();
 	}
 }

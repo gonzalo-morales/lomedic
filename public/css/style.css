@@ -363,3 +363,6 @@ a:hover .window {
   top:0;
   left:0;
 }
+.material-icons {
+	cursor: default;
+}

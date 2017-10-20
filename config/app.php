@@ -181,6 +181,7 @@ return [
 	    Maatwebsite\Excel\ExcelServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
 	    Proengsoft\JsValidation\JsValidationServiceProvider::class,
+	    Orchestra\Parser\XmlServiceProvider::class,
 	],
 
 	/*
@@ -236,6 +237,7 @@ return [
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
 	    'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
+	    'XmlParser' => Orchestra\Parser\Xml\Facade::class,
 	],
 
 ];

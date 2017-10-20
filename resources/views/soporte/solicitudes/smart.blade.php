@@ -192,17 +192,17 @@
   					Solicitante: <span><b>{{Auth::User()->nombre_corto}}</b></span>
 					{{Form::hidden('id_solicitante',Auth::User()->fk_id_empleado,['id'=>'id_solicitante'])}}
   				</div>
-  				<div class="input-group input-group-sm w-100">
+  				<div class="input-group input-group-sm" style="width: 96%">
 					<span class="input-group-addon">
 						<input type="checkbox" id="check_solicitante">
 					</span>
-					{!! Form::select('empleado_solicitud',[],null,['id'=>'empleado_solicitud','class'=>'form-control select2-single select2-hidden-accessible','disabled'=>'true','style'=>'width: 96% !important;','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados')]) !!}
+					{!! Form::select('empleado_solicitud',[],null,['id'=>'empleado_solicitud','class'=>'form-control select2-single select2-hidden-accessible w-100','disabled'=>'true','style'=>'width: 96% !important;','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados')]) !!}
   				</div>
   			</div>
   			<div class="form-group row">
   				<div class="col-md-12">
       				{{Form::label('fk_id_sucursal','Sucursal')}}
-      				{!! Form::select('fk_id_sucursal',[],null,['id'=>'fk_id_sucursal','class'=>'form-control select2-single select2-hidden-accessible','style'=>'width: 96% !important;','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])]) !!}
+      				{!! Form::select('fk_id_sucursal',[''=>'Selecciona una sucursal'],null,['id'=>'fk_id_sucursal','class'=>'form-control select2-single select2-hidden-accessible w-100','style'=>'width: 96% !important;','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])]) !!}
   				</div>
   			</div>
   			<div class="form-group row">
