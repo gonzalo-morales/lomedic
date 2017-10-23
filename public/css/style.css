@@ -34,6 +34,15 @@
   /* Support for IE. */
   font-feature-settings: 'liga';
 }
+.bg-login {
+	background: #FFF url('../img/pills2.jpg') no-repeat center top fixed;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/pills2.jpg',sizingMethod='scale');
+	-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/pills2.jpg', sizingMethod='scale')";
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
 .pace {
   -webkit-pointer-events: none;
   pointer-events: none;

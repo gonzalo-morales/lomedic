@@ -21,13 +21,13 @@
 					</div>
                         {{ $errors->has('email') ? HTML::tag('span', $errors->first('email'), ['class'=>'form-text text-white bg-danger p-1 m-0 rounded-bottom']) : '' }}
 				</div>
-				<div class="form-group">
+				<div class="form-group mt-5">
 					<div class=" container">
 					{{ Form::button('Enviar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
 					</div>
 				</div>
-				<div class="form-group">
-					<small>{{ link_to_route('login', 'Regresar', null, ['class'=>'card-link text-white']) }}</small>
+				<div class="form-group mt-4">
+					<small><b>{{ link_to_route('login', 'Regresar', null, ['class'=>'card-link text-white']) }}</b></small>
 				</div>
 			</div>
 			{!! Form::close() !!}
