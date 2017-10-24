@@ -15,7 +15,8 @@ $(document).ready(function(){
         perPageSelect: false,
         labels:{
             info: "Mostrando del registro {start} al {end} de {rows}"
-        }
+        },
+        footer: true
     });
     totalOrden();
     if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1)
@@ -217,8 +218,11 @@ function totalProducto() {
 function totalOrden() {
 
     let total = 0;
-    $(".total").each(function () {
-        total +=  parseFloat($(this).val());
+    // $(".total").each(function () {
+    //     total +=  parseFloat($(this).val());
+    // });
+    $.each(window.dataTable.data,function () {
+        total += parseFloat($(this).find('td .total').val());
     });
     let descuento_porcentaje = $('#descuento_oferta').val()/100;
     let descuento = descuento_porcentaje * total;

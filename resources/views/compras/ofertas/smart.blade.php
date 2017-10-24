@@ -54,18 +54,6 @@
 	<div class="form-group col-md-3 col-sm-6">
 		{!! Form::cSelectWithDisabled('*Moneda','fk_id_moneda',isset($monedas)?$monedas:[],[])!!}
 	</div>
-	<div class="form-group col-md-3 col-sm-6">
-		{!! Form::label('descuento_oferta','Descuento General') !!}
-		<div class="input-group">
-			{!! Form::text('descuento_oferta',null,['placeholder'=>'99.0000','class'=>'form-control','id'=>'descuento_oferta']) !!}
-			<span class="input-group-addon">%</span>
-		</div>
-		{{ Form::label('total_orden', 'Total de la orden') }}
-		<div class="input-group">
-			<span class="input-group-addon">$</span>
-			{!! Form::text('total_orden', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}
-		</div>
-	</div>
 </div>
 <div class="row">
 	<div class="col-sm-12">
@@ -289,6 +277,30 @@
 						@endforeach
 					@endif
 					</tbody>
+					<tfoot class="table-dark">
+						<tr>
+							<td colspan="5"></td>
+							<td colspan="3">
+								{!! Form::label('descuento_oferta','Descuento General') !!}
+								<div class="form-group col-md-12">
+									<div class="input-group">
+										{!! Form::text('descuento_oferta',null,['placeholder'=>'99.0000','class'=>'form-control','id'=>'descuento_oferta']) !!}
+										<span class="input-group-addon">%</span>
+									</div>
+								</div>
+							</td>
+							<td colspan="4">
+								{{ Form::label('total_orden', 'Total de la oferta') }}
+								<div class="form-group col-md-12">
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										{!! Form::text('total_orden', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}
+									</div>
+								</div>
+							</td>
+							<td></td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>

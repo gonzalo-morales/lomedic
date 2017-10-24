@@ -295,16 +295,17 @@
 					</tbody>
 					<tfoot class="table-dark">
 					<tr>
-						<td colspan="3">
+						<td colspan="2"></td>
+						<td colspan="2">
 								{{ Form::label('', 'Subtotal',['class'=>'h5']) }}
 								<span class="">$</span>
 							{{ Form::label('subtotal', '0.00',['class'=>'h5','id'=>'subtotal']) }}
 							{{--{!! Form::text('subtotal', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}--}}
 						</td>
 						<td colspan="3">
-							{{ Form::label('', 'Descuento: ',['class'=>'h5']) }}
 {{--							{{ Form::label('0','',['class'=>'h5','id'=>'descuento_porcentaje']) }}--}}
 							<div class="form-group col-sm-6">
+								{{ Form::label('', 'Descuento: ',['class'=>'h5']) }}
 								<div class="input-group">
 									{{Form::text('descuento_porcentaje',null,['class'=>'form-control','placeholder'=>'00.0000','id'=>'descuento_porcentaje'])}}
 									<span class="input-group-addon">%</span>
@@ -320,8 +321,7 @@
 								<span>$</span>
 								{{ Form::label('impuesto', '0.0',['class'=>'h5','id'=>'impuesto_total']) }}
 						</td>
-						<td colspan="2"></td>
-						<td colspan="2">
+						<td colspan="3">
 							<div class="input-group">
 								{{ Form::label('total_orden', 'Total',['class'=>'input-group-addon']) }}
 								<span class="input-group-addon">$</span>
