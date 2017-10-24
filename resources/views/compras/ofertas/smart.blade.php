@@ -360,7 +360,7 @@
             'rv-hide-update':''
         }};
 		@endcan
-		{{--@can('delete', currentEntity())--}}
+		@can('delete', currentEntity())
             window['smart-model'].collections.itemsOptions.delete = {a: {
             'html': '<i class="material-icons">not_interested</i>',
             'href' : '#',
@@ -370,7 +370,7 @@
             'data-delete-type': 'single',
             'rv-hide-delete':''
         }};
-		{{--@endcan--}}
+		@endcan
         window['smart-model'].collections.itemsOptions.supply = {a: {
             'html': '<i class="material-icons">shopping_cart</i>',
             'href' : '{!! url($company."/compras/#ID#/2/ordenes/crear") !!}',
@@ -380,8 +380,7 @@
             'rv-get-comprar-url':''
         }};
         window['smart-model'].actions.itemsCancel = function(e, rv){
-
-                $.delete(this.dataset.deleteUrl,data,function (response) {
+                $.delete(this.dataset.deleteUrl,function (response) {
                     if(response.success){
                         sessionStorage.reloadAfterPageLoad = true;
                         location.reload();
