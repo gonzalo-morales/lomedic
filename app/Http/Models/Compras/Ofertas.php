@@ -34,7 +34,9 @@ class Ofertas extends ModelCompany
         'fk_id_proveedor'=>'proveedor'
     ];
 
-    protected $dataColumns = [];
+    protected $dataColumns = [
+        'fk_id_estatus_oferta'
+    ];
     /**
      * Los atributos que seran visibles en index-datable
      * @var array

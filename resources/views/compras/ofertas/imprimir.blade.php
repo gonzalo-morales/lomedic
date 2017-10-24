@@ -5,7 +5,7 @@
         <?php $logo = $oferta->empresa->logotipo_completo?>
             {!!HTML::image(asset("img/$logo"),'',['height'=>'56'])!!}
             <div style="width: 60.5%; float: left">
-                <h4 align="center">Orden de compra</h4>
+                <h4 align="center">Oferta de compra</h4>
                 <h6 align="center">
                     {{$oferta->empresa->razon_social}}
                     <br><b>Dirección</b>
@@ -76,9 +76,9 @@
                 <th><h5>Total</h5></th>
             </tr>
             {{--For each detalle--}}
-            @foreach($oferta->detallesOferta()->where('cerrado','f')->get() as $detalle)
+            @foreach($oferta->DetalleOfertas()->where('cerrado','f')->get() as $detalle)
 
-            <tr>
+            <tr align="center">
                 <td>{{isset($detalle->fk_id_solicitud)?$detalle->fk_id_solicitud:'N/A'}}</td>
                 <td>{{$detalle->sku->sku}}</td>
                 <td>{{isset($detalle->upc) ? $detalle->upc->upc : 'UPC no seleccionado'}}</td>
@@ -89,7 +89,7 @@
                 <td>{{$detalle->cantidad}}</td>
                 <td>{{$detalle->impuesto->impuesto}}</td>
                 <td>${{number_format($detalle->precio_unitario,2,'.',',')}}</td>
-                <td>{{number_format($detalle->descuento,4,'.',',')}}%</td>
+                <td>{{number_format($detalle->descuento_detalle,4,'.',',')}}%</td>
                 <td>${{number_format($detalle->total,2,'.',',')}}</td>
             </tr>
             @endforeach

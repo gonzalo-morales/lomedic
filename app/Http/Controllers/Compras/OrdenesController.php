@@ -20,7 +20,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-
+use Illuminate\Support\Facades\Route;
 
 class OrdenesController extends ControllerBase
 {

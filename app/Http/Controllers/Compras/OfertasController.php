@@ -34,7 +34,9 @@ class OfertasController extends ControllerBase
 
 	public function index($company, $attributes = [])
 	{
-		$attributes = ['where'=>[]];
+		$attributes = ['where'=>[],'dataview'=>[
+		    'company'=>$company
+        ]];
 		return parent::index($company, $attributes);
 	}
 
@@ -122,6 +124,7 @@ class OfertasController extends ControllerBase
                 'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
                 'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
                 'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
+                'company' => $company
 			]];
 		return parent::show($company,$id,$attributes);
 	}
@@ -273,7 +276,8 @@ class OfertasController extends ControllerBase
         $subtotal = 0;
         $iva = 0;
         $total = 0;
-        foreach ($oferta->detallesOferta()->where('cerrado','f')->get() as $detalle)
+
+        foreach ($oferta->DetalleOfertas()->where('cerrado','f')->get() as $detalle)
         {
             $subtotal += $detalle->precio_unitario * $detalle->cantidad;
             $iva += (($detalle->precio_unitario*$detalle->cantidad)*$detalle->impuesto->porcentaje)/100;
@@ -284,7 +288,7 @@ class OfertasController extends ControllerBase
         $barcode = DNS1D::getBarcodePNG($oferta->id_oferta,'EAN8');
         $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$oferta->id_oferta])), "QRCODE");
 
-        $pdf = PDF::loadView(currentRouteName('imprimir'),[
+        $pdf = PDF::loadView(currentRouteName('compras.ofertas.imprimir'),[
             'oferta' => $oferta,
 //            'detalles' => $detalles,
             'subtotal' => $subtotal,

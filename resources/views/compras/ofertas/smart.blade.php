@@ -13,10 +13,11 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
+{{--{{dd($company)}}--}}
 @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
 	<div class="row">
 		<div class="col-md-12 text-center text-success">
-			<h3>Orden No. {{$data->id_orden}}</h3>
+			<h3>Oferta No. {{$data->id_oferta}}</h3>
 		</div>
 	</div>
 @endif
@@ -160,10 +161,10 @@
 									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>
-									{{$detalle->sku->descripcion_corta}}
+									{{str_limit($detalle->sku->descripcion_corta,250)}}
 								</td>
 								<td>
-									{{$detalle->sku->descripcion}}
+									{{str_limit($detalle->sku->descripcion,250)}}
 								</td>
 								<td>
 									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
@@ -306,140 +307,138 @@
 		</div>
 	</div>
 </div>
-{{--<div class="form-group col-md-2 col-sm-6 float-right mt-3">--}}
-	{{--{{ Form::label('total_orden', 'Total de la orden') }}--}}
-	{{--<div class="input-group">--}}
-		{{--<span class="input-group-addon">$</span>--}}
-		{{--{!! Form::text('total_orden', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}--}}
-	{{--</div>--}}
-{{--</div>--}}
 @endsection
 
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
-	{{--@section('smart-js')--}}
-		{{--<script type="text/javascript">--}}
-            {{--if ( sessionStorage.reloadAfterPageLoad ) {--}}
-                {{--sessionStorage.clear();--}}
-                {{--$.toaster({--}}
-                    {{--priority: 'success', title: '¡Éxito!', message: 'Orden cancelada',--}}
-                    {{--settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}--}}
-                {{--});--}}
-            {{--}--}}
-		{{--</script>--}}
-		{{--@parent--}}
-		{{--<script type="text/javascript">--}}
-			{{--rivets.binders['hide-delete'] = {--}}
-				{{--bind: function (el) {--}}
-					{{--if(el.dataset.fk_id_estatus_orden != 1)--}}
-					{{--{--}}
-						{{--$(el).hide();--}}
-					{{--}--}}
-				{{--}--}}
-			{{--};--}}
-			{{--rivets.binders['hide-update'] = {--}}
-				{{--bind: function (el) {--}}
-					{{--if(el.dataset.fk_id_estatus_orden != 1)--}}
-					{{--{--}}
-						{{--$(el).hide();--}}
-					{{--}--}}
-				{{--}--}}
-			{{--};--}}
-			{{--@can('update', currentEntity())--}}
-				{{--window['smart-model'].collections.itemsOptions.edit = {a: {--}}
-				{{--'html': '<i class="material-icons">mode_edit</i>',--}}
-				{{--'class': 'btn is-icon',--}}
-				{{--'rv-get-edit-url': '',--}}
-				{{--'rv-hide-update':''--}}
-			{{--}};--}}
-			{{--@endcan--}}
-			{{--@can('delete', currentEntity())--}}
-				{{--window['smart-model'].collections.itemsOptions.delete = {a: {--}}
-				{{--'html': '<i class="material-icons">not_interested</i>',--}}
-				{{--'href' : '#',--}}
-				{{--'class': 'btn is-icon',--}}
-				{{--'rv-on-click': 'actions.showModalCancelar',--}}
-				{{--'rv-get-delete-url': '',--}}
-				{{--'data-delete-type': 'single',--}}
-				{{--'rv-hide-delete':''--}}
-			{{--}};--}}
-			{{--@endcan--}}
-				{{--window['smart-model'].actions.itemsCancel = function(e, rv, motivo){--}}
-				{{--if(!motivo.motivo_cancelacion){--}}
-					{{--$.toaster({--}}
-						{{--priority : 'danger',--}}
-						{{--title : '¡Error!',--}}
-						{{--message : 'Por favor escribe un motivo por el que se está cancelando esta orden de compra',--}}
-						{{--settings:{--}}
-							{{--'timeout':10000,--}}
-							{{--'toaster':{--}}
-								{{--'css':{--}}
-									{{--'top':'5em'--}}
-								{{--}--}}
-							{{--}--}}
-						{{--}--}}
-					{{--});--}}
-				{{--}else{--}}
-					{{--let data = {motivo};--}}
-					{{--$.delete(this.dataset.deleteUrl,data,function (response) {--}}
-						{{--if(response.success){--}}
-							{{--sessionStorage.reloadAfterPageLoad = true;--}}
-							{{--location.reload();--}}
-						{{--}--}}
-					{{--})--}}
-				{{--}--}}
-			{{--};--}}
-			{{--window['smart-model'].actions.showModalCancelar = function(e, rv) {--}}
-				{{--e.preventDefault();--}}
+@section('smart-js')
+	<script type="text/javascript">
+        if ( sessionStorage.reloadAfterPageLoad ) {
+            sessionStorage.clear();
+            $.toaster({
+                priority: 'success', title: 'Exito', message: 'Oferta cancelada',
+                settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
+            });
+        }
+	</script>
+	@parent
+	<script type="text/javascript">
+        rivets.binders['hide-delete'] = {
+            bind: function (el) {
+                if(el.dataset.fk_id_estatus_oferta != 1)
+                {
+                    $(el).hide();
+                }
+            }
+        };
+        rivets.binders['hide-update'] = {
+            bind: function (el) {
+                if(el.dataset.fk_id_estatus_oferta != 1)
+                {
+                    $(el).hide();
+                }
+            }
+        };
+        rivets.binders['hide-comprar'] = {
+            bind: function (el) {
+                if(el.dataset.fk_id_estatus_oferta != 1)
+                {
+                    $(el).hide();
+                }
+            }
+        };
+        rivets.binders['get-comprar-url'] = {
+            bind: function (el) {
+                el.href = el.href.replace('#ID#',el.dataset.itemId);
+            }
+        };
+		@can('update', currentEntity())
+            window['smart-model'].collections.itemsOptions.edit ={a: {
+            'html': '<i class="material-icons">mode_edit</i>',
+            'class': 'btn is-icon',
+            'rv-get-edit-url': '',
+            'rv-hide-update':''
+        }};
+		@endcan
+		{{--@can('delete', currentEntity())--}}
+            window['smart-model'].collections.itemsOptions.delete = {a: {
+            'html': '<i class="material-icons">not_interested</i>',
+            'href' : '#',
+            'class': 'btn is-icon',
+            'rv-on-click': 'actions.showModalCancelar',
+            'rv-get-delete-url': '',
+            'data-delete-type': 'single',
+            'rv-hide-delete':''
+        }};
+		{{--@endcan--}}
+        window['smart-model'].collections.itemsOptions.supply = {a: {
+            'html': '<i class="material-icons">shopping_cart</i>',
+            'href' : '{!! url($company."/compras/#ID#/2/ordenes/crear") !!}',
+//            'href' : '#',
+            'class': 'btn is-icon',
+            'rv-hide-comprar':'',
+            'rv-get-comprar-url':''
+        }};
+        window['smart-model'].actions.itemsCancel = function(e, rv){
 
-				{{--let modal = window['smart-modal'];--}}
-				{{--modal.view = rivets.bind(modal, {--}}
-					{{--title: '¿Estas seguro que deseas cancelar la orden?',--}}
-					{{--content: '<form  id="cancel-form">' +--}}
-					{{--'<div class="form-group">' +--}}
-					{{--'<label for="recipient-name" class="form-control-label">Motivo de cancelación:</label>' +--}}
-					{{--'<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +--}}
-					{{--'</div>' +--}}
-					{{--'</form>',--}}
-					{{--buttons: [--}}
-						{{--{button: {--}}
-							{{--'text': 'Cerrar',--}}
-							{{--'class': 'btn btn-secondary',--}}
-							{{--'data-dismiss': 'modal',--}}
-						{{--}},--}}
-						{{--{button: {--}}
-							{{--'html': 'Cancelar',--}}
-							{{--'class': 'btn btn-danger',--}}
-							{{--'rv-on-click': 'action',--}}
-						{{--}}--}}
-					{{--],--}}
-					{{--action: function(e,rv) {--}}
-						{{--var formData = new FormData(document.querySelector('#cancel-form')), convertedJSON = {}, it = formData.entries(), n;--}}
+                $.delete(this.dataset.deleteUrl,data,function (response) {
+                    if(response.success){
+                        sessionStorage.reloadAfterPageLoad = true;
+                        location.reload();
+                    }
+                });
+        };
+        window['smart-model'].actions.showModalCancelar = function(e, rv) {
+            e.preventDefault();
+            let modal = window['smart-modal'];
+            modal.view = rivets.bind(modal, {
+                title: '¿Estas seguro que deseas cancelar la solicitud?',
+                content: '<form  id="cancel-form">' +
+                '<div class="form-group">' +
+//                '<label for="recipient-name" class="form-control-label">Cancelar:</label>' +
+//                '<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +
+                '</div>' +
+                '</form>',
+                buttons: [
+                    {button: {
+                        'text': 'Cerrar',
+                        'class': 'btn btn-secondary',
+                        'data-dismiss': 'modal',
+                    }},
+                    {button: {
+                        'html': 'Cancelar',
+                        'class': 'btn btn-danger',
+                        'rv-on-click': 'action',
+                    }}
+                ],
+                action: function(e,rv) {
+                    var formData = new FormData(document.querySelector('#cancel-form')), convertedJSON = {}, it = formData.entries(), n;
 
-						{{--while(n = it.next()) {--}}
-							{{--if(!n || n.done) break;--}}
-							{{--convertedJSON[n.value[0]] = n.value[1];--}}
-						{{--}--}}
-						{{--console.log(convertedJSON);--}}
-						{{--window['smart-model'].actions.itemsCancel.call(this, e, rv,convertedJSON);--}}
-					{{--}.bind(this),--}}
-					{{--// Opcionales--}}
-					{{--onModalShow: function() {--}}
+                    while(n = it.next()) {
+                        if(!n || n.done) break;
+                        convertedJSON[n.value[0]] = n.value[1];
+                    }
+                    console.log(convertedJSON);
+                    window['smart-model'].actions.itemsCancel.call(this, e, rv,convertedJSON);
+                }.bind(this),
+                // Opcionales
+                onModalShow: function() {
 
-						{{--let btn = modal.querySelector('[rv-on-click="action"]');--}}
+                    let btn = modal.querySelector('[rv-on-click="action"]');
 
-						{{--// Copiamos data a boton de modal--}}
-						{{--for (var i in this.dataset) btn.dataset[i] = this.dataset[i];--}}
+                    // Copiamos data a boton de modal
+                    for (var i in this.dataset) btn.dataset[i] = this.dataset[i];
 
-					{{--}.bind(this),--}}
-					{{--// onModalHide: function() {}--}}
-				{{--});--}}
-				{{--// Abrimos modal--}}
-				{{--$(modal).modal('show');--}}
-			{{--};--}}
-		{{--</script>--}}
-	{{--@endsection--}}
-	@include('layouts.smart.index')
+                }.bind(this),
+                // onModalHide: function() {}
+            });
+            // Abrimos modal
+            $(modal).modal('show');
+        };
+	</script>
+@endsection
+
+@include('layouts.smart.index')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
@@ -459,14 +458,11 @@
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('extraButtons')
 		@parent
-{{--		{!!isset($data->id_orden) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_orden]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}--}}
+		{!!isset($data->id_oferta) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_oferta]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
+		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($company.'/compras/'.$data->id_oferta.'/2/ordenes/crear',[1,2,3]), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
 	@endsection
-	@section('form-title')
+@section('form-title')
 		<h1 class="display-4">Datos de la Oferta de Compra</h1>
 	@endsection
 	@include('layouts.smart.show')
 @endif
-
-{{--@if (currentRouteName('createSolicitudOrden'))--}}
-	{{--@include('layouts.smart.create')--}}
-{{--@endif--}}
