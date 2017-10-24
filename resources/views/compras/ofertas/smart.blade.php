@@ -42,7 +42,7 @@
 		{{ Form::label('', 'Días/Fecha') }}
 		<div class="input-group">
 			{!! Form::text('tiempo_entrega', null,['id'=>'tiempo_entrega','class'=>'form-control','readonly','placeholder'=>'Días para la entrega']) !!}
-			{!! Form::text('fecha_estimada_entrega', null,['id'=>'fecha_estimada_entrega','class'=>'form-control','readonly','placeholder'=>'Fecha estimada']) !!}
+			{!! Form::text('fecha_estimada_entrega', null,['id'=>'fecha_estimada_entrega','data-date-format'=>'mm-dd-yyyy','class'=>'form-control','readonly','placeholder'=>'Fecha estimada']) !!}
 		</div>
 	</div>
 	<div class="form-group col-md-3">
@@ -211,7 +211,7 @@
 									['class'=>'form-control descuento','id'=>'descuento_detalle'.$detalle->id_solicitud_detalle,'style'=>'min-width:100px','placeholder'=>'99.0000','onkeyup'=>'total_row('.$detalle->id_solicitud_detalle.')']) !!}
 								</td>
 								<td>
-									<input type="text" class="form-control total" id="total{{$detalle->id_solicitud_detalle}}" style="min-width: 100px" name="{{'detalles['.$detalle->id_solicitud_detalle.'][total_producto]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+									<input type="text" class="form-control total" id="total{{$detalle->id_solicitud_detalle}}" style="min-width: 100px" name="{{'detalles['.$detalle->id_solicitud_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
 								</td>
 								<td>
 									<button class="btn is-icon text-primary bg-white"
@@ -223,8 +223,8 @@
 								</td>
 							</tr>
 						@endforeach
-					@elseif( isset( $data->detallesOferta ) )
-						@foreach( $data->detallesOferta->where('cerrado',false) as $detalle)
+					@elseif( isset( $data->DetalleOfertas ) )
+						@foreach( $data->DetalleOfertas->where('cerrado',false) as $detalle)
 							<tr class="{{isset($detalle->fk_id_solicitud)?'list-left bg-light':''}}">
 								<td>
 									{{isset($detalle->fk_id_solicitud)?$detalle->fk_id_solicitud:'N/A'}}
@@ -273,7 +273,7 @@
 									{{number_format($detalle->descuento_detalle,4,'.','')}}
 								</td>
 								<td>
-									<input type="text" class="form-control total" style="min-width: 100px" name="{{'detalles['.$detalle->id_oferta_detalle.'][total_producto]'}}" readonly value="{{number_format($detalle->total_producto,2,'.','')}}">
+									<input type="text" class="form-control total" style="min-width: 100px" name="{{'detalles['.$detalle->id_oferta_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
 								</td>
 								<td>
 									{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}

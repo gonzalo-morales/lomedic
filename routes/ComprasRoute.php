@@ -22,11 +22,15 @@ Route::prefix('{company}')->group(function () {
         Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
         Route::resource('solicitudes', 'Compras\SolicitudesController');
         Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
+        Route::group(['prefix'=>'{id}/{tipo_documento}'],function (){
+            Route::resource('ordenes','Compras\OrdenesController');
+        });
         Route::get('ordenes/getProveedores', 'Compras\OrdenesController@getProveedores')->name('ordenes');
         Route::post('ordenes/destroyDetail', 'Compras\OrdenesController@destroyDetail')->name('ordenes');
         Route::get('ordenes/{id}/impress', 'Compras\OrdenesController@impress')->name('ordenes');
         Route::get('ordenes/{id}/solicitudOrden','Compras\OrdenesController@createSolicitudOrden')->name('ordenes');
         Route::resource('ordenes','Compras\OrdenesController');
+
         Route::group(['prefix' => 'solicitudes/{id_solicitud}'], function(){
             Route::resource('ofertas','Compras\OfertasController');
         });

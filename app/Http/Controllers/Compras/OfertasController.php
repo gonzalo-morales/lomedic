@@ -277,7 +277,7 @@ class OfertasController extends ControllerBase
         {
             $subtotal += $detalle->precio_unitario * $detalle->cantidad;
             $iva += (($detalle->precio_unitario*$detalle->cantidad)*$detalle->impuesto->porcentaje)/100;
-            $total += $detalle->total_producto;
+            $total += $detalle->total;
         }
         $total = number_format($total,2,'.',',');
 

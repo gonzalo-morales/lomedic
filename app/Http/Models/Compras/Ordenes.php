@@ -108,4 +108,9 @@ class Ordenes extends ModelCompany
         return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
     }
 
+    public function tipoDocumento()
+    {
+        return $this->hasOne('App\Http\Models\Administracion\TiposDocumentos','id_tipo_documento','fk_id_tipo_documento');
+    }
+
 }

@@ -181,7 +181,7 @@ function agregarProducto() {
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_impuesto]" value="' + $('#fk_id_impuesto').val() + '" />')[0].outerHTML + $('#fk_id_impuesto').select2('data')[0].text,
             $('<input type="hidden" name="_detalles['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />')[0].outerHTML + $('#precio_unitario').val(),
             $('<input type="hidden" name="_detalles['+row_id+'][descuento_detalle]" value="' + $('#descuento_detalle').val() + '" />')[0].outerHTML + $('#descuento_detalle').val(),
-            $('<input type="text" value="'+ total +'" style="min-width: 100px" name="_detalles['+row_id+'][total_producto]" class="form-control total" readonly>')[0].outerHTML,
+            $('<input type="text" value="'+ total +'" style="min-width: 100px" name="_detalles['+row_id+'][total]" class="form-control total" readonly>')[0].outerHTML,
             '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
         ]);
 

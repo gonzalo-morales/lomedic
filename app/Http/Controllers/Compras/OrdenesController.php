@@ -7,8 +7,9 @@ use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Compras\DetalleSolicitudes;
-use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\Solicitudes;
+use App\Http\Models\Compras\Ofertas;
+use App\Http\Models\Compras\Ordenes;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
 use App\Http\Models\Finanzas\CondicionesPago;
@@ -36,17 +37,39 @@ class OrdenesController extends ControllerBase
 
 	public function create($company, $attributes =[])
 	{
+        switch (\request('tipo_documento')){
+            case 1:
+                $documento = Solicitudes::find(\request('id'));
+                $detalles_documento = $documento->detalleSolicitudes()->select('*','fk_id_solicitud as fk_id_documento')->get();
+                break;
+            case 2:
+                $documento = Ofertas::find(\request('id'));
+                $detalles_documento = $documento->DetalleOfertas()->select('*','fk_id_oferta as fk_id_documento')->get();
+                break;
+            case 3:
+                $documento = Ofertas::find(\request('id'));
+                $detalles_documento = $documento->DetalleOfertas()->get();
+                break;
+            default:
+                $documento = null;
+                $detalles_documento = null;
+                break;
+        }
+
 	    $clientes = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
 	        $q->where('fk_id_tipo_socio', 1);
         })->pluck('nombre_corto','id_socio_negocio');
 
-        $attributes = $attributes+['dataview'=>[
-                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
-                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-                'clientes' => $clientes,
-                'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
-                'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
-                'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
+        $attributes = ['dataview'=>[
+            'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+            'documento' =>$documento,
+            'detalles_documento'=>$detalles_documento,
+            'tipo_documento' => \request('tipo_documento'),
+            'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
+            'clientes' => $clientes,
+            'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+            'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
+            'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
             ]];
 		 return parent::create($company,$attributes);
 	}
@@ -70,6 +93,9 @@ class OrdenesController extends ControllerBase
 		    $request->request->set('importacion','t');
         }
 //        dd($request->request);
+        $now = DB::raw('now()');
+        $request->request->set('fecha_estimada_entrega',DB::raw("date '$now' + integer '$request->tiempo_entrega'"));
+//        dd($request->request);
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 			if(isset($request->_detalles)) {
@@ -89,8 +115,12 @@ class OrdenesController extends ControllerBase
 					$isSuccess->detalleOrdenes()->save(new DetalleOrdenes($detalle));
 				}
 			}
-			if(isset($request->id_solicitud)){
+			if(isset($request->detalles)){
+			    $id_documento = 0;
+			    $tipo_documento = 0;
 			    foreach ($request->detalles as $detalle){
+                    $id_documento = $detalle['fk_id_documento'];
+                    $tipo_documento = $detalle['fk_id_tipo_documento'];
                     if(empty($detalle['fk_id_upc'])){
                         $detalle['fk_id_upc'] = null;
                     }
@@ -105,9 +135,18 @@ class OrdenesController extends ControllerBase
                     }
                     $isSuccess->detalleOrdenes()->save(new DetalleOrdenes($detalle));
                 }
-                $solicitud = Solicitudes::where('id_solicitud',$request->id_solicitud)->first();
-                $solicitud->fk_id_estatus_solicitud = 2;
-                $solicitud->save();
+                switch ($tipo_documento){
+                    case 1:
+                        $solicitud = Solicitudes::where('id_solicitud',$request->id_solicitud)->first();
+                        $solicitud->fk_id_estatus_solicitud = 2;
+                        $solicitud->save();
+                        break;
+                    case 2:
+                        $oferta = Ofertas::where('id_oferta',$id_documento)->first();
+                        $oferta->fk_id_estatus_oferta = 2;
+                        $oferta->save();
+                        break;
+			    }
             }
             $this->log('store', $isSuccess->id_orden);
             return $this->redirect('store');
