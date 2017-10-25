@@ -291,6 +291,7 @@
 @section('header-bottom')
 	@parent
 	{{ HTML::script(asset('vendor/vanilla-datatables/vanilla-dataTables.js')) }}
+    @if (!Route::currentRouteNamed(currentRouteName('index')))
 	{{ HTML::script(asset('js/proyectos.js')) }}
 	{{ HTML::script(asset('js/maestro_materiales.js')) }}
 	
@@ -764,7 +765,8 @@ var chart = AmCharts.makeChart( "chart-compras", {
 	}
 
 </script>
-	
+    @endif
+
 @endsection
 
 @endsection

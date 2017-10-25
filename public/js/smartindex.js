@@ -74,12 +74,14 @@ datatable.on('datatable.update', function() {
 	view.unbind();
 	view = rivets.bind(window['smart-view'], window['smart-model']);
 	view.models.actions.itemsSync({}, view.models);
+    $('[data-toggle="tooltip"]').tooltip();
 })
 
 datatable.on('datatable.page', function() {
 	view.unbind();
 	view = rivets.bind(window['smart-view'], window['smart-model']);
 	view.models.actions.itemsSync({}, view.models);
+    $('[data-toggle="tooltip"]').tooltip();
 })
 
 $('#smart-modal').on('show.bs.modal', function (e) {

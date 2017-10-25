@@ -24,12 +24,16 @@
 		'html': '<i class="material-icons">visibility</i>',
 		'class': 'btn is-icon',
 		'rv-get-show-url': '',
+		'data-toggle':'tooltip',
+		'title':'Ver'
 	}};
 	@can('update', currentEntity())
 	window['smart-model'].collections.itemsOptions.edit = {a: {
 		'html': '<i class="material-icons">mode_edit</i>',
 		'class': 'btn is-icon',
 		'rv-get-edit-url': '',
+        'data-toggle':'tooltip',
+        'title':'Editar'
 	}};
 	@endcan
 	@can('delete', currentEntity())
@@ -40,9 +44,10 @@
 		'rv-on-click': 'actions.showModalDelete',
 		'rv-get-delete-url': '',
 		'data-delete-type': 'single',
+        'data-toggle':'tooltip',
+        'title':'Eliminar'
 	}};
 	@endcan
-
 </script>
 @endsection
 

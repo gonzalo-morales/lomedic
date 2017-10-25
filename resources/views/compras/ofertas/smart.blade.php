@@ -357,7 +357,9 @@
             'html': '<i class="material-icons">mode_edit</i>',
             'class': 'btn is-icon',
             'rv-get-edit-url': '',
-            'rv-hide-update':''
+            'rv-hide-update':'',
+            'data-toggle':'tooltip',
+            'title':'Editar'
         }};
 		@endcan
 		@can('delete', currentEntity())
@@ -368,7 +370,9 @@
             'rv-on-click': 'actions.showModalCancelar',
             'rv-get-delete-url': '',
             'data-delete-type': 'single',
-            'rv-hide-delete':''
+            'rv-hide-delete':'',
+            'data-toggle':'tooltip',
+            'title':'Cancelar'
         }};
 		@endcan
         window['smart-model'].collections.itemsOptions.supply = {a: {
@@ -377,7 +381,9 @@
 //            'href' : '#',
             'class': 'btn is-icon',
             'rv-hide-comprar':'',
-            'rv-get-comprar-url':''
+            'rv-get-comprar-url':'',
+            'data-toggle':'tooltip',
+            'title':'Ordenar'
         }};
         window['smart-model'].actions.itemsCancel = function(e, rv){
                 $.delete(this.dataset.deleteUrl,function (response) {

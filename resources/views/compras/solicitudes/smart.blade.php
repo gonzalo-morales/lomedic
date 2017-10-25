@@ -306,7 +306,9 @@
              'html': '<i class="material-icons">mode_edit</i>',
              'class': 'btn is-icon',
              'rv-get-edit-url': '',
-             'rv-hide-update':''
+             'rv-hide-update':'',
+             'data-toggle':'tooltip',
+             'title':'Editar'
          }};
 		 @endcan
 		@can('delete', currentEntity())
@@ -317,21 +319,28 @@
 			'rv-on-click': 'actions.showModalCancelar',
 			'rv-get-delete-url': '',
 			'data-delete-type': 'single',
-			'rv-hide-delete':''
+			'rv-hide-delete':'',
+             'data-toggle':'tooltip',
+             'title':'Cancelar'
 		}};
 		@endcan
         window['smart-model'].collections.itemsOptions.offer = {a: {
         'html': '<i class="material-icons">attach_money</i>',
         'class': 'btn is-icon',
 		'href':'#',
-		'rv-get-offer-url':''
+		'rv-get-offer-url':'',
+		'data-toggle':'tooltip',
+		'title':'Crear oferta'
         }};
 		window['smart-model'].collections.itemsOptions.supply = {a: {
 		'html': '<i class="material-icons">shopping_cart</i>',
-		'href' : '{!! companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>'#ID#']) !!}',
+{{--		'href' : '{!! companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>'#ID#']) !!}',--}}
+		'href' : '{!! url($company."/compras/#ID#/1/ordenes/crear") !!}',
 		'class': 'btn is-icon',
 		'rv-hide-comprar':'',
-		'rv-get-comprar-url':''
+		'rv-get-comprar-url':'',
+		'data-toggle':'tooltip',
+		'title':'Ordenar'
         }};
 		window['smart-model'].actions.itemsCancel = function(e, rv, motivo){
 		    if(!motivo.motivo_cancelacion){
