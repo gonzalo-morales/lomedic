@@ -21,8 +21,8 @@
 			{{ method_field('PUT') }}
 			<div class="col-12">
 				<div class="text-right">
-					<button class="btn btn-primary" name="action">Guardar Cambios</button>
-					<button class="btn btn-default text-primary">Cancelar y salir</button>
+					<button class="btn btn-primary progress-button" name="action">Guardar Cambios</button>
+					<button class="btn btn-default text-primary progress-button">Cancelar y salir</button>
 				</div>
 			</div><!--/buttons-->
 

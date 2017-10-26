@@ -16,8 +16,8 @@
 	<div class="row">
 		<div class="col-12">
 			<div class="text-right">
-				<button type="submit" class="btn btn-primary">Guardar y salir</button>
-				<a href="{{ url()->previous() }}" class="btn btn-default">Cancelar y salir</a>
+				<button type="submit" class="btn btn-primary progress-button">Guardar y salir</button>
+				<a href="{{ url()->previous() }}" class="btn btn-default progress-button">Cancelar y salir</a>
 			</div>
 		</div>
 	</div>
@@ -29,8 +29,10 @@
 						<label for="nombre">Nombre:</label>
 						<input type="text" name="nombre" id="nombre" class="validate form-control">
 						@if ($errors->has('nombre'))
-							<span class="help-block">
-								<strong>{{ $errors->first('nombre') }}</strong>
+							
+							<span class="help-block text-danger">
+								
+								{{ $errors->first('nombre') }}
 							</span>
 						@endif
 					</div>
@@ -41,8 +43,10 @@
 						<input type="text" name="descripcion" id="descripcion" class="validate form-control">
 						
 						@if ($errors->has('descripcion'))
-							<span class="help-block">
-								<strong>{{ $errors->first('descripcion') }}</strong>
+							
+							<span class="help-block text-danger">
+								
+								{{ $errors->first('descripcion') }}
 							</span>
 						@endif
 					</div>
@@ -54,8 +58,9 @@
 						<label for="url">URL:</label>
 						<input type="text" name="url" id="url" class="validate form-control">
 						@if ($errors->has('url'))
-							<span class="help-block">
-								<strong>{{ $errors->first('url') }}</strong>
+							
+							<span class="help-block text-danger">
+								{{ $errors->first('url') }}
 							</span>
 						@endif
 					</div>
@@ -70,8 +75,9 @@
 							<option value="icono-3">Option 3</option>
 						</select>
 						@if ($errors->has('icono'))
-							<span class="help-block">
-								<strong>{{ $errors->first('icono') }}</strong>
+							
+							<span class="help-block text-danger">
+								{{ $errors->first('icono') }}
 							</span>
 						@endif
 					</div>
@@ -86,8 +92,9 @@
 							@endforeach
 						</select>
 						@if ($errors->has('modulos'))
-							<span class="help-block">
-								<strong>{{ $errors->first('modulos') }}</strong>
+							
+							<span class="help-block text-danger">
+								{{ $errors->first('modulos') }}
 							</span>
 						@endif
 					</div>
@@ -102,8 +109,9 @@
 							@endforeach
 						</select>
 						@if ($errors->has('empresas'))
-							<span class="help-block">
-								<strong>{{ $errors->first('empresas') }}</strong>
+							
+							<span class="help-block text-danger">
+								{{ $errors->first('empresas') }}
 							</span>
 						@endif
 					</div>
@@ -115,8 +123,9 @@
 						<input type="checkbox" id="accion_menu" name="accion_menu" />
 						<label for="accion_menu">Acción Menu</label>
 						@if ($errors->has('accion_menu'))
-							<span class="help-block">
-								<strong>{{ $errors->first('accion_menu') }}</strong>
+							
+							<span class="help-block text-danger">
+								{{ $errors->first('accion_menu') }}
 							</span>
 						@endif
 					</div>
@@ -126,8 +135,9 @@
 						<input type="checkbox" id="accion_barra" name="accion_barra" />
 						<label for="accion_barra">Acción Barra</label>
 						@if ($errors->has('accion_barra'))
-							<span class="help-block">
-								<strong>{{ $errors->first('accion_barra') }}</strong>
+							
+							<span class="help-block text-danger">
+								{{ $errors->first('accion_barra') }}
 							</span>
 						@endif
 					</div>
@@ -137,8 +147,9 @@
 						<input type="checkbox" id="accion_tabla" name="accion_tabla" />
 						<label for="accion_tabla">Acción Tabla</label>
 						@if ($errors->has('accion_tabla'))
-							<span class="help-block">
-								<strong>{{ $errors->first('accion_tabla') }}</strong>
+							
+							<span class="help-block text-danger">
+								{{ $errors->first('accion_tabla') }}
 							</span>
 						@endif
 					</div>
@@ -148,8 +159,9 @@
 						<input type="checkbox" id="modulo_seguro" name="modulo_seguro" />
 						<label for="modulo_seguro">Modo seguro</label>
 						@if ($errors->has('modulo_seguro'))
-							<span class="help-block">
-								<strong>{{ $errors->first('modulo_seguro') }}</strong>
+							
+							<span class="help-block text-danger">
+								{{ $errors->first('modulo_seguro') }}
 							</span>
 						@endif
 					</div>

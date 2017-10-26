@@ -17,8 +17,8 @@
 @section('content')
 <div class="col-12">
 	<p class="text-right">
-		<a href="{{ companyRoute('create') }}" class="btn btn-primary">Nuevo</a>
-		<a href="{{ companyRoute('index') }}" class="btn btn-info"><i class="material-icons align-middle">cached</i> Actualizar</a>
+		<a href="{{ companyRoute('create') }}" class="btn btn-primary progress-button">Nuevo</a>
+		<a href="{{ companyRoute('index') }}" class="btn btn-info progress-button"><i class="material-icons align-middle">cached</i> Actualizar</a>
 	</p>
 </div>
 @if (session('success'))

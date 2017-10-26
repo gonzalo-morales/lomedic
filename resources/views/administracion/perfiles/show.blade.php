@@ -14,8 +14,8 @@
 
 	<div class="col-12">
 		<div class="text-right">
-			<a href="{{ companyRoute("edit",['id' => $data->id_perfil, 'company'=> $company]) }}" class="btn btn-primary"><i class="material-icons align-middle">mode_edit</i> Editar</a>
-			<a href="{{ companyRoute("index",['company'=> $company]) }}" class="btn btn-default">Regresar</a>
+			<a href="{{ companyRoute("edit",['id' => $data->id_perfil, 'company'=> $company]) }}" class="btn btn-primary progress-button"><i class="material-icons align-middle">mode_edit</i> Editar</a>
+			<a href="{{ companyRoute("index",['company'=> $company]) }}" class="btn btn-default progress-button">Regresar</a>
 		</div>
 	</div>
 

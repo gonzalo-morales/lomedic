@@ -12,8 +12,8 @@
 		{{ method_field('POST') }}
 	<div class="col-12">
 		<div class="text-right">
-			<button class="btn btn-primary" name="action">Guardar</button>
-			<a href="{{ url()->previous() }}" class="btn btn-default">Cancelar y salir</a>
+			<button class="btn btn-primary progress-button" name="action">Guardar</button>
+			<a href="{{ url()->previous() }}" class="btn btn-default progress-button">Cancelar y salir</a>
 		</div>
 	</div><!--/row buttons-->
 

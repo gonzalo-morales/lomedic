@@ -16,8 +16,8 @@
 	<div class="row">
 		<div class="col-12">
 			<div class="text-right">
-				<button type="submit" class="btn btn-primary">Guardar y salir</button>
-				<a href="{{ url()->previous() }}" class="btn btn-default">Cancelar y salir</a>
+				<button type="submit" class="btn btn-primary progress-button">Guardar y salir</button>
+				<a href="{{ url()->previous() }}" class="btn btn-default progress-button">Cancelar y salir</a>
 			</div>
 		</div>
 	</div>

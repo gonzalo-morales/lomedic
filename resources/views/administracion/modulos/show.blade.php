@@ -13,8 +13,8 @@
 <div class="row">
 	<div class="col-12">
 		<div class="text-right">
-			<a href="{{ companyRoute('edit', ['id' => $data->id_modulo]) }}" class="btn btn-primary"><i class="material-icons align-middle">mode_edit</i> Editar</a>
-			<a href="{{ companyRoute('index') }}" class="btn btn-default">Regresar</a>
+			<a href="{{ companyRoute('edit', ['id' => $data->id_modulo]) }}" class="btn btn-primary progress-button"><i class="material-icons align-middle">mode_edit</i> Editar</a>
+			<a href="{{ companyRoute('index') }}" class="btn btn-default progress-button">Regresar</a>
 		</div>
 	</div>
 </div>
