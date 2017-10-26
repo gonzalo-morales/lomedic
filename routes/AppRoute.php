@@ -20,7 +20,7 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-	Route::resource('/', 'HomeController', ['middleware' => 'share']);
+    Route::resource('/', 'HomeController', ['middleware' => ['share','csrf']]);
 });
 
 Route::group(['prefix' => '{company}/{entity}', 'middleware' => ['auth', 'share']], function($co) {

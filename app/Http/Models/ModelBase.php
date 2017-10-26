@@ -130,7 +130,7 @@ class ModelBase extends Model
 	            'comment'  => $column->getComment(),
 	        ];
 	    }, $columns );
-
+	        
         $rules = [];
         foreach($propertys as $col=>$prop) {
             if(in_array($col, $this->fillable))
@@ -146,7 +146,7 @@ class ModelBase extends Model
                 elseif(in_array($type,['Integer','Decimal'])) {
                     array_push($rules[$col],'digits_between:0,'.$prop['length']);
                 }
-                else {
+                elseif(!in_array($type,['Text'])) {
                     array_push($rules[$col],'max:'.$prop['length']);
                 }
 

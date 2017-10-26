@@ -105,6 +105,7 @@ class ControllerBase extends Controller
 		# Validamos request, si falla regresamos pagina
 		$this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
+		DB::beginTransaction();
 		$isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 
@@ -117,6 +118,8 @@ class ControllerBase extends Controller
 					}
 				}
 			}
+			
+			DB::commit();
 
 			# Eliminamos cache
 			Cache::tags(getCacheTag('index'))->flush();
@@ -124,6 +127,7 @@ class ControllerBase extends Controller
 			$this->log('store', $isSuccess->id_banco);
 			return $this->redirect('store');
 		} else {
+		    DB::rollBack();
 			$this->log('error_store');
 			return $this->redirect('error_store');
 		}
@@ -204,6 +208,7 @@ class ControllerBase extends Controller
 		# Validamos request, si falla regresamos atras
 		$this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
+		DB::beginTransaction();
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
 		if ($entity->save()) {
@@ -225,6 +230,7 @@ class ControllerBase extends Controller
 					}
 				}
 			}
+			DB::commit();
 
 			# Eliminamos cache
 			Cache::tags(getCacheTag('index'))->flush();
@@ -232,6 +238,7 @@ class ControllerBase extends Controller
 			$this->log('update', $id);
 			return $this->redirect('update');
 		} else {
+		    DB::rollBack();
 			$this->log('error_update', $id);
 			return $this->redirect('error_update');
 		}
@@ -251,9 +258,11 @@ class ControllerBase extends Controller
 		# Unico
 		if (!is_array($idOrIds)) {
 
+		    DB::beginTransaction();
 			$isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)->update(['eliminar' => 't']);
 			if ($isSuccess) {
 
+			    DB::commit();
 				$this->log('destroy', $idOrIds);
 
 				# Eliminamos cache
@@ -268,6 +277,7 @@ class ControllerBase extends Controller
 
 			} else {
 
+			    DB::rollBack();
 				$this->log('error_destroy', $idOrIds);
 
 				if ($request->ajax()) {
@@ -281,9 +291,11 @@ class ControllerBase extends Controller
 		# Multiple
 		} else {
 
+		    DB::beginTransaction();
 			$isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)->update(['eliminar' => 't']);
 			if ($isSuccess) {
 
+			    DB::commit();
 				# Shorthand
 				foreach ($idOrIds as $id) $this->log('destroy', $id);
 
@@ -299,6 +311,7 @@ class ControllerBase extends Controller
 
 			} else {
 
+			    DB::rollBack();
 				# Shorthand
 				foreach ($idOrIds as $id) $this->log('error_destroy', $id);
 

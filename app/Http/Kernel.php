@@ -57,5 +57,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'share' => \App\Http\Middleware\Share::class,
+        'csrf' => \App\Http\Middleware\VerifyCsrfToken::class,
     ];
 }

@@ -16,7 +16,7 @@ Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
 
-	Route::group(['prefix' => 'servicios', 'as' => 'servicios.', 'middleware' => ['share'] ], function() {
+    Route::group(['prefix' => 'servicios', 'as' => 'servicios.', 'middleware' => ['share','csrf'] ], function() {
 	    Route::get("/", function(){ return View::make("servicios.index"); });
 	    Route::post('getAfiliados','Servicios\RecetasController@getAfiliados')->name('recetas.getAfiliados');
 	    Route::post('getDiagnosticos','Servicios\RecetasController@getDiagnosticos')->name('recetas.getDiagnosticos');

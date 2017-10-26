@@ -33,7 +33,7 @@
     				</div>
     				<div class="form-group">
     					<div class=" container">
-    					{{ Form::button('Entrar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
+    					{{ Form::button('Entrar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
     					</div>
     				</div>
     				<div class="form-group">

@@ -14,6 +14,8 @@ use App\Http\Models\Administracion\Impuestos;
 use App\Http\Models\Administracion\Familiasproductos;
 use App\Http\Models\Administracion\PresentacionVenta;
 use App\Http\Models\SociosNegocio\TiposSocioNegocio;
+use App\Http\Models\Inventarios\Upcs;
+use Illuminate\Support\Facades\Crypt;
 
 class ProductosController extends ControllerBase
 {
@@ -41,6 +43,8 @@ class ProductosController extends ControllerBase
             'presentacionventa' => PresentacionVenta::where('eliminar',0)->where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('Selecciona una Presentacion de venta...',''),
             'sociosnegocio' => TiposSocioNegocio::where('id_tipo_socio',2)->first()->sng()->where('eliminar',0)->where('activo',1)
                 ->pluck('nombre_corto','id_socio_negocio')->sortBy('nombre_corto')->prepend('Selecciona un Proveedor...',''),
+            'upcs' => Upcs::where('activo',1)->where('eliminar',0)->select('id_upc','upc')->pluck('upc','id_upc')->sortBy('upc')->prepend('Selecciona un upc',''),
+            'api_js'=>Crypt::encryptString('"select": ["nombre_comercial", "descripcion","fk_id_laboratorio"], "conditions": [{"where": ["id_upc","$id_upc"]}], "with": ["laboratorio"]')
         ];
     }
 

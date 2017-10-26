@@ -1,7 +1,15 @@
 @section('content-width', 's12')
+@section('header-top')
+	@parent
+	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
+@endsection
 @section('header-bottom')
     @parent
     @if(!Route::currentRouteNamed(currentRouteName('index')))
+    	{{ HTML::script(asset('vendor/vanilla-datatables/vanilla-dataTables.js')) }}
+    	<script type="text/javascript">
+        	var param_js = '{{ $api_js }}';
+        </script>
     	{{ HTML::script(asset('js/inventarios/productos.js')) }}
     @endif
 @endsection
@@ -19,7 +27,7 @@
         	<div class="col-sm-12 col-md-6 col-lg-3">
         		<div class="form-group">
         			<i class="material-icons text-danger float-left" data-toggle="tooltip" data-placement="top" title="El numero de serie puede cambiar si otro usuario genero un sku antes de que se guardara este. Verificalo despues de guardarlo.">warning</i>
-        			{{ Form::cText('Sku', 'sku', ['placeholder'=>'Ejemplo: SO-1922-09','disabled'=>true]) }}
+        			{{ Form::cText('Sku', 'sku', ['placeholder'=>'Ejemplo: SO-01922-09','disabled'=>true]) }}
         		</div>
         	</div>
         	<div class="col-sm-12 col-md-12 col-lg-7">
@@ -113,7 +121,7 @@
                 			{{ Form::cSelect('Familia', 'fk_id_familia', $familia ?? []) }}
                 		</div>
                 	</div>
-                	<div class="col-sm-12 col-md-12 col-lg-6 row">
+                	<div class="col-sm-12 col-md-12 col-lg-10 col-xl-6 row">
                 		<div class="col-sm-12 col-md-4 col-lg-4">
                     		<div class="form-group">
                     			{{ Form::cCheckboxBtn('Estatus', 'Activo', 'activo', $data['activo'] ?? null, 'Inactivo') }}
@@ -139,60 +147,44 @@
             				<h4>Relacion Sku - Upc's</h4>
             				<p>Aquí puedes relacionar los codigos de barra correspondientes al Sku</p>
         					<div class="row">
-        						<div class="col-sm-8 form-group">
-    								{{ Form::cText('Upc', 'upc') }}
+        						<div class="col-sm-12 col-md-8 form-group">
+        							{{ Form::cSelect('Upc', 'fk_id_upc', $upcs ?? [],['data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api']) }}
         						</div>
-        						<div class="col-sm-4 form-group">
-    								{{ Form::cText('Cantidad', 'cantidad') }}
+        						<div class="col-sm-12 col-md-4 form-group">
+    								{{ Form::cNumber('Cantidad', 'cantidad') }}
         						</div>
         					</div>
                 			<div class="col-sm-12 text-center my-3">
             					<div class="sep sepBtn">
-            						<button class="btn btn-primary btn-large btn-circle" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+            						<button id="agrega-detalle" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-toggle="tooltip" title="Agregar" type="button"><i class="material-icons">add</i></button>
             					</div>
             				</div>
             			</div>
         				<div class="card-body">
-        					<table id="upcs" class="table table-responsive table-hover">
+        					<table id="upcs" class="table-responsive-sm highlight mt-3">
         						<thead>
         							<tr>
-        								<th>#</th>
-        								<th>Upc</th>
-        								<th>Nombre Comercial</th>
-        								<th>Descripcion</th>
-        								<th>Laboratorio</th>
-        								<th>Cantidad</th>
+        								<th id="idupc">Upc</th>
+        								<th id="upcnombrecomercial">Nombre Comercial</th>
+        								<th id="upcdescripcion">Descripcion</th>
+        								<th id="upclaboratorio">Laboratorio</th>
+        								<th id="upccantidad">Cantidad</th>
         								<th></th>
         							</tr>
         						</thead>
         						<tbody>
-        							<tr>
-        								<th scope="row">1</th>
-        								<td>23454643140</td>
-        								<td>Tempra Tabletas C/40</td>
-        								<td>Paracetamol 250 mg Caja con 40 tabletas </td>
-        								<td>BRISTOL-MYERS SQUIBB DE MEXICO, S. DE R. L. DE C.V.</td>
-        								<td>1</td>
-        								<td><a href="#" data-toggle="Eliminar" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a></td>
-        							</tr>
-        							<tr>
-        								<th scope="row">2</th>
-        								<td>23454643120</td>
-        								<td>Tempra Tabletas C/20</td>
-        								<td>Paracetamol 250 mg Caja con 20 tabletas</td>
-        								<td>BRISTOL-MYERS SQUIBB DE MEXICO, S. DE R. L. DE C.V.</td>
-        								<td>2</td>
-        								<td><a href="#" data-toggle="Eliminar" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a></td>
-        							</tr>
-        							<tr>
-        								<th scope="row">3</th>
-        								<td>23454643110</td>
-        								<td>Tempra Tabletas C/10</td>
-        								<td>Paracetamol 250 mg Caja con 10 tabletas</td>
-        								<td>BRISTOL-MYERS SQUIBB DE MEXICO, S. DE R. L. DE C.V.</td>
-        								<td>4</td>
-        								<td><a href="#" data-toggle="Eliminar" data-placement="top" title="Eliminar"><i class="material-icons">delete</i></a></td>
-        							</tr>
+        						@if(isset($data->upcs)) 
+        							@foreach($data->upcs as $key=>$detalle)
+    								<tr>
+    									<td>{{$detalle->upc}}</td>
+    									<td>{{$detalle->nombre_comercial ?? ''}}</td>
+    									<td>{{$detalle->descripcion ?? ''}}</td>
+    									<td>{{$detalle->laboratorio->laboratorio ?? ''}}</td>
+    									<td>{{$detalle->pivot->where('fk_id_upc',$detalle->id_upc)->where('fk_id_sku',$data->id_sku)->first()->cantidad ?? '0'}}</td>
+    									<td>{!! Form::hidden('detalles['.$key.'][fk_id_upc]',$detalle->id_upc) !!} <button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>
+    								</tr>
+        							@endforeach
+        						@endif
         						</tbody>
         					</table>
         				</div>
@@ -203,6 +195,9 @@
             	<div class="row">
     	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
             			{{ Form::cSelect('Unidad Medida Venta', 'fk_id_unidad_medida_venta', $unidadmedida ?? []) }}
+            		</div>
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
+            			{{ Form::cSelect('Presentacion de Venta', 'fk_id_presentacion_venta', $unidadmedida ?? []) }}
             		</div>
     	  		</div>
             </div>
@@ -218,54 +213,54 @@
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-inventario" aria-labelledby="inventario-tab">
             	<div class="row">
-    	  			<div class="form-group col-sm-12 col-md-6 col-lg-2">
-                		{{ Form::cText('Necesario', 'necesario',['placeholder'=>'Ejm: 40']) }}
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-2">
+                		{{ Form::cNumber('Necesario', 'necesario',['placeholder'=>'Ejm: 40']) }}
                 	</div>
-                	<div class="form-group col-sm-12 col-md-6 col-lg-2">
-                		{{ Form::cText('Minimo', 'minimo',['placeholder'=>'Ejm: 10']) }}
+                	<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-2">
+                		{{ Form::cNumber('Minimo', 'minimo',['placeholder'=>'Ejm: 10']) }}
                 	</div>
-    	  			<div class="form-group col-sm-12 col-md-6 col-lg-2">
-                		{{ Form::cText('Maximo', 'maximo',['placeholder'=>'Ejm: 90']) }}
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-2">
+                		{{ Form::cNumber('Maximo', 'maximo',['placeholder'=>'Ejm: 90']) }}
                 	</div>
-                	<div class="form-group col-sm-12 col-md-6 col-lg-2">
-            			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $metodovaloracion ?? ['Costos estimados','Costo estandar','Costos promedio','PEPS','UEPS','Lotes espec�fico']) }}
+                	<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-2">
+            			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $metodovaloracion ?? ['Costos estimados','Costo estandar','Costos promedio','PEPS','UEPS','Lotes especificos']) }}
             		</div>
     	  		</div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-planificacion" aria-labelledby="planificacion-tab">
             	<div class="row">
-    	  			<div class="form-group col-sm-12 col-md-6 col-lg-2">
-            			{{ Form::cText('Punto Reorden', 'punto_reorden',['placeholder'=>'Ejm: 15']) }}
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-2">
+            			{{ Form::cNumber('Punto Reorden', 'punto_reorden',['placeholder'=>'Ejm: 15']) }}
             		</div>
-            		<div class="form-group col-sm-12 col-md-6 col-lg-2">
+            		<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-3">
             			{{ Form::cSelect('Intervalo del periodo', 'fk_id_intervalo', $intervaloperiodo?? ['Diario','Semanal','Quincenal','Menual','Trimestral','Semestral']) }}
             		</div>
-            		<div class="form-group col-sm-12 col-md-6 col-lg-2">
-            			{{ Form::cText('Cantidad minima por periodo', 'minima_periodo',['placeholder'=>'Ejm: 5']) }}
+            		<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-3">
+            			{{ Form::cNumber('Cantidad minima por periodo', 'minima_periodo',['placeholder'=>'Ejm: 5']) }}
             		</div>
-    	  			<div class="form-group col-sm-12 col-md-6 col-lg-2">
-                		{{ Form::cText('Tiempo lead (Días)', 'tiempo_lead',['placeholder'=>'Ejm: 7']) }}
+    	  			<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                		{{ Form::cNumber('Tiempo lead (Días)', 'tiempo_lead',['placeholder'=>'Ejm: 7']) }}
                 	</div>
-                	<div class="form-group col-sm-12 col-md-6 col-lg-2">
-                		{{ Form::cText('Días de tolerancia', 'dias_tolerancia',['placeholder'=>'Ejm: 3']) }}
+                	<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-2">
+                		{{ Form::cNumber('Días de tolerancia', 'dias_tolerancia',['placeholder'=>'Ejm: 3']) }}
                 	</div>
     	  		</div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-especificaciones" aria-labelledby="especificaciones-tab">
             	<div class="row">
-        			<div class="col-sm-6 form-group">
+        			<div class="col-md-12 col-lg-6 form-group">
                 		{{ Form::cTextArea('Descripcion', 'descripcion') }}
                 	</div>
-                	<div class="col-sm-6 form-group">
+                	<div class="col-md-12 col-lg-6 form-group">
                 		{{ Form::cTextArea('Descripcion de Cenefas', 'descripcion_cenefas') }}
                 	</div>
-                	<div class="col-sm-6 form-group">
+                	<div class="col-md-12 col-lg-6 form-group">
                 		{{ Form::cTextArea('Descripcion en Ticket', 'descripcion_ticket') }}
                 	</div>
-                	<div class="col-sm-6 form-group">
+                	<div class="col-md-12 col-lg-6 form-group">
                 		{{ Form::cTextArea('Descripcion en Rack', 'descripcion_rack') }}
                 	</div>
-                	<div class="col-sm-6 form-group">
+                	<div class="col-md-12 col-lg-6 form-group">
                 		{{ Form::cTextArea('Descripcion Cuadro Basico Nacional', 'descripcion_cbn') }}
                 	</div>
                 </div>

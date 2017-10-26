@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 /*
 $.get('http://localhost:8000/abisa/administracion.paises/api', {
@@ -31,6 +32,13 @@ class APIController extends Controller
 	 */
 	public function index($company, $entity)
 	{
+	    $str_json = '{'.Crypt::decryptString(request()->param_js).'}';
+	    $param_array = request()->all();
+	    
+	    $json = str_replace(array_keys($param_array),$param_array,$str_json);
+	    
+	    $request = json_decode($json,true);
+	    
 		# Obtenemos entidad
 		$entity = rescue(function() use ($entity) {
 			return resolve('App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', $entity))));
@@ -38,28 +46,26 @@ class APIController extends Controller
 
 		if ($entity) {
 
-			// dump(request()->all());
-
 			# Select especific fields
-			$entity = call_user_func_array([$entity, 'select'], request()->select ?? []);
+		    $entity = call_user_func_array([$entity, 'select'], $request['select'] ?? []);
 
 			# Si hay eagerloaders
-			$entity = $entity->with(request()->with ?? []);
+		    $entity = $entity->with($request['with'] ?? []);
 
 			# Condiciones ... (where, whereIn etc)
-			foreach ((request()->conditions ?? []) as $conditions) {
+		    foreach (($request['conditions'] ?? []) as $conditions) {
 				foreach ($conditions as $condition => $args) {
 					call_user_func_array([$entity, $condition], $args);
 				}
 			}
 
 			# Si depende de relacion
-			foreach ((request()->has ?? []) as $relation) {
+			foreach (($request['has'] ?? []) as $relation) {
 				$entity = $entity->has($relation);
 			}
 
 			# Condiciones de relacion ...
-			foreach ((request()->whereHas ?? []) as $relations) {
+			foreach (($request['whereHas'] ?? []) as $relations) {
 				foreach ($relations as $relation => $conditions) {
 					$entity = $entity->whereHas($relation, function($query) use($conditions) {
 						foreach ($conditions as $condition => $args) {
@@ -70,19 +76,19 @@ class APIController extends Controller
 			}
 
 			# Orden de registros
-			foreach ((request()->orderBy ?? []) as $orderBy) {
+			foreach (($request['orderBy'] ?? []) as $orderBy) {
 				call_user_func_array([$entity, 'orderBy'], $orderBy);
 			}
 
 			# Limite
-			$entity->limit(request()->limit ?? null);
+			$entity->limit($request['limit'] ?? null);
 
 			#
 			$collections = $entity->get();
 
 			# Pluck collection
-			if (request()->pluck) {
-				$collections = call_user_func_array([$collections, 'pluck'], request()->pluck);
+			if (isset($request['pluck'])) {
+			    $collections = call_user_func_array([$collections, 'pluck'], $request['pluck']);
 			}
 
 			// dump($collections);

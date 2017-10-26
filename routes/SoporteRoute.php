@@ -17,7 +17,7 @@ Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
 
-    Route::group(['prefix' => 'soporte', 'as' => 'soporte.', 'middleware' => ['auth','share']], function(){
+    Route::group(['prefix' => 'soporte', 'as' => 'soporte.', 'middleware' => ['auth','share','csrf']], function(){
         Route::resource('acciones', 'Soporte\AccionesController');
         Route::resource('categorias', 'Soporte\CategoriasController');
         Route::resource('estatustickets', 'Soporte\EstatusTicketsController');

@@ -117,7 +117,7 @@ window['smart-model'] = {
 			// Button
 			{a: {
 				href: '#',
-				class: 'btn btn-primary',
+				class: 'btn btn-primary progress-button',
 				role: 'buttons',
 				'rv-get-create-url': '',
 				html: '<i class="material-icons left align-middle">add</i>Crear',

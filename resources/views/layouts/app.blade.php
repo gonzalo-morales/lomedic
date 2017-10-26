@@ -11,7 +11,7 @@
 	
 	<!-- Bootstrap CSS local fallback -->
 	{{ HTML::style(asset('css/bootstrap/dist/css/bootstrap.min.css')) }}
-	
+	{{ HTML::style(asset('vendor/btn-load/style.css')) }}
 	{{ HTML::style(asset('css/style.css')) }}
 </head>
 <body  class="bg-login">
@@ -31,5 +31,6 @@
 <!-- Bootstrap JS local fallback -->
 <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap.min.js') }}"><\/script>')}</script>
 
+{{ HTML::script(asset('vendor/btn-load/script.js')) }}
 </body>
 </html>
