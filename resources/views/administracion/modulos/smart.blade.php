@@ -1,49 +1,49 @@
 
-@section('content-width', 's12 m7 xl8 offset-xl2')
+@section('content-width', 'col-12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="input-field col s4">
+	<div class="col-sm-4 col-md-12">
 		{{ Form::text('nombre', null, ['id'=>'nombre','class'=>'validate']) }}
 		{{ Form::label('nombre', '* Nombre') }}
-		{{ $errors->has('nombre') ? HTML::tag('span', $errors->first('nombre'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{{ $errors->has('nombre') ? HTML::tag('span', $errors->first('nombre'), ['class'=>'help-block text-danger']) : '' }}
 	</div>
-	<div class="input-field col s4">
+	<div class="col-sm-4 col-md-12">
 		{{ Form::text('url', null, ['id'=>'url','class'=>'validate']) }}
 		{{ Form::label('url', '* Url') }}
-		{{ $errors->has('url') ? HTML::tag('span', $errors->first('url'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{{ $errors->has('url') ? HTML::tag('span', $errors->first('url'), ['class'=>'help-block text-danger']) : '' }}
 	</div>
-	<div class="input-field col s4">
+	<div class="col-sm-4 col-md-12">
 		{{ Form::text('icono', null, ['id'=>'icono','class'=>'validate']) }}
 		{{ Form::label('icono', '* Icono') }}
-		{{ $errors->has('icono') ? HTML::tag('span', $errors->first('icono'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{{ $errors->has('icono') ? HTML::tag('span', $errors->first('icono'), ['class'=>'help-block text-danger']) : '' }}
 	</div>
 </div>
 <div class="row">
-	<div class="input-field col s12">
+	<div class="col-md-12">
 		{{ Form::textarea('descripcion', null, ['id'=>'descripcion','class'=>'validate materialize-textarea']) }}
 		{{ Form::label('descripcion', '* Descripcion') }}
-		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block text-danger']) : '' }}
 	</div>
 </div>
 <div class="row">
-	<div class="input-field col s2">
+	<div class="col-md-3 col-sm-6">
 		{{ Form::hidden('accion_menu', 0) }}
 		{{ Form::checkbox('accion_menu', null, old('accion_menu'), ['id'=>'accion_menu']) }}
 		{{ Form::label('accion_menu', '¿Accion Menu?') }}
 	</div>
-	<div class="input-field col s2">
+	<div class="col-md-3 col-sm-6">
 		{{ Form::hidden('accion_barra', 0) }}
 		{{ Form::checkbox('accion_barra', null, old('accion_barra'), ['id'=>'accion_barra']) }}
 		{{ Form::label('accion_barra', '¿Accion Menu?') }}
 	</div>
-	<div class="input-field col s2">
+	<div class="col-md-3 col-sm-6">
 		{{ Form::hidden('accion_tabla', 0) }}
 		{{ Form::checkbox('accion_tabla', null, old('accion_tabla'), ['id'=>'accion_tabla']) }}
 		{{ Form::label('accion_tabla', '¿Accion Menu?') }}
 	</div>
-	<div class="input-field col s2">
+	<div class="col-md-3 col-sm-6">
 		<div class="alert alert-warning" role="alert">
             Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
         </div>

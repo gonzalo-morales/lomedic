@@ -15,21 +15,21 @@
 @endsection
 
 @section('content')
-<div class="col s12 xl8 offset-xl2">
-	<p class="right">
-		<a href="{{ companyRoute('create') }}" class="waves-effect waves-light btn orange">Nuevo</a>
-		<a href="{{ companyRoute('index') }}" class="waves-effect waves-light btn"><i class="material-icons">cached</i></a>
+<div class="col-12">
+	<p class="text-right">
+		<a href="{{ companyRoute('create') }}" class="btn btn-primary">Nuevo</a>
+		<a href="{{ companyRoute('index') }}" class="btn btn-info"><i class="material-icons align-middle">cached</i> Actualizar</a>
 	</p>
 </div>
 @if (session('success'))
-<div class="col s12 xl8 offset-xl2">
+<div class="col-12">
 	<div class="alert alert-success">
 		{{ session('success') }}
 	</div>
 </div>
 @endif
-<div class="col s12 xl8 offset-xl2">
-	<table class="striped responsive-table highlight">
+<div class="col-12">
+	<table class="table table-striped table-responsive-sm table-hover">
 		<thead>
 			<tr>
 				<th>Modulos</th>
@@ -41,9 +41,9 @@
 		<tr>
 			<td>{{ $modulo->nombre }}</td>
 			<td class="width-auto">
-				<a href="{{ companyRoute('show', ['id' => $modulo->id_modulo]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">visibility</i></a>
-				<a href="{{ companyRoute('edit', ['id' => $modulo->id_modulo]) }}" class="waves-effect waves-light btn btn-flat no-padding"><i class="material-icons">mode_edit</i></a>
-				<a href="#" class="waves-effect waves-light btn btn-flat no-padding" onclick="event.preventDefault(); document.getElementById('delete-form-{{$modulo->id_modulo}}').submit();"><i class="material-icons">delete</i></a>
+				<a href="{{ companyRoute('show', ['id' => $modulo->id_modulo]) }}" class="btn is-icon" data-toggle="tooltip" data-placement="top" title="Ver"><i class="material-icons">visibility</i></a>
+				<a href="{{ companyRoute('edit', ['id' => $modulo->id_modulo]) }}" class="btn is-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">mode_edit</i></a>
+				<a href="#" class="btn is-icon" onclick="event.preventDefault(); document.getElementById('delete-form-{{$modulo->id_modulo}}').submit();" data-toggle="tooltip" data-placement="top" title="Borrar"><i class="material-icons">delete</i></a>
 				<form id="delete-form-{{$modulo->id_modulo}}" action="{{ companyRoute('destroy', ['id' => $modulo->id_modulo]) }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 					{{ method_field('DELETE') }}
