@@ -15,6 +15,7 @@
 @endsection
 
 @section('content')
+<h4 class="col-md-12 display-4">Perfiles</h4>
 <div class="col-12">
 	<p class="text-right">
 		<a href="{{ companyRoute('create') }}" class="btn btn-primary progress-button">Nuevo</a>

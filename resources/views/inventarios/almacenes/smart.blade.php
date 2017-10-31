@@ -65,7 +65,7 @@
 			</div>
 			@endif
 			<div class="card-body">
-				<table class="table table-hover table-responsive table-striped" style="table-layout: fixed">
+				<table class="table table-hover table-responsive-sm table-striped" style="table-layout: fixed">
 					<thead>
 						<tr>
 							<th>#</th>
