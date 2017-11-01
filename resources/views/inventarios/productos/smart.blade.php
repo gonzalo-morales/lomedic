@@ -26,7 +26,9 @@
         	</div>
         	<div class="col-sm-12 col-md-6 col-lg-3">
         		<div class="form-group">
+        			@if (Route::currentRouteNamed(currentRouteName('create')))
         			<i class="material-icons text-danger float-left" data-toggle="tooltip" data-placement="top" title="El numero de serie puede cambiar si otro usuario genero un sku antes de que se guardara este. Verificalo despues de guardarlo.">warning</i>
+        			@endif
         			{{ Form::cText('Sku', 'sku', ['placeholder'=>'Ejemplo: SO-01922-09','disabled'=>true]) }}
         		</div>
         	</div>
@@ -40,7 +42,7 @@
         	</div>
         	<div class="col-sm-12 col-md-6 col-lg-3">
         		<div class="form-group">
-        			{{ Form::cSelect('Unidad Medida', 'fk_id_unidad_medida', $unidadmedida ?? []) }}
+        			{{ Form::cSelect('Unidad Medida', 'fk_id_unidad_medida', $unidadmedida ?? [],['class'=>'select2']) }}
         		</div>
         	</div>
     	</div>
@@ -108,17 +110,17 @@
             	<div class="row">
         	  		<div class="col-sm-12 col-md-6 col-lg-4">
                 		<div class="form-group">
-                			{{ Form::cSelect('Impuesto', 'fk_id_impuesto', $impuesto ?? []) }}
+                			{{ Form::cSelect('Impuesto', 'fk_id_impuesto', $impuesto ?? [],['class'=>'select2']) }}
                 		</div>
                 	</div>
         	  		<div class="col-sm-12 col-md-6 col-lg-4">
                 		<div class="form-group">
-                			{{ Form::cSelect('Subgrupo', 'fk_id_subgrupo', $subgrupo ?? []) }}
+                			{{ Form::cSelect('Subgrupo', 'fk_id_subgrupo', $subgrupo ?? [],['class'=>'select2']) }}
                 		</div>
                 	</div>
                 	<div class="col-sm-12 col-md-6 col-lg-4">
                 		<div class="form-group">
-                			{{ Form::cSelect('Familia', 'fk_id_familia', $familia ?? []) }}
+                			{{ Form::cSelect('Familia', 'fk_id_familia', $familia ?? [],['class'=>'select2']) }}
                 		</div>
                 	</div>
                 	<div class="col-sm-12 col-md-12 col-lg-10 col-xl-6 row">
@@ -148,7 +150,7 @@
             				<p>Aquí puedes relacionar los codigos de barra correspondientes al Sku</p>
         					<div class="row">
         						<div class="col-sm-12 col-md-8 form-group">
-        							{{ Form::cSelect('Upc', 'fk_id_upc', $upcs ?? [],['data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api']) }}
+        							{{ Form::cSelect('Upc', 'fk_id_upc', $upcs ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api']) }}
         						</div>
         						<div class="col-sm-12 col-md-4 form-group">
     								{{ Form::cNumber('Cantidad', 'cantidad') }}
@@ -176,12 +178,15 @@
         						@if(isset($data->upcs)) 
         							@foreach($data->upcs as $key=>$detalle)
     								<tr>
-    									<td>{{$detalle->upc}}</td>
+    									<td>{!! Form::hidden('detalles['.$key.'][fk_id_upc]',$detalle->id_upc,['class'=>'id_upc']) !!} {{$detalle->upc}}</td>
     									<td>{{$detalle->nombre_comercial ?? ''}}</td>
     									<td>{{$detalle->descripcion ?? ''}}</td>
     									<td>{{$detalle->laboratorio->laboratorio ?? ''}}</td>
-    									<td>{{$detalle->pivot->where('fk_id_upc',$detalle->id_upc)->where('fk_id_sku',$data->id_sku)->first()->cantidad ?? '0'}}</td>
-    									<td>{!! Form::hidden('detalles['.$key.'][fk_id_upc]',$detalle->id_upc) !!} <button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>
+    									<td>
+    										{{$cantidad = $detalle->pivot->where('fk_id_upc',$detalle->id_upc)->where('fk_id_sku',$data->id_sku)->first()->cantidad ?? '0'}}
+    										{!! Form::hidden('detalles['.$key.'][cantidad]',$cantidad) !!} 
+    									</td>
+    									<td> <button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>
     								</tr>
         							@endforeach
         						@endif
@@ -194,20 +199,20 @@
             <div role="tabpanel" class="tab-pane fade" id="tab-venta" aria-labelledby="venta-tab">
             	<div class="row">
     	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
-            			{{ Form::cSelect('Unidad Medida Venta', 'fk_id_unidad_medida_venta', $unidadmedida ?? []) }}
+            			{{ Form::cSelect('Unidad Medida Venta', 'fk_id_unidad_medida_venta', $unidadmedida ?? [],['class'=>'select2']) }}
             		</div>
     	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
-            			{{ Form::cSelect('Presentacion de Venta', 'fk_id_presentacion_venta', $unidadmedida ?? []) }}
+            			{{ Form::cSelect('Presentacion de Venta', 'fk_id_presentacion_venta', $unidadmedida ?? [],['class'=>'select2']) }}
             		</div>
     	  		</div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="tab-compra" aria-labelledby="compra-tab">
             	<div class="row">
     	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
-            			{{ Form::cSelect('Proveedor Predeterminado', 'fk_id_proveedor', $sociosnegocio ?? []) }}
+            			{{ Form::cSelect('Proveedor Predeterminado', 'fk_id_proveedor', $sociosnegocio ?? [],['class'=>'select2']) }}
             		</div>
     	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
-            			{{ Form::cSelect('Unidad Medida Compra', 'fk_id_unidad_medida_compra', $unidadmedida ?? []) }}
+            			{{ Form::cSelect('Unidad Medida Compra', 'fk_id_unidad_medida_compra', $unidadmedida ?? [],['class'=>'select2']) }}
             		</div>
     	  		</div>
             </div>
@@ -223,7 +228,7 @@
                 		{{ Form::cNumber('Maximo', 'maximo',['placeholder'=>'Ejm: 90']) }}
                 	</div>
                 	<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-2">
-            			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $metodovaloracion ?? ['Costos estimados','Costo estandar','Costos promedio','PEPS','UEPS','Lotes especificos']) }}
+            			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $metodovaloracion ?? ['Costos estimados','Costo estandar','Costos promedio','PEPS','UEPS','Lotes especificos'],['class'=>'select2']) }}
             		</div>
     	  		</div>
             </div>
@@ -233,7 +238,7 @@
             			{{ Form::cNumber('Punto Reorden', 'punto_reorden',['placeholder'=>'Ejm: 15']) }}
             		</div>
             		<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-3">
-            			{{ Form::cSelect('Intervalo del periodo', 'fk_id_intervalo', $intervaloperiodo?? ['Diario','Semanal','Quincenal','Menual','Trimestral','Semestral']) }}
+            			{{ Form::cSelect('Intervalo del periodo', 'fk_id_intervalo', $intervaloperiodo?? ['Diario','Semanal','Quincenal','Menual','Trimestral','Semestral'],['class'=>'select2']) }}
             		</div>
             		<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-3">
             			{{ Form::cNumber('Cantidad minima por periodo', 'minima_periodo',['placeholder'=>'Ejm: 5']) }}

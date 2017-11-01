@@ -6,7 +6,7 @@ $(document).ready(function () {
         fixedColumns: false,
         searchable: false,
         perPageSelect: false,
-        //labels:{ info: "Mostrando del registro {start} al {end} de {rows}" },
+        labels:{info:""},
     });
     
 	var from_picker = $('#activo_desde').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
@@ -74,8 +74,20 @@ $(document).ready(function () {
     		});
 		}
 	});
+	
+	$('#cantidad').on('change', function() {
+		var oldvalue = this.old;
+		var newvalue = this.value;
+		
+		console.log(oldvalue+ ' '+newvalue);
+	});
 
     $('#agrega-detalle').on('click', function() {
+    	var upcs_ids = [];
+    	$('.id_upc').each(function (i) {
+    		upcs_ids.push($('.id_upc')[i].value); 
+		});
+    	
     	let row_id = dataTable.activeRows.length + 1;
 		
     	id_upc = $('#fk_id_upc option:selected').val();
@@ -83,11 +95,16 @@ $(document).ready(function () {
         text_upc = $('#fk_id_upc option:selected').text();
         
         
-        console.log(dataTable.searchData);
-        console.log(dataTable.searchData);
-        
-        
-        if(id_upc != '' & cantidad != '') {
+        if(id_upc == '' ){
+        	$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un upc.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        }
+        else if(cantidad == '' | Number.isInteger(cantidad) != false) {
+        	$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar la cantidad, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        }
+        else if(upcs_ids.indexOf(id_upc) !== -1) {
+        	$.toaster({priority:'danger',title:'¡Error!',message:'El upc seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        }
+        else {
 	        var url = $('#fk_id_upc').data('url');
 	        var data_upc = null;
 	        $.ajax({
@@ -98,11 +115,11 @@ $(document).ready(function () {
 	            success: function (data) {
 	            	 dataTable.insert( {
 	            		 data:[
-	            			 '<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + id_upc + '" /> ' + text_upc,
+	            			 '<input type="hidden" class="id_upc" name="detalles['+row_id+'][fk_id_upc]" value="' + id_upc + '" /> '+text_upc,
 	                         data[0].nombre_comercial,
 	                         data[0].descripcion,
 	                         data[0].laboratorio.laboratorio,
-	                         cantidad,
+	                         '<input type="hidden" name="detalles['+row_id+'][cantidad]" value="' + cantidad + '" /> '+cantidad,
 	                         '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
 	            		 ]
 	            	 })
@@ -114,19 +131,6 @@ $(document).ready(function () {
     
 function borrarFila(el) {
     let fila = dataTable.data[$(el).parents('tr').index()];
-    /*
-    let cantidad = $(fila).find('td .cantidad_row').val();
-    let precio = $(fila).find('td .precio_unitario_row').val();
-    let descuento = $(fila).find('td .descuento_row').val();
-    descuento = (descuento * precio)/100;
-    let subtotal = (precio-descuento)*cantidad;
-    subtotal_original -= subtotal;
-    subtotal_original = subtotal_original.toFixed(2);
-    */
     dataTable.rows().remove([$(el).parents('tr').index()]);
-        $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
-            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-
-    //console.log('BORRAR. original: '+subtotal_original+' producto: '+subtotal);
-    //totalOrden();
+        $.toaster({priority:'success',title:'¡Advertencia!',message:'Se ha eliminado la fila correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }

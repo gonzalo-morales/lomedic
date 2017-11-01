@@ -16,12 +16,46 @@ use App\Http\Models\Administracion\PresentacionVenta;
 use App\Http\Models\SociosNegocio\TiposSocioNegocio;
 use App\Http\Models\Inventarios\Upcs;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Cache;
+use DB;
 
 class ProductosController extends ControllerBase
 {
     public function __construct(Productos $entity)
     {
         $this->entity = $entity;
+    }
+    
+    public function update(Request $request, $company, $id)
+    {
+        # ¿Usuario tiene permiso para actualizar?
+        #$this->authorize('update', $this->entity);
+        
+        # Validamos request, si falla regresamos atras
+        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
+        
+        DB::beginTransaction();
+        $entity = $this->entity->findOrFail($id);
+        $entity->fill($request->all());
+        if ($entity->save()) {
+            if(isset($request->detalles)) {
+                foreach ($request->detalles as $detalle) {
+                    $sync[$detalle['fk_id_upc']] = $detalle;
+                }
+                $entity->findOrFail($id)->upcs()->sync($sync);
+            }
+            DB::commit();
+            
+            # Eliminamos cache
+            Cache::tags(getCacheTag('index'))->flush();
+            
+            $this->log('update', $id);
+            return $this->redirect('update');
+        } else {
+            DB::rollBack();
+            $this->log('error_update', $id);
+            return $this->redirect('error_update');
+        }
     }
     
     public function getDataView($entity = null)
@@ -53,9 +87,9 @@ class ProductosController extends ControllerBase
         $term = $request->term;
         $skus = Productos::where('activo','1')->where('sku','LIKE','%'.$term.'%')->orWhere('descripcion_corta','LIKE','%'.$term.'%')->orWhere('descripcion','LIKE','%'.$term.'%')->get();
 
-        $skus_set = [];
+        $skus_set = []; 
         foreach ($skus as $sku)
-        {
+        { 
             $sku_data['id'] = (int)$sku->id_sku;
             $sku_data['text'] = $sku->sku;
             $sku_data['descripcion_corta'] = $sku->descripcion_corta;

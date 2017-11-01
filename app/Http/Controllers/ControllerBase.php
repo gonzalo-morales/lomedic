@@ -202,7 +202,7 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 //		$this->authorize('update', $this->entity);
-
+	    
 		$request->request->set('activo',!empty($request->request->get('activo')));
 
 		# Validamos request, si falla regresamos atras
@@ -218,6 +218,7 @@ class ControllerBase extends Controller
 				foreach ($request->relations as $relationType => $collections) {
 					# Relacion "HAS"
 					if ($relationType == 'has') {
+					    dd($collections);
 						foreach ($collections as $relationName => $relations) {
 							# Recorremos cada coleccion
 							$primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
@@ -375,7 +376,7 @@ class ControllerBase extends Controller
 		
 
 		if($type == 'pdf') {
-		    $pdf= \PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
+		    $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
 		    return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
 		}
 		else {

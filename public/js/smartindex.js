@@ -295,7 +295,8 @@ window['smart-model'] = {
 		itemsExport(e, rv) {
 			e.preventDefault();
 			rv.status.isDownloading = true;
-			post_to_url(window['smart-view'].dataset.itemExportUrl.replace('_ID_', this.dataset.exportType), {'ids' : rivets.formatters.keys(rv.collections.items)});
+			token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+			post_to_url(window['smart-view'].dataset.itemExportUrl.replace('_ID_', this.dataset.exportType), {'ids' : rivets.formatters.keys(rv.collections.items),'_token':token});
 			rv.status.isDownloading = false;
 		},
 	},

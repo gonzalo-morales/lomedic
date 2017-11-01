@@ -62,7 +62,7 @@ class Productos extends ModelCompany
      * @var array
      */
     public $rules = [];
-
+    
     public function upcs()
     {
         return $this->belongsToMany(Upcs::class,'inv_det_sku_upc','fk_id_sku','fk_id_upc');

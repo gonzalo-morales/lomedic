@@ -24,7 +24,7 @@ class SeriesSkus extends ModelCompany
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre_serie','prefijo','primer_numero','numero_siguiente','ultimo_numero','descripcion','activo'];
+	protected $fillable = ['nombre_serie','prefijo','sufijo','primer_numero','numero_siguiente','ultimo_numero','descripcion','activo'];
 
 	/**
 	 * The validation rules
@@ -40,8 +40,10 @@ class SeriesSkus extends ModelCompany
 		'nombre_serie' => 'Nombre Serie',
 	    'descripcion' => 'Descripcion',
 	    'prefijo' => 'Prefijo',
+	    'sufijo' => 'Sufijo',
 	    'primer_numero' => 'Primer Numero',
 	    'numero_siguiente' => 'Numero Siguiente',
+	    'ultimo_numero' => 'Ultimo Numero',
 		'activo_span' => 'Estatus',
 	];
 }
