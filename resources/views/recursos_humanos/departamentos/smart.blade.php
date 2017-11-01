@@ -4,14 +4,14 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="form-group col-md-12 col-xs-12">
+	<div class="form-group col-md-6 col-sm-12">
 		{{ Form::label('descripcion', '* Descripcion') }}
-		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'validate']) }}
+		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'validate form-control']) }}
 		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
-	<div class="form-group col-md-12 col-xs-12">
+	<div class="form-group col-md-6 col-sm-12">
 		{{ Form::label('nomenclatura', '* Nomenclatura') }}
-		{{ Form::text('nomenclatura', null, ['id'=>'nomenclatura','class'=>'validate']) }}
+		{{ Form::text('nomenclatura', null, ['id'=>'nomenclatura','class'=>'validate form-control']) }}
 		{{ $errors->has('nomenclatura') ? HTML::tag('span', $errors->first('nomenclatura'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
 	<div  class="col-md-12 text-center mt-4">
