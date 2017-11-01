@@ -8,7 +8,7 @@
     @if(!Route::currentRouteNamed(currentRouteName('index')))
     	{{ HTML::script(asset('vendor/vanilla-datatables/vanilla-dataTables.js')) }}
     	<script type="text/javascript">
-        	var param_js = '{{ $api_js }}';
+        	var param_js = '{{ $api_js ?? '' }}';
         </script>
     	{{ HTML::script(asset('js/inventarios/productos.js')) }}
     @endif

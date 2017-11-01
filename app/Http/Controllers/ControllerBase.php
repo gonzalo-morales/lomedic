@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\Logs;
-use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
@@ -377,6 +377,11 @@ class ControllerBase extends Controller
 
 		if($type == 'pdf') {
 		    $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
+		    $pdf->setPaper('letter','landscape');
+		    $pdf->output();
+		    $dom_pdf = $pdf->getDomPDF();
+		    $canvas = $dom_pdf->get_canvas();
+		    $canvas->page_text(38,580,"Página {PAGE_NUM} de {PAGE_COUNT}",null,8,array(0,0,0));
 		    return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
 		}
 		else {
