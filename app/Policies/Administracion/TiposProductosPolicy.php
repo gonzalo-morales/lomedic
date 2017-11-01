@@ -4,7 +4,7 @@ namespace App\Policies\Administracion;
 
 use App\Policies\PolicyBase;
 
-class UserPolicy extends PolicyBase
+class TiposProductosPolicy extends PolicyBase
 {
 
 }

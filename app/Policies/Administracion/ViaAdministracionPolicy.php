@@ -4,7 +4,7 @@ namespace App\Policies\Administracion;
 
 use App\Policies\PolicyBase;
 
-class ZonasPolicy extends PolicyBase
+class ViaAdministracionPolicy extends PolicyBase
 {
 
 }

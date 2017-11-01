@@ -268,14 +268,15 @@ window['smart-model'] = {
 			e.preventDefault();
 
 			let data, tablerows;
+			let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
 			switch (this.dataset.deleteType) {
 				case 'multiple':
-				data =  {ids: rivets.formatters.keys(rv.collections.items)};
+				data =  {ids: rivets.formatters.keys(rv.collections.items),'_token':token};
 				tablerows = rivets.formatters.values(rv.collections.items);
 				break;
 				case 'single':
-				data =  {};
+				data =  {'_token':token};
 				tablerows = [this.parentNode.parentNode.dataIndex];
 				break;
 			}
