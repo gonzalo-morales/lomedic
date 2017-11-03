@@ -69,7 +69,7 @@
           			<div class="form-group row">
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_categoria','Categoría')}}
-                    		{!! Form::select('fk_id_categoria',$categories_tickets,null,['id'=>'fk_id_categoria','class'=>'form-control fk_id_categoria','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
+                    		{!! Form::select('fk_id_categoria',$categories_tickets ?? [],null,['id'=>'fk_id_categoria','class'=>'form-control fk_id_categoria','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
           				</div>
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_subcategoria','Subategoría')}}
@@ -83,7 +83,7 @@
           				</div>
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_prioridad','Prioridad')}}
-	            			{!! Form::select('fk_id_prioridad',$priorities_tickets->pluck('prioridad','id_prioridad'),null,['id'=>'fk_id_prioridad','class'=>'form-control']) !!}
+	            			{!! Form::select('fk_id_prioridad',$priorities_tickets ?? [],null,['id'=>'fk_id_prioridad','class'=>'form-control']) !!}
           				</div>
           			</div>
           			<div class="form-group">

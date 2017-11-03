@@ -70,10 +70,6 @@ class Modulos extends Model
 	 * Obtenemos los permisos relacionados al modulo
 	 * @return array
 	 */
-//	public function permisos()
-//	{
-//		return $this->belongsTo(ModulosAcciones::class , 'id_modulo');
-//	}
     public function permisos()
     {
         return $this->belongsToMany(Permisos::class, 'ges_det_permisos_modulos', 'fk_id_modulo', 'fk_id_permiso');
@@ -81,7 +77,5 @@ class Modulos extends Model
     public function modulos_acciones()
     {
         return $this->belongsToMany(Acciones::class,'adm_det_modulo_accion','fk_id_modulo','fk_id_accion');
-//        return $this->belongsToMany(Acciones::class,'adm_det_modulo_acciones','fk_id_modulo','fk_id_accion');
     }
-
 }

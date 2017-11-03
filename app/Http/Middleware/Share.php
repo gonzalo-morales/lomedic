@@ -21,17 +21,18 @@ class Share
      */
     public function handle($request, Closure $next)
     {
-        # Compartimos empresa
-        View::share('empresa', Empresas::where('conexion', request()->company)->first());
-        # Compartimos otras empresas
-        View::share('empresas', Empresas::where('conexion', '!=', request()->company)->get());
+        # Compartimos empresas activas
+        $empresas = Empresas::where('activo',1)->get();
+        View::share('empresa', $empresas->where('conexion', '=', request()->company)->first());
+        View::share('empresas', $empresas->where('conexion', '!=', request()->company));
+
         # Compartimos modulos de usuario para generar menu
-        View::share('menu', Auth::user()->modulos_anidados());
+        View::share('menu', Auth::user()->modulos_anidados($empresas->where('conexion', '=', request()->company)->first()));
+
         View::share('employees_tickets', Empleados::all());
         View::share('categories_tickets', Categorias::all()->pluck('categoria','id_categoria')->toArray());
-        View::share('priorities_tickets', Prioridades::all());
-        View::share('ultimos_tickets',Solicitudes::all()->where('fk_id_empleado_solicitud',Auth::id())
-            ->where('fecha_hora_resolucion',null)->take(5));
+        View::share('priorities_tickets', Prioridades::all()->pluck('prioridad','id_prioridad'));
+        View::share('ultimos_tickets',Solicitudes::where('fk_id_empleado_solicitud',Auth::id())->where('fecha_hora_resolucion',null)->take(5)->get());
         return $next($request);
     }
 }

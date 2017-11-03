@@ -480,8 +480,9 @@ function getItems($page) {
 
 	let primary = window['smart-view'].dataset.primaryKey;
 	let columns = JSON.parse(window['smart-view'].dataset.columns);
+	let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
-	$.getJSON(window['smart-view'].dataset.itemShowOrDeleteUrl.replace('/#ID#', '') + '?page=' + $page, function(response) {
+	$.getJSON(window['smart-view'].dataset.itemShowOrDeleteUrl.replace('/#ID#', '') + '?page=' + $page +'&_token=' + token, function(response) {
 		let collection = [];
 		$.each(response.data, function(index, item) {
 			let id = item[primary];

@@ -122,12 +122,12 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         return $allpermisos->pluck('descripcion','id_permiso')->contains($routeaction);
     }
 
-
     public function getpermisos()
     {
         $permisos = new Collection();
+        $perfiles = $this->perfiles;
         # Obtenemos permisos relacionados a perfiles del usuario
-        foreach ($this->perfiles as $perfil) {
+        foreach ($perfiles as $perfil) {
             $permisos = $permisos->merge( $perfil->permisos);
         }
 
@@ -136,56 +136,36 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
     }
 
     /**
-     * Obtenemos modulos a los que tiene acceso el usuario por medio de sus permisos
-     * @return array
-     */
-    public function modulos($empresa = null)
-    {
-        # Obtenemos modulos en base a ...
-        return Modulos::whereHas('permisos', function($q) {
-            # Modulos relacionados a los permisos del usuario
-            $q->whereIn('id_permiso', $this->getpermisos()->pluck('id_permiso') );
-        })->get();
-    }
-
-    /**
-     * Obtenemos modulos anidados a los que tiene acceso el usuario por medio de sus permisos
-     * @return array
-     */
-    public function modulos_anidados()
-    {
-        return $this->__modulos();
-    }
-
-    /**
      * Obtenemos modulos anidados a los que tiene acceso el usuario por medio de sus permisos
      * @param  Empresa $empresa
      * @return array
      */
-    private function __modulos($empresa = null)
+    public $modulos_menu = null;
+    
+    public function modulos_anidados($empresa = null, $idmenu = null)
     {
         $empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
-        $modulos_empresa = method_exists($empresa, 'modulos_anidados') ? $empresa->modulos_anidados() : $empresa;
+        $this->modulos_menu = $this->modulos_menu ?: $this->getmenu($empresa);
 
-        # Obtenemos modulos en base a ...
-        $modulos_usuario = Modulos::where('eliminar','=',0)->where('activo','=',1)->whereHas('permisos', function($q) {
-            # Modulos relacionados a los permisos del usuario
-            $q->whereIn('id_permiso', $this->getpermisos()->pluck('id_permiso') );
-        })->orderBy('nombre')->get();
-
-        # Recorremos modulos de la empresa
-        foreach ($modulos_empresa as $key => $modulo) {
-            # Si usuario tiene acceso a modulo
-            if (in_array($modulo->id_modulo, $modulos_usuario->pluck('id_modulo')->toArray() )) {
-                # Mismo proceso a submodulos
-                $modulo->submodulos = $this->__modulos($modulo->submodulos);
-            } else {
-                # Eliminamos modulo de coleccion
-                $modulos_empresa->forget($key);
-            }
+        $menu = $this->modulos_menu->where('fk_id_modulo_hijo','=',$idmenu);
+        
+        foreach ($menu as $key=>$itemMenu) {
+            $menu[$key]->submodulos = $this->modulos_anidados($empresa,$itemMenu->id_modulo);
         }
-
-        return $modulos_empresa;
+        return $menu;
     }
 
+    public function getmenu($empresa = null)
+    {
+        $empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
+        $id_empresa = isset($empresa->id_empresa) ? $empresa->id_empresa : 0;
+        
+        $modulos = Modulos::where('eliminar','=',0)->where('activo','=',1)->where('accion_menu','=',1)
+        ->wherein('id_modulo',$this->getpermisos()->pluck('id_permiso'))
+        ->leftJoin('ges_det_modulos','fk_id_modulo','id_modulo')
+        ->where('fk_id_empresa', '=', $id_empresa)
+        ->orderBy('id_modulo');
+
+        return $modulos->get();
+    }
 }
