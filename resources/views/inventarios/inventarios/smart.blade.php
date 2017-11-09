@@ -6,17 +6,13 @@
 <div class="row">
 	<div class="col-md-4 col-sm-4">
 		<div class="form-group">
-			{{ Form::cSelectWithDisabled('Tipo de inventario', 'fk_tipo_inventario', [
-			'1' => 'Periodico',
-			'2' => 'Ciclico',
-			'3' => 'Extraordinario',
-			], ['class' => 'select2']) }}
+			{{ Form::cSelectWithDisabled('Tipo de inventario', 'fk_tipo_inventario', $tipos ?? [], ['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '']) }}
 		</div>
 	</div>
 	<div class="col-md-4 col-sm-4">
 		<div class="form-group">
 			{{ Form::cSelectWithDisabled('Sucursal', 'fk_id_sucursal', $sucursales ?? [], [
-				'class' => 'select2 select-cascade',
+				'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2 select-cascade' : '',
 				'data-target-url' => companyRoute('administracion.sucursales.show', ['id' => '#ID#']),
 				'data-target-el' => '[targeted="fk_id_almacen"]',
 				'data-target-with' => '["almacenes:id_almacen,fk_id_sucursal,almacen"]',
@@ -26,13 +22,14 @@
 	</div>
 	<div class="col-md-4 col-sm-4">
 		<div class="form-group">
-			{{ Form::cSelect('Almacén', 'fk_id_almacen', $almacenes ?? [], ['id' => 'some','class' => 'select2', 'targeted' => 'fk_id_almacen']) }}
+			{{ Form::cSelect('Almacén', 'fk_id_almacen', $almacenes ?? [], ['id' => 'some','class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '', 'targeted' => 'fk_id_almacen']) }}
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12 col-sm-12 mb-3">
-		<div id="app" class="card z-depth-1-half">
+		<div id="app" class="card z-depth-1-half" data-api-endpoint="{{ companyRoute('api.index', ['entity' => '#ENTITY#'], false) }}">
+			@if (!Route::currentRouteNamed(currentRouteName('show')))
 			<div class="card-header text-center">
 				<div class="row">
 					<div class="col-sm-12">
@@ -48,12 +45,18 @@
 							<div class="tab-pane active" id="scanner" role="tabpanel">
 								<div class="row justify-content-center">
 									<div class="col-12 col-md-6 col-lg-4">
-										<div class="form-group">
-											{{ Form::cText('Código de barras', 'codebar-only', [
-												'ref' => 'codeba',
-												'v-on:keydown' => 'onKeydownCodebar',
-												'v-on:keyup.enter' => 'onEnterCodebar'
+										<div class="form-group" v-cloak>
+											{{ Form::cText('Código de barras', '', [
+												'v-on:keydown.enter.prevent' => '',
+												'v-validate' => '"required|alpha_num"',
+												'v-bind:class' => '{"is-invalid": errors.has("scanner.codigo_barras")}',
+												'data-vv-as' => 'Código de barras',
+												'data-vv-name' => 'codigo_barras',
+												'data-vv-scope' => 'scanner',
+												'v-on:blur' => 'clearErrorScope("scanner")',
+												'v-on:keyup.enter.prevent' => 'onEnterCodebar',
 											]) }}
+											<span v-show="errors.has('scanner.codigo_barras')" class="help-block help-block-error small">@{{ errors.first('scanner.codigo_barras') }}</span>
 										</div>
 									</div>
 								</div>
@@ -63,52 +66,95 @@
 									<div class="col-12 col-lg-8">
 										<div class="row">
 											<div class="col-12 col-md-4 col-sm-6">
-												<div class="form-group">
-													{{ Form::cText('Código de barras', 'codebar', ['ref' => 'codebar']) }}
-												</div>
-											</div>
-											<div class="col-12 col-md-4 col-sm-6">
-												<div class="form-group">
-													{{ Form::cNumber('Cantidad', 'cantidad', ['ref' => 'cantidad']) }}
-												</div>
-											</div>
-											<div class="col-12 col-md-4 col-sm-6">
-												<div class="form-group">
-													{{ Form::cText('Lote', 'lote', ['ref' => 'lote']) }}
-												</div>
-											</div>
-											<div class="col-12 col-md-4 col-sm-6">
-												<div class="form-group">
-													{{ Form::cText('Caducidad', 'caducidad', ['ref' => 'caducidad']) }}
-												</div>
-											</div>
-											<div class="col-12 col-md-4 col-sm-6">
-												<div class="form-group">
-													{{ Form::cSelectWithDisabled('Almacén', 'almacen', [], [
-														'class' => 'select2 select-cascade',
-														'targeted' => 'fk_id_almacen',
-														'data-target-url' => companyRoute('almacenes.show', ['id' => '#ID#']),
-														'data-target-el' => '[targeted="fk_id_ubicacion"]',
-														'data-target-with' => '["ubicaciones:id_ubicacion,fk_id_almacen,ubicacion"]',
-														'data-target-value' => 'ubicaciones,id_ubicacion,ubicacion',
-														'ref' => 'almacen'
+												<div class="form-group" v-cloak>
+													{{ Form::cText('Código de barras', '', [
+														'v-model' => 'nuffer.codigo_barras',
+														'v-validate' => '"required|alpha_num"',
+														'v-bind:class' => '{"is-invalid": errors.has("header.codigo_barras")}',
+														'data-vv-as' => 'Código de barras',
+														'data-vv-name' => 'codigo_barras',
+														'data-vv-scope' => 'header',
+														'v-on:keydown.enter.prevent',
 													]) }}
+													<span v-show="errors.has('header.codigo_barras')" class="help-block help-block-error small">@{{ errors.first('header.codigo_barras') }}</span>
 												</div>
 											</div>
 											<div class="col-12 col-md-4 col-sm-6">
-												<div class="form-group">
-													{{ Form::cSelectWithDisabled('Ubicación', 'ubicacion', [], [
-														'class' => 'select2',
-														'targeted' => 'fk_id_ubicacion',
-														'ref' => 'ubicacion'
+												<div class="form-group" v-cloak>
+													{{ Form::cNumber('Cantidad', '', [
+														'min' => 0,
+														'v-model.number' => 'nuffer.cantidad',
+														'v-bind:class' => '{"is-invalid": errors.has("header.cantidad")}',
+														'v-validate' => '"required|min_value:1"',
+														'data-vv-as' => 'Cantidad',
+														'data-vv-name' => 'cantidad',
+														'data-vv-scope' => 'header',
+														'v-on:keydown.enter.prevent',
 													]) }}
+													<span v-show="errors.has('header.cantidad')" class="help-block help-block-error small">@{{ errors.first('header.cantidad') }}</span>
+												</div>
+											</div>
+											<div class="col-12 col-md-4 col-sm-6">
+												<div class="form-group" v-cloak>
+													{{ Form::cText('Lote', '', [
+														'v-model' => 'nuffer.no_lote',
+														'v-validate' => '"required"',
+														'v-bind:class' => '{"is-invalid": errors.has("header.no_lote")}',
+														'data-vv-as' => 'Lote',
+														'data-vv-name' => 'no_lote',
+														'data-vv-scope' => 'header',
+														'v-on:keydown.enter.prevent'
+													]) }}
+													<span v-show="errors.has('header.no_lote')" class="help-block help-block-error small">@{{ errors.first('header.no_lote') }}</span>
+												</div>
+											</div>
+											<div class="col-12 col-md-4 col-sm-6">
+												<div class="form-group" v-cloak>
+													{{ Form::cText('Caducidad', '', [
+														'v-model' => 'nuffer.caducidad',
+														'v-pickadate' => 'nuffer.caducidad',
+														'v-validate' => '"required"',
+														'v-bind:class' => '{"is-invalid": errors.has("header.caducidad")}',
+														'data-vv-as' => 'Caducidad',
+														'data-vv-name' => 'caducidad',
+														'data-vv-scope' => 'header',
+														'v-on:keydown.enter.prevent'
+													]) }}
+													<span v-show="errors.has('header.caducidad')" class="help-block help-block-error small">@{{ errors.first('header.caducidad') }}</span>
+												</div>
+											</div>
+											<div class="col-12 col-md-4 col-sm-6">
+												<div class="form-group" v-cloak>
+													<label>Almacén</label>
+													<select class="form-control" v-select2="nuffer.fk_id_almacen" v-model.number="nuffer.fk_id_almacen" v-on:change="onChangeAlmacenes($event, true)" v-validate="'required|not_in:0'" v-bind:class="{'is-invalid': errors.has('header.fk_id_almacen')}" data-vv-as="Almacén" data-vv-name="fk_id_almacen" data-vv-scope="header">
+														<option v-for="almacen in almacenes" v-bind:value="almacen.value" v-bind:selected="almacen.selected" v-bind:disabled="almacen.disabled">@{{ almacen.text }}</option>
+													</select>
+													<span v-show="errors.has('header.fk_id_almacen')" class="help-block help-block-error small">@{{ errors.first('header.fk_id_almacen') }}</span>
+												</div>
+											</div>
+											<div class="col-12 col-md-4 col-sm-6">
+												<div class="form-group" v-cloak>
+													<label>Ubicación</label>
+													<select class="form-control" v-select2="nuffer.fk_id_ubicacion" v-model.number="nuffer.fk_id_ubicacion" v-validate="'required|not_in:0'" v-bind:class="{'is-invalid': errors.has('header.fk_id_ubicacion')}" data-vv-as="Ubicación" data-vv-name="fk_id_ubicacion" data-vv-scope="header">
+														<option v-for="ubicacion in ubicaciones[nuffer.fk_id_almacen]" v-bind:value="ubicacion.value" v-bind:selected="ubicacion.selected" v-bind:disabled="ubicacion.disabled">@{{ ubicacion.text }}</option>
+													</select>
+													<span v-show="errors.has('header.fk_id_ubicacion')" class="help-block help-block-error small">@{{ errors.first('header.fk_id_ubicacion') }}</span>
 												</div>
 											</div>
 										</div>
 									</div>
 									<div class="col-12 col-lg-4">
-										<div class="form-group full-height">
-											{{ Form::cTextArea('Observaciones', 'observaciones', ['ref' => 'observaciones', 'rows' => 2]) }}
+										<div class="form-group full-height" v-cloak>
+											{{ Form::cTextArea('Observaciones', '', [
+												'rows' => 2,
+												'v-model' => 'nuffer.observaciones',
+												'v-validate' => '"required"',
+												'v-bind:class' => '{"is-invalid": errors.has("header.observaciones")}',
+												'data-vv-as' => 'Observaciones',
+												'data-vv-name' => 'observaciones',
+												'data-vv-scope' => 'header',
+											]) }}
+											<span v-show="errors.has('header.observaciones')" class="help-block help-block-error small">@{{ errors.first('header.observaciones') }}</span>
 										</div>
 									</div>
 									<div class="col-sm-12 text-center">
@@ -121,16 +167,20 @@
 								</div>
 							</div>
 							<div class="tab-pane" id="importar" role="tabpanel">
-								<div class="row">
-									<div class="col-sm-12 col-md-4">
+								<div class="row justify-content-center">
+									<div class="col-12 col-md-6 col-lg-4">
 										<div class="form-group">
 											<label for="importExcel">Selecciona el archivo <b>Excel</b> a importar</label>
-											<input type="file" class="form-control-file btn" id="importExcel">
+											<input type="file" accept=".csv" class="form-control" id="importExcel"
+											v-validate='"ext:csv"'
+											v-bind:class='{"is-invalid": errors.has("import.csv")}'
+											data-vv-as='archivo a importar'
+											data-vv-name="csv"
+											data-vv-scope='import'
+											v-on:change="importCSV">
+											<a href="#" v-on:click.prevent="downloadDummyCSV" class="small">Formato de archivo de importación</a>
+											<span v-show="errors.has('import.csv')" class="help-block help-block-error small">@{{ errors.first('import.csv') }}</span>
 										</div>
-									</div>
-									<div class="col-sm-12 col-md-8">
-										<p>Formato del archivo <b>Excel:</b></p>
-										<img src="img/índice.png" class="img-fluid float-left" alt="Formato de ejemplo">
 									</div>
 								</div>
 							</div>
@@ -138,8 +188,9 @@
 					</div>
 				</div>
 			</div>
+			@endif
 			<div class="card-body">
-				<table class="table table-hover table-responsive table-striped" style="table-layout: fixed">
+				<table class="table table-hover table-responsive-sm table-striped" style="table-layout: fixed">
 					<thead>
 						<tr>
 							<th>#</th>
@@ -153,58 +204,156 @@
 							<th></th>
 						</tr>
 					</thead>
-					<tbody v-if="ubicaciones.length" v-cloak>
-						<tr v-for="ubicacion,index in computedUbicaciones" v-bind:class="{'table-dark':ubicacion.eliminar}">
+					<tbody v-if="upcs.length" v-cloak>
+						<tr v-for="upc,index in computedUpcs" v-bind:class="{'table-dark':upc.eliminar}" v-bind:data-index.prop.camel="index">
 							<th scope="row">
 								<span v-text="index + 1"></span>
-								<input type="hidden" v-bind:name="'relations[has][ubicaciones]['+index+'][id_ubicacion]'" v-bind:value="ubicacion.id_ubicacion">
-								<input type="hidden" v-bind:name="'relations[has][ubicaciones]['+index+'][eliminar]'" v-bind:value="ubicacion.eliminar">
+								<input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][id_detalle]'" v-bind:value="upc.id_detalle">
+								<input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][eliminar]'" v-bind:value="upc.eliminar">
 							</th>
 							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.codebar"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][codebar]'" v-model="ubicacion.codebar">
+								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="upc.codigo_barras"></span>
+								<input type="text" class="form-control"
+									{{-- General --}}
+									v-show="upc.props.editar || errors.any('upcs-'+index)"
+									v-model="upc.codigo_barras"
+									v-bind:name="'relations[has][detalle]['+index+'][codigo_barras]'"
+									{{-- Validation --}}
+									v-validate="'required|alpha_num|verify_codebar:'+index"
+									v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.codigo_barras')}"
+									data-vv-as="Código de barras"
+									data-vv-name="codigo_barras"
+									v-bind:data-vv-scope="'upcs-'+index"
+									{{-- Prevent submit --}}
+									v-on:keydown.enter.prevent
+									v-on:keyup.enter.prevent="onValidateCodebar">
+								<span v-show="errors.has('upcs-'+index+'.codigo_barras')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.codigo_barras') }}</span>
 							</td>
 							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.cantidad"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][cantidad]'" v-model="ubicacion.cantidad">
+								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="upc.cantidad"></span>
+								<input type="number" min="0" class="form-control"
+									{{-- General --}}
+									v-show="upc.props.editar || errors.any('upcs-'+index)"
+									v-model="upc.cantidad"
+									v-bind:name="'relations[has][detalle]['+index+'][cantidad]'"
+									{{-- Validation --}}
+									v-validate="'required|min_value:1'"
+									v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.cantidad')}"
+									data-vv-as="Cantidad"
+									data-vv-name="cantidad"
+									v-bind:data-vv-scope="'upcs-'+index"
+									{{-- Prevent submit --}}
+									v-on:keydown.enter.prevent>
+								<span v-show="errors.has('upcs-'+index+'.cantidad')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.cantidad') }}</span>
 							</td>
 							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.lote"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][lote]'" v-model="ubicacion.lote">
+								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="upc.no_lote"></span>
+								<input type="text" class="form-control"
+									{{-- General --}}
+									v-show="upc.props.editar || errors.any('upcs-'+index)"
+									v-model="upc.no_lote"
+									v-bind:name="'relations[has][detalle]['+index+'][no_lote]'"
+									{{-- Validation --}}
+									v-validate="'required'"
+									v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.no_lote')}"
+									data-vv-as="Lote"
+									data-vv-name="no_lote"
+									v-bind:data-vv-scope="'upcs-'+index"
+									{{-- Prevent submit --}}
+									v-on:keydown.enter.prevent>
+								<span v-show="errors.has('upcs-'+index+'.no_lote')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.no_lote') }}</span>
 							</td>
 							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.caducidad"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][caducidad]'" v-model="ubicacion.caducidad">
+								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="upc.caducidad"></span>
+								<input type="text" class="form-control"
+									{{-- General --}}
+									v-show="upc.props.editar || errors.any('upcs-'+index)"
+									v-model="upc.caducidad"
+									v-bind:name="'relations[has][detalle]['+index+'][caducidad]'"
+									v-pickadate="upc.caducidad"
+									{{-- Validation --}}
+									v-validate="'required'"
+									v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.caducidad')}"
+									data-vv-as="Caducidad"
+									data-vv-name="caducidad"
+									v-bind:data-vv-scope="'upcs-'+index"
+									{{-- Prevent submit --}}
+									v-on:keydown.enter.prevent>
+								<span v-show="errors.has('upcs-'+index+'.caducidad')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.caducidad') }}</span>
 							</td>
 							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.almacen"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][almacen]'" v-model="ubicacion.almacen">
+								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="almacenes[upc.fk_id_almacen].text"></span>
+								<div v-show="upc.props.editar || errors.any('upcs-'+index)">
+									<select class="form-control"
+										{{-- General --}}
+										v-model.number="upc.fk_id_almacen"
+										v-bind:name="'relations[has][detalle]['+index+'][fk_id_almacen]'"
+										v-on:change="onChangeAlmacenes"
+										v-select2="upc.fk_id_almacen"
+										{{-- Validation --}}
+										v-validate="'required|not_in:0'"
+										v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.fk_id_almacen')}"
+										data-vv-as="Almacén"
+										data-vv-name="fk_id_almacen"
+										v-bind:data-vv-scope="'upcs-'+index">
+										<option v-for="almacen in almacenes" v-bind:value="almacen.value" v-bind:selected="almacen.selected" v-bind:disabled="almacen.disabled">@{{ almacen.text }}</option>
+									</select>
+								</div>
+								<span v-show="errors.has('upcs-'+index+'.fk_id_almacen')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.fk_id_almacen') }}</span>
 							</td>
 							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.ubicacion"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][ubicacion]'" v-model="ubicacion.ubicacion">
+								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="ubicaciones[upc.fk_id_almacen][upc.fk_id_ubicacion].text"></span>
+								<div v-show="upc.props.editar || errors.any('upcs-'+index)">
+									<select class="form-control"
+										{{-- General --}}
+										v-model.number="upc.fk_id_ubicacion"
+										v-bind:name="'relations[has][detalle]['+index+'][fk_id_ubicacion]'"
+										v-select2="upc.fk_id_ubicacion"
+										{{-- Validation --}}
+										v-validate="'required|not_in:0'"
+										v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.fk_id_ubicacion')}"
+										data-vv-as="Almacén"
+										data-vv-name="fk_id_ubicacion"
+										v-bind:data-vv-scope="'upcs-'+index">
+										<option v-for="ubicacion in ubicaciones[upc.fk_id_almacen]" v-bind:value="ubicacion.value" v-bind:selected="ubicacion.selected" v-bind:disabled="ubicacion.disabled">@{{ ubicacion.text }}</option>
+									</select>
+								</div>
+								<span v-show="errors.has('upcs-'+index+'.fk_id_ubicacion')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.fk_id_ubicacion') }}</span>
 							</td>
 							<td>
-								<span v-if="!ubicacion.editar" v-text="ubicacion.observaciones"></span>
-								<input type="text" class="form-control" v-show="ubicacion.editar" v-bind:name="'relations[has][ubicaciones]['+index+'][observaciones]'" v-model="ubicacion.observaciones">
+								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="upc.observaciones"></span>
+								<textarea class="form-control" rows="2"
+									{{-- General --}}
+									v-show="upc.props.editar || errors.any('upcs-'+index)"
+									v-model="upc.observaciones"
+									v-bind:name="'relations[has][detalle]['+index+'][observaciones]'"
+									{{-- Validation --}}
+									v-validate="'required'"
+									v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.observaciones')}"
+									data-vv-as="Observaciones"
+									data-vv-name="observaciones"
+									v-bind:data-vv-scope="'upcs-'+index"
+									{{-- Prevent submit --}}
+									v-on:keydown.enter.prevent>
+								</textarea>
+								<span v-show="errors.has('upcs-'+index+'.observaciones')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.observaciones') }}</span>
 							</td>
-							<td style="width: 1px !important;">
+							<td style="width: 1px !important;position: relative;">
+								<div v-if="upc.props.valido == 'unknow'"  class="w-100 h-100 text-center text-white align-middle loadingData">Validando ...<i class="material-icons align-middle loading">cached</i></div>
 								@if (!Route::currentRouteNamed(currentRouteName('show')))
-								<a href="#" v-if="ubicacion.eliminar" v-on:click.prevent="removeOrUndo(index)"><i class="material-icons">undo</i> Deshacer</a>
-								<template v-else>
-									<a href="#" v-if="ubicacion.editar" v-on:click.prevent="editOrDone(index)"><i class="material-icons">done</i></a>
-									<template v-else>
-										<a href="#" v-on:click.prevent="editOrDone(index)"><i class="material-icons">mode_edit</i></a>
-										<a href="#" v-on:click.prevent="removeOrUndo(index)"><i class="material-icons">delete</i></a>
-									</template>
-								</template>
+								<a href="#" v-if="(!upc.eliminar && upc.props.editar && upc.props.valido != 'unknow') || errors.any('upcs-'+index)" v-on:click.prevent="editOrDone"><i class="material-icons">done</i> Finalizar</a>
+								<a href="#" v-if="!upc.eliminar && !upc.props.editar && !errors.any('upcs-'+index)" v-on:click.prevent="editOrDone"><i class="material-icons">mode_edit</i></a>
+								<a href="#" v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-on:click.prevent="removeOrUndo">
+									<i class="material-icons" v-text="upc.eliminar ? 'undo' : 'delete'"></i>
+									<span v-text="upc.eliminar ? 'Deshacer' : ''"></span>
+								</a>
 								@endif
 							</td>
 						</tr>
 					</tbody>
 					<tbody v-else>
 						<tr class="text-center">
-							<td colspan="7">Agrega una o más Ubicaciones.</td>
+							<td colspan="9">Agrega uno o más detalles.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -216,117 +365,424 @@
 
 @section('header-bottom')
 @parent
-<script src="{{ asset('vendor/vue/vue.2.4.4.min.js') }}"></script>
+<script src="{{ asset('vendor/vue/vue.js') }}"></script>
+<script src="{{ asset('vendor/papaparse/papaparse.min.js') }}"></script>
 <script type="text/javascript">
-	// $('[name="caducidad"]').pickadate({
-	//     selectMonths: true, // Creates a dropdown to control month
-	//     selectYears: 3, // Creates a dropdown of 3 years to control year
-	//     min: true,
-	//     format: 'yyyy/mm/dd'
-	// });
-	var app = new Vue({
-		el: '#app',
-		data: {
-			buffer: {id_ubicacion: null, codebar: '', cantidad: '', lote: '', caducidad: '', almacen: '', ubicacion: '', observaciones: '', eliminar: 0},
-			ubicaciones: @json($ubicaciones ?? []),
-		},
-		methods: {
-			onKeydownCodebar: function(e) {
-				if (!new RegExp('^[a-zA-Z0-9]+$').test(e.key) || e.ctrlKey || e.keyCode == 13) {
-					e.preventDefault();
-				}
-			},
-			onEnterCodebar: function(e) {
-				e.preventDefault();
-				console.log('onEnterCodebar')
-			},
-			append: function(e) {
-				var data, isValid = true, valid;
-				// Recorremos referencias
-				data = Object.keys(this.$refs).reduce(function(acc, item){
-					// Validamos campo
-					// var valid = $('#form-model').validate().element( '#' + item );
-					// if (!valid) isValid = valid;
-					acc[item] = this.$refs[item].value;
-					return acc;
-				}.bind(this), {});
-				if (!isValid) { return; }
-				Object.keys(this.$refs).forEach(function(key){ this.$refs[key].value = '' }.bind(this));
-				this.ubicaciones.push(JSON.parse(JSON.stringify($.extend(this.buffer, data))))
-			},
-			editOrDone: function(index) {
-				this.ubicaciones[index].editar = !this.ubicaciones[index].editar;
-			},
-			removeOrUndo: function(index) {
-				if (!this.ubicaciones[index].id_ubicacion) {
-					this.ubicaciones.splice(index ,1); return;
-				}
-				this.ubicaciones[index].eliminar = !this.ubicaciones[index].eliminar;
-			}
-		},
-		computed: {
-			computedUbicaciones: function() {
-				return this.ubicaciones.reduce(function(acc, item){
-					if (!item.editar) { Vue.set(item, 'editar', false)}
-						return acc.concat(item)
-				}, []);
-			}
-		},
-		mounted: function(e) {
 
-			$('[name="caducidad"]').pickadate({
+	function debounce(func, wait, immediate) {
+		var timeout;
+		return function() {
+			var context = this, args = arguments;
+			var later = function() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			};
+			var callNow = immediate && !timeout;
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+			if (callNow) func.apply(context, args);
+		};
+	};
+
+	$(function(){
+
+		function updateSelect2 (el, binding) {
+			$(el).off().val(binding.value).select2().on('select2:select', function(e){
+				el.dispatchEvent(new Event('change', { target: e.target }));
+			});
+		}
+		Vue.directive('select2', {inserted: updateSelect2, componentUpdated: updateSelect2});
+
+		function updatePickadate (el, binding) {
+			if ( $(el).pickadate('picker') ) {
+				$(el).addClass('picker__input')
+			}
+			$(el).val(binding.value).pickadate({
 				selectMonths: true, // Creates a dropdown to control month
 				selectYears: 3, // Creates a dropdown of 3 years to control year
 				min: true,
-				format: 'yyyy/mm/dd'
-			});
-
+				format: 'yyyy/mm/dd',
+				onSet: function(context) {
+					el.dispatchEvent(new Event('input'));
+				}
+			})
 		}
-	});
-	jQuery(document).ready(function(){
-		function addRules() {
-			// $('#rack').rules('add',{
-			// 	required: true,
-			// 	messages:{
-			// 		required: 'El campo rack es requerido.'
-			// 	}
-			// });
-			// $('#ubicacion').rules('add',{
-			// 	required: true,
-			// 	messages:{
-			// 		required: 'El campo ubicacion es requerido.'
-			// 	}
-			// });
-			// $('#posicion').rules('add',{
-			// 	required: true,
-			// 	messages:{
-			// 		required: 'El campo posicion es requerido.'
-			// 	}
-			// });
-			// $('#nivel').rules('add',{
-			// 	required: true,
-			// 	messages:{
-			// 		required: 'El campo nivel es requerido.'
-			// 	}
-			// });
-		}
-		$('#form-model').on('submit', function(e) {
-			e.preventDefault();
+		Vue.directive('pickadate', {inserted: updatePickadate, componentUpdated: updatePickadate});
 
-			Object.keys(app.$refs).forEach(function(key){
-				$(app.$refs[key]).rules('remove')
-			});
+		Vue.use(VeeValidate, {
+			locale: 'es',
+		});
 
-			if ($(this).validate().form()) {
-				$(this).validate().destroy();
-				this.submit();
-			} else {
-				addRules();
+		window.vapp = new Vue({
+			el: '#app',
+			data: function() {
+				return {
+					queue: [],
+					buffer: {
+						id_detalle: null,
+						codigo_barras: '',
+						cantidad: 0,
+						no_lote: '',
+						caducidad: '',
+						fk_id_almacen: 0,
+						fk_id_ubicacion: 0,
+						observaciones: '',
+						eliminar: false,
+						props: {
+							valido: 'unknow',
+							editar: false,
+							queue: null,
+						}
+					},
+					nuffer: {},
+					upcs: @json($upcs ?? []),
+					// Catalogos con defaults
+					almacenes: @json($vue_almacenes ?? []),
+					ubicaciones: @json($vue_ubicaciones ?? [])
+					// almacenes: {0: {value: 0, text: '...', selected: true, disabled: true}},
+					// ubicaciones: {0: {0: {value: 0, text: '...', selected: true, disabled: true}}}
+				}
+			},
+			methods: {
+				// Limpiamos notificacion de errores
+				clearErrorScope: function(scope) {
+					this.$nextTick(function() {
+						this.errors.clear(scope)
+					}.bind(this))
+				},
+				// Buscamos indice-posicion de <td>
+				getDataIndex: function(e) {
+					var dataIndex;
+					for (var i in e.path) {
+						if (e.path[i].dataIndex >= 0) {
+							dataIndex = e.path[i].dataIndex;
+							break;
+						}
+					}
+					return dataIndex;
+				},
+				// Cola de validaciones
+				enQueue: function(fn) {
+					if (this.queue.length === 0) {
+						this.queue.push(fn)
+						this.nextQueue()
+					} else {
+						this.queue.push(fn)
+					}
+					return this.queue.slice(-1).shift();
+				},
+				nextQueue: function() {
+					if (this.queue.length === 0) return;
+					this.queue[0]().then(function() {
+						this.queue.splice(0, 1)
+						this.nextQueue()
+					}.bind(this))
+				},
+				// Codebar-only
+				onKeydownCodebar: function(e) {
+					if (!new RegExp('^[a-zA-Z0-9]+$').test(e.key) || e.ctrlKey || e.keyCode == 13) {
+						e.preventDefault();
+					}
+				},
+				onEnterCodebar: function(e) {
+					// Validamos campo
+					this.$validator.validateAll('scanner').then(function(isValid){
+						if (isValid) {
+							// codebar --enviamos--> upcs
+							this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.buffer, {
+								codigo_barras: e.target.value, props: {editar: true}
+							}))))
+							// Obtenemos ultimo upc (recien agregado)
+							var upc = this.upcs.slice(-1).shift();
+								upc.props.queue = this.remoteValidateCodebar(upc);
+							// Limpiamos campo
+							e.target.value = '';
+						}
+					}.bind(this))
+				},
+				// Revalidacion de codigo de barra en detalle
+				onValidateCodebar: function(e) {
+					// Obtenemos indice de fila
+					var index = this.getDataIndex(e);
+					// Upc actual
+					var upc = this.upcs[index];
+						upc.props.valido = 'unknow';
+						upc.props.queue = this.remoteValidateCodebar(upc);
+				},
+				// Agregamos a cola de validaciones
+				remoteValidateCodebar: function(upc) {
+					var endpoint = this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.upcs');
+					return this.enQueue(function() {
+						return $.get(endpoint, {
+							conditions: [{'where': ['upc', this.codigo_barras]}],
+						}, function(data) {
+							this.props.valido = (data.length > 0);
+							if (!this.props.valido) {
+								this.props.editar = true
+							}
+						}.bind(this))
+					}.bind(upc))
+				},
+				onChangeAlmacenes: function(e, isHead) {
+					if (isHead) {
+						this.nuffer.fk_id_ubicacion = 0;
+					} else {
+						// Obtenemos indice de fila
+						var index = this.getDataIndex(e);
+						this.upcs[index].fk_id_ubicacion = 0;
+					}
+					// Almacen seleccionado
+					var fk_id_almacen = e.target.value;
+					// Si no existe almacen en arreglo de ubicaciones (ajax)
+					if (!this.ubicaciones[fk_id_almacen]) {
+						this.ubicaciones[fk_id_almacen] = {0:{value: 0, text: 'Obteniendo ...', selected: true, disabled: true}};
+						$.get(this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.ubicaciones'), {
+							conditions: [{'where': ['fk_id_almacen', fk_id_almacen]}],
+						}, function(data) {
+							// Si hay resultados
+							if (data.length > 0) {
+								this.ubicaciones[fk_id_almacen] = data.reduce(function(acc, item){
+									acc[item.id_ubicacion] = {
+										value: item.id_ubicacion,
+										text: item.ubicacion,
+									}
+									return acc;
+								}, {0:{value: 0, text: 'Selecciona ...', selected: true, disabled: true}});
+							} else {
+								this.ubicaciones[fk_id_almacen] = {0:{value: 0, text: 'Sin resultados ...', selected: true, disabled: true}};
+							}
+							this.$forceUpdate();
+						}.bind(this))
+					} else {
+						this.$forceUpdate();
+					}
+				},
+				append: function(e) {
+					// Validamos campos
+					this.$validator.validateAll('header').then(function(isValid){
+						if (isValid) {
+							// upc --enviamos--> upcs
+							this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.nuffer))));
+							// Obtenemos ultimo upc (recien agregado)
+							var upc = this.upcs.slice(-1).shift();
+								upc.props.queue = this.remoteValidateCodebar(upc);
+							// Limpiamos campos
+							this.nuffer = $.extend(true, {}, this.buffer);
+						}
+					}.bind(this))
+				},
+				editOrDone: function(e) {
+					var index = this.getDataIndex(e);
+					this.$validator.validateAll('upcs-' + index).then(function(isValid){
+						if (isValid) {
+							this.upcs[index].props.editar = !this.upcs[index].props.editar;
+						}
+					}.bind(this))
+				},
+				removeOrUndo: function(e) {
+					var index = this.getDataIndex(e);
+					if (!this.upcs[index].id_detalle) {
+						var queueIndex = this.queue.indexOf(this.upcs[index].props.queue);
+						if (queueIndex >= 0) {
+							this.queue.splice(queueIndex, 1);
+						}
+						this.upcs.splice(index, 1);
+						return;
+					}
+					this.upcs[index].eliminar = !this.upcs[index].eliminar;
+				},
+				importCSV: function(e) {
+					// Validamos archivo
+					this.$validator.validateAll('import').then(function(isValid){
+						if (isValid) {
+							Papa.parse(e.target.files[0], {
+								header: true,
+								complete: function(parse) {
+									// Parse ok
+									if (parse.errors.length == 0) {
+										// Agregamos lineas
+										for (var i in parse.data) {
+											this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.buffer, parse.data[i], {props: {editar: true}}))));
+											// Obtenemos ultimo upc (recien agregado)
+											var upc = this.upcs.slice(-1).shift();
+												upc.props.queue = this.remoteValidateCodebar(upc);
+										}
+									}
+								}.bind(this)
+							})
+						}
+					}.bind(this))
+				},
+				downloadDummyCSV: function() {
+
+					var csv, uri, link;
+
+					csv = Papa.unparse({
+						fields: ['codigo_barras', 'cantidad', 'no_lote', 'caducidad', 'observaciones'],
+						data: [
+							['12345678', '10', 'Numero de lote', '2017/11/30', 'Algun comentario ...'],
+							['12345678', '10', 'Numero de lote', '2017/11/30', 'Algun comentario ...'],
+							['12345678', '10', 'Numero de lote', '2017/11/30', 'Algun comentario ...'],
+						]
+					});
+
+					uri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+
+					// Create a link to trigger the download
+					link = document.createElement('a');
+					link.href = uri;
+					link.download = 'formato.csv';
+
+					// Append the link
+					document.body.appendChild(link);
+
+					// Trigger the download
+					link.click();
+
+					// Remove the link
+					document.body.removeChild(link);
+				}
+			},
+			watch: {
+				trace: function(after, before) {
+
+					var changes = {index: null, path: '', old:'', new:''};
+					var trace = function(after, before, acc) {
+						return Object.keys(after).some(function(index){
+							if(!acc.index) {
+								acc.index = index;
+							}
+							if (typeof after[index] == 'object' && after[index] != null) {
+								var isDiff = trace(after[index], before[index], acc)
+								if (isDiff) {
+									acc.index = index;
+									acc.path = index + '.' + acc.path;
+								}
+								return isDiff;
+							}
+							// Si existe nodo
+							if (before) {
+								var isDiff = after[index] != before[index];
+								if (isDiff) {
+									acc.type = 'modified';
+									acc.path += index;
+									acc.old = before[index];
+									acc.new = after[index];
+								}
+							} else {
+								acc.type = 'added';
+								acc.path += index;
+								acc.old = null;
+								acc.new = after;
+								return true
+							}
+							return isDiff
+						}.bind(this));
+					}
+
+					trace(after, before, changes)
+
+					if (changes.path == (changes.index + '.codigo_barras')) {
+						this.upcs[changes.index].props.valido = false;
+						// Validar campo
+						this.$validator.validate('upcs-'+ changes.index + '.codigo_barras')
+					}
+
+					if (changes.path == (changes.index + '.props.valido')) {
+						// Validar campo
+						this.$validator.validate('upcs-'+ changes.index + '.codigo_barras')
+					}
+
+				},
+			},
+			computed: {
+				trace: function() {
+					return this.upcs.reduce(function(acc, item){
+						return acc.concat($.extend(true, {}, item))
+					}, [])
+				},
+				computedUpcs: function() {
+					return this.upcs.reduce(function(acc, item){
+						if (!item.props) {
+							Vue.set(item, 'props', {
+								valido: true,
+								editar: false,
+								queue: null,
+							})
+						}
+						if (!item.eliminar) {
+							Vue.set(item, 'eliminar', false)
+						}
+						return acc.concat(item)
+					}, []);
+				}
+			},
+			beforeMount: function() {
+				var vm = this;
+
+				// First
+				this.nuffer = $.extend(true, {}, this.buffer);
+
+				this.$validator.extend('verify_codebar', {
+					getMessage: function(field) {
+						return field + ' incorrecto. "Enter" para revalidar.'
+					},
+					validate: function(value, index, a) {
+						return {valid: this.upcs[index[0]].props.valido === true};
+					}.bind(this),
+				});
+
+				$('[name="fk_id_almacen"]').on('beforeupdate', function (e) {
+					vm.almacenes = {0:{value: 0, text: 'Obteniendo ...', selected: true, disabled: true}}
+				});
+
+				$('[name="fk_id_almacen"]').on('update', function (e) {
+					vm.almacenes = [].slice.call(this.options).reduce(function(acc, item) {
+						acc[item.value] = {
+							value: item.value,
+							text: item.text || item.textContent,
+							selected: item.selected,
+							disabled: item.disabled,
+						}
+						return acc;
+					}, {} );
+					// reset
+					vm.nuffer.fk_id_almacen= 0;
+					vm.nuffer.fk_id_ubicacion = 0;
+					vm.upcs.forEach(function(item){
+						item.fk_id_almacen = 0;
+						item.fk_id_ubicacion = 0;
+					});
+				});
+
+				$('#form-model').on('submit', function(e) {
+					e.preventDefault();
+					var form = this;
+					// this.submit();
+
+					// Obtenemos scopes upcs-* a validar
+					var scopes = Object.keys(vm.fields).filter(function(item){
+						return item.indexOf('upcs-') !== -1
+					});
+					scopes_promises = scopes.map(function(item) {
+						return vm.$validator.validateAll(item.replace('$', ''))
+					});
+					// Si todos resuelven validados
+					Promise.all(scopes_promises).then(function(results){
+						var areValids = results.every(function(result){
+							return result;
+						})
+						// Si detalle y formulario estan validados
+						if (areValids && $(form).validate().form()) {
+							form.submit()
+						} else {
+							console.log('nada aun ...')
+						}
+					})
+				});
 			}
 		});
-		if ($('#form-model').length) {
-			addRules();
-		}
+
 	})
 </script>
 @endsection

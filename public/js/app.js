@@ -73,7 +73,7 @@ $(document).ready(function(){
 		$("#ticketHelp").remove();
 		$("#content").removeClass('pt-3');
 		$(".wrapper").removeAttr("style");
-	
+
 	}
 	else {
 		// Busqueda para menu
@@ -194,23 +194,26 @@ $(document).ready(function(){
     });
 
     $('#form-model').on('change', '.select-cascade', function() {
-      let data = $(this).data(), values = data.targetValue.split(',');
-      $(data.targetEl).parent().prepend('<div class="w-100 h-100 text-center text-white align-middle loadingData">Cargando datos... <i class="material-icons align-middle loading">cached</i></div>');
+      var data = $(this).data(), values = data.targetValue.split(','), target = data.targetEl;
+      $(target).parent().prepend('<div class="w-100 h-100 text-center text-white align-middle loadingData">Cargando datos... <i class="material-icons align-middle loading">cached</i></div>');
+      $(target).trigger('beforeupdate');
       $.get(data.targetUrl.replace('#ID#', this.value), {with: data.targetWith} , function(request){
-        let target = $(data.targetEl).empty(), options = [];
+        var options = [];
+        $(target).empty();
         if (request.success) {
-          let i, response = request.data[values[0]];
+          var i, response = request.data[values[0]];
           if (response.length > 0) {
-            options.push('<option value="0" selected disabled>Seleccione una opcion ...</option>')
+            options.push('<option value="0" selected disabled>Selecciona ...</option>')
             for (i in response) {
               options.push('<option value="'+response[i][values[1]]+'">'+response[i][values[2]]+'</option>')
             }
           } else {
-            options.push('<option value="0" selected disabled>Sin datos asociados ...</option>')
+            options.push('<option value="0" selected disabled>Sin resultados ...</option>')
           }
         }
-        target.append(options.join())
-        $('.loadingData').remove();
+        $(target).append(options.join())
+        $(target).trigger('update');
+        $('.loadingData', $(target).parent()).remove();
       })
     });
 

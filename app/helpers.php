@@ -77,10 +77,10 @@ function routeNameReplace($route = '')
  * @param  array  $params - Parametros personalizados
  * @return string
  */
-function companyRoute($route = '', $params = [])
+function companyRoute($route = '', $params = [], $replace = true)
 {
 	#
-	$expected_action = routeNameReplace($route);
+	$expected_action = $replace ? routeNameReplace($route) : explode('.', $route);
 
 	# Injectamos empresa
 	$autoparams = ['company' => request()->company];

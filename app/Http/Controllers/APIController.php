@@ -91,6 +91,8 @@ class APIController extends Controller
 			    $collections = call_user_func_array([$collections, 'pluck'], $request['pluck']);
 			}
 
+			sleep( rand(1, 5) );
+
 			// dump($collections);
 			return $collections;
 		}

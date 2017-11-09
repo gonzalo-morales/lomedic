@@ -373,7 +373,7 @@ class ControllerBase extends Controller
 		    return $return;
 		});
 		$data = $alldata;
-		
+
 
 		if($type == 'pdf') {
 		    $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
