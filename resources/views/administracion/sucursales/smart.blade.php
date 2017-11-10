@@ -3,8 +3,9 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
+
 <div class="row">
-	<div class="col-lg-6 col-xl-4">
+	<div class="col-lg-6">
 		<h2 class="font-light">Datos de sucursal</h2>
 		<hr>
 		<div class="row">
@@ -34,7 +35,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-6 col-xl-4">
+	<div class="col-lg-6">
 		<h2 class="font-light">Ubicación</h2>
 		<hr>
 		<div class="row">
