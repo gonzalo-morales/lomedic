@@ -17,7 +17,7 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'proyectos', 'as' => 'proyectos.', 'middleware' => ['auth','share','csrf'] ], function() {
-        Route::get("/", function(){ return View::make("proyectos.index"); });
+        Route::view("/","proyectos.index");
         Route::resource('proyectos', 'Proyectos\ProyectosController');
         Route::get('getProyectos','Proyectos\ProyectosController@obtenerProyectos');
         Route::post('getProductosProyectos','Proyectos\ProyectosController@loadLayoutProductosProyectos');

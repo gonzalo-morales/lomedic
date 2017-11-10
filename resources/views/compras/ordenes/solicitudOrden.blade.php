@@ -13,7 +13,6 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
-{{--{{dd($detalleSolicitud)}}--}}
 {{Form::hidden('id_solicitud',$solicitud->id_solicitud)}}
 <div class="row">
 	<div class="form-group col-md-3 col-sm-12">

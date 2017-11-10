@@ -412,7 +412,6 @@ class RecetasController extends ControllerBase
 //        $barcode = '<img src="data:image/png,base64,' . DNS1D::getBarcodePNG("$solicitud->id_solicitud", "EAN8") . '" alt="barcode"   />';
 //        $codigo = "<img width='150px' src='data:image/png;charset=binary;base64,".base64_encode($barcode)."' />";
 
-//        dd($barcode);
         $pdf = PDF::loadView(currentRouteName('imprimir'),[
             'receta' => $receta,
             'detalles' => $detalles,

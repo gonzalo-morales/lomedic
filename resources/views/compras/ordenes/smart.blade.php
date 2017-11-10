@@ -423,6 +423,8 @@
 				modal.view = rivets.bind(modal, {
 					title: '¿Estas seguro que deseas cancelar la orden?',
 					content: '<form  id="cancel-form">' +
+					'<div class="alert alert-warning text-center"><span class="text-danger">La cancelación de un documento es irreversible.</span><br>'+
+					'Para continuar, especifique el motivo y de click en cancelar.</div>'+
 					'<div class="form-group">' +
 					'<label for="recipient-name" class="form-control-label">Motivo de cancelación:</label>' +
 					'<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
+use App\Http\Models\Soporte\Prioridades;
 
 class SolicitudesController extends ControllerBase
 {
@@ -148,5 +149,15 @@ class SolicitudesController extends ControllerBase
         else {
             App::abort(404,'No se encontro el archivo o recurso que se solicito.');
         }
+    }
+    
+    public function getCategorias($company)
+    {
+        return Categorias::where('activo',1)->where('eliminar',0)->select('id_categoria as id','categoria as text')->get()->toJson();
+    }
+    
+    public function getPrioridades($company)
+    {
+        return Prioridades::where('activo',1)->where('eliminar',0)->select('id_prioridad as id','prioridad as text')->get()->toJson();
     }
 }

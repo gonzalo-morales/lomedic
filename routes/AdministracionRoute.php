@@ -16,7 +16,7 @@ Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'administracion', 'as' => 'administracion.', 'middleware' => ['auth','share','csrf'] ], function() {
-        Route::get("/", function(){ return View::make("administracion.index"); });
+        Route::view("/","administracion.index");
         
 		Route::resource('aplicacionesmedicamentos', 'Administracion\AplicacionesMedicamentosController');
 		Route::resource('areas', 'Administracion\AreasController');

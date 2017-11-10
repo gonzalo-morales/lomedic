@@ -17,10 +17,13 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 
 Route::get('/', 'HomeController@index')->name('home');
 
+Route::get('/phpinfo', function () { phpinfo(); });
+
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
     Route::resource('/', 'HomeController', ['middleware' => ['share','csrf']]);
+    Route::get('/phpinfo', function () { phpinfo(); });
 });
 
 Route::group(['prefix' => '{company}/{entity}', 'middleware' => ['auth', 'share']], function($co) {

@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use App\Notifications\MyResetPassword;
 
 class Usuarios extends ModelBase implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
@@ -64,6 +65,11 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         'nombre_corto' => 'required',
         'usuario' => 'required',
     ];
+    
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new MyResetPassword($token));
+    }
 
     /**
      * Obtenemos usuarios activos

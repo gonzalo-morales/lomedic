@@ -28,10 +28,8 @@ class Share
 
         # Compartimos modulos de usuario para generar menu
         View::share('menu', Auth::user()->modulos_anidados($empresas->where('conexion', '=', request()->company)->first()));
-
-        View::share('employees_tickets', Empleados::all());
-        View::share('categories_tickets', Categorias::all()->pluck('categoria','id_categoria')->toArray());
-        View::share('priorities_tickets', Prioridades::all()->pluck('prioridad','id_prioridad'));
+        
+        # Compartimos ultimos tickets
         View::share('ultimos_tickets',Solicitudes::where('fk_id_empleado_solicitud',Auth::id())->where('fecha_hora_resolucion',null)->take(5)->get());
         return $next($request);
     }

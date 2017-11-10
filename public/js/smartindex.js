@@ -232,8 +232,8 @@ window['smart-model'] = {
 
 			let modal = window['smart-modal'];
 			modal.view = rivets.bind(modal, {
-				title: 'Â¿Estas seguro?',
-				content: 'Una vez eliminado(s) no podrÃ¡s recuperarlo(s).',
+				title: 'Ã‚Â¿Estas seguro?',
+				content: 'Una vez eliminado(s) no podrÃƒÂ¡s recuperarlo(s).',
 				buttons: [
 					{button: {
 						'text': 'Cancelar',
@@ -482,7 +482,7 @@ function getItems($page) {
 	let columns = JSON.parse(window['smart-view'].dataset.columns);
 	let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
-	$.getJSON(window['smart-view'].dataset.itemShowOrDeleteUrl.replace('/#ID#', '') + '?page=' + $page +'&_token=' + token, function(response) {
+	$.getJSON(window['smart-view'].dataset.itemShowOrDeleteUrl.replace('/#ID#', '') + '?page=' + $page, function(response) {
 		let collection = [];
 		$.each(response.data, function(index, item) {
 			let id = item[primary];

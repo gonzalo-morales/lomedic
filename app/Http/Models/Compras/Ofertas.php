@@ -44,8 +44,9 @@ class Ofertas extends ModelCompany
     protected $fields = [
         'id_oferta' => 'Número oferta',
         'proveedor.nombre_corto' => 'Proveedor',
-        'sucursales.sucursal' => 'Sucursal entrega',
-        'vigencia' => 'Vigencia'
+        'sucursal.sucursal' => 'Sucursal entrega',
+        'vigencia' => 'Vigencia',
+        'estatus.estatus' => 'Estatus'
     ];
 
     protected $eagerLoaders = ['proveedor','sucursal'];

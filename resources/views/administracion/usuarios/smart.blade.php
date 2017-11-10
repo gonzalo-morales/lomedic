@@ -148,7 +148,6 @@
 
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
-	{{--{{dd($data)}}--}}
 	@section('form-content')
 
 		<div class="container-fluid">

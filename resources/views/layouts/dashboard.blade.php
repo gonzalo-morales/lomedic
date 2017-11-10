@@ -114,7 +114,7 @@
 <!-- jQuery local fallback -->
 <script>window.jQuery || document.write('<script src="{{asset('js/jquery.min.js') }}"><\/script>')</script>
 
-{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js') }}
+{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js') }}
 {{ HTML::script(asset('js/popper.min.js')) }}
 
 <!-- Bootstrap JS CDN -->

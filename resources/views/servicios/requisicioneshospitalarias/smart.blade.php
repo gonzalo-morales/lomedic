@@ -100,8 +100,6 @@
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
 @section('form-actions')
-
-    {{--{{dd($data)}}--}}
     <div class="text-right ">
 
         @if(in_array($data->id_estatus,[1,2]))

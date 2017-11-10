@@ -17,6 +17,6 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'informes', 'as' => 'informes.', 'middleware' => ['auth','share','csrf'] ], function() {
-        Route::get("/", function(){ return View::make("informes.index"); });
+        Route::view("/","informes.index");
     });
 });

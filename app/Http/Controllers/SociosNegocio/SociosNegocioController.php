@@ -2,129 +2,52 @@
 
 namespace App\Http\Controllers\SociosNegocio;
 
+use App\Http\Controllers\ControllerBase;
 use App\Http\Models\SociosNegocio\SociosNegocio;
-use App\Http\Models\SociosNegocio\ContactosSociosNegocio as Contactos;
-use App\Http\Models\SociosNegocio\CorreosOrdenCompra as Correos;
-use App\Http\Models\SociosNegocio\CorreosContacto;
 use App\Http\Models\SociosNegocio\TiposSocioNegocio as TiposSocios;
 use App\Http\Models\SociosNegocio\TiposContacto;
 use App\Http\Models\SociosNegocio\TiposDireccion;
 use App\Http\Models\SociosNegocio\TiposEntrega;
-use App\Http\Models\SociosNegocio\CuentasBancarias as Cuentas;
 use App\Http\Models\SociosNegocio\RamosSocioNegocio as Ramos;
 use App\Http\Models\Administracion\Bancos;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\FormasPago;
-use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Administracion\Estados;
 use App\Http\Models\Administracion\Municipios;
 use App\Http\Models\Administracion\Sucursales;
-use App\Http\Controllers\Controller;
+#use App\Http\Models\Administracion\Monedas;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Models\Logs;
-use Illuminate\Support\Facades\Response;
 
-// use Illuminate\Contracts\Filesystem\Factory;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\URL;
-use phpseclib\Crypt\RSA;
-use phpseclib\Net\SSH2;
-use phpseclib\Net\SFTP;
-use Validator;
-
-
-class SociosNegocioController extends Controller
+class SociosNegocioController extends ControllerBase
 {
-
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
 	public function __construct(SociosNegocio $entity)
 	{
 		$this->entity = $entity;
-		$this->entity_name = strtolower(class_basename($entity));
-		// return dd($entity);
 	}
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index($company)
+	
+	public function getDataView($entity = null)
 	{
-		// Logs::createLog($this->entity->getTable(),$company,null,'index',null);
-
-// $account = Account::select(['id', 'is_sign_contract', 'restaurant_name', 'state', 'phone_no', 'email', 'one_time_pick_up', 'sign_contract_date', 'created_at', 'oil_on_hand', 'binsize'])
-// ->with(['completedservice' => function($c) {
-// 	$c->select('id', 'account_id');
-// }])->with(['accountService' => function($q) {
-// 	$q->with(['serviceProvider' => function($qs) {
-// 	$qs->select('id', 'company_name');
-// 	}])->select('account_id', 'service_provider_id', 'service_id');
-// }])->whereRaw($where)->orderBy('id', 'ASC')->offset(54)->limit(1)->get();
-
-		return view(Route::currentRouteName(), [
-			'entity' => $this->entity_name,
-			'company' => $company,
-			'data' => $this->entity->where('eliminar',0)->get(),
-			'tiposSocios' => TiposSocios::all()->where('activo',1)->where('eliminar',0)->sortBy('tipo_socio')
-		]);
-		return redirect(companyRoute('index'));
-		// return dd($company);
-
+	    return [
+	        'ramos'                => Ramos::where('activo','1')->where('eliminar','0')->pluck('ramo','id_ramo')->sortBy('ramo')->prepend('Selecciona una opcion...',''),
+	        'paises'               => Paises::where('activo','1')->where('eliminar','0')->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
+	        'tipossociosventa'     => TiposSocios::where('activo','1')->where('eliminar','0')->where('para_venta','1')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',Null),
+	        'tipossocioscompra'    => TiposSocios::where('activo','1')->where('eliminar','0')->where('para_venta','0')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Proveedor',Null),
+	        'empresas'		       => Empresas::select('id_empresa','nombre_comercial')->where('activo','1')->get()->sortBy('nombre_comercial'),
+	        'formaspago'           => FormasPago::where('activo','1')->where('eliminar','0')->pluck('forma_pago','id_forma_pago')->sortBy('forma_pago')->prepend('Selecciona una opcion...',''),
+	        'bancos'               => Bancos::where('eliminar','0')->pluck('banco','id_banco')->sortBy('banco')->prepend('Selecciona una opcion...',''),
+	        'tiposentrega'	       => TiposEntrega::where('activo','1')->where('eliminar','0')->pluck('tipo_entrega','id_tipo_entrega')->sortBy('tipo_entrega'),
+	        'sucursales' 	       => Sucursales::where('activo','1')->where('eliminar','0')->pluck('sucursal','id_sucursal')->sortBy('sucursal')->prepend('Selecciona una opcion...',''),
+	        'tiposcontactos'       => TiposContacto::where('activo','1')->where('eliminar','0')->pluck('tipo_contacto','id_tipo_contacto')->sortBy('tipo_contacto')->prepend('Selecciona una opcion...',''),
+	        'tiposdireccion'       => TiposDireccion::where('activo','1')->where('eliminar','0')->pluck('tipo_direccion','id_tipo_direccion')->sortBy('tipo_direccion'),
+	    ];
 	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create($company)
-	{
-
-		return view(Route::currentRouteName(), [
-			'entity'  		=> $this->entity_name,
-			'company' 		=> $company,
-			'sucursales' 	=> Sucursales::all()->where('activo','1')->where('eliminar','0')->sortBy('nombre_sucursal'),
-			'contactos' 	=> Contactos::all()->where('activo','1')->where('eliminar','0')->sortBy('nombre'),
-			'bancos' 		=> Bancos::all()->where('eliminar','0')->sortBy('banco'),
-			'paises' 		=> Paises::all()->where('activo','1')->where('eliminar','0')->sortBy('pais'),
-			'estados' 		=> Estados::all()->where('activo','1')->where('eliminar','0')->sortBy('estado'),
-			'ramos' 		=> Ramos::all()->where('activo','1')->where('eliminar','0')->sortBy('ramo'),
-			'monedas' 		=> Monedas::all()->where('activo','1')->where('eliminar','0')->sortBy('moneda'),
-			'tiposSocios'	=> TiposSocios::all()->where('activo','1')->where('eliminar','0')->sortBy('tipo_socio'),
-			'empresas'		=> Empresas::all()->where('activo','1')->sortBy('nombre_comercial'),
-			'formasPago'	=> FormasPago::all()->where('activo','1')->where('eliminar','0')->sortBy('forma_pago'),
-			'tiposContactos'=> TiposContacto::all()->where('activo','1')->where('eliminar','0')->sortBy('id_tipo_contacto'),
-			'tiposDireccion'=> TiposDireccion::all()->where('activo','1')->where('eliminar','0')->sortBy('tipo_direccion'),
-			'tiposEntrega'	=> TiposEntrega::all()->where('activo','1')->where('eliminar','0')->sortBy('id_tipo_entrega'),
-		]);
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
+	
 	public function store(Request $request, $company)
 	{
-		# Validamos request, si falla regresamos pagina
-		// $this->validate($request, [
-		// 	'avisoFuncionamiento' => 'required|size:10240|mimes:pdf',
-		// 	'razonSocial' => 'required| min:10',
-		// ]);
-
-		// dd($request);
-		// print_r(json_decode($request->input('objectSocio'),true));
+	    #Validamos request, si falla regresamos atras
+	    $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
+	    
 		$objSocio = $request->input('objectSocio');
 		$validArray = [];
 
@@ -267,10 +190,6 @@ class SociosNegocioController extends Controller
 		}
 
 
-
-
-		exit();
-
 		// **********************************************************
 		// **********************************************************
 
@@ -318,13 +237,8 @@ class SociosNegocioController extends Controller
 		// return redirect(companyRoute('create'));
 	}
 
-	/**
-	 * Display the specified resource
-	 *
-	 * @param  integer $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($company, $id)
+	/*
+	public function show($company, $id, $attributes =[])
 	{
 		// Logs::createLog($this->entity->getTable(),$company,$id,'ver',null);
 
@@ -334,7 +248,9 @@ class SociosNegocioController extends Controller
 			'data' => $this->entity->findOrFail($id),
 		]);
 	}
-
+    */
+	
+	
 	/**
 	 * Show the form for editing the specified resource.
 	 *
@@ -516,7 +432,6 @@ class SociosNegocioController extends Controller
         return Response::json($dataSelect2);
 	}
 
-
 	/*public function deleteLicencias($company,Request $request){
 		if(Input::hasFile('files')){
 			$files=Input::file('files');
@@ -534,9 +449,6 @@ class SociosNegocioController extends Controller
 			return Response::json($arrayFiles);
 		}
 	}*/
-
-
-
 
 	/* ALMACENAR EN EL SERVIDOR
 	 public function store(Request $request, $company)
@@ -588,7 +500,4 @@ class SociosNegocioController extends Controller
 		 return redirect(companyRoute('create'));
 	 }
 	 */
-
-
-
 }

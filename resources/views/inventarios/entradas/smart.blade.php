@@ -56,7 +56,6 @@
 				</div>
 			</div>
 		</div><!--/row forms-->
-{{--{{dd($sucursales)}}--}}
 <div class="row">
 	{{--<div class="form-group col-md-3 col-sm-12">--}}
 		{{--{{ Form::label('fk_id_socio_negocio', '* Sucursal') }}--}}

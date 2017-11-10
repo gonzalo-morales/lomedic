@@ -92,10 +92,10 @@ class OrdenesController extends ControllerBase
         if(!empty($request->importacion)){
 		    $request->request->set('importacion','t');
         }
-//        dd($request->request);
+
         $now = DB::raw('now()');
         $request->request->set('fecha_estimada_entrega',DB::raw("date '$now' + integer '$request->tiempo_entrega'"));
-//        dd($request->request);
+
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 			if(isset($request->_detalles)) {
@@ -198,7 +198,7 @@ class OrdenesController extends ControllerBase
 		$this->validate($request, $this->entity->rules);
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
-//		dd($entity);
+
 		if ($entity->save()) {
 			if(isset($request->detalles)) {
 				foreach ($request->detalles as $detalle) {
@@ -318,7 +318,6 @@ class OrdenesController extends ControllerBase
     public function impress($company,$id)
     {
         $orden = Ordenes::find($id);
-//        dd($orden->detalleOrdenes()->where('cerrado','f')->get());
 
         $subtotal = 0;
         $iva = 0;
@@ -381,7 +380,7 @@ class OrdenesController extends ControllerBase
             'solicitud'=>Solicitudes::where('id_solicitud',$id)->first(),
             'detalleSolicitud' => DetalleSolicitudes::where('fk_id_solicitud',$id)->get(),
         ]];
-//        dd(currentRouteName('solicitudOrden'));
+
         return view(currentRouteName('solicitudOrden'),($attributes['dataview'] ?? []) + [
             'data' => $data,
             'validator' => $validator

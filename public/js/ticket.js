@@ -71,6 +71,7 @@ $(document).ready(function () {
 		    	id_empleado = $('#id_solicitante').val();
 		    }
 	
+		    
 		    $('#ticketHelp #fk_id_sucursal').select2({
 		    	theme: 'bootstrap',
 		        placeholder: 'Sucursal',
@@ -78,8 +79,8 @@ $(document).ready(function () {
 		        containerCssClass: ':all:',
 		        ajax: {
 		            dataType: 'json',
-		            url: url_sucursal.replace('?id', id_empleado),
-		            delay:250,
+		            
+		            url: url_sucursal.replace('?id', $('#id_solicitante').val()),
 		            data: function (params) {
 		                return {q: params.term}
 		            },
@@ -95,9 +96,49 @@ $(document).ready(function () {
 	    $('.fk_id_categoria').prepend(options);
 	    $('.fk_id_categoria').val('');
 	    $('.fk_id_categoria option:selected').prop('disabled', true);
+	    
+	    $('#ticketHelp .fk_id_categoria').on('click', function() {
+		    $(this).select2({
+		    	theme: 'bootstrap',
+		        placeholder: 'Categoria',
+		        maximumSelectionSize: 6,
+		        containerCssClass: ':all:',
+		        ajax: {
+		            dataType: 'json',
+		            
+		            url: $(this).data('url'),
+		            data: function (params) {
+		                return {q: params.term}
+		            },
+		            processResults: function (data) {
+		                return {results: data}
+		            }
+		        },
+		    });
+	    });
+	    
+	    $('#fk_id_prioridad').on('click', function() {
+		    $(this).select2({
+		    	theme: 'bootstrap',
+		        placeholder: 'Categoria',
+		        maximumSelectionSize: 6,
+		        containerCssClass: ':all:',
+		        ajax: {
+		            dataType: 'json',
+		            
+		            url: $(this).data('url'),
+		            data: function (params) {
+		                return {q: params.term}
+		            },
+		            processResults: function (data) {
+		                return {results: data}
+		            }
+		        },
+		    });
+	    });
 	
 	    $('.fk_id_categoria').on('change', function(){
-	        let url = $(this).data('url');
+	        let url = $('.fk_id_subcategoria').data('url');
 	
 	        $('.fk_id_subcategoria').empty();
 	        $('.fk_id_accion').empty();
@@ -124,7 +165,7 @@ $(document).ready(function () {
 	
 	    //Carga acciones segun al elegir una subcategoria
 	    $('.fk_id_subcategoria').on('change', function(){
-	        let url = $(this).data('url');
+	        let url = $('.fk_id_accion').data('url');
 	
 	        $('.fk_id_accion').empty();
 	        $('.fk_id_accion').prop('disabled',!$('option:selected', this).val());

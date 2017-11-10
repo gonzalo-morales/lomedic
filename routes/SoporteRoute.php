@@ -30,6 +30,8 @@ Route::prefix('{company}')->group(function () {
         Route::get('solicitudes/{id}/acciones', 'Soporte\SolicitudesController@obtenerAcciones');
         Route::get('solicitudes/{id}/descargar', 'Soporte\SolicitudesController@descargarArchivosAdjuntos');
         Route::get('solicitudes/{id}/subcategorias', 'Soporte\SolicitudesController@obtenerSubcategorias');
+        Route::get('solicitudes/getcategorias', 'Soporte\SolicitudesController@getCategorias');
+        Route::get('solicitudes/getprioridades', 'Soporte\SolicitudesController@getPrioridades');
         Route::resource('solicitudes', 'Soporte\SolicitudesController');
         Route::resource('subcategorias', 'Soporte\SubcategoriasController');
         Route::resource('urgencias', 'Soporte\UrgenciasController');

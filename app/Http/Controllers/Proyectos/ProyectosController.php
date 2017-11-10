@@ -62,7 +62,7 @@ class ProyectosController extends ControllerBase
 
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-//        dd($request->request);
+
         $isSuccess = $this->entity->create($request->all());
         if ($isSuccess) {
 

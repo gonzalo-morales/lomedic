@@ -186,7 +186,7 @@
     										{{$cantidad = $detalle->pivot->where('fk_id_upc',$detalle->id_upc)->where('fk_id_sku',$data->id_sku)->first()->cantidad ?? '0'}}
     										{!! Form::hidden('detalles['.$key.'][cantidad]',$cantidad) !!} 
     									</td>
-    									<td> <button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>
+    									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>
     								</tr>
         							@endforeach
         						@endif

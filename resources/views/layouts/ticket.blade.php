@@ -10,12 +10,16 @@
     </div>
 
     <ul class="list-unstyled components bg-white">
+    	
     	<li>
             <a class="collapsed d-flex align-items-center" href="#tickets" data-toggle="collapse" aria-expanded="false">
             	<i class="material-icons">list</i>Tickets recientes
             	<i class="material-icons float-right grey-text">expand_more</i>
             </a>
             <ul id="tickets" class="list-unstyled collapse" aria-expanded="false">
+            	@if(!$ultimos_tickets->count())
+            		<li> </li>
+            	@endif
                 @foreach($ultimos_tickets as $ticket)
                 <li>
                 	<a href="{{ companyAction('Soporte\SolicitudesController@show', ['id' => $ticket->id_solicitud]) }}" class="btn d-flex align-items-center"><i class="material-icons">note</i>
@@ -69,21 +73,21 @@
           			<div class="form-group row">
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_categoria','Categoría')}}
-                    		{!! Form::select('fk_id_categoria',$categories_tickets ?? [],null,['id'=>'fk_id_categoria','class'=>'form-control fk_id_categoria','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
+                    		{!! Form::select('fk_id_categoria',$categories_tickets ?? [],null,['id'=>'fk_id_categoria','class'=>'form-control fk_id_categoria','data-url'=>companyAction('Soporte\SolicitudesController@getCategorias')])!!}
           				</div>
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_subcategoria','Subategoría')}}
-                			{!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria','class'=>'form-control fk_id_subcategoria','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
+                			{!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria','class'=>'form-control fk_id_subcategoria','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])]) !!}
           				</div>
           			</div>
           			<div class="form-group row">
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_accion','Acción')}}
-	            			{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control fk_id_accion','disabled'=>'disabled']) !!}
+	            			{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control fk_id_accion','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
           				</div>
           				<div class="col-md-12 col-lg-6">
               				{{Form::label('fk_id_prioridad','Prioridad')}}
-	            			{!! Form::select('fk_id_prioridad',$priorities_tickets ?? [],null,['id'=>'fk_id_prioridad','class'=>'form-control']) !!}
+	            			{!! Form::select('fk_id_prioridad',$priorities_tickets ?? [],null,['id'=>'fk_id_prioridad','class'=>'form-control','data-url'=>companyAction('Soporte\SolicitudesController@getPrioridades')]) !!}
           				</div>
           			</div>
           			<div class="form-group">

@@ -36,7 +36,7 @@ class Puestos extends ModelBase
      */
     protected $fields = [
         'descripcion' => 'Puesto',
-        'activo' => 'Activo'
+        'activo_text' => 'Estatus'
     ];
 
     /**
@@ -52,7 +52,6 @@ class Puestos extends ModelBase
      */
     public $rules = [
         'descripcion' => 'required',
-
     ];
 
     public function usuario()

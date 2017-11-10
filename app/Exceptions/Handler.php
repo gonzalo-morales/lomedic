@@ -32,6 +32,12 @@ class Handler extends ExceptionHandler
 	 */
 	public function report(Exception $exception)
 	{
+	    /* # Enviar datos de error por email 
+	    if ($e instanceof \Exception) {
+	        Mail::send('emails.exception', ['error' => $e->getMessage()], function ($m) {
+	            $m->to('your email', 'your name')->subject('your email subject');
+	        });
+	    }*/
 		parent::report($exception);
 	}
 
@@ -44,6 +50,12 @@ class Handler extends ExceptionHandler
 	 */
 	public function render($request, Exception $exception)
 	{
+	    /*
+	    if ($exception->getStatusCode() == 500) {
+	        return response()->view('errors.500', [], 500);
+	    }
+	    */
+	    
 		return parent::render($request, $exception);
 	}
 

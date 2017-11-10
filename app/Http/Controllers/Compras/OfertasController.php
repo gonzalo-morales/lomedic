@@ -72,7 +72,6 @@ class OfertasController extends ControllerBase
 		if(empty($request->fk_id_empresa)){
 		    $request->request->set('fk_id_empresa',Empresas::where('conexion','LIKE',$company)->first()->id_empresa);
         }
-//        dd($request->request);
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 			if(isset($request->_detalles)) {
@@ -271,7 +270,6 @@ class OfertasController extends ControllerBase
     public function impress($company,$id)
     {
         $oferta = Ofertas::find($id);
-//        dd($orden->detalleOrdenes()->where('cerrado','f')->get());
 
         $subtotal = 0;
         $iva = 0;
