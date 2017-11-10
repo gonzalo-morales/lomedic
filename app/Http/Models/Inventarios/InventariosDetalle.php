@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Inventarios;
 
+use App\Http\Models\Inventarios\Upcs;
 use App\Http\Models\ModelCompany;
 
 class InventariosDetalle extends ModelCompany
@@ -56,5 +57,16 @@ class InventariosDetalle extends ModelCompany
 	 */
 	// public $niceNames = [
 	// ];
+
+
+	/**
+	 * Obtenemos upc relacionadas a detalle
+	 * @return @belongsTo
+	 */
+	public function upc()
+	{
+		return $this->belongsTo(Upcs::class, 'codigo_barras', 'upc');
+	}
+
 
 }

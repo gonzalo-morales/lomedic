@@ -10,6 +10,7 @@ use App\Http\Models\Inventarios\Inventarios;
 use App\Http\Models\Inventarios\Ubicaciones;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Crypt;
 
 class InventariosController extends ControllerBase
 {
@@ -52,9 +53,15 @@ class InventariosController extends ControllerBase
 			'tipos' => TipoInventario::select(['tipo','id_tipo'])->where('activo', 1)->pluck('tipo','id_tipo'),
 			'sucursales' => Sucursales::select(['sucursal','id_sucursal'])->where('activo', 1)->pluck('sucursal','id_sucursal'),
 			'almacenes' => $almacenes,
-			'upcs' => $entity ? $entity->detalle()->orderby('id_detalle', 'DESC')->get() : [],
+			'upcs' => $entity ? $entity->detalle()->with('upc:nombre_comercial,descripcion,upc')->orderby('id_detalle', 'DESC')->get() : [],
 			'vue_almacenes' => $vue_almacenes,
 			'vue_ubicaciones' => $vue_ubicaciones,
+			'api_codebar' => Crypt::encryptString('"select": ["nombre_comercial", "descripcion"], "conditions": [{"where": ["upc", "$codigo_barras"]}]'),
+			'api_almacen' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$fk_id_almacen"]}]')
+
+
+
+
 		];
 	}
 

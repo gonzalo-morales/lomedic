@@ -27,7 +27,7 @@ class Inventarios extends ModelCompany
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['fk_tipo_inventario', 'fk_id_sucursal', 'fk_id_almacen', 'fecha_creacion'];
+	protected $fillable = ['fk_tipo_inventario', 'fk_id_sucursal', 'fk_id_almacen', 'fecha_creacion', 'tipo_captura'];
 
 	/*
 	 * Los atributos que seran visibles en index-datable
@@ -37,6 +37,8 @@ class Inventarios extends ModelCompany
 		'tipo.tipo' => 'Tipo de inventario',
 		'sucursal.sucursal' => 'Sucursal',
 		'almacen.almacen' => 'Almacén',
+		'fecha_creacion' => 'Fecha de creación',
+		'tipo_captura_text' => 'Tipo de captura'
 	];
 
 	/**
@@ -65,6 +67,10 @@ class Inventarios extends ModelCompany
 		'fk_id_almacen' => 'Almacén',
 	];
 
+	public function getTipoCapturaTextAttribute() {
+		return $this->tipo_captura == 2 ? 'HandHeld' : 'Manual';
+	}
+
 	/**
 	 * Obtenemos detalle relacionadas a inventario
 	 * @return @hasMany
@@ -92,6 +98,10 @@ class Inventarios extends ModelCompany
 		return $this->belongsTo(Almacenes::class, 'fk_id_almacen', 'id_almacen');
 	}
 
+	/**
+	 * Obtenemos tipo de inventario
+	 * @return @belongsTo
+	 */
 	public function tipo()
 	{
 		return $this->belongsTo(TipoInventario::class, 'fk_tipo_inventario', 'id_tipo');

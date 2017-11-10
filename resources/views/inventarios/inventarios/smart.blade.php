@@ -4,12 +4,12 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="col-md-4 col-sm-4">
+	<div class="col-md-3 col-sm-3">
 		<div class="form-group">
 			{{ Form::cSelectWithDisabled('Tipo de inventario', 'fk_tipo_inventario', $tipos ?? [], ['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '']) }}
 		</div>
 	</div>
-	<div class="col-md-4 col-sm-4">
+	<div class="col-md-3 col-sm-3">
 		<div class="form-group">
 			{{ Form::cSelectWithDisabled('Sucursal', 'fk_id_sucursal', $sucursales ?? [], [
 				'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2 select-cascade' : '',
@@ -20,9 +20,14 @@
 			]) }}
 		</div>
 	</div>
-	<div class="col-md-4 col-sm-4">
+	<div class="col-md-3 col-sm-3">
 		<div class="form-group">
 			{{ Form::cSelect('Almacén', 'fk_id_almacen', $almacenes ?? [], ['id' => 'some','class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '', 'targeted' => 'fk_id_almacen']) }}
+		</div>
+	</div>
+	<div class="col-md-3 col-sm-3">
+		<div class="form-group">
+			{{ Form::cSelect('Tipo de captura', 'tipo_captura', [1 => 'Manual', 2 => 'HandHeld'], ['class' => 'custom-select']) }}
 		</div>
 	</div>
 </div>
@@ -30,7 +35,7 @@
 	<div class="col-md-12 col-sm-12 mb-3">
 		<div id="app" class="card z-depth-1-half" data-api-endpoint="{{ companyRoute('api.index', ['entity' => '#ENTITY#'], false) }}">
 			@if (!Route::currentRouteNamed(currentRouteName('show')))
-			<div class="card-header text-center">
+			<div v-if="tipo_captura == 1" class="card-header text-center">
 				<div class="row">
 					<div class="col-sm-12">
 						<p>Tipo de <b>captura</b> para el producto</p>
@@ -83,15 +88,15 @@
 												<div class="form-group" v-cloak>
 													{{ Form::cNumber('Cantidad', '', [
 														'min' => 0,
-														'v-model.number' => 'nuffer.cantidad',
-														'v-bind:class' => '{"is-invalid": errors.has("header.cantidad")}',
+														'v-model.number' => 'nuffer.cantidad_toma',
+														'v-bind:class' => '{"is-invalid": errors.has("header.cantidad_toma")}',
 														'v-validate' => '"required|min_value:1"',
 														'data-vv-as' => 'Cantidad',
-														'data-vv-name' => 'cantidad',
+														'data-vv-name' => 'cantidad_toma',
 														'data-vv-scope' => 'header',
 														'v-on:keydown.enter.prevent',
 													]) }}
-													<span v-show="errors.has('header.cantidad')" class="help-block help-block-error small">@{{ errors.first('header.cantidad') }}</span>
+													<span v-show="errors.has('header.cantidad_toma')" class="help-block help-block-error small">@{{ errors.first('header.cantidad_toma') }}</span>
 												</div>
 											</div>
 											<div class="col-12 col-md-4 col-sm-6">
@@ -148,13 +153,7 @@
 											{{ Form::cTextArea('Observaciones', '', [
 												'rows' => 2,
 												'v-model' => 'nuffer.observaciones',
-												'v-validate' => '"required"',
-												'v-bind:class' => '{"is-invalid": errors.has("header.observaciones")}',
-												'data-vv-as' => 'Observaciones',
-												'data-vv-name' => 'observaciones',
-												'data-vv-scope' => 'header',
 											]) }}
-											<span v-show="errors.has('header.observaciones')" class="help-block help-block-error small">@{{ errors.first('header.observaciones') }}</span>
 										</div>
 									</div>
 									<div class="col-sm-12 text-center">
@@ -193,8 +192,9 @@
 				<table class="table table-hover table-responsive-sm table-striped" style="table-layout: fixed">
 					<thead>
 						<tr>
-							<th>#</th>
+							<th style="width: 1px;">#</th>
 							<th>Código de barras</th>
+							<th>Descripción</th>
 							<th>Cantidad</th>
 							<th>Lote</th>
 							<th>Caducidad</th>
@@ -230,21 +230,24 @@
 								<span v-show="errors.has('upcs-'+index+'.codigo_barras')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.codigo_barras') }}</span>
 							</td>
 							<td>
-								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="upc.cantidad"></span>
+								<span v-text="upc.upc.descripcion"></span>
+							</td>
+							<td>
+								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="upc.cantidad_toma"></span>
 								<input type="number" min="0" class="form-control"
 									{{-- General --}}
 									v-show="upc.props.editar || errors.any('upcs-'+index)"
-									v-model="upc.cantidad"
-									v-bind:name="'relations[has][detalle]['+index+'][cantidad]'"
+									v-model="upc.cantidad_toma"
+									v-bind:name="'relations[has][detalle]['+index+'][cantidad_toma]'"
 									{{-- Validation --}}
 									v-validate="'required|min_value:1'"
-									v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.cantidad')}"
+									v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.cantidad_toma')}"
 									data-vv-as="Cantidad"
-									data-vv-name="cantidad"
+									data-vv-name="cantidad_toma"
 									v-bind:data-vv-scope="'upcs-'+index"
 									{{-- Prevent submit --}}
 									v-on:keydown.enter.prevent>
-								<span v-show="errors.has('upcs-'+index+'.cantidad')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.cantidad') }}</span>
+								<span v-show="errors.has('upcs-'+index+'.cantidad_toma')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.cantidad_toma') }}</span>
 							</td>
 							<td>
 								<span v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-text="upc.no_lote"></span>
@@ -327,25 +330,18 @@
 									v-show="upc.props.editar || errors.any('upcs-'+index)"
 									v-model="upc.observaciones"
 									v-bind:name="'relations[has][detalle]['+index+'][observaciones]'"
-									{{-- Validation --}}
-									v-validate="'required'"
-									v-bind:class="{'is-invalid': errors.has('upcs-'+index+'.observaciones')}"
-									data-vv-as="Observaciones"
-									data-vv-name="observaciones"
-									v-bind:data-vv-scope="'upcs-'+index"
 									{{-- Prevent submit --}}
 									v-on:keydown.enter.prevent>
 								</textarea>
-								<span v-show="errors.has('upcs-'+index+'.observaciones')" class="help-block help-block-error small">@{{ errors.first('upcs-'+index+'.observaciones') }}</span>
 							</td>
 							<td style="width: 1px !important;position: relative;">
 								<div v-if="upc.props.valido == 'unknow'"  class="w-100 h-100 text-center text-white align-middle loadingData">Validando ...<i class="material-icons align-middle loading">cached</i></div>
 								@if (!Route::currentRouteNamed(currentRouteName('show')))
-								<a href="#" v-if="(!upc.eliminar && upc.props.editar && upc.props.valido != 'unknow') || errors.any('upcs-'+index)" v-on:click.prevent="editOrDone"><i class="material-icons">done</i> Finalizar</a>
-								<a href="#" v-if="!upc.eliminar && !upc.props.editar && !errors.any('upcs-'+index)" v-on:click.prevent="editOrDone"><i class="material-icons">mode_edit</i></a>
-								<a href="#" v-if="!upc.props.editar && !errors.any('upcs-'+index)" v-on:click.prevent="removeOrUndo">
+								<a href="#" v-if="(!upc.eliminar && upc.props.editar && upc.props.valido != 'unknow') || errors.any('upcs-'+index)" v-on:click.prevent="editOrDone"><i class="material-icons">done</i> Cerrar</a>
+								<a href="#" v-if="!upc.eliminar && !upc.props.editar && !errors.any('upcs-'+index)" v-on:click.prevent="editOrDone"><i class="material-icons">mode_edit</i> Editar</a>
+								<a href="#" v-on:click.prevent="removeOrUndo">
 									<i class="material-icons" v-text="upc.eliminar ? 'undo' : 'delete'"></i>
-									<span v-text="upc.eliminar ? 'Deshacer' : ''"></span>
+									<span v-text="upc.eliminar ? 'Deshacer' : 'Eliminar'"></span>
 								</a>
 								@endif
 							</td>
@@ -353,7 +349,7 @@
 					</tbody>
 					<tbody v-else>
 						<tr class="text-center">
-							<td colspan="9">Agrega uno o más detalles.</td>
+							<td colspan="10">Agrega uno o más detalles.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -417,11 +413,12 @@
 			el: '#app',
 			data: function() {
 				return {
+					tipo_captura: 1,
 					queue: [],
 					buffer: {
 						id_detalle: null,
 						codigo_barras: '',
-						cantidad: 0,
+						cantidad_toma: 0,
 						no_lote: '',
 						caducidad: '',
 						fk_id_almacen: 0,
@@ -432,6 +429,9 @@
 							valido: 'unknow',
 							editar: false,
 							queue: null,
+						},
+						upc: {
+							descripcion: ''
 						}
 					},
 					nuffer: {},
@@ -513,12 +513,15 @@
 				remoteValidateCodebar: function(upc) {
 					var endpoint = this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.upcs');
 					return this.enQueue(function() {
-						return $.get(endpoint, {
-							conditions: [{'where': ['upc', this.codigo_barras]}],
+						return $.get(endpoint, { param_js: '{{$api_codebar ?? ''}}', $codigo_barras: this.codigo_barras
+							// conditions: [{'where': ['upc', this.codigo_barras]}],
 						}, function(data) {
 							this.props.valido = (data.length > 0);
+							// Si no valido
 							if (!this.props.valido) {
 								this.props.editar = true
+							} else {
+								this.upc.descripcion = data[0].descripcion;
 							}
 						}.bind(this))
 					}.bind(upc))
@@ -537,7 +540,8 @@
 					if (!this.ubicaciones[fk_id_almacen]) {
 						this.ubicaciones[fk_id_almacen] = {0:{value: 0, text: 'Obteniendo ...', selected: true, disabled: true}};
 						$.get(this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.ubicaciones'), {
-							conditions: [{'where': ['fk_id_almacen', fk_id_almacen]}],
+							// conditions: [{'where': ['fk_id_almacen', fk_id_almacen]}],
+							param_js: '{{$api_almacen ?? ''}}', $fk_id_almacen: fk_id_almacen
 						}, function(data) {
 							// Si hay resultados
 							if (data.length > 0) {
@@ -568,6 +572,7 @@
 								upc.props.queue = this.remoteValidateCodebar(upc);
 							// Limpiamos campos
 							this.nuffer = $.extend(true, {}, this.buffer);
+							this.clearErrorScope('header');
 						}
 					}.bind(this))
 				},
@@ -618,7 +623,7 @@
 					var csv, uri, link;
 
 					csv = Papa.unparse({
-						fields: ['codigo_barras', 'cantidad', 'no_lote', 'caducidad', 'observaciones'],
+						fields: ['codigo_barras', 'cantidad_toma', 'no_lote', 'caducidad', 'observaciones'],
 						data: [
 							['12345678', '10', 'Numero de lote', '2017/11/30', 'Algun comentario ...'],
 							['12345678', '10', 'Numero de lote', '2017/11/30', 'Algun comentario ...'],
@@ -730,6 +735,11 @@
 					validate: function(value, index, a) {
 						return {valid: this.upcs[index[0]].props.valido === true};
 					}.bind(this),
+				});
+
+				this.tipo_captura = $('#tipo_captura').val();
+				$('#tipo_captura').on('change', function(){
+					vm.tipo_captura = this.value;
 				});
 
 				$('[name="fk_id_almacen"]').on('beforeupdate', function (e) {

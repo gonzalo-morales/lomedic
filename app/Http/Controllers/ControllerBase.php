@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\Logs;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
@@ -105,7 +105,6 @@ class ControllerBase extends Controller
 		# Validamos request, si falla regresamos pagina
 		$this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
-		DB::beginTransaction();
 		$isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 
@@ -118,8 +117,6 @@ class ControllerBase extends Controller
 					}
 				}
 			}
-			
-			DB::commit();
 
 			# Eliminamos cache
 			Cache::tags(getCacheTag('index'))->flush();
@@ -127,7 +124,6 @@ class ControllerBase extends Controller
 			$this->log('store', $isSuccess->id_banco);
 			return $this->redirect('store');
 		} else {
-		    DB::rollBack();
 			$this->log('error_store');
 			return $this->redirect('error_store');
 		}
@@ -202,13 +198,12 @@ class ControllerBase extends Controller
 	{
 		# ¿Usuario tiene permiso para actualizar?
 //		$this->authorize('update', $this->entity);
-	    
+
 		$request->request->set('activo',!empty($request->request->get('activo')));
 
 		# Validamos request, si falla regresamos atras
 		$this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
-		DB::beginTransaction();
 		$entity = $this->entity->findOrFail($id);
 		$entity->fill($request->all());
 		if ($entity->save()) {
@@ -218,7 +213,6 @@ class ControllerBase extends Controller
 				foreach ($request->relations as $relationType => $collections) {
 					# Relacion "HAS"
 					if ($relationType == 'has') {
-					    dd($collections);
 						foreach ($collections as $relationName => $relations) {
 							# Recorremos cada coleccion
 							$primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
@@ -231,7 +225,6 @@ class ControllerBase extends Controller
 					}
 				}
 			}
-			DB::commit();
 
 			# Eliminamos cache
 			Cache::tags(getCacheTag('index'))->flush();
@@ -239,7 +232,6 @@ class ControllerBase extends Controller
 			$this->log('update', $id);
 			return $this->redirect('update');
 		} else {
-		    DB::rollBack();
 			$this->log('error_update', $id);
 			return $this->redirect('error_update');
 		}
@@ -259,11 +251,9 @@ class ControllerBase extends Controller
 		# Unico
 		if (!is_array($idOrIds)) {
 
-		    DB::beginTransaction();
 			$isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)->update(['eliminar' => 't']);
 			if ($isSuccess) {
 
-			    DB::commit();
 				$this->log('destroy', $idOrIds);
 
 				# Eliminamos cache
@@ -278,7 +268,6 @@ class ControllerBase extends Controller
 
 			} else {
 
-			    DB::rollBack();
 				$this->log('error_destroy', $idOrIds);
 
 				if ($request->ajax()) {
@@ -292,11 +281,9 @@ class ControllerBase extends Controller
 		# Multiple
 		} else {
 
-		    DB::beginTransaction();
 			$isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)->update(['eliminar' => 't']);
 			if ($isSuccess) {
 
-			    DB::commit();
 				# Shorthand
 				foreach ($idOrIds as $id) $this->log('destroy', $id);
 
@@ -312,7 +299,6 @@ class ControllerBase extends Controller
 
 			} else {
 
-			    DB::rollBack();
 				# Shorthand
 				foreach ($idOrIds as $id) $this->log('error_destroy', $id);
 
@@ -376,12 +362,7 @@ class ControllerBase extends Controller
 
 
 		if($type == 'pdf') {
-		    $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
-		    $pdf->setPaper('letter','landscape');
-		    $pdf->output();
-		    $dom_pdf = $pdf->getDomPDF();
-		    $canvas = $dom_pdf->get_canvas();
-		    $canvas->page_text(38,580,"Página {PAGE_NUM} de {PAGE_COUNT}",null,8,array(0,0,0));
+		    $pdf= \PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
 		    return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
 		}
 		else {
