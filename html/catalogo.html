@@ -53,33 +53,33 @@
           <div class="col-sm-4">
             <div class="input-field">
               <label for="subtotal">Subtotal:</label>
-              <input id="subtotal" type="number" class="form-control" name="subtotal">
+              <input maxlength="10" id="subtotal" type="number" class="form-control" name="subtotal">
             </div>
           </div>
           <div class="col-sm-4">
             <div class="input-field">
               <label for="iva">IVA</label>
-              <input id="iva" type="number" class="form-control" name="iva">
+              <input maxlength="10" id="iva" type="number" class="form-control" name="iva">
             </div>
           </div>
           <div class="col-sm-4">
             <div class="input-field">
               <label for="total">Total</label>
-              <input id="total" type="number" class="form-control" name="total">
+              <input maxlength="10" id="total" type="number" class="form-control" name="total">
             </div>
           </div>
         </div><!--/row-->
         <div class="col-12 text-center my-3">
           <div class="sep">
             <div class="sepBtn">
-              <button id="saveTable" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+              <button id="saveTable" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="submit"><i class="material-icons">add</i></button>
             </div>
           </div>
         </div>
         </form><!--/Here ends de form-->
       </div><!--/Here ends the up section-->
       <div class="card-body">
-        <table id="factConcepts" class="table table-responsive table-hover">
+        <table id="factConcepts" class="table table-responsive-sm table-hover">
           <thead>
             <tr>
               <th>Folio</th>
@@ -126,42 +126,92 @@
   <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script type="text/javascript">
-    $(document).ready(function(){
-      $('[data-toggle="tooltip"]').tooltip();
 
-      /*$("#saveTable").click(function(){
-        var stringValues = $('#overall').serializeArray();
-        console.log(stringValues);
-        $.each(stringValues, function(i,val){
-          $('#factConcepts > tbody:last-child').append(
-            "<td>" + val.value + "</td>"
-          )
-        })*/
-      $("#saveTable").click(function(){
-        //Tomamos los valores de los campos
-        var numFolio = $("#folio").val();
-        var selTipo = $("#typeFact").val();
-        var numSubtotal = $("#subtotal").val();
-        var numIVA = $("#iva").val();
-        var numTotal = $("#total").val();
-        if(numFolio === null){
-          console.log("faltan datos");
-        }
-        else{
-          console.log(numFolio)
-        }
-        //Los insertamos en la tabla
-      /*$('#factConcepts > tbody:last-child').append(
-        '<tr><td>'+ numFolio +'</td>'
-        + '<td>'+ selTipo +'</td>'
-        + '<td>'+ numSubtotal +'</td>'
-        + '<td>'+ numIVA +'</td>'
-        + '<td>'+ numTotal +'</td>'
-        + '<td>'+ '<a data-toggle="tooltip" data-placement="top" title="Eliminar" href="#"><i class="material-icons">delete</i></a>' +'</td></tr>'
-        );*/
+    //Cuando se agregue los datos
+    document.getElementById('overall').addEventListener('submit', saveRowData);
 
-      })
-    });
+    //Función para guardar los datos del formulario
+    function saveRowData(e){
+      //Prevenimos que genere la acción default
+      e.preventDefault();
+
+
+      //Cuando se agregue los datos
+      function formDataToJSON(formElement) {    
+          var formData = new FormData(formElement), convertedJSON = {}, it = formData.entries(), n;
+          while(n = it.next()) {
+            if(!n || n.done) break;
+            convertedJSON[n.value[0]] = n.value[1];
+          }
+        return convertedJSON;
+      }
+
+      //Creamos un objeto con los datos
+      var oveData = formDataToJSON(document.querySelector('#overall'));
+
+      console.log(oveData);
+
+      //función para validar
+      if(oveData == ""){
+        alert("Debes de ingresar un dato forzosamente");
+        return false;
+      }
+
+      // limpiamos el formulario
+      document.getElementById('overall').reset();
+      //Tomamos la tabla
+       var tableData = document.querySelector('table > tbody');
+
+      //Ingresamos estos datos en la tabla
+      tableData.innerHTML +=
+        '<tr><td>'+ oveData.folio +'</td>'
+        + '<td>'+ oveData.typeFact +'</td>'
+        + '<td>'+ oveData.subtotal +'</td>'
+        + '<td>'+ oveData.iva +'</td>'
+        + '<td>'+ oveData.total +'</td>'
+        + '<td>'+ '<a data-toggle="Eliminar" data-placement="top" title="Eliminar" href="#"><i class="material-icons">delete</i></a>'+'</td></tr>';
+
+    }
+
+    // //Cuando se agregue los datos
+    // document.getElementById('overall').addEventListener('submit', saveRowData);
+
+    // //Función para guardar los datos del formulario
+    // function saveRowData(e){
+    //   //Prevenimos que genere la acción default
+    //   e.preventDefault();
+    //   //tomamos los datos
+    //   var dataFolio = document.querySelector('#folio').value;
+    //   var dataType = document.querySelector('#typeFact').value;
+    //   var dataSubtotal = document.querySelector('#subtotal').value;
+    //   var dataIVA = document.querySelector('#iva').value;
+    //   var dataTotal = document.querySelector('#total').value;
+
+    //   //Creamos un objeto con los datos
+    //   var oveData = {
+    //     folio: dataFolio,
+    //     tipo: dataType,
+    //     subtotal: dataSubtotal,
+    //     iva: dataIVA,
+    //     total: dataTotal,
+    //   }
+    //   console.log(oveData);
+
+    //   //Tomamos la tabla
+    //   var tableData = document.querySelector('table > tbody');
+
+    //   //Ingresamos estos datos en la tabla
+    //   tableData.innerHTML +=
+    //     '<tr><td>'+ oveData.folio +'</td>'
+    //     + '<td>'+ oveData.tipo +'</td>'
+    //     + '<td>'+ oveData.subtotal +'</td>'
+    //     + '<td>'+ oveData.iva +'</td>'
+    //     + '<td>'+ oveData.total +'</td>'
+    //     + '<td>'+ '<a data-toggle="Eliminar" data-placement="top" title="Eliminar" href="#"><i class="material-icons">delete</i></a>' +'</td></tr>'
+
+    //   // limpiamos el formulario
+    //   document.getElementById('overall').reset();
+    // }
   </script>
     </body>
   </html>
