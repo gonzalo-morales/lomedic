@@ -172,7 +172,7 @@ return [
 		 */
 		App\Providers\AppServiceProvider::class,
 		App\Providers\AuthServiceProvider::class,
-		// App\Providers\BroadcastServiceProvider::class,
+		//App\Providers\BroadcastServiceProvider::class,
 		App\Providers\EventServiceProvider::class,
 		App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
@@ -180,7 +180,7 @@ return [
         Milon\Barcode\BarcodeServiceProvider::class,
 	    Proengsoft\JsValidation\JsValidationServiceProvider::class,
 	    Orchestra\Parser\XmlServiceProvider::class,
-	    #Barryvdh\Debugbar\ServiceProvider::class,
+	    Barryvdh\Debugbar\ServiceProvider::class,
 	],
 
 	/*
