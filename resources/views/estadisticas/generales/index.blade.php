@@ -6,18 +6,18 @@
     {{ HTML::script(asset('js/amcharts/amcharts.js')) }}
     {{ HTML::script(asset('js/amcharts/pie.js')) }}
     {{ HTML::script(asset('js/amcharts/themes/light.js')) }}
+    
     {{ HTML::script(asset('js/pickadate/picker.js')) }}
     {{ HTML::script(asset('js/pickadate/picker.date.js')) }}
     {{ HTML::script(asset('js/pickadate/translations/es_Es.js')) }}
 	{!! isset($validator) ? $validator : '' !!}
+	
 	
     <script type="text/javascript">
 		$(document).ready(function() {
 
 			var from_picker = $('#fecha_ini').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 			var to_picker = $('#fecha_fin').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
-
-			
 
 			from_picker.on('set', function(event) {
 				if ( 'select' in event ) {
@@ -30,41 +30,8 @@
 				  }
 			});
 
-/*
-			var from_$input = $('#fecha_ini').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }),
-		    	from_picker = from_$input.pickadate('picker')
-
-    		var to_$input = $('#fecha_fin').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }),
-    		    to_picker = to_$input.pickadate('picker')
-    
-    
-    		if ( from_picker.get('value') ) {
-    		  to_picker.set('min', from_picker.get('select'))
-    		}
-    		if ( to_picker.get('value') ) {
-    		  from_picker.set('max', to_picker.get('select'))
-    		}
-    
-    		// When something is selected, update the “from” and “to” limits.
-    		from_picker.on('set', function(event) {
-    		  if ( event.select ) {
-    		    to_picker.set('min', from_picker.get('select'))    
-    		  }
-    		  else if ( 'clear' in event ) {
-    		    to_picker.set('min', false)
-    		  }
-    		})
-    		to_picker.on('set', function(event) {
-    		  if ( event.select ) {
-    		    from_picker.set('max', to_picker.get('select'))
-    		  }
-    		  else if ( 'clear' in event ) {
-    		    from_picker.set('max', false)
-    		  }
-    		});
-*/
         	$("#localidades").select2({       
-            	"language": { //para cambiar el idioma a español
+            	"language": { /*para cambiar el idioma a español*/
                 "noResults": function(){
                 	return "No se encontraron resultados";
                 }
