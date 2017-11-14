@@ -28,12 +28,14 @@ class SociosNegocioController extends ControllerBase
 	
 	public function getDataView($entity = null)
 	{
+	    $tipo = TiposSocios::where('activo','1')->where('eliminar','0')->select('para_venta','tipo_socio','id_tipo_socio')->get();
+	    
 	    return [
 	        'ramos'                => Ramos::where('activo','1')->where('eliminar','0')->pluck('ramo','id_ramo')->sortBy('ramo')->prepend('Selecciona una opcion...',''),
 	        'paises'               => Paises::where('activo','1')->where('eliminar','0')->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
-	        'tipossociosventa'     => TiposSocios::where('activo','1')->where('eliminar','0')->where('para_venta','1')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',Null),
-	        'tipossocioscompra'    => TiposSocios::where('activo','1')->where('eliminar','0')->where('para_venta','0')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Proveedor',Null),
-	        'empresas'		       => Empresas::select('id_empresa','nombre_comercial')->where('activo','1')->get()->sortBy('nombre_comercial'),
+	        'tipossociosventa'     => $tipo->where('para_venta','1')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',''),
+	        'tipossocioscompra'    => $tipo->where('para_venta','0')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Proveedor',''),
+	        'empresas'		       => Empresas::select('id_empresa','nombre_comercial')->where('activo',1)->where('empresa',1)->get()->sortBy('nombre_comercial'),
 	        'formaspago'           => FormasPago::where('activo','1')->where('eliminar','0')->pluck('forma_pago','id_forma_pago')->sortBy('forma_pago')->prepend('Selecciona una opcion...',''),
 	        'bancos'               => Bancos::where('eliminar','0')->pluck('banco','id_banco')->sortBy('banco')->prepend('Selecciona una opcion...',''),
 	        'tiposentrega'	       => TiposEntrega::where('activo','1')->where('eliminar','0')->pluck('tipo_entrega','id_tipo_entrega')->sortBy('tipo_entrega'),
@@ -274,29 +276,31 @@ class SociosNegocioController extends ControllerBase
 	 * @return \Illuminate\Http\Response
 	 *
 	 */
-	// public function update(Request $request, $company, $id)
-	// {
-	// 	$this->validate($request, $this->entity->rules);
-	//
-	// 	if($request->activo == 'on'){
-	// 		$request->activo=true;
-	// 	}
-	//
-	// 	$entity = $this->entity->findOrFail($id);
-	// 	$entity->fill([
-	// 		'descripcion' 	=> $request->descripcion,
-	// 		'estatus'     	=> $request->estatus,
-	// 		'metodo_pago' 	=> $request->metodo_pago,
-	// 		'activo'  		=> $request->activo,
-	// 	]);
-	// 	if($entity->save()){
-	// 		Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');
-	// 	}else{
-	// 		Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');
-	// 	}
-	//
-	// 	return redirect(companyRoute('index'));
-	// }
+    public function update(Request $request, $company, $id)
+    {
+        dd($request->all());
+        
+        $this->validate($request, $this->entity->rules);
+        
+        if($request->activo == 'on'){
+        	$request->activo=true;
+        }
+        
+        $entity = $this->entity->findOrFail($id);
+        $entity->fill([
+        	'descripcion' 	=> $request->descripcion,
+        	'estatus'     	=> $request->estatus,
+        	'metodo_pago' 	=> $request->metodo_pago,
+        	'activo'  		=> $request->activo,
+        ]);
+        if($entity->save()){
+        	Logs::createLog($this->entity->getTable(),$company,$id,'editar','Registro actualizado');
+        }else{
+        	Logs::createLog($this->entity->getTable(),$company,$id,'editar','Error al editar');
+        }
+    
+        return redirect(companyRoute('index'));
+    }
 
 	/**
 	 * Remove the specified resource from storage.

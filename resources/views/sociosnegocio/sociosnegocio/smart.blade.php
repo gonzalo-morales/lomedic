@@ -1,6 +1,7 @@
 @section('content-width', 's12')
 @section('header-bottom')
 	@parent
+	{{ HTML::script(asset('vendor/multiselect/js/bootstrap-multiselect.js')) }}
 	{{ HTML::script(asset('js/sociosnegocios/socios.js')) }}
 @endsection
 
@@ -18,7 +19,7 @@
 					{{ Form::cText('* RFC', 'rfc') }}
 				</div>
 				<div class="form-group col-sm-6 col-md-4">
-					{{ Form::cText('Nombre Comercial', 'nombre_corto') }}
+					{{ Form::cText('Nombre Comercial', 'nombre_comercial') }}
 				</div>
 				<div class="form-group col-sm-6 col-md-4">
 					{{ Form::cText('Ejecutivo de venta', 'ejecutivo_venta') }}
@@ -41,7 +42,7 @@
 					{{ Form::cSelect('Tipo socio para venta', 'fk_id_tipo_socio_venta', $tipossociosventa ?? []) }}
 				</div>
 				<div class="form-group col-sm-6 col-md-3">
-					{{ Form::cSelect('Tipo socio para compra', 'fk_id_tipo_socio_venta', $tipossocioscompra ?? []) }}
+					{{ Form::cSelect('Tipo socio para compra', 'fk_id_tipo_socio_compra', $tipossocioscompra ?? []) }}
 				</div>
 				<div class="form-group col-sm-12">
 					<div class="alert alert-warning" role="alert">
@@ -52,10 +53,10 @@
                 			{{ Form::cCheckboxBtn('Estatus', 'Activo', 'activo', $data['activo'] ?? null, 'Inactivo') }}
                     	</div>
                     	<div class="form-group col-sm-6 col-md-4 col-lg-4">
-                			{{ Form::cText('Desde', 'activo_desde') }}
+                			{{ Form::cText('Desde', 'activo_desde',['readonly'=>true]) }}
                     	</div>
                     	<div class="form-group col-sm-6 col-md-4 col-lg-4">
-                			{{ Form::cText('Hasta', 'activo_hasta') }}
+                			{{ Form::cText('Hasta', 'activo_hasta',['readonly'=>true]) }}
                     	</div>
                 	</div>
 				</div>
@@ -63,6 +64,7 @@
 		</div> <!-- Fin campos generales -->
 		
 		<!-- Empresas -->
+		@if(isset($empresas))
 		<div class="col-sm-12 col-md-3">
 			<div class="card z-depth-1-half">
 				<div class="card-header">
@@ -75,13 +77,14 @@
 						</li>
                         @foreach ($empresas as $row)
                         <li class="list-group-item form-group row">
-                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']') }}
+                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa']) }}
                         </li>
                         @endforeach
                     </ul>
 				</div>
 			</div>
-		</div> <!-- Fin Empresas -->
+		</div>
+		@endif <!-- Fin Empresas -->
 	</div>
 
 	<!-- Card -->

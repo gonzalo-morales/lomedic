@@ -9,18 +9,20 @@
 	"type" : "project",
 	"require" : {
 		"php" : ">=7.0.0",
+		"Doctrine/dbal" : "~2.6",
+		"barryvdh/laravel-debugbar" : "~3.1",
+		"barryvdh/laravel-dompdf" : "~0.8",
 		"fideloper/proxy" : "~3.3",
 		"laravel/framework" : "~5.5",
 		"laravel/tinker" : "~1.0",
 		"laravelcollective/html" : "~5.5",
-		"Doctrine/dbal" : "~2.6",
-		"barryvdh/laravel-dompdf" : "~0.8",
+		"laravelnews/laravel-twbs4" : "~1.1",
 		"maatwebsite/excel" : "~2.1",
 		"milon/barcode" : "~5.3",
+		"orchestra/parser" : "~3.5",
 		"predis/predis" : "~1.1",
 		"proengsoft/laravel-jsvalidation" : "~2.1",
-		"orchestra/parser" : "~3.5",
-		"barryvdh/laravel-debugbar" : "~3.1"
+		"renatomarinho/laravel-page-speed" : "~1.8"
 	},
 	"require-dev" : {
 		"filp/whoops" : "~2.1",

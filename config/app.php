@@ -181,6 +181,7 @@ return [
 	    Proengsoft\JsValidation\JsValidationServiceProvider::class,
 	    Orchestra\Parser\XmlServiceProvider::class,
 	    Barryvdh\Debugbar\ServiceProvider::class,
+	    RenatoMarinho\LaravelPageSpeed\ServiceProvider::class,
 	],
 
 	/*

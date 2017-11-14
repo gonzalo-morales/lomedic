@@ -27,7 +27,9 @@ $(document).ready(function () {
     		$('#activo_hasta').prop('readonly', true);
 		}
 		else {
-			from_picker.start().clear(); to_picker.trigger('set');
+			from_picker.start().clear();
+			to_picker.start().clear();
+			to_picker.trigger('set');
 		}
 	});
 	
@@ -96,13 +98,13 @@ $(document).ready(function () {
         
         
         if(id_upc == '' ){
-        	$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un upc.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe seleccionar un upc.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else if(cantidad == '' | Number.isInteger(cantidad) != false) {
-        	$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar la cantidad, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe seleccionar la cantidad, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else if(upcs_ids.indexOf(id_upc) !== -1) {
-        	$.toaster({priority:'danger',title:'¡Error!',message:'El upc seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'Â¡Error!',message:'El upc seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else {
 	        var url = $('#fk_id_upc').data('url');
@@ -132,5 +134,5 @@ $(document).ready(function () {
 function borrarFila(el) {
     let fila = dataTable.data[$(el).parents('tr').index()];
     dataTable.rows().remove([$(el).parents('tr').index()]);
-        $.toaster({priority:'success',title:'¡Advertencia!',message:'Se ha eliminado la fila correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        $.toaster({priority:'success',title:'Â¡Advertencia!',message:'Se ha eliminado la fila correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
