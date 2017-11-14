@@ -31,6 +31,7 @@
     <link rel="dns-prefetch" href="{{str_replace(['http:','https:'],'',url('/'))}}">
     <link rel="dns-prefetch" href="//ajax.googleapis.com">
     <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
 </head>
 <body>
 @if(!isset(request()->kendoWindow))
