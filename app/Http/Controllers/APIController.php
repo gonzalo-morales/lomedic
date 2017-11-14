@@ -39,6 +39,8 @@ class APIController extends Controller
 
 	    $request = json_decode($json,true);
 
+	    // $request = request()->all();
+
 		# Obtenemos entidad
 		$entity = rescue(function() use ($entity) {
 			return resolve('App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', $entity))));

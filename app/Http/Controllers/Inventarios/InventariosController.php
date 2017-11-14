@@ -57,11 +57,8 @@ class InventariosController extends ControllerBase
 			'vue_almacenes' => $vue_almacenes,
 			'vue_ubicaciones' => $vue_ubicaciones,
 			'api_codebar' => Crypt::encryptString('"select": ["nombre_comercial", "descripcion"], "conditions": [{"where": ["upc", "$codigo_barras"]}]'),
-			'api_almacen' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$fk_id_almacen"]}]')
-
-
-
-
+			'api_almacen' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$fk_id_almacen"]}]'),
+			'api_almacenes_ubicaciones' => Crypt::encryptString('"conditions": [{"where":["fk_id_sucursal", "$fk_id_sucursal"]}], "with": ["ubicaciones:id_ubicacion,fk_id_almacen,ubicacion"]')
 		];
 	}
 

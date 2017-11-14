@@ -397,7 +397,7 @@
 				selectMonths: true, // Creates a dropdown to control month
 				selectYears: 3, // Creates a dropdown of 3 years to control year
 				min: true,
-				format: 'yyyy/mm/dd',
+				format: 'yyyy-mm-dd',
 				onSet: function(context) {
 					el.dispatchEvent(new Event('input'));
 				}
@@ -600,19 +600,53 @@
 					// Validamos archivo
 					this.$validator.validateAll('import').then(function(isValid){
 						if (isValid) {
+
+							// Recorremos almacenes
+							var search = Object.keys(this.almacenes).reduce(function(acc, item){
+								// Recorremos ubicaciones de almacen
+								var ubi = Object.keys(this.ubicaciones[this.almacenes[item].value]).reduce(function(acc, itemu){
+									acc[ this.ubicaciones[this.almacenes[item].value][itemu].text.toUpperCase() ] = this.ubicaciones[this.almacenes[item].value][itemu].value;
+									return acc;
+								}.bind(this), {})
+								acc[ this.almacenes[item].text.toUpperCase() ] = {value: this.almacenes[item].value, ubicaciones: ubi };
+								return acc;
+							}.bind(this), {})
+
 							Papa.parse(e.target.files[0], {
 								header: true,
+								skipEmptyLines: true,
 								complete: function(parse) {
 									// Parse ok
 									if (parse.errors.length == 0) {
 										// Agregamos lineas
 										for (var i in parse.data) {
-											this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.buffer, parse.data[i], {props: {editar: true}}))));
-											// Obtenemos ultimo upc (recien agregado)
-											var upc = this.upcs.slice(-1).shift();
-												upc.props.queue = this.remoteValidateCodebar(upc);
+											// Buscamos identificador de almacen y ubicacion
+											var search_almacenes_keys =  Object.keys(search);
+											var index_almacen = search_almacenes_keys.indexOf(parse.data[i].fk_id_almacen.toUpperCase());
+											if (index_almacen !== -1) {
+												parse.data[i].fk_id_almacen = search[search_almacenes_keys[index_almacen]].value;
+												var search_ubicaciones_keys =  Object.keys(search[search_almacenes_keys[index_almacen]].ubicaciones);
+												var index_ubicacion = search_ubicaciones_keys.indexOf(parse.data[i].fk_id_ubicacion.toUpperCase());
+												if (index_ubicacion !== -1) {
+													parse.data[i].fk_id_ubicacion = search[search_almacenes_keys[index_almacen]].ubicaciones[search_ubicaciones_keys[index_ubicacion]];
+												} else {
+													parse.data[i].fk_id_ubicacion = 0
+												}
+											} else {
+												parse.data[i].fk_id_almacen	= 0
+												parse.data[i].fk_id_ubicacion = 0
+											}
+
+											//
+											if (parse.data[i].codigo_barras !== '') {
+												this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.buffer, parse.data[i], {props: {editar: true}}))));
+												// Obtenemos ultimo upc (recien agregado)
+												var upc = this.upcs.slice(-1).shift();
+													upc.props.queue = this.remoteValidateCodebar(upc);
+											}
 										}
 									}
+									e.target.value = '';
 								}.bind(this)
 							})
 						}
@@ -623,11 +657,11 @@
 					var csv, uri, link;
 
 					csv = Papa.unparse({
-						fields: ['codigo_barras', 'cantidad_toma', 'no_lote', 'caducidad', 'observaciones'],
+						fields: ['codigo_barras', 'cantidad_toma', 'no_lote', 'caducidad', 'fk_id_almacen', 'fk_id_ubicacion', 'observaciones'],
 						data: [
-							['12345678', '10', 'Numero de lote', '2017/11/30', 'Algun comentario ...'],
-							['12345678', '10', 'Numero de lote', '2017/11/30', 'Algun comentario ...'],
-							['12345678', '10', 'Numero de lote', '2017/11/30', 'Algun comentario ...'],
+							['12345678', '10', 'Numero de lote', '2017-11-30', 'Ejemplo', 'Ejemplo', 'Algun comentario ...'],
+							['12345678', '10', 'Numero de lote', '2017-11-30', 'Ejemplo', 'Ejemplo', 'Algun comentario ...'],
+							['12345678', '10', 'Numero de lote', '2017-11-30', 'Ejemplo', 'Ejemplo', 'Algun comentario ...'],
 						]
 					});
 
@@ -742,28 +776,71 @@
 					vm.tipo_captura = this.value;
 				});
 
-				$('[name="fk_id_almacen"]').on('beforeupdate', function (e) {
-					vm.almacenes = {0:{value: 0, text: 'Obteniendo ...', selected: true, disabled: true}}
-				});
+				function getAlmacenesUbicaciones(el) {
+					$.get(vm.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.almacenes'), {
+						param_js: '{{$api_almacenes_ubicaciones ?? ''}}', $fk_id_sucursal: el.value
+						// conditions: [{'where':['fk_id_sucursal', this.value]}],
+						// with: ['ubicaciones:id_ubicacion,fk_id_almacen,ubicacion'],
+					}, function(almacenes){
+						// defaults
+						var _almacenes = {0: {value: 0, text: '...'}}, _ubicaciones = {0: {0: {value: 0, text: '...'}}};
+						// Recorremos almacenes
+						almacenes.forEach(function(almacen){
+							_almacenes[almacen.id_almacen] = {value: almacen.id_almacen, text: almacen.almacen};
+							_ubicaciones[almacen.id_almacen] = {};
+							// Si tiene ubicaciones, las recorremos
+							if (almacen.ubicaciones.length > 0) {
+								_ubicaciones[almacen.id_almacen][0] = {value: 0, text: 'Selecciona ...'}
+								almacen.ubicaciones.forEach(function(ubicacion){
+									_ubicaciones[almacen.id_almacen][ubicacion.id_ubicacion] = {value: ubicacion.id_ubicacion, text: ubicacion.ubicacion}
+								})
+							} else {
+								_ubicaciones[almacen.id_almacen][0] = {value: 0, text: 'Sin resultados ...'}
+							}
+						})
+						vm.almacenes = _almacenes;
+						vm.ubicaciones = _ubicaciones;
+					})
+				}
 
-				$('[name="fk_id_almacen"]').on('update', function (e) {
-					vm.almacenes = [].slice.call(this.options).reduce(function(acc, item) {
-						acc[item.value] = {
-							value: item.value,
-							text: item.text || item.textContent,
-							selected: item.selected,
-							disabled: item.disabled,
-						}
-						return acc;
-					}, {} );
-					// reset
+				//
+				$('#fk_id_sucursal').on('change', function(){
+
 					vm.nuffer.fk_id_almacen= 0;
 					vm.nuffer.fk_id_ubicacion = 0;
 					vm.upcs.forEach(function(item){
 						item.fk_id_almacen = 0;
 						item.fk_id_ubicacion = 0;
 					});
+
+					getAlmacenesUbicaciones(this);
+				})
+				if ($('#fk_id_sucursal').val() != 0) {
+					getAlmacenesUbicaciones($('#fk_id_sucursal')[0]);
+				}
+
+				$('[name="fk_id_almacen"]').on('beforeupdate', function (e) {
+					vm.almacenes = {0:{value: 0, text: 'Obteniendo ...', selected: true, disabled: true}}
 				});
+
+				// $('[name="fk_id_almacen"]').on('update', function (e) {
+					// vm.almacenes = [].slice.call(this.options).reduce(function(acc, item) {
+					// 	acc[item.value] = {
+					// 		value: item.value,
+					// 		text: item.text || item.textContent,
+					// 		selected: item.selected,
+					// 		disabled: item.disabled,
+					// 	}
+					// 	return acc;
+					// }, {} );
+					// reset
+					// vm.nuffer.fk_id_almacen= 0;
+					// vm.nuffer.fk_id_ubicacion = 0;
+					// vm.upcs.forEach(function(item){
+					// 	item.fk_id_almacen = 0;
+					// 	item.fk_id_ubicacion = 0;
+					// });
+				// });
 
 				$('#form-model').on('submit', function(e) {
 					e.preventDefault();
