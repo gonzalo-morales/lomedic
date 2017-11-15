@@ -40,9 +40,15 @@
 					<div class="col-sm-12">
 						<p>Tipo de <b>captura</b> para el producto</p>
 						<ul class="nav nav-tabs btn-group justify-content-center border-0 mb-3" role="tablist">
-							<a class="btn m-0 btn-info active" data-toggle="tab" href="#scanner" role="tab" aria-expanded="true"><i class="material-icons align-middle">settings_remote</i> Captura con scanner</a>
-							<a class="btn m-0 btn-info" data-toggle="tab" href="#manual" role="tab"><i class="material-icons align-middle">keyboard</i> Captura manual</a>
-							<a class="btn m-0 btn-info" data-toggle="tab" href="#importar" role="tab"><i class="material-icons align-middle">get_app</i> Importar Excel</a>
+							<li>
+								<a class="btn m-0 btn-info active" data-toggle="tab" href="#scanner" role="tab" aria-controls="scanner" aria-selected="true"><i class="material-icons align-middle">settings_remote</i> Captura con scanner</a>
+							</li>
+							<li>
+								<a class="btn m-0 btn-info" data-toggle="tab" href="#manual" role="tab" aria-controls="manual" aria-selected="false"><i class="material-icons align-middle">keyboard</i> Captura manual</a>
+							</li>
+							<li>
+								<a class="btn m-0 btn-info" data-toggle="tab" href="#importar" role="tab" aria-controls="importar" aria-selected="false"><i class="material-icons align-middle">get_app</i> Importar Excel</a>
+							</li>
 						</ul>
 					</div>
 					<div class="col-sm-12">
@@ -381,495 +387,472 @@
 	};
 
 	$(function(){
-
-		function updateSelect2 (el, binding) {
-			$(el).off().val(binding.value).select2().on('select2:select', function(e){
-				el.dispatchEvent(new Event('change', { target: e.target }));
-			});
-		}
-		Vue.directive('select2', {inserted: updateSelect2, componentUpdated: updateSelect2});
-
-		function updatePickadate (el, binding) {
-			if ( $(el).pickadate('picker') ) {
-				$(el).addClass('picker__input')
+		if ($('#app').length) {
+			function updateSelect2 (el, binding) {
+				$(el).off().val(binding.value).select2().on('select2:select', function(e){
+					el.dispatchEvent(new Event('change', { target: e.target }));
+				});
 			}
-			$(el).val(binding.value).pickadate({
-				selectMonths: true, // Creates a dropdown to control month
-				selectYears: 3, // Creates a dropdown of 3 years to control year
-				min: true,
-				format: 'yyyy-mm-dd',
-				onSet: function(context) {
-					el.dispatchEvent(new Event('input'));
+			Vue.directive('select2', {inserted: updateSelect2, componentUpdated: updateSelect2});
+
+			function updatePickadate (el, binding) {
+				if ( $(el).pickadate('picker') ) {
+					$(el).addClass('picker__input')
 				}
-			})
-		}
-		Vue.directive('pickadate', {inserted: updatePickadate, componentUpdated: updatePickadate});
-
-		Vue.use(VeeValidate, {
-			locale: 'es',
-		});
-
-		window.vapp = new Vue({
-			el: '#app',
-			data: function() {
-				return {
-					tipo_captura: 1,
-					queue: [],
-					buffer: {
-						id_detalle: null,
-						codigo_barras: '',
-						cantidad_toma: 0,
-						no_lote: '',
-						caducidad: '',
-						fk_id_almacen: 0,
-						fk_id_ubicacion: 0,
-						observaciones: '',
-						eliminar: false,
-						props: {
-							valido: 'unknow',
-							editar: false,
-							queue: null,
-						},
-						upc: {
-							descripcion: ''
-						}
-					},
-					nuffer: {},
-					upcs: @json($upcs ?? []),
-					// Catalogos con defaults
-					almacenes: @json($vue_almacenes ?? []),
-					ubicaciones: @json($vue_ubicaciones ?? [])
-					// almacenes: {0: {value: 0, text: '...', selected: true, disabled: true}},
-					// ubicaciones: {0: {0: {value: 0, text: '...', selected: true, disabled: true}}}
-				}
-			},
-			methods: {
-				// Limpiamos notificacion de errores
-				clearErrorScope: function(scope) {
-					this.$nextTick(function() {
-						this.errors.clear(scope)
-					}.bind(this))
-				},
-				// Buscamos indice-posicion de <td>
-				getDataIndex: function(e) {
-					var dataIndex;
-					for (var i in e.path) {
-						if (e.path[i].dataIndex >= 0) {
-							dataIndex = e.path[i].dataIndex;
-							break;
-						}
+				$(el).val(binding.value).pickadate({
+					selectMonths: true, /* Creates a dropdown to control month */
+					selectYears: 3, /* Creates a dropdown of 3 years to control year */
+					min: true,
+					format: 'yyyy-mm-dd',
+					onSet: function(context) {
+						el.dispatchEvent(new Event('input'));
 					}
-					return dataIndex;
-				},
-				// Cola de validaciones
-				enQueue: function(fn) {
-					if (this.queue.length === 0) {
-						this.queue.push(fn)
-						this.nextQueue()
-					} else {
-						this.queue.push(fn)
-					}
-					return this.queue.slice(-1).shift();
-				},
-				nextQueue: function() {
-					if (this.queue.length === 0) return;
-					this.queue[0]().then(function() {
-						this.queue.splice(0, 1)
-						this.nextQueue()
-					}.bind(this))
-				},
-				// Codebar-only
-				onKeydownCodebar: function(e) {
-					if (!new RegExp('^[a-zA-Z0-9]+$').test(e.key) || e.ctrlKey || e.keyCode == 13) {
-						e.preventDefault();
-					}
-				},
-				onEnterCodebar: function(e) {
-					// Validamos campo
-					this.$validator.validateAll('scanner').then(function(isValid){
-						if (isValid) {
-							// codebar --enviamos--> upcs
-							this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.buffer, {
-								codigo_barras: e.target.value, props: {editar: true}
-							}))))
-							// Obtenemos ultimo upc (recien agregado)
-							var upc = this.upcs.slice(-1).shift();
-								upc.props.queue = this.remoteValidateCodebar(upc);
-							// Limpiamos campo
-							e.target.value = '';
-						}
-					}.bind(this))
-				},
-				// Revalidacion de codigo de barra en detalle
-				onValidateCodebar: function(e) {
-					// Obtenemos indice de fila
-					var index = this.getDataIndex(e);
-					// Upc actual
-					var upc = this.upcs[index];
-						upc.props.valido = 'unknow';
-						upc.props.queue = this.remoteValidateCodebar(upc);
-				},
-				// Agregamos a cola de validaciones
-				remoteValidateCodebar: function(upc) {
-					var endpoint = this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.upcs');
-					return this.enQueue(function() {
-						return $.get(endpoint, { param_js: '{{$api_codebar ?? ''}}', $codigo_barras: this.codigo_barras
-							// conditions: [{'where': ['upc', this.codigo_barras]}],
-						}, function(data) {
-							this.props.valido = (data.length > 0);
-							// Si no valido
-							if (!this.props.valido) {
-								this.props.editar = true
-							} else {
-								this.upc.descripcion = data[0].descripcion;
-							}
-						}.bind(this))
-					}.bind(upc))
-				},
-				onChangeAlmacenes: function(e, isHead) {
-					if (isHead) {
-						this.nuffer.fk_id_ubicacion = 0;
-					} else {
-						// Obtenemos indice de fila
-						var index = this.getDataIndex(e);
-						this.upcs[index].fk_id_ubicacion = 0;
-					}
-					// Almacen seleccionado
-					var fk_id_almacen = e.target.value;
-					// Si no existe almacen en arreglo de ubicaciones (ajax)
-					if (!this.ubicaciones[fk_id_almacen]) {
-						this.ubicaciones[fk_id_almacen] = {0:{value: 0, text: 'Obteniendo ...', selected: true, disabled: true}};
-						$.get(this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.ubicaciones'), {
-							// conditions: [{'where': ['fk_id_almacen', fk_id_almacen]}],
-							param_js: '{{$api_almacen ?? ''}}', $fk_id_almacen: fk_id_almacen
-						}, function(data) {
-							// Si hay resultados
-							if (data.length > 0) {
-								this.ubicaciones[fk_id_almacen] = data.reduce(function(acc, item){
-									acc[item.id_ubicacion] = {
-										value: item.id_ubicacion,
-										text: item.ubicacion,
-									}
-									return acc;
-								}, {0:{value: 0, text: 'Selecciona ...', selected: true, disabled: true}});
-							} else {
-								this.ubicaciones[fk_id_almacen] = {0:{value: 0, text: 'Sin resultados ...', selected: true, disabled: true}};
-							}
-							this.$forceUpdate();
-						}.bind(this))
-					} else {
-						this.$forceUpdate();
-					}
-				},
-				append: function(e) {
-					// Validamos campos
-					this.$validator.validateAll('header').then(function(isValid){
-						if (isValid) {
-							// upc --enviamos--> upcs
-							this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.nuffer))));
-							// Obtenemos ultimo upc (recien agregado)
-							var upc = this.upcs.slice(-1).shift();
-								upc.props.queue = this.remoteValidateCodebar(upc);
-							// Limpiamos campos
-							this.nuffer = $.extend(true, {}, this.buffer);
-							this.clearErrorScope('header');
-						}
-					}.bind(this))
-				},
-				editOrDone: function(e) {
-					var index = this.getDataIndex(e);
-					this.$validator.validateAll('upcs-' + index).then(function(isValid){
-						if (isValid) {
-							this.upcs[index].props.editar = !this.upcs[index].props.editar;
-						}
-					}.bind(this))
-				},
-				removeOrUndo: function(e) {
-					var index = this.getDataIndex(e);
-					if (!this.upcs[index].id_detalle) {
-						var queueIndex = this.queue.indexOf(this.upcs[index].props.queue);
-						if (queueIndex >= 0) {
-							this.queue.splice(queueIndex, 1);
-						}
-						this.upcs.splice(index, 1);
-						return;
-					}
-					this.upcs[index].eliminar = !this.upcs[index].eliminar;
-				},
-				importCSV: function(e) {
-					// Validamos archivo
-					this.$validator.validateAll('import').then(function(isValid){
-						if (isValid) {
+				})
+			}
+			Vue.directive('pickadate', {inserted: updatePickadate, componentUpdated: updatePickadate});
 
-							// Recorremos almacenes
-							var search = Object.keys(this.almacenes).reduce(function(acc, item){
-								// Recorremos ubicaciones de almacen
-								var ubi = Object.keys(this.ubicaciones[this.almacenes[item].value]).reduce(function(acc, itemu){
-									acc[ this.ubicaciones[this.almacenes[item].value][itemu].text.toUpperCase() ] = this.ubicaciones[this.almacenes[item].value][itemu].value;
-									return acc;
-								}.bind(this), {})
-								acc[ this.almacenes[item].text.toUpperCase() ] = {value: this.almacenes[item].value, ubicaciones: ubi };
-								return acc;
-							}.bind(this), {})
+			Vue.use(VeeValidate, {
+				locale: 'es',
+			});
 
-							Papa.parse(e.target.files[0], {
-								header: true,
-								skipEmptyLines: true,
-								complete: function(parse) {
-									// Parse ok
-									if (parse.errors.length == 0) {
-										// Agregamos lineas
-										for (var i in parse.data) {
-											// Buscamos identificador de almacen y ubicacion
-											var search_almacenes_keys =  Object.keys(search);
-											var index_almacen = search_almacenes_keys.indexOf(parse.data[i].fk_id_almacen.toUpperCase());
-											if (index_almacen !== -1) {
-												parse.data[i].fk_id_almacen = search[search_almacenes_keys[index_almacen]].value;
-												var search_ubicaciones_keys =  Object.keys(search[search_almacenes_keys[index_almacen]].ubicaciones);
-												var index_ubicacion = search_ubicaciones_keys.indexOf(parse.data[i].fk_id_ubicacion.toUpperCase());
-												if (index_ubicacion !== -1) {
-													parse.data[i].fk_id_ubicacion = search[search_almacenes_keys[index_almacen]].ubicaciones[search_ubicaciones_keys[index_ubicacion]];
-												} else {
-													parse.data[i].fk_id_ubicacion = 0
-												}
-											} else {
-												parse.data[i].fk_id_almacen	= 0
-												parse.data[i].fk_id_ubicacion = 0
-											}
-
-											//
-											if (parse.data[i].codigo_barras !== '') {
-												this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.buffer, parse.data[i], {props: {editar: true}}))));
-												// Obtenemos ultimo upc (recien agregado)
-												var upc = this.upcs.slice(-1).shift();
-													upc.props.queue = this.remoteValidateCodebar(upc);
-											}
-										}
-									}
-									e.target.value = '';
-								}.bind(this)
-							})
-						}
-					}.bind(this))
-				},
-				downloadDummyCSV: function() {
-
-					var csv, uri, link;
-
-					csv = Papa.unparse({
-						fields: ['codigo_barras', 'cantidad_toma', 'no_lote', 'caducidad', 'fk_id_almacen', 'fk_id_ubicacion', 'observaciones'],
-						data: [
-							['12345678', '10', 'Numero de lote', '2017-11-30', 'Ejemplo', 'Ejemplo', 'Algun comentario ...'],
-							['12345678', '10', 'Numero de lote', '2017-11-30', 'Ejemplo', 'Ejemplo', 'Algun comentario ...'],
-							['12345678', '10', 'Numero de lote', '2017-11-30', 'Ejemplo', 'Ejemplo', 'Algun comentario ...'],
-						]
-					});
-
-					uri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
-
-					// Create a link to trigger the download
-					link = document.createElement('a');
-					link.href = uri;
-					link.download = 'formato.csv';
-
-					// Append the link
-					document.body.appendChild(link);
-
-					// Trigger the download
-					link.click();
-
-					// Remove the link
-					document.body.removeChild(link);
-				}
-			},
-			watch: {
-				trace: function(after, before) {
-
-					var changes = {index: null, path: '', old:'', new:''};
-					var trace = function(after, before, acc) {
-						return Object.keys(after).some(function(index){
-							if(!acc.index) {
-								acc.index = index;
-							}
-							if (typeof after[index] == 'object' && after[index] != null) {
-								var isDiff = trace(after[index], before[index], acc)
-								if (isDiff) {
-									acc.index = index;
-									acc.path = index + '.' + acc.path;
-								}
-								return isDiff;
-							}
-							// Si existe nodo
-							if (before) {
-								var isDiff = after[index] != before[index];
-								if (isDiff) {
-									acc.type = 'modified';
-									acc.path += index;
-									acc.old = before[index];
-									acc.new = after[index];
-								}
-							} else {
-								acc.type = 'added';
-								acc.path += index;
-								acc.old = null;
-								acc.new = after;
-								return true
-							}
-							return isDiff
-						}.bind(this));
-					}
-
-					trace(after, before, changes)
-
-					if (changes.path == (changes.index + '.codigo_barras')) {
-						this.upcs[changes.index].props.valido = false;
-						// Validar campo
-						this.$validator.validate('upcs-'+ changes.index + '.codigo_barras')
-					}
-
-					if (changes.path == (changes.index + '.props.valido')) {
-						// Validar campo
-						this.$validator.validate('upcs-'+ changes.index + '.codigo_barras')
-					}
-
-				},
-			},
-			computed: {
-				trace: function() {
-					return this.upcs.reduce(function(acc, item){
-						return acc.concat($.extend(true, {}, item))
-					}, [])
-				},
-				computedUpcs: function() {
-					return this.upcs.reduce(function(acc, item){
-						if (!item.props) {
-							Vue.set(item, 'props', {
-								valido: true,
+			window.vapp = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						tipo_captura: 1,
+						queue: [],
+						buffer: {
+							id_detalle: null,
+							codigo_barras: '',
+							cantidad_toma: 0,
+							no_lote: '',
+							caducidad: '',
+							fk_id_almacen: 0,
+							fk_id_ubicacion: 0,
+							observaciones: '',
+							eliminar: false,
+							props: {
+								valido: 'unknow',
 								editar: false,
 								queue: null,
-							})
-						}
-						if (!item.eliminar) {
-							Vue.set(item, 'eliminar', false)
-						}
-						return acc.concat(item)
-					}, []);
-				}
-			},
-			beforeMount: function() {
-				var vm = this;
-
-				// First
-				this.nuffer = $.extend(true, {}, this.buffer);
-
-				this.$validator.extend('verify_codebar', {
-					getMessage: function(field) {
-						return field + ' incorrecto. "Enter" para revalidar.'
+							},
+							upc: {
+								descripcion: ''
+							}
+						},
+						nuffer: {},
+						upcs: @json($upcs ?? []),
+						/* Catalogos con defaults */
+						almacenes: @json($vue_almacenes ?? []),
+						ubicaciones: @json($vue_ubicaciones ?? [])
+						/* almacenes: {0: {value: 0, text: '...', selected: true, disabled: true}}, */
+						/* ubicaciones: {0: {0: {value: 0, text: '...', selected: true, disabled: true}}} */
+					}
+				},
+				methods: {
+					/* Limpiamos notificacion de errores */
+					clearErrorScope: function(scope) {
+						this.$nextTick(function() {
+							this.errors.clear(scope)
+						}.bind(this))
 					},
-					validate: function(value, index, a) {
-						return {valid: this.upcs[index[0]].props.valido === true};
-					}.bind(this),
-				});
+					/* Buscamos indice-posicion de <td> */
+					getDataIndex: function(e) {
+						var dataIndex;
+						for (var i in e.path) {
+							if (e.path[i].dataIndex >= 0) {
+								dataIndex = e.path[i].dataIndex;
+								break;
+							}
+						}
+						return dataIndex;
+					},
+					/* Cola de validaciones */
+					enQueue: function(fn) {
+						if (this.queue.length === 0) {
+							this.queue.push(fn)
+							this.nextQueue()
+						} else {
+							this.queue.push(fn)
+						}
+						return this.queue.slice(-1).shift();
+					},
+					nextQueue: function() {
+						if (this.queue.length === 0) return;
+						this.queue[0]().then(function() {
+							this.queue.splice(0, 1)
+							this.nextQueue()
+						}.bind(this))
+					},
+					/* Codebar-only */
+					onKeydownCodebar: function(e) {
+						if (!new RegExp('^[a-zA-Z0-9]+$').test(e.key) || e.ctrlKey || e.keyCode == 13) {
+							e.preventDefault();
+						}
+					},
+					onEnterCodebar: function(e) {
+						/* Validamos campo */
+						this.$validator.validateAll('scanner').then(function(isValid){
+							if (isValid) {
+								/* codebar --enviamos--> upcs */
+								this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.buffer, {
+									codigo_barras: e.target.value, props: {editar: true}
+								}))))
+								/* Obtenemos ultimo upc (recien agregado) */
+								var upc = this.upcs.slice(-1).shift();
+									upc.props.queue = this.remoteValidateCodebar(upc);
+								/* Limpiamos campo */
+								e.target.value = '';
+							}
+						}.bind(this))
+					},
+					/* Revalidacion de codigo de barra en detalle */
+					onValidateCodebar: function(e) {
+						/* Obtenemos indice de fila */
+						var index = this.getDataIndex(e);
+						/* Upc actual */
+						var upc = this.upcs[index];
+							upc.props.valido = 'unknow';
+							upc.props.queue = this.remoteValidateCodebar(upc);
+					},
+					/* Agregamos a cola de validaciones */
+					remoteValidateCodebar: function(upc) {
+						var endpoint = this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.upcs');
+						return this.enQueue(function() {
+							return $.get(endpoint, { param_js: '{{$api_codebar ?? ''}}', $codigo_barras: this.codigo_barras
+								/* conditions: [{'where': ['upc', this.codigo_barras]}], */
+							}, function(data) {
+								this.props.valido = (data.length > 0);
+								/* Si no valido */
+								if (!this.props.valido) {
+									this.props.editar = true
+								} else {
+									this.upc.descripcion = data[0].descripcion;
+								}
+							}.bind(this))
+						}.bind(upc))
+					},
+					onChangeAlmacenes: function(e, isHead) {
+						if (isHead) {
+							this.nuffer.fk_id_ubicacion = 0;
+						} else {
+							/* Obtenemos indice de fila */
+							var index = this.getDataIndex(e);
+							this.upcs[index].fk_id_ubicacion = 0;
+						}
+						/* Almacen seleccionado */
+						var fk_id_almacen = e.target.value;
+						/* Si no existe almacen en arreglo de ubicaciones (ajax) */
+						if (!this.ubicaciones[fk_id_almacen]) {
+							this.ubicaciones[fk_id_almacen] = {0:{value: 0, text: 'Obteniendo ...', selected: true, disabled: true}};
+							$.get(this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.ubicaciones'), {
+								/* conditions: [{'where': ['fk_id_almacen', fk_id_almacen]}], */
+								param_js: '{{$api_almacen ?? ''}}', $fk_id_almacen: fk_id_almacen
+							}, function(data) {
+								/* Si hay resultados */
+								if (data.length > 0) {
+									this.ubicaciones[fk_id_almacen] = data.reduce(function(acc, item){
+										acc[item.id_ubicacion] = {
+											value: item.id_ubicacion,
+											text: item.ubicacion,
+										}
+										return acc;
+									}, {0:{value: 0, text: 'Selecciona ...', selected: true, disabled: true}});
+								} else {
+									this.ubicaciones[fk_id_almacen] = {0:{value: 0, text: 'Sin resultados ...', selected: true, disabled: true}};
+								}
+								this.$forceUpdate();
+							}.bind(this))
+						} else {
+							this.$forceUpdate();
+						}
+					},
+					append: function(e) {
+						/* Validamos campos */
+						this.$validator.validateAll('header').then(function(isValid){
+							if (isValid) {
+								/* upc --enviamos--> upcs */
+								this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.nuffer))));
+								/* Obtenemos ultimo upc (recien agregado) */
+								var upc = this.upcs.slice(-1).shift();
+									upc.props.queue = this.remoteValidateCodebar(upc);
+								/* Limpiamos campos */
+								this.nuffer = $.extend(true, {}, this.buffer);
+								this.clearErrorScope('header');
+							}
+						}.bind(this))
+					},
+					editOrDone: function(e) {
+						var index = this.getDataIndex(e);
+						this.$validator.validateAll('upcs-' + index).then(function(isValid){
+							if (isValid) {
+								this.upcs[index].props.editar = !this.upcs[index].props.editar;
+							}
+						}.bind(this))
+					},
+					removeOrUndo: function(e) {
+						var index = this.getDataIndex(e);
+						if (!this.upcs[index].id_detalle) {
+							var queueIndex = this.queue.indexOf(this.upcs[index].props.queue);
+							if (queueIndex >= 0) {
+								this.queue.splice(queueIndex, 1);
+							}
+							this.upcs.splice(index, 1);
+							return;
+						}
+						this.upcs[index].eliminar = !this.upcs[index].eliminar;
+					},
+					importCSV: function(e) {
+						/* Validamos archivo */
+						this.$validator.validateAll('import').then(function(isValid){
+							if (isValid) {
+								/* Recorremos almacenes */
+								var search = Object.keys(this.almacenes).reduce(function(acc, item){
+									/* Recorremos ubicaciones de almacen */
+									var ubi = Object.keys(this.ubicaciones[this.almacenes[item].value]).reduce(function(acc, itemu){
+										acc[ this.ubicaciones[this.almacenes[item].value][itemu].text.toUpperCase() ] = this.ubicaciones[this.almacenes[item].value][itemu].value;
+										return acc;
+									}.bind(this), {})
+									acc[ this.almacenes[item].text.toUpperCase() ] = {value: this.almacenes[item].value, ubicaciones: ubi };
+									return acc;
+								}.bind(this), {})
 
-				this.tipo_captura = $('#tipo_captura').val();
-				$('#tipo_captura').on('change', function(){
-					vm.tipo_captura = this.value;
-				});
+								Papa.parse(e.target.files[0], {
+									header: true,
+									skipEmptyLines: true,
+									complete: function(parse) {
+										/* Parse ok */
+										if (parse.errors.length == 0) {
+											/* Agregamos lineas */
+											for (var i in parse.data) {
+												/* Buscamos identificador de almacen y ubicacion */
+												var search_almacenes_keys =  Object.keys(search);
+												var index_almacen = search_almacenes_keys.indexOf(parse.data[i].fk_id_almacen.toUpperCase());
+												if (index_almacen !== -1) {
+													parse.data[i].fk_id_almacen = search[search_almacenes_keys[index_almacen]].value;
+													var search_ubicaciones_keys =  Object.keys(search[search_almacenes_keys[index_almacen]].ubicaciones);
+													var index_ubicacion = search_ubicaciones_keys.indexOf(parse.data[i].fk_id_ubicacion.toUpperCase());
+													if (index_ubicacion !== -1) {
+														parse.data[i].fk_id_ubicacion = search[search_almacenes_keys[index_almacen]].ubicaciones[search_ubicaciones_keys[index_ubicacion]];
+													} else {
+														parse.data[i].fk_id_ubicacion = 0
+													}
+												} else {
+													parse.data[i].fk_id_almacen	= 0
+													parse.data[i].fk_id_ubicacion = 0
+												}
 
-				function getAlmacenesUbicaciones(el) {
-					$.get(vm.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.almacenes'), {
-						param_js: '{{$api_almacenes_ubicaciones ?? ''}}', $fk_id_sucursal: el.value
-						// conditions: [{'where':['fk_id_sucursal', this.value]}],
-						// with: ['ubicaciones:id_ubicacion,fk_id_almacen,ubicacion'],
-					}, function(almacenes){
-						// defaults
-						var _almacenes = {0: {value: 0, text: '...'}}, _ubicaciones = {0: {0: {value: 0, text: '...'}}};
-						// Recorremos almacenes
-						almacenes.forEach(function(almacen){
-							_almacenes[almacen.id_almacen] = {value: almacen.id_almacen, text: almacen.almacen};
-							_ubicaciones[almacen.id_almacen] = {};
-							// Si tiene ubicaciones, las recorremos
-							if (almacen.ubicaciones.length > 0) {
-								_ubicaciones[almacen.id_almacen][0] = {value: 0, text: 'Selecciona ...'}
-								almacen.ubicaciones.forEach(function(ubicacion){
-									_ubicaciones[almacen.id_almacen][ubicacion.id_ubicacion] = {value: ubicacion.id_ubicacion, text: ubicacion.ubicacion}
+												if (parse.data[i].codigo_barras !== '') {
+													this.upcs.push(JSON.parse(JSON.stringify($.extend(true, {}, this.buffer, parse.data[i], {props: {editar: true}}))));
+													/* Obtenemos ultimo upc (recien agregado) */
+													var upc = this.upcs.slice(-1).shift();
+														upc.props.queue = this.remoteValidateCodebar(upc);
+												}
+											}
+										}
+										e.target.value = '';
+									}.bind(this)
 								})
+							}
+						}.bind(this))
+					},
+					downloadDummyCSV: function() {
+
+						var csv, uri, link;
+
+						csv = Papa.unparse({
+							fields: ['codigo_barras', 'cantidad_toma', 'no_lote', 'caducidad', 'fk_id_almacen', 'fk_id_ubicacion', 'observaciones'],
+							data: [
+								['12345678', '10', 'Numero de lote', '2017-11-30', 'Ejemplo', 'Ejemplo', 'Algun comentario ...'],
+								['12345678', '10', 'Numero de lote', '2017-11-30', 'Ejemplo', 'Ejemplo', 'Algun comentario ...'],
+								['12345678', '10', 'Numero de lote', '2017-11-30', 'Ejemplo', 'Ejemplo', 'Algun comentario ...'],
+							]
+						});
+
+						uri = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+
+						/* Create a link to trigger the download */
+						link = document.createElement('a');
+						link.href = uri;
+						link.download = 'formato.csv';
+
+						/* Append the link */
+						document.body.appendChild(link);
+
+						/* Trigger the download */
+						link.click();
+
+						/* Remove the link */
+						document.body.removeChild(link);
+					}
+				},
+				watch: {
+					trace: function(after, before) {
+
+						var changes = {index: null, path: '', old:'', new:''};
+						var trace = function(after, before, acc) {
+							return Object.keys(after).some(function(index){
+								if(!acc.index) {
+									acc.index = index;
+								}
+								if (typeof after[index] == 'object' && after[index] != null) {
+									var isDiff = trace(after[index], before[index], acc)
+									if (isDiff) {
+										acc.index = index;
+										acc.path = index + '.' + acc.path;
+									}
+									return isDiff;
+								}
+								/* Si existe nodo */
+								if (before) {
+									var isDiff = after[index] != before[index];
+									if (isDiff) {
+										acc.type = 'modified';
+										acc.path += index;
+										acc.old = before[index];
+										acc.new = after[index];
+									}
+								} else {
+									acc.type = 'added';
+									acc.path += index;
+									acc.old = null;
+									acc.new = after;
+									return true
+								}
+								return isDiff
+							}.bind(this));
+						}
+
+						trace(after, before, changes)
+
+						if (changes.path == (changes.index + '.codigo_barras')) {
+							this.upcs[changes.index].props.valido = false;
+							/* Validar campo */
+							this.$validator.validate('upcs-'+ changes.index + '.codigo_barras')
+						}
+
+						if (changes.path == (changes.index + '.props.valido')) {
+							/* Validar campo */
+							this.$validator.validate('upcs-'+ changes.index + '.codigo_barras')
+						}
+
+					},
+				},
+				computed: {
+					trace: function() {
+						return this.upcs.reduce(function(acc, item){
+							return acc.concat($.extend(true, {}, item))
+						}, [])
+					},
+					computedUpcs: function() {
+						return this.upcs.reduce(function(acc, item){
+							if (!item.props) {
+								Vue.set(item, 'props', {
+									valido: true,
+									editar: false,
+									queue: null,
+								})
+							}
+							if (!item.eliminar) {
+								Vue.set(item, 'eliminar', false)
+							}
+							return acc.concat(item)
+						}, []);
+					}
+				},
+				beforeMount: function() {
+					var vm = this;
+
+					/* First */
+					this.nuffer = $.extend(true, {}, this.buffer);
+
+					this.$validator.extend('verify_codebar', {
+						getMessage: function(field) {
+							return field + ' incorrecto. "Enter" para revalidar.'
+						},
+						validate: function(value, index, a) {
+							return {valid: this.upcs[index[0]].props.valido === true};
+						}.bind(this),
+					});
+
+					this.tipo_captura = $('#tipo_captura').val();
+					$('#tipo_captura').on('change', function(){
+						vm.tipo_captura = this.value;
+					});
+
+					function getAlmacenesUbicaciones(el) {
+						$.get(vm.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.almacenes'), {
+							param_js: '{{$api_almacenes_ubicaciones ?? ''}}', $fk_id_sucursal: el.value
+							/* conditions: [{'where':['fk_id_sucursal', this.value]}], */
+							/* with: ['ubicaciones:id_ubicacion,fk_id_almacen,ubicacion'], */
+						}, function(almacenes){
+							/* defaults */
+							var _almacenes = {0: {value: 0, text: '...'}}, _ubicaciones = {0: {0: {value: 0, text: '...'}}};
+							/* Recorremos almacenes */
+							almacenes.forEach(function(almacen){
+								_almacenes[almacen.id_almacen] = {value: almacen.id_almacen, text: almacen.almacen};
+								_ubicaciones[almacen.id_almacen] = {};
+								/* Si tiene ubicaciones, las recorremos */
+								if (almacen.ubicaciones.length > 0) {
+									_ubicaciones[almacen.id_almacen][0] = {value: 0, text: 'Selecciona ...'}
+									almacen.ubicaciones.forEach(function(ubicacion){
+										_ubicaciones[almacen.id_almacen][ubicacion.id_ubicacion] = {value: ubicacion.id_ubicacion, text: ubicacion.ubicacion}
+									})
+								} else {
+									_ubicaciones[almacen.id_almacen][0] = {value: 0, text: 'Sin resultados ...'}
+								}
+							})
+							vm.almacenes = _almacenes;
+							vm.ubicaciones = _ubicaciones;
+						})
+					}
+
+					$('#fk_id_sucursal').on('change', function(){
+
+						vm.nuffer.fk_id_almacen= 0;
+						vm.nuffer.fk_id_ubicacion = 0;
+						vm.upcs.forEach(function(item){
+							item.fk_id_almacen = 0;
+							item.fk_id_ubicacion = 0;
+						});
+
+						getAlmacenesUbicaciones(this);
+					})
+					if ($('#fk_id_sucursal').val() != 0) {
+						getAlmacenesUbicaciones($('#fk_id_sucursal')[0]);
+					}
+
+					$('[name="fk_id_almacen"]').on('beforeupdate', function (e) {
+						vm.almacenes = {0:{value: 0, text: 'Obteniendo ...', selected: true, disabled: true}}
+					});
+
+					$('#form-model').on('submit', function(e) {
+						e.preventDefault();
+						var form = this;
+
+						/* Obtenemos scopes upcs-* a validar */
+						var scopes = Object.keys(vm.fields).filter(function(item){
+							return item.indexOf('upcs-') !== -1
+						});
+						scopes_promises = scopes.map(function(item) {
+							return vm.$validator.validateAll(item.replace('$', ''))
+						});
+						/* Si todos resuelven validados */
+						Promise.all(scopes_promises).then(function(results){
+							var areValids = results.every(function(result){
+								return result;
+							})
+							/* Si detalle y formulario estan validados */
+							if (areValids && $(form).validate().form()) {
+								form.submit()
 							} else {
-								_ubicaciones[almacen.id_almacen][0] = {value: 0, text: 'Sin resultados ...'}
+								console.log('nada aun ...')
 							}
 						})
-						vm.almacenes = _almacenes;
-						vm.ubicaciones = _ubicaciones;
-					})
+					});
 				}
-
-				//
-				$('#fk_id_sucursal').on('change', function(){
-
-					vm.nuffer.fk_id_almacen= 0;
-					vm.nuffer.fk_id_ubicacion = 0;
-					vm.upcs.forEach(function(item){
-						item.fk_id_almacen = 0;
-						item.fk_id_ubicacion = 0;
-					});
-
-					getAlmacenesUbicaciones(this);
-				})
-				if ($('#fk_id_sucursal').val() != 0) {
-					getAlmacenesUbicaciones($('#fk_id_sucursal')[0]);
-				}
-
-				$('[name="fk_id_almacen"]').on('beforeupdate', function (e) {
-					vm.almacenes = {0:{value: 0, text: 'Obteniendo ...', selected: true, disabled: true}}
-				});
-
-				// $('[name="fk_id_almacen"]').on('update', function (e) {
-					// vm.almacenes = [].slice.call(this.options).reduce(function(acc, item) {
-					// 	acc[item.value] = {
-					// 		value: item.value,
-					// 		text: item.text || item.textContent,
-					// 		selected: item.selected,
-					// 		disabled: item.disabled,
-					// 	}
-					// 	return acc;
-					// }, {} );
-					// reset
-					// vm.nuffer.fk_id_almacen= 0;
-					// vm.nuffer.fk_id_ubicacion = 0;
-					// vm.upcs.forEach(function(item){
-					// 	item.fk_id_almacen = 0;
-					// 	item.fk_id_ubicacion = 0;
-					// });
-				// });
-
-				$('#form-model').on('submit', function(e) {
-					e.preventDefault();
-					var form = this;
-					// this.submit();
-
-					// Obtenemos scopes upcs-* a validar
-					var scopes = Object.keys(vm.fields).filter(function(item){
-						return item.indexOf('upcs-') !== -1
-					});
-					scopes_promises = scopes.map(function(item) {
-						return vm.$validator.validateAll(item.replace('$', ''))
-					});
-					// Si todos resuelven validados
-					Promise.all(scopes_promises).then(function(results){
-						var areValids = results.every(function(result){
-							return result;
-						})
-						// Si detalle y formulario estan validados
-						if (areValids && $(form).validate().form()) {
-							form.submit()
-						} else {
-							console.log('nada aun ...')
-						}
-					})
-				});
-			}
-		});
-
+			});
+		}
 	})
 </script>
 @endsection
