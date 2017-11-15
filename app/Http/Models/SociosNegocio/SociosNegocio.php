@@ -26,7 +26,7 @@ class SociosNegocio extends ModelBase
      * @var array
      */
     protected $fillable = ['fk_id_tipo_socio','fk_id_forma_pago','fk_id_tipo_entrega','fk_id_sucursal_entrega','fk_id_usuario_modificacion',
-    'razon_social','rfc','nombre_corto','telefono','sitio_web','monto_credito','dias_credito','monto_minimo_facturacion','fecha_modificacion',
+    'razon_social','rfc','nombre_comercial','telefono','sitio_web','monto_credito','dias_credito','monto_minimo_facturacion','fecha_modificacion',
     'ejecutivo_venta','fk_id_ramo','fk_id_pais_origen','fk_id_moneda','activo'];
     
     protected $eagerLoaders = ['ramo','tiposocio'];
@@ -34,7 +34,7 @@ class SociosNegocio extends ModelBase
     protected $fields = [
         'razon_social' => 'Razon Social',
         'rfc' => 'RFC',
-        'nombre_corto' => 'Nombre Comercial',
+        'nombre_comercial' => 'Nombre Comercial',
         'ramo.ramo' => 'Ramo',
         'tipos_socios' => 'Tipo Socio',
         'activo_text' => 'Estatus'
@@ -43,7 +43,7 @@ class SociosNegocio extends ModelBase
     public $rules = [
         'razon_social' => 'required|min:10',
         'rfc' => 'required',
-        'nombre_corto' => 'required',
+        'nombre_comercial' => 'required',
         'ejecutivo_venta' => 'required',
         'telefono' => 'required',
         'sitio_web' => 'required',
@@ -75,6 +75,9 @@ class SociosNegocio extends ModelBase
         $this->attributes['fecha_modificacion'] = \Carbon\Carbon::now();
     }
     */
+    public function cuentas(){
+        return $this->hasMany(CuentasBancarias::class,'fk_id_socio_negocio');
+    }
     
     public function formaPago(){
         return $this->belongsTo('App\Http\Models\Administracion\FormasPago','fk_id_forma_pago');

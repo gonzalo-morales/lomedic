@@ -1,8 +1,14 @@
 @section('content-width', 's12')
 @section('header-bottom')
 	@parent
-	{{ HTML::script(asset('vendor/multiselect/js/bootstrap-multiselect.js')) }}
-	{{ HTML::script(asset('js/sociosnegocios/socios.js')) }}
+	@if(!Route::currentRouteNamed(currentRouteName('index')))
+    	{{ HTML::script(asset('vendor/multiselect/js/bootstrap-multiselect.js')) }}
+    	{{ HTML::script(asset('vendor/vanilla-datatables/vanilla-dataTables.js')) }}
+    	<script type="text/javascript">
+        	var param_js = '{{ $api_js ?? '' }}';
+        </script>
+    	{{ HTML::script(asset('js/sociosnegocios/socios.js')) }}
+    @endif
 @endsection
 
 @section('form-content')
@@ -21,29 +27,36 @@
 				<div class="form-group col-sm-6 col-md-4">
 					{{ Form::cText('Nombre Comercial', 'nombre_comercial') }}
 				</div>
-				<div class="form-group col-sm-6 col-md-4">
-					{{ Form::cText('Ejecutivo de venta', 'ejecutivo_venta') }}
-				</div>
-				<div class="form-group col-sm-6 col-md-4">
-					{{ Form::cText('Teléfono', 'telefono') }}
-				</div>
-				<div class="form-group col-sm-6 col-md-4">
-					{{ Form::cText('Sitio web', 'sitio_web') }}
-				</div>
 			</div>
 			<div class="row">
+				<div class="form-group col-sm-6 col-md-3">
+					{{ Form::cText('Teléfono', 'telefono') }}
+				</div>
+				<div class="form-group col-sm-6 col-md-3">
+					{{ Form::cText('Sitio web', 'sitio_web') }}
+				</div>
 				<div class="form-group col-sm-6 col-md-3">
 					{{ Form::cSelect('* Ramo(s)', 'fk_id_ramo', $ramos ?? []) }}
 				</div>
 				<div class="form-group col-sm-6 col-md-3">
-					{{ Form::cSelect('País de Origen', 'fk_id_pais', $paises ?? []) }}
+					{{ Form::cSelect('País de Origen', 'fk_id_pais_origen', $paises ?? []) }}
 				</div>
+			</div>
+			<div class="row">
 				<div class="form-group col-sm-6 col-md-3">
 					{{ Form::cSelect('Tipo socio para venta', 'fk_id_tipo_socio_venta', $tipossociosventa ?? []) }}
 				</div>
 				<div class="form-group col-sm-6 col-md-3">
+					{{ Form::cSelect('Ejecutivo de venta', 'fk_id_ejecutivo_venta', $ejecutivos ?? []) }}
+				</div>
+				<div class="form-group col-sm-6 col-md-3">
 					{{ Form::cSelect('Tipo socio para compra', 'fk_id_tipo_socio_compra', $tipossocioscompra ?? []) }}
 				</div>
+				<div class="form-group col-sm-6 col-md-3">
+					{{ Form::cSelect('Ejecutivo de compra', 'fk_id_ejecutivo_compra', $ejecutivos ?? []) }}
+				</div>
+			</div>
+			<div class="row">
 				<div class="form-group col-sm-12">
 					<div class="alert alert-warning" role="alert">
                         Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
@@ -122,25 +135,44 @@
 										{{ Form::cNumber('Cuenta bancaria', 'no_cuenta') }}
 									</div>
 									<div class="form-group col-sm-6">
-										{{ Form::cSelect('Banco', 'fk_id_banco', $bancos ?? []) }}
+										{{ Form::cSelect('Banco', 'fk_id_banco', $bancos ?? [], ['class'=>'select2','data-url'=>companyAction('HomeController@index').'/administracion.bancos/api']) }}
 									</div>
 								</div>
 								<div class="col-md-12 my-3">
 									<div class="sep sepBtn">
-                						<button id="agregarCuenta" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                						<button id="agrega-cuenta" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
                 					</div>
 								</div>
 							</div>
 							<div class="card-body">
-								<table class="table responsive-table highlight" id="tableCuentas">
+								<table class="table responsive-table highlight" id="Cuentas">
 									<thead>
 										<tr>
-											<th>Banco</th>
 											<th>Cuenta bancaria</th>
+											<th>Banco</th>
 											<th>Acción</th>
 										</tr>
 									</thead>
 									<tbody>
+									@if(isset($data->cuentas)) 
+            							@foreach($data->cuentas as $key=>$detalle)
+        								<tr>
+        									<td>
+        										{{$detalle->no_cuenta}}
+        										{!! Form::hidden('cuentas['.$key.'][no_cuenta]',$detalle->no_cuenta) !!} 
+        									</td>
+        									<td>
+        										{{$detalle->banco->banco}}
+        										{!! Form::hidden('cuentas['.$key.'][id_cuenta]',$detalle->id_cuenta,['class'=>'id_cuenta']) !!}
+        										{!! Form::hidden('cuentas['.$key.'][fk_id_banco]',$detalle->fk_id_banco,['class'=>'fk_id_banco']) !!}
+        										{!! Form::hidden('cuentas['.$key.'][fk_id_socio_negocio]',$detalle->fk_id_socio_negocio,['class'=>'fk_id_socio_negocio']) !!}
+        										
+        										{!! Form::hidden('cuentas['.$key.'][uniquekey]',$detalle->fk_id_banco.'-'.$detalle->no_cuenta,['class'=>'uniquekey']) !!} 
+    										</td>
+        									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>
+        								</tr>
+            							@endforeach
+            						@endif
 									</tbody>
 								</table>
 							</div>

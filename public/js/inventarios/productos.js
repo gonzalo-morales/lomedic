@@ -98,17 +98,16 @@ $(document).ready(function () {
         
         
         if(id_upc == '' ){
-        	$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe seleccionar un upc.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe seleccionar un upc.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else if(cantidad == '' | Number.isInteger(cantidad) != false) {
-        	$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe seleccionar la cantidad, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe seleccionar la cantidad, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else if(upcs_ids.indexOf(id_upc) !== -1) {
-        	$.toaster({priority:'danger',title:'Â¡Error!',message:'El upc seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'El upc seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else {
 	        var url = $('#fk_id_upc').data('url');
-	        var data_upc = null;
 	        $.ajax({
 	            type: "GET",
 	            url: url,
@@ -124,7 +123,11 @@ $(document).ready(function () {
 	                         '<input type="hidden" name="detalles['+row_id+'][cantidad]" value="' + cantidad + '" /> '+cantidad,
 	                         '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
 	            		 ]
-	            	 })
+	            	 }),
+	            	 $.toaster({priority:'success',title:'¡Correcto!',message:'El Upc se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+	            },
+	            error: function () {
+	            	$.toaster({priority:'danger',title:'¡Error!',message:'Algo salio mal :( Revisa que los datos sean correctos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 	            }
 	        });
         }
@@ -134,5 +137,5 @@ $(document).ready(function () {
 function borrarFila(el) {
     let fila = dataTable.data[$(el).parents('tr').index()];
     dataTable.rows().remove([$(el).parents('tr').index()]);
-        $.toaster({priority:'success',title:'Â¡Advertencia!',message:'Se ha eliminado la fila correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la fila correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }

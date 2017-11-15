@@ -23,7 +23,7 @@
 				</div>
 				<div class="form-group mt-5">
 					<div class=" container">
-					{{ Form::button('Enviar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
+					{{ Form::button('Enviar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
 					</div>
 				</div>
 				<div class="form-group mt-4">

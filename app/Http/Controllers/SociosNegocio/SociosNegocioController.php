@@ -18,6 +18,8 @@ use App\Http\Models\Administracion\Municipios;
 use App\Http\Models\Administracion\Sucursales;
 #use App\Http\Models\Administracion\Monedas;
 use Illuminate\Http\Request;
+use App\Http\Models\Administracion\Usuarios;
+use Illuminate\Support\Facades\Crypt;
 
 class SociosNegocioController extends ControllerBase
 {
@@ -32,16 +34,18 @@ class SociosNegocioController extends ControllerBase
 	    
 	    return [
 	        'ramos'                => Ramos::where('activo','1')->where('eliminar','0')->pluck('ramo','id_ramo')->sortBy('ramo')->prepend('Selecciona una opcion...',''),
+	        'ejecutivos'           => Usuarios::where('activo','1')->where('eliminar','0')->pluck('nombre_corto','id_usuario')->sortBy('nombre_corto')->prepend('Selecciona una opcion...',''),
 	        'paises'               => Paises::where('activo','1')->where('eliminar','0')->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
 	        'tipossociosventa'     => $tipo->where('para_venta','1')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',''),
 	        'tipossocioscompra'    => $tipo->where('para_venta','0')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Proveedor',''),
 	        'empresas'		       => Empresas::select('id_empresa','nombre_comercial')->where('activo',1)->where('empresa',1)->get()->sortBy('nombre_comercial'),
-	        'formaspago'           => FormasPago::where('activo','1')->where('eliminar','0')->pluck('forma_pago','id_forma_pago')->sortBy('forma_pago')->prepend('Selecciona una opcion...',''),
+	        'formaspago'           => FormasPago::where('activo','1')->where('eliminar','0')->selectRaw("concat(forma_pago,' - ',descripcion) as forma_pago, id_forma_pago")->pluck('forma_pago','id_forma_pago')->sortBy('forma_pago')->prepend('Selecciona una opcion...',''),
 	        'bancos'               => Bancos::where('eliminar','0')->pluck('banco','id_banco')->sortBy('banco')->prepend('Selecciona una opcion...',''),
 	        'tiposentrega'	       => TiposEntrega::where('activo','1')->where('eliminar','0')->pluck('tipo_entrega','id_tipo_entrega')->sortBy('tipo_entrega'),
 	        'sucursales' 	       => Sucursales::where('activo','1')->where('eliminar','0')->pluck('sucursal','id_sucursal')->sortBy('sucursal')->prepend('Selecciona una opcion...',''),
 	        'tiposcontactos'       => TiposContacto::where('activo','1')->where('eliminar','0')->pluck('tipo_contacto','id_tipo_contacto')->sortBy('tipo_contacto')->prepend('Selecciona una opcion...',''),
 	        'tiposdireccion'       => TiposDireccion::where('activo','1')->where('eliminar','0')->pluck('tipo_direccion','id_tipo_direccion')->sortBy('tipo_direccion'),
+	        'api_js'               => Crypt::encryptString('"select": ["banco", "id_banco"], "conditions": [{"where": ["id_banco","$id_banco"]}]')
 	    ];
 	}
 	
@@ -75,7 +79,7 @@ class SociosNegocioController extends ControllerBase
 			// 	}
 			// }
 			// echo $objSocio->rfc;
-			// echo $objSocio->nombre_corto;
+			// echo $objSocio->nombre_comercial;
 			// echo $objSocio->telefono;
 			// echo $objSocio->sitio_web;
 
@@ -112,7 +116,7 @@ class SociosNegocioController extends ControllerBase
 				// 'activo' => 'required',
 	            'razon_social' => 'required|min:10',
 	            'rfc' => 'required',
-	            'nombre_corto' => 'required',
+	            'nombre_comercial' => 'required',
 	            'ejecutivo_venta' => 'required',
 				'telefono' => 'required',
 				'sitio_web' => 'required',
@@ -146,7 +150,7 @@ class SociosNegocioController extends ControllerBase
 				'razon_social' 					=> $objSocio->razon_social,
 				'rfc' 							=> $objSocio->rfc,
 				'ejecutivo_venta'				=> $objSocio->ejecutivo_venta,
-				'nombre_corto'					=> $objSocio->nombre_corto,
+				'nombre_comercial'					=> $objSocio->nombre_comercial,
 				'telefono'						=> $objSocio->telefono,
 				'sitio_web'						=> $objSocio->sitio_web,
 				'fk_id_ramo'					=> $objSocio->ramo,

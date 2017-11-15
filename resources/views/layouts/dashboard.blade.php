@@ -28,7 +28,7 @@
         {{ HTML::style(asset('css/kendo/web/kendo.material.mobile.min.css')) }}
     @endif
 	@yield('header-top')
-    <link rel="dns-prefetch" href="{{str_replace(['http:','https:'],'',url('/'))}}">
+    
     <link rel="dns-prefetch" href="//ajax.googleapis.com">
     <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
@@ -111,9 +111,9 @@
 <!-- jQuery CDN -->
 {{ HTML::script('https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js') }}
 
-<!-- jQuery local fallback --
+<!-- jQuery local fallback -->
 <script>window.jQuery || document.write('<script src="{{asset('js/jquery.min.js') }}"><\/script>')</script>
--->
+
 {{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js') }}
 {{ HTML::script(asset('js/popper.min.js')) }}
 

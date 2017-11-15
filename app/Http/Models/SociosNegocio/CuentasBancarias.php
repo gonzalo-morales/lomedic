@@ -4,6 +4,7 @@ namespace App\Http\Models\SociosNegocio;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use App\Http\Models\Administracion\Bancos;
 
 class CuentasBancarias extends Model
 {
@@ -80,7 +81,8 @@ class CuentasBancarias extends Model
 	}
 
     public function banco(){
-        return $this->belongsTo('App\Http\Models\Admnistracion\Bancos','fk_id_banco');
+        return $this->belongsTo(Bancos::class,'fk_id_banco');
+        #return $this->belongsTo('App\Http\Models\Admnistracion\Bancos','fk_id_banco');
     }
     public function socioNegocio(){
         return $this->belongsTo('App\Http\Models\SociosNegocio\SociosNegocio','fk_id_socio_negocio');

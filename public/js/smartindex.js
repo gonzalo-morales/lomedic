@@ -101,7 +101,6 @@ $('#smart-modal').on('hidden.bs.modal', function (e) {
 	}
 })
 
-//
 window['smart-model'] = {
 	// Estados de vista
 	status: {
@@ -232,8 +231,8 @@ window['smart-model'] = {
 
 			let modal = window['smart-modal'];
 			modal.view = rivets.bind(modal, {
-				title: 'Ã‚Â¿Estas seguro?',
-				content: 'Una vez eliminado(s) no podrÃƒÂ¡s recuperarlo(s).',
+				title: 'Ãƒâ€šÃ‚Â¿Estas seguro?',
+				content: 'Una vez eliminado(s) no podrÃƒÆ’Ã‚Â¡s recuperarlo(s).',
 				buttons: [
 					{button: {
 						'text': 'Cancelar',
@@ -282,7 +281,7 @@ window['smart-model'] = {
 			}
 
 			$(window['smart-modal']).modal('hide');
-			//
+
 			$.delete(this.dataset.deleteUrl, data, function(response) {
 				if (response.success) {
 					datatable.rows().remove(tablerows)
@@ -438,7 +437,6 @@ rivets.binders['append-filters'] = function(el) {
 	var input_group = row.querySelector('.input-group');
 		input_group.insertBefore(el, input_group.firstChild)
 
-	//
 	for (var i in datatable.headings) {
 		var th = datatable.headings[i];
 		if (th.innerText || th.textContent) {
@@ -475,7 +473,6 @@ if (datatable.hasRows) {
 	datatable.setMessage('Sin elementos.');
 }
 
-/* */
 function getItems($page) {
 
 	let primary = window['smart-view'].dataset.primaryKey;
