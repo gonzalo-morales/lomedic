@@ -1,0 +1,18 @@
+body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
+/**{margin: 0; padding: 0;}*/
+.blue{background-color: #007bff;}
+.green{background-color: #17A2B8;}
+.red{background-color: #dc3545;}
+.yellow{background-color: #ffc107; color:#111 !important;}
+.wrapper{display: block; width:100%;bottom:0;left: 0;background-color: #fff;}
+.conent{overflow: auto;padding:0;}
+.square{float: left;width: 49%;margin: 0.2%;height: 73px;text-align: center;color: #fff;text-decoration: none;padding:5px;overflow: hidden;z-index: 0;white-space:normal;word-wrap: break-word;border:none;}
+.form-control{border: 1px solid #ced4da; background-color: #fff;width: 100%;padding: 2px;}
+
+/* Lista almacen */
+#navigation{display: block; width:100%;}
+.list-item{display: block;width: 100%;margin: 0.2%;min-height: 34px;text-align: center;color: #111;overflow: hidden;z-index: 0;word-wrap: break-word;border:1px solid #f4f4f4;text-decoration: none;font-size: 14px;font-family: 'Arial, Helvetica, sans-serif';line-height: 30px;background-color: #007bff;color:#fff;}
+.list-item:active{background-color:#ccc;line-height: 30px;}
+
+
+/*button.square:active{background-color:#ccc;}*/
