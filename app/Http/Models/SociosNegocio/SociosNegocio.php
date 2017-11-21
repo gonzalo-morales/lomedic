@@ -78,6 +78,13 @@ class SociosNegocio extends ModelBase
     public function cuentas(){
         return $this->hasMany(CuentasBancarias::class,'fk_id_socio_negocio');
     }
+    public function contactos(){
+        return $this->hasMany(ContactosSociosNegocio::class,'fk_id_socio_negocio');
+    }
+    public function direcciones(){
+        return $this->hasMany(Direcciones::class,'fk_id_socio_negocio');
+    }
+    
     
     public function formaPago(){
         return $this->belongsTo('App\Http\Models\Administracion\FormasPago','fk_id_forma_pago');

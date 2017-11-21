@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\SociosNegocio;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class ContactosSociosNegocio extends Model
+class TiposAnexos extends ModelBase
 {
     // use SoftDeletes;
 
@@ -13,21 +13,20 @@ class ContactosSociosNegocio extends Model
      *
      * @var string
      */
-    protected $table = 'sng_cat_contactos';
+    protected $table = 'sng_cat_tipos_anexos';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_contacto';
+    protected $primaryKey = 'id_tipo_anexo';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['fk_id_socio_negocio', 'fk_id_tipo_contacto', 'nombre', 'puesto', 'telefono_oficina', 'extension_oficina',
-                'celular', 'activo'];
+    protected $fillable = ['tipo_anexo', 'activo'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -41,18 +40,12 @@ class ContactosSociosNegocio extends Model
      * @var array
      */
     // public $rules = [
+    //     'tipo_contacto' => 'required',
+    //     'activo' => 'required',
     // ];
 
     public function getTable(){
 	    return $this->table;
-    }
-
-    public function sociosNegocio(){
-        return $this->belongsTo('App\Http\Models\SociosNegocio\SociosNegocio','fk_id_socio_negocio');
-    }
-
-    public function tipocontacto(){
-        return $this->hasOne('App\Http\Models\SociosNegocio\TiposSocioContacto');
     }
 
 }
