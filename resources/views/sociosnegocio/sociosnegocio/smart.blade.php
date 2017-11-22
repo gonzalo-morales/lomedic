@@ -4,6 +4,13 @@
 	@if(!Route::currentRouteNamed(currentRouteName('index')))
     	{{ HTML::script(asset('vendor/multiselect/js/bootstrap-multiselect.js')) }}
     	{{ HTML::script(asset('vendor/vanilla-datatables/vanilla-dataTables.js')) }}
+    	<script type="text/javascript">
+        	var estados_js = '{{ $js_estados ?? '' }}';
+        	var municipios_js = '{{ $js_municipios ?? '' }}';
+        	var upcs_js = '{{ $js_upcs ?? '' }}';
+        	var upc_js = '{{ $js_upc ?? '' }}';
+        	var sku_js = '{{ $js_sku ?? '' }}';
+        </script>
     	{{ HTML::script(asset('js/sociosnegocios/socios.js')) }}
     @endif
 @endsection
@@ -20,6 +27,9 @@
 				<div class="form-group col-md-6 col-lg-4">
 					{{ Form::cSelect('Tipo socio para compra', 'fk_id_tipo_socio_compra', $tipossocioscompra ?? []) }}
 				</div>
+				<div class="form-group col-md-6 col-lg-4">
+					{{ Form::cSelect('Tipo Proveedor', 'fk_id_tipo_proveedor', $tiposproveedores ?? []) }}
+				</div>
 			</div>
 			<div class="row">
 				<div class="form-group col-md-12 col-lg-8">
@@ -28,7 +38,6 @@
 				<div class="form-group col-md-12 col-lg-4">
 					{{ Form::cText('* RFC', 'rfc') }}
 				</div>
-				
 				<div class="form-group col-md-12 col-lg-8">
 					{{ Form::cText('Nombre Comercial', 'nombre_comercial') }}
 				</div>
@@ -64,7 +73,7 @@
 		<div class="card-header mb-0 pb-0">
 			<ul class="nav nav-pills nav-justified">
 				<li class="nav-item"><a class="nav-link active"  role="tab" data-toggle="tab"  href="#general">General</a></li>
-				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#contactos">Personas contactos</a></li>
+				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#contactos">Personas contacto</a></li>
 				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#direcciones">Direcciones</a></li>
 				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#condicionpago">Condiciones pago</a></li>
 				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#cuentas">Cuentas</a></li>
@@ -120,7 +129,6 @@
 							<div class="form-group col-sm-6 col-md-4">
 								{{ Form::cText('* Puesto/Departamento', 'puesto') }}
 							</div>
-							
 							<div class="form-group col-sm-6 col-md-4">
 								{{ Form::cText('* Correo', 'correo') }}
 							</div>
@@ -212,15 +220,14 @@
 							<div class="form-group col-sm-2 ">
 								{{ Form::cNumber('* C.P.', 'cp') }}
 							</div>
-
 							<div class="form-group col-sm-6 col-md-3">
-								{{ Form::cSelect('* País', 'pais', $paises ?? [], ['data-url'=>companyAction('SociosNegocio\SociosNegocioController@getEstados',['id'=>'?id'])]) }}
+								{{ Form::cSelect('* País', 'pais', $paises ?? []) }}
 							</div>
 							<div class="form-group col-sm6 col-md-3">
-								{{ Form::cSelect('* Estado', 'estado', [], ['data-url'=>companyAction('SociosNegocio\SociosNegocioController@getMunicipios',['id'=>'?id'])]) }}
+								{{ Form::cSelect('* Estado', 'estado', [], ['data-url'=>companyAction('HomeController@index').'/administracion.estados/api']) }}
 							</div>
 							<div class="form-group col-sm-6 col-md-3">
-								{{ Form::cSelect('* Municipio', 'municipio', []) }}
+								{{ Form::cSelect('* Municipio', 'municipio', [], ['data-url'=>companyAction('HomeController@index').'/administracion.municipios/api']) }}
 							</div>
 							<div class="form-group col-sm-6 col-md-3">
 								{{ Form::cText('* Colonia', 'colonia') }}
@@ -357,7 +364,7 @@
 						</div>
 						<div class="col-md-12 my-3">
 							<div class="sep sepBtn">
-        						<button id="agrega-cuenta" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
+        						<button id="agregar-cuenta" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
         					</div>
 						</div>
 					</div>
@@ -415,10 +422,10 @@
     								{{ Form::cSelect('* Tipo Anexo', 'tipo_anexo', $tiposanexos ?? []) }}
     							</div>
     							<div class="form-group col-md-4">
-    								{{ Form::cText('* Nombre', 'no_cuenta') }}
+    								{{ Form::cText('* Nombre', 'nombre_archivo') }}
     							</div>
     							<div class="form-group col-md-4">
-    								{{ Form::cFile('* Archivo', 'filesSanitarias') }}
+    								{{ Form::cFile('* Archivo', 'archivo',['accept'=>'.xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf']) }}
     							</div>
     							<div class="form-group col-sm-12 my-3">
         							<div class="sep sepBtn">
@@ -446,27 +453,27 @@
 			</div><!--/aquí termina el contenido de un tab-->
 			
 			<div id="productos" class="tab-pane" role="tabpanel">
-				<div class="col-sm-12">
+				<fieldset id="fieldProductos"class="col-sm-12">
             		<div class="card z-depth-1-half">
             			<div class="card-header">
     						<div class="row">
     							<div class="form-group col-md-4">
-    								{{ Form::cSelect('* Sku', 'sku', $skus ?? []) }}
+    								{{ Form::cSelect('* Sku', 'sku', $skus ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/inventarios.productos/api']) }}
     							</div>
     							<div class="form-group col-md-4">
-    								{{ Form::cSelect('Upc', 'upc', $upcs ?? []) }}
-    							</div>
-    							<div class="form-group col-md-4">
-    								{{ Form::cNumber('* Precio', 'precio') }}
+    								{{ Form::cSelect('Upc', 'upc', $upcs ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api']) }}
     							</div>
     							<div class="form-group col-md-4">
     								{{ Form::cNumber('* Tiempo Entrega (dias)', 'tiempo_entrega') }}
     							</div>
     							<div class="form-group col-md-4">
-    								{{ Form::cText('Precio Valido De', 'precio_de') }}
+    								{{ Form::cNumber('* Precio', 'precio') }}
     							</div>
     							<div class="form-group col-md-4">
-    								{{ Form::cText('Precio Valido Hasta', 'precio_hasta') }}
+    								{{ Form::cText('* Precio Valido De', 'precio_de') }}
+    							</div>
+    							<div class="form-group col-md-4">
+    								{{ Form::cText('* Precio Valido Hasta', 'precio_hasta') }}
     							</div>
     							<div class="form-group col-sm-12 my-3">
         							<div class="sep sepBtn">
@@ -482,8 +489,8 @@
     									<th>Sku</th>
     									<th>Upc</th>
     									<th>Descripcion</th>
-    									<th>Precio</th>
     									<th>Tiempo entrega</th>
+    									<th>Precio</th>
     									<th>Precio Valido De</th>
     									<th>Precio Valido Hasta</th>
     									<th>Acción</th>
@@ -494,7 +501,7 @@
     						</table>
     					</div>
     				</div><!--/Here ends card-->
-    			</div>
+    			</fieldset>
 			</div><!--/aquí termina el tab content-->
 			
 		</div>
@@ -502,18 +509,18 @@
 @endsection
 
 {{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
+@if(Route::currentRouteNamed(currentRouteName('index')))
 	@include('layouts.smart.index')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('create')))
+@if(Route::currentRouteNamed(currentRouteName('create')))
 	@include('layouts.smart.create')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('edit')))
+@if(Route::currentRouteNamed(currentRouteName('edit')))
 	@include('layouts.smart.edit')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('show')))
+@if(Route::currentRouteNamed(currentRouteName('show')))
 	@include('layouts.smart.show')
 @endif

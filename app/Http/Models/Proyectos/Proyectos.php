@@ -64,7 +64,7 @@ class Proyectos extends ModelCompany
 
     public $fields = [
         'proyecto' => 'Proyecto',
-        'cliente.nombre_corto' => 'Cliente',
+        'cliente.nombre_comercial' => 'Cliente',
         'numero_contrato' => 'No. Contrato',
         'fecha_inicio_contrato' => 'Inicio de contrato',
         'fecha_fin_contrato' => 'Fin de contrato',

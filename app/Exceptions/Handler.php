@@ -49,12 +49,13 @@ class Handler extends ExceptionHandler
 	 * @return \Illuminate\Http\Response
 	 */
 	public function render($request, Exception $exception)
-	{
-	    /*
-	    if ($exception->getStatusCode() == 500) {
+	{ 
+	        #dd('Error en la conexion a la BD');
+	    
+	    /*if ($exception->getStatusCode() == 500) {
 	        return response()->view('errors.500', [], 500);
-	    }
-	    */
+	    }*/
+	    
 	    
 		return parent::render($request, $exception);
 	}

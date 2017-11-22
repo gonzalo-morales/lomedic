@@ -7,7 +7,6 @@ use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\SociosNegocio\TiposSocioNegocio as TiposSocios;
 use App\Http\Models\SociosNegocio\TiposContacto;
 use App\Http\Models\SociosNegocio\TiposDireccion;
-use App\Http\Models\SociosNegocio\TiposEntrega;
 use App\Http\Models\SociosNegocio\RamosSocioNegocio as Ramos;
 use App\Http\Models\Administracion\Bancos;
 use App\Http\Models\Administracion\Empresas;
@@ -22,6 +21,8 @@ use App\Http\Models\Administracion\Usuarios;
 use Illuminate\Support\Facades\Crypt;
 use App\Http\Models\Finanzas\CondicionesPago;
 use App\Http\Models\SociosNegocio\TiposAnexos;
+use App\Http\Models\Inventarios\Productos;
+use App\Http\Models\SociosNegocio\TiposProveedores;
 
 class SociosNegocioController extends ControllerBase
 {
@@ -38,6 +39,7 @@ class SociosNegocioController extends ControllerBase
 	        'ramos'                => Ramos::where('activo','1')->where('eliminar','0')->pluck('ramo','id_ramo')->sortBy('ramo')->prepend('Selecciona una opcion...',''),
 	        'ejecutivos'           => Usuarios::where('activo','1')->where('eliminar','0')->pluck('nombre_corto','id_usuario')->sortBy('nombre_corto')->prepend('Selecciona una opcion...',''),
 	        'paises'               => Paises::where('activo','1')->where('eliminar','0')->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
+	        'tiposproveedores'     => TiposProveedores::where('activo','1')->where('eliminar','0')->pluck('tipo_proveedor','id_tipo_proveedor')->sortBy('tipo_proveedor')->prepend('Selecciona una opcion...',''),
 	        'tipossociosventa'     => $tipo->where('para_venta','1')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',''),
 	        'tipossocioscompra'    => $tipo->where('para_venta','0')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Proveedor',''),
 	        'tiposanexos'          => TiposAnexos::where('activo','1')->where('eliminar','0')->pluck('tipo_anexo','id_tipo_anexo')->sortBy('tipo_anexo')->prepend('Selecciona una opcion...',''),
@@ -45,10 +47,17 @@ class SociosNegocioController extends ControllerBase
 	        'condicionpago'        => CondicionesPago::where('activo','1')->where('eliminar','0')->pluck('condicion_pago','id_condicion_pago')->sortBy('condicion_pago')->prepend('Selecciona una opcion...',''),
 	        'formaspago'           => FormasPago::where('activo','1')->where('eliminar','0')->selectRaw("concat(forma_pago,' - ',descripcion) as forma_pago, id_forma_pago")->pluck('forma_pago','id_forma_pago')->sortBy('forma_pago'),
 	        'bancos'               => Bancos::where('eliminar','0')->pluck('banco','id_banco')->sortBy('banco')->prepend('Selecciona una opcion...',''),
-	        'tiposentrega'	       => TiposEntrega::where('activo','1')->where('eliminar','0')->pluck('tipo_entrega','id_tipo_entrega')->sortBy('tipo_entrega'),
+	        //'tiposentrega'	       => TiposEntrega::where('activo','1')->where('eliminar','0')->pluck('tipo_entrega','id_tipo_entrega')->sortBy('tipo_entrega'),
 	        'sucursales' 	       => Sucursales::where('activo','1')->where('eliminar','0')->pluck('sucursal','id_sucursal')->sortBy('sucursal')->prepend('Selecciona una opcion...',''),
 	        'tiposcontactos'       => TiposContacto::where('activo','1')->where('eliminar','0')->pluck('tipo_contacto','id_tipo_contacto')->sortBy('tipo_contacto')->prepend('Selecciona una opcion...',''),
 	        'tiposdireccion'       => TiposDireccion::where('activo','1')->where('eliminar','0')->pluck('tipo_direccion','id_tipo_direccion')->sortBy('tipo_direccion'),
+	        'skus'                 => Productos::where('activo','1')->where('eliminar','0')->pluck('sku','id_sku')->sortBy('sku')->prepend('Selecciona una opcion...',''),
+
+	        'js_estados'           => Crypt::encryptString('"select": ["estado", "id_estado"], "conditions": [{"where": ["fk_id_pais","$fk_id_pais"]}], "orderBy": [["estado", "ASC"]]'),
+	        'js_municipios'        => Crypt::encryptString('"select": ["municipio", "id_municipio"], "conditions": [{"where": ["fk_id_estado","$fk_id_estado"]}], "orderBy": [["municipio", "ASC"]]'),
+	        'js_upcs'              => Crypt::encryptString('"select": ["upc", "id_upc"], "conditions": [{"where": ["activo","1"]}], "whereHas": [{"skus":{"where":["fk_id_sku", "$fk_id_sku"]}}], "orderBy": [["upc", "ASC"]]'),
+	        'js_sku'               => Crypt::encryptString('"select": ["descripcion_corta as descripcion", "id_sku"], "conditions": [{"where": ["id_sku","$id_sku"]}], "limit": 1'),
+	        'js_upc'               => Crypt::encryptString('"select": ["descripcion", "id_upc"], "conditions": [{"where": ["id_upc","$id_upc"]}], "limit": 1'),
 	    ];
 	}
 	

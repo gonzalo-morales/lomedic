@@ -36,9 +36,7 @@ class SolicitudesController extends ControllerBase
 
     public function create($company,$attributes =[])
     {
-        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
-            $q->where('fk_id_tipo_socio', 2);
-        })->pluck('nombre_corto','id_socio_negocio');
+        $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity->first()
                     ->empleado()->first()
@@ -115,9 +113,7 @@ class SolicitudesController extends ControllerBase
 
     public function show($company,$id,$attributes = [])
     {
-        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
-            $q->where('fk_id_tipo_socio', 2);
-        })->pluck('nombre_corto','id_socio_negocio');
+        $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity
                     ->where('id_solicitud',$id)->first()
@@ -143,9 +139,7 @@ class SolicitudesController extends ControllerBase
 
     public function edit($company,$id,$attributes = [])
     {
-        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
-            $q->where('fk_id_tipo_socio', 2);
-        })->pluck('nombre_corto','id_socio_negocio');
+        $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
 
         $attributes = $attributes+['dataview'=>[
                 'sucursalesempleado' => $this->entity

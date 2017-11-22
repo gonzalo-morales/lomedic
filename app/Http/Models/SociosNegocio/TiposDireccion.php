@@ -2,15 +2,12 @@
 
 namespace App\Http\Models\SociosNegocio;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class TiposDireccion extends Model
+class TiposDireccion extends ModelBase
 {
-    // use SoftDeletes;
-
     /**
      * The table associated with the model.
-     *
      * @var string
      */
     protected $table = 'sng_cat_tipos_direccion';
@@ -23,14 +20,12 @@ class TiposDireccion extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = ['tipo_direccion', 'activo'];
 
     /**
      * Indicates if the model should be timestamped.
-     *
      * @var bool
      */
     public $timestamps = false;
@@ -39,13 +34,9 @@ class TiposDireccion extends Model
      * The validation rules
      * @var array
      */
-    // public $rules = [
-    //     'tipo_direccion' => 'required',
-    //     'activo'         => 'required',
-    // ];
+    public $rules = [];
 
-    public function getTable(){
-	    return $this->table;
+    public function direcciones(){
+        return $this->hasOne(DireccionesSociosNegocio::class);
     }
-
 }
