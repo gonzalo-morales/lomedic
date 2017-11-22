@@ -30,7 +30,7 @@ class SociosNegocio extends ModelBase
     'razon_social','rfc','nombre_comercial','telefono','sitio_web','monto_credito','dias_credito','monto_minimo_facturacion','fecha_modificacion',
     'ejecutivo_venta','fk_id_ramo','fk_id_pais_origen','fk_id_moneda','activo'];
     
-    protected $eagerLoaders = ['ramo','tiposocio'];
+    protected $eagerLoaders = ['ramo','tiposocioventa','tiposociocompra'];
     
     protected $fields = [
         'razon_social' => 'Razon Social',
@@ -63,7 +63,10 @@ class SociosNegocio extends ModelBase
     
     public function getTiposSociosAttribute()
     {
-        return trim($this->tiposocioventa()->tipo_socio.' '.$this->tiposociocompra()->tipo_socio);
+        $venta = $this->tiposocioventa->tipo_socio ?? '';
+        $compra = $this->tiposociocompra->tipo_socio ?? '';
+        $compra = !empty($venta) && !empty($compra) ? ", ".$compra : (!empty($compra) ? $compra : '');
+        return trim($venta.$compra);
     }
     public function empresas(){
         return $this->belongsToMany(Empresas::class,'sng_det_empresa_socio_negocio','fk_id_empresa','fk_id_socio_negocio');
