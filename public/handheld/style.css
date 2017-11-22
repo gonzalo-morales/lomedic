@@ -14,5 +14,42 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
 .list-item{display: block;width: 100%;margin: 0.2%;min-height: 34px;text-align: center;color: #111;overflow: hidden;z-index: 0;word-wrap: break-word;border:1px solid #f4f4f4;text-decoration: none;font-size: 14px;font-family: 'Arial, Helvetica, sans-serif';line-height: 30px;background-color: #007bff;color:#fff;}
 .list-item:active{background-color:#ccc;line-height: 30px;}
 
+.table-columns {
+    width: 100%;
+    border-collapse: collapse;
+}
+.table-columns .column {
+    text-align: right;
+    width: 50%;
+}
+.table-columns .column.right {
+    text-align: right;
+    padding-right: 10px;
+}
+.table-columns .form-control {
+    width: 95%;
+    padding: 2px;
+}
+.table-columns ul {
+    list-style: none;
+}
+.table-columns .placeholder {
+    color: #aaa;
+}
+.table-columns .readonly {
+    border: 0px;
+}
+
+.table-equal {
+    width: 100%;
+    border-collapse: collapse;
+}
+.margin-top {
+    margin-top: 5px;
+}
+.success-message {
+    padding: 5px;
+    background: #a7d2ff;
+}
 
 /*button.square:active{background-color:#ccc;}*/

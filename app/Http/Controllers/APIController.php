@@ -32,12 +32,12 @@ class APIController extends Controller
 	 */
 	public function index($company, $entity)
 	{
-	    $str_json = '{'.Crypt::decryptString(request()->param_js).'}';
-	    $param_array = request()->all();
+		$str_json = '{'.Crypt::decryptString(request()->param_js).'}';
+		$param_array = request()->all();
 
-	    $json = str_replace(array_keys($param_array),$param_array,$str_json);
+		$json = str_replace(array_keys($param_array),$param_array,$str_json);
 
-	    $request = json_decode($json,true);
+		$request = json_decode($json,true);
 
 	    // $request = request()->all();
 
@@ -91,6 +91,10 @@ class APIController extends Controller
 			# Pluck collection
 			if (isset($request['pluck'])) {
 			    $collections = call_user_func_array([$collections, 'pluck'], $request['pluck']);
+			}
+
+			if (isset($request['only'])) {
+				$collections = $collections->map->only($request['only']);
 			}
 
 			return $collections;

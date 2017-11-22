@@ -25,7 +25,6 @@ class HomeController extends Controller
 	        return redirect()->route('login');
 	    }
 
-		#return view('handheld.home');
 		// Handheld
 		if (str_contains(request()->header('User-Agent'), ['MSIE 6.8', 'Windows CE'])) {
 			return view('handheld.home');
