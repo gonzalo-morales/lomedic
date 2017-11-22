@@ -54,19 +54,11 @@
 			</tr>
 		</table>
 
-        <table class="table-equal margin-top">
-            <tr>
-                <td>
-                    {{ link_to(companyRoute('handheld.inventarios'), 'Regresar', ['class'=>'square green']) }}
-                </td>
-                <td>
-                    <button type="submit" class="square blue">Siguiente</button>
-                </td>
-                <td>
-                    {{ link_to(companyRoute('handheld.inventarios'), 'Cancelar', ['class'=>'square red']) }}
-                </td>
-            </tr>
-        </table>
+        <div class="margin-top wrapper">
+            {{ link_to(companyRoute('handheld.inventarios'), 'Regresar', ['class'=>'square actionBtn green']) }}
+            <button type="submit" class="square actionBtn blue">Siguiente</button>
+            {{ link_to(companyRoute('handheld.inventarios'), 'Cancelar', ['class'=>'square actionBtn red']) }}
+        </div>
 
 	</div>
 </form>

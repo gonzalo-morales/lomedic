@@ -53,23 +53,15 @@
                 </td>
             </tr>
         </table>
-        <table class="table-equal margin-top">
-            <tr>
-                <td>
-                    {{ link_to(companyRoute('handheld.inventarios-inventario', [
-                        'id' => $previous->fk_id_inventario,
-                        'fk_id_ubicacion' => $previous->fk_id_ubicacion,
-                        'codigo_barras' => $previous->codigo_barras
-                    ]), 'Regresar', ['class'=>'square green']) }}
-                </td>
-                <td>
-                    <button type="submit" class="square blue">Finalizar</button>
-                </td>
-                <td>
-                    {{ link_to(companyRoute('handheld.inventarios'), 'Cancelar', ['class'=>'square red']) }}
-                </td>
-            </tr>
-        </table>
+        <div class="wrapper margin-top">
+            {{ link_to(companyRoute('handheld.inventarios-inventario', [
+                'id' => $previous->fk_id_inventario,
+                'fk_id_ubicacion' => $previous->fk_id_ubicacion,
+                'codigo_barras' => $previous->codigo_barras
+            ]), 'Regresar', ['class'=>'square actionBtn green']) }}
+            <button type="submit" class="square blue actionBtn">Finalizar</button>
+            {{ link_to(companyRoute('handheld.inventarios'), 'Cancelar', ['class'=>'square red actionBtn']) }}
+        </div>
     </div>
 </form>
 

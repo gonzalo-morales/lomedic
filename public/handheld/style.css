@@ -6,8 +6,9 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
 .yellow{background-color: #ffc107; color:#111 !important;}
 .wrapper{display: block; width:100%;bottom:0;left: 0;background-color: #fff;}
 .conent{overflow: auto;padding:0;}
-.square{float: left;width: 49%;margin: 0.2%;height: 73px;text-align: center;color: #fff;text-decoration: none;padding:5px;overflow: hidden;z-index: 0;white-space:normal;word-wrap: break-word;border:none;}
+.square{float: left;width: 45.5%;align-self:center;margin: 0.2%;height: 63px;text-align: center;color: #fff;text-decoration: none;padding:5px;overflow: hidden;z-index: 0;white-space:normal;word-wrap: break-word;border:none;}
 .form-control{border: 1px solid #ced4da; background-color: #fff;width: 100%;padding: 2px;}
+.actionBtn{width:32%;height:44px; padding:0; line-height:40px;}
 
 /* Lista almacen */
 #navigation{display: block; width:100%;}
