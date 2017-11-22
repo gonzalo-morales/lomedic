@@ -43,9 +43,7 @@ class OfertasController extends ControllerBase
 	public function create($company, $attributes =[])
 	{
 	    !is_array($attributes) ? $id_solicitud = $attributes : $id_solicitud = 0;//Si tiene un id de solicitud
-	    $clientes = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
-	        $q->where('fk_id_tipo_socio', 1);
-        })->pluck('nombre_corto','id_socio_negocio');
+	    $clientes = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
 
         $attributes = ['dataview'=>[
             'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
@@ -112,9 +110,7 @@ class OfertasController extends ControllerBase
 
 	public function show($company,$id,$attributes = [])
 	{
-        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
-            $q->where('fk_id_tipo_socio', 2);
-        })->pluck('nombre_corto','id_socio_negocio');
+	    $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
 		$attributes = $attributes+['dataview'=>[
                 'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
                 'actual_company_id'=>Empresas::where('conexion','LIKE',$company)->first()->id_empresa,
@@ -130,12 +126,8 @@ class OfertasController extends ControllerBase
 
 	public function edit($company,$id,$attributes = [])
 	{
-        $clientes = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
-            $q->where('fk_id_tipo_socio', 1);
-        })->pluck('nombre_corto','id_socio_negocio');
-        $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
-            $q->where('fk_id_tipo_socio', 2);
-        })->pluck('nombre_corto','id_socio_negocio');
+	    $clientes = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
+	    $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
 		$attributes = $attributes+['dataview'=>[
                 'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
                 'actual_company_id'=>Empresas::where('conexion','LIKE',$company)->first()->id_empresa,
@@ -310,9 +302,7 @@ class OfertasController extends ControllerBase
     }
 
     public function getProveedores($company){
-	    $proveedores = SociosNegocio::where('activo', 1)->whereHas('tipoSocio', function($q) {
-            $q->where('fk_id_tipo_socio', 2);
-        })->select('id_socio_negocio as id','nombre_corto as text','tiempo_entrega')->get();
+        $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
 	    return Response::json($proveedores);
     }
 }

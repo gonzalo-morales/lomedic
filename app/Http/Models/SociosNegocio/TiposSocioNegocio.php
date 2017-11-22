@@ -2,15 +2,12 @@
 
 namespace App\Http\Models\SociosNegocio;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class TiposSocioNegocio extends Model
+class TiposSocioNegocio extends ModelBase
 {
-    // use SoftDeletes;
-
     /**
      * The table associated with the model.
-     *
      * @var string
      */
     protected $table = 'sng_cat_tipos_socio_negocio';
@@ -23,14 +20,12 @@ class TiposSocioNegocio extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = ['tipo_socio', 'activo'];
 
     /**
      * Indicates if the model should be timestamped.
-     *
      * @var bool
      */
     public $timestamps = false;
@@ -39,16 +34,9 @@ class TiposSocioNegocio extends Model
      * The validation rules
      * @var array
      */
-    // public $rules = [
-    //     'tipo_socio'     => 'required',
-    //     'activo'         => 'required',
-    // ];
+    public $rules = [];
 
-    public function getTable(){
-	    return $this->table;
+    public function socionegocio(){
+        return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');
     }
-    public function sng(){
-        return $this->belongsToMany(SociosNegocio::class,'sng_det_tipo_socio_negocio','fk_id_tipo_socio','fk_id_socio_negocio');
-    }
-
 }

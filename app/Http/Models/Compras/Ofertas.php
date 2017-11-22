@@ -4,6 +4,7 @@ namespace App\Http\Models\Compras;
 
 use App\Http\Models\ModelCompany;
 use DB;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Ofertas extends ModelCompany
 {
@@ -43,7 +44,7 @@ class Ofertas extends ModelCompany
      */
     protected $fields = [
         'id_oferta' => 'Número oferta',
-        'proveedor.nombre_corto' => 'Proveedor',
+        'proveedor.nombre_comercial' => 'Proveedor',
         'sucursal.sucursal' => 'Sucursal entrega',
         'vigencia' => 'Vigencia',
         'estatus.estatus' => 'Estatus'
@@ -79,7 +80,7 @@ class Ofertas extends ModelCompany
 
     public function proveedor()
     {
-        return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_proveedor');
+        return $this->belongsTo(SociosNegocio::class,'fk_id_proveedor');
     }
 
     public function moneda()

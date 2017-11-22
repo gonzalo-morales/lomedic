@@ -6,11 +6,8 @@ use App\Http\Models\ModelBase;
 
 class TiposAnexos extends ModelBase
 {
-    // use SoftDeletes;
-
     /**
      * The table associated with the model.
-     *
      * @var string
      */
     protected $table = 'sng_cat_tipos_anexos';
@@ -23,14 +20,12 @@ class TiposAnexos extends ModelBase
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = ['tipo_anexo', 'activo'];
 
     /**
      * Indicates if the model should be timestamped.
-     *
      * @var bool
      */
     public $timestamps = false;
@@ -39,13 +34,9 @@ class TiposAnexos extends ModelBase
      * The validation rules
      * @var array
      */
-    // public $rules = [
-    //     'tipo_contacto' => 'required',
-    //     'activo' => 'required',
-    // ];
+    public $rules = [];
 
-    public function getTable(){
-	    return $this->table;
+    public function anexos(){
+        return $this->hasOne(AnexosSociosNegocio::class);
     }
-
 }

@@ -3,7 +3,8 @@
 namespace App\Http\Models\SociosNegocio;
 
 use App\Http\Models\ModelBase;
-use DB;
+use App\Http\Models\Administracion\FormasPago;
+use App\Http\Models\Administracion\Empresas;
 
 class SociosNegocio extends ModelBase
 {
@@ -41,7 +42,7 @@ class SociosNegocio extends ModelBase
     ];
     
     public $rules = [
-        'razon_social' => 'required|min:10',
+        'razon_social' => 'required|min:5',
         'rfc' => 'required',
         'nombre_comercial' => 'required',
         'ejecutivo_venta' => 'required',
@@ -56,41 +57,34 @@ class SociosNegocio extends ModelBase
         'condiciones_pago.dias_credito' => 'required',
         'condiciones_pago.forma_pago' => 'required',
         'condiciones_pago.cuentas' => 'required',
-        'info_entrega.tipos_entrega' => 'required',
-        'info_entrega.sucursal' => "required_if:info_entrega.tipos_entrega,==,1", // id=> 1 : para "sucursal"
-        'info_entrega.monto_minimo_facturacion' => 'required|numeric|min:1',
-        'info_entrega.correos' => 'required',
-        'info_entrega.correos.*.correo' => 'email',
     ];
+    
+    public $niceNames = [];
     
     public function getTiposSociosAttribute()
     {
-        return implode(', ',$this->tiposocio()->pluck('tipo_socio')->toarray());
+        return trim($this->tiposocioventa()->tipo_socio.' '.$this->tiposociocompra()->tipo_socio);
     }
-    
-    /*
-    const UPDATED_AT = 'fecha_modificacion';
-    
-    public function setUpdatedAtAttribute($value) {
-        $this->attributes['fecha_modificacion'] = \Carbon\Carbon::now();
-    }
-    */
-    public function cuentas(){
-        return $this->hasMany(CuentasBancarias::class,'fk_id_socio_negocio');
+    public function empresas(){
+        return $this->belongsToMany(Empresas::class,'sng_det_empresa_socio_negocio','fk_id_empresa','fk_id_socio_negocio');
     }
     public function contactos(){
         return $this->hasMany(ContactosSociosNegocio::class,'fk_id_socio_negocio');
     }
     public function direcciones(){
-        return $this->hasMany(Direcciones::class,'fk_id_socio_negocio');
+        return $this->hasMany(DireccionesSociosNegocio::class,'fk_id_socio_negocio');
     }
-    
-    
-    public function formaPago(){
-        return $this->belongsTo('App\Http\Models\Administracion\FormasPago','fk_id_forma_pago');
+    public function formaspago(){
+        return $this->belongsToMany(FormasPago::class,'sng_det_forma_pago_socio_negocio','fk_id_forma_pago','fk_id_socio_negocio');
     }
-    public function tipoEntrega(){
-        return $this->belongsTo('App\Http\Models\SociosNegocio\TiposEntrega','fk_id_tipo_entrega');
+    public function cuentas(){
+        return $this->hasMany(CuentasSociosNegocio::class,'fk_id_socio_negocio');
+    }
+    public function anexos(){
+        return $this->hasMany(AnexosSociosNegocio::class,'fk_id_socio_negocio');
+    }
+    public function productos(){
+        return $this->hasMany(ProductosSociosNegocio::class,'fk_id_socio_negocio');
     }
     public function sucursal(){
         return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal_entrega');
@@ -99,9 +93,15 @@ class SociosNegocio extends ModelBase
         return $this->belongsTo('App\Http\Models\Administracion\Usuarios','fk_id_usuario_modificacion');
     }
     public function ramo(){
-        return $this->belongsTo('App\Http\Models\SociosNegocio\RamosSocioNegocio','fk_id_ramo');
+        return $this->belongsTo(RamosSocioNegocio::class,'fk_id_ramo');
     }
-    public function tiposocio(){
-        return $this->belongsToMany('App\Http\Models\SociosNegocio\TiposSocioNegocio','sng_det_tipo_socio_negocio','fk_id_socio_negocio','fk_id_tipo_socio');
+    public function tiposocioventa(){
+        return $this->belongsTo(TiposSocioNegocio::class,'fk_id_tipo_socio_venta');
+    }
+    public function tiposociocompra(){
+        return $this->belongsTo(TiposSocioNegocio::class,'fk_id_tipo_socio_compra');
+    }
+    public function tipoproveedor(){
+        return $this->belongsTo(TiposProveedores::class,'fk_id_tipo_proveedor');
     }
 }

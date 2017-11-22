@@ -45,7 +45,7 @@ class Ordenes extends ModelCompany
      */
     protected $fields = [
         'id_orden' => 'Número Solicitud',
-        'proveedor.nombre_corto' => 'Proveedor',
+        'proveedor.nombre_comercial' => 'Proveedor',
         'sucursales.sucursal' => 'Sucursal entrega',
         'fecha_creacion' => 'Fecha del pedido',
         'fecha_estimada_entrega' => 'Fecha de entrega',
