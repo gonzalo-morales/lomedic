@@ -24,7 +24,7 @@ class ProductosSociosNegocio extends ModelBase
      * The attributes that are mass assignable.
      * @var array
      */
-    protected $fillable = ['fk_id_socio_negocio', 'fk_id_sku', 'fk_id_upc', 'tiempo_entrega', 'precio', 'precio_de', 'precio_hasta', 'activo'];
+    protected $fillable = ['fk_id_socio_negocio', 'fk_id_sku', 'fk_id_upc', 'tiempo_entrega', 'precio', 'precio_de', 'precio_hasta'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -47,6 +47,6 @@ class ProductosSociosNegocio extends ModelBase
     }
     
     public function upc(){
-        return $this->belongsTo(Upcs::class,'fk_id_pc');
+        return $this->belongsTo(Upcs::class,'fk_id_upc');
     }
 }

@@ -25,7 +25,7 @@ class DireccionesSociosNegocio extends ModelBase
      * The attributes that are mass assignable.
      * @var array
      */
-    protected $fillable = ['fk_id_socio_negocio','fk_id_pais','fk_id_estado','fk_id_municipio','fk_id_colonia','fk_id_tipo_direccion','calle','num_exterior','num_interior','cp','activo'];
+    protected $fillable = ['fk_id_socio_negocio','fk_id_pais','fk_id_estado','fk_id_municipio','colonia','fk_id_tipo_direccion','calle','num_exterior','num_interior','codigo_postal','activo'];
     
     /**
      * Indicates if the model should be timestamped.

@@ -41,7 +41,7 @@ class SociosNegocio extends ModelBase
         'activo_text' => 'Estatus'
     ];
     
-    public $rules = [
+    public $rules = [ /*
         'razon_social' => 'required|min:5',
         'rfc' => 'required',
         'nombre_comercial' => 'required',
@@ -56,7 +56,7 @@ class SociosNegocio extends ModelBase
         'condiciones_pago.monto_credito' => 'required',
         'condiciones_pago.dias_credito' => 'required',
         'condiciones_pago.forma_pago' => 'required',
-        'condiciones_pago.cuentas' => 'required',
+        'condiciones_pago.cuentas' => 'required',*/
     ];
     
     public $niceNames = [];
@@ -69,7 +69,7 @@ class SociosNegocio extends ModelBase
         return trim($venta.$compra);
     }
     public function empresas(){
-        return $this->belongsToMany(Empresas::class,'sng_det_empresa_socio_negocio','fk_id_empresa','fk_id_socio_negocio');
+        return $this->belongsToMany(Empresas::class,'sng_det_empresa_socio_negocio','fk_id_socio_negocio','fk_id_empresa');
     }
     public function contactos(){
         return $this->hasMany(ContactosSociosNegocio::class,'fk_id_socio_negocio');
@@ -78,7 +78,7 @@ class SociosNegocio extends ModelBase
         return $this->hasMany(DireccionesSociosNegocio::class,'fk_id_socio_negocio');
     }
     public function formaspago(){
-        return $this->belongsToMany(FormasPago::class,'sng_det_forma_pago_socio_negocio','fk_id_forma_pago','fk_id_socio_negocio');
+        return $this->belongsToMany(FormasPago::class,'sng_det_forma_pago_socio_negocio','fk_id_socio_negocio','fk_id_forma_pago');
     }
     public function cuentas(){
         return $this->hasMany(CuentasSociosNegocio::class,'fk_id_socio_negocio');

@@ -133,20 +133,21 @@ $(document).ready(function () {
     	correo    = $('#correo').val();
     	celular   = $('#celular').val();
     	telefono  = $('#telefono_oficina').val();
-    	extension = ' - ' + $('#extension_oficina').val();
+    	extension = $('#extension_oficina').val();
+    	iextension = ' - ' + extension;
         
     	if(tipo == '' | nombre == '' | puesto == '' | correo == '') {
     		$.toaster({priority:'danger',title:'¡Error!',message:'Los siguientes campos son necesarios: Tipo contacto, Nombre, Puesto y Correo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     	}
         else {
         	$('#tContactos').append('<tr>'+
-				'<td>'+tipo+' <input name="cuentas['+row_id+'][fk_id_tipo_contacto]" type="hidden" value="'+id_tipo+'"></td>'+
-				'<td>'+nombre+' <input name="cuentas['+row_id+'][nombre_contacto]" type="hidden" value="'+nombre+'"></td>'+
-				'<td>'+puesto+' <input name="cuentas['+row_id+'][puesto]" type="hidden" value="'+puesto+'"></td>'+
-				'<td>'+correo+' <input name="cuentas['+row_id+'][correo]" type="hidden" value="'+correo+'"></td>'+
-				'<td>'+celular+' <input name="cuentas['+row_id+'][celular]" type="hidden" value="'+celular+'"></td>'+
-				'<td>'+telefono+extension+' <input name="cuentas['+row_id+'][telefono_oficina]" type="hidden" value="'+telefono+'">'+
-				'<input name="cuentas['+row_id+'][extension_oficina]" type="hidden" value="'+extension+'"></td>'+
+				'<td>'+tipo+' <input name="contactos['+row_id+'][fk_id_tipo_contacto]" type="hidden" value="'+id_tipo+'"></td>'+
+				'<td>'+nombre+' <input name="contactos['+row_id+'][nombre]" type="hidden" value="'+nombre+'"></td>'+
+				'<td>'+puesto+' <input name="contactos['+row_id+'][puesto]" type="hidden" value="'+puesto+'"></td>'+
+				'<td>'+correo+' <input name="contactos['+row_id+'][correo]" type="hidden" value="'+correo+'"></td>'+
+				'<td>'+celular+' <input name="contactos['+row_id+'][celular]" type="hidden" value="'+celular+'"></td>'+
+				'<td>'+telefono+iextension+' <input name="contactos['+row_id+'][telefono_oficina]" type="hidden" value="'+telefono+'">'+
+				'<input name="contactos['+row_id+'][extension_oficina]" type="hidden" value="'+extension+'"></td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
         	$.toaster({priority:'success',title:'¡Correcto!',message:'El contacto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
@@ -175,7 +176,7 @@ $(document).ready(function () {
     	}
         else {
 			$('#tDirecciones').append('<tr>'+
-				'<td>'+tipo+' <input name="direcciones['+row_id+'][fk_id_tipo_contacto]" type="hidden" value="'+id_tipo+'"></td>'+
+				'<td>'+tipo+' <input name="direcciones['+row_id+'][fk_id_tipo_direccion]" type="hidden" value="'+id_tipo+'"></td>'+
 				'<td>'+calle+' '+num_exterior+' '+num_interior+
 				' <input name="direcciones['+row_id+'][calle]" type="hidden" value="'+calle+'">'+
 				' <input name="direcciones['+row_id+'][num_exterior]" type="hidden" value="'+num_exterior+'">'+
@@ -219,7 +220,6 @@ $(document).ready(function () {
 				'<td>' + banco +
 				'<input class="id_cuenta" name="cuentas['+row_id+'][id_cuenta]" type="hidden" value="">'+
 				'<input class="fk_id_banco" name="cuentas['+row_id+'][fk_id_banco]" type="hidden" value="'+id_banco+'">'+
-				'<input class="fk_id_socio_negocio" name="cuentas['+row_id+'][fk_id_socio_negocio]" type="hidden" value="">'+
 				'<input class="uniquekey" name="cuentas['+row_id+'][uniquekey]" type="hidden" value="'+id_banco+'-'+no_cuenta+'"></td>'+
 				'<td>' + no_cuenta + ' <input name="cuentas['+row_id+'][no_cuenta]" type="hidden" value="'+no_cuenta+'"></td>'+
 				'<td>' + sucursal + ' <input name="cuentas['+row_id+'][no_sucursal]" type="hidden" value="'+sucursal+'"></td>'+
@@ -249,8 +249,8 @@ $(document).ready(function () {
 		}
 		else {
 			$('#tAnexos').append('<tr>'+
-				'<td>' + tipo + '<input class="id_tipo" name="anexos['+row_id+'][fk_id_tipo]" type="hidden" value="'+id_tipo+'"></td>'+
-				'<td>' + nombre+' <input name="anexos['+row_id+'][nombre_archivo]" type="hidden" value="'+nombre+'"></td>'+
+				'<td>' + tipo + '<input class="id_tipo" name="anexos['+row_id+'][fk_id_tipo_anexo]" type="hidden" value="'+id_tipo+'"></td>'+
+				'<td>' + nombre+' <input name="anexos['+row_id+'][nombre]" type="hidden" value="'+nombre+'"></td>'+
 				'<td>' + archivo[0].name + ' <input id="anexos-'+row_id+'" class="file-anexos" name="anexos['+row_id+'][archivo]" type="file" style="display:none"></td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');

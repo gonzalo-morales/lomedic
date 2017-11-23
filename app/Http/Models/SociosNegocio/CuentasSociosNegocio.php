@@ -23,7 +23,7 @@ class CuentasSociosNegocio extends ModelBase
      * The attributes that are mass assignable.
      * @var array
      */
-    protected $fillable = ['fk_id_banco','fk_id_socio_negocio','no_cuenta','activo'];
+    protected $fillable = ['fk_id_banco','fk_id_socio_negocio','no_cuenta','no_sucursal','clave_interbancaria','activo'];
     
     /**
      * Indicates if the model should be timestamped.

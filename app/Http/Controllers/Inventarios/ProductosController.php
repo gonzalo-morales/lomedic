@@ -38,6 +38,7 @@ class ProductosController extends ControllerBase
         DB::beginTransaction();
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
+        
         if ($entity->save()) {
             if(isset($request->detalles)) {
                 foreach ($request->detalles as $detalle) {
