@@ -7,20 +7,6 @@
     <!-- Bootstrap CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
-    <style type="text/css">
-    .loading{
-        animation: spin 0.5s infinite linear;
-        -webkit-animation: spin 0.5s infinite linear;
-        -moz-animation: spin 0.5s infinite linear;
-        -o-animation: spin 0.5s infinite linear;
-        -ms-animation: spin 0.5s infinite linear;
-    }
-    @keyframes spin {
-        from { transform: scale(1) rotate(360deg); }
-        to { transform: scale(1) rotate(0deg); }
-    }
-
-    </style>
   </head>
   <body>
     <div class="container-fluid">
@@ -29,6 +15,14 @@
       <button type="button" class="btn btn-info">Info</button>
       <button type="button" class="btn btn-danger">Danger</button>
       <button id="pageLoader" type="button" class="btn btn-default">Guardar y salir</button>
+      <div class="row">
+        <div class="col-12">
+          Elemento que se puede usar para los campos que tienen que cargar datos:
+          <div class="w-100 h-100 text-center text-white align-middle loadingData">
+            Cargando datos... <i class="material-icons align-middle loading">cached</i>
+          </div>
+        </div>
+      </div>
     </div><!--/container-fluid-->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

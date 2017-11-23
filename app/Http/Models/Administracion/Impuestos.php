@@ -20,18 +20,26 @@ class Impuestos extends ModelCompany
     protected $primaryKey = 'id_impuesto';
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['impuesto'];
-
-    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
     public $timestamps = false;
+    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['impuesto','porcentaje','activo'];
+    
+    protected $fields = [
+        'impuesto' => 'Impuesto',
+        'porcentaje' => 'Porcentaje',
+        'activo_span' => 'Estatus',
+    ];
+
+    public $rules = [];
 
     public function getFields()
     {

@@ -37,7 +37,7 @@ class Departamentos extends ModelBase
     protected $fields = [
         'nomenclatura' => 'Nomenclatura',
         'descripcion' => 'Descripcion',
-        'activo' => 'Activo'
+        'activo_text' => 'Estatus'
     ];
 
     /**
@@ -54,7 +54,6 @@ class Departamentos extends ModelBase
     public $rules = [
         'descripcion' => 'required',
         'nomenclatura' => 'required',
-
     ];
 
     public function usuario()
@@ -67,11 +66,13 @@ class Departamentos extends ModelBase
         $this->$this->hasOne('app\Http\Models\Administracion\Empresas');
     }
 
-    public function mails(){
+    public function mails()
+    {
         return $this->hasMany('app\Http\Models\Correos');
     }
 
-    public function branches(){
+    public function branches()
+    {
         return $this->belongsToMany('app\Http\Models\Sucursales','ges_det_usuario_sucursal','fk_id_usuario','fk_id_sucursal');
     }
 
@@ -79,7 +80,8 @@ class Departamentos extends ModelBase
      * Obtenemos perfiles asignados al usuario
      * @return array
      */
-    public function perfiles(){
+    public function perfiles()
+    {
         return $this->belongsToMany(Perfiles::class, 'ges_det_perfiles_usuarios', 'fk_id_usuario', 'fk_id_perfil');
     }
 
@@ -112,5 +114,4 @@ class Departamentos extends ModelBase
             $q->whereIn('id_permiso', $this->permisos()->pluck('id_permiso') );
         })->get();
     }
-
 }

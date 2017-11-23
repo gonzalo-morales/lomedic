@@ -14,12 +14,49 @@ use App\Http\Models\Administracion\Impuestos;
 use App\Http\Models\Administracion\Familiasproductos;
 use App\Http\Models\Administracion\PresentacionVenta;
 use App\Http\Models\SociosNegocio\TiposSocioNegocio;
+use App\Http\Models\Inventarios\Upcs;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Cache;
+use DB;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class ProductosController extends ControllerBase
 {
     public function __construct(Productos $entity)
     {
         $this->entity = $entity;
+    }
+    
+    public function update(Request $request, $company, $id)
+    {
+        # ¿Usuario tiene permiso para actualizar?
+        #$this->authorize('update', $this->entity);
+        
+        # Validamos request, si falla regresamos atras
+        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
+        
+        DB::beginTransaction();
+        $entity = $this->entity->findOrFail($id);
+        $entity->fill($request->all());
+        if ($entity->save()) {
+            if(isset($request->detalles)) {
+                foreach ($request->detalles as $detalle) {
+                    $sync[$detalle['fk_id_upc']] = $detalle;
+                }
+                $entity->findOrFail($id)->upcs()->sync($sync);
+            }
+            DB::commit();
+            
+            # Eliminamos cache
+            Cache::tags(getCacheTag('index'))->flush();
+            
+            $this->log('update', $id);
+            return $this->redirect('update');
+        } else {
+            DB::rollBack();
+            $this->log('error_update', $id);
+            return $this->redirect('error_update');
+        }
     }
     
     public function getDataView($entity = null)
@@ -39,22 +76,24 @@ class ProductosController extends ControllerBase
             'impuesto' => Impuestos::where('eliminar',0)->where('activo',1)->pluck('impuesto','id_impuesto')->sortBy('impuesto')->prepend('Selecciona una opcion...',''),
             'familia' => Familiasproductos::where('eliminar',0)->where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('Selecciona una familia...',''),
             'presentacionventa' => PresentacionVenta::where('eliminar',0)->where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('Selecciona una Presentacion de venta...',''),
-            'sociosnegocio' => TiposSocioNegocio::where('id_tipo_socio',2)->first()->sng()->where('eliminar',0)->where('activo',1)
-            ->pluck('nombre_corto','id_socio_negocio')->sortBy('nombre_corto')->prepend('Selecciona un Proveedor...',''),
+            'sociosnegocio' => SociosNegocio::where('activo',1)->where('eliminar',0)->whereNotNull('fk_id_tipo_socio_compra')
+                ->pluck('nombre_comercial','id_socio_negocio')->sortBy('nombre_comercial')->prepend('Selecciona un Proveedor...',''),
+            'upcs' => Upcs::where('activo',1)->where('eliminar',0)->select('id_upc','upc')->pluck('upc','id_upc')->sortBy('upc')->prepend('Selecciona un upc',''),
+            'api_js'=>Crypt::encryptString('"select": ["nombre_comercial", "descripcion","fk_id_laboratorio"], "conditions": [{"where": ["id_upc","$id_upc"]}], "with": ["laboratorio"]')
         ];
     }
 
     public function obtenerSkus($company,Request $request)
     {
         $term = $request->term;
-        $skus = Productos::where('activo','1')->where('sku','LIKE',$term.'%')->orWhere('nombre_comercial','LIKE','%'.$term.'%')->orWhere('descripcion','LIKE','%'.$term.'%')->get();
+        $skus = Productos::where('activo','1')->where('sku','LIKE','%'.$term.'%')->orWhere('descripcion_corta','LIKE','%'.$term.'%')->orWhere('descripcion','LIKE','%'.$term.'%')->get();
 
-        $skus_set = [];
+        $skus_set = []; 
         foreach ($skus as $sku)
-        {
+        { 
             $sku_data['id'] = (int)$sku->id_sku;
             $sku_data['text'] = $sku->sku;
-            $sku_data['nombre_comercial'] = $sku->nombre_comercial;
+            $sku_data['descripcion_corta'] = $sku->descripcion_corta;
             $sku_data['descripcion'] = $sku->descripcion;
             $skus_set[] = $sku_data;
         }

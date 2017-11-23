@@ -29,7 +29,7 @@
         </div>
     @endif
     <div class="col s12 xl8 offset-xl2">
-        <table class="striped responsive-table highlight">
+        <table class="striped responsive-table-sm highlight">
             <thead>
             <tr>
                 <th>Usuarios</th>

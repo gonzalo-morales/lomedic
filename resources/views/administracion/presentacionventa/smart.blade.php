@@ -2,7 +2,7 @@
 @section('content-width', 's12')
 
 @section('form-content')
-{{ Form::setModel($data) }}
+{{Form::setModel($data)}}
 <div class="row">
     <div class="form-group col-md-12 col-xs-12">
         {{ Form::label('presentacion_venta', 'Presentacion Venta') }}

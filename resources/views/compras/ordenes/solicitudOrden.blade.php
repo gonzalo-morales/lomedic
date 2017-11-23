@@ -13,7 +13,6 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
-{{--{{dd($detalleSolicitud)}}--}}
 {{Form::hidden('id_solicitud',$solicitud->id_solicitud)}}
 <div class="row">
 	<div class="form-group col-md-3 col-sm-12">
@@ -159,7 +158,7 @@
 									{{isset($detalle->upc->upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>
-									{{$detalle->sku->nombre_comercial}}
+									{{$detalle->sku->descripcion_corta}}
 								</td>
 								<td>
 									{{$detalle->sku->descripcion}}
@@ -214,6 +213,9 @@
 {{-- DONT DELETE --}}
 
 @if (currentRouteName('solicitudOrden'))
+@section('form-title')
+	<h1 class="display-4">Agregar Orden de Compra</h1>
+@endsection
 	@include('layouts.smart.create')
 @endif
 

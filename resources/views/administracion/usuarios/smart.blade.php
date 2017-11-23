@@ -109,7 +109,7 @@
 							<div class="tab-content">
 								@foreach($companies as $data_company)
 									<div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">
-										<table class="table table-hover">
+										<table class="table table-hover table-responsive-sm">
 											<thead>
 											<tr>
 												<th>Modulo</th>
@@ -148,7 +148,6 @@
 
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
-	{{--{{dd($data)}}--}}
 	@section('form-content')
 
 		<div class="container-fluid">
@@ -182,7 +181,7 @@
 							<h5>Correo Empresarial</h5>
 							<fieldset>
 								<div class="card-body">
-									<table class="table table-hover table-responsive">
+									<table class="table table-hover table-responsive-sm">
 										<thead>
 										<tr>
 											<th>Empresa</th>
@@ -223,7 +222,7 @@
 							<div class="tab-content">
 								@foreach($companies as $data_company)
 									<h4>{{$data_company->nombre_comercial}}</h4>
-										<table class="table table-hover">
+										<table class="table table-hover table-responsive-sm">
 											<thead>
 											<tr>
 												<th>Modulo</th>
@@ -325,7 +324,7 @@
 								</div>
 							</div>
 							<div class="card-body">
-								<table class="table table-hover table-responsive">
+								<table class="table table-hover table-responsive-sm">
 									<thead>
 									<tr>
 										<th>Empresa</th>
@@ -389,7 +388,7 @@
 						<div class="tab-content">
 							@foreach($companies as $data_company)
 								<div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">
-									<table class="table table-hover">
+									<table class="table table-hover table-responsive-sm">
 										<thead>
 										<tr>
 											<th>Modulo</th>

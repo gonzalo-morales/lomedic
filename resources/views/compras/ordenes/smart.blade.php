@@ -69,7 +69,7 @@
 <div class="row">
 	<div class="col-sm-12">
 		<h3>Detalle de la orden</h3>
-		<div class="card">
+		<div class="card z-depth-1-half">
 			@if(!Route::currentRouteNamed(currentRouteName('show')))
 			<div class="card-header">
 				<fieldset name="detalle-form" id="detalle-form">
@@ -115,7 +115,14 @@
 						</div>
 						<div class="form-group input-field col-md-2 col-sm-6">
 							{{Form::label('precio_unitario','Precio unitario',['class'=>'validate'])}}
-							{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio_unitario','autocomplete'=>'off']) !!}
+							{!! Form::text('precio_unitario',null,['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio_unitario','autocomplete'=>'off']) !!}
+						</div>
+						<div class="form-group input-field col-md-2 col-sm-6">
+							{{Form::label('descuento','Descuento',['class'=>'validate'])}}
+							<div class="input-group">
+								{!! Form::text('descuento',null,['id'=>'descuento','placeholder'=>'00.0000','class'=>'form-control','autocomplete'=>'off']) !!}
+								{!! Form::label('','%',['class'=>'input-group-addon']) !!}
+							</div>
 						</div>
 						<div class="col-sm-12 text-center">
 							<div class="sep">
@@ -139,15 +146,16 @@
 					   data-porcentaje="{{companyAction('Administracion\ImpuestosController@obtenerPorcentaje',['id'=>'?id'])}}">
 					<thead>
 					<tr>
-						<th>Solicitud</th>
+						<th>Documento</th>
 						<th id="idsku">SKU</th>
 						<th id="idupc">UPC</th>
-						<th id="nombrecomercial">Nombre comercial</th>
+						<th id="descripcioncorta">Producto</th>
 						<th id="descripcion">Descripción</th>
 						<th id="idcliente">Cliente</th>
 						<th id="idproyecto" >Proyecto</th>
 						<th id="fechanecesario" >Fecha límite</th>
 						<th>Cantidad</th>
+						<th>Descuento</th>
 						<th id="idimpuesto" >Tipo de impuesto</th>
 						<th>Precio unitario</th>
 						<th>Total</th>
@@ -155,11 +163,74 @@
 					</tr>
 					</thead>
 					<tbody>
-					@if( isset( $data->detalleOrdenes ) )
+					@if(!empty($documento))
+						@foreach($detalles_documento as $detalle)
+							<tr>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_tipo_documento]',$tipo_documento) !!}
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_documento]',$detalle->fk_id_documento) !!}
+									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
+								</td>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_sku]',$detalle->fk_id_sku) !!}
+									{{$detalle->sku->sku}}
+								</td>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_upc]',$detalle->fk_id_upc) !!}
+									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
+								</td>
+								<td>
+									{{$detalle->sku->descripcion_corta}}
+								</td>
+								<td>
+									{{$detalle->sku->descripcion}}
+								</td>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
+									{{isset($detalle->cliente->nombre_corto)?$detalle->cliente->nombre_corto:'Sin cliente'}}
+								</td>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
+									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
+								</td>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fecha_necesario]',$detalle->fecha_necesario) !!}
+									{{$detalle->fecha_necesario??'Sin fecha'}}
+								</td>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
+									{{$detalle->cantidad}}
+								</td>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][descuento_detalle]',$detalle->descuento_detalle,['class'=>'descuento_row']) !!}
+									{{$detalle->descuento_detalle??0}}
+								</td>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+									{!! Form::hidden('',$detalle->impuesto->porcentaje,['class'=>'porcentaje']) !!}
+									{{$detalle->impuesto->impuesto}}
+								</td>
+								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
+									{{number_format($detalle->precio_unitario,2,'.','')}}
+								</td>
+								<td>
+									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'detalles['.$detalle->getKey().'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+								</td>
+								<td>
+										<button class="btn is-icon text-primary bg-white "
+												type="button" data-item-id="{{$detalle->getKey()}}"
+												id="{{$detalle->getKey()}}" data-delay="50"
+												onclick="borrarFila(this)" data-delete-type="single">
+											<i class="material-icons">delete</i></button>
+								</td>
+							</tr>
+						@endforeach
+					@elseif( isset( $data->detalleOrdenes ) )
 						@foreach( $data->detalleOrdenes as $detalle)
 							<tr>
 								<td>
-									{{isset($detalle->fk_id_solicitud)?$detalle->fk_id_solicitud:'N/A'}}
+									{{isset($detalle->fk_id_orden)?$detalle->fk_id_orden:'N/A'}}
 								</td>
 								<td>
 									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][id_orden_detalle]',$detalle->id_orden_detalle) !!}
@@ -171,7 +242,7 @@
 									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>
-									{{$detalle->sku->nombre_comercial}}
+									{{$detalle->sku->descripcion_corta}}
 								</td>
 								<td>
 									{{$detalle->sku->descripcion}}
@@ -189,19 +260,25 @@
 									{{$detalle->fecha_necesario}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][cantidad]',$detalle->cantidad) !!}
+									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
 									{{$detalle->cantidad}}
 								</td>
 								<td>
+									{!! Form::hidden('detalles['.$detalle->getKey().'][descuento_detalle]',$detalle->descuento_detalle,['class'=>'descuento_row']) !!}
+									{{$detalle->descuento_detalle??0}}
+								</td>
+								<td>
 									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_impuesto]',$detalle->impuesto->porcentaje,['class'=>'porcentaje']) !!}
 									{{$detalle->impuesto->impuesto}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][precio_unitario]',$detalle->precio_unitario) !!}
+									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
 									{{number_format($detalle->precio_unitario,2,'.','')}}
 								</td>
 								<td>
-									<input type="text" class="form-control total" name="{{'detalles['.$detalle->id_orden_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'detalles['.$detalle->id_orden_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+								</td>
 								<td>
 									{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
 									@if(Route::currentRouteNamed(currentRouteName('edit')) && $data->fk_id_estatus_orden == 1)
@@ -216,14 +293,48 @@
 						@endforeach
 					@endif
 					</tbody>
+					<tfoot class="table-dark">
+					<tr>
+						<td colspan="2"></td>
+						<td colspan="2">
+								{{ Form::label('', 'Subtotal',['class'=>'h5']) }}
+								<span class="">$</span>
+							{{ Form::label('subtotal', '0.00',['class'=>'h5','id'=>'subtotal']) }}
+							{{--{!! Form::text('subtotal', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}--}}
+						</td>
+						<td colspan="3">
+{{--							{{ Form::label('0','',['class'=>'h5','id'=>'descuento_porcentaje']) }}--}}
+							<div class="form-group col-sm-6">
+								{{ Form::label('', 'Descuento: ',['class'=>'h5']) }}
+								<div class="input-group">
+									{{Form::text('descuento_porcentaje',null,['class'=>'form-control','placeholder'=>'00.0000','id'=>'descuento_porcentaje'])}}
+									<span class="input-group-addon">%</span>
+									<span class="input-group-addon">=</span>
+									<span class="input-group-addon">$</span>
+									{{--{{ Form::label('', '0.00',['class'=>'h5','id'=>'descuento_moneda']) }}--}}
+									{{Form::text('descuento_moneda',null,['class'=>'form-control','placeholder'=>'00000.00','id'=>'descuento_moneda'])}}
+								</div>
+							</div>
+						</td>
+						<td colspan="3">
+								{{ Form::label('impuesto', 'Impuesto',['class'=>'h5']) }}
+								<span>$</span>
+								{{ Form::label('impuesto', '0.0',['class'=>'h5','id'=>'impuesto_total']) }}
+						</td>
+						<td colspan="3">
+							<div class="input-group">
+								{{ Form::label('total_orden', 'Total',['class'=>'input-group-addon']) }}
+								<span class="input-group-addon">$</span>
+								{!! Form::text('total_orden', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}
+							</div>
+						</td>
+						<td></td>
+					</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
 	</div>
-</div>
-<div class="form-group col-md-2 col-sm-6 float-right">
-	{{ Form::label('total_orden', 'Total de la orden') }}
-	{!! Form::text('total_orden', null,['class'=>'form-control','disabled','placeholder'=>'Total']) !!}
 </div>
 @endsection
 
@@ -262,7 +373,9 @@
 				'html': '<i class="material-icons">mode_edit</i>',
 				'class': 'btn is-icon',
 				'rv-get-edit-url': '',
-				'rv-hide-update':''
+				'rv-hide-update':'',
+                'data-toggle':'tooltip',
+                'title':'Editar'
 			}};
 			@endcan
 			@can('delete', currentEntity())
@@ -273,7 +386,9 @@
 				'rv-on-click': 'actions.showModalCancelar',
 				'rv-get-delete-url': '',
 				'data-delete-type': 'single',
-				'rv-hide-delete':''
+				'rv-hide-delete':'',
+                'data-toggle':'tooltip',
+                'title':'Cancelar'
 			}};
 			@endcan
 				window['smart-model'].actions.itemsCancel = function(e, rv, motivo){
@@ -308,6 +423,8 @@
 				modal.view = rivets.bind(modal, {
 					title: '¿Estas seguro que deseas cancelar la orden?',
 					content: '<form  id="cancel-form">' +
+					'<div class="alert alert-warning text-center"><span class="text-danger">La cancelación de un documento es irreversible.</span><br>'+
+					'Para continuar, especifique el motivo y de click en cancelar.</div>'+
 					'<div class="form-group">' +
 					'<label for="recipient-name" class="form-control-label">Motivo de cancelación:</label>' +
 					'<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +
@@ -355,17 +472,26 @@
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
+@section('form-title')
+	<h1 class="display-4">Agregar Orden de Compra</h1>
+@endsection
 	@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
+	@section('form-title')
+		<h1 class="display-4">Editar Orden de Compra</h1>
+	@endsection
 	@include('layouts.smart.edit')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('extraButtons')
 		@parent
-		{!!isset($data->id_orden) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_orden]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) : ''!!}
+		{!!isset($data->id_orden) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_orden]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
+	@endsection
+	@section('form-title')
+		<h1 class="display-4">Datos de la Orden de Compra</h1>
 	@endsection
 	@include('layouts.smart.show')
 @endif

@@ -4,6 +4,7 @@ namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 use Illuminate\Support\HtmlString;
+use App\Http\Models\Inventarios\Upcs;
 
 class Laboratorios extends ModelBase
 {
@@ -53,4 +54,9 @@ class Laboratorios extends ModelBase
 	{
 		$this->$this->hasOne('app\Http\Models\Administracion\Empresas');
 	}
+	
+	public function upcs() {
+	    $this->hasMany(Upcs::class, 'id_laboratorio','fk_id_laboratorio' );
+	}
+	
 }

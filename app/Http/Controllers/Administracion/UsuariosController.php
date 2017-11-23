@@ -116,18 +116,16 @@ class UsuariosController extends ControllerBase
     {
         # ¿Usuario tiene permiso para ver?
 
-//        dd($this->entity);
-
         $this->authorize('view', $this->entity);
         $companies = Empresas::all();
         $correos = Correos::join('gen_cat_empresas','adm_det_correos.fk_id_empresa','=','gen_cat_empresas.id_empresa')
             ->where('fk_id_usuario','=',$id)
             ->get();
-//        dd($correos);
+
         $perfiles = Perfiles::join('adm_det_perfiles_usuarios','adm_cat_perfiles.id_perfil','=','adm_det_perfiles_usuarios.fk_id_perfil')
             ->where('fk_id_usuario','=',$id)
             ->get();
-//        dd($perfiles);
+
 //        $profiles_permissions = Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')
 //            ->join('adm_det_modulo_accion','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_perfiles.fk_id_modulo_accion')
 //            ->select('adm_det_modulo_accion.*','adm_det_permisos_perfiles.fk_id_perfil')
@@ -206,8 +204,6 @@ class UsuariosController extends ControllerBase
 //
 //        # Validamos request, si falla regresamos atras
 //        $this->validate($request, $this->entity->rules);
-
-//        dd($request->all());
 
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());

@@ -5,8 +5,8 @@
 {{ Form::setModel($data) }}
 <div class="row">
 	<div class="form-group col-md-12 col-xs-12">
-		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'validate']) }}
 		{{ Form::label('descripcion', '* Descripcion') }}
+		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'validate form-control']) }}
 		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
 	<div  class="col-md-12 text-center mt-4">

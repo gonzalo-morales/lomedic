@@ -33,6 +33,8 @@ class Productos extends ModelCompany
         "fk_id_unidad_medida_compra","necesario","maximo","minimo","punto_reorden","fk_id_metodo_valoracion"
     ];
 
+    protected $eagerLoaders = ['upcs'];
+
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
@@ -60,7 +62,7 @@ class Productos extends ModelCompany
      * @var array
      */
     public $rules = [];
-
+    
     public function upcs()
     {
         return $this->belongsToMany(Upcs::class,'inv_det_sku_upc','fk_id_sku','fk_id_upc');

@@ -21,9 +21,15 @@ class HomeController extends Controller
 	 */
 	public function index()
 	{
-	    if(empty(request()->company))
+	    if(empty(request()->company)) {
 	        return redirect()->route('login');
-	        
+	    }
+
+		// Handheld
+		if (str_contains(request()->header('User-Agent'), ['MSIE 6.8', 'Windows CE'])) {
+			return view('handheld.home');
+		}
+
 		return view('home');
 	}
 }

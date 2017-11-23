@@ -36,7 +36,7 @@ class CausasBajas extends ModelBase
      */
     protected $fields = [
         'causa_baja' => 'Causa Baja',
-        'activo' => 'Activo'
+        'activo_text' => 'Estatus'
     ];
 
     /**

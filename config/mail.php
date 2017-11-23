@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'D3s4rr0ll0'),
-        'name' => env('MAIL_FROM_NAME', 'ServerTest'),
+        'address' => env('MAIL_FROM_ADDRESS', 'desarrollo@abisalud.com'),
+        'name' => env('MAIL_FROM_NAME', 'Laravel App'),
     ],
 
     /*
@@ -86,7 +86,7 @@ return [
 
     'username' => env('MAIL_USERNAME', 'desarrollo@abisalud.com'),
 
-    'password' => env('MAIL_PASSWORD', 'D3s4rr0ll0'),
+    'password' => env('MAIL_PASSWORD', ''),
 
     /*
     |--------------------------------------------------------------------------

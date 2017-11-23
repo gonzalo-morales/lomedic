@@ -16,12 +16,13 @@ Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
 
-    Route::group(['prefix' => 'proyectos', 'as' => 'proyectos.', 'middleware' => ['auth','share'] ], function() {
+    Route::group(['prefix' => 'proyectos', 'as' => 'proyectos.', 'middleware' => ['auth','share','csrf'] ], function() {
+        Route::view("/","proyectos.index");
         Route::resource('proyectos', 'Proyectos\ProyectosController');
         Route::get('getProyectos','Proyectos\ProyectosController@obtenerProyectos');
         Route::post('getProductosProyectos','Proyectos\ProyectosController@loadLayoutProductosProyectos');
         Route::get('getProyectosCliente/{id}','Proyectos\ProyectosController@obtenerProyectosCliente');
-        Route::get('getLayoutProductosProyecyo','Proyectos\ProyectosController@layoutProtudctosProyecto');
+        Route::get('getLayoutProductosProyecto','Proyectos\ProyectosController@layoutProductosProyecto');
         Route::resource('tipos_proyectos','Proyectos\TiposProyectosController');
         Route::resource('clasificaciones_proyectos','Proyectos\ClasificacionesProyectosController');
         Route::resource('tipos_productos','Proyectos\TiposProductosProyectosController');

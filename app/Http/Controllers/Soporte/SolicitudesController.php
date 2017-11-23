@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
+use App\Http\Models\Soporte\Prioridades;
 
 class SolicitudesController extends ControllerBase
 {
@@ -106,7 +107,7 @@ class SolicitudesController extends ControllerBase
             'categorys' => Categorias::select('id_categoria', 'categoria')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('categoria', 'id_categoria'),
             'subcategorys' => Subcategorias::select('id_subcategoria', 'subcategoria')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('subcategoria', 'id_subcategoria'),
             'acctions' => Acciones::select('id_accion', 'accion')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('accion', 'id_accion'),
-            'employee_department' => Empleados::findOrFail(Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado)->fk_id_departamento
+            #'employee_department' => Empleados::findOrFail(Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado)->fk_id_departamento
         ];
         
         return parent::show($company, $id, $attributes);
@@ -148,5 +149,15 @@ class SolicitudesController extends ControllerBase
         else {
             App::abort(404,'No se encontro el archivo o recurso que se solicito.');
         }
+    }
+    
+    public function getCategorias($company)
+    {
+        return Categorias::where('activo',1)->where('eliminar',0)->select('id_categoria as id','categoria as text')->get()->toJson();
+    }
+    
+    public function getPrioridades($company)
+    {
+        return Prioridades::where('activo',1)->where('eliminar',0)->select('id_prioridad as id','prioridad as text')->get()->toJson();
     }
 }

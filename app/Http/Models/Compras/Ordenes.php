@@ -30,7 +30,10 @@ class Ordenes extends ModelCompany
         'tiempo_entrega','importacion'];
 
     public $niceNames =[
-        'fk_id_socio_negocio'=>'proveedor'
+        'fk_id_socio_negocio'=>'proveedor',
+        'fk_id_sucursal'=>'sucursal',
+        'fk_id_condicion_pago'=>'condición pago',
+        'fk_id_tipo_entrega'=>'tipo entrega'
     ];
 
     protected $dataColumns = [
@@ -42,13 +45,15 @@ class Ordenes extends ModelCompany
      */
     protected $fields = [
         'id_orden' => 'Número Solicitud',
-        'proveedor.nombre_corto' => 'Proveedor',
+        'proveedor.nombre_comercial' => 'Proveedor',
         'sucursales.sucursal' => 'Sucursal entrega',
         'fecha_creacion' => 'Fecha del pedido',
         'fecha_estimada_entrega' => 'Fecha de entrega',
         'estatus.estatus' => 'Estatus de la orden',
         'empresa.nombre_comercial' => 'Empresa'
     ];
+
+    protected $eagerLoaders = ['proveedor','sucursales','estatus','empresa'];
 
     function getNombreCompletoAttribute() {
         return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
@@ -101,6 +106,11 @@ class Ordenes extends ModelCompany
     public function proveedor()
     {
         return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
+    }
+
+    public function tipoDocumento()
+    {
+        return $this->hasOne('App\Http\Models\Administracion\TiposDocumentos','id_tipo_documento','fk_id_tipo_documento');
     }
 
 }

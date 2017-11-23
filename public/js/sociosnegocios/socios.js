@@ -1,1453 +1,349 @@
+$(document).ready(function () {
+	var from_picker = $('#activo_desde').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
+	var to_picker = $('#activo_hasta').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 
-// $(document).ready(function(){
+	if(!$('#activo').prop('checked')) {
+		from_picker.clear().stop();
+		to_picker.clear().stop();
+		$('#activo_desde').prop('readonly', true);
+		$('#activo_hasta').prop('readonly', true);
+	}
 
-    // $('#sucursalNombre').select2({
-    //
-    //     placeholder: 'Escriba su descripción',
-    //        ajax: {
-    //            type: 'GET',
-    //            url: "http://localhost:82/abisa/sociosnegocio/getData",
-    //            dataType: 'json',
-    //         //    data: function (params) {
-    //         //         var queryParameters = {
-    //         //           q: params.term
-    //         //         }
-    //           //
-    //         //     return queryParameters;
-    //         //   },
-    //           processResults: function (data) {
-    //               console.log("qwertyu");
-    //                 return {
-    //                     results: data
-    //                 };
-    //             },
-    //         },
-    // });
-// });
+	$('#activo').click(function (e) {
+		if(!$(this).prop('checked')) {
+			from_picker.clear().stop();
+			to_picker.clear().stop();
+    		$('#activo_desde').prop('readonly', true);
+    		$('#activo_hasta').prop('readonly', true);
+		}
+		else {
+			from_picker.start().clear();
+			to_picker.start().clear();
+			to_picker.trigger('set');
+		}
+	});
+	
+	from_picker.on('set', function(event) {
+		if ( 'select' in event ) {
+			to_picker.start().clear().set('min', from_picker.get('select'));
+	    }
 
-var socioTemplate = {
-    'activo' : '',
-    'razon_social' : '',
-    'rfc' : '',
-    'nombre_corto' : '',
-    'ejecutivo_venta' : '',
-    'telefono' : '',
-    'sitio_web' : '',
-    'ramo' : '',
-    'pais_origen' : '',
-    'tipo_socio' : '',
-    'moneda' : '',
-    'empresas' : [{}],
-    'condiciones_pago' : {
-        'monto_credito' : '',
-        'dias_credito' : '',
-        'forma_pago' : '',
-        'cuentas' : [{}],
-    },
-    'info_entrega' : {
-        'tipo_entrega' : '',
-        'sucursal' : '',
-        'pagoPaqueteria' : '',
-        'monto_minimo_facturacion' : '',
-        'correos' : [{}],
-    },
-    'contactos' : {
-        'contactos' : [{}]
-    },
-    'direcciones' : {
-        'direcciones' : [{}]
-    },
-    'licencias':{
-        'sanitaria' : [{}],
-        'avisoFuncionamiento' : [{}],
-        'avisoResponsable' : [{}]
-    }
-    // '' : '',
-};
+	    if ( 'clear' in event ) {
+	    	to_picker.clear().set('min', false).stop();
+	    	$('#activo_hasta').prop('readonly', true);
+		  }
+	});
+	
+	var precio_from = $('#precio_de').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
+	var precio_to = $('#precio_hasta').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 
-// ****** Declaración de variables globales *******
-var objectSocio = socioTemplate;
-var arrayCondicionesPago = [];
-var elementSelected = null;
-var contactoSelected = null;
-var arrayTableCuentas = [];
-var idTableCuentasEdit = 0;
-var idTableCuentas = 0;
+	precio_from.on('set', function(event) {
+		if ( 'select' in event ) {
+			precio_to.start().clear().set('min', precio_from.get('select'));
+	    }
 
+	    if ( 'clear' in event ) {
+	    	precio_to.clear().set('min', false).stop();
+	    	$('#precio_hasta').prop('readonly', true);
+		  }
+	});
+	
+	$('#pais').on('change', function() {
+		let estado = $('#estado');
 
-var arrayCorreos = [];
+		if($(this).val() == '') {
+			estado.val('');
+		}
+		else {
+    		$.ajax({
+    		    async: true,
+    		    url: estado.data('url'),
+    		    data: {'param_js':estados_js,$fk_id_pais:$(this).val()},
+    		    dataType: 'json',
+                success: function (data) {
+                	$("#estado option").remove();
+                	estado.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                    $.each(data, function(){
+                    	estado.append('<option value="'+ this.id_estado +'">'+ this.estado +'</option>')
+                    });
+                	estado.val('');
+                	estado.prop('disabled', (data.length == 0)); 
+    		    }
+    		});
+		}
+	});
+	
+	$('#estado').on('change', function() {
+		let municipio = $('#municipio');
 
+		if($(this).val() == '') {
+			municipio.val('');
+		}
+		else {
+    		$.ajax({
+    		    async: true,
+    		    url: municipio.data('url'),
+    		    data: {'param_js':municipios_js,$fk_id_estado:$(this).val()},
+    		    dataType: 'json',
+                success: function (data) {
+                	$("#municipio option").remove();
+                	municipio.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                    $.each(data, function(){
+                    	municipio.append('<option value="'+ this.id_municipio +'">'+ this.municipio +'</option>')
+                    });
+                	municipio.val('');
+                	municipio.prop('disabled', (data.length == 0)); 
+    		    }
+    		});
+		}
+	});
+	
+	$('#sku').on('change', function() {
+		let upc = $('#upc');
 
-var arrayTableContactos = [];
-var arrayContactos = [];
-var correosContacto = [];
-// var idTableCuentas = null;
-var idTableContactos = 0;
-var idTableContactosEdit = 0;
-
-var arrayTableDirecciones = [];
-var idTableDirecciones = 0;
-var direccionSelected = null;
-var idTableDireccionesEdit = 0;
-
-var arrayTableSanitarias = [];
-var idTableSanitaria = 0;
-var sanitariaSelected = null;
-var idTableSanitariaEdit = 0;
-
-var arrayTableAvisoFuncionamiento = [];
-var idTableAvisoFunc = 0;
-var avisoFuncSelected = null;
-var idTableAvisoFuncEdit = 0;
-
-var arrayTableAvisoResponsable = [];
-var idTableAvisoResp = 0;
-var avisoRespSelected = null;
-var idTableAvisoRespEdit = 0;
-
-
-// ****** Declaración de variables globales *******
-
-$(document).ready(function(){
-
-    $("#sucursalNombre").multiselect({
-        maxHeight:200,
-        enableFiltering: true,
-        buttonWidth: '300px',
-        includeSelectAllOption: true,
-        filterPlaceholder: 'Buscar...',
-        allSelectedText: 'Todo seleccionado ...',
-        nSelectedText: ' - opciones seleccionadas!',
-        nonSelectedText: 'Seleccione...',
-        selectAllText: 'Seleccionar todo',
-        buttonClass: 'form-control',
-        // templates: {
-        //   li: '<li><a tabindex="0" class="form-control"><label></label></a></li>',
-        //   li: '<li><a tabindex="0" class="form-control"><label></label></a></li>',
-        // },
-        templates: {
-            // button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"></button>',
-            // ul: '<ul class="multiselect-container dropdown-menu"></ul>',
-            // filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
-            filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" '+
-            'type="button"><i class="material-icons">backspace</i></button></span>',
-            // li: '<li><a href="javascript:void(0);"><label></label></a></li>',
-            // divider: '<li class="multiselect-item divider"></li>',
-            // liGroup: '<li class="multiselect-item group"><label class="multiselect-group"></label></li>'
-        },
-        numberDisplayed: 1,
-        onChange: function(element, checked) {
-                if (checked === true) {
-                    console.log(element.val());
-                }
-                else if (checked === false) {
-                    console.log(element.val());
-                }
-            }
-    });
-    $("#tipo_socio").multiselect({
-        maxHeight:200,
-        enableFiltering: true,
-        buttonWidth: '180px',
-        includeSelectAllOption: true,
-        filterPlaceholder: 'Buscar...',
-        allSelectedText: 'Todo seleccionado ...',
-        nSelectedText: ' - opciones seleccionadas!',
-        nonSelectedText: 'Seleccione...',
-        selectAllText: 'Seleccionar todo',
-        buttonClass: 'form-control',
-        // templates: {
-        //   li: '<li><a tabindex="0" class="form-control"><label></label></a></li>',
-        //   li: '<li><a tabindex="0" class="form-control"><label></label></a></li>',
-        // },
-        templates: {
-            // button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"></button>',
-            // ul: '<ul class="multiselect-container dropdown-menu"></ul>',
-            // filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
-            filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default multiselect-clear-filter" '+
-            'type="button" style="margin:0px;"><i class="material-icons">backspace</i></button></span>',
-            // li: '<li><a href="javascript:void(0);"><label></label></a></li>',
-            // divider: '<li class="multiselect-item divider"></li>',
-            // liGroup: '<li class="multiselect-item group"><label class="multiselect-group"></label></li>'
-        },
-        numberDisplayed: 1,
-        onChange: function(element, checked) {
-                if (checked === true) {
-                    console.log(element.val());
-                }
-                else if (checked === false) {
-                    console.log(element.val());
-                }
-            }
-    });
-
-
-    // var url_estados = $("#sucursalNombre option:selected").data('url');
-    // console.log(url_estados);
-    // loadEstados(url_estados);
-    // $.ajax({
-    //     type:'POST',
-    //     url: url_estados,
-    //     // url: "http://localhost:82/abisa/sociosnegocio/getData",
-    //     // data: vars,
-    //     dataType: 'json',
-    //     success: function (data) {
-    //         $("#sucursalNombre").multiselect("dataprovider",data);
-    //     },
-    //     complete:function(data){
-    //
-    //     },
-    //     error: function () {
-    //         console.log('error');
-    //     }
-    // });
-
-    $("#guardarSocio").click(function(e){
-        e.preventDefault();
-        console.log("<<<-----");
-        if($("#activo").prop('checked')){
-            objectSocio.activo          = "true";
-        }else{
-            objectSocio.activo          = "false";
+		if($(this).val() == '') {
+			upc.val('');
+		}
+		else {
+    		$.ajax({
+    		    async: true,
+    		    url: upc.data('url'),
+    		    data: {'param_js':upcs_js,$fk_id_sku:$(this).val()},
+    		    dataType: 'json',
+                success: function (data) {
+                	$("#upc option").remove();
+                	upc.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                    $.each(data, function(){
+                    	upc.append('<option value="'+ this.id_upc +'">'+ this.upc +'</option>')
+                    });
+                	upc.val('');
+                	upc.prop('disabled', (data.length == 0)); 
+    		    }
+    		});
+		}
+	});
+	
+	$('#agregar-contacto').on('click', function() {
+		let row_id = $('#tContactos tr').length;
+		
+    	id_tipo   = $('#tipo_contacto option:selected').val();
+    	tipo      = $('#tipo_contacto option:selected').text();
+    	nombre    = $('#nombre_contacto').val();
+    	puesto    = $('#puesto').val();
+    	correo    = $('#correo').val();
+    	celular   = $('#celular').val();
+    	telefono  = $('#telefono_oficina').val();
+    	extension = ' - ' + $('#extension_oficina').val();
+        
+    	if(tipo == '' | nombre == '' | puesto == '' | correo == '') {
+    		$.toaster({priority:'danger',title:'¡Error!',message:'Los siguientes campos son necesarios: Tipo contacto, Nombre, Puesto y Correo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    	}
+        else {
+        	$('#tContactos').append('<tr>'+
+				'<td>'+tipo+' <input name="cuentas['+row_id+'][fk_id_tipo_contacto]" type="hidden" value="'+id_tipo+'"></td>'+
+				'<td>'+nombre+' <input name="cuentas['+row_id+'][nombre_contacto]" type="hidden" value="'+nombre+'"></td>'+
+				'<td>'+puesto+' <input name="cuentas['+row_id+'][puesto]" type="hidden" value="'+puesto+'"></td>'+
+				'<td>'+correo+' <input name="cuentas['+row_id+'][correo]" type="hidden" value="'+correo+'"></td>'+
+				'<td>'+celular+' <input name="cuentas['+row_id+'][celular]" type="hidden" value="'+celular+'"></td>'+
+				'<td>'+telefono+extension+' <input name="cuentas['+row_id+'][telefono_oficina]" type="hidden" value="'+telefono+'">'+
+				'<input name="cuentas['+row_id+'][extension_oficina]" type="hidden" value="'+extension+'"></td>'+
+				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>'+
+			'</tr>');
+        	$.toaster({priority:'success',title:'¡Correcto!',message:'El contacto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
-
-        objectSocio.razon_social    = $("#razon_social").val();
-        objectSocio.rfc             = $("#rfc").val();
-        objectSocio.nombre_corto    = $("#nombre_corto").val();
-        objectSocio.ejecutivo_venta = $("#ejecutivo_venta").val();
-        objectSocio.telefono        = $("#telefono").val();
-        objectSocio.sitio_web       = $("#sitio_web").val();
-        objectSocio.ramo            = $("#ramo").val();
-        objectSocio.pais_origen     = $("#pais_origen").val();
-        // console.log($("#tipo_socio").val());
-        objectSocio.tipo_socio      = $("#tipo_socio").val();
-        objectSocio.moneda          = $("#moneda").val();
-
-
-        var inputs = $("#empresas tbody tr td input");
-        var empresas = [];
-        console.log(inputs.length);
-        $("#empresas tbody tr").find('td').each(function(i,e){
-            $(this).find('input').each(function(){
-                // console.log(this.checked);
-                empresas.push({"checked": this.checked, "id": $(this).attr('id')});
-                // console.log($(this).data('name'));
-            });
-        });
-
-        objectSocio.empresas = empresas;
-
-        // ****************************************************
-        //  CONDICIONES DE PAGO
-        // ****************************************************
-        objectSocio.condiciones_pago.monto_credito  = $("#monto_credito").val();
-        objectSocio.condiciones_pago.dias_credito   = $("#dias_credito").val();
-        objectSocio.condiciones_pago.forma_pago     = $("#forma_pago").val();
-        objectSocio.condiciones_pago.cuentas        = arrayTableCuentas;
-        // ****************************************************
-        // ****************************************************
-
-
-        // ****************************************************
-        //  INFORMACION DE ENTREGA
-        // ****************************************************
-
-        if($("input:radio[name='tipos_entrega']:checked").data('idtipoentrega') === 'undefined'){
-            objectSocio.info_entrega.tipos_entrega = 'null';
-        }else{
-            objectSocio.info_entrega.tipos_entrega = $("input:radio[name='tipos_entrega']:checked").data('idtipoentrega');
+	});
+	
+	$('#agregar-direccion').on('click', function() {
+		let row_id = $('#tDirecciones tr').length;
+		
+    	id_tipo      = $('#tipo_direccion option:selected').val();
+    	tipo         = $('#tipo_direccion option:selected').text();
+    	calle        = $('#calle').val();
+    	num_exterior = $('#num_exterior').val();
+    	num_interior = $('#num_interior').val();
+    	cp           = $('#cp').val();
+    	colonia		 = $('#colonia').val();
+    	id_municipio = $('#municipio option:selected').val();
+    	municipio  	 = $('#municipio option:selected').text();
+    	id_estado    = $('#estado option:selected').val();
+    	estado   	 = $('#estado option:selected').text();
+    	id_pais		 = $('#pais option:selected').val();
+    	pais		 = $('#pais option:selected').text();
+    	
+    	if(tipo == '' | calle == '' | num_exterior == '' | num_interior == '' | cp == '' | id_pais == '' | id_estado == '' | id_municipio == '' | colonia == '') {
+    		$.toaster({priority:'danger',title:'¡Error!',message:'Los siguientes campos son necesarios: Tipo contacto, Nombre, Puesto y Correo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    	}
+        else {
+			$('#tDirecciones').append('<tr>'+
+				'<td>'+tipo+' <input name="direcciones['+row_id+'][fk_id_tipo_contacto]" type="hidden" value="'+id_tipo+'"></td>'+
+				'<td>'+calle+' '+num_exterior+' '+num_interior+
+				' <input name="direcciones['+row_id+'][calle]" type="hidden" value="'+calle+'">'+
+				' <input name="direcciones['+row_id+'][num_exterior]" type="hidden" value="'+num_exterior+'">'+
+				' <input name="direcciones['+row_id+'][num_interior]" type="hidden" value="'+num_interior+'"></td>'+
+				'<td>'+cp+' <input name="direcciones['+row_id+'][codigo_postal]" type="hidden" value="'+cp+'"></td>'+
+				'<td>'+colonia+' <input name="direcciones['+row_id+'][colonia]" type="hidden" value="'+colonia+'"></td>'+
+				'<td>'+municipio+' <input name="direcciones['+row_id+'][fk_id_municipio]" type="hidden" value="'+id_municipio+'"></td>'+
+				'<td>'+estado+' <input name="direcciones['+row_id+'][fk_id_estado]" type="hidden" value="'+id_estado+'"></td>'+
+				'<td>'+pais+'<input name="direcciones['+row_id+'][fk_id_pais]" type="hidden" value="'+id_pais+'"></td>'+
+				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarDireccion(this)"> <i class="material-icons">delete</i></button></td>'+
+			'</tr>');
+        	$.toaster({priority:'success',title:'¡Correcto!',message:'La direccion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
-        objectSocio.info_entrega.sucursal                   = $("#sucursalNombre").val();
-        // objectSocio.info_entrega.sucursal                   = $("#sucursalNombre").val();
-        // console.log($("#sucursalNombre").val());
-        objectSocio.info_entrega.pagoPaqueteria             = $("#pagoPaqueteria").val();
-        objectSocio.info_entrega.monto_minimo_facturacion   = $("#monto_minimo_facturacion").val();
-        if(arrayCorreos.length >= 1){
-            objectSocio.info_entrega.correos                    = arrayCorreos;
-        }else {
-            objectSocio.info_entrega.correos                    = '';
+	});
+	
+	$('#agregar-cuenta').on('click', function() {
+		var cuentas = [];
+		$('.uniquekey').each(function (i) {
+			cuentas.push($('.uniquekey')[i].value); 
+		});
+		
+		let row_id = $('#tCuentas tr').length;
+		
+		id_banco  = $('#fk_id_banco option:selected').val();
+		banco  = $('#fk_id_banco option:selected').text();
+		no_cuenta = $('#no_cuenta').val();
+		sucursal = $('#sucursal').val();
+		clave_int = $('#clave_interbancaria').val();
+		
+		if(no_cuenta == '' | Number.isInteger(no_cuenta) != false) {
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el numero de cuenta, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+		else if(id_banco == '' ){
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un banco.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+		else if(cuentas.indexOf(id_banco+'-'+no_cuenta) !== -1) {
+			$.toaster({priority:'danger',title:'¡Error!',message:'La cuenta que trata de agregar ya existe.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+		else {
+			$('#tCuentas').append('<tr>'+
+				'<td>' + banco +
+				'<input class="id_cuenta" name="cuentas['+row_id+'][id_cuenta]" type="hidden" value="">'+
+				'<input class="fk_id_banco" name="cuentas['+row_id+'][fk_id_banco]" type="hidden" value="'+id_banco+'">'+
+				'<input class="fk_id_socio_negocio" name="cuentas['+row_id+'][fk_id_socio_negocio]" type="hidden" value="">'+
+				'<input class="uniquekey" name="cuentas['+row_id+'][uniquekey]" type="hidden" value="'+id_banco+'-'+no_cuenta+'"></td>'+
+				'<td>' + no_cuenta + ' <input name="cuentas['+row_id+'][no_cuenta]" type="hidden" value="'+no_cuenta+'"></td>'+
+				'<td>' + sucursal + ' <input name="cuentas['+row_id+'][no_sucursal]" type="hidden" value="'+sucursal+'"></td>'+
+				'<td>' + clave_int + ' <input name="cuentas['+row_id+'][clave_interbancaria]" type="hidden" value="'+clave_int+'"></td>'+
+				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCuenta(this)"> <i class="material-icons">delete</i></button></td>'+
+			'</tr>');
+			$.toaster({priority:'success',title:'¡Correcto!',message:'La cuenta se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+	});
+
+	$('#agregar-anexo').on('click', function() {
+		let row_id = $('#tAnexos tr').length;
+		
+		id_tipo  = $('#tipo_anexo option:selected').val();
+		tipo  = $('#tipo_anexo option:selected').text();
+		nombre = $('#nombre_archivo').val();
+		archivo = $("#archivo").prop('files');
+		
+		if(id_tipo == '' ){
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un tipo de documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+		else if(nombre == '') {
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+		else if($("#archivo").length == 0) {
+			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+		else {
+			$('#tAnexos').append('<tr>'+
+				'<td>' + tipo + '<input class="id_tipo" name="anexos['+row_id+'][fk_id_tipo]" type="hidden" value="'+id_tipo+'"></td>'+
+				'<td>' + nombre+' <input name="anexos['+row_id+'][nombre_archivo]" type="hidden" value="'+nombre+'"></td>'+
+				'<td>' + archivo[0].name + ' <input id="anexos-'+row_id+'" class="file-anexos" name="anexos['+row_id+'][archivo]" type="file" style="display:none"></td>'+
+				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button></td>'+
+			'</tr>');
+			$('#anexos-'+row_id).prop('files',archivo);
+			$.toaster({priority:'success',title:'¡Correcto!',message:'La cuenta se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+	});
+
+	$('#fk_id_tipo_socio_compra').on('change', function() {
+		console.log($(this).val());
+		$('#fieldProductos').prop('disabled',$(this).val() == '');
+	});
+	
+	$('#agregar-producto').on('click', function() {
+		let row_id = $('#tProductos tr').length;
+		
+		var skus_ids = [];
+    	$('.id_sku').each(function (i) {
+    		skus_ids.push($('.id_sku')[i].value + $('.id_sku').parent().find('.id_upc').value ); 
+		});
+		
+		id_sku  = $('#sku option:selected').val();
+		sku  = $('#sku option:selected').text();
+		id_upc  = $('#upc option:selected').val();
+		upc  = id_upc == '' ? '' : $('#upc option:selected').text();
+		tiempo_entrega = $('#tiempo_entrega').val();
+		precio = $("#precio").val();
+		precio_de = $("#precio_de").val();
+		precio_hasta = $("#precio_hasta").val();
+		
+		if(id_sku == '' | tiempo_entrega == '' | precio == '' | precio_de == '' | precio_hasta == ''){
+			$.toaster({priority:'danger',title:'¡Error!',message:'Los campos, Sku, Tiempo Entrega, Precio, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+		else if(skus_ids.indexOf(id_sku + id_upc) !== -1) {
+        	$.toaster({priority:'danger',title:'¡Error!',message:'El producto seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
-        // ****************************************************
-        // ****************************************************
-
-
-        // ****************************************************
-        //  CONTACTOS
-        // ****************************************************
-        if(arrayTableContactos.length >= 1){
-            objectSocio.contactos.contactos = arrayTableContactos;
-        }else {
-            objectSocio.contactos.contactos = 'null';
-        }
-
-        // ****************************************************
-        // ****************************************************
-
-
-        // ****************************************************
-        // DIRECCIONES
-        // ****************************************************
-        objectSocio.direcciones.direcciones = arrayTableDirecciones;
-
-        // ****************************************************
-        // ****************************************************
-
-
-        // ****************************************************
-        // LICENCIAS
-        // ****************************************************
-        // objectSocio.licencias.sanitaria             = arrayTableSanitarias;
-        // objectSocio.licencias.avisoFuncionamiento   = arrayTableAvisoFuncionamiento;
-        // objectSocio.licencias.avisoResponsable      = arrayTableAvisoResponsable;
-
-        // ****************************************************
-        // ****************************************************
-
-
-
-
-        // ****************************************************
-        // PETICION AJAX PARA GUARDAR
-        // ****************************************************
-        var formData = new FormData();
-        $.each(arrayTableSanitarias, function(key, value){
-            console.log(value['archivo']['fileObject']);
-            formData.append('fsanitaria[]', value['archivo']['fileObject'],value['archivo']['nombreArchivo']);
-        });
-        // formData.append("tipo_entrega", objectSocio.info_entrega.tipos_entrega);
-        // formData.append("sucursal", objectSocio.info_entrega.sucursal);
-        // formData.append("monto_minimo_facturacion", objectSocio.info_entrega.monto_minimo_facturacion);
-        //
-        // $.map(objectSocio.info_entrega.correos, function(value, index){
-        //     formData.append("correos[]", JSON.stringify(value));
-        //     console.log(JSON.stringify(value));
-        //     console.log(value);
-        // });
-        // formData.append("tipo_entrega", objectSocio.info_entrega.tipo_entrega);
-
-        // var datos = $("#form-socios").serializeArray();
-        // formData.append('objectSocio', objectSocio);
-        // $.each(datos,function(key,input){
-        //     formData.append(input.name,input.value);
-        // });
-        // formData.submit();
-        // console.log($('meta[name=csrf-token]').attr('content'));
-
-        $.ajaxSetup({
-            headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') }
-        });
-        // objectSocio = JSON.parse(objectSocio);
-        // console.log(objectSocio);
-
-        // console.log($("#form-socios").serialize());
-
-        $.ajax({
-            url: "/abisa/sociosnegocio/store",
-            type: 'POST',
-            data: {objectSocio:JSON.stringify(objectSocio)},
-            cache: false,
-            dataType: 'json',
-            // processData: false,
-            // contentType: false,
-            success: function(data){
-                console.log(data);
-            }
-        });
-
-        // $.ajax({
-        //     url: "http://localhost/abisa/sociosnegocio/store",
-        //     type: 'POST',
-        //     data: formData,
-        //     cache: false,
-        //     dataType: 'json',
-        //     processData: false, // Don't process the files
-        //     contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-        //     success: function(data){
-        //         console.log(data);
-        //     }
-        // });
-        // ****************************************************
-        // ****************************************************
-
-
-
-
-        // console.log(JSON.stringify(objectSocio));
-        // console.log(objectSocio);
-        // console.log("----->>>");
-    });
-
-    $("#addLicenciaSanitaria").click(function(event){
-        event.preventDefault();
-    /**
-     * UPLOAD A FILE
-     *
-        console.log("Add Licencia Sanitaria");
-
-        var nombreArchivo = $("#filesSanitarias").val();
-        console.log(nombreArchivo);
-        console.log($("#filesSanitarias").val());
-        console.log($("#filesSanitarias").prop('files')[0]);
-
-        if ($(this).data('action') == 'add') {
-            idTableSanitaria++;
-            arrayTableSanitarias.push({'idTable':idTableSanitaria,' nombreArchivo': nombreArchivo,'id_licencia':'','estatus':'new'});
-            addLicencia(idTableSanitaria);
-        }else{
-            updateLicencia(idTableSanitariaEdit,licencias);
-        }
-        console.log($("#filesSanitarias").val());
-        console.log($("#filesSanitarias").prop('files')[0]);
-
-        var files = $('#filesSanitarias').prop("files");
-        var names = $.map(files, function(val) { return val; });
-        console.log(names);
-
-        var formDataFiles = new FormData();
-        var arrayFiles = [];
-        for(var i=0; i< names.length; i++){
-           var file = names[i];
-           arrayFiles[i] = file;
-           console.log("FILE: "+names[i]);
-           name = file.name.toLowerCase();
-           size = file.size;
-           type = file.type;
-           formDataFiles.append('files[]', file, name);
-        }
-        console.log("--------------------------------");
-        console.log(formDataFiles);
-        console.log("--------------------------------");
-        console.log("********************************");
-        console.log(arrayFiles);
-        console.log("********************************");
-
-        let url_licencias = $("#filesSanitarias").data('url');
-        console.log(url_licencias);
-
-        jQuery.ajax({
-            url: url_licencias,
-            data: formDataFiles,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function(data){
-                console.log(data);
-            }
-        });
-    */
-
-        var files = $('#filesSanitarias').prop("files");
-        var names = $.map(files, function(val) { return val; });
-        console.log(names);
-
-        var arrayFiles = [];
-        for(var i=0; i< names.length; i++){
-           var formDataFiles = new FormData();
-           var file = names[i];
-           arrayFiles[i] = file;
-           console.log("FILE: "+names[i]);
-           nombreArchivo = file.name.toLowerCase();
-           size = file.size;
-           type = file.type;
-           formDataFiles.append('files[]', file, nombreArchivo);
-
-           if ($(this).data('action') == 'add') {
-               idTableSanitaria++;
-               arrayTableSanitarias.push({'idTable':idTableSanitaria,'id_sanitaria':'','archivo':{ 'nombreArchivo': nombreArchivo,"fileObject": file},'estatus':'new'});
-               addLicencia(idTableSanitaria);
-               console.log("ADD LICENCIA -->"+nombreArchivo);
-           }
-        }
-
-        console.log("#############################################################");
-        console.log(arrayTableSanitarias);
-        console.log("#############################################################");
-
-    });
-
-    $("#addAvisoFuncionamiento").click(function(event){
-        event.preventDefault();
-        var files = $('#filesAvisoFuncionamiento').prop("files");
-        var names = $.map(files, function(val) { return val; });
-        console.log(names);
-
-        var formDataFiles = new FormData();
-        var arrayFiles = [];
-        for(var i=0; i< names.length; i++){
-           var file = names[i];
-           arrayFiles[i] = file;
-           console.log("FILE: "+names[i]);
-           nombreArchivo = file.name.toLowerCase();
-           size = file.size;
-           type = file.type;
-           formDataFiles.append('files[]', file, nombreArchivo);
-
-           if ($(this).data('action') == 'add') {
-               idTableAvisoFunc++;
-               arrayTableAvisoFuncionamiento.push({'idTable':idTableAvisoFunc,'id_aviso_funcionamiento':'','archivo':{ 'nombreArchivo': nombreArchivo,"fileObject": file},'estatus':'new'});
-               addAvisoFuncionamiento(idTableAvisoFunc);
-               console.log("ADD LICENCIA -->"+nombreArchivo);
-           }
-        }
-
-        console.log("#############################################################");
-        console.log(arrayTableAvisoFuncionamiento);
-        console.log("#############################################################");
-
-    });
-
-
-    $("#addAvisoResponsable").click(function(event){
-        event.preventDefault();
-        var files = $('#filesAvisoResponsable').prop("files");
-        var names = $.map(files, function(val) { return val; });
-        console.log(names);
-
-        var formDataFiles = new FormData();
-        var arrayFiles = [];
-        for(var i=0; i< names.length; i++){
-           var file = names[i];
-           arrayFiles[i] = file;
-           console.log("FILE: "+names[i]);
-           nombreArchivo = file.name.toLowerCase();
-           size = file.size;
-           type = file.type;
-           formDataFiles.append('files[]', file, nombreArchivo);
-
-           if ($(this).data('action') == 'add') {
-               idTableAvisoResp++;
-               arrayTableAvisoResponsable.push({'idTable':idTableAvisoResp,'id_aviso_responsable':'','archivo':{ 'nombreArchivo': nombreArchivo,"fileObject": file},'estatus':'new'});
-               addAvisoResponsable(idTableAvisoResp);
-               console.log("ADD LICENCIA -->"+nombreArchivo);
-           }
-        }
-
-        console.log("#############################################################");
-        console.log(arrayTableAvisoResponsable);
-        console.log("#############################################################");
-
-    });
-
-
-    $("#pais").on('change',function(event){
-        var url_estados = $("#pais option:selected").data('url');
-        console.log(url_estados);
-        loadEstados(url_estados);
-    });
-
-    $("#estado").on('change',function(event){
-        let url_municipio = $("#estado").data('url');
-        url_municipio = url_municipio.replace('?id',$("#estado option:selected").val());
-        loadMunicipios(url_municipio);
-    });
-
-
-    $("#agregarDireccion").click(function(event){
-        event.preventDefault();
-
-        var tipo_direccion = $("input:radio[name='tipo_direccion']:checked").siblings('label').text();
-        var id_tipo_direccion = $("input:radio[name='tipo_direccion']:checked").attr('id');
-        var calle = $("#calle").val();
-        var num_exterior = $("#num_exterior").val();
-        var num_interior = $("#num_interior").val();
-        var cp = $("#cp").val();
-        var pais = $("#pais option:selected").text();
-        var id_pais = $("#pais").val();
-        var estado = $("#estado option:selected").text();
-        var id_estado = $("#estado").val();
-        var municipio = $("#municipio option:selected").text();
-        var id_municipio = $("#municipio").val();
-        var colonia = $("#colonia").val();
-
-        console.log('tipo_direccion'+tipo_direccion);
-        console.log('calle'+calle);
-        console.log('num_exterior'+num_exterior);
-        console.log('num_interior'+num_interior);
-        console.log('cp'+cp);
-        console.log('pais'+pais);
-        console.log('id_pais'+id_pais);
-        console.log('estado'+estado);
-        console.log('id_estado'+id_estado);
-        console.log('municipio'+municipio);
-        console.log('id_municipio'+id_municipio);
-        console.log('colonia'+colonia);
-
-        resetDireccion();
-        if ($(this).data('action') == 'add') {
-            idTableDirecciones++;
-            arrayTableDirecciones.push({'idTable':idTableDirecciones,'tipo_direccion':tipo_direccion,'id_tipo_direccion':id_tipo_direccion,'calle':calle, 'num_exterior':num_exterior,
-            'num_interior':num_interior,'cp':cp,'pais':pais,'id_pais':id_pais,'estado':estado,'id_estado':id_estado,'municipio':municipio,
-            'id_municipio':id_municipio,'colonia':colonia,'estatus':'new'});
-            addDireccion(idTableDirecciones);
-        }else{
-            updateDireccion(idTableDireccionesEdit,tipo_direccion,id_tipo_direccion,calle,num_exterior,num_interior,cp,pais,id_pais,estado,id_estado,municipio,id_municipio,colonia);
-        }
-    });
-
-    $("#agregarCuenta").click(function(event){
-        event.preventDefault();
-        if($("#no_cuenta").val() != '' && $("#banco").val() != null ){
-            var banco = $("#banco option:selected:not([disabled])").text();
-            var indexBanco = $("#banco option:selected").val();
-            var no_cuenta = $("#no_cuenta").val();
-
-            resetCuentaBancaria();
-            if ($(this).data('action') == 'add') {
-                idTableCuentas++;
-                console.log("====ID===="+idTableCuentas);
-                arrayTableCuentas.push({'idTable':idTableCuentas,'banco':banco,'indexBanco':indexBanco, 'no_cuenta':no_cuenta,'estatus':'new'});
-                addCuenta(idTableCuentas);
-            }else{
-                updateCuenta(idTableCuentasEdit,banco,indexBanco,no_cuenta);
-            }
-        }else {
-            putToast('danger','Campos requeridos (*)','Cuenta bancaria <br> Banco');
-        }
-    });
-
-    $("#xx").click(function(){
-        console.log("==========LOG==============");
-        console.log("ID-TABLE:"+idTableCuentas);
-        console.log(arrayTableCuentas);
-        console.log(JSON.stringify(arrayTableCuentas));
-        console.log("ID-TABLE:"+idTableCuentas);
-        console.log("==========LOG==============");
-    });
-
-
-
-
-    $("#yy").click(function(){
-        console.log("====ARRAY-CORREOS-LOADED====");
-        loadArrayCorreos();
-        console.log(arrayCorreos);
-        console.log("============================");
-    });
-
-    $("input[name=tipos_entrega]").click(function(){
-        switch($("input[name=tipos_entrega]:checked").data('idtipoentrega')){
-            case 1:
-                console.log("--->>");
-                $("#sucursalBlock").show("slow").attr('hidden',false);
-                $("#paqueteriaBlock").hide();
-                $("#pagoPaqueteria").val('');
-            break;
-            case 2:
-                console.log("--->>");
-                $("#paqueteriaBlock").show("slow").attr('hidden',false);
-                $("#sucursalBlock").hide();
-                $("#sucursalNombre").val('');
-            break;
-            default:
-                console.log("default");
-                console.log($("input[name=tipos_entrega]:checked").data('idtipoentrega'));
-                $("#sucursalBlock").hide();
-                $("#sucursalNombre").val('');
-                $("#paqueteriaBlock").hide();
-                $("#pagoPaqueteria").val('');
-                break;
-        }
-    });
-
-//  TODO: cambiar este componente chip de materialize
-    $("#correos").select2({
-        tags: true,
-        multiple: true,
-        // insertTag: function (data, tag) {
-        //     // Insert the tag at the end of the results
-        //     data.push(tag);
-        // }
-        createSearchChoice:function(term, data) {
-            if ($(data).filter(function() {
-                return this.text.localeCompare(term)===0;
-            }).length===0) {
-                return {id:term, text:term};
-            }
-        },
-        // data: [{id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'}]
-    });
-
-    // $("#correos").keyup(function(e){
-    //     var code = e.which;
-    //     console.log("-----------"+e.params.data);
-    //     if(code==13){
-    //         console.log("===========CORREOS=========");
-    //            var correos = e.params.data;
-    //            console.log(JSON.stringify(correos));
-    //         console.log("===========================");
-    //     }
-    // });
-
-    $('#correos').on('select2:select', function (e) {
-        var data = e.params.data;
-        console.log(e.params);
-        console.log(data);
-
-        e.params.data.id = 'none';
-        e.params.data.estatus = 'new';
-        arrayCorreos.push({'correo':e.params.data.text, 'id':e.params.data.id, 'estatus':'new'});
-        console.log("========ARRAY=CORREOS======");
-        console.log(JSON.stringify(arrayCorreos));
-        console.log("===========================");
-    });
-
-    $('#correos').on('select2:unselect', function(e){
-            console.log("NEW-DELETED!");
-            for (var i = 0; i < arrayCorreos.length; i++) {
-                if(arrayCorreos[i]['correo'] == e.params.data.text){
-                    console.log(arrayCorreos.splice(i,1));
-                }
-            }
-            console.log(JSON.stringify(arrayCorreos));
-    });
-
-    $("#zz").click(function(){
-        console.log("====ARRAY-CORREOS-LOADED====");
-        console.log(arrayCorreosContacto);
-        console.log("============================");
-        console.log("====ARRAY-CORREOS-LOADED====");
-        console.log(arrayTableContactos);
-        console.log("============================");
-    });
-
-    $("#agregarContacto").click(function(event){
-        event.preventDefault();
-
-        var tipoContacto = $("#tipo_contacto option:selected:not([disabled])").text();
-        var tipoContactoIndex = $("#tipo_contacto option:selected").val();
-        var nombreContacto = $("#nombre_contacto").val();
-        var puesto = $("#puesto").val();
-        var celular = $("#celular").val();
-        var telefonoOficina = $("#telefono_oficina").val();
-        var extensionOficina = $("#extension_oficina").val();
-
-        console.log($(this).data('action'));
-        console.log($("#correos_contacto").length);
-        if(tipoContacto != null && nombreContacto != '' && puesto != '' && celular != '' && telefonoOficina != '' && extensionOficina != '' && $("#correos_contacto").lenght > 0){
-            resetContacto();
-            if ($(this).data('action') == 'add') {
-                idTableContactos++;
-                console.log("====ID===="+idTableContactos);
-                arrayTableContactos.push({'idTableContactos':idTableContactos,'tipoContacto':tipoContacto, 'tipoContactoIndex':tipoContactoIndex,'nombreContacto':nombreContacto,'puesto':puesto,'celular':celular,'telefonoOficina':telefonoOficina,
-                'extensionOficina':extensionOficina,'arrayCorreosContacto':correosContacto.slice(),'estatus':'new'});
-                addContacto(idTableContactos);
-                correosContacto = [];
-            }else{
-                updateContacto(idTableContactosEdit,tipoContacto,tipoContactoIndex,nombreContacto,puesto,celular,telefonoOficina,extensionOficina,correosContacto.slice());
-                correosContacto = [];
-            }
-        }else {
-            putToast('danger','Campos requeridos (*)','Tipo Contacto <br> Nombre Contacto <br> Puesto <br> Celular <br> Tel Oficina <br> Ext Oficina <br> Correos');
-        }
-
-
-
-
-    });
-
-    $("#select_all").click(function(){
-        var checkAll = $(this).is(":checked");
-        console.log(checkAll);
-        var check = $("#empresas > tbody > tr > td:nth-child(1)").children().find('input').each(function(e,v){
-                console.log($(v).is(':checked')+" =>>"+e);
-                // console.log($(v).is(':checked') ) ? 1 : 0;
-                $(v).prop('checked', checkAll).change();
-
-                if($(v).prop("checked")){
-                    // $(v).find('span').addClass('checked');
-                    console.log('checked');
-                  }else{
-                      console.log('unchecked');
-                    // $(v).find('span').removeClass('checked');
-                  }
-            });
-
-    });
-
-
-    // TODO: cambiar chip de materialize
-    // $("#correos_contacto").keyup(function(e){
-    //     var code = e.which;
-    //     if(code==13){
-    //         console.log("===========CORREOS=========");
-    //            var correos = $(this).material_chip('data');
-    //            console.log(JSON.stringify(correos));
-    //         console.log("===========================");
-    //     }
-    // });
-
-
-    $("#correos_contacto").select2({
-        tags: true,
-        multiple: true,
-        // insertTag: function (data, tag) {
-        //     // Insert the tag at the end of the results
-        //     data.push(tag);
-        // }
-        createSearchChoice:function(term, data) {
-            if ($(data).filter(function() {
-                return this.text.localeCompare(term)===0;
-            }).length===0) {
-                return {id:term, text:term};
-            }
-        },
-        // data: [{id: 0, text: 'story'},{id: 1, text: 'bug'},{id: 2, text: 'task'}]
-    });
-    $('#correos_contacto').on('select2:select', function(e){
-        e.params.data.id = 'none';
-        e.params.data.estatus = 'new';
-        correosContacto.push({'correo':e.params.data.text, 'id':e.params.data.id, 'estatus':'new'});
-        console.log("========ARRAY=CORREOS======");
-        console.log(JSON.stringify(correosContacto));
-        console.log("===========================");
-    });
-    $('#correos_contacto').on('select2:unselect', function(e){
-        // if(e.params.data.estatus == 'new'){
-            console.log("NEW-DELETED!");
-            for (var i = 0; i < correosContacto.length; i++) {
-                if(correosContacto[i]['tag'] == e.params.data.text){
-                    console.log(correosContacto.splice(i,1));
-                }
-            }
-            console.log(JSON.stringify(correosContacto));
-        // }
-
-    });
-
+		else {
+			if(id_upc != '') {
+				var url_ajax = $('#upc').data('url');
+				var param_js = upc_js;
+				var params = {'param_js':param_js,'$id_upc':id_upc}
+			}
+			else {
+				var url_ajax = $('#sku').data('url');
+				var param_js = sku_js;
+				var params = {'param_js':param_js,'$id_sku':id_sku}
+			}
+			console.log(params);
+			
+			$.ajax({
+    		    async: true,
+    		    url: url_ajax,
+    		    data: params,
+    		    dataType: 'json',
+                success: function (data) {
+                	$('#tProductos').append('<tr>'+
+        				'<td>' + sku + '<input class="id_sku" name="productos['+row_id+'][fk_id_sku]" type="hidden" value="'+id_sku+'"></td>'+
+        				'<td>' + upc + '<input class="id_upc" name="productos['+row_id+'][fk_id_upc]" type="hidden" value="'+id_upc+'"></td>'+
+        				'<td>'+data[0].descripcion+'</td>'+
+        				'<td>' + tiempo_entrega + ' <input name="productos['+row_id+'][tiempo_entrega]" type="hidden" value="'+tiempo_entrega+'"></td>'+
+        				'<td>' + precio + ' <input name="productos['+row_id+'][precio]" type="hidden" value="'+precio+'"></td>'+
+        				'<td>' + precio_de + ' <input name="productos['+row_id+'][precio_de]" type="hidden" value="'+precio_de+'"></td>'+
+        				'<td>' + precio_hasta + ' <input name="productos['+row_id+'][precio_hasta]" type="hidden" value="'+precio_hasta+'"></td>'+
+        				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarProducto(this)"> <i class="material-icons">delete</i></button></td>'+
+        			'</tr>');
+        			$.toaster({priority:'success',title:'¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    		    }
+    		});
+		}
+	});
 });
 
-
-function putToast(priority,title,message,timeout=3000){
-    $.toaster({
-        priority : priority, //danger || success
-        title : title,
-        message : message,
-        settings:{
-            'timeout':timeout,
-            'toaster':{
-                'css':{
-                    'top':'5em'
-                }
-            }
-        }
-    });
+function borrarCuenta(el) {
+	$(el).parent().parent('tr').remove();
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la cuenta correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
-function addDireccion(idTable){
-    for (var i = 0; i < arrayTableDirecciones.length; i++) {
-        if(arrayTableDirecciones[i]['idTable'] ==  idTable){
-            console.log(arrayTableDirecciones[i]['idTable']);
-            console.log(arrayTableDirecciones[i]['tipo_direccion']);
-            console.log(arrayTableDirecciones[i]['calle']);
-            console.log(arrayTableDirecciones[i]['num_exterior']);
-            console.log(arrayTableDirecciones[i]['num_interior']);
-            console.log(arrayTableDirecciones[i]['cp']);
-            console.log(arrayTableDirecciones[i]['pais']);
-            console.log(arrayTableDirecciones[i]['id_pais']);
-            console.log("ID===>"+idTable);
-
-            let ext = arrayTableDirecciones[i]['num_exterior']=="" ? '' : " #"+arrayTableDirecciones[i]['num_exterior'];
-            let int = arrayTableDirecciones[i]['num_interior']=="" ? '' : " INT. "+arrayTableDirecciones[i]['num_interior'];
-            $("#tableDirecciones > tbody ").eq(0)
-                .append("<tr>"+
-                "<td>"+arrayTableDirecciones[i]['tipo_direccion']+"</td>"+
-                "<td>"+arrayTableDirecciones[i]['calle']+ext+int+"</td>"+
-                "<td><a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowDireccion(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-                "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowDireccion(this,"+idTable+");'><i class=\"material-icons\">delete</i></a></td>"+
-                "</tr>");
-        }
-        console.log("============ADD===============");
-        console.log("ID-TABLE: "+idTable);
-        console.log(arrayTableDirecciones);
-        console.log("==============================");
-    }
+function borrarContacto(el) {
+	$(el).parent().parent('tr').remove();
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado el contacto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
-function editRowDireccion(obj,idTable){
-    for (var i = 0; i < arrayTableDirecciones.length; i++) {
-        if(arrayTableDirecciones[i]['idTable'] ==  idTable){
-            // console.log("ID-TABLE: "+idTable);
-            idTableDireccionesEdit = idTable;
-            direccionSelected = $(obj).parent().parent().find('td');
-            $("#agregarDireccion").data('action','update');
-
-
-            $("#"+arrayTableDirecciones[i]['id_tipo_direccion']).attr('checked','checked');
-            $("#"+arrayTableDirecciones[i]['id_tipo_direccion']).siblings('label').click();
-            $("#calle").val(arrayTableDirecciones[i]['calle']);
-            $("#num_exterior").val(arrayTableDirecciones[i]['num_exterior']);
-            $("#num_interior").val(arrayTableDirecciones[i]['num_interior']);
-            $("#cp").val(arrayTableDirecciones[i]['cp']);
-            $("#pais").val(arrayTableDirecciones[i]['id_pais']);
-            // $("#pais").material_select();
-            $("#estado").removeAttr('selected');
-            $("#estado").val(arrayTableDirecciones[i]['id_estado']);
-            // $("#estado").material_select();
-
-            let url_municipio = $("#estado").data('url');
-            url_municipio = url_municipio.replace('?id',$("#estado option:selected").val());
-            console.log("editRow: "+url_municipio);
-            loadMunicipios(url_municipio, arrayTableDirecciones[i]['id_municipio']);
-
-            console.log(arrayTableDirecciones[i]['id_municipio']);
-            $("#colonia").val(arrayTableDirecciones[i]['colonia']);
-        }
-    }
+function borrarDireccion(el) {
+	$(el).parent().parent('tr').remove();
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la diereccion correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
-function updateDireccion(idTable,tipo_direccion,id_tipo_direccion,calle,num_exterior,num_interior,cp,pais,id_pais,estado,id_estado,municipio,id_municipio,colonia){
-    for (var i = 0; i < arrayTableDirecciones.length; i++) {
-        if(arrayTableDirecciones[i]['idTable'] ==  idTable){
-            $(direccionSelected[2]).children().remove();
-            $(direccionSelected[2]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowDireccion(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-            "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowDireccion(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
-
-            let ext = num_exterior=="" ? '' : " #"+num_exterior;
-            let int = num_interior=="" ? '' : " INT. "+num_interior;
-
-            $(direccionSelected[0]).text(tipo_direccion);
-            $(direccionSelected[1]).text(calle+ext+int);
-
-            console.log("=========UPDATE===============");
-            console.log("ID-TABLE: "+idTable);
-            console.log(arrayTableDirecciones);
-
-            console.log(arrayTableDirecciones[i] = {'idTable':idTable,'tipo_direccion':tipo_direccion,'id_tipo_direccion':id_tipo_direccion,'calle':calle, 'num_exterior':num_exterior,
-                                                    'num_interior':num_interior,'cp':cp,'pais':pais,'id_pais':id_pais,'estado':estado,'id_estado':id_estado,'municipio':municipio,
-                                                    'id_municipio':id_municipio,'colonia':colonia,'estatus':'new'});
-            console.log("[i]=>"+i);
-
-            console.log(arrayTableDirecciones);
-            console.log("==============================");
-            $("#agregarDireccion").data('action',"add");
-        }
-    }
+function borrarAnexo(el) {
+    $(el).parent().parent('tr').remove();
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado el anexo correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
-function deleteRowDireccion(obj,idTable){
-    $(obj).parent().parent().hide('slow', function(){ this.remove(); });
-    resetDireccion();
-    console.log("==========DELETE==============");
-    console.log("ID-DELETE:"+idTable);
-    for (var i = 0; i < arrayTableDirecciones.length; i++) {
-        // if(arrayTableDirecciones[i]['idTable'] == idTable){
-            // console.log("LOADED-DELETED!");
-            // console.log(arrayTableDirecciones[i]);
-        //     console.log(arrayTableDirecciones[i] = {'idTable':idTable,'banco':arrayTableDirecciones[i]['banco'],'no_cuenta':arrayTableDirecciones[i]['no_cuenta'],'estatus':'deleted'});
-        //     console.log("[i]=>"+i);
-        // }
-        if(arrayTableDirecciones[i]['idTable'] == idTable && arrayTableDirecciones[i]['estatus'] == 'new'){
-            console.log("NEW-DELETED!");
-            console.log(arrayTableDirecciones.splice(i,1));
-            console.log(JSON.stringify(arrayTableDirecciones));
-        }
-    }
-    console.log("==============================");
-}
-
-function updateCuenta(idTable,banco,indexBanco,no_cuenta){
-    for (var i = 0; i < arrayTableCuentas.length; i++) {
-        if(arrayTableCuentas[i]['idTable'] ==  idTable){
-            $(elementSelected[2]).children().remove();
-            $(elementSelected[2]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-            "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
-            $(elementSelected[0]).text(banco);
-            $(elementSelected[1]).text(no_cuenta);
-
-            console.log("=========UPDATE===============");
-            console.log("ID-TABLE: "+idTable);
-            console.log(arrayTableCuentas);
-
-            console.log(arrayTableCuentas[i] = {'idTable':idTable,'banco':banco,'no_cuenta':no_cuenta,'indexBanco':indexBanco,'estatus':'new'});
-            console.log("[i]=>"+i);
-
-            console.log(arrayTableCuentas);
-            console.log("==============================");
-            $("#agregarCuenta").data('action',"add");
-        }
-    }
-}
-
-
-function editRowCuenta(obj,idTable){
-    for (var i = 0; i < arrayTableCuentas.length; i++) {
-        if(arrayTableCuentas[i]['idTable'] ==  idTable){
-            console.log("ID-TABLE: "+idTable);
-            idTableCuentasEdit = idTable;
-            elementSelected = $(obj).parent().parent().find('td');
-            // var update="update";
-            $("#agregarCuenta").data('action','update');
-            $("#no_cuenta").val(arrayTableCuentas[i]['no_cuenta']);
-            $("#banco").val(arrayTableCuentas[i]['indexBanco']);
-            // $("#banco").material_select();
-        }
-    }
-}
-
-function addCuenta(idTable){
-        for (var i = 0; i < arrayTableCuentas.length; i++) {
-            if(arrayTableCuentas[i]['idTable'] ==  idTable){
-                console.log(arrayTableCuentas[i]['idTable']);
-                console.log(arrayTableCuentas[i]['banco']);
-                console.log(arrayTableCuentas[i]['indexBanco']);
-                console.log("ID===>"+idTable);
-                $("#tableCuentas > tbody ").eq(0)
-                    .append("<tr>"+
-                    "<td>"+arrayTableCuentas[i]['banco']+"</td>"+
-                    "<td>"+arrayTableCuentas[i]['no_cuenta']+"</td>"+
-                    "<td><a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-                    "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a></td>"+
-                    "</tr>");
-            }
-            console.log("============ADD===============");
-            console.log("ID-TABLE: "+idTable);
-            console.log(arrayTableCuentas);
-            console.log("==============================");
-        }
-}
-
-function updateCuenta(idTable,banco,indexBanco,no_cuenta){
-    for (var i = 0; i < arrayTableCuentas.length; i++) {
-        if(arrayTableCuentas[i]['idTable'] ==  idTable){
-            $(elementSelected[2]).children().remove();
-            $(elementSelected[2]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowCuenta(this,"+idTable+");'><i class=\"material-icons\">edit</i></a>"+
-            "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowCuenta(this,"+idTable+");'><i class=\"material-icons\">delete</i></a>");
-            $(elementSelected[0]).text(banco);
-            $(elementSelected[1]).text(no_cuenta);
-
-            console.log("=========UPDATE===============");
-            console.log("ID-TABLE: "+idTable);
-            console.log(arrayTableCuentas);
-
-            console.log(arrayTableCuentas[i] = {'idTable':idTable,'banco':banco,'no_cuenta':no_cuenta,'indexBanco':indexBanco,'estatus':'new'});
-            console.log("[i]=>"+i);
-
-            console.log(arrayTableCuentas);
-            console.log("==============================");
-            $("#agregarCuenta").data('action',"add");
-        }
-    }
-}
-
-function deleteRowCuenta(obj,idTable){
-    $(obj).parent().parent().hide('slow', function(){ this.remove(); });
-    resetCuentaBancaria();
-    console.log("==========DELETE==============");
-    console.log("ID-DELETE:"+idTable);
-    for (var i = 0; i < arrayTableCuentas.length; i++) {
-        // if(arrayTableCuentas[i]['idTable'] == idTable){
-            // console.log("LOADED-DELETED!");
-            // console.log(arrayTableCuentas[i]);
-        //     console.log(arrayTableCuentas[i] = {'idTable':idTable,'banco':arrayTableCuentas[i]['banco'],'no_cuenta':arrayTableCuentas[i]['no_cuenta'],'estatus':'deleted'});
-        //     console.log("[i]=>"+i);
-        // }
-        if(arrayTableCuentas[i]['idTable'] == idTable && arrayTableCuentas[i]['estatus'] == 'new'){
-            console.log("NEW-DELETED!");
-            console.log(arrayTableCuentas.splice(i,1));
-            console.log(JSON.stringify(arrayTableCuentas));
-        }
-    }
-    console.log("==============================");
-}
-
-function resetCuentaBancaria(){
-    $("#no_cuenta").val("");
-    $("#banco").prop("selectedIndex",false);
-    // $("#banco").material_select();
-}
-
-// TODO: cambiar chip de materialize
-// function loadArrayCorreos(){
-//     var correos = $('#correos').material_chip('data');
-//     arrayCorreos = [];
-//     $.each(correos,function(elem,value){
-//         arrayCorreos.push({'correo':value.tag, 'id':value.id, 'estatus':value.estatus});
-//         console.log(elem+"----"+value.tag);
-//     });
-// }
-
-
-function addContacto(idTableContactos){
-        console.log("ID===>"+idTableContactos);
-        for (var i = 0; i < arrayTableContactos.length; i++) {
-            if(arrayTableContactos[i]['idTableContactos'] ==  idTableContactos){
-                $("#tableContactos > tbody ").eq(0)
-                    .append("<tr>"+
-                    "<td>"+arrayTableContactos[i]['tipoContacto']+"</td>"+
-                    "<td>"+arrayTableContactos[i]['nombreContacto']+"</td>"+
-                    "<td>"+arrayTableContactos[i]['telefonoOficina']+" +"+arrayTableContactos[i]['extensionOficina']+"</td>"+
-                    "<td><a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowContacto(this,"+idTableContactos+");'><i class=\"material-icons\">edit</i></a>"+
-                    "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowContacto(this,"+idTableContactos+");'><i class=\"material-icons\">delete</i></a></td>"+
-                    "</tr>");
-                console.log("=========ADD==CONTACTO========");
-                console.log("ID-TABLE: "+idTableContactos);
-                console.log(arrayTableContactos);
-                console.log("==============================");
-
-            }
-        }
-}
-
-
-
-function updateContacto(idTableContacto,tipoContacto,tipoContactoIndex,nombreContacto,puesto,celular,telefonoOficina,extensionOficina,correos){
-    console.log("::::::::::::::::::::::::::::::::::::::::::");
-    console.log(correos);
-    console.log("::::::::::::::::::::::::::::::::::::::::::");
-    for (var i = 0; i < arrayTableContactos.length; i++) {
-        if(arrayTableContactos[i]['idTableContactos'] ==  idTableContacto){
-            console.log(arrayTableContactos[i]);
-            $(contactoSelected[3]).children().remove();
-            $(contactoSelected[3]).html("<a class=\"editar btn btn_tables waves-effect btn-flat\" onclick='editRowContacto(this,"+idTableContacto+
-                                        ");'><i class=\"material-icons\">edit</i></a>"+
-            "<a class=\"eliminar btn btn_tables waves-effect btn-flat\" onclick='deleteRowContacto(this,"+idTableContacto+");'><i class=\"material-icons\">delete</i></a>");
-            $(contactoSelected[0]).text(tipoContacto);
-            $(contactoSelected[1]).text(nombreContacto);
-            $(contactoSelected[2]).text(telefonoOficina+" +"+extensionOficina); // no cuenta
-            console.log("=========UPDATE===============");
-            console.log("ID-TABLE: "+idTableContacto);
-            console.log(arrayTableContactos);
-
-                    console.log("ESTATUS:"+arrayTableContactos[i]['estatus']);
-                    if (arrayTableContactos[i]['estatus'] == 'new'){
-                        // TODO: cambiar chip de materialize
-                        // console.log($("#correos_contacto").material_chip('data'));
-                        console.log(arrayTableContactos[i] = {'idTableContactos':idTableContacto,'tipoContacto':tipoContacto,'tipoContactoIndex':tipoContactoIndex,'nombreContacto':nombreContacto,'puesto':puesto,
-                                            'celular':celular,'telefonoOficina':telefonoOficina,'extensionOficina':extensionOficina,'arrayCorreosContacto':correos,
-                                            'estatus':'new'});
-                    }else {
-                        console.log(arrayTableContactos[i] = {'idTableContactos':idTableContacto,'tipoContacto':tipoContacto,'tipoContactoIndex':tipoContactoIndex,'nombreContacto':nombreContacto,'puesto':puesto,
-                                            'celular':celular,'telefonoOficina':telefonoOficina,'extensionOficina':extensionOficina,'arrayCorreosContacto':correos,
-                                            'estatus':'edit'});
-                    }
-                    console.log("[i]=>"+i);
-
-            console.log("ID-CONTACTO-EDIT: "+idTableContacto);
-            console.log(arrayTableContactos);
-            console.log("==============================");
-            $("#agregarContacto").data('action',"add");
-        }
-    }
-}
-
-
-
-function editRowContacto(obj,idTableContactos){
-    for (var i = 0; i < arrayTableContactos.length; i++) {
-        if(arrayTableContactos[i]['idTableContactos'] ==  idTableContactos){
-
-            console.log("ID: "+idTableContactos);
-            console.log("ID-TABLE: "+idTableContactos);
-            idTableContactosEdit = idTableContactos;
-            correosContacto = arrayTableContactos[i]['arrayCorreosContacto'];
-            contactoSelected = $(obj).parent().parent().find('td');
-            var update="update";
-            $("#agregarContacto").data('action',update);
-            $("#tipo_contacto").val(arrayTableContactos[i]['tipoContactoIndex']);
-            // $("#tipo_contacto").material_select();
-            $("#nombre_contacto").val(arrayTableContactos[i]['nombreContacto']);
-            $("#puesto").val(arrayTableContactos[i]['puesto']);
-            $("#celular").val(arrayTableContactos[i]['celular']);
-            $("#telefono_oficina").val(arrayTableContactos[i]['telefonoOficina']);
-            $("#extension_oficina").val(arrayTableContactos[i]['extensionOficina']);
-            // $("#correos_contacto").val();
-            // $("#correos_contacto").material_select();
-            // console.log(arrayTableContactos[i]['correosContacto']);
-            // var correos = '';
-            // for (var j = 0; j < arrayTableContactos[i]['arrayCorreosContacto'].length; j++) {
-            //     console.log(arrayTableContactos[i]['arrayCorreosContacto']);
-            // }
-            var scorreos = {};
-            scorreos.data = arrayTableContactos[i]['arrayCorreosContacto'];
-            console.log(JSON.stringify(scorreos));
-            var x = JSON.stringify(scorreos);
-            console.log(JSON.parse(x));
-            // TODO: cambiar chip de materialize
-            // $("#correos_contacto").material_chip(JSON.parse(x));
-
-
-        }
-    }
-}
-
-function deleteRowContacto(obj,idTable){
-    $(obj).parent().parent().hide('slow', function(){ this.remove(); });
-    resetContacto();
-    console.log("==========DELETE==============");
-    console.log("ID-DELETE:"+idTable);
-    for (var i = 0; i < arrayTableContactos.length; i++) {
-        // if(arrayTableContactos[i]['idTable'] == idTable){
-            // console.log("LOADED-DELETED!");
-            // console.log(arrayTableContactos[i]);
-        //     console.log(arrayTableContactos[i] = {'idTable':idTable,'banco':arrayTableContactos[i]['banco'],'no_cuenta':arrayTableContactos[i]['no_cuenta'],'estatus':'deleted'});
-        //     console.log("[i]=>"+i);
-        // }
-        if(arrayTableContactos[i]['idTableContactos'] == idTable && arrayTableContactos[i]['estatus'] == 'new'){
-            console.log("NEW-DELETED!");
-            console.log(arrayTableContactos.splice(i,1));
-            console.log(JSON.stringify(arrayTableContactos));
-        }
-    }
-    console.log("==============================");
-}
-
-
-function resetContacto(){
-    $("#tipo_contacto").prop("selectedIndex",false);
-    // $("#tipo_contacto").material_select();
-    $("#nombre_contacto").val("");
-    $("#puesto").val("");
-    $("#celular").val("");
-    $("#telefono_oficina").val("");
-    $("#extension_oficina").val("");
-    // $("#correos_contacto").val("");
-    // TODO: cambiar chip
-    // $("#correos_contacto").material_chip("");
-}
-
-
-function resetDireccion(){
-    $("input:radio[name='tipo_direccion']:checked").removeAttr('checked');
-    $("#calle").val("");
-    $("#num_exterior").val("");
-    $("#num_interior").val("");
-    $("#cp").val("");
-    $("#pais").prop("selectedIndex",false);
-    // $("#pais").material_select();
-    $("#estado").prop("selectedIndex",false);
-    // $("#estado").material_select();
-    $("#municipio").prop("selectedIndex",false);
-    // $("#municipio").material_select();
-    $("#colonia").val("");
-}
-
-
-
-function loadEstados(url_estados){
-    $.ajax({
-        type:'POST',
-        url: url_estados,
-        dataType: 'json',
-        success: function (data) {
-            $('#estado').html('');
-            console.log("loadEstados"+url_estados);
-            let option_estado = $('<option/>');
-            option_estado.val(null);
-            option_estado.attr('disabled','disabled');
-            option_estado.attr('selected','selected');
-            option_estado.text('Selecciona...');
-            let option_municipio = $('<option/>');
-            option_municipio.val(null);
-            option_municipio.attr('disabled','disabled');
-            option_municipio.attr('selected','selected');
-            option_municipio.text('Selecciona...');
-            if(data.cantidad === 0){
-                $('#municipio').html(option_municipio);
-                $('#municipio').prop('disabled',true);
-                $('#estado').html(option_estado);
-                $('#estado').prop('disabled',true);
-            }else{
-                $('#estado').prop('disabled',false);
-                let option = $('<option/>');
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                option.text('Selecciona...');
-                $('#estado').append(option);
-                $.each(data, function (key, estado) {
-                    let option = $('<option/>');
-                    option.val(estado.id_estado);
-                    option.text(estado.estado);
-                    $('#estado').append(option);
-                });
-            }
-            // $('#estado').material_select();
-            // $('#municipio').material_select();
-        },
-        error: function () {
-            // alert('error');
-            // Materialize.toast('<span><i class="material-icons">priority_high</i> No se pudieron cargar los estados</span>', 3000,'m_error');
-        }
-    });
-}
-
-
-
-
-function loadMunicipios(url_municipio, id_municipio ){
-    $.ajax({
-        type:'POST',
-        url: url_municipio,
-        dataType: 'json',
-        success: function (data) {
-            $('#municipio').html('');
-            let option = $('<option/>');
-            console.log("loadMunicipios: " + url_municipio);
-            option.val(null);
-            option.attr('disabled','disabled');
-            option.attr('selected','selected');
-            option.text('Selecciona...');
-            if(data.cantidad === 0){
-                $('#municipio').html(option);
-                $('#municipio').prop('disabled',true);
-            }else{
-                $('#municipio').prop('disabled',false);
-                let option = $('<option/>');
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                option.text('Selecciona...');
-                $('#municipio').append(option);
-                $.each(data, function (key, municipio) {
-                    let option = $('<option/>');
-                    option.val(municipio.id_municipio);
-                    option.text(municipio.municipio);
-                    $('#municipio').append(option);
-                });
-            }
-
-            console.log(id_municipio)
-
-            if (id_municipio !== undefined) {
-                $("#municipio").val(id_municipio);
-            }
-
-            // $('#municipio').material_select();
-        },
-        error: function () {
-            // alert('error');
-            //   Materialize.toast('<span><i class="material-icons">priority_high</i> No se pudieron cargar los municipios</span>', 3000,'m_error');
-        }
-    });
-}
-
-
-
-
-
-function addLicencia(idTable){
-    for (var i = 0; i < arrayTableSanitarias.length; i++) {
-        if(arrayTableSanitarias[i]['idTable'] ==  idTable){
-            console.log(arrayTableSanitarias[i]['idTable']);
-            console.log(arrayTableSanitarias[i]['archivo']['nombreArchivo']);
-            console.log("ID===>"+idTable);
-
-            $("#tableSanitaria > tbody ").eq(0)
-                .append("<tr>"+
-                "<td><a ><i class=\"material-icons\">attach_file</i>"+
-                arrayTableSanitarias[i]['archivo']['nombreArchivo']+"</a></td>"+
-                "<td><a class='eliminar btn btn_tables waves-effect btn-flat' onclick='deleteRowSanitaria(this,"+
-                idTable+");'><i class='material-icons'>delete</i></a></td></tr>");
-        }
-        console.log("============ADD===============");
-        console.log("ID-TABLE: "+idTable);
-        console.log(arrayTableSanitarias);
-        console.log("==============================");
-    }
-    // $("#filesSanitarias").closest('form').trigger('reset');
-    $("#filesSanitarias").val("");
-}
-
-
-function deleteRowSanitaria(obj,idTable){
-    $(obj).parent().parent().hide('slow', function(){ this.remove(); });
-    // TODO: reset input files for this field
-    // $("#filesSanitarias").closest('form').trigger('reset');
-    $("#filesSanitarias").val("");
-    console.log("==========DELETE==============");
-    console.log("ID-DELETE:"+idTable);
-    for (var i = 0; i < arrayTableSanitarias.length; i++) {
-        if(arrayTableSanitarias[i]['idTable'] == idTable && arrayTableSanitarias[i]['estatus'] == 'new'){
-            console.log("NEW-DELETED!");
-            console.log(arrayTableSanitarias.splice(i,1));
-            console.log(JSON.stringify(arrayTableSanitarias));
-        }
-    }
-    console.log("==============================");
-}
-
-
-function addAvisoFuncionamiento(idTable){
-    for (var i = 0; i < arrayTableAvisoFuncionamiento.length; i++) {
-        if(arrayTableAvisoFuncionamiento[i]['idTable'] ==  idTable){
-            console.log(arrayTableAvisoFuncionamiento[i]['idTable']);
-            console.log(arrayTableAvisoFuncionamiento[i]['archivo']['nombreArchivo']);
-            console.log("ID===>"+idTable);
-
-            $("#tableAvisosFuncionamiento > tbody ").eq(0)
-                .append("<tr>"+
-                "<td><a ><i class=\"material-icons\">attach_file</i>"+
-                arrayTableAvisoFuncionamiento[i]['archivo']['nombreArchivo']+"</a></td>"+
-                "<td><a class='eliminar btn btn_tables waves-effect btn-flat' onclick='deleteRowAvisoFuncionamiento(this,"+
-                idTable+");'><i class='material-icons'>delete</i></a></td></tr>");
-        }
-        console.log("============ADD===============");
-        console.log("ID-TABLE: "+idTable);
-        console.log(arrayTableAvisoFuncionamiento);
-        console.log("==============================");
-    }
-    // $("#filesAvisoFuncionamiento").closest('form').trigger('reset');
-    $("#filesAvisoFuncionamiento").val("");
-}
-
-
-function deleteRowAvisoFuncionamiento(obj,idTable){
-    $(obj).parent().parent().hide('slow', function(){ this.remove(); });
-    // TODO: reset input fiules for this field
-    // $("#filesAvisoFuncionamiento").closest('form').trigger('reset');
-    $("#filesAvisoFuncionamiento").val("");
-    console.log("==========DELETE==============");
-    console.log("ID-DELETE:"+idTable);
-    for (var i = 0; i < arrayTableAvisoFuncionamiento.length; i++) {
-        if(arrayTableAvisoFuncionamiento[i]['idTable'] == idTable && arrayTableAvisoFuncionamiento[i]['estatus'] == 'new'){
-            console.log("NEW-DELETED!");
-            console.log(arrayTableAvisoFuncionamiento.splice(i,1));
-            console.log(JSON.stringify(arrayTableAvisoFuncionamiento));
-        }
-    }
-    console.log("==============================");
-}
-
-function addAvisoResponsable(idTable){
-    for (var i = 0; i < arrayTableAvisoResponsable.length; i++) {
-        if(arrayTableAvisoResponsable[i]['idTable'] ==  idTable){
-            console.log(arrayTableAvisoResponsable[i]['idTable']);
-            console.log(arrayTableAvisoResponsable[i]['archivo']['nombreArchivo']);
-            console.log("ID===>"+idTable);
-
-            $("#tableAvisosResponsable > tbody ").eq(0)
-                .append("<tr>"+
-                "<td><a ><i class=\"material-icons\">attach_file</i>"+
-                arrayTableAvisoResponsable[i]['archivo']['nombreArchivo']+"</a></td>"+
-                "<td><a class='eliminar btn btn_tables waves-effect btn-flat' onclick='deleteRowAvisoResponsable(this,"+
-                idTable+");'><i class='material-icons'>delete</i></a></td></tr>");
-        }
-        console.log("============ADD===============");
-        console.log("ID-TABLE: "+idTable);
-        console.log(arrayTableAvisoResponsable);
-        console.log("==============================");
-    }
-    // $("#filesAvisoResponsable").closest('form').trigger('reset');
-    $("#filesAvisoResponsable").val("");
-}
-
-
-function deleteRowAvisoResponsable(obj,idTable){
-    $(obj).parent().parent().hide('slow', function(){ this.remove(); });
-    // TODO: reset input files for this field
-    // $("#filesAvisoResponsable").parent().siblings('.file-path-wrapper').wrap('<form>').closest('form').get(0).reset();
-    // $("#filesAvisoResponsable").parent().siblings('form').children().unwrap();
-    // var avisoRespToClone = $("#avisoRespToClone");
-    $("#filesAvisoResponsable").val("");
-    // $("#filesAvisoResponsable").closest('form').trigger('reset');
-
-    console.log("==========DELETE==============");
-    console.log("ID-DELETE:"+idTable);
-    for (var i = 0; i < arrayTableAvisoResponsable.length; i++) {
-        if(arrayTableAvisoResponsable[i]['idTable'] == idTable && arrayTableAvisoResponsable[i]['estatus'] == 'new'){
-            console.log("NEW-DELETED!");
-            console.log(arrayTableAvisoResponsable.splice(i,1));
-            console.log(JSON.stringify(arrayTableAvisoResponsable));
-        }
-    }
-    console.log("==============================");
+function borrarProducto(el) {
+	$(el).parent().parent('tr').remove();
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado el producto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }

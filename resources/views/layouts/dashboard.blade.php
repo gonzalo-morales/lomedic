@@ -1,30 +1,37 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ app()->getLocale() }}">
 <head>
 	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="robots" content="noindex,nofollow" />
+	<base href="{{url('/')}}" />
 	<title>{{ config('app.name', '') }} - @yield('title')</title>
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
 	{{ HTML::meta('csrf-token', csrf_token()) }}
-	{{ HTML::favicon(asset("img/$empresa->logotipo")) }}
+	{{ HTML::favicon(asset("img/$menuempresa->logotipo")) }}
 	<!-- Bootstrap CSS local fallback -->
-	{{ HTML::style(asset('css/bootstrap.min.css')) }}
+	{{ HTML::style(asset('css/bootstrap/dist/css/bootstrap.min.css')) }}
 	<!-- Select2 CSS local -->
 	{{ HTML::style(asset('css/select2.min.css')) }}
 	{{ HTML::style(asset('css/select2-bootstrap.min.css')) }}
 	{{ HTML::style(asset('css/pickadate/default.css')) }}
 	{{ HTML::style(asset('css/pickadate/default.date.css')) }}
-	
+	{{ HTML::style(asset('vendor/btn-load/style.css')) }}
+
     {{ HTML::style(asset('css/style.css'), ['media'=>'screen,projection']) }}
     {{ HTML::style(asset('css/style-nav.css'), ['media'=>'screen,projection']) }}
-    
+
     @if(!isset(request()->kendoWindow))
-        {{ HTML::style(asset('css/kendo.common-material.min.css')) }}
-        {{ HTML::style(asset('css/kendo.rtl.min.css')) }}
-        {{ HTML::style(asset('css/kendo.material.min.css')) }}
-        {{ HTML::style(asset('css/kendo.material.mobile.min.css')) }}
+        {{ HTML::style(asset('css/kendo/web/kendo.common-material.min.css')) }}
+        {{ HTML::style(asset('css/kendo/web/kendo.material.min.css')) }}
+        {{ HTML::style(asset('css/kendo/web/kendo.material.mobile.min.css')) }}
     @endif
 	@yield('header-top')
+    
+    <link rel="dns-prefetch" href="//ajax.googleapis.com">
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
 </head>
 <body>
 @if(!isset(request()->kendoWindow))
@@ -32,24 +39,22 @@
     	<nav class="navbar navbar-default bg-white">
             <div class="navbar-header d-flex flex-row">
                 <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">menu</i></button>
-    
-            <div class="btn-group">
-                <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        			{{ HTML::image(asset("img/$empresa->logotipo"), 'Logo', ['width'=>'25px']) }} {{ $empresa->nombre_comercial }}
-        		</a>
-                <ul id='enteDrop' class="dropdown-menu z-depth-2" aria-labelledby="dropdownMenu2">
-            		@foreach($empresas as $_empresa)
-            		<li><a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">{{ HTML::image(asset("img/$_empresa->logotipo"), null, ['class'=>'circle responsive-img','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}</a></li>
-            		@endforeach
-            	</ul>
-            </div>
-    
+                <div class="btn-group">
+                    <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            			{{ HTML::image(asset("img/$menuempresa->logotipo"), 'Logo', ['width'=>'25px']) }} {{ $menuempresa->nombre_comercial }}
+            		</a>
+                    <ul id='enteDrop' class="dropdown-menu z-depth-2" aria-labelledby="dropdownMenu2">
+                		@foreach($menuempresas as $_empresa)
+                		<li><a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">{{ HTML::image(asset("img/$_empresa->logotipo"), null, ['class'=>'circle responsive-img','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}</a></li>
+                		@endforeach
+                	</ul>
+                </div>
             </div>
             <a class="d-flex align-items-center" href="{{asset(request()->company)}}" title="ADMINISTRACION"><i class='material-icons left'>home</i></a>
             <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">live_help</i></button>
         </nav>
     	<!--<ol class="breadcrumb bg-light rounded-0 z-depth-1-half">
-    		<li class="breadcrumb-item" id="bread-home">{{ HTML::link(companyAction('HomeController@index', ['company' => $empresa->conexion]), 'Inicio') }}</li>
+    		<li class="breadcrumb-item" id="bread-home">{{ HTML::link(companyAction('HomeController@index', ['company' => $menuempresa->conexion]), 'Inicio') }}</li>
     		@foreach(routeNameReplace() as $key=>$item)
     			@if($item !== 'index' && !empty($item))
     				<li class="breadcrumb-item active">{{ HTML::link($key == 1 ? companyRoute('index') : '#', $item) }}</li>
@@ -81,10 +86,10 @@
             				<i class="tiny material-icons">power_settings_new</i>
             			</a>
         			</strong>
-    
+
         			{!! Form::open(['route' => 'logout', 'before' => 'csrf', 'id' => 'logout-form', 'class' => 'hidden']) !!} {!! Form::close() !!}
                 </div>
-    
+
                 <ul id="menu-conten" class="list-unstyled components text-center">
                 	{!! Form::text('filter',null,['id'=>'filter-menu','placeholder'=>'Buscar en menu.']) !!}
                     @if(isset($menu))
@@ -100,24 +105,26 @@
             @yield('content')
         </div>
     </div>
-    
+
 @include('layouts.ticket')
 
 <!-- jQuery CDN -->
-{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js') }}
+{{ HTML::script('https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js') }}
+
 <!-- jQuery local fallback -->
 <script>window.jQuery || document.write('<script src="{{asset('js/jquery.min.js') }}"><\/script>')</script>
 
-{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js') }}
+{{ HTML::script('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js') }}
 {{ HTML::script(asset('js/popper.min.js')) }}
 
 <!-- Bootstrap JS CDN -->
-{{ HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js') }}
+{{ HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js') }}
+
 <!-- Bootstrap JS local fallback -->
-<script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap.min.js') }}"><\/script>')}</script>
+<script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{{asset('js/bootstrap/bootstrap.min.js') }}"><\/script>')}</script>
 
 <!-- Kendo UI -->
-{{ HTML::script(asset('js/kendo.all.min.js')) }}
+{{ HTML::script(asset('js/kendo/kendo.all.min.js')) }}
 
 <!-- jQuery js Validation local-->
 {{ HTML::script('vendor/jsvalidation/js/jsvalidation.min.js') }}
@@ -128,10 +135,12 @@
 {{ HTML::script(asset('js/toaster.js')) }}
 {{ HTML::script(asset('js/select2.full.min.js')) }}
 {{ HTML::script(asset('js/app.js')) }}
+{{ HTML::script(asset('vendor/btn-load/script.js')) }}
 
 @if(!isset(request()->kendoWindow))
     {{ HTML::script(asset('js/ticket.js')) }}
 @endif
+
 @yield('header-bottom')
 
 </body>

@@ -32,8 +32,6 @@ class SeguimientoSolicitudesController extends ControllerBase
             $request->request->set('asunto',$asunto.". (Cambio estatus: $estatus->estatus)");
         }
         
-        //dd($request->request);
-        
         $created = $this->entity->create($request->all());
         
         if ($created) {

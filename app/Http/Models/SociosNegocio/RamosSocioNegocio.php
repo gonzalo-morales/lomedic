@@ -2,15 +2,12 @@
 
 namespace App\Http\Models\SociosNegocio;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class RamosSocioNegocio extends Model
+class RamosSocioNegocio extends ModelBase
 {
-    // use SoftDeletes;
-
     /**
      * The table associated with the model.
-     *
      * @var string
      */
     protected $table = 'sng_cat_ramos_socio';
@@ -23,14 +20,12 @@ class RamosSocioNegocio extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = ['ramo', 'activo'];
 
     /**
      * Indicates if the model should be timestamped.
-     *
      * @var bool
      */
     public $timestamps = false;
@@ -39,13 +34,9 @@ class RamosSocioNegocio extends Model
      * The validation rules
      * @var array
      */
-    // public $rules = [
-    //     'ramo' => 'required',
-    //     'activo' => 'required',
-    // ];
+    public $rules = [];
 
-    public function getTable(){
-	    return $this->table;
+    public function socionegocio(){
+        return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');
     }
-
 }

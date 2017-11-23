@@ -3,7 +3,6 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
-{{dump(old())}}
 <div class="row">
 	<div class="form-group col-md-11 col-xs-12">
 		{{ Form::label('sustancia_activa', 'Sustancia Activa') }}

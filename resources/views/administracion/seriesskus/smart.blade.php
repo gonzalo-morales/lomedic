@@ -1,34 +1,45 @@
 
 @section('content-width', 's12')
 
+@section('header-bottom')
+    @parent
+    <script type="text/javascript">
+		$(document).ready(function() {
+        	$("#primer_numero").on('change',function(){
+            	var primero = parseInt($("#primer_numero").val());
+        		$("#numero_siguiente").val(primero);
+        		$("#ultimo_numero").attr('min',primero+1);
+        	});
+
+        });
+    </script>
+@endsection
+
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-    <div class="form-group col-md-6 col-xs-12">
-        {{ Form::label('descripcion', 'Familia') }}
-        {{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'form-control']) }}
-        {{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
+    <div class="form-group col-md-12 col-lg-6">
+        {{ Form::cText('* Nombre Serie','nombre_serie') }}
     </div>
-    <div class="form-group col-md-6 col-xs-12">
-        {{ Form::label('nomenclatura', 'Nomenclatura') }}
-        {{ Form::text('nomenclatura', null, ['id'=>'nomenclatura','class'=>'form-control']) }}
-        {{ $errors->has('nomenclatura') ? HTML::tag('span', $errors->first('nomenclatura'), ['class'=>'help-block deep-orange-text']) : '' }}
+    <div class="form-group col-md-4 col-lg-2">
+        {{ Form::cText('* Prefijo','prefijo', null) }}
     </div>
-    <div class="form-group col-md-6 col-xs-12">
-        {{ Form::label('fk_id_tipo_producto', 'Tipo') }}
-        {{Form::select('fk_id_tipo_producto',isset($product_types)?$product_types:[],null,['id'=>'fk_id_tipo_producto','class'=>'form-control'])}}
-        {{ $errors->has('tipo') ? HTML::tag('span', $errors->first('tipo'), ['class'=>'help-block deep-orange-text']) : '' }}
+    <div class="form-group col-md-4 col-lg-2">
+        {{ Form::cNumber('* Primer Numero','primer_numero') }}
     </div>
-    <div class="form-group col-md-6 col-xs-12">
-        {{ Form::label('tipo_presentacion', 'Presentacion') }}
-        {{ Form::select('tipo_presentacion',
-        ['1'=>'Cantidad',
-        '2'=>'Cantidad y Unidad',
-        '3'=>'Ampolletas (Ã�mpulas)',
-        '4'=>'Dosis'],
-        null, ['id'=>'tipo_presentacion','class'=>'form-control']) }}
-        {{ $errors->has('tipo_presentacion') ? HTML::tag('span', $errors->first('tipo_presentacion'), ['class'=>'help-block deep-orange-text']) : '' }}
+    <div class="form-group col-md-4 col-lg-2">
+        {{ Form::cNumber('Ultimo Numero','ultimo_numero') }}
     </div>
+    <div class="form-group col-md-4 col-lg-2">
+        {{ Form::cNumber('Siguiente Numero','numero_siguiente',['readonly'=>true]) }}
+    </div>
+    <div class="form-group col-md-4 col-lg-2">
+        {{ Form::cText('Sufijo','sufijo', null) }}
+    </div>
+    <div class="form-group col-md-12 col-xs-12">
+    	{{ Form::cTextArea('Descripcion','descripcion', null) }}
+    </div>
+
     <div  class="col-md-12 text-center mt-2">
         <div class="alert alert-warning" role="alert">
             Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.

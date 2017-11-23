@@ -59,11 +59,12 @@ class Proyectos extends ModelCompany
         'fk_id_cliente' => 'required',
         'fecha_contrato' => 'required',
         'fk_id_clasificacion_proyecto' => 'required',
+        'monto_adjudicado'=>'regex:/^\d{0,10}(\.\d{0,2})?$/'
     ];
 
     public $fields = [
         'proyecto' => 'Proyecto',
-        'cliente.nombre_corto' => 'Cliente',
+        'cliente.nombre_comercial' => 'Cliente',
         'numero_contrato' => 'No. Contrato',
         'fecha_inicio_contrato' => 'Inicio de contrato',
         'fecha_fin_contrato' => 'Fin de contrato',

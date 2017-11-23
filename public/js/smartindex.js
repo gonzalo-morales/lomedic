@@ -74,12 +74,14 @@ datatable.on('datatable.update', function() {
 	view.unbind();
 	view = rivets.bind(window['smart-view'], window['smart-model']);
 	view.models.actions.itemsSync({}, view.models);
+    $('[data-toggle="tooltip"]').tooltip();
 })
 
 datatable.on('datatable.page', function() {
 	view.unbind();
 	view = rivets.bind(window['smart-view'], window['smart-model']);
 	view.models.actions.itemsSync({}, view.models);
+    $('[data-toggle="tooltip"]').tooltip();
 })
 
 $('#smart-modal').on('show.bs.modal', function (e) {
@@ -99,7 +101,6 @@ $('#smart-modal').on('hidden.bs.modal', function (e) {
 	}
 })
 
-//
 window['smart-model'] = {
 	// Estados de vista
 	status: {
@@ -115,7 +116,7 @@ window['smart-model'] = {
 			// Button
 			{a: {
 				href: '#',
-				class: 'btn btn-primary',
+				class: 'btn btn-primary progress-button',
 				role: 'buttons',
 				'rv-get-create-url': '',
 				html: '<i class="material-icons left align-middle">add</i>Crear',
@@ -230,8 +231,8 @@ window['smart-model'] = {
 
 			let modal = window['smart-modal'];
 			modal.view = rivets.bind(modal, {
-				title: '¿Estas seguro?',
-				content: 'Una vez eliminado(s) no podrás recuperarlo(s).',
+				title: 'Ãƒâ€šÃ‚Â¿Estas seguro?',
+				content: 'Una vez eliminado(s) no podrÃƒÆ’Ã‚Â¡s recuperarlo(s).',
 				buttons: [
 					{button: {
 						'text': 'Cancelar',
@@ -266,20 +267,21 @@ window['smart-model'] = {
 			e.preventDefault();
 
 			let data, tablerows;
+			let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
 			switch (this.dataset.deleteType) {
 				case 'multiple':
-				data =  {ids: rivets.formatters.keys(rv.collections.items)};
+				data =  {ids: rivets.formatters.keys(rv.collections.items),'_token':token};
 				tablerows = rivets.formatters.values(rv.collections.items);
 				break;
 				case 'single':
-				data =  {};
+				data =  {'_token':token};
 				tablerows = [this.parentNode.parentNode.dataIndex];
 				break;
 			}
 
 			$(window['smart-modal']).modal('hide');
-			//
+
 			$.delete(this.dataset.deleteUrl, data, function(response) {
 				if (response.success) {
 					datatable.rows().remove(tablerows)
@@ -293,7 +295,8 @@ window['smart-model'] = {
 		itemsExport(e, rv) {
 			e.preventDefault();
 			rv.status.isDownloading = true;
-			post_to_url(window['smart-view'].dataset.itemExportUrl.replace('_ID_', this.dataset.exportType), {'ids' : rivets.formatters.keys(rv.collections.items)});
+			token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+			post_to_url(window['smart-view'].dataset.itemExportUrl.replace('_ID_', this.dataset.exportType), {'ids' : rivets.formatters.keys(rv.collections.items),'_token':token});
 			rv.status.isDownloading = false;
 		},
 	},
@@ -434,7 +437,6 @@ rivets.binders['append-filters'] = function(el) {
 	var input_group = row.querySelector('.input-group');
 		input_group.insertBefore(el, input_group.firstChild)
 
-	//
 	for (var i in datatable.headings) {
 		var th = datatable.headings[i];
 		if (th.innerText || th.textContent) {
@@ -471,13 +473,13 @@ if (datatable.hasRows) {
 	datatable.setMessage('Sin elementos.');
 }
 
-/* */
 function getItems($page) {
 
 	let primary = window['smart-view'].dataset.primaryKey;
 	let columns = JSON.parse(window['smart-view'].dataset.columns);
+	let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
-	$.getJSON(window['smart-view'].dataset.itemShowOrDeleteUrl.replace('#ID#', '') + '?page=' + $page, function(response) {
+	$.getJSON(window['smart-view'].dataset.itemShowOrDeleteUrl.replace('/#ID#', '') + '?page=' + $page, function(response) {
 		let collection = [];
 		$.each(response.data, function(index, item) {
 			let id = item[primary];

@@ -24,12 +24,16 @@
 		'html': '<i class="material-icons">visibility</i>',
 		'class': 'btn is-icon',
 		'rv-get-show-url': '',
+		'data-toggle':'tooltip',
+		'title':'Ver'
 	}};
 	@can('update', currentEntity())
 	window['smart-model'].collections.itemsOptions.edit = {a: {
 		'html': '<i class="material-icons">mode_edit</i>',
 		'class': 'btn is-icon',
 		'rv-get-edit-url': '',
+        'data-toggle':'tooltip',
+        'title':'Editar'
 	}};
 	@endcan
 	@can('delete', currentEntity())
@@ -40,9 +44,10 @@
 		'rv-on-click': 'actions.showModalDelete',
 		'rv-get-delete-url': '',
 		'data-delete-type': 'single',
+        'data-toggle':'tooltip',
+        'title':'Eliminar'
 	}};
 	@endcan
-
 </script>
 @endsection
 
@@ -63,7 +68,7 @@
 
 @section('content')
 <div class="container-fluid">
-	<h4 class="col-md-12">@yield('title')</h4>
+	<h4 class="col-md-12 display-4">@yield('title')</h4>
 	<div class="row">
 		<div class="col">
 			<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-create-url="{{ companyRoute('create') }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}" data-item-export-url="{{companyRoute('export', ['type' => '_ID_'])}}">

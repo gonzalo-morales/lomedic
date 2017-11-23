@@ -21,4 +21,17 @@ class Ubicaciones extends ModelBase
      */
     protected $fillable = ['fk_id_almacen','rack', 'ubicacion', 'posicion', 'nivel', 'activo','eliminar'];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['nomenclatura'];
+
+    public function getNomenclaturaAttribute()
+    {
+        return implode('-', [$this->rack, $this->ubicacion, $this->posicion, $this->nivel]);
+    }
+
+
 }

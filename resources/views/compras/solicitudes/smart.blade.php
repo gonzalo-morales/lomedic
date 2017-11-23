@@ -1,19 +1,12 @@
 @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/pickadate/default.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/pickadate/default.date.css') }}">
 @endsection
 @section('header-bottom')
 	@parent
 	{{--<script type="text/javascript" src="{{ asset('js/jquery.ui.autocomplete2.js') }}"></script>--}}
-	<script type="text/javascript" src="{{ asset('js/pickadate/picker.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/pickadate/picker.date.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/pickadate/translations/es_Es.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/toaster.js') }}"></script>
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if(!Route::currentRouteNamed(currentRouteName('index')))
-		<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
 	@endif
 @endsection
 
@@ -34,11 +27,10 @@
 			@if(Route::currentRouteNamed(currentRouteName('edit')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
 				{!! Form::select('fk_id_sucursal', isset($sucursalesempleado)?$sucursalesempleado:[],null, ['id'=>'fk_id_sucursal_','class'=>'form-control','style'=>'width:100%']) !!}
-				{!! Form::hidden('sucursal_defecto',$data->fk_id_sucursal,['id'=>'sucursal_defecto']) !!}
+				{!! Form::hidden('sucursal_defecto',null,['id'=>'sucursal_defecto']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('show')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
-
-				{!! Form::text('sucursal',$data->sucursales->where('id_sucursal',$data->fk_id_sucursal)->first()->nombre_sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
+				{!! Form::text('sucursal',$data->sucursales->sucursal,['class'=>'form-control','style'=>'width:100%']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('create')))
 				{{ Form::label('fk_id_sucursal', '* Sucursal') }}
 				{!! Form::select('fk_id_sucursal', isset($sucursalesempleado)?$sucursalesempleado:[],null, ['id'=>'fk_id_sucursal_','class'=>'form-control','style'=>'width:100%']) !!}
@@ -53,7 +45,7 @@
 			{{--{!! Form::select('fk_id_estatus_solicitud', \App\Http\Models\Compras\EstatusSolicitudes::all()->pluck('estatus','id_estatus'),null, ['id'=>'fk_id_sucursal']) !!}--}}
 			{{ Form::label('estatus_solicitud', '* Estatus de la solicitud') }}
 			@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('show')))
-				{!! Form::text('estatus_solicitud',$data->estatus->estatus,['disabled','class'=>'form-control']) !!}
+				{!! Form::text('estatus_solicitud',null,['disabled','class'=>'form-control']) !!}
 			@elseif(Route::currentRouteNamed(currentRouteName('create')))
 				{!! Form::text('estatus_solicitud','Abierto',['disabled','class'=>'form-control']) !!}
 			@endif
@@ -62,18 +54,18 @@
 			@if(isset($data->fk_id_estatus_solicitud) && $data->fk_id_estatus_solicitud ==3)
 				<div class="form-group input-field col-md-3 col-sm-12">
 					{{ Form::label('fecha_cancelacion','Fecha de cancelación') }}
-					{!! Form::text('fecha_cancelacion',$data->fecha_cancelacion,['disabled','class'=>'form-control']) !!}
+					{!! Form::text('fecha_cancelacion',null,['disabled','class'=>'form-control']) !!}
 				</div>
 				<div class="form-group input-field col-md-9 col-sm-12">
 					{{ Form::label('motivo_cancelacion','Motivo de la cancelación') }}
-					{!! Form::text('motivo_cancelacion',$data->motivo_cancelacion,['disabled','class'=>'form-control']) !!}
+					{!! Form::text('motivo_cancelacion',null,['disabled','class'=>'form-control']) !!}
 				</div>
 			@endif
 	</div>
 	<div class="row">
 		<div class="col-sm-12">
 			<h3>Detalle de la solicitud</h3>
-			<div class="card">
+			<div class="card z-depth-1-half">
 				@if(!Route::currentRouteNamed(currentRouteName('show')))
 				<div class="card-header">
 					<fieldset name="detalle-form" id="detalle-form">
@@ -84,13 +76,16 @@
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_upc','Código de barras')}}
+								<div id="loadingUPC" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+									Cargando datos... <i class="material-icons align-middle loading">cached</i>
+								</div>
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
 								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
 								'class'=>'form-control','style'=>'width:100%']) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_proveedor','Proveedor')}}
-								{!!Form::select('fk_id_proveedor',[],null,['id'=>'fk_id_proveedor','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%'])!!}
+								{!!Form::select('fk_id_proveedor',isset($proveedores)?$proveedores:[],null,['id'=>'fk_id_proveedor','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%'])!!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_proyecto','Proyecto')}}
@@ -112,7 +107,6 @@
 							</div>
 							<div class="form-group input-field col-md-2 col-sm-6">
 								{{Form::label('fk_id_impuesto','Tipo de impuesto')}}
-								{{--{{dd($impuestos)}}--}}
 								{!! Form::select('fk_id_impuesto',[]
 									,null,['id'=>'fk_id_impuesto',
 									'data-url'=>companyAction('Administracion\ImpuestosController@obtenerImpuestos'),
@@ -168,10 +162,11 @@
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
-										{{$detalle->upc->descripcion}}
+										{{$detalle->upc->upc ?? ''}}
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proveedor]',$detalle->fk_id_proveedor) !!}
+										{{$detalle->proveedor->nombre_corto ?? 'Sin proveedor'}}
 									</td>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
@@ -179,11 +174,11 @@
 									<td>
 										@if(!Route::currentRouteNamed(currentRouteName('edit')))
 											{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
-											{{$detalle->proyecto->proyecto}}
+											{{$detalle->proyecto->proyecto ?? ''}}
 										@else
 											{!! Form::select('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
-													isset($proyectos) ? $proyectos : null,
-													$detalle->id_proyecto,['id'=>'detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
+													isset($proyectos) ? $proyectos->prepend('...','0') : null,
+													$detalle->fk_id_proyecto,['id'=>'detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
 													'class'=>'detalle_select','style'=>'width:100%'])
 											!!}
 										@endif
@@ -230,7 +225,7 @@
 											{{number_format($detalle->total,2,'.','')}}
 										@else
 											{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][total]',number_format($detalle->total,2,'.','')
-											,['class'=>'form-control','id'=>'total'.$detalle->id_solicitud_detalle,'readonly'])!!}
+											,['class'=>'form-control','id'=>'total'.$detalle->id_solicitud_detalle,'readonly','style'=>'min-width:100px'])!!}
 										@endif
 									<td>
 										{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
@@ -300,12 +295,19 @@
 //				 el.href = window['smart-view'].dataset.itemSupplyUrl.replace('#ID#',el.dataset.itemId);
              }
 		 };
+         rivets.binders['get-offer-url'] = {
+             bind: function (el) {
+				 el.href = el.href.replace('#','/'+el.dataset.itemId+'/ofertas/crear');
+             }
+		 };
 		 @can('update', currentEntity())
              window['smart-model'].collections.itemsOptions.edit ={a: {
              'html': '<i class="material-icons">mode_edit</i>',
              'class': 'btn is-icon',
              'rv-get-edit-url': '',
-             'rv-hide-update':''
+             'rv-hide-update':'',
+             'data-toggle':'tooltip',
+             'title':'Editar'
          }};
 		 @endcan
 		@can('delete', currentEntity())
@@ -316,15 +318,28 @@
 			'rv-on-click': 'actions.showModalCancelar',
 			'rv-get-delete-url': '',
 			'data-delete-type': 'single',
-			'rv-hide-delete':''
+			'rv-hide-delete':'',
+             'data-toggle':'tooltip',
+             'title':'Cancelar'
 		}};
 		@endcan
+        window['smart-model'].collections.itemsOptions.offer = {a: {
+        'html': '<i class="material-icons">attach_money</i>',
+        'class': 'btn is-icon',
+		'href':'#',
+		'rv-get-offer-url':'',
+		'data-toggle':'tooltip',
+		'title':'Crear oferta'
+        }};
 		window['smart-model'].collections.itemsOptions.supply = {a: {
 		'html': '<i class="material-icons">shopping_cart</i>',
-		'href' : '{!! companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>'#ID#']) !!}',
+{{--		'href' : '{!! companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>'#ID#']) !!}',--}}
+		'href' : '{!! url($company."/compras/#ID#/1/ordenes/crear") !!}',
 		'class': 'btn is-icon',
 		'rv-hide-comprar':'',
-		'rv-get-comprar-url':''
+		'rv-get-comprar-url':'',
+		'data-toggle':'tooltip',
+		'title':'Ordenar'
         }};
 		window['smart-model'].actions.itemsCancel = function(e, rv, motivo){
 		    if(!motivo.motivo_cancelacion){
@@ -358,6 +373,8 @@
             modal.view = rivets.bind(modal, {
                 title: '¿Estas seguro que deseas cancelar la solicitud?',
                 content: '<form  id="cancel-form">' +
+                '<div class="alert alert-warning text-center"><span class="text-danger">La cancelación de un documento es irreversible.</span><br>'+
+				'Para continuar, especifique el motivo y de click en cancelar.</div>'+
                 '<div class="form-group">' +
                 '<label for="recipient-name" class="form-control-label">Motivo de cancelación:</label>' +
                 '<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +
@@ -406,20 +423,29 @@
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
+	@section('form-title')
+		<h1 class="display-4">Agregar Solicitud</h1>
+	@endsection
 	@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
+	@section('form-title')
+		<h1 class="display-4">Editar Solicitud</h1>
+	@endsection
 	@include('layouts.smart.edit')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('extraButtons')
 		@parent
-		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) !!}
+		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
 		@if($data->fk_id_estatus_solicitud == 1)
-			{!! HTML::decode(link_to(companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>$data->id_solicitud]),'<i class="material-icons">shopping_cart</i> Ordenar',['class'=>'btn btn-default'])) !!}
+			{!! HTML::decode(link_to(companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>$data->id_solicitud]),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
 		@endif
+	@endsection
+	@section('form-title')
+		<h1 class="display-4">Datos de la Solicitud</h1>
 	@endsection
 	@include('layouts.smart.show')
 @endif

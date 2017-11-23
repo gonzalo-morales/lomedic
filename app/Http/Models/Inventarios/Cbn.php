@@ -31,7 +31,7 @@ class Cbn extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['clave_cbn','descripcion','precio_comision','precio_causes','precio_imss','activo'];
+    protected $fillable = ['clave_cbn','descripcion','precio_comision','precio_causes','precio_imss','vigencia','activo'];
     
     /**
      * Los atributos que seran visibles en index-datable

@@ -1,0 +1,218 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"  media="screen,projection"/>
+      <!--estilo css personal-->
+      <link type="text/css" rel="stylesheet" href="css/style.css"  media="screen,projection"/>
+      <!--meta para caracteres especiales-->
+      <meta charset="UTF-8">
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body class="bg-light">
+
+<div class="container-fluid">
+
+  <div class="col-md-12">
+    <div class="text-right">
+      <button  data-toggle="Guardar" data-placement="top" title="Guardar" class="btn btn-primary" name="action">Guardar</button>
+      <button data-toggle="Cancelar" data-placement="top" title="Cancelar" class="btn btn-default text-primary">Cancelar</button>
+    </div>
+  </div><!--/botones de acciones según smart-->
+
+<div class="row">
+
+  <div class="col-12">
+    <h5 class="display-4">Nombre del catálogo</h5>
+    <p>Agrega los registros que tendrá el catálogo.</p>
+    <div class="card z-depth-1-half">
+      <div class="card-header">
+        <form id="overall">
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <div class="form-group">
+              <label for="folio">Folio</label>
+              <input id="folio" type="text" class="form-control" name="folio">
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <label for="typeFact">Tipo:</label> 
+            <select id="typeFact" class="form-control" name="typeFact">
+              <option value="" disabled selected>Selecciona...</option>
+              <option value="1">Alimentos</option>
+              <option value="2">Hospedaje</option>
+              <option value="3">Casetas</option>
+              <option value="4">Taxis</option>
+              <option value="5">transporte y TUA</option>
+              <option value="6">Otros</option>
+            </select>
+          </div>
+        </div><!--/row-->
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="input-field">
+              <label for="subtotal">Subtotal:</label>
+              <input maxlength="10" id="subtotal" type="number" class="form-control" name="subtotal">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="input-field">
+              <label for="iva">IVA</label>
+              <input maxlength="10" id="iva" type="number" class="form-control" name="iva">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="input-field">
+              <label for="total">Total</label>
+              <input maxlength="10" id="total" type="number" class="form-control" name="total">
+            </div>
+          </div>
+        </div><!--/row-->
+        <div class="col-12 text-center my-3">
+          <div class="sep">
+            <div class="sepBtn">
+              <button id="saveTable" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="submit"><i class="material-icons">add</i></button>
+            </div>
+          </div>
+        </div>
+        </form><!--/Here ends de form-->
+      </div><!--/Here ends the up section-->
+      <div class="card-body">
+        <table id="factConcepts" class="table table-responsive-sm table-hover">
+          <thead>
+            <tr>
+              <th>Folio</th>
+              <th>Tipo</th>
+              <th>Subtotal</th>
+              <th>IVA(%)</th>
+              <th>Total</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>              
+              <tr>
+              <td>A12345</td>
+              <td>Alimentos</td>
+              <td>$12345</td>
+              <td>17%</td>
+              <td>$1234.56</td>
+              <td>
+                <a data-toggle="tooltip" data-placement="top" title="Eliminar" href="#"><i class="material-icons">delete</i></a>
+              </td>
+            </tr>
+            <tr>
+              <td>A12346</td>
+              <td>Alimentos</td>
+              <td>$12345</td>
+              <td>17%</td>
+              <td>$1234.56</td>
+              <td>
+                <a data-toggle="tooltip" data-placement="top" title="Eliminar" href="#"><i class="material-icons">delete</i></a>
+              </td>
+            </tr> 
+          </tbody>
+        </table>
+      </div><!--/here ends de down section-->
+    </div>
+  </div><!--/col-s12 m5-->
+</div><!--/row-->
+
+</div><!--/container-fluid-->
+
+  <!--Import jQuery before materialize.js-->
+  <!--Script para hacer los datos ordenarse-->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+
+    //Cuando se agregue los datos
+    document.getElementById('overall').addEventListener('submit', saveRowData);
+
+    //Función para guardar los datos del formulario
+    function saveRowData(e){
+      //Prevenimos que genere la acción default
+      e.preventDefault();
+
+
+      //Cuando se agregue los datos
+      function formDataToJSON(formElement) {    
+          var formData = new FormData(formElement), convertedJSON = {}, it = formData.entries(), n;
+          while(n = it.next()) {
+            if(!n || n.done) break;
+            convertedJSON[n.value[0]] = n.value[1];
+          }
+        return convertedJSON;
+      }
+
+      //Creamos un objeto con los datos
+      var oveData = formDataToJSON(document.querySelector('#overall'));
+
+      console.log(oveData);
+
+      //función para validar
+      if(oveData == ""){
+        alert("Debes de ingresar un dato forzosamente");
+        return false;
+      }
+
+      // limpiamos el formulario
+      document.getElementById('overall').reset();
+      //Tomamos la tabla
+       var tableData = document.querySelector('table > tbody');
+
+      //Ingresamos estos datos en la tabla
+      tableData.innerHTML +=
+        '<tr><td>'+ oveData.folio +'</td>'
+        + '<td>'+ oveData.typeFact +'</td>'
+        + '<td>'+ oveData.subtotal +'</td>'
+        + '<td>'+ oveData.iva +'</td>'
+        + '<td>'+ oveData.total +'</td>'
+        + '<td>'+ '<a data-toggle="Eliminar" data-placement="top" title="Eliminar" href="#"><i class="material-icons">delete</i></a>'+'</td></tr>';
+
+    }
+
+    // //Cuando se agregue los datos
+    // document.getElementById('overall').addEventListener('submit', saveRowData);
+
+    // //Función para guardar los datos del formulario
+    // function saveRowData(e){
+    //   //Prevenimos que genere la acción default
+    //   e.preventDefault();
+    //   //tomamos los datos
+    //   var dataFolio = document.querySelector('#folio').value;
+    //   var dataType = document.querySelector('#typeFact').value;
+    //   var dataSubtotal = document.querySelector('#subtotal').value;
+    //   var dataIVA = document.querySelector('#iva').value;
+    //   var dataTotal = document.querySelector('#total').value;
+
+    //   //Creamos un objeto con los datos
+    //   var oveData = {
+    //     folio: dataFolio,
+    //     tipo: dataType,
+    //     subtotal: dataSubtotal,
+    //     iva: dataIVA,
+    //     total: dataTotal,
+    //   }
+    //   console.log(oveData);
+
+    //   //Tomamos la tabla
+    //   var tableData = document.querySelector('table > tbody');
+
+    //   //Ingresamos estos datos en la tabla
+    //   tableData.innerHTML +=
+    //     '<tr><td>'+ oveData.folio +'</td>'
+    //     + '<td>'+ oveData.tipo +'</td>'
+    //     + '<td>'+ oveData.subtotal +'</td>'
+    //     + '<td>'+ oveData.iva +'</td>'
+    //     + '<td>'+ oveData.total +'</td>'
+    //     + '<td>'+ '<a data-toggle="Eliminar" data-placement="top" title="Eliminar" href="#"><i class="material-icons">delete</i></a>' +'</td></tr>'
+
+    //   // limpiamos el formulario
+    //   document.getElementById('overall').reset();
+    // }
+  </script>
+    </body>
+  </html>
+        

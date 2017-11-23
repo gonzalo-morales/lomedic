@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  	<!--meta para caracteres especiales-->
+  	<meta charset="UTF-8">
+  	<!--Let browser know website is optimized for mobile-->
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Hand held</title>
+	<style type="text/css">
+		body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
+		/**{margin: 0; padding: 0;}*/
+		.blue{background-color: #007bff;}
+		.green{background-color: #17A2B8;}
+		.red{background-color: #dc3545;}
+		.wrapper{display: block; width:100%;bottom:0;left: 0;background-color: #fff;}
+		.conent{overflow: auto;padding:0;}
+		.square{float: left;width: 49%;margin: 0.2%;height: 73px;text-align: center;color: #fff;text-decoration: none;padding:5px;overflow: hidden;z-index: 0;white-space:normal;word-wrap: break-word;border:none;}
+		.form-control{border: 1px solid #ced4da; background-color: #fff;width: 100%;padding: 2px;}
+	</style>
+</head>
+<body>
+	<div class="content">
+		<form action="" id="formContent">
+			<label for="codigo">Código</label>
+			<input class="form-control" id="codigo" name="codigo" type="text">
+			<br>
+			<label for="nomComercial">Nombre comercial</label>
+			<input class="form-control" id="nomComercial" name="nomComercial" type="text">
+			<br>
+			<label for="descripcion">Descripción</label>
+			<textarea class="form-control" id="descripcion" name="descripcion" type="text"></textarea>
+			<br>
+		</form>
+	</div>
+	<div class="wrapper" style="text-align: center; margin-top: 20px;">
+		<button style="width: 32%; height: 44px;" class="square blue">Confirmar</button>
+		<button style="width: 32%; height: 44px;" class="square green">Regresar</button>
+	</div>	
+</body>
+</html>

@@ -2,18 +2,15 @@
 
 namespace App\Http\Models\SociosNegocio;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class ContactosSociosNegocio extends Model
+class ContactosSociosNegocio extends ModelBase
 {
-    // use SoftDeletes;
-
     /**
      * The table associated with the model.
-     *
      * @var string
      */
-    protected $table = 'sng_cat_contactos';
+    protected $table = 'sng_det_contactos';
 
     /**
      * The primary key of the table
@@ -23,15 +20,12 @@ class ContactosSociosNegocio extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
-    protected $fillable = ['fk_id_socio_negocio', 'fk_id_tipo_contacto', 'nombre', 'puesto', 'telefono_oficina', 'extension_oficina',
-                'celular', 'activo'];
+    protected $fillable = ['fk_id_socio_negocio', 'fk_id_tipo_contacto', 'nombre', 'puesto', 'correo', 'telefono_oficina', 'extension_oficina', 'celular', 'activo'];
 
     /**
      * Indicates if the model should be timestamped.
-     *
      * @var bool
      */
     public $timestamps = false;
@@ -40,19 +34,13 @@ class ContactosSociosNegocio extends Model
      * The validation rules
      * @var array
      */
-    // public $rules = [
-    // ];
-
-    public function getTable(){
-	    return $this->table;
-    }
+    public $rules = [];
 
     public function sociosNegocio(){
-        return $this->belongsTo('App\Http\Models\SociosNegocio\SociosNegocio','fk_id_socio_negocio');
+        return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');
     }
 
-    public function tipoContacto(){
-        return $this->hasOne('App\Http\Models\SociosNegocio\TiposSocioContacto');
+    public function tipocontacto(){
+        return $this->belongsTo(TiposContacto::class,'fk_id_tipo_contacto');
     }
-
 }

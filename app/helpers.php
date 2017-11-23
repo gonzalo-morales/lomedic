@@ -38,7 +38,7 @@ function companyAction($action = '', $params = [])
 			$autoparams['id'] =  head($_params);
 		}
 	}
-	
+
 	try {
 		# Generamos URL
 		return action(implode('@', $expected_action), array_merge($autoparams, $params));
@@ -64,9 +64,11 @@ function currentRouteAction($action = '')
  */
 function routeNameReplace($route = '')
 {
+	$routeName = explode('.', Route::currentRouteName());
+	$countRouteName = count($routeName);
 	return array_map(function($current, $expected) {
 		return $expected === '' ? $current : $expected;
-	}, explode('.', Route::currentRouteName()), array_pad(explode('.', $route, 3), -3, '') );
+	}, $routeName, array_pad(explode('.', $route, $countRouteName), 0 - $countRouteName, '') );
 }
 
 /**
@@ -75,10 +77,10 @@ function routeNameReplace($route = '')
  * @param  array  $params - Parametros personalizados
  * @return string
  */
-function companyRoute($route = '', $params = [])
+function companyRoute($route = '', $params = [], $replace = true)
 {
 	#
-	$expected_action = routeNameReplace($route);
+	$expected_action = $replace ? routeNameReplace($route) : explode('.', $route);
 
 	# Injectamos empresa
 	$autoparams = ['company' => request()->company];
@@ -164,7 +166,7 @@ function array_merge_recursive_simple($paArray1, $paArray2)
     {
         if(!isset($paArray1[$sKey2]))
             $paArray1[$sKey2] = $sValue2;
-        
+
         if(!is_array($paArray1[$sKey2]) && !is_array($paArray2[$sKey2]) &&isset($paArray1[$sKey2]))
         {
             if($paArray1[$sKey2] != array_merge_recursive_simple(@$paArray1[$sKey2], $sValue2))
