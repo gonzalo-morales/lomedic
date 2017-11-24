@@ -50,11 +50,11 @@
 		<!-- Empresas -->
 		@if(isset($empresas))
 		<div class="col-sm-12 col-md-5 col-lg-3">
-			<div class="card z-depth-1-half">
+			<div class="card z-depth-1-half" style="max-height: 255px;">
 				<div class="card-header">
 					<h5>Empresas</h5>
 				</div>
-				<div class="card-body">
+				<div class="card-body" style="overflow: auto;">
 					<ul class="list-group">
 						<?php 
 						$empresa_socio = [];
