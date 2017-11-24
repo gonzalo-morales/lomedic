@@ -45,7 +45,7 @@
 .wrapper {
     display: flex;
     align-items: stretch;
-    height: 100%;
+    height: 10%;
     overflow: auto;
 }
 
@@ -197,16 +197,14 @@ a.article, a.article:hover {
 }
 
 
-
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
 #content {
-    min-height: 100vh;
+    min-height: 95.5vh;
     transition: all 0.3s;
     width: 100%;
 }
-
 
 /* ---------------------------------------------------
     MEDIAQUERIES

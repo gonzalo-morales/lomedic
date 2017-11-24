@@ -1,6 +1,6 @@
 @extends('layouts.smart.create')
 
-@section('title', currentEntityBaseName() . '@Editar')
+@section('title', currentEntityBaseName() . ' Editar')
 
 @section('form-header')
     {!! Form::open(['method'=>'put', 'url' => companyRoute('update'), 'id' => 'form-model', 'class' => 'col-md-12']) !!}

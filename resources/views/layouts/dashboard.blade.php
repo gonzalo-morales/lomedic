@@ -41,11 +41,15 @@
                 <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">menu</i></button>
                 <div class="btn-group">
                     <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            			{{ HTML::image(asset("img/$menuempresa->logotipo"), 'Logo', ['width'=>'25px']) }} {{ $menuempresa->nombre_comercial }}
+            			{{ HTML::image(asset("img/logotipos/$menuempresa->logotipo"), null, ['width'=>'25px','class'=>'mr-2']) }} {{ $menuempresa->nombre_comercial }}
             		</a>
                     <ul id='enteDrop' class="dropdown-menu z-depth-2" aria-labelledby="dropdownMenu2">
                 		@foreach($menuempresas as $_empresa)
-                		<li><a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">{{ HTML::image(asset("img/$_empresa->logotipo"), null, ['class'=>'circle responsive-img','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}</a></li>
+                		<li class="dropdown-item">
+                			<a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">
+                				{{ HTML::image(asset("img/logotipos/$_empresa->logotipo"), null, ['class'=>'circle responsive-img mr-1','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}
+                			</a>
+                		</li>
                 		@endforeach
                 	</ul>
                 </div>
@@ -53,14 +57,7 @@
             <a class="d-flex align-items-center" href="{{asset(request()->company)}}" title="ADMINISTRACION"><i class='material-icons left'>home</i></a>
             <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">live_help</i></button>
         </nav>
-    	<!--<ol class="breadcrumb bg-light rounded-0 z-depth-1-half">
-    		<li class="breadcrumb-item" id="bread-home">{{ HTML::link(companyAction('HomeController@index', ['company' => $menuempresa->conexion]), 'Inicio') }}</li>
-    		@foreach(routeNameReplace() as $key=>$item)
-    			@if($item !== 'index' && !empty($item))
-    				<li class="breadcrumb-item active">{{ HTML::link($key == 1 ? companyRoute('index') : '#', $item) }}</li>
-    			@endif
-    		@endforeach
-    	</ol>-->
+    	
     </div>
 @endif
     @if(isset(request()->kendoWindow))
@@ -102,6 +99,17 @@
         <!-- Page Content Holder -->
         <div id="content" class="pt-3 bg-light">
             <div id="onload"></div>
+            <div>
+            	<!-- <ol class="col-sm-12 breadcrumb bg-light p-1 m-0">
+            		<li class="breadcrumb-item" id="bread-home">{{ HTML::link(companyAction('HomeController@index', ['company' => $menuempresa->conexion]), 'inicio') }}</li>
+            		foreach(routeNameReplace() as $key=>$item)
+            			if($item !== 'index' && !empty($item))
+            				<li class="breadcrumb-item active">{{-- HTML::link($key == 1 ? companyRoute('index') : '#', $item) --}}</li>
+            			endif
+            		endforeach
+            	</ol> -->
+                <h4 class="col-sm-12 display-4">@yield('form-title')</h4>
+        	</div>
             @yield('content')
         </div>
     </div>

@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', currentEntityBaseName() . '@Agregar')
+@section('title', currentEntityBaseName() . ' Agregar')
 
 @section('form-header')
 	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col-md-12 col-xs-12']) !!}
@@ -31,7 +31,6 @@
 	<div class="@yield('content-width')">
 		@yield('form-header')
     		<div class="row">
-    			@yield('form-title')
     			@yield('form-actions')
 				<div class="col-12">
 					<fieldset @yield('fieldset')>
