@@ -21,7 +21,7 @@ $(document).ready( function () {
     select2Placeholder('fk_id_sku','Selecciona un SKU');
     select2Placeholder('fk_id_proveedor','Proveedor no seleccionado',50,true,false);
 
-    $('#id_solicitante').val(getIdempleado());
+    $('#_id_solicitante').val(getIdempleado());
     if(window.location.href.toString().indexOf('editar') > -1)//Si es editar
     {
         total_producto();//Obtiene el porcentaje del valor por defecto
@@ -33,7 +33,7 @@ $(document).ready( function () {
             10,
             true,
             false,
-            $('#id_solicitante').val());
+            $('#_id_solicitante').val());
     }else{
         $('select').prop('disabled',true);
     }
@@ -47,7 +47,7 @@ $(document).ready( function () {
 
     // $('#fk_id_solicitante').select2();
     $('#fk_id_solicitante').change(function () {
-        $('#id_solicitante').val('');
+        $('#_id_solicitante').val('');
         sucursal();//Caga los nuevos datos de la sucursal
     });
 
@@ -127,16 +127,16 @@ function getIdempleado()
 
 function sucursal()
 {
-    let data_empleado = $('#id_solicitante').data('url');
+    let data_empleado = $('#_id_solicitante').data('url');
     $('#fk_id_sucursal_').prop('disabled',true);//Deshabilitar
 
-    if(!$('#id_solicitante').val())
+    if(!$('#_id_solicitante').val())
     {
             var _url = data_empleado.replace('?id', $('#fk_id_solicitante').select2('data')[0].id);
-            $('#id_solicitante').val($('#fk_id_solicitante').select2('data')[0].id);
+            $('#_id_solicitante').val($('#fk_id_solicitante').select2('data')[0].id);
     }
     else
-        {var _url = data_empleado.replace('?id', $('#id_solicitante').val());}
+        {var _url = data_empleado.replace('?id', $('#_id_solicitante').val());}
 
     $.ajax({
         async:false,
@@ -153,11 +153,11 @@ function sucursal()
             $('#fk_id_sucursal_').append(option);
             $.each(data, function (key, sucursal) {
                 let option = $('<option/>');
-                option.val(key);
-                option.text(sucursal);
+                option.val(sucursal.id);
+                option.text(sucursal.text);
                 if(window.location.href.toString().indexOf('editar') > -1)
                 {
-                    if($('#sucursal_defecto').val() == key)
+                    if($('#sucursal_defecto').val() == sucursal.id)
                     {
                         option.prop('selected',true);
                     }

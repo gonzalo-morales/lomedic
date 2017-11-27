@@ -70,7 +70,6 @@ $(document).ready(function(){
 		$("#sidebar").remove();
 		$("#top-nav").remove();
 		$("#rigth-sidebar").remove();
-		$("#ticketHelp").remove();
 		$("#content").removeClass('pt-3');
 		$(".wrapper").removeAttr("style");
 

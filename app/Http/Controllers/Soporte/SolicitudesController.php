@@ -31,7 +31,17 @@ class SolicitudesController extends ControllerBase
         $this->entity = $entity;
         $this->entity_name = strtolower(class_basename($entity));
     }
-    
+
+    public function getDataView($entity = null)
+    {
+        $categories_tickets = Categorias::where('activo','t')->pluck('categoria','id_categoria');
+        $priorities_tickets = Prioridades::where('activo','t')->pluck('prioridad','id_prioridad');
+
+        return [
+            'categories_tickets' => $categories_tickets,
+            'priorities_tickets' => $priorities_tickets
+        ];
+    }
     public function index_tecnicos($company)
     {
         return view(currentRouteName(), [

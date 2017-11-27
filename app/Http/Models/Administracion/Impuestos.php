@@ -39,7 +39,7 @@ class Impuestos extends ModelCompany
         'activo_span' => 'Estatus',
     ];
 
-    public $rules = [];
+    public $rules = ['porcentaje'=>'numeric'];
 
     public function getFields()
     {

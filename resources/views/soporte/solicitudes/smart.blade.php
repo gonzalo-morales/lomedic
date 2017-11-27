@@ -28,6 +28,7 @@
         		{{ Form::button('Actualizar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
             @endif
 	</div>
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
 @else
 	@parent
 @endif
@@ -186,59 +187,75 @@
         </div>
     </div>
     @elseif(Route::currentRouteNamed(currentRouteName('create')))
-      	<div class="modal-body">
-  			<div class="form-group">
-  				<div style="padding:6px; width:100%; border-bottom:1px solid #eee;">
-  					Solicitante: <span><b>{{Auth::User()->nombre_corto}}</b></span>
-					{{Form::hidden('id_solicitante',Auth::User()->fk_id_empleado,['id'=>'id_solicitante'])}}
-  				</div>
-  				<div class="input-group input-group-sm" style="width: 96%">
-					<span class="input-group-addon">
-						<input type="checkbox" id="check_solicitante">
-					</span>
-					{!! Form::select('empleado_solicitud',[],null,['id'=>'empleado_solicitud','class'=>'form-control select2-single select2-hidden-accessible w-100','disabled'=>'true','style'=>'width: 96% !important;','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados')]) !!}
-  				</div>
-  			</div>
-  			<div class="form-group row">
-  				<div class="col-md-12">
-      				{{Form::label('fk_id_sucursal','Sucursal')}}
-      				{!! Form::select('fk_id_sucursal',[''=>'Selecciona una sucursal'],null,['id'=>'fk_id_sucursal','class'=>'form-control select2-single select2-hidden-accessible w-100','style'=>'width: 96% !important;','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])]) !!}
-  				</div>
-  			</div>
-  			<div class="form-group row">
-  				<div class="col-md-12 col-lg-6">
-      				{{Form::label('fk_id_categoria','Categoría')}}
-            		{!! Form::select('fk_id_categoria',$categories_tickets,null,['id'=>'fk_id_categoria','class'=>'form-control fk_id_categoria','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])])!!}
-  				</div>
-  				<div class="col-md-12 col-lg-6">
-      				{{Form::label('fk_id_subcategoria','Subategoría')}}
-        			{!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria','class'=>'form-control fk_id_subcategoria','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
-  				</div>
-  			</div>
-  			<div class="form-group row">
-  				<div class="col-md-12 col-lg-6">
-      				{{Form::label('fk_id_accion','Acción')}}
-        			{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control fk_id_accion','disabled'=>'disabled']) !!}
-  				</div>
-  				<div class="col-md-12 col-lg-6">
-      				{{Form::label('fk_id_prioridad','Prioridad')}}
-        			{!! Form::select('fk_id_prioridad',$priorities_tickets->pluck('prioridad','id_prioridad'),null,['id'=>'fk_id_prioridad','class'=>'form-control']) !!}
-  				</div>
-  			</div>
-  			<div class="form-group">
-        		{{Form::label('asunto','Asunto')}}
-  				{!! Form::text('asunto',old('asunto'),['class'=>'form-control validate','id'=>'asunto']) !!}
-  			</div>
-  			<div class="form-group">
-  				{{Form::label('descripción','Descripción')}}
-        		{!! Form::textarea('descripcion',old('descripcion'),['id'=>'descripcion','class'=>'form-control']) !!}
-  			</div>
-  			<div class="form-group">
-      			<label class="custom-file w-100">
-                    <span class="custom-file-control"></span>
-                	{!! Form::file('archivo[]',['id'=>'archivo','class'=>'form-control-file','multiple'=>'multiple']) !!}
-                </label>
-  			</div>
+      	<div id="ticketHelp" class="">
+			{!! Form::model(null,['url'=>companyAction('Soporte\SolicitudesController@store'), 'enctype'=>"multipart/form-data",'method'=>'post','id'=>'form-ticket']) !!}
+			{{--<div class="modal-header bg-primary text-white">--}}
+				{{--<h5 class="modal-title" id="exampleModalLabel">Nuevo Ticket:</h5>--}}
+				{{--<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">--}}
+					{{--<span aria-hidden="true">&times;</span>--}}
+				{{--</button>--}}
+			{{--</div>--}}
+
+			<div class="modal-body">
+				<div class="form-group">
+					<div style="padding:6px; width:100%; border-bottom:1px solid #eee;">
+						Solicitante: <span><b>{{Auth::User()->nombre_corto}}</b></span>
+						{{Form::hidden('id_solicitante',Auth::User()->fk_id_empleado,['id'=>'id_solicitante'])}}
+					</div>
+					<div class="input-group input-group-sm" style="width: 96%">
+        					<span class="input-group-addon">
+        						<input type="checkbox" id="check_solicitante">
+        					</span>
+						{!! Form::select('empleado_solicitud',[],null,['id'=>'empleado_solicitud','class'=>'form-control select2-single w-100','disabled'=>'true','style'=>'width: 96% !important;','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados')]) !!}
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-md-12">
+						{{Form::label('fk_id_sucursal','Sucursal')}}
+						{!! Form::select('fk_id_sucursal',[],null,['id'=>'fk_id_sucursal','class'=>'form-control select2-single ','style'=>'width: 96% !important;','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])]) !!}
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-md-12 col-lg-6">
+						{{Form::label('fk_id_categoria','Categoría')}}
+						{!! Form::select('fk_id_categoria',$categories_tickets ?? [],null,['id'=>'fk_id_categoria','class'=>'form-control fk_id_categoria','data-url'=>companyAction('Soporte\SolicitudesController@getCategorias')])!!}
+					</div>
+					<div class="col-md-12 col-lg-6">
+						{{Form::label('fk_id_subcategoria','Subategoría')}}
+						{!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria','class'=>'form-control fk_id_subcategoria','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])]) !!}
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-md-12 col-lg-6">
+						{{Form::label('fk_id_accion','Acción')}}
+						{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control fk_id_accion','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
+					</div>
+					<div class="col-md-12 col-lg-6">
+						{{Form::label('fk_id_prioridad','Prioridad')}}
+						{!! Form::select('fk_id_prioridad',$priorities_tickets ?? [],null,['id'=>'fk_id_prioridad','class'=>'form-control','data-url'=>companyAction('Soporte\SolicitudesController@getPrioridades')]) !!}
+					</div>
+				</div>
+				<div class="form-group">
+					{{Form::label('asunto','Asunto')}}
+					{!! Form::text('asunto',old('asunto'),['class'=>'form-control validate','id'=>'asunto']) !!}
+				</div>
+				<div class="form-group">
+					{{Form::label('descripción','Descripción')}}
+					{!! Form::textarea('descripcion',old('descripcion'),['id'=>'descripcion','class'=>'form-control']) !!}
+				</div>
+				<div class="form-group">
+					<label class="custom-file w-100">
+						<span class="custom-file-control"></span>
+						{!! Form::file('archivo[]',['id'=>'archivo','class'=>'form-control-file','multiple'=>'multiple']) !!}
+					</label>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				{!! Form::button('Enviar',['class'=>'btn btn-primary','type'=>'submit']) !!}
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+			</div>
+			{!! Form::close() !!}
       	</div>
 	@endif
 @endsection

@@ -65,6 +65,6 @@ class SucursalesController extends ControllerBase
 
 	public function sucursalesEmpleado($company,$id)
 	{
-		return Empleados::where('id_empleado',$id)->first()->sucursales()->select('id_sucursal as id','sucursal as text')->get()->pluck('text','id')->toJson();
+		return Empleados::where('id_empleado',$id)->first()->sucursales()->select('id_sucursal as id','sucursal as text')->get()->toJson();
 	}
 }
