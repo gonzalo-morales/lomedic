@@ -39,7 +39,7 @@ class Perfiles extends Model
      * @var array
      */
     public $rules = [
-        'nombre_perfil' => 'required',
+        'nombre_perfil' => 'required|max:20',
     ];
 
     /**

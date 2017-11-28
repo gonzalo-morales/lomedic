@@ -465,7 +465,7 @@
 	@section('extraButtons')
 		@parent
 		{!!isset($data->id_oferta) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_oferta]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
-		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($company.'/compras/'.$data->id_oferta.'/2/ordenes/crear',[1,2,3]), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
+		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($company.'/compras/'.$data->id_oferta.'/2/ordenes/crear'), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
 	@endsection
 @section('form-title')
 		<h1 class="display-4">Datos de la Oferta de Compra</h1>

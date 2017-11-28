@@ -50,7 +50,7 @@ class Solicitudes extends ModelCompany
     }
 
     function getNombreSucursalAttribute(){
-        return $this->sucursales->nombre_sucursal;
+        return $this->sucursales->sucursal;
     }
 
     function getEstatusSolicitudAttribute(){

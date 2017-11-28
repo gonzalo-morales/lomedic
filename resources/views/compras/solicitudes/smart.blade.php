@@ -10,8 +10,6 @@
 	@endif
 @endsection
 
-@section('content-width','mt-3')
-
 @section('form-content')
 {{ Form::setModel($data) }}
 	<div class="row">
@@ -439,9 +437,9 @@
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('extraButtons')
 		@parent
-		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
+		{!! HTML::decode(link_to(companyAction('Compras\SolicitudesController@impress',['id'=>$data->id_solicitud]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
 		@if($data->fk_id_estatus_solicitud == 1)
-			{!! HTML::decode(link_to(companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>$data->id_solicitud]),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
+			{!! HTML::decode(link_to(url($company.'/compras/'.$data->id_solicitud.'/1/ordenes/crear'),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
 		@endif
 	@endsection
 	@section('form-title')

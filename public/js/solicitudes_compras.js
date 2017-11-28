@@ -81,25 +81,21 @@ $(document).ready( function () {
     select2Placeholder('fk_id_unidad_medida','Selecciona una unidad de medida','Infinity');
     select2Placeholder('fk_id_proyecto','Proyecto no seleccionado',50,true,false);
 
-    $(document).on('keyup','.cantidad',function (e) {
-            let valid = /[^0-9]/g.test(this.value),
-                val = this.value;
-            if(valid)
-            {
-                this.value = val.substring(0, val.length - 1);
-            }
-            // else
-            // {
-            //     total_producto_row(this.id);
-            // }
+    $(document).on('keypress','.cantidad',function (e) {
+        // this.value = (this.value + '').replace(/^\d{1,9}/g, '');
+        let valid = /^\d{1,9}$/g.test(this.value+e.key),
+            val = this.value;
+        if(!valid){
+            return false;
+        }
     });
 
-    $(document).on('keyup','.precio_unitario',function (e) {
-        let valid = /^\d{0,10}(\.\d{0,2})?$/g.test(this.value),
+    $(document).on('keypress','.precio_unitario',function (e) {
+        // this.value = (this.value + '').replace(/^\d{0,6}(\.\d{0,2})?/g , '');
+        let valid = /^\d{0,6}(\.\d{0,3})?$/g.test(this.value+e.key),
             val = this.value;
-        if(!valid)
-        {
-            this.value = val.substring(0, val.length - 1);
+        if(!valid){
+            return false;
         }
     });
 });

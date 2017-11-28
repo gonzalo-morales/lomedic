@@ -327,7 +327,7 @@ class OrdenesController extends ControllerBase
         $barcode = DNS1D::getBarcodePNG($orden->id_orden,'EAN8');
         $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$orden->id_orden])), "QRCODE");
 
-        $pdf = PDF::loadView(currentRouteName('imprimir'),[
+        $pdf = PDF::loadView(currentRouteName('compras.ordenes.imprimir'),[
             'orden' => $orden,
 //            'detalles' => $detalles,
             'subtotal' => $subtotal,
