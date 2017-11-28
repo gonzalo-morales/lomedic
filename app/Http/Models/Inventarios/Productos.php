@@ -62,22 +62,26 @@ class Productos extends ModelCompany
      * @var array
      */
     public $rules = [];
-    
+
+    public function getSkuDescripcionAttribute() {
+        return $this->sku . ' - ' . $this-> descripcion_corta;
+    }
+
     public function upcs()
     {
         return $this->belongsToMany(Upcs::class,'inv_det_sku_upc','fk_id_sku','fk_id_upc');
     }
-    
+
     public function serie()
     {
         return $this->belongsTo(SeriesSkus::class,'fk_id_serie_sku','id_serie_sku');
     }
-    
+
     public function unidadmedida()
     {
         return $this->belongsTo(UnidadesMedidas::class,'fk_id_unidad_medida','id_unidad_medida');
     }
-    
+
     public function subgrupo()
     {
         return $this->belongsTo(SubgrupoProductos::class,'fk_id_subgrupo','id_subgrupo');
