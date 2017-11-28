@@ -373,7 +373,7 @@ class ControllerBase extends Controller
         $alldata = $data->map(function ($data) use($fields) {
             $return = [];
             foreach ($fields as $field=>$lable)
-                $return[$lable] = html_entity_decode(strip_tags($data->$field));
+                $return[$lable] = html_entity_decode(strip_tags(object_get($data, $field)));
                 return $return;
         });
             $data = $alldata;
