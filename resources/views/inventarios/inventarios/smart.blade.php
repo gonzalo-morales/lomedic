@@ -34,7 +34,7 @@
 <div class="row">
 	<div class="col-md-12 col-sm-12 mb-3">
 		<div id="app" class="card z-depth-1-half" data-api-endpoint="{{ companyRoute('api.index', ['entity' => '#ENTITY#'], false) }}">
-			@if (!Route::currentRouteNamed(currentRouteName('show')))
+			@if (!Route::currentRouteNamed(currentRouteName('showdd')))
 			<div v-if="tipo_captura == 1" class="card-header text-center">
 				<div class="row">
 					<div class="col-sm-12">

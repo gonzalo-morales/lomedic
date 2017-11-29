@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Inventarios;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\Inventarios\Productos;
-use App\Http\Models\Inventarios\SolicitudesEntradas;
+use App\Http\Models\Inventarios\SolicitudesEntrada;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\SociosNegocio\DireccionesSociosNegocio;
 use App\Http\Models\SociosNegocio\SociosNegocio;
@@ -13,14 +13,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
 
-class SolicitudesEntradasController extends ControllerBase
+class SolicitudesEntradaController extends ControllerBase
 {
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(SolicitudesEntradas $entity)
+	public function __construct(SolicitudesEntrada $entity)
 	{
 		$this->entity = $entity;
 	}

@@ -2,20 +2,20 @@
 
 namespace App\Http\Models\Inventarios;
 
-use App\Http\Models\Inventarios\SolicitudesEntradasDetalle;
+use App\Http\Models\Inventarios\SolicitudesEntradaDetalle;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\SociosNegocio\DireccionesSociosNegocio;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 
-class SolicitudesEntradas extends ModelCompany
+class SolicitudesEntrada extends ModelCompany
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'inv_solicitudes_entradas';
+    protected $table = 'inv_solicitudes_entrada';
 
     /**
      * The primary key of the table
@@ -128,7 +128,7 @@ class SolicitudesEntradas extends ModelCompany
      */
     public function detalle()
     {
-        return $this->hasMany(SolicitudesEntradasDetalle::class, 'fk_id_solicitud', 'id_solicitud');
+        return $this->hasMany(SolicitudesEntradaDetalle::class, 'fk_id_solicitud', 'id_solicitud');
     }
 
 
