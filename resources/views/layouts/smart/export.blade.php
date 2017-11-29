@@ -23,9 +23,9 @@
 	<thead>
 		<tr class="teal white-text" style="padding: 10px 0;">
 			@if(strtolower($_GET['type']) == 'pdf')
-			<th colspan="{{ count($fields) - 1 }}"> <span class="logo-enterprise">{{ HTML::image(asset("img/$empresa->logotipo"), 'Logo', ['class'=>'circle responsive-img']) }}</span>
+			<th colspan="{{ count($fields) - 1 }}"> <span class="logo-enterprise">{{ HTML::image(asset("img/logotipos/$menuempresa->logotipo"), 'Logo', ['class'=>'circle responsive-img']) }}</span>
 			@endif
-			{{ $empresa->nombre_comercial }} </th>
+			{{ $menuempresa->nombre_comercial }} </th>
 			<th class="right-text"> {{ currentEntityBaseName() }} </th>
 		</tr>
 		<tr>

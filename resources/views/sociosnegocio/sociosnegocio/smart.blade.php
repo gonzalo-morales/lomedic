@@ -468,17 +468,19 @@
 									<td>
 										{!! Form::hidden('anexos['.$key.'][id_anexo]',$detalle->id_anexo,['class'=>'id_anexo']) !!}
 										{{$detalle->tipoanexo->tipo_anexo}}
-										{!! Form::hidden('anexos['.$key.'][fk_id_tipo_anexo]',$detalle->fk_id_tipo_anexo,['class'=>'fk_id_tipo_anexo']) !!}
 									</td>
 									<td>
 										{{$detalle->nombre}}
-										{!! Form::hidden('anexos['.$key.'][nombre]',$detalle->nombre) !!} 
 									</td>
 									<td>
 										{{$detalle->archivo}}
-										{!! Form::hidden('anexos['.$key.'][archivo]',$detalle->archivo) !!} 
 									</td>
-									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>
+									<td>
+										<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargar', ['id' => $detalle->id_anexo])}}" title="Descargar Archivo">
+											<i class="material-icons">file_download</i>
+										</a>
+										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button>
+									</td>
 								</tr>
     							@endforeach
     						@endif

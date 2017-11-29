@@ -24,7 +24,7 @@ class ArchivosAdjuntos extends ModelBase
      *
      * @var array
      */
-    protected $fillable = ['fk_id_solicitud','ruta_archivo'];
+    protected $fillable = ['fk_id_solicitud','ruta_archivo','nombre_archivo','fk_id_mensaje'];
 
     /**
      * Indicates if the model should be timestamped.
