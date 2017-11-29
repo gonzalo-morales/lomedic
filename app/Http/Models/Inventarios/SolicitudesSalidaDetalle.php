@@ -4,14 +4,14 @@ namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
 
-class SolicitudesEntradaDetalle extends ModelCompany
+class SolicitudesSalidaDetalle extends ModelCompany
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'inv_det_solicitudes_entrada';
+    protected $table = 'inv_det_solicitudes_salida';
 
     /**
      * The primary key of the table
