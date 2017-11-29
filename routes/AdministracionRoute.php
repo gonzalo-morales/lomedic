@@ -65,5 +65,6 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('viaadministracion', 'Administracion\ViaAdministracionController');
 		Route::resource('zonas', 'Administracion\ZonasController');
 		Route::resource('tiposentrega', 'Administracion\TipoEntregaController');
+		Route::resource('tipodocumento', 'Administracion\TiposDocumentosController');
 	});
 });
