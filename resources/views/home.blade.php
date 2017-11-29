@@ -14,6 +14,9 @@
 @endsection
 
 @section('content')
+
+{{ dump( Route::getRoutes()  ) }}	
+
 <div class="text-center">
 <h1 class="display-3">¡Bienvenido!</h1>
 <h6>Aquí puedes consultar algúnos mensajes urgentes o últimas acitivades que realizaste:</h6>
@@ -23,16 +26,10 @@
 		<div id="metro" class="col-md-8 col-sm-12 mb-3" style="opacity: 0; top:50px;">
 
 			<div class="row mx-2">
-				<a class="col-6 m-2 metrOpt text-white blue d-flex justify-content-center" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="ADMINISTRACIÓN">
-					<div class="align-self-center d-flex">
-						<i class="material-icons">web</i>
-						<span class="badge badge-danger align-self-start">9</span>
-	  					<span class="sr-only align-self-start">unread messages</span>
-  					</div>
-				</a>
-				<a class="col m-2 d-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="FINANZAS">
-					<i class="material-icons align-self-center">trending_up</i>
-				</a>
+				{!! HTML::decode(link_to(companyRoute('administracion.aplicacionesmedicamentos.index'), '<div class="align-self-center d-flex"><i class="material-icons">web</i><span class="badge badge-danger align-self-start">9</span><span class="sr-only align-self-start">unread messages</span></div>',['class'=>'col-6 m-2 metrOpt text-white blue d-flex justify-content-center', 'data-toggle'=>'tooltip','data-placement'=>'top','data-original-title'=>'Aplicaciones medicamentos'])) !!}
+
+				{!! HTML::decode(link_to(companyRoute('proyectos.proyectos.index'),'<div class="align-self-center d-flex"><i class="material-icons">book</i></div>',['class'=>'col m-2 d-flex justify-content-center metrOpt text-white blue', 'data-toggle'=>'tooltip','data-placement'=>'top','data-original-title'=>'Proyectos'])) !!}
+
 				<a class="col m-2 d-flex justify-content-center metrOpt text-white blue" href="#" title="" data-toggle="tooltip" data-placement="top" data-original-title="FINANZAS">
 					<i class="material-icons align-self-center">trending_up</i>
 				</a>

@@ -57,7 +57,7 @@
         <div class="margin-top wrapper">
             {{ link_to(companyRoute('handheld.inventarios'), 'Regresar', ['class'=>'square actionBtn green']) }}
             <button type="submit" class="square actionBtn blue">Siguiente</button>
-            {{ link_to(companyRoute('handheld.inventarios'), 'Cancelar', ['class'=>'square actionBtn red']) }}
+            {{ link_to(route('home'), 'Cancelar', ['class'=>'square actionBtn red']) }}
         </div>
 
 	</div>
