@@ -191,7 +191,7 @@ function agregarProducto() {
 
         var data = [];
         data.push([
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_solicitud]"/>')[0].outerHTML + 'N/A',
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_documento]"/>')[0].outerHTML + 'N/A',
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text,
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_upc').select2('data')[0].text,
             $('#fk_id_sku').select2('data')[0].descripcion_corta,

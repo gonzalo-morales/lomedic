@@ -295,7 +295,7 @@
 		 };
          rivets.binders['get-offer-url'] = {
              bind: function (el) {
-				 el.href = el.href.replace('#','/'+el.dataset.itemId+'/ofertas/crear');
+				 el.href = el.href.replace('#','{{$company}}/compras/solicitudes/'+el.dataset.itemId+'/ofertas/crear');
              }
 		 };
 		 @can('update', currentEntity())

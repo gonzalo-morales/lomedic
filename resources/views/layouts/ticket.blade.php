@@ -5,7 +5,7 @@
     	<div class="h-content">
         <span><i class="material-icons medium white-text">live_help</i></span>
         <a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
-        <a href="{{companyAction("Soporte\SolicitudesController@create")}}" class="waves-effect waves-light btn-flat white-text dismiss"><span class='window'>Crear ticket/solicitud</span></a>
+        <a href="{{companyAction("Soporte\SolicitudesController@create")}}" class="white-text dismiss"><span class='window'>Crear ticket/solicitud</span></a>
         </div>
     </div>
 

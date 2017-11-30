@@ -35,7 +35,7 @@ class DevolucionesMotivos extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'devolucion_motivo' => 'Motivo',
+		'devolucion_motivo' =>  'Motivo',
 		'solicitante_formated' => 'Solicitante',
 		'activo_span' => 'Estado'
 	];

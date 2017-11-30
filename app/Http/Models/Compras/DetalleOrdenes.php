@@ -25,9 +25,9 @@ class DetalleOrdenes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_orden','fk_id_sku','fk_id_upc','fk_id_cliente','cantidad',
+    protected $fillable = ['fk_id_sku','fk_id_upc','fk_id_cliente','cantidad',
         'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario','fk_id_solicitud',
-        'descuento_detalle','fk_id_tipo_documento','fk_id_documento'];
+        'descuento_detalle','fk_id_tipo_documento','fk_id_documento','fk_id_tipo_documento_parent','fk_id_documento_parent'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -79,7 +79,7 @@ class DetalleOrdenes extends ModelCompany
 
     public function orden()
     {
-        return $this->belongsTo('App\Http\Models\Compras\Ordenes','fk_id_orden','id_orden');
+        return $this->belongsTo('App\Http\Models\Compras\Ordenes','fk_id_documnento','id_orden');
     }
 
     public function cliente()
@@ -91,4 +91,5 @@ class DetalleOrdenes extends ModelCompany
     {
         return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_solicitud','fk_id_solicitud');
     }
+
 }

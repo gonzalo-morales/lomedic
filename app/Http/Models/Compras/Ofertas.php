@@ -60,7 +60,7 @@ class Ofertas extends ModelCompany
         'fk_id_sucursal'=>'required',
         'fk_id_proveedor'=>'required',
         'fk_id_moneda'=>'required',
-        'descuento_oferta'=>'numeric|regex:/^\d{0,2}(\.\d{0,4})?$/'
+        'descuento_oferta'=>'nullable||regex:/^(\d{0,2}(\.\d{0,4})?\)$/'
     ];
 
     public function sucursal()
@@ -90,6 +90,6 @@ class Ofertas extends ModelCompany
 
     public function DetalleOfertas()
     {
-        return $this->hasMany('App\Http\Models\Compras\DetalleOfertas','fk_id_oferta','id_oferta');
+        return $this->hasMany('App\Http\Models\Compras\DetalleOfertas','fk_id_documento','id_oferta');
     }
 }

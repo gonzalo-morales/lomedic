@@ -128,7 +128,7 @@
 											</div>
 											<div class="form-goup col-md-6">
 												<label class="custom-file">
-													<input type="file" id="file_xlsx" name="file_xlsx" data-url="{{companyAction('loadLayoutProductosProyectos')}}">
+													<input type="file" class="custom-file-input" id="file_xlsx" name="file_xlsx" data-url="{{companyAction('loadLayoutProductosProyectos')}}">
 													<span class="custom-file-control"></span>
 												</label>
 											</div>

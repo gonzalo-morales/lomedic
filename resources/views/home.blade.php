@@ -15,8 +15,6 @@
 
 @section('content')
 
-{{ dump( Route::getRoutes()  ) }}	
-
 <div class="text-center">
 <h1 class="display-3">¡Bienvenido!</h1>
 <h6>Aquí puedes consultar algúnos mensajes urgentes o últimas acitivades que realizaste:</h6>

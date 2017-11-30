@@ -54,7 +54,7 @@ class OfertasController extends ControllerBase
             'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
             'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
             'solicitud' => Solicitudes::find($id_solicitud),
-            ]];
+        ]];
         return parent::create($company,$attributes);
 	}
 
@@ -62,13 +62,15 @@ class OfertasController extends ControllerBase
 	{
         # ¿Usuario tiene permiso para crear?
 //		$this->authorize('create', $this->entity);
-
 		# Validamos request, si falla regresamos pagina
-		$this->validate($request, $this->entity->rules);
+        $this->validate($request, $this->entity->rules);
 
 		$request->request->set('fk_id_estatus_oferta',1);
 		if(empty($request->fk_id_empresa)){
 		    $request->request->set('fk_id_empresa',Empresas::where('conexion','LIKE',$company)->first()->id_empresa);
+        }
+        if(empty($request->descuento_oferta)){
+		    $request->request->set('descuento_oferta',0);
         }
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
@@ -83,7 +85,7 @@ class OfertasController extends ControllerBase
                     if(empty($detalle['fk_id_proyecto'])){
                         $detalle['fk_id_proyecto'] = null;
                     }
-					$isSuccess->detallesOferta()->save(new DetalleOfertas($detalle));
+					$isSuccess->detalleOfertas()->save(new DetalleOfertas($detalle));
 				}
 			}
 			if(isset($request->detalles)){
@@ -97,7 +99,7 @@ class OfertasController extends ControllerBase
                     if(empty($detalle['fk_id_proyecto'])){
                         $detalle['fk_id_proyecto'] = null;
                     }
-                    $isSuccess->detallesOferta()->save(new DetalleOfertas($detalle));
+                    $isSuccess->detalleOfertas()->save(new DetalleOfertas($detalle));
                 }
             }
             $this->log('store', $isSuccess->id_orden);
@@ -155,7 +157,7 @@ class OfertasController extends ControllerBase
 				foreach ($request->detalles as $detalle) {
 						$oferta_detalle = $entity
 							->findOrFail($id)
-							->detallesOferta()
+							->detalleOfertas()
 							->where('id_oferta_detalle', $detalle['id_oferta_detalle'])
 							->first();
 						$oferta_detalle->fill($detalle);
@@ -173,7 +175,7 @@ class OfertasController extends ControllerBase
                     if(empty($detalle['fk_id_proyecto'])){
                         $detalle['fk_id_proyecto'] = null;
                     }
-					$entity->detallesOferta()->save(new DetalleOfertas($detalle));
+					$entity->detalleOfertas()->save(new DetalleOfertas($detalle));
 				}
 			}
 
