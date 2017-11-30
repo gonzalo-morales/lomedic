@@ -9,7 +9,7 @@
 	<title>{{ config('app.name', '') }} - @yield('title')</title>
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
 	{{ HTML::meta('csrf-token', csrf_token()) }}
-	{{ HTML::favicon(asset("img/$menuempresa->logotipo")) }}
+	{{ HTML::favicon(asset("img/logotipos/$menuempresa->icono")) }}
 	<!-- Bootstrap CSS local fallback -->
 	{{ HTML::style(asset('css/bootstrap/dist/css/bootstrap.min.css')) }}
 	<!-- Select2 CSS local -->
@@ -38,24 +38,24 @@
     <div class="w-100 fixed-top z-depth-1-half" id="top-nav">
     	<nav class="navbar navbar-default bg-white">
             <div class="navbar-header d-flex flex-row">
-                <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">menu</i></button>
+                <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="MENU"><i class="material-icons">menu</i></button>
                 <div class="btn-group">
-                    <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            			{{ HTML::image(asset("img/logotipos/$menuempresa->logotipo"), null, ['width'=>'25px','class'=>'mr-2']) }} {{ $menuempresa->nombre_comercial }}
+                    <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" title="EMPRESA" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            			{{ HTML::image(asset("img/logotipos/$menuempresa->icono"), null, ['width'=>'25px','class'=>'mr-2']) }} {{ $menuempresa->nombre_comercial }}
             		</a>
                     <ul id='enteDrop' class="dropdown-menu z-depth-2" aria-labelledby="dropdownMenu2">
                 		@foreach($menuempresas as $_empresa)
                 		<li class="dropdown-item">
                 			<a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">
-                				{{ HTML::image(asset("img/logotipos/$_empresa->logotipo"), null, ['class'=>'circle responsive-img mr-1','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}
+                				{{ HTML::image(asset("img/logotipos/$_empresa->icono"), null, ['class'=>'circle responsive-img mr-1','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}
                 			</a>
                 		</li>
                 		@endforeach
                 	</ul>
                 </div>
             </div>
-            <a class="d-flex align-items-center" href="{{asset(request()->company)}}" title="ADMINISTRACION"><i class='material-icons left'>home</i></a>
-            <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">live_help</i></button>
+            <a class="d-flex align-items-center" href="{{asset(request()->company)}}" title="INICIO"><i class='material-icons left'>home</i></a>
+            <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="AYUDA"><i class="material-icons">live_help</i></button>
         </nav>
     	
     </div>
