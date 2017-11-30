@@ -4,13 +4,18 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="form-group col-md-6 col-xs-12">
-		{{ Form::label('metodo_pago', 'Método de pago') }}
-		{{ Form::text('metodo_pago', null, ['id'=>'metodo_pago','class'=>'form-control']) }}
-		{{ $errors->has('metodo_pago') ? HTML::tag('span', $errors->first('metodo_pago'), ['class'=>'help-block text-danger']) : '' }}
+	<div class="form-group col-6">
+		{{ Form::label('moneda', '* Abreviatura de la moneda') }}
+		{{ Form::text('moneda', null, ['id'=>'moneda','class'=>'form-control']) }}
+		{{ $errors->has('moneda') ? HTML::tag('span', $errors->first('moneda'), ['class'=>'help-block text-danger']) : '' }}
 	</div>
-	<div class="form-group col-md-6 col-xs-12">
-		{{ Form::label('descripcion', 'Descripción') }}
+	<div class="form-group col-6">
+		{{ Form::label('total_decimales', '* Cantidad total de decimales') }}
+		{{ Form::number('total_decimales', null, ['id'=>'total_decimales','class'=>'form-control']) }}
+		{{ $errors->has('total_decimales') ? HTML::tag('span', $errors->first('total_decimales'), ['class'=>'help-block text-danger']) : '' }}
+	</div>
+	<div class="form-group col-12">
+		{{ Form::label('descripcion', '* Descripción') }}
 		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'form-control']) }}
 		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block text-danger']) : '' }}
 	</div>

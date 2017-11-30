@@ -1,16 +1,16 @@
 
-@section('content-width', 's12')
+@section('content-width')
 
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="form-group col-md-6 col-xs-12">
-		{{ Form::label('metodo_pago', 'Método de pago') }}
-		{{ Form::text('metodo_pago', null, ['id'=>'metodo_pago','class'=>'form-control']) }}
-		{{ $errors->has('metodo_pago') ? HTML::tag('span', $errors->first('metodo_pago'), ['class'=>'help-block text-danger']) : '' }}
+	<div class="form-group col-md-6 col-xs-6">
+		{{ Form::label('cadena_pago', 'Cadena pago:') }}
+		{{ Form::text('cadena_pago', null, ['id'=>'cadena_pago','class'=>'form-control']) }}
+		{{ $errors->has('cadena_pago') ? HTML::tag('span', $errors->first('cadena_pago'), ['class'=>'help-block text-danger']) : '' }}
 	</div>
-	<div class="form-group col-md-6 col-xs-12">
-		{{ Form::label('descripcion', 'Descripción') }}
+	<div class="form-group col-md-6 col-xs-6">
+		{{ Form::label('descripcion', 'Descripción:') }}
 		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'form-control']) }}
 		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block text-danger']) : '' }}
 	</div>

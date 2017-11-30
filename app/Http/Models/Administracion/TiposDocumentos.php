@@ -19,7 +19,7 @@ class TiposDocumentos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre_documento'];//Solicitante devolución. false: localidad; true: proveedor;
+	protected $fillable = ['nombre_documento','activo'];//Solicitante devolución. false: localidad; true: proveedor;
 
 	/**
 	 * The validation rules
@@ -34,7 +34,8 @@ class TiposDocumentos extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'nombre_documento' => 'Documento'
+		'nombre_documento' => 'Documento',
+		'activo_span' => 'Estado'
 	];
 
 }

@@ -12,13 +12,13 @@ class MetodosPago extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_metodos_pago';
+	protected $table = 'sat_cat_metodos_pago';
 
 	/**
 	 * The primary key of the table
 	 * @var string
 	 */
-	protected $primaryKey = 'id_metodo_pago';
+	protected $primaryKey = 'id_metodos_pago';
 
 	/**
 	 * The attributes that are mass assignable.
@@ -32,8 +32,8 @@ class MetodosPago extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'metodo_pago'	=> 'required',
-		'descripcion'	=> 'required',
+		'metodo_pago'	=> 'required|max:3',
+		'descripcion'	=> 'required|max:255',
 	];
 
     /**

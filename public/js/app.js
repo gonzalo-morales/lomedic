@@ -10,7 +10,13 @@ $(document).ready(function(){
        cursorwidth: 4,
        cursorborder: 'none'
    });
-
+// Inicializar los datepicker para las fechas necesarias
+$('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 3, // Creates a dropdown of 3 years to control year
+    min: true,
+    format: 'yyyy-mm-dd'
+});
 
    /* Sidebar's */
    $('#sidebarCollapse').on('click', function () {

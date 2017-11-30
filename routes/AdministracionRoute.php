@@ -68,5 +68,11 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('zonas', 'Administracion\ZonasController');
 		Route::resource('tiposentrega', 'Administracion\TipoEntregaController');
 		Route::resource('tipodocumento', 'Administracion\TiposDocumentosController');
+		Route::resource('cadenaspagos', 'Administracion\CadenasPagosController');
+		Route::resource('clavesproductosservicios', 'Administracion\ClavesProductosServiciosController');
+		Route::resource('clavesunidades', 'Administracion\ClavesUnidadesController');
+		Route::resource('formaspago', 'Administracion\FormasPagoController');
+		Route::resource('monedas', 'Administracion\MonedasController');
+		Route::resource('satmunicipios', 'Administracion\SatMunicipiosController');
 	});
 });
