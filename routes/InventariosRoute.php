@@ -28,7 +28,7 @@ Route::prefix('{company}')->group(function () {
         Route::post('getOrdenes','Inventarios\EntradasController@getOrdenes')->name('entradas.getOrdenes');
         Route::post('getDetalleOrden','Inventarios\EntradasController@getDetalleOrden')->name('entradas.getDetalleOrden');
         Route::resource('inventarios','Inventarios\InventariosController');
-        Route::resource('solicitudes-entrada','Inventarios\SolicitudesEntradaController');
         Route::resource('solicitudes-salida','Inventarios\SolicitudesSalidaController');
+        Route::resource('solicitudes-entrada','Inventarios\SolicitudesEntradaController');
     });
 });

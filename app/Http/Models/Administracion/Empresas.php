@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class Empresas extends Model
+class Empresas extends ModelBase
 {
 	// use SoftDeletes;
 
@@ -26,7 +26,14 @@ class Empresas extends Model
 	 *
 	 * @var array
 	 */
-	// protected $fillable = ['razon_social', 'banco', 'rfc', 'nacional'];
+	protected $fillable = ['nombre_comercial', 'rfc', 'empresa', 'razon_social', 'conexion', 'icono', 'activo', 'logotipo', 'fk_id_regimen_fiscal'];
+	
+	protected $fields = [
+	    'nombre_comercial' => 'Nombre Comercial',
+	    'razon_social' => 'Razon Social',
+	    'rfc' => 'Rfc',
+	    'activo_text' => 'Estatus',
+	];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -34,6 +41,8 @@ class Empresas extends Model
 	 * @var bool
 	 */
 	public $timestamps = false;
+	
+	public $rules = [];
 
 	/**
 	 * Obtenemos empresas activas
@@ -72,7 +81,6 @@ class Empresas extends Model
             ->where('adm_det_permisos_usuarios.fk_id_usuario','=',$id_usuario)
             ->where('adm_det_modulo_accion.fk_id_empresa','=',$id_empresa)
             ->get();
-
     }
 
     public function accion_usuario($id_usuario,$id_empresa,$id_modulo)
@@ -84,6 +92,10 @@ class Empresas extends Model
             ->where('adm_det_modulo_accion.fk_id_empresa','=',$id_empresa)
             ->where('adm_det_modulo_accion.fk_id_modulo','=',$id_modulo)
             ->get();
+    }
+    
+    public function certificados(){
+        return $this->hasMany(Certificados::class,'fk_id_empresa');
     }
 
     public function numeroscuenta()

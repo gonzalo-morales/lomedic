@@ -2,37 +2,39 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class TiposDocumentos extends Model
+class TiposDocumentos extends ModelBase
 {
-    // use SoftDeletes;
+	protected $table = 'gen_cat_tipo_documento';
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'gen_cat_tipo_documento';
+	/**
+	 * The primary key of the table
+	 * @var string
+	 */
+	protected $primaryKey = 'id_tipo_documento';
 
-    /**
-     * The primary key of the table
-     * @var string
-     */
-    protected $primaryKey = 'id_tipo_documento';
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['nombre_documento'];//Solicitante devolución. false: localidad; true: proveedor;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['nombre_documento'];
+	/**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'nombre_documento' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/'
+	];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+	/**
+	 * Los atributos que seran visibles en index-datable
+	 * @var null|array
+	 */
+	protected $fields = [
+		'nombre_documento' => 'Documento'
+	];
 
 }

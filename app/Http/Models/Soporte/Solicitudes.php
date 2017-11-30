@@ -107,8 +107,8 @@ class Solicitudes extends ModelBase
         'asunto' => 'required',
         'fk_id_empleado_solicitud' => 'required',
         'fk_id_categoria' => 'required',
-        'fk_id_subcategoria' => 'required',
-        'fk_id_accion' => 'required',
+        //'fk_id_subcategoria' => 'required',
+        //'fk_id_accion' => 'required',
         'fk_id_prioridad' => 'required',
 	];
 

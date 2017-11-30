@@ -13,15 +13,23 @@ use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Administracion\Sucursales;
-use Illuminate\Http\Request;
 use App\Http\Models\Administracion\Usuarios;
-use Illuminate\Support\Facades\Crypt;
 use App\Http\Models\Finanzas\CondicionesPago;
 use App\Http\Models\SociosNegocio\TiposAnexos;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\SociosNegocio\TiposProveedores;
-use Illuminate\Support\Facades\Cache;
+use App\Http\Models\SociosNegocio\AnexosSociosNegocio;
+use App\Http\Models\Logs;
+use App;
 use DB;
+use File;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 #use App\Http\Models\Administracion\Monedas;
 
 class SociosNegocioController extends ControllerBase
@@ -111,7 +119,7 @@ class SociosNegocioController extends ControllerBase
 	        if(isset($request->direcciones)){
 	            $direcciones = collect($request->direcciones);
 
-	            #Inserta o Actualiza la informacion del contacto
+	            #Inserta o Actualiza la informacion del direcciones
 	            foreach ($direcciones as $direccion)
 	            {
 	                array_unshift($direccion, ['fk_id_socio_negocio'=> $id]);
@@ -123,7 +131,7 @@ class SociosNegocioController extends ControllerBase
 	        if(isset($request->cuentas)){
 	            $cuentas = collect($request->cuentas);
 	            
-	            #Inserta o Actualiza la informacion del contacto
+	            #Inserta o Actualiza la informacion del cuentas
 	            foreach ($cuentas as $cuenta)
 	            {
 	                array_unshift($cuenta, ['fk_id_socio_negocio'=> $id]);
@@ -133,13 +141,22 @@ class SociosNegocioController extends ControllerBase
 	        
 	        # Guardamos el detalle de los anexos de los socios de negocio
 	        if(isset($request->anexos)){
-	            $anexos = collect($request->anexos);
+	            $anexos = $request->anexos;
 	            
-	            #Inserta o Actualiza la informacion del contacto
+	            #Inserta o Actualiza la informacion del anexo
 	            foreach ($anexos as $anexo)
 	            {
-	                array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
-	                $entity->anexos()->updateOrCreate(['id_anexo' => ($anexo['id_anexo'] ?? null)], $anexo);
+	                if(isset($anexo['archivo'])) {
+	                    $myfile = $anexo['archivo'];
+	                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
+	                    $file_save = Storage::disk('socios_anexos')->put($id.'/'.$filename, file_get_contents($myfile->getRealPath()));
+	                
+	                    if($file_save) {
+	                        array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
+	                        $anexo['archivo'] = $filename;
+	                        $entity->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
+	                    }
+	                }
 	            }
 	        }
 	        
@@ -147,7 +164,7 @@ class SociosNegocioController extends ControllerBase
 	        if(isset($request->productos)){
 	            $productos = collect($request->productos);
 	            
-	            #Inserta o Actualiza la informacion del contacto
+	            #Inserta o Actualiza la informacion del productos
 	            foreach ($productos as $producto)
 	            {
 	                array_unshift($producto, ['fk_id_socio_negocio'=> $id]);
@@ -265,17 +282,26 @@ class SociosNegocioController extends ControllerBase
 	        
 	        # Guardamos el detalle de los anexos de los socios de negocio
 	        if(isset($request->anexos)){
-	            $anexos = collect($request->anexos);
+	            $anexos = $request->anexos;
 	            
 	            #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
-	            $ids_anexos = $anexos->pluck('id_anexo');
+	            $ids_anexos = collect($anexos)->pluck('id_anexo');
 	            $entity->anexos()->whereNotIn('id_anexo', $ids_anexos)->update(['eliminar' => 1]);
 	            
 	            #Inserta o Actualiza la informacion del contacto
 	            foreach ($anexos as $anexo)
 	            {
-	                array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
-	                $entity->anexos()->updateOrCreate(['id_anexo' => ($anexo['id_anexo'] ?? null)], $anexo);
+	                if(isset($anexo['archivo'])) {
+	                    $myfile = $anexo['archivo'];
+	                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
+	                    $file_save = Storage::disk('socios_anexos')->put($id.'/'.$filename, file_get_contents($myfile->getRealPath()));
+	                    
+    	                if($file_save) {
+        	                array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
+        	                $anexo['archivo'] = $filename;
+        	                $entity->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
+    	                }
+	                }
 	            }
 	        }
 	        else {
@@ -311,6 +337,20 @@ class SociosNegocioController extends ControllerBase
 	        #DB::rollBack();
 	        $this->log('error_update', $id);
 	        return $this->redirect('error_update');
+	    }
+	}
+	
+	public function descargar($company, $id)
+	{
+	    $archivo = AnexosSociosNegocio::where('id_anexo',$id)->first();
+	    $file = Storage::disk('socios_anexos')->getDriver()->getAdapter()->getPathPrefix().$archivo->fk_id_socio_negocio.'/'.$archivo->archivo;
+	    if (File::exists($file))
+	    {
+	        Logs::createLog($archivo->getTable(), $company, $archivo->id_anexo, 'descargar', 'Archivo anexo de socio negocio');
+	        return Response::download($file);
+	    }
+	    else {
+	        App::abort(404,'No se encontro el archivo o recurso que se solicito.');
 	    }
 	}
 }

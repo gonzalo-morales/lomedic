@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>SIM - @yield('title')</title>
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
-	{{ HTML::favicon(asset("img/$empresa->logotipo")) }}
+	{{ HTML::favicon(asset("img/logotipos/$menuempresa->logotipo")) }}
 	{{ HTML::style(asset('css/bootstrap.min.css'), ['media'=>'screen,projection'])}}
 	{{ HTML::style('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css') }}
 	{{ HTML::style(asset('css/style.css')) }}

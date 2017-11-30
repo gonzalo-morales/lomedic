@@ -3,7 +3,7 @@
 @section('title', currentEntityBaseName() . ' Agregar')
 
 @section('form-header')
-	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col-md-12 col-xs-12']) !!}
+	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col-md-12 col-xs-12', 'enctype' => 'multipart/form-data']) !!}
 @endsection
 
 @section('header-bottom')

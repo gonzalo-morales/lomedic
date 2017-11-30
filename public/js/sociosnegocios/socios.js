@@ -137,7 +137,7 @@ $(document).ready(function () {
     	iextension = ' - ' + extension;
         
     	if(tipo == '' | nombre == '' | puesto == '' | correo == '') {
-    		$.toaster({priority:'danger',title:'¡Error!',message:'Los siguientes campos son necesarios: Tipo contacto, Nombre, Puesto y Correo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    		$.toaster({priority:'danger',title:'Â¡Error!',message:'Los siguientes campos son necesarios: Tipo contacto, Nombre, Puesto y Correo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     	}
         else {
         	$('#tContactos').append('<tr>'+
@@ -150,7 +150,7 @@ $(document).ready(function () {
 				'<input name="contactos['+row_id+'][extension_oficina]" type="hidden" value="'+extension+'"></td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-        	$.toaster({priority:'success',title:'¡Correcto!',message:'El contacto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'success',title:'Â¡Correcto!',message:'El contacto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
 	});
 	
@@ -172,7 +172,7 @@ $(document).ready(function () {
     	pais		 = $('#pais option:selected').text();
     	
     	if(tipo == '' | calle == '' | num_exterior == '' | num_interior == '' | cp == '' | id_pais == '' | id_estado == '' | id_municipio == '' | colonia == '') {
-    		$.toaster({priority:'danger',title:'¡Error!',message:'Los siguientes campos son necesarios: Tipo contacto, Nombre, Puesto y Correo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    		$.toaster({priority:'danger',title:'Â¡Error!',message:'Los siguientes campos son necesarios: Tipo contacto, Nombre, Puesto y Correo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     	}
         else {
 			$('#tDirecciones').append('<tr>'+
@@ -188,7 +188,7 @@ $(document).ready(function () {
 				'<td>'+pais+'<input name="direcciones['+row_id+'][fk_id_pais]" type="hidden" value="'+id_pais+'"></td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarDireccion(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-        	$.toaster({priority:'success',title:'¡Correcto!',message:'La direccion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'success',title:'Â¡Correcto!',message:'La direccion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
 	});
 	
@@ -207,13 +207,13 @@ $(document).ready(function () {
 		clave_int = $('#clave_interbancaria').val();
 		
 		if(no_cuenta == '' | Number.isInteger(no_cuenta) != false) {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el numero de cuenta, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el numero de cuenta, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(id_banco == '' ){
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un banco.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe seleccionar un banco.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(cuentas.indexOf(id_banco+'-'+no_cuenta) !== -1) {
-			$.toaster({priority:'danger',title:'¡Error!',message:'La cuenta que trata de agregar ya existe.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'La cuenta que trata de agregar ya existe.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#tCuentas').append('<tr>'+
@@ -226,7 +226,7 @@ $(document).ready(function () {
 				'<td>' + clave_int + ' <input name="cuentas['+row_id+'][clave_interbancaria]" type="hidden" value="'+clave_int+'"></td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCuenta(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-			$.toaster({priority:'success',title:'¡Correcto!',message:'La cuenta se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Â¡Correcto!',message:'La cuenta se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 
@@ -239,13 +239,13 @@ $(document).ready(function () {
 		archivo = $("#archivo").prop('files');
 		
 		if(id_tipo == '' ){
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un tipo de documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe seleccionar un tipo de documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(nombre == '') {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if($("#archivo").length == 0) {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#tAnexos').append('<tr>'+
@@ -255,7 +255,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#anexos-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'¡Correcto!',message:'La cuenta se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Â¡Correcto!',message:'La cuenta se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 
@@ -282,10 +282,10 @@ $(document).ready(function () {
 		precio_hasta = $("#precio_hasta").val();
 		
 		if(id_sku == '' | tiempo_entrega == '' | precio == '' | precio_de == '' | precio_hasta == ''){
-			$.toaster({priority:'danger',title:'¡Error!',message:'Los campos, Sku, Tiempo Entrega, Precio, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'Los campos, Sku, Tiempo Entrega, Precio, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(skus_ids.indexOf(id_sku + id_upc) !== -1) {
-        	$.toaster({priority:'danger',title:'¡Error!',message:'El producto seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'Â¡Error!',message:'El producto seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
 		else {
 			if(id_upc != '') {
@@ -316,7 +316,7 @@ $(document).ready(function () {
         				'<td>' + precio_hasta + ' <input name="productos['+row_id+'][precio_hasta]" type="hidden" value="'+precio_hasta+'"></td>'+
         				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarProducto(this)"> <i class="material-icons">delete</i></button></td>'+
         			'</tr>');
-        			$.toaster({priority:'success',title:'¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        			$.toaster({priority:'success',title:'Â¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     		    }
     		});
 		}
@@ -325,25 +325,25 @@ $(document).ready(function () {
 
 function borrarCuenta(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la cuenta correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado la cuenta correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function borrarContacto(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado el contacto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado el contacto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function borrarDireccion(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la diereccion correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado la diereccion correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function borrarAnexo(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado el anexo correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado el anexo correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function borrarProducto(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado el producto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado el producto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
