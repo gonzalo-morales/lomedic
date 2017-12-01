@@ -21,8 +21,7 @@
 </div>
 <div class="container-fluid">
 	<div class="row">
-		<div id="metro" class="col-md-8 col-sm-12 mb-3" style="opacity: 0; top:50px;">
-
+		<div id="metro" class="col-lg-8 col-md-12 mb-3" style="opacity: 0; top:50px;">
 			<div class="row mx-2">
 				{!! HTML::decode(link_to(companyRoute('administracion.aplicacionesmedicamentos.index'), '<div class="align-self-center d-flex"><i class="material-icons">web</i><span class="badge badge-danger align-self-start">9</span><span class="sr-only align-self-start">unread messages</span></div>',['class'=>'col-6 m-2 metrOpt text-white blue d-flex justify-content-center', 'data-toggle'=>'tooltip','data-placement'=>'top','data-original-title'=>'Aplicaciones medicamentos'])) !!}
 
@@ -63,9 +62,8 @@
 					<i class="material-icons align-self-center">equalizer</i>
 				</a>
 			</div>
-
-		</div><!--/col collapsibles-->
-		<div id="infoSections" class="col-md-4 col-sm-12"  style="opacity: 0; top:50px;">
+		</div><!--/col collapsibles-->		
+		<div id="infoSections" class="col-lg-4 col-md-12"  style="opacity: 0; top:50px;">
 			<div class="card text-center z-depth-1-half">
 			  <div class="card-header">
 				<ul class="nav nav-pills nav-justified" id="myTab" role="tablist">
