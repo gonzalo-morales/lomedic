@@ -74,5 +74,10 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('formaspago', 'Administracion\FormasPagoController');
 		Route::resource('monedas', 'Administracion\MonedasController');
 		Route::resource('satmunicipios', 'Administracion\SatMunicipiosController');
+		Route::resource('patrones', 'Administracion\PatronesController');
+		Route::resource('pedimentosaduana', 'Administracion\PedimentosAduanaController');
+		Route::resource('regimenesfiscales', 'Administracion\RegimenesFiscalesController');
+		Route::resource('tiposcomprobantes', 'Administracion\TiposComprobantesController');
+		Route::resource('usoscfdis', 'Administracion\UsosCfdisController');
 	});
 });

@@ -10,6 +10,7 @@ $(document).ready(function(){
        cursorwidth: 4,
        cursorborder: 'none'
    });
+
 // Inicializar los datepicker para las fechas necesarias
 /*$('.datepicker').pickadate({
     selectMonths: true, // Creates a dropdown to control month
