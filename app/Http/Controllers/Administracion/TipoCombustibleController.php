@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\ControllerBase;
-use App\Http\Models\Administracion\TiposDocumentos;
-use Illuminate\Http\Request;
+use App\Http\Models\Administracion\Tipocombustible;
 
-class TiposDocumentosController extends ControllerBase
+class TipoCombustibleController extends ControllerBase
 {
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(TiposDocumentos $entity)
+    public function __construct(Tipocombustible $entity)
 	{
 		$this->entity = $entity;
 	}

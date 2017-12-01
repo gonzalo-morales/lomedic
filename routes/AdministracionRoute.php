@@ -56,8 +56,10 @@ Route::prefix('{company}')->group(function () {
 		Route::get('sucursalesempleado/{id}','Administracion\SucursalesController@sucursalesEmpleado');
 		Route::resource('sustanciasactivas', 'Administracion\SustanciasActivasController');
 		Route::resource('tipoalmacen', 'Administracion\TipoAlmacenController');
-		Route::resource('tipocombustible', 'Administracion\TipocombustibleController');
-		Route::resource('tiposproductos', 'Administracion\TiposProductosController');
+		Route::resource('tipocombustible', 'Administracion\TipoCombustibleController');
+		Route::resource('tipodocumento', 'Administracion\TipoDocumentosController');
+		Route::resource('tipoentrega', 'Administracion\TipoEntregaController');
+		Route::resource('tipoproductos', 'Administracion\TipoProductosController');
 		Route::resource('tiposucursal', 'Administracion\TipoSucursalController');
 		Route::resource('unidadesmedicas', 'Administracion\UnidadesMedicasController');
 		Route::resource('unidadesmedidas', 'Administracion\UnidadesMedidasController');
@@ -66,8 +68,6 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('vehiculosmodelos', 'Administracion\VehiculosModelosController');
 		Route::resource('viaadministracion', 'Administracion\ViaAdministracionController');
 		Route::resource('zonas', 'Administracion\ZonasController');
-		Route::resource('tiposentrega', 'Administracion\TipoEntregaController');
-		Route::resource('tipodocumento', 'Administracion\TiposDocumentosController');
 		Route::resource('cadenaspagos', 'Administracion\CadenasPagosController');
 		Route::resource('clavesproductosservicios', 'Administracion\ClavesProductosServiciosController');
 		Route::resource('clavesunidades', 'Administracion\ClavesUnidadesController');

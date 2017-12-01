@@ -26,7 +26,7 @@ class TiposEntrega extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'tipo_entrega' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/'
+		'tipo_entrega' => 'required'
 	];
 
 	/**
@@ -37,5 +37,4 @@ class TiposEntrega extends ModelBase
 		'tipo_entrega' => 'Entrega',
 		'activo_span' => 'Estado'
 	];
-
 }
