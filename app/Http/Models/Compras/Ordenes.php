@@ -112,5 +112,14 @@ class Ordenes extends ModelCompany
     {
         return $this->hasOne('App\Http\Models\Administracion\TiposDocumentos','id_tipo_documento','fk_id_tipo_documento');
     }
+    public function detalleSku()
+    {
+        return $this->hasOne('App\Http\Models\Inventarios\Productos','id_sku','fk_id_sku');
+    }
+
+    public function detalleUpc()
+    {
+        return $this->hasOne('App\Http\Models\Inventarios\Upcs','id_upc','fk_id_upc');
+    }
 
 }
