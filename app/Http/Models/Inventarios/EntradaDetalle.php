@@ -32,7 +32,7 @@ class EntradaDetalle extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_entrada_almacen','fk_id_lote','fk_id_sku','fk_id_upc','cantidad_surtida','fecha_caducidad','lote'];
+    protected $fillable = ['fk_id_entrada_almacen','fk_id_lote','fk_id_sku','fk_id_upc','cantidad_surtida','fecha_caducidad','lote','fk_id_detalle_documento'];
 
 //    public $niceNames =[
 //        'fk_id_socio_negocio'=>'proveedor'
@@ -87,10 +87,7 @@ class EntradaDetalle extends ModelCompany
         return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_orden');
     }
 
-    public function detalleOrdenes()
-    {
-        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_orden', 'id_orden');
-    }
+
 
     public function empresa()
     {
@@ -107,13 +104,10 @@ class EntradaDetalle extends ModelCompany
         return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
     }
 
-    public function detalleSku()
+    public function detalleOrdenes()
     {
-        return $this->belongsToMany('App\Http\Models\Inventarios\Productos','com_det_ordenes','fk_id_orden','fk_id_sku','id_orden');
+        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_orden', 'id_orden');
     }
-    public function detalleUpc()
-    {
-        return $this->belongsToMany('App\Http\Models\Inventarios\Upcs','com_det_ordenes','fk_id_orden','fk_id_upc','id_orden');
-    }
+
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Inventarios;
 
+use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\ModelCompany;
 use DB;
 
@@ -12,95 +13,86 @@ class Entradas extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'com_opr_ordenes';
+    protected $table = 'inv_opr_entrada_almacen';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_orden';
+    protected $primaryKey = 'id_entrada_almacen';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['fk_id_socio_negocio','fk_id_sucursal','fk_id_condicion_pago','fecha_creacion','fecha_estimada_entrega',
-        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_orden','fk_id_tipo_entrega','fk_id_empresa',
-        'tiempo_entrega','importacion'];
+    protected $fillable = ['fk_id_tipo_documento','numero_documento','referencia_documento',
+        'fecha_entrada','fk_id_estatus_entrada'];
 
-    public $niceNames =[
-        'fk_id_socio_negocio'=>'proveedor'
-    ];
-
-    protected $dataColumns = [
-        'fk_id_estatus_orden'
-    ];
+//    public $niceNames =[
+//        'fk_id_socio_negocio'=>'proveedor'
+//    ];
+//
+//    protected $dataColumns = [
+//        'fk_id_estatus_orden'
+//    ];
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
     protected $fields = [
-        'id_orden' => 'Número Solicitud',
-        'proveedor.nombre_corto' => 'Proveedor',
-        'sucursales.sucursal' => 'Sucursal entrega',
-        'fecha_creacion' => 'Fecha del pedido',
-        'fecha_estimada_entrega' => 'Fecha de entrega',
-        'estatus.estatus' => 'Estatus de la orden',
-        'empresa.nombre_comercial' => 'Empresa'
+        'id_entrada_almacen' => 'Número Entrada',
+        'fk_id_tipo_documento' => 'Tipo docuemnto',
+        'numero_documento' => 'Numero de documento',
+        'referencia_documento' => 'Referencia del documentos',
+        'fecha_entrada' => 'Fecha de entrada',
+        'fk_id_estatus_entrada' => 'Estatus de la entrada'
     ];
 
-    function getNombreCompletoAttribute() {
-        return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
+    public function detalleEntrada()
+    {
+        return $this->hasMany('App\Http\Models\Inventarios\EntradaDetalle','fk_id_entrada_almacen', 'id_entreda_almacen');
     }
 
-    function getNombreSucursalAttribute(){
-        return $this->sucursales->nombre_sucursal;
-    }
+    public function datosEntrada($id,$tipo_documento)
+    {
+        switch ($tipo_documento)
+        {
+            case 1:
+                break;
+            case 2:
+                breack;
+            case 3:
+                $datos = Ordenes::where('id_orden',$id)->first();
+                break;
+        }
 
-    function getEstatusSolicitudAttribute(){
-        return $this->estatus->estatus;
+//        $datos->sucursal = $datos->sucursales()->pluck('sucursal');
+//        $datos->proeveedor = $datos->proveedor()->pluck('nombre_comercial');
+//        $datos->tipo_documento = $this->tipoDocumento()->pluck('nombre_documento')->first();
+        return $datos;
     }
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-        'fk_id_socio_negocio' => 'required',
-        'fk_id_sucursal' => 'required',
-        'fk_id_condicion_pago' => 'required',
-        'fk_id_tipo_entrega' => 'required'
-    ];
 
     public function sucursales()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
+        return $this->hasOne('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
     }
-
-    public function estatus()
-    {
-        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_orden');
-    }
-
-    public function detalleOrdenes()
-    {
-        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_orden', 'id_orden');
-    }
-
-    public function empresa()
-    {
-        return $this->belongsTo('App\Http\Models\Administracion\Empresas','fk_id_empresa','id_empresa');
-    }
-
-    public function tipoEntrega()
-    {
-        return $this->hasOne('App\Http\Models\SociosNegocio\TiposEntrega','id_tipo_entrega','fk_id_tipo_entrega');
-    }
-
     public function proveedor()
     {
         return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
     }
+    public function tipoDocumento()
+    {
+        return $this->belongsTo('App\Http\Models\Administracion\TiposDocumentos','fk_id_tipo_documento','id_tipo_documento');
+    }
+    public function productos()
+    {
+        return $this->hasMany('App\Http\Models\Inventarios\EntradaDetalle','fk_id_entrada_almacen', 'id_entreda_almacen');
+    }
+
+//    public function detalleEntrada()
+//    {
+//        return $this->hasMany('App\Http\Models\Inventarios\EntradaDetalle','fk_id_entrada_almacen', 'id_entreda_almacen');
+//    }
 
 }

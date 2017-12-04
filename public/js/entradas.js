@@ -2,146 +2,132 @@
  * Created by ihernandezt on 12/10/2017.
  */
 
-
-
 $('#entrada_escaner').on('change', function() {
-        var no_entrada = $('#entrada_escaner').val();
-        $('#entrada_escaner').val('');
 
+    var tipo_documento = $('#fk_id_tipo_documento').val();
+    var numero_documento = $('#entrada_escaner').val();
+    $('#entrada_escaner').val('');
 
-        if(no_entrada) {
+        if(numero_documento) {
+            let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
             $.ajax({
                 url: $('#entrada_escaner').data('url'),
                 method:'POST',
-                data: {'numero_documento':no_entrada,'fk_id_tipo_documento':$('#fk_id_tipo_documento').val()},
+                data: {'numero_documento':numero_documento,'fk_id_tipo_documento':tipo_documento,'_token':token},
                 dataType: "json",
                 success:function(data){
-
                     console.info(data);
-
                     if(data != '')
                     {
                         $('#lista_entradas').append('<li class="nav-item">' +
-                            '<a class="nav-link" href="#'+no_entrada+'" role="tab" data-toggle="tab">'+no_entrada+'</a> ' +
+                            '<a class="nav-link" href="#'+tipo_documento+'_'+numero_documento+'" role="tab" data-toggle="tab">'+numero_documento+'</a> ' +
                             '</li>');
 
-
-                        var nombre_sucursal = data.datos_orden.sucursales.sucursal;
-                        var nombre_proveedor = data.datos_orden.proveedor.nombre_comercial;
                         var detalle_entrada = '';
-                        var cantidad_sutida = 0;
                         var estado_producto = '';
 
-                        $.each(data.detalle_orden, function(index) {
+                        $.each(data.detalle_documento, function(index) {
 
 
-                            var sku = data.detalle_orden[index].detalle_sku.sku;
-                            var id_sku = data.detalle_orden[index].detalle_sku.id_sku;
-                            var upc = data.detalle_orden[index].detalle_upc.upc;
-                            var id_upc = data.detalle_orden[index].detalle_upc.id_upc;
-                            var cliente = data.detalle_orden[index].fk_id_cliente;
-                            var proyecto = data.detalle_orden[index].fk_id_proyecto;
+                            var sku = data.detalle_entrada[index].sku;
+                            var id_sku = data.detalle_entrada[index].id_sku;
+                            var sku_descripcion = data.detalle_entrada[index].sku_descripcion;
+                            var upc = data.detalle_entrada[index].upc;
+                            var id_upc = data.detalle_entrada[index].id_upc;
+                            var nombre_cliente = data.detalle_entrada[index].fk_id_cliente;
+                            var nombre_proyecto = data.detalle_entrada[index].nombre_proyecto;
+                            var cantidad_surtida = data.detalle_entrada[index].cantidad_surtida;
+                            var cantidad = data.detalle_entrada[index].cantidad;
+                            var lote = data.detalle_entrada[index].lote;
+                            var fecha_caducidad = data.detalle_entrada[index].fecha_caducidad;
+                            var id_detalle_documento = data.detalle_entrada[index].id_detalle;
 
-                            if( data.detalle_orden[index].detalle_sku.sku === null || data.detalle_orden[index].detalle_sku.sku === undefined )
+                            if(sku === undefined || sku === null ){sku='-';}
+                            if(sku_descripcion === undefined || sku_descripcion === null){sku_descripcion='-';}
+                            if(upc === undefined || upc === null ){upc='-';}
+                            if(nombre_cliente === undefined || nombre_cliente === null ){nombre_cliente='-';}
+                            if(nombre_proyecto === undefined || nombre_proyecto === null){nombre_proyecto='-';}
+                            if(lote === undefined || lote === null){lote = '';}
+                            if(fecha_caducidad === undefined || fecha_caducidad === null){fecha_caducidad = '';}
+                            if(cantidad_surtida === undefined || cantidad_surtida  === null){cantidad_surtida  = 0;}
+
+                            if( cantidad_surtida < cantidad)
                             {
-                                sku = '-';
-                            }
+                                estado_producto = '<input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_ingresar"  name="datos_entradas['+index+'][ingresar]" value="0" style="max-width:6em;" disabled>';
 
-                            if(data.detalle_orden[index].detalle_upc.upc === null || data.detalle_orden[index].detalle_upc.upc === undefined )
-                            {
-                                upc = '-';
-                            }
-
-                            if( data.detalle_orden[index].fk_id_cliente === null || data.detalle_orden[index].fk_id_cliente === undefined )
-                            {
-                                cliente = '-';
-                            }
-
-                            if(data.detalle_orden[index].fk_id_proyecto === null || data.detalle_orden[index].fk_id_proyecto === undefined)
-                            {
-                                proyecto = '-';
-                            }
-
-                            if( cantidad_sutida < data.detalle_orden[index].cantidad )
-                            {
-                                estado_producto = '<input type="text" id="'+index+'_ingresar_'+sku+'_'+upc+'"  name="'+index+'_ingresar_'+sku+'_'+upc+'" value="0" style="max-width:6em;" disabled>';
+                                detalle_entrada = detalle_entrada + '<tr>' +
+                                    '<td>'+sku+'</td>' +
+                                    '<td>'+upc+'</td>' +
+                                    '<td>'+sku_descripcion .substr(0, 150)+'</td>' +
+                                    '<td>'+nombre_cliente +'</td>' +
+                                    '<td>'+nombre_proyecto+'</td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_lote" name="datos_entradas['+index+'][lote]" value="'+lote+'" style="max-width:6em;" disabled></td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_caducidad" name="datos_entradas['+index+'][caducidad]" value="'+fecha_caducidad+'" style="max-width:6em;"disabled></td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_entrada" value="'+cantidad+'" style="max-width:6em;" disabled></td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_surtida" name="datos_entradas['+index+'][surtida]"  value="'+cantidad_surtida+'" style="max-width:6em;" disabled></td>' +
+                                    '<td>'+estado_producto+'</td>' +
+                                    '<input type="hidden" name="datos_entradas['+index+'][id_sku]" value="'+id_sku+'" >' +
+                                    '<input type="hidden" name="datos_entradas['+index+'][id_upc]" value="'+id_upc+'" >' +
+                                    '<input type="hidden" name="datos_entradas['+index+'][id_detalle_documento]" value="'+id_detalle_documento+'" >' +
+                                    '</tr>';
                             }
                             else
                             {
-                                estado_producto = 'Producto ya surtido en su totalidad.';
+                                return true;
                             }
-
-                            detalle_entrada = detalle_entrada + '<tr>' +
-                                '<td>'+sku+'</td>' +
-                                '<td>'+upc+'</td>' +
-                                '<td>'+data.detalle_orden[index].detalle_sku.descripcion.substr(0, 150)+'</td>' +
-                                '<td>'+cliente+'</td>' +
-                                '<td>'+proyecto+'</td>' +
-                                '<td><input type="text" id="'+index+'_lote_'+sku+'_'+upc+'" name="datos_entradas['+index+'][lote]" style="max-width:6em;" disabled></td>' +
-                                '<td><input type="text" id="'+index+'_caducidad_'+sku+'_'+upc+'" name="datos_entradas['+index+'][caducidad]" style="max-width:6em;"disabled></td>' +
-                                '<td><input type="text" id="'+index+'_entrada_'+sku+'" name="datos_entradas['+index+'][entrada]" value="'+data.detalle_orden[index].cantidad+'" style="max-width:6em;" disabled></td>' +
-                                '<td><input type="text" id="'+index+'_surtida_'+sku+'" name="datos_entradas['+index+'][surtida]"  value="0" style="max-width:6em;" disabled></td>' +
-                                '<td>'+estado_producto+'</td>' +
-                                '<td></td>' +
-                                '<td></td>' +
-                                '<input type="hidden" id="datos_entradas-'+index+'-id_sku" name="datos_entradas['+index+'][id_sku]" value="'+id_sku+'" >' +
-                                '<input type="hidden" id="datos_entradas-'+index+'-id_upc" name="datos_entradas['+index+'][id_upc]" value="'+id_upc+'" >' +
-                                '</tr>';
-                            // detalle_entrada = detalle_entrada.replace(undefined, "-");
-                            // detalle_entrada = detalle_entrada.replace(null, "-");
                         });
 
-                        $('#detalle_entrada').append('<div role="tabpanel" class="tab-pane fade in" id="'+no_entrada+'">' +
+                        $('#detalle_entrada').append('<div role="tabpanel" class="tab-pane fade in" id="'+tipo_documento+'_'+numero_documento+'">' +
                             '<div class="row"> ' +
                             '   <div class="col-sm-12"> ' +
-                            '       <h3>Entrada: '+ no_entrada +'</h3> <input type="hidden" name="'+no_entrada+'">' +
+                            '       <h3>Entrada: '+ numero_documento +'</h3> <input type="hidden" name="'+numero_documento+'">' +
                             '       <div class="card z-depth-1-half"> ' +
                             '           <div class="card-body"> ' +
                             '               <div class="row">' +
                             '                   <div class="col-md-6 col-sm-6 col-lg-3">' +
                             '                       <div class="form-group">' +
-                            '                           <label for="sucursal_'+no_entrada+'">Sucursal</label>' +
-                            '                           <input class="form-control" id="sucursal_'+no_entrada+'" name="sucursal_'+no_entrada+'" type="text" value="'+nombre_sucursal+'" disabled>' +
+                            '                           <label for="sucursal_'+numero_documento+'">Sucursal</label>' +
+                            '                           <input class="form-control" id="sucursal_'+tipo_documento+'_'+numero_documento+'" name="sucursal_'+tipo_documento+'_'+numero_documento+'" type="text" value="'+data.datos_documento.sucursales.sucursal+'" disabled>' +
                             '                       </div>' +
                             '                   </div> ' +
                             '                   <div class="col-md-6 col-sm-6 col-lg-3">' +
                             '                       <div class="form-group">' +
-                            '                           <label for="negocios_'+no_entrada+'">Proveedor</label>' +
-                            '                           <input class="form-control" id="negocios_'+no_entrada+'" name="negocios_'+no_entrada+'" type="text" value="'+nombre_proveedor+'" disabled>' +
+                            '                           <label for="negocios_'+tipo_documento+'_'+numero_documento+'">Proveedor</label>' +
+                            '                           <input class="form-control" id="negocios_'+tipo_documento+'_'+numero_documento+'" name="negocios_'+tipo_documento+'_'+numero_documento+'" type="text" value="'+data.datos_documento.proveedor.nombre_comercial+'" disabled>' +
                             '                       </div>' +
                             '                   </div> ' +
                             '                   <div class="col-md-6 col-sm-6 col-lg-3">' +
                             '                       <div class="form-group">' +
-                            '                           <label for="documento_'+no_entrada+'">Documento</label>' +
-                            '                           <input class="form-control" id="documento_'+no_entrada+'" name="documento_'+no_entrada+'" type="text">' +
+                            '                           <label for="documento_'+tipo_documento+'_'+numero_documento+'">Documento</label>' +
+                            '                           <input class="form-control" id="documento_'+tipo_documento+'_'+numero_documento+'" name="documento_'+tipo_documento+'_'+numero_documento+'" type="text">' +
                             '                       </div>' +
                             '                   </div>' +
                             '                   <div class="text-right d-flex ">' +
-                            '                       <button type="button" class="btn btn-primary" id="guardar_entrada" onclick="guardarEntrada('+no_entrada+')" data-url='+data.company_route+'>Guardar</button> ' +
+                            '                       <button type="button" class="btn btn-primary" id="guardar_entrada" onclick="guardarEntrada('+tipo_documento+','+numero_documento+')" data-url='+data.company_route+'>Guardar</button> ' +
                             '                   </div>' +
                             '                   <div class="col-12"> ' +
                             '                       <h3>Detalle de la entrada</h3> ' +
                             '                       <div class="row justify-content-center">' +
                             '                           <div class="col-md-6 col-sm-6 col-lg-3">' +
                             '                               <div class="form-group">' +
-                            '                                   <label for="lote_'+no_entrada+'">Lote</label>' +
-                            '                                   <input class="form-control" id="lote_'+no_entrada+'" name="lote_'+no_entrada+'" type="text">' +
+                            '                                   <label for="lote_'+tipo_documento+'_'+numero_documento+'">Lote</label>' +
+                            '                                   <input class="form-control" id="lote_'+tipo_documento+'_'+numero_documento+'" name="lote_'+tipo_documento+'_'+numero_documento+'" type="text">' +
                             '                               </div>' +
                             '                           </div>' +
                             '                           <div class="col-md-6 col-sm-6 col-lg-3">' +
                             '                               <div class="form-group">' +
-                            '                                   <label for="caducidad_'+no_entrada+'">Fecha de caducidad</label>' +
-                            '                                   <input class="datepicker form-control" id="caducidad_'+no_entrada+'" name="caducidad_'+no_entrada+'" type="text" placeholder="Selecciona una fecha">' +
+                            '                                   <label for="caducidad_'+tipo_documento+'_'+numero_documento+'">Fecha de caducidad</label>' +
+                            '                                   <input class="datepicker form-control" id="caducidad_'+tipo_documento+'_'+numero_documento+'" name="caducidad_'+tipo_documento+'_'+numero_documento+'" type="text" placeholder="Selecciona una fecha">' +
                             '                               </div>' +
                             '                           </div>' +
                             '                           <div class="col-12 col-md-6 col-lg-4">' +
                             '                               <div class="form-group">' +
                             '                                   <label for="codigo_barras">Código del producto</label>' +
-                            '                                   <input class="form-control" id="codigo_barras" name="'+no_entrada+'" type="text">' +
+                            '                                   <input class="form-control" id="codigo_barras" name="codigo_barras_'+tipo_documento+'_'+numero_documento+'" type="text">' +
                             '                               </div>' +
                             '                           </div>' +
                             '                       </div>' +
-                            '                       <form id="form_'+no_entrada+'"><table class="table table-hover table-responsive" name="table2">' +
+                            '                       <form id="form_'+tipo_documento+'_'+numero_documento+'"><table class="table table-hover table-responsive" name="table2">' +
                             '                           <thead>' +
                             '                               <tr>' +
                             '                                   <th>Sku</th> ' +
@@ -157,7 +143,7 @@ $('#entrada_escaner').on('change', function() {
                             '                                   <th></th>' +
                             '                               </tr> ' +
                             '                           </thead> ' +
-                            '                           <tbody id="detalle_entrada_'+no_entrada+'">'+ detalle_entrada +'</tbody> ' +
+                            '                           <tbody class="detalle_entrada_'+tipo_documento+'_'+numero_documento+'">'+ detalle_entrada +'</tbody> ' +
                             '                       </table></form> ' +
                             '                   </div> ' +
                             '               </div> ' +
@@ -166,103 +152,155 @@ $('#entrada_escaner').on('change', function() {
                             '   </div>' +
                             '</div></div>');
 
-                        $('#caducidad_52').pickadate({ selectMonths: true, // Creates a dropdown to control month
+                        $('#caducidad_'+tipo_documento+'_'+numero_documento).pickadate({ selectMonths: true, // Creates a dropdown to control month
                             selectYears: 3, // Creates a dropdown of 3 years to control year
                             min: true,
-                            format: 'yyyy-mm-dd'});
-
+                            format: 'yyyy-mm-dd'
+                        });
                     }
-
-
                 }
             });
-
         }
-
-        $("#form-model").submit(function(){
-            return false;
-        });
     });
 
 
-
+$("#form-model").submit(function(){
+    return false;
+});
 
 $(document).on('change','#codigo_barras',function (){
 
+    var datos_documento = this.name;
     var codigo_barras = this.value;
-    var numero_documento = this.name;
-    this.value = '';
 
-    $("#detalle_entrada tr").find("input").each(function(){
+    var detalle_entrada = datos_documento.replace('codigo_barras','detalle_entrada');
+    var caducidad = datos_documento.replace('codigo_barras','caducidad');
+    var lote = datos_documento.replace('codigo_barras','lote');
 
-        var id_row = this.id;
-        if(id_row.includes('ingresar_'))
+    $('.'+detalle_entrada).find('tr').each(function(index)
+    {
+        var surtida = $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(9).children('input').val();
+        if(surtida != undefined)
         {
-            var codigos = id_row.split('_');
-
-            if(codigos[2] == codigo_barras)
+            var sku = $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(0).text();
+            if( sku == codigo_barras )
             {
+                var numero_lote = $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(5).children('input').val();
+                var entrada = parseInt($('.'+detalle_entrada).find('tr').eq(index).children('td').eq(7).children('input').val());
+                var surtida = parseInt($('.'+detalle_entrada).find('tr').eq(index).children('td').eq(8).children('input').val());
+                var escanda = parseInt($('.'+detalle_entrada).find('tr').eq(index).children('td').eq(9).children('input').val());
 
-                if( parseInt($('#'+codigos[0]+'_entrada_'+codigos[2]).val()) >= ( (parseInt($('#'+id_row).val()) + 1 ) + parseInt($('#'+codigos[0]+'_surtida_'+codigos[2]).val()) ))
+                if(entrada >= ((escanda + 1)  + surtida ))
                 {
-                    var lote = id_row.replace('_ingresar_','_lote_');
-                    var caducidad = id_row.replace('_ingresar_','_caducidad_');
-                    $('#'+lote).val($('#lote_'+numero_documento).val());
-                    $('#'+caducidad).val($('#caducidad_'+numero_documento).val());
-                    $('#'+id_row).val(parseInt($('#'+id_row).val()) + 1);
-
-                    if(parseInt($('#'+codigos[0]+'_entrada_'+codigos[2]).val()) == ( parseInt($('#'+id_row).val()) + parseInt($('#'+codigos[0]+'_surtida_'+codigos[2]).val()) ) )
+                    if( $('#'+lote).val() != '' && $('#'+caducidad).val() != '' && numero_lote == '')
                     {
-                        $('#lote_'+numero_documento).val('');
-                        $('#caducidad_'+numero_documento).val('');
+                        $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(5).children('input').val( $('#'+lote).val() );
+                        $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(6).children('input').val( $('#'+caducidad).val() );
+                        $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(9).children('input').val( escanda + 1 );
+                        $('#codigo_barras').val('');
+                        $('#'+lote).val('');
+                        $('#'+caducidad).val('');
+                        return false;
+                    }
+                    else if( $('#'+lote).val() == '' && $('#'+caducidad).val() == '' && numero_lote  != ''  )
+                    {
+                        $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(9).children('input').val( escanda + 1 );
+                        $('#codigo_barras').val('');
+                        return false;
+                    }
+                    else
+                    {
+                        mensajeAlerta('Favor de ingresar un lote y la fecha de caducidad','danger');
+                        $('#codigo_barras').val('');
+                        return false;
                     }
 
                 }
                 else
                 {
-                    alert('Estas mal !!');
+                    $('#codigo_barras').val('');
                 }
-            }
-            if(codigos[3] == codigo_barras)
-            {
-                $('#'+id_row).val(parseInt($('#'+id_row).val()) + 1);
+
             }
         }
 
     });
-
 
 });
 
-
-
-
-function guardarEntrada(numero_documento)
+function guardarEntrada(tipo_documento,numero_documento)
 {
-    var form = $('#form_'+numero_documento);
-    $('#detalle_entrada_'+numero_documento+' input[type="text"]').prop('disabled', false);
+    var form = $('#form_'+tipo_documento+'_'+numero_documento);
+    $('.detalle_entrada_'+tipo_documento+'_'+numero_documento+' input[type="text"]').prop('disabled', false);
     var detalle_entrada = $(form).serialize();
-    $('#detalle_entrada_'+numero_documento+' input[type="text"]').prop('disabled', true);
-    //
-    // var myform = $('#form_'+numero_documento);
-    // var disabled = myform.find(':input:disabled').removeAttr('disabled');
-    // var serialized = disabled.serializeArray();
-    // disabled.attr('disabled','disabled');
+    $('.detalle_entrada_'+tipo_documento+'_'+numero_documento+' input[type="text"]').prop('disabled', true);
 
-    $.ajax({
-        type: "POST",
-        url: $('#guardar_entrada').data('url'),
-        data: {'numero_documento':numero_documento,
-            'fk_id_tipo_documento':$('#fk_id_tipo_documento').val(),
-            'referencia_documento':$('#documento_'+numero_documento).val(),
-            'detalle_entrada':detalle_entrada,
+    if($('#documento_'+tipo_documento+'_'+numero_documento).val() != '' ){
+        if(validarForm(tipo_documento,numero_documento) != 0)
+        {
+            let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+            $.ajax({
+                type: "POST",
+                url: $('#guardar_entrada').data('url'),
+                data: {'numero_documento':numero_documento,
+                    'fk_id_tipo_documento':$('#fk_id_tipo_documento').val(),
+                    'referencia_documento':$('#documento_'+tipo_documento+'_'+numero_documento).val(),
+                    'detalle_entrada':detalle_entrada,
+                    '_token':token,
+                },
+                dataType: "json",
+                success:function(data){
 
-        },
-        dataType: "json",
-        success:function(data){
+                    mensajeAlerta('Registro guardado correctamente.','success');
+                    window.setTimeout(function(){
+                        window.location.replace($('#guardar_entrada').data('url'));
+                        },10100);
 
-            console.info(data);
-
+                }
+            });
         }
+        else
+        {
+            mensajeAlerta('Debes ingresar algun producto antes de guardar.','danger');
+        }
+    }
+    else
+    {
+        mensajeAlerta('Debes ingresar algun numero de referencial al documento antes de poder guardar.','danger');
+    }
+
+
+}
+
+function validarForm(tipo_documento,numero_documento) {
+
+    var detalle_entrada = '.detalle_entrada_'+tipo_documento+'_'+numero_documento;
+    var cont_surtida = 0;
+    $(detalle_entrada).find('tr').each(function(index)
+    {
+        var surtida = $(detalle_entrada).find('tr').eq(index).children('td').eq(9).children('input').val();
+
+        if(surtida != undefined)
+        {
+            cont_surtida = cont_surtida + parseInt(surtida);
+        }
+
     });
+
+    return cont_surtida;
+}
+
+function mensajeAlerta(mensaje,tipo){
+
+    var titulo = '';
+
+    if(tipo == 'danger'){ titulo = '¡Error!'}
+    else if(tipo == 'success'){titulo = '¡Correcto!' }
+    $.toaster({priority:tipo,
+            title: titulo,
+            message:mensaje,
+            settings:{'timeout':10000,
+                    'toaster':{'css':{'top':'5em'}}}
+            }
+    );
 }
