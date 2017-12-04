@@ -2,6 +2,8 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Inventarios\EntradaDetalle;
+use App\Http\Models\Inventarios\Entradas;
 use App\Http\Models\ModelCompany;
 use DB;
 
@@ -25,9 +27,9 @@ class DetalleOrdenes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_sku','fk_id_upc','fk_id_cliente','cantidad',
+    protected $fillable = ['fk_id_orden','fk_id_sku','fk_id_upc','fk_id_cliente','cantidad',
         'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario','fk_id_solicitud',
-        'descuento_detalle','fk_id_tipo_documento','fk_id_documento','fk_id_tipo_documento_parent','fk_id_documento_parent'];
+        'descuento_detalle','fk_id_tipo_documento','fk_id_documento'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -79,7 +81,7 @@ class DetalleOrdenes extends ModelCompany
 
     public function orden()
     {
-        return $this->belongsTo('App\Http\Models\Compras\Ordenes','fk_id_documnento','id_orden');
+        return $this->belongsTo('App\Http\Models\Compras\Ordenes','fk_id_orden','id_orden');
     }
 
     public function cliente()
@@ -90,6 +92,27 @@ class DetalleOrdenes extends ModelCompany
     public function solicitud()
     {
         return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_solicitud','fk_id_solicitud');
+    }
+    public function entradaDetalle()
+    {
+        return $this->hasOne('App\Http\Models\Inventarios\EntradaDetalle','fk_id_detalle_documento','id_orden_detalle');
+    }
+    public function sumatoriaCentidad($fk_id_documento,$numero_documento,$fk_id_sku,$fk_id_upc,$fk_id_detalle_documento)
+    {
+
+        if($fk_id_upc === null)
+        {
+            $fk_id_upc = 'null';
+        }
+        $entrada = Entradas::join('inv_det_entrada_almacen','inv_opr_entrada_almacen.id_entrada_almacen','=','inv_det_entrada_almacen.fk_id_entrada_almacen')
+            ->where('inv_opr_entrada_almacen.fk_id_tipo_documento',$fk_id_documento)
+            ->where('inv_opr_entrada_almacen.numero_documento',$numero_documento)
+            ->where('inv_det_entrada_almacen.fk_id_sku',$fk_id_sku)
+            ->where('inv_det_entrada_almacen.fk_id_upc',$fk_id_upc)
+            ->where('inv_det_entrada_almacen.fk_id_detalle_documento',$fk_id_detalle_documento)
+            ->sum('inv_det_entrada_almacen.cantidad_surtida');
+
+        return $entrada;
     }
 
 }
