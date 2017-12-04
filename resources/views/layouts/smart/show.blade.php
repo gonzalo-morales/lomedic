@@ -1,6 +1,6 @@
 @extends('layouts.smart.create')
 
-@section('title', currentEntityBaseName() . '@Ver')
+@section('title', currentEntityBaseName() . ' Ver')
 
 @section('fieldset', 'disabled')
 

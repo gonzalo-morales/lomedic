@@ -27,7 +27,7 @@
 			<span class="input-group-addon">
 				<input type="checkbox" id="otra_empresa" {{isset($data->fk_id_empresa) && $data->fk_id_empresa != $actual_company_id?'checked':''}}>
 			</span>
-			{!! Form::select('fk_id_empresa',isset($companies)?$companies->prepend('...','0'):[],null,['id'=>'fk_id_empresa','class'=>'form-control','style'=>'width:100%',isset($data->fk_id_empresa) && $data->fk_id_empresa != $actual_company_id?'disabled':'']) !!}
+			{!! Form::select('fk_id_empresa',isset($companies)?$companies->prepend('...','0'):[],null,['id'=>'fk_id_empresa','class'=>'form-control','style'=>'width:100%',(isset($data->fk_id_empresa) && $data->fk_id_empresa != $actual_company_id) || !isset($data->fk_id_empresa) ? 'disabled':'']) !!}
 		</div>
 		{{ $errors->has('fk_id_empresa') ? HTML::tag('span', $errors->first('fk_id_empresa'), ['class'=>'help-block deep-orange-text']) : '' }}
 	</div>
@@ -149,7 +149,7 @@
 							<tr class="list-left bg-light">
 								<td>
 									{{isset($detalle->fk_id_solicitud)?$detalle->fk_id_solicitud:'N/A'}}
-									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_solicitud]',$detalle->fk_id_solicitud) !!}
+									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_documento_parent]',$detalle->fk_id_solicitud) !!}
 								</td>
 								<td>
 									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
@@ -213,9 +213,9 @@
 						@endforeach
 					@elseif( isset( $data->DetalleOfertas ) )
 						@foreach( $data->DetalleOfertas->where('cerrado',false) as $detalle)
-							<tr class="{{isset($detalle->fk_id_solicitud)?'list-left bg-light':''}}">
+							<tr class="{{isset($detalle->fk_id_documento)?'list-left bg-light':''}}">
 								<td>
-									{{isset($detalle->fk_id_solicitud)?$detalle->fk_id_solicitud:'N/A'}}
+									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
 								</td>
 								<td>
 									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][id_oferta_detalle]',$detalle->id_oferta_detalle) !!}
@@ -465,7 +465,7 @@
 	@section('extraButtons')
 		@parent
 		{!!isset($data->id_oferta) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_oferta]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
-		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($company.'/compras/'.$data->id_oferta.'/2/ordenes/crear',[1,2,3]), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
+		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($company.'/compras/'.$data->id_oferta.'/2/ordenes/crear'), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
 	@endsection
 @section('form-title')
 		<h1 class="display-4">Datos de la Oferta de Compra</h1>

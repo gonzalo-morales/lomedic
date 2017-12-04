@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
 
-class FormasPago extends Model
+class FormasPago extends ModelBase
 {
     // use SoftDeletes;
 
@@ -22,35 +22,31 @@ class FormasPago extends Model
 	protected $primaryKey = 'id_forma_pago';
 
 	/**
-	 * The attributes that are mass assignable.
+	 * The attributes that are mass assignable.P
 	 *
 	 * @var array
 	 */
 	protected $fillable = ['forma_pago', 'descripcion', 'activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'forma_pago'	=> 'required',
-		'descripcion'	=> 'required',
-		// 'activo'		=> 'required',
+		'forma_pago'	=> 'required|max:5',
+		'descripcion'	=> 'required|max:255',
+		'activo'		=> 'required',
 	];
 
-
 	/**
-	 * @return field name of table
+	 * Los atributos que seran visibles en index-datable
+	 * @var null|array
 	 */
-	public function getTable(){
-	    return $this->table;
-    }
+	protected $fields = [
+		'forma_pago' => 'No. Forma de Pago',
+		'descripcion' => 'Descripcion',
+		'activo_span' => 'Estado'
+	];
+
 
 }

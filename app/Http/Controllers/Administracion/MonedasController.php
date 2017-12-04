@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\ControllerBase;
-use App\Http\Models\Administracion\TiposProductos;
+use App\Http\Models\Administracion\Monedas;
+use Illuminate\Http\Request;
 
-class TiposProductosController extends ControllerBase
+class MonedasController extends ControllerBase
 {
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(TiposProductos $entity)
+	public function __construct(Monedas $entity)
 	{
 		$this->entity = $entity;
 	}

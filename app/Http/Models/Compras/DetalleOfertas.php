@@ -26,8 +26,9 @@ class DetalleOfertas extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_oferta','fk_id_sku','fk_id_upc','fk_id_cliente','cantidad','fk_id_unidad_medida',
-        'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','descuento_detalle','fk_id_solicitud'];
+    protected $fillable = ['fk_id_sku','fk_id_upc','fk_id_cliente','cantidad','fk_id_unidad_medida',
+        'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','descuento_detalle','fk_id_documento',
+        'fk_id_documento_parent','fk_id_tipo_documento_parent'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -90,7 +91,7 @@ class DetalleOfertas extends ModelCompany
 
     public function solicitud()
     {
-        return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_solicitud','fk_id_solicitud');
+        return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_solicitud','fk_id_documento');
     }
 
     public function unidadMedida()

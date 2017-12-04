@@ -24,6 +24,8 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('correos', 'Administracion\CorreosController');
 		Route::resource('devolucionesmotivos', 'Administracion\DevolucionesMotivosController');
 		Route::resource('diagnosticos', 'Administracion\DiagnosticosController');
+		Route::resource('empresas', 'Administracion\EmpresasController');
+		Route::get('empresas/{id}/descargar', 'Administracion\EmpresasController@descargar');
 		Route::resource('estados', 'Administracion\EstadosController');
 		Route::resource('familiasproductos', 'Administracion\FamiliasproductosController');
 		Route::resource('formafarmaceutica', 'Administracion\FormaFarmaceuticaController');
@@ -54,8 +56,10 @@ Route::prefix('{company}')->group(function () {
 		Route::get('sucursalesempleado/{id}','Administracion\SucursalesController@sucursalesEmpleado');
 		Route::resource('sustanciasactivas', 'Administracion\SustanciasActivasController');
 		Route::resource('tipoalmacen', 'Administracion\TipoAlmacenController');
-		Route::resource('tipocombustible', 'Administracion\TipocombustibleController');
-		Route::resource('tiposproductos', 'Administracion\TiposProductosController');
+		Route::resource('tipocombustible', 'Administracion\TipoCombustibleController');
+		Route::resource('tipodocumento', 'Administracion\TipoDocumentosController');
+		Route::resource('tipoentrega', 'Administracion\TipoEntregaController');
+		Route::resource('tipoproductos', 'Administracion\TipoProductosController');
 		Route::resource('tiposucursal', 'Administracion\TipoSucursalController');
 		Route::resource('unidadesmedicas', 'Administracion\UnidadesMedicasController');
 		Route::resource('unidadesmedidas', 'Administracion\UnidadesMedidasController');
@@ -64,5 +68,16 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('vehiculosmodelos', 'Administracion\VehiculosModelosController');
 		Route::resource('viaadministracion', 'Administracion\ViaAdministracionController');
 		Route::resource('zonas', 'Administracion\ZonasController');
+		Route::resource('cadenaspagos', 'Administracion\CadenasPagosController');
+		Route::resource('clavesproductosservicios', 'Administracion\ClavesProductosServiciosController');
+		Route::resource('clavesunidades', 'Administracion\ClavesUnidadesController');
+		Route::resource('formaspago', 'Administracion\FormasPagoController');
+		Route::resource('monedas', 'Administracion\MonedasController');
+		Route::resource('satmunicipios', 'Administracion\SatMunicipiosController');
+		Route::resource('patrones', 'Administracion\PatronesController');
+		Route::resource('pedimentosaduana', 'Administracion\PedimentosAduanaController');
+		Route::resource('regimenesfiscales', 'Administracion\RegimenesFiscalesController');
+		Route::resource('tiposcomprobantes', 'Administracion\TiposComprobantesController');
+		Route::resource('usoscfdis', 'Administracion\UsosCfdisController');
 	});
 });

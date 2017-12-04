@@ -26,7 +26,7 @@ class ProductosController extends ControllerBase
     {
         $this->entity = $entity;
     }
-    
+
     public function update(Request $request, $company, $id)
     {
         # ¿Usuario tiene permiso para actualizar?
@@ -38,6 +38,7 @@ class ProductosController extends ControllerBase
         DB::beginTransaction();
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
+        
         if ($entity->save()) {
             if(isset($request->detalles)) {
                 foreach ($request->detalles as $detalle) {
@@ -86,7 +87,7 @@ class ProductosController extends ControllerBase
     public function obtenerSkus($company,Request $request)
     {
         $term = $request->term;
-        $skus = Productos::where('activo','1')->where('sku','LIKE','%'.$term.'%')->orWhere('descripcion_corta','LIKE','%'.$term.'%')->orWhere('descripcion','LIKE','%'.$term.'%')->get();
+        $skus = Productos::where('activo','1')->where('sku','ILIKE','%'.$term.'%')->orWhere('descripcion_corta','LIKE','%'.$term.'%')->orWhere('descripcion','LIKE','%'.$term.'%')->get();
 
         $skus_set = []; 
         foreach ($skus as $sku)

@@ -50,15 +50,24 @@
 		<!-- Empresas -->
 		@if(isset($empresas))
 		<div class="col-sm-12 col-md-5 col-lg-3">
-			<div class="card z-depth-1-half">
+			<div class="card z-depth-1-half" style="max-height: 255px;">
 				<div class="card-header">
 					<h5>Empresas</h5>
 				</div>
-				<div class="card-body">
+				<div class="card-body" style="overflow: auto;">
 					<ul class="list-group">
+						<?php 
+						$empresa_socio = [];
+						if(isset($data->empresas))
+						{
+    						foreach ($data->empresas as $empresa)
+    						    array_push($empresa_socio, $empresa->pivot->fk_id_empresa);
+						}
+						?>
+						
                         @foreach ($empresas as $row)
                         <li class="list-group-item form-group row">
-                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa']) }}
+                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresa_socio)?1:0) ) }}
                         </li>
                         @endforeach
                     </ul>
@@ -163,7 +172,7 @@
 							</thead>
 							<tbody>
 							@if(isset($data->contactos)) 
-    							@foreach($data->contactos as $key=>$detalle)
+    							@foreach($data->contactos->where('eliminar',0) as $key=>$detalle)
 								<tr>
 									<td>
 										{!! Form::hidden('contactos['.$key.'][id_contacto]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
@@ -191,7 +200,7 @@
 										{!! Form::hidden('contactos['.$key.'][telefono_oficina]',$detalle->telefono_oficina) !!}
 										{!! Form::hidden('contactos['.$key.'][extension_oficina]',$detalle->extension_oficina) !!}
 									</td>
-									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContactos(this)"> <i class="material-icons">delete</i></button></td>
+									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>
 								</tr>
     							@endforeach
     						@endif
@@ -324,6 +333,14 @@
     		
 					<!-- Formas de pago -->
             		@if(isset($formaspago))
+            		<?php 
+					$formas_pago = [];
+					if(isset($data->formaspago))
+					{
+    					foreach ($data->formaspago as $formapago)
+    					    array_push($formas_pago, $formapago->pivot->fk_id_forma_pago);
+					}
+					?>
             		<div class="col-sm-12 col-md-6 col-lg-7">
             			<div class="card z-depth-1-half">
             				<div class="card-header text-center">
@@ -334,7 +351,7 @@
             					<ul class="row">
                                     @foreach ($formaspago as $key=>$value)
                                     <li class="list-group-item form-group col-lg-12 col-xl-6 p-2">
-                                    	{{ Form::cCheckbox($value, 'formaspago['.$key.']') }}
+                                    	{{ Form::cCheckbox($value, 'formaspago['.$key.']', [], (in_array($key, $formas_pago)?1:0) ) }}
                                     </li>
                                     @endforeach
                                 </ul>
@@ -445,6 +462,28 @@
     								</tr>
     							</thead>
     							<tbody>
+    							@if(isset($data->anexos)) 
+    							@foreach($data->anexos->where('eliminar',0) as $key=>$detalle)
+								<tr>
+									<td>
+										{!! Form::hidden('anexos['.$key.'][id_anexo]',$detalle->id_anexo,['class'=>'id_anexo']) !!}
+										{{$detalle->tipoanexo->tipo_anexo}}
+									</td>
+									<td>
+										{{$detalle->nombre}}
+									</td>
+									<td>
+										{{$detalle->archivo}}
+									</td>
+									<td>
+										<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargar', ['id' => $detalle->id_anexo])}}" title="Descargar Archivo">
+											<i class="material-icons">file_download</i>
+										</a>
+										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button>
+									</td>
+								</tr>
+    							@endforeach
+    						@endif
     							</tbody>
     						</table>
     					</div>
@@ -497,6 +536,35 @@
     								</tr>
     							</thead>
     							<tbody>
+    							@if(isset($data->productos)) 
+        							@foreach($data->productos->where('eliminar',0) as $key=>$detalle)
+    								<tr>
+    									<td>
+    										{!! Form::hidden('productos['.$key.'][id_producto]',$detalle->id_producto,['class'=>'id_producto']) !!}
+    										{{$detalle->sku->sku}}
+    									</td>
+    									<td>
+    										{{$detalle->upc->upc ?? ''}}
+    									</td>
+    									<td>
+    										{{$detalle->upc->descreipcion ?? $detalle->sku->descripcion_corta}}
+    									</td>
+    									<td>
+    										{{$detalle->tiempo_entrega}}
+    									</td>
+    									<td>
+    										{{$detalle->precio}}
+    									</td>
+    									<td>
+    										{{$detalle->precio_de}}
+    									</td>
+    									<td>
+    										{{$detalle->precio_hasta}}
+    									</td>
+    									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>
+    								</tr>
+        							@endforeach
+        						@endif
     							</tbody>
     						</table>
     					</div>

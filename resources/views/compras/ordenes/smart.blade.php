@@ -167,8 +167,8 @@
 						@foreach($detalles_documento as $detalle)
 							<tr>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_tipo_documento]',$tipo_documento) !!}
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_documento]',$detalle->fk_id_documento) !!}
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_tipo_documento_parent]',$tipo_documento) !!}
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_documento_parent]',$detalle->fk_id_documento) !!}
 									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
 								</td>
 								<td>
@@ -230,7 +230,7 @@
 						@foreach( $data->detalleOrdenes as $detalle)
 							<tr>
 								<td>
-									{{isset($detalle->fk_id_orden)?$detalle->fk_id_orden:'N/A'}}
+									{{isset($detalle->fk_id_documento_parent)?$detalle->fk_id_tipo_documento_parent.' - '.$detalle->fk_id_documento_parent:'N/A'}}
 								</td>
 								<td>
 									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][id_orden_detalle]',$detalle->id_orden_detalle) !!}

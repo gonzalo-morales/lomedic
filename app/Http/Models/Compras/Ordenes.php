@@ -90,7 +90,7 @@ class Ordenes extends ModelCompany
 
     public function detalleOrdenes()
     {
-        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_orden', 'id_orden');
+        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_documento', 'id_orden');
     }
 
     public function empresa()

@@ -241,8 +241,8 @@ function borrarFila(el) {
 }
 
 function limpiarCampos() {
-    $('#fk_id_sku').val(0).trigger('change');
-    $('#fk_id_upc').val(0).trigger('change');
+    $('#fk_id_sku').val(0).select2();
+    $('#fk_id_upc').val(0).select2();
     $('#fk_id_proyecto').val(0).trigger('change');
     $('#fk_id_cliente').val(0).trigger('change');
     $('#fk_id_impuesto').val('0').trigger('change');

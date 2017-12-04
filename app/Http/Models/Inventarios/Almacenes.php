@@ -72,6 +72,15 @@ class Almacenes extends ModelBase
 	}
 
 	/**
+	 * Obtenemos texto "Almacen - Sucursal" concatenado
+	 * @return string
+	 */
+	public function getAlmacenSucursalConcatAttribute()
+	{
+		return $this->almacen . ' - ' . $this->sucursal->sucursal;
+	}
+
+	/**
 	 * Obtenemos ubicaciones relacionadas a almacen
 	 * @return @hasMany
 	 */

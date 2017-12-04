@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Compras;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Unidadesmedidas;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Compras\DetalleSolicitudes;
@@ -132,7 +133,8 @@ class SolicitudesController extends ControllerBase
                     ->where('activo',1)
                     ->get()
                     ->pluck('nombre','id_empleado'),
-                'proveedores' => $proveedores
+                'proveedores' => $proveedores,
+                'company' => $company
             ]];
         return parent::show($company,$id,$attributes);
     }
@@ -314,7 +316,9 @@ class SolicitudesController extends ControllerBase
         $barcode = DNS1D::getBarcodePNG($solicitud->id_solicitud,'EAN8');
         $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$solicitud->id_solicitud])), "QRCODE");
 
-        $pdf = PDF::loadView(currentRouteName('imprimir'),[
+        $empresa = Empresas::where('conexion','LIKE',$company)->first();
+
+        $pdf = PDF::loadView(currentRouteName('compras.solicitudes.imprimir'),[
             'solicitud' => $solicitud,
             'detalles' => $detalles,
             'subtotal' => $subtotal,
@@ -322,7 +326,8 @@ class SolicitudesController extends ControllerBase
             'total' => $total,
             'total_letra' => num2letras($total),
             'barcode' => $barcode,
-            'qr' => $qr
+            'qr' => $qr,
+            'empresa' => $empresa
         ]);
 
         $pdf->setPaper('letter','landscape');

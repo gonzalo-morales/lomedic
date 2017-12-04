@@ -1,7 +1,6 @@
 var eliminarProyectoProducto=[];
 // Inicializar los datepicker para las fechas necesarias
 $(document).ready(function(){
-
     $('#form-model').attr('enctype',"multipart/form-data");
 
     //Inicializar tabla
@@ -45,10 +44,10 @@ $(document).ready(function(){
                 else
                     option.text('...');
 
-                $('#fk_id_clave_cliente_producto').select2({
+                $('#fk_id_clave_cliente_producto').prepend(option).select2({
                     minimumResultsForSearch:'50',
                     data:data,
-                }).attr('disabled',false).prepend(option);
+                }).attr('disabled',false);
                 $('#loadingfk_id_clave_cliente_producto').hide();
             }
         });
@@ -168,23 +167,25 @@ $(document).ready(function(){
     });
 
     if($('#fk_id_cliente').val()){
-        let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
-        $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
-        $.ajax({
-            url: _url,
-            dataType:'json',
-            success:function (data) {
-                let option = $('<option/>');
-                option.val(0);
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                option.text('...');
-                $('#fk_id_clave_cliente_producto').select2({
-                    minimumResultsForSearch:'50',
-                    data:data,
-                }).attr('disabled',false).prepend(option);
-            }
-        });
+        if($('#detalle-form').length > 0) {
+            let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id', $('#fk_id_cliente').val());
+            $('#fk_id_clave_cliente_producto').empty();
+            $.ajax({
+                url: _url,
+                dataType: 'json',
+                success: function (data) {
+                    let option = $('<option/>');
+                    option.val(0);
+                    option.attr('disabled', 'disabled');
+                    option.attr('selected', 'selected');
+                    option.text('...');
+                    $('#fk_id_clave_cliente_producto').prepend(option).select2({
+                        minimumResultsForSearch: '50',
+                        data: data,
+                    }).attr('disabled', false);
+                }
+            });
+        }
     }else{
         let option = $('<option/>');
         option.val(0);

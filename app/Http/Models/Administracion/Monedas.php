@@ -2,9 +2,11 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\ModelBase;
+use Illuminate\Support\HtmlString;
 
-class Monedas extends Model
+
+class Monedas extends ModelBase
 {
     /**
      * The table associated with the model.
@@ -27,15 +29,35 @@ class Monedas extends Model
     protected $fillable = ['moneda', 'descripcion','total_decimales','porcentaje_variacion','activo'];
 
     /**
+     * The validation rules
+     * @var array
+     */
+    public $rules = [
+        'moneda'   => 'required|max:3',
+        'descripcion'   => 'required|max:255',
+        'total_decimales'   => 'required|integer|max:10'
+    ];
+
+    /**
+     * Los atributos que seran visibles en index-datable
+     * @var array
+     */
+    protected $fields = [
+        'moneda' => 'Metodo de pago',
+        'descripcion' => 'Descripción',
+        'total_decimales' => 'Total Decimales',
+        'activo_span' => 'Activo'
+    ];
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
-    public $timestamps = false;
+    // public $timestamps = false;
 
-    public function numeroscuenta()
-    {
-        return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
-    }
+    // public function numeroscuenta()
+    // {
+    //     return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
+    // }
 
 }

@@ -2,6 +2,9 @@
 
 @section('title', currentEntityBaseName())
 
+@section('form-title', str_singular(currentEntityBaseName()))
+
+
 @section('header-top')
 <!--dataTable.css-->
 <link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
@@ -60,7 +63,7 @@
 	$.toaster({
 		priority: 'success', title: 'Exito', message: '{{session('message.text')}}',
 		settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
-	})
+	});
 </script>
 @endif
 @yield('smart-js')
@@ -68,7 +71,6 @@
 
 @section('content')
 <div class="container-fluid">
-	<h4 class="col-md-12 display-4">@yield('title')</h4>
 	<div class="row">
 		<div class="col">
 			<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-create-url="{{ companyRoute('create') }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}" data-item-export-url="{{companyRoute('export', ['type' => '_ID_'])}}">

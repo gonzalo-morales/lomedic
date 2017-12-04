@@ -486,14 +486,22 @@ function getItems($page) {
 			let collection_item = {};
 			collection_item['input'] = '<input type="checkbox" id="check-'+id+'" name="check-'+id+'" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="'+id+'">';
 			$.each(columns, function(index, column) {
-				collection_item[column] = (new Function('str', 'return eval("this." + str);')).call(item, column);
-				if(item[column] == null) collection_item[column] = '';
-			})
+				// console.log(column);
+
+				try{
+					collection_item[column] = (new Function('str', 'return eval("this." + str);')).call(item, column);
+				}catch(err){
+                    collection_item[column] = null;
+				}
+				if(collection_item[column] == null) {
+                    collection_item[column] = '';
+                }
+			});
 
 
 			collection_item['actions'] = '<a rv-each-dynamics="collections.itemsOptions" data-item-id="'+id+'"></a>';
 			collection.push(collection_item);
-		})
+		});
 
 		datatable.import({
 			type: 'json',

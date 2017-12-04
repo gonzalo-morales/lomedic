@@ -13,7 +13,7 @@ class DireccionesSociosNegocio extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'sng_det_direcciones';
+    protected $table = 'maestro.sng_det_direcciones';
 
     /**
      * The primary key of the table
@@ -25,8 +25,8 @@ class DireccionesSociosNegocio extends ModelBase
      * The attributes that are mass assignable.
      * @var array
      */
-    protected $fillable = ['fk_id_socio_negocio','fk_id_pais','fk_id_estado','fk_id_municipio','fk_id_colonia','fk_id_tipo_direccion','calle','num_exterior','num_interior','cp','activo'];
-    
+    protected $fillable = ['fk_id_socio_negocio','fk_id_pais','fk_id_estado','fk_id_municipio','colonia','fk_id_tipo_direccion','calle','num_exterior','num_interior','codigo_postal','activo'];
+
     /**
      * Indicates if the model should be timestamped.
      * @var bool
@@ -38,6 +38,11 @@ class DireccionesSociosNegocio extends ModelBase
      * @var array
      */
     public $rules = [];
+
+    public function getDireccionConcatAttribute()
+    {
+        return sprintf('%s #%s CP.%s %s, %s', $this->calle, $this->num_exterior . '-' . $this->num_interior, $this->codigo_postal, $this->municipio->municipio, $this->estado->estado);
+    }
 
     public function socionegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');

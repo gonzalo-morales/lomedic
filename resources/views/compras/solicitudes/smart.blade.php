@@ -10,8 +10,6 @@
 	@endif
 @endsection
 
-@section('content-width','mt-3')
-
 @section('form-content')
 {{ Form::setModel($data) }}
 	<div class="row">
@@ -20,7 +18,7 @@
 			{{ Form::label('fk_id_solicitante', '* Solicitante') }}
 			{!! Form::select('fk_id_solicitante',isset($empleados)?$empleados:[],null,['id'=>'fk_id_solicitante','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado'),'class'=>'form-control','style'=>'width:100%']) !!}
 			{{ $errors->has('fk_id_solicitante') ? HTML::tag('span', $errors->first('fk_id_solicitante'), ['class'=>'help-block deep-orange-text']) : '' }}
-			{{Form::hidden('id_solicitante',null,['id'=>'id_solicitante','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])])}}
+			{{Form::hidden('_id_solicitante',null,['id'=>'_id_solicitante','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])])}}
 		</div>
 		<div class="form-group input-field col-md-4 col-sm-6">
 			{{--Se utilizan estas comprobaciones debido a que este campo se carga dinámicamente con base en el solicitante seleccionado y no se muestra el que está por defecto sin esto--}}
@@ -297,7 +295,7 @@
 		 };
          rivets.binders['get-offer-url'] = {
              bind: function (el) {
-				 el.href = el.href.replace('#','/'+el.dataset.itemId+'/ofertas/crear');
+				 el.href = el.href.replace('#','{{$company}}/compras/solicitudes/'+el.dataset.itemId+'/ofertas/crear');
              }
 		 };
 		 @can('update', currentEntity())
@@ -439,9 +437,9 @@
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('extraButtons')
 		@parent
-		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_solicitud]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
+		{!! HTML::decode(link_to(companyAction('Compras\SolicitudesController@impress',['id'=>$data->id_solicitud]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
 		@if($data->fk_id_estatus_solicitud == 1)
-			{!! HTML::decode(link_to(companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>$data->id_solicitud]),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
+			{!! HTML::decode(link_to(url($company.'/compras/'.$data->id_solicitud.'/1/ordenes/crear'),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
 		@endif
 	@endsection
 	@section('form-title')

@@ -11,21 +11,31 @@ $(document).ready(function(){
        cursorborder: 'none'
    });
 
+// Inicializar los datepicker para las fechas necesarias
+/*$('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 3, // Creates a dropdown of 3 years to control year
+    min: true,
+    format: 'yyyy-mm-dd'
+});*/
 
    /* Sidebar's */
    $('#sidebarCollapse').on('click', function () {
        $('#sidebar').toggleClass('active');
-       //condiciones para cambiar el ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­cono de menÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âº a x
-       if($('#sidebar').hasClass('active') && $(window).width() >= 768){
+       //condiciones para cambiar el ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­cono de menÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âº a x
+       if($('#sidebar').hasClass('active') && $(window).width() >= 768){//Si es desktop
            $(this).find("i").text("menu");
        }
-       else if($('#sidebar').not('active') && $(window).width() >= 768){
+       else if($('#sidebar').not('active') && $(window).width() >= 768){//Si es desktop
           $(this).find("i").text("close");
        }
        else{
            $(this).find("i").text("menu");
        }
+   });
 
+   $(window).resize(function () {
+       $(window).width() <= 767 ? $("#sidebar").removeClass('active') : $("#sidebar").addClass('active');
    });
 
    $('#rigth-sidebarCollapse').on('click', function () {
@@ -70,7 +80,6 @@ $(document).ready(function(){
 		$("#sidebar").remove();
 		$("#top-nav").remove();
 		$("#rigth-sidebar").remove();
-		$("#ticketHelp").remove();
 		$("#content").removeClass('pt-3');
 		$(".wrapper").removeAttr("style");
 

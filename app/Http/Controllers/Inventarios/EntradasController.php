@@ -21,6 +21,7 @@ use App\Http\Models\Inventarios\EntradaDetalle;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use function MongoDB\BSON\toJSON;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 //use App\Http\Models\Compras\Solicitudes;
 //use Milon\Barcode\DNS2D;
@@ -32,6 +33,7 @@ use Carbon\Carbon;
 //use Barryvdh\DomPDF\Facade as PDF;
 //use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Integer;
 use PhpParser\Node\Expr\Cast\Object_;
 use PhpParser\Node\Scalar\String_;
 
@@ -102,6 +104,45 @@ class EntradasController extends ControllerBase
         return parent::create($company,$attributes);
     }
 
+    public function store(Request $request, $company)
+    {
+//        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
+//        $numero_docmento = Entradas::where('numero_documento',$_POST['numero_documento'])
+//            ->where('fk_id_tipo_documento',$_POST['fk_id_tipo_documento'])
+//            ->first();
+//        if(!$numero_docmento)
+//        {
+        $nueva_entrada = Entradas::create(['fk_id_tipo_documento'=>$_POST['fk_id_tipo_documento'],
+            'numero_documento'=> $_POST['numero_documento'],
+            'referencia_documento'=> $_POST['referencia_documento'],
+            'fecha_entrada'=> date("Y-m-d H:i:s")
+        ]);
+        parse_str($_POST['detalle_entrada'] , $datos_detalle);
+        foreach ($datos_detalle["datos_entradas"] as $detalle)
+        {
+//                if($detalle['caducidad'] == '')
+//                {
+//                    $detalle['caducidad'] = null;
+//                }
+
+            if( $detalle['ingresar'] != 0 )
+            {
+                EntradaDetalle::create(['fk_id_entrada_almacen' => $nueva_entrada->id_entrada_almacen ,
+                    'fk_id_sku' => $detalle['id_sku'],
+                    'fk_id_upc' => $detalle['id_upc'],
+                    'cantidad_surtida' => $detalle['ingresar'],
+                    'lote' => $detalle['lote'],
+                    'fecha_caducidad' => $detalle['caducidad'],
+                    'fk_id_detalle_documento' => $detalle['id_detalle_documento'],
+                ]);
+            }
+        }
+
+//        dd($this);
+//        }
+        return $this->redirect('store');
+    }
+
     public function getProveedores()
     {
         $ordenes_compra = SociosNegocio::where('fk_id_sucursal',$_POST['id_sucursal'])
@@ -163,41 +204,44 @@ class EntradasController extends ControllerBase
 
         if($datos_documento != '')
         {
-
-            $datos_entrada = Entradas::Join('inv_det_entrada_almacen','inv_opr_entrada_almacen.id_entrada_almacen','=','inv_det_entrada_almacen.fk_id_entrada_almacen')
-                ->where('inv_opr_entrada_almacen.fk_id_tipo_documento',$_POST['fk_id_tipo_documento'])
-                ->where('inv_opr_entrada_almacen.numero_documento',$_POST['numero_documento'])
-                ->get();
+//
+//            $datos_entrada = Entradas::Join('inv_det_entrada_almacen','inv_opr_entrada_almacen.id_entrada_almacen','=','inv_det_entrada_almacen.fk_id_entrada_almacen')
+//                ->where('inv_opr_entrada_almacen.fk_id_tipo_documento',$_POST['fk_id_tipo_documento'])
+//                ->where('inv_opr_entrada_almacen.numero_documento',$_POST['numero_documento'])
+//                ->get();
 
             $datos_orden['sucursales'] = $datos_documento->sucursales;
             $datos_orden['proveedor'] = $datos_documento->proveedor;
 //            $datos_orden['entrada_detalle'] = $datos_entrada;
-            $detalle_orden = $datos_documento->detalleOrdenes;
-            $sku = $datos_documento->detalleSku;
-            $upc = $datos_documento->detalleUpc;
+            $detalle_documento = $datos_documento->detalleOrdenes;
+//            $sku = $datos_documento->detalleSku;
+//            $upc = $datos_documento->detalleUpc;
 
-            foreach ( $detalle_orden as $index => $detalle_sku)
+            foreach ( $datos_documento->detalleOrdenes as $id_row => $detalle)
             {
-                $detalle_orden[$index]->detalle_sku = '';
-                $detalle_orden[$index]->detalle_upc = '';
-
-                foreach ($sku as $detalle)
-                {
-                    if($detalle_sku['fk_id_sku'] == $detalle['id_sku'])
-                    {
-                        $detalle_orden[$index]->detalle_sku = $detalle;
-                    }
-                }
-                foreach ($upc as $detalle)
-                {
-                    if($detalle_sku['fk_id_upc'] == $detalle['id_upc'])
-                    {
-                        $detalle_orden[$index]->detalle_upc = $detalle;
-                    }
-                }
+                $detalle_productos[$id_row]['id_sku'] = $detalle->fk_id_sku;
+                $detalle_productos[$id_row]['sku'] = $detalle->sku->sku;
+                $detalle_productos[$id_row]['sku_descripcion'] = $detalle->sku->descripcion;
+                $detalle_productos[$id_row]['id_upc'] = $detalle->fk_id_upc;
+                $detalle_productos[$id_row]['upc'] = $detalle->upc['upc'];
+                $detalle_productos[$id_row]['id_cliente'] = $detalle->fk_id_cliente;
+                $detalle_productos[$id_row]['nombre_cliente'] = $detalle->cliente['nombre_comercial'];
+                $detalle_productos[$id_row]['fk_id_proyecto'] = $detalle->fk_id_proyecto;
+                $detalle_productos[$id_row]['nombre_proyecto'] = $detalle->proyecto['proyecto'];
+                $detalle_productos[$id_row]['cantidad'] = $detalle->cantidad;
+                $detalle_productos[$id_row]['id_detalle'] = $detalle->id_orden_detalle;
+                $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCentidad($_POST['fk_id_tipo_documento'],$_POST['numero_documento'],$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_orden_detalle);
+//                $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->entradaDetalle['cantidad_surtida'];
+                $detalle_productos[$id_row]['lote'] = $detalle->entradaDetalle['lote'];
+                $detalle_productos[$id_row]['fecha_caducidad'] = $detalle->entradaDetalle['fecha_caducidad'];
             }
 
-            $data = ['datos_orden' => $datos_orden , 'detalle_orden' => $detalle_orden,'company_route'=>companyRoute('guardarEntrada'),'dato_entrada'=>$datos_documento];
+            $data = [
+                    'datos_documento' => $datos_orden ,
+                    'detalle_documento' => $detalle_documento,
+                    'company_route'=>companyRoute('store'),
+                    'dato_entrada'=>$datos_documento,
+                    'detalle_entrada'=>$detalle_productos];
 
         }
         else
@@ -208,41 +252,46 @@ class EntradasController extends ControllerBase
         return $data ;
     }
 
-    public function guardarEntrada()
-    {
-        $numero_docmento = Entradas::where('numero_documento',$_POST['numero_documento'])
-            ->where('fk_id_tipo_documento',$_POST['fk_id_tipo_documento'])
-            ->first();
-        if(!$numero_docmento)
-        {
-            $nueva_entrada = Entradas::create(['fk_id_tipo_documento'=>$_POST['fk_id_tipo_documento'],
-                            'numero_documento'=> $_POST['numero_documento'],
-                            'referencia_documento'=> $_POST['referencia_documento'],
-                            'fecha_entrada'=> date("Y-m-d H:i:s")
-                            ]);
-            parse_str($_POST['detalle_entrada'] , $datos_detalle);
-            foreach ($datos_detalle["datos_entradas"] as $detalle)
-            {
-                if($detalle['caducidad'] == '')
-                {
-                    $detalle['caducidad'] = null;
-                }
+//    public function guardarEntrada(Request $request, $company)
+//    {
+//
+////        $numero_docmento = Entradas::where('numero_documento',$_POST['numero_documento'])
+////            ->where('fk_id_tipo_documento',$_POST['fk_id_tipo_documento'])
+////            ->first();
+////        if(!$numero_docmento)
+////        {
+//            $nueva_entrada = Entradas::create(['fk_id_tipo_documento'=>$_POST['fk_id_tipo_documento'],
+//                            'numero_documento'=> $_POST['numero_documento'],
+//                            'referencia_documento'=> $_POST['referencia_documento'],
+//                            'fecha_entrada'=> date("Y-m-d H:i:s")
+//                            ]);
+//            parse_str($_POST['detalle_entrada'] , $datos_detalle);
+//            foreach ($datos_detalle["datos_entradas"] as $detalle)
+//            {
+////                if($detalle['caducidad'] == '')
+////                {
+////                    $detalle['caducidad'] = null;
+////                }
+//
+//                if( $detalle['ingresar'] != 0 )
+//                {
+//                    EntradaDetalle::create(['fk_id_entrada_almacen' => $nueva_entrada->id_entrada_almacen ,
+//                        'fk_id_sku' => $detalle['id_sku'],
+//                        'fk_id_upc' => $detalle['id_upc'],
+//                        'cantidad_surtida' => $detalle['ingresar'],
+//                        'lote' => $detalle['lote'],
+//                        'fecha_caducidad' => $detalle['caducidad'],
+//                        'fk_id_detalle_documento' => $detalle['id_detalle_documento'],
+//                    ]);
+//                }
+//            }
+//
+//
+////        }
+//        return $this->redirect('store');
+//
+//    }
 
-                EntradaDetalle::create(['fk_id_entrada_almacen' => $nueva_entrada->id_entrada_almacen ,
-                    'fk_id_sku' => $detalle['id_sku'],
-                    'fk_id_upc' => $detalle['id_upc'],
-                    'cantidad_surtida' => $detalle['surtida'],
-                    'lote' => $detalle['lote'],
-                    'fecha_caducidad' => $detalle['caducidad'],
-                ]);
-
-            }
-
-
-        }
-        return $nueva_entrada;
-
-    }
 
 
 }

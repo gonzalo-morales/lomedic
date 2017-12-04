@@ -9,7 +9,7 @@
 	<title>{{ config('app.name', '') }} - @yield('title')</title>
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
 	{{ HTML::meta('csrf-token', csrf_token()) }}
-	{{ HTML::favicon(asset("img/$menuempresa->logotipo")) }}
+	{{ HTML::favicon(asset("img/logotipos/$menuempresa->icono")) }}
 	<!-- Bootstrap CSS local fallback -->
 	{{ HTML::style(asset('css/bootstrap/dist/css/bootstrap.min.css')) }}
 	<!-- Select2 CSS local -->
@@ -38,29 +38,26 @@
     <div class="w-100 fixed-top z-depth-1-half" id="top-nav">
     	<nav class="navbar navbar-default bg-white">
             <div class="navbar-header d-flex flex-row">
-                <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">menu</i></button>
+                <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="MENU"><i class="material-icons">menu</i></button>
                 <div class="btn-group">
-                    <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            			{{ HTML::image(asset("img/$menuempresa->logotipo"), 'Logo', ['width'=>'25px']) }} {{ $menuempresa->nombre_comercial }}
+                    <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" title="EMPRESA" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            			{{ HTML::image(asset("img/logotipos/$menuempresa->icono"), null, ['width'=>'25px','class'=>'mr-2']) }} {{ $menuempresa->nombre_comercial }}
             		</a>
                     <ul id='enteDrop' class="dropdown-menu z-depth-2" aria-labelledby="dropdownMenu2">
                 		@foreach($menuempresas as $_empresa)
-                		<li><a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">{{ HTML::image(asset("img/$_empresa->logotipo"), null, ['class'=>'circle responsive-img','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}</a></li>
+                		<li class="dropdown-item">
+                			<a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">
+                				{{ HTML::image(asset("img/logotipos/$_empresa->icono"), null, ['class'=>'circle responsive-img mr-1','width'=>'24px']) }} {{ $_empresa->nombre_comercial }}
+                			</a>
+                		</li>
                 		@endforeach
                 	</ul>
                 </div>
             </div>
-            <a class="d-flex align-items-center" href="{{asset(request()->company)}}" title="ADMINISTRACION"><i class='material-icons left'>home</i></a>
-            <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center"><i class="material-icons">live_help</i></button>
+            <a class="d-flex align-items-center" href="{{asset(request()->company)}}" title="INICIO"><i class='material-icons left'>home</i></a>
+            <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="AYUDA"><i class="material-icons">live_help</i></button>
         </nav>
-    	<!--<ol class="breadcrumb bg-light rounded-0 z-depth-1-half">
-    		<li class="breadcrumb-item" id="bread-home">{{ HTML::link(companyAction('HomeController@index', ['company' => $menuempresa->conexion]), 'Inicio') }}</li>
-    		@foreach(routeNameReplace() as $key=>$item)
-    			@if($item !== 'index' && !empty($item))
-    				<li class="breadcrumb-item active">{{ HTML::link($key == 1 ? companyRoute('index') : '#', $item) }}</li>
-    			@endif
-    		@endforeach
-    	</ol>-->
+    	
     </div>
 @endif
     @if(isset(request()->kendoWindow))
@@ -72,15 +69,15 @@
         	<div id="sidebar-content">
                 <div class="sidebar-header text-center" style="position: relative;">
                     <div class="title">
-                    	<div class="text-center"><object id="front-page-logo" class="sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object></div>
+                    	<div class="text-center"><object id="front-page-logo" class="sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Su navegador no soporta imagenes SVG</object></div>
+                        <a href="#" class="mt-3"><p class="mt-3 d-flex justify-content-center w-100"><small>{{ Auth::User()->nombre_corto }}</small></p></a>
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text w-100">
             				<i class="tiny material-icons">power_settings_new</i> CERRAR SESION
             			</a>
-                        <a href="#"><p class="d-flex justify-content-center"><small>{{ Auth::User()->nombre_corto }}</small></p></a>
                     </div>
                     <strong>
                     	<a href="#" title="{{ Auth::User()->nombre_corto }}" data-toggle="tooltip" data-placement="right">
-                    		<object id="front-page-logo" class="sim w-50" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Your browser does not support SVG</object>
+                    		<object id="front-page-logo" class="sim w-50" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Su navegador no soporta imagenes  SVG</object>
                     	</a>
         				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center" title="CERRAR SESION" data-toggle="tooltip" data-placement="right">
             				<i class="tiny material-icons">power_settings_new</i>
@@ -91,7 +88,7 @@
                 </div>
 
                 <ul id="menu-conten" class="list-unstyled components text-center">
-                	{!! Form::text('filter',null,['id'=>'filter-menu','placeholder'=>'Buscar en menu.']) !!}
+                	{!! Form::text('filter',null,['id'=>'filter-menu','placeholder'=>'Buscar en menu','class'=>'mt-2 p-1']) !!}
                     @if(isset($menu))
         				@each('partials.menu', $menu, 'modulo')
         			@endif
@@ -102,6 +99,17 @@
         <!-- Page Content Holder -->
         <div id="content" class="pt-3 bg-light">
             <div id="onload"></div>
+            <div>
+            	<!-- <ol class="col-sm-12 breadcrumb bg-light p-1 m-0">
+            		<li class="breadcrumb-item" id="bread-home">{{ HTML::link(companyAction('HomeController@index', ['company' => $menuempresa->conexion]), 'inicio') }}</li>
+            		foreach(routeNameReplace() as $key=>$item)
+            			if($item !== 'index' && !empty($item))
+            				<li class="breadcrumb-item active">{{-- HTML::link($key == 1 ? companyRoute('index') : '#', $item) --}}</li>
+            			endif
+            		endforeach
+            	</ol> -->
+                <h4 class="col-sm-12 display-4">@yield('form-title')</h4>
+        	</div>
             @yield('content')
         </div>
     </div>
