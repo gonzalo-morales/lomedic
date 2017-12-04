@@ -26,7 +26,7 @@ class TiposComprobantes extends ModelBase
      * @var array
      */
     public $rules = [
-        'tipo_comprobante' => 'required|max:1',
+        'tipo_comprobante' => 'required|max:10',
         'descripcion' => 'required|max:255',
         'limite' => 'required|numeric|max:255'
     ];

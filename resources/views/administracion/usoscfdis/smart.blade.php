@@ -6,7 +6,7 @@
 <div class="row">
     <div class="form-group col-sm-6 col-md-4">
         {{ Form::label('uso_cfdi', '* Uso CFDI') }}
-        {{ Form::text('uso_cfdi', null, ['id'=>'uso_cfdi','class'=>'form-control']) }}
+        {{ Form::text('uso_cfdi', null, ['id'=>'uso_cfdi','class'=>'form-control','style' =>'text-transform: uppercase;']) }}
         {{ $errors->has('uso_cfdi') ? HTML::tag('span', $errors->first('uso_cfdi'), ['class'=>'help-block text-danger']) : '' }}
     </div>
     <div class="form-group col-sm-6 col-md-8">

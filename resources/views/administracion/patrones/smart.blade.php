@@ -5,7 +5,7 @@
 {{ Form::setModel($data) }}
 <div class="row">
 	<div class="form-group col-md-12 col-xs-12">
-		{{ Form::label('patron', 'Nombre documento:') }}
+		{{ Form::label('patron', 'Código(s) de patrones:') }}
 		{{ Form::text('patron', null, ['id'=>'patron','class'=>'form-control']) }}
 		{{ $errors->has('patron') ? HTML::tag('span', $errors->first('patron'), ['class'=>'help-block text-danger']) : '' }}
 	</div>

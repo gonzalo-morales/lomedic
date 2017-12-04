@@ -35,7 +35,7 @@ class Monedas extends ModelBase
     public $rules = [
         'moneda'   => 'required|max:3',
         'descripcion'   => 'required|max:255',
-        'total_decimales'   => 'required|integer|max:1'
+        'total_decimales'   => 'required|integer|max:10'
     ];
 
     /**
