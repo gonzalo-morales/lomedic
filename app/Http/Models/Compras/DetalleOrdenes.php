@@ -97,7 +97,7 @@ class DetalleOrdenes extends ModelCompany
     {
         return $this->hasOne('App\Http\Models\Inventarios\EntradaDetalle','fk_id_detalle_documento','id_orden_detalle');
     }
-    public function sumatoriaCentidad($fk_id_documento,$numero_documento,$fk_id_sku,$fk_id_upc,$fk_id_detalle_documento)
+    public function sumatoriaCantidad($fk_id_documento,$numero_documento,$fk_id_sku,$fk_id_upc,$fk_id_detalle_documento)
     {
 
         if($fk_id_upc === null)
