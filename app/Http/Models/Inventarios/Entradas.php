@@ -53,25 +53,22 @@ class Entradas extends ModelCompany
     {
         return $this->hasMany('App\Http\Models\Inventarios\EntradaDetalle','fk_id_entrada_almacen', 'id_entreda_almacen');
     }
-
-    public function datosEntrada($id,$tipo_documento)
-    {
-        switch ($tipo_documento)
-        {
-            case 1:
-                break;
-            case 2:
-                breack;
-            case 3:
-                $datos = Ordenes::where('id_orden',$id)->first();
-                break;
-        }
-
-//        $datos->sucursal = $datos->sucursales()->pluck('sucursal');
-//        $datos->proeveedor = $datos->proveedor()->pluck('nombre_comercial');
-//        $datos->tipo_documento = $this->tipoDocumento()->pluck('nombre_documento')->first();
-        return $datos;
-    }
+//
+//    public function datosEntrada($id,$tipo_documento)
+//    {
+//        switch ($tipo_documento)
+//        {
+//            case 1:
+//                break;
+//            case 2:
+//                breack;
+//            case 3:
+//                $documento = Ordenes::where('id_orden',$id)->first();
+//                break;
+//        }
+//
+//        return $documento;
+//    }
 
     public function sucursales()
     {
