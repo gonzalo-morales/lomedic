@@ -71,7 +71,7 @@
 								</div>
 							@endif
 							@if(Route::currentRouteNamed(currentRouteName('show')))
-
+								{{--{{dd($datos_documento)}}--}}
 								<div role="tabpanel" class="tab-pane " >
 									<div class="row">
 										<div class="col-sm-12">
@@ -119,22 +119,27 @@
 																	<th>Cliente</th>
 																	<th>Proyecto</th>
 																	<th>Lote</th>
+																	<th>F. Caducidad</th>
 																	<th>C. Entrada</th>
 																	<th>C. Surtida</th>
 																	<th></th>
 																</tr>
 																</thead>
 																<tbody>
+
+																{{--{{dump($detalle_entrada)}}--}}
 																{{--{{dd($productos_entrada)}}--}}
-																@foreach($productos_entrada as $producto)
+																@foreach($detalle_entrada as $detalle_producto)
 																	<tr>
-																		<td>{{$producto->sku}}</td>
-																		<td>{{$producto->upc}}</td>
-																		<td>{{$producto->descripcion}}</td>
-																		<td>{{$producto->fk_id_cliente}}</td>
-																		<td>{{$producto->fk_id_proyecto}}</td>
-																		<td></td>
-																		<td>{{$producto->cantidad}}</td>
+																		<td>{{$detalle_producto['sku']}}</td>
+																		<td>{{$detalle_producto['upc']}}</td>
+																		<td>{{$detalle_producto['sku_descripcion']}}</td>
+																		<td>{{$detalle_producto['nombre_cliente']}}</td>
+																		<td>{{$detalle_producto['nombre_proyecto']}}</td>
+																		<td>{{$detalle_producto['lote']}}</td>
+																		<td>{{$detalle_producto['fecha_caducidad']}}</td>
+																		<td>{{$detalle_producto['cantidad']}}</td>
+																		<td>{{$detalle_producto['cantidad_surtida']}}</td>
 																		<td></td>
 																	</tr>
 																@endforeach
