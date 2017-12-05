@@ -4,6 +4,7 @@ namespace App\Http\Models\RecursosHumanos;
 
 use App\Http\Models\ModelBase;
 use App\Http\Models\Administracion\Sucursales;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Empleados extends ModelBase
 {
@@ -88,5 +89,8 @@ class Empleados extends ModelBase
     public function sucursales()
     {
         return $this->belongsToMany(Sucursales::class,'maestro.ges_det_empleado_sucursal','fk_id_empleado','fk_id_sucursal');
+    }
+    public function ejecutivocompra(){
+        return $this->hasOne(SociosNegocio::class,'fk_id_ejecutivo_compra','id_empleado');
     }
 }

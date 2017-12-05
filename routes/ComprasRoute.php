@@ -37,5 +37,8 @@ Route::prefix('{company}')->group(function () {
         });
         Route::resource('ofertas','Compras\OfertasController');
         Route::get('ofertas/{id}/impress', 'Compras\OfertasController@impress')->name('ofertas');
+
+        Route::resource('facturasProveedores','Compras\FacturasProveedoresController');
+        Route::post('getFacturaData','Compras\FacturasProveedoresController@parseXML');
     });
 });

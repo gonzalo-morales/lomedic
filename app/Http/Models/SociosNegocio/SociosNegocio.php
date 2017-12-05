@@ -5,6 +5,7 @@ namespace App\Http\Models\SociosNegocio;
 use App\Http\Models\ModelBase;
 use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\RecursosHumanos\Empleados;
 
 class SociosNegocio extends ModelBase
 {
@@ -104,7 +105,7 @@ class SociosNegocio extends ModelBase
     public function tiposociocompra(){
         return $this->belongsTo(TiposSocioNegocio::class,'fk_id_tipo_socio_compra');
     }
-    public function tipoproveedor(){
-        return $this->belongsTo(TiposProveedores::class,'fk_id_tipo_proveedor');
-    }
+//    public function tipoproveedor(){
+//        return $this->belongsTo(TiposProveedores::class,'fk_id_tipo_proveedor');
+//    }
 }

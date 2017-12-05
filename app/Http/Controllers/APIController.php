@@ -35,6 +35,7 @@ class APIController extends Controller
 		$str_json = '{'.Crypt::decryptString(request()->param_js).'}';
 		$param_array = request()->all();
 
+
 		$json = str_replace(array_keys($param_array),$param_array,$str_json);
 
 		$request = json_decode($json,true);
@@ -45,10 +46,9 @@ class APIController extends Controller
 		$entity = rescue(function() use ($entity) {
 			return resolve('App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', $entity))));
 		});
+        if ($entity) {
 
-		if ($entity) {
-
-			# Select especific fields
+            # Select especific fields
 		    $entity = call_user_func_array([$entity, 'select'], $request['select'] ?? []);
 
 			# Si hay eagerloaders
