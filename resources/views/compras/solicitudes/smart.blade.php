@@ -1,3 +1,4 @@
+@section('form-title', 'Solicitudes de Compra')
 @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
 @endsection
@@ -279,6 +280,14 @@
                  }
              }
          };
+         rivets.binders['hide-oferta'] = {
+                 bind: function (el) {
+    				 if(el.dataset.fk_id_estatus_solicitud != 1)
+    				 { console.log(el.dataset.fk_id_estatus_solicitud);
+    				     $(el).hide();
+    				 }
+                 }
+    		 };
          rivets.binders['hide-comprar'] = {
              bind: function (el) {
 				 if(el.dataset.fk_id_estatus_solicitud != 1)
@@ -326,6 +335,7 @@
         'class': 'btn is-icon',
 		'href':'#',
 		'rv-get-offer-url':'',
+		'rv-hide-oferta':'',
 		'data-toggle':'tooltip',
 		'title':'Crear oferta'
         }};

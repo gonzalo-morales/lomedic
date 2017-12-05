@@ -1,3 +1,4 @@
+@section('form-title', 'Ordenes de Compra')
 @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
 @endsection

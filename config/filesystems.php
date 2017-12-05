@@ -54,6 +54,10 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/sociosnegocio/anexos'),
         ],
+        'proyectos_anexos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/proyectos/anexos'),
+        ],
         'logotipos' => [
             'driver' => 'local',
             'root' => public_path('img/logotipos'),

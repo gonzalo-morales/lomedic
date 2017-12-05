@@ -80,4 +80,8 @@ class Proyectos extends ModelCompany
     {
         return $this->hasMany(ProyectosProductos::class,'fk_id_proyecto','id_proyecto');
     }
+    
+    public function anexos(){
+        return $this->hasMany(AnexosProyectos::class,'fk_id_proyecto');
+    }
 }

@@ -479,7 +479,7 @@
 										<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargar', ['id' => $detalle->id_anexo])}}" title="Descargar Archivo">
 											<i class="material-icons">file_download</i>
 										</a>
-										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button>
+										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button>
 									</td>
 								</tr>
     							@endforeach
@@ -561,7 +561,7 @@
     									<td>
     										{{$detalle->precio_hasta}}
     									</td>
-    									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>
+    									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarProducto(this)"> <i class="material-icons">delete</i></button></td>
     								</tr>
         							@endforeach
         						@endif

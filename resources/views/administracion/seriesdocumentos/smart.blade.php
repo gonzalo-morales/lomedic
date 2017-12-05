@@ -1,5 +1,5 @@
 @section('content-width', 's12')
-@section('form-title', 'Series para Skus')
+@section('form-title', 'Series de Documentos')
 
 @section('header-bottom')
     @parent
@@ -10,7 +10,6 @@
         		$("#numero_siguiente").val(primero);
         		$("#ultimo_numero").attr('min',primero+1);
         	});
-
         });
     </script>
 @endsection
@@ -36,10 +35,15 @@
     <div class="form-group col-md-4 col-lg-2">
         {{ Form::cText('Sufijo','sufijo', null) }}
     </div>
+    <div class="form-group col-md-4 col-xs-4">
+    	{{ Form::cSelect('* Empresa', 'fk_id_empresa', $empresas ?? []) }}
+    </div>
+    <div class="form-group col-md-4 col-xs-4">
+    	{{ Form::cSelect('* Tipo Documento', 'fk_id_tipo_documento', $tiposdocumentos ?? []) }}
+    </div>
     <div class="form-group col-md-12 col-xs-12">
     	{{ Form::cTextArea('Descripcion','descripcion', null) }}
     </div>
-
     <div  class="col-md-12 text-center mt-2">
         <div class="alert alert-warning" role="alert">
             Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.

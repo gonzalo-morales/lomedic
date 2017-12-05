@@ -78,6 +78,9 @@
 				<li class="nav-item">
 					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-finanzas" id="finanzas-tab" aria-controls="finanzas" aria-expanded="true">Finanzas</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-anexos" id="anexos-tab" aria-controls="anexos" aria-expanded="true">Anexos</a>
+				</li>
 			</ul>
 		</div>
 		<!-- Content Panel -->
@@ -282,6 +285,59 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div role="tabpanel" class="tab-pane fade" id="tab-anexos" aria-labelledby="anexos-tab">
+				<div class="col-sm-12">
+            		<div class="card z-depth-1-half">
+            			<div class="card-header">
+    						<div class="row">
+    							<div class="form-group col-md-6">
+    								{{ Form::cText('* Nombre', 'nombre_archivo') }}
+    							</div>
+    							<div class="form-group col-md-6">
+    								{{ Form::cFile('* Archivo', 'archivo',['accept'=>'.xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf']) }}
+    							</div>
+    							<div class="form-group col-sm-12 my-3">
+        							<div class="sep sepBtn">
+                						<button id="agregar-anexo" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                					</div>
+        						</div>
+    						</div>
+    					</div>
+    					<div class="card-body">
+    						<table class="table responsive-table highlight" id="tAnexos">
+    							<thead>
+    								<tr>
+    									<th>Nombre</th>
+    									<th>Archivo</th>
+    									<th>Acción</th>
+    								</tr>
+    							</thead>
+    							<tbody>
+    							@if(isset($data->anexos)) 
+    							@foreach($data->anexos->where('eliminar',0) as $key=>$detalle)
+								<tr>
+									<td>
+										{!! Form::hidden('anexos['.$key.'][id_anexo]',$detalle->id_anexo,['class'=>'id_anexo']) !!}
+										{{$detalle->nombre}}
+									</td>
+									<td>
+										{{$detalle->archivo}}
+									</td>
+									<td>
+										<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargar', ['id' => $detalle->id_anexo])}}" title="Descargar Archivo">
+											<i class="material-icons">file_download</i>
+										</a>
+										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button>
+									</td>
+								</tr>
+    							@endforeach
+    						@endif
+    							</tbody>
+    						</table>
+    					</div>
+    				</div><!--/Here ends card-->
+    			</div>
 			</div>
 		</div>
 		<!-- End Content Panel -->

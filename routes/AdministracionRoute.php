@@ -48,6 +48,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('parentescos', 'Administracion\ParentescosController');
 		Route::resource('perfiles', 'Administracion\PerfilesController');
 		Route::resource('presentacionventa', 'Administracion\PresentacionVentaController');
+		Route::resource('seriesdocumentos', 'Administracion\SeriesDocumentosController');
 		Route::resource('seriesskus', 'Administracion\SeriesSkusController');
 		Route::get('getSerie/{id}','Administracion\SeriesSkusController@getSerie');
 		Route::resource('subgrupoproductos', 'Administracion\SubgrupoProductosController');
