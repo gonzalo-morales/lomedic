@@ -72,8 +72,8 @@ $(document).ready(function () {
 		expedicion  = $('#fecha_expedicion').val();
 		vencimiento = $('#fecha_vencimiento').val();
 		
-		if($("#certificado").length == 0 | expedicion == '' | vencimiento == '') {
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Selecciona un archivo. Fecha de expedicion y de vencimiento no deben estar vacias',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		if($("#file_key").length == 0 | $("#file_certificado").length == 0 | expedicion == '' | vencimiento == '') {
+			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Selecciona los archivos, Fecha de expedicion y de vencimiento no deben estar vacias',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#tCertificados').append('<tr>'+
@@ -84,6 +84,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'El certificado se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$('#key-'+row_id).prop('files',key);
 			$('#certificado-'+row_id).prop('files',certificado);
 		}
 	});
