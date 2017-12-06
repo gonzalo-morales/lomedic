@@ -386,3 +386,71 @@ a:hover .window {
 .material-icons {
 	cursor: default;
 }
+
+
+.vue-slide-fade {
+  max-height: 500px;
+}
+/* durations and timing functions.              */
+.vue-slide-fade-enter-active {
+  transition: all .6s ease;
+}
+.vue-slide-fade-leave-active {
+  transition: all .4s ease;
+}
+.vue-slide-fade-enter, .vue-slide-fade-leave-to {
+  opacity: 0;
+  max-height: 0px;
+}
+@media (min-width: 576px) {
+  .vue-slide-fade-enter-active {
+    transition: all .3s ease;
+  }
+  .vue-slide-fade-leave-active {
+    transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .vue-slide-fade-enter, .vue-slide-fade-leave-to {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+.vue-list-item {
+  max-height: 500px;
+}
+.vue-list-slide-fade-enter-active {
+  transition: all .6s ease;
+}
+.vue-list-slide-fade-leave-active {
+  transition: all .4s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.vue-list-slide-fade-enter, .vue-list-slide-fade-leave-to {
+  -webkit-transform: scale(0.9);
+  transform: scale(0.9);
+  max-height: 0px;
+  opacity: 0;
+}
+
+
+
+
+.list-complete-item {
+  transition: all 1s;
+}
+.list-complete-enter, .list-complete-leave-to {
+  -webkit-transform: scale(0.9);
+  transform: scale(0.9);
+  opacity: 0;
+}
+.list-complete-move {
+  transition: transform 1s;
+}
+.list-complete-leave-active {
+  position: absolute;
+  background: lightgray;
+  width: 1153px;
+  display: table;
+  table-layout: fixed;
+  z-index: 99;
+}
