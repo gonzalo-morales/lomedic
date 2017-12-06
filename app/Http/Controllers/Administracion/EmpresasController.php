@@ -142,12 +142,12 @@ class EmpresasController extends ControllerBase
 	                $save_cer = false;
 	                if(isset($certificado['key-file'])) {
 	                    $mykey = $certificado['key-file'];
-	                    $namekey = $mykey->getClientOriginalName();
+	                    $namekey = 'key-'.$mykey->getClientOriginalName();
 	                    $save_key = Storage::disk('certificados')->put($request->conexion.'/'.$namekey, file_get_contents($mykey->getRealPath()));
 	                }
 	                if(isset($certificado['cer-file'])) {
 	                    $mycer = $certificado['cer-file'];
-	                    $namecer = $mycer->getClientOriginalName();
+	                    $namecer = 'cer-'.$mycer->getClientOriginalName();
 	                    $save_cer = Storage::disk('certificados')->put($request->conexion.'/'.$namecer, file_get_contents($mycer->getRealPath()));
 	                }
 
