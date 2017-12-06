@@ -67,21 +67,23 @@ $(document).ready(function () {
 	$('#agregar-certificado').on('click', function() {
 		let row_id = $('#tCertificados tr').length;
 		
-		certificado = $("#certificado").prop('files');
+		key         = $("#file_key").prop('files');
+		certificado = $("#file_certificado").prop('files');
 		expedicion  = $('#fecha_expedicion').val();
 		vencimiento = $('#fecha_vencimiento').val();
 		
 		if($("#certificado").length == 0 | expedicion == '' | vencimiento == '') {
-			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Selecciona un archivo. Fecha de expedicion y de vencimiento no deben estar vacias',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Selecciona un archivo. Fecha de expedicion y de vencimiento no deben estar vacias',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#tCertificados').append('<tr>'+
-				'<td>' + certificado[0].name + ' <input id="certificado-'+row_id+'" class="file-anexos" name="certificados['+row_id+'][archivo]" type="file" style="display:none"></td>'+
+				'<td>' + key[0].name + ' <input id="key-'+row_id+'" class="file-anexos" name="certificados['+row_id+'][key-file]" type="file" style="display:none"></td>'+
+				'<td>' + certificado[0].name + ' <input id="certificado-'+row_id+'" class="file-anexos" name="certificados['+row_id+'][cer-file]" type="file" style="display:none"></td>'+
 				'<td>' + expedicion + '<input name="certificados['+row_id+'][fecha_expedicion]" type="hidden" value="'+expedicion+'"></td>'+
 				'<td>' + vencimiento+' <input name="certificados['+row_id+'][fecha_vencimiento]" type="hidden" value="'+vencimiento+'"></td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'El certificado se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'El certificado se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 			$('#certificado-'+row_id).prop('files',certificado);
 		}
 	});
@@ -110,10 +112,10 @@ $(document).ready(function () {
 		precio_hasta = $("#precio_hasta").val();
 		
 		if(id_sku == '' | tiempo_entrega == '' | precio == '' | precio_de == '' | precio_hasta == ''){
-			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Los campos, Sku, Tiempo Entrega, Precio, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Los campos, Sku, Tiempo Entrega, Precio, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(skus_ids.indexOf(id_sku + id_upc) !== -1) {
-        	$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'El producto seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'El producto seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
 		else {
 			if(id_upc != '') {
@@ -144,7 +146,7 @@ $(document).ready(function () {
         				'<td>' + precio_hasta + ' <input name="productos['+row_id+'][precio_hasta]" type="hidden" value="'+precio_hasta+'"></td>'+
         				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarProducto(this)"> <i class="material-icons">delete</i></button></td>'+
         			'</tr>');
-        			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        			$.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     		    }
     		});
 		}
@@ -155,26 +157,26 @@ $(document).ready(function () {
 
 function borrarCertificado(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado la cuenta correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado la cuenta correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 /*
 function borrarContacto(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado el contacto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado el contacto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function borrarDireccion(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado la diereccion correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado la diereccion correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function borrarAnexo(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado el anexo correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado el anexo correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function borrarProducto(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado el producto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado el producto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 */

@@ -24,7 +24,7 @@ class Certificados extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['archivo', 'fecha_expedicion', 'fecha_vencimiento', 'activo'];
+	protected $fillable = ['certificado','key','fecha_expedicion','fecha_vencimiento','activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -47,7 +47,8 @@ class Certificados extends ModelBase
 	 * @var array
 	 */
 	protected $fields = [
-		'archivo' => 'Archivo',
+		'certificado' => 'Certificado',
+	    'key' => 'Key',
 		'fecha_expedicion' => 'Fecha Expedicion',
 	    'fecha_vencimiento' => 'Fecha Vencimiento'
 	];

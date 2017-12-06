@@ -37,7 +37,7 @@ class EmpresasController extends ControllerBase
 	    ];
 	}
 	
-	/*
+	
 	public function store(Request $request, $company)
 	{
 	    # ¿Usuario tiene permiso para crear?
@@ -46,105 +46,40 @@ class EmpresasController extends ControllerBase
 	    # Validamos request, si falla regresamos pagina
 	    $this->validate($request, $this->entity->rules);
 	    
-	    DB::beginTransaction();
+	    #DB::beginTransaction();
 	    $entity = $this->entity->create($request->all());
 	    
-	    if ($entity)
-	    {
-	        $id = $entity->id_socio_negocio;
+	    if ($entity) {
+	        $id = $entity->id_empresa;
 	        
-	        # Guardamos el detalle de empresas en la que estara disponible
-	        if(isset($request->empresas)) {
-	            $sync = [];
-	            foreach ($request->empresas as $id_empresa=>$active) {
-	                if($active) {
-	                    $sync[] = $id_empresa;
+	        # Guardamos el detalle de los certificados de las empresas
+	        if(isset($request->certificados)){
+	            $certificados = $request->certificados;
+	            
+	            foreach ($certificados as $certificado) {
+	                $save_key = false;
+	                $save_cer = false;
+	                if(isset($certificado['key-file'])) {
+	                    $mykey = $certificado['key-file'];
+	                    $namekey = $mykey->getClientOriginalName();
+	                    $save_key = Storage::disk('certificados')->put($request->conexion.'/'.$namekey, file_get_contents($mykey->getRealPath()));
 	                }
-	            }
-     	            $entity->empresas()->sync($sync);
-	        }
-	        
-	        # Guardamos el detalle de formas de pago para el socio de negocio
-	        if(isset($request->formaspago)) {
-	            $sync = [];
-	            foreach ($request->formaspago as $id_forma=>$active) {
-	                if($active) {
-	                    $sync[] = $id_forma;
+	                if(isset($certificado['cer-file'])) {
+	                    $mycer = $certificado['cer-file'];
+	                    $namecer = $mycer->getClientOriginalName();
+	                    $save_cer = Storage::disk('certificados')->put($request->conexion.'/'.$namecer, file_get_contents($mycer->getRealPath()));
 	                }
-	            }
-	            $entity->formaspago()->sync($sync);
-	        }
-	        
-	        # Guardamos los contactos de los socios de negocio
-	        if(isset($request->contactos)){
-	            $contactos = collect($request->contactos);
-	            
-	            #Insertar o Actualizar la informacion de los contactos
-	            foreach ($contactos as $contacto)
-	            {
-	                array_unshift($contacto, ['fk_id_socio_negocio'=> $id]);
-	                $entity->contactos()->updateOrCreate(['id_contacto' => ($contacto['id_contacto'] ?? null)], $contacto);
-	            }
-	        }
-	        
-	        # Guardamos el detalle de las direcciones de los socios de negocio
-	        if(isset($request->direcciones)){
-	            $direcciones = collect($request->direcciones);
-
-	            #Inserta o Actualiza la informacion del direcciones
-	            foreach ($direcciones as $direccion)
-	            {
-	                array_unshift($direccion, ['fk_id_socio_negocio'=> $id]);
-	                $entity->direcciones()->updateOrCreate(['id_direccion' => ($direccion['id_direccion'] ?? null)], $direccion);
-	            }
-	        }
-	        
-	        # Guardamos el detalle de las cuentas bancarias de los socios de negocio
-	        if(isset($request->cuentas)){
-	            $cuentas = collect($request->cuentas);
-	            
-	            #Inserta o Actualiza la informacion del cuentas
-	            foreach ($cuentas as $cuenta)
-	            {
-	                array_unshift($cuenta, ['fk_id_socio_negocio'=> $id]);
-	                $entity->cuentas()->updateOrCreate(['id_cuenta' => ($cuenta['id_cuenta'] ?? null)], $cuenta);
-	            }
-	        }
-	        
-	        # Guardamos el detalle de los anexos de los socios de negocio
-	        if(isset($request->anexos)){
-	            $anexos = $request->anexos;
-	            
-	            #Inserta o Actualiza la informacion del anexo
-	            foreach ($anexos as $anexo)
-	            {
-	                if(isset($anexo['archivo'])) {
-	                    $myfile = $anexo['archivo'];
-	                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
-	                    $file_save = Storage::disk('socios_anexos')->put($filename, file_get_contents($myfile->getRealPath()));
 	                
-	                    if($file_save) {
-	                        array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
-	                        $anexo['archivo'] = $filename;
-	                        $entity->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
-	                    }
+	                if($file_save && $save_cer) {
+	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
+	                    $certificado['key'] = $namekey;
+	                    $certificado['certificado'] = $namecer;
+	                    $entity->certificados()->updateOrCreate(['id_certificado' => null], $certificado);
 	                }
 	            }
 	        }
 	        
-	        # Guardamos el detalle de los productos de los socios de negocio
-	        if(isset($request->productos)){
-	            $productos = collect($request->productos);
-	            
-	            #Inserta o Actualiza la informacion del productos
-	            foreach ($productos as $producto)
-	            {
-	                array_unshift($producto, ['fk_id_socio_negocio'=> $id]);
-	                $entity->productos()->updateOrCreate(['id_producto' => ($producto['id_producto'] ?? null)], $producto);
-	            }
-	        }
-	        
-	        DB::commit();
+	        #DB::commit();
 	        
 	        # Eliminamos cache
 	        Cache::tags(getCacheTag('index'))->flush();
@@ -152,13 +87,14 @@ class EmpresasController extends ControllerBase
 	        
 	        $this->log('store', $id);
 	        return $this->redirect('store');
-	    } else {
-	        DB::rollBack();
+	    }
+	    else {
+	        #DB::rollBack();
 	        $this->log('error_store');
 	        return $this->redirect('error_store');
 	    }
 	}
-	*/
+	
 	
 	public function update(Request $request, $company, $id)
 	{
@@ -203,14 +139,23 @@ class EmpresasController extends ControllerBase
 	            #Inserta o Actualiza la informacion del contacto
 	            foreach ($certificados as $certificado)
 	            {
-	                if(isset($certificado['archivo'])) {
-	                    $myfile = $certificado['archivo'];
-	                    $filename = $myfile->getClientOriginalName();
-	                    $file_save = Storage::disk('certificados')->put($request->conexion.'/'.$filename, file_get_contents($myfile->getRealPath()));
+	                $save_key = false;
+	                $save_cer = false;
+	                if(isset($certificado['key-file'])) {
+	                    $mykey = $certificado['key-file'];
+	                    $namekey = $mykey->getClientOriginalName();
+	                    $save_key = Storage::disk('certificados')->put($request->conexion.'/'.$namekey, file_get_contents($mykey->getRealPath()));
+	                }
+	                if(isset($certificado['cer-file'])) {
+	                    $mycer = $certificado['cer-file'];
+	                    $namecer = $mycer->getClientOriginalName();
+	                    $save_cer = Storage::disk('certificados')->put($request->conexion.'/'.$namecer, file_get_contents($mycer->getRealPath()));
+	                }
 
-    	                if($file_save) {
+	                if($file_save && $save_cer) {
     	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
-    	                    $certificado['archivo'] = $filename;
+    	                    $certificado['key'] = $namekey;
+    	                    $certificado['certificado'] = $namecer;
     	                    $entity->certificados()->updateOrCreate(['id_certificado' => null], $certificado);
     	                }
 	                }
@@ -255,14 +200,14 @@ class EmpresasController extends ControllerBase
 	    }
 	}
 	
-	public function descargar($company, $id)
+	public function descargar($company, $id, $archivo)
 	{
-	    $archivo = Certificados::where('id_certificado',$id)->first();
-	    $file = Storage::disk('certificados')->getDriver()->getAdapter()->getPathPrefix().$archivo->empresa->conexion.'/'.$archivo->archivo;
+	    $certificado = Certificados::where('id_certificado',$id)->first();
+	    $file = Storage::disk('certificados')->getDriver()->getAdapter()->getPathPrefix().$certificado->empresa->conexion.'/'.$certificado->{$archivo};
 	    
 	    if (File::exists($file))
 	    {
-	        Logs::createLog($archivo->getTable(), $company, $archivo->id_certificado, 'descargar', 'Archivo Certificado');
+	        Logs::createLog($certificado->getTable(), $company, $certificado->id_certificado, 'descargar', "Archivo $archivo");
 	        return Response::download($file);
 	    }
 	    else {

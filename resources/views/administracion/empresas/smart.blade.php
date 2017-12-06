@@ -107,13 +107,16 @@
 			<div class="row card">
 				<div class="card-header">
 					<div class="row">
-						<div class="form-group col-md-4">
-							{{ Form::cFile('* Certificado', 'certificado',['accept'=>'.pem']) }}
+						<div class="form-group col-md-3">
+							{{ Form::cFile('* Key', 'file_key',['accept'=>'.pem']) }}
 						</div>
-						<div class="form-group col-md-4">
+						<div class="form-group col-md-3">
+							{{ Form::cFile('* Certificado', 'file_certificado',['accept'=>'.pem']) }}
+						</div>
+						<div class="form-group col-md-3">
 							{{ Form::cText('* Fecha expedicion', 'fecha_expedicion') }}
 						</div>
-						<div class="form-group col-md-4">
+						<div class="form-group col-md-3">
 							{{ Form::cText('* Fecha vencimiento', 'fecha_vencimiento') }}
 						</div>
 					</div>
@@ -127,6 +130,7 @@
 					<table class="table responsive-table highlight" id="tCertificados">
 						<thead>
 							<tr>
+								<th>Key</th>
 								<th>Certificado</th>
 								<th>Fecha expedicion</th>
 								<th>Fecha vencimiento</th>
@@ -139,7 +143,14 @@
 							<tr>
 								<td>
 									{!! Form::hidden('certificados['.$key.'][id_certificado]',$detalle->id_certificado,['class'=>'id_certificado']) !!}
-									{{$detalle->archivo}}
+									<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargar', ['id' => $detalle->id_certificado,'archivo'=>'key'])}}" title="Descargar Key">
+										{{$detalle->key}}
+									</a>
+								</td>
+								<td>
+									<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargar', ['id' => $detalle->id_certificado,'archivo'=>'certificado'])}}" title="Descargar Certificado">
+										{{$detalle->certificado}}
+									</a>
 								</td>
 								<td>
 									{{$detalle->fecha_expedicion}}
@@ -148,9 +159,6 @@
 									{{$detalle->fecha_vencimiento}}
 								</td>
 								<td>
-    								<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargar', ['id' => $detalle->id_certificado])}}" title="Descargar Archivo">
-    									<i class="material-icons">file_download</i>
-    								</a>
     								<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCertificado(this)"> <i class="material-icons">delete</i></button>
     							</td>
 							</tr>
