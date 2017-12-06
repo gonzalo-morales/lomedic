@@ -137,8 +137,7 @@ class EmpresasController extends ControllerBase
 	            $entity->certificados()->whereNotIn('id_certificado', $ids_certificados)->update(['eliminar' => 1]);
 	            
 	            #Inserta o Actualiza la informacion del contacto
-	            foreach ($certificados as $certificado)
-	            {
+	            foreach ($certificados as $certificado) {
 	                $save_key = false;
 	                $save_cer = false;
 	                if(isset($certificado['key-file'])) {
@@ -153,14 +152,13 @@ class EmpresasController extends ControllerBase
 	                }
 
 	                if($file_save && $save_cer) {
-    	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
-    	                    $certificado['key'] = $namekey;
-    	                    $certificado['certificado'] = $namecer;
-    	                    $entity->certificados()->updateOrCreate(['id_certificado' => null], $certificado);
-    	                }
+	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
+	                    $certificado['key'] = $namekey;
+	                    $certificado['certificado'] = $namecer;
+	                    $entity->certificados()->updateOrCreate(['id_certificado' => null], $certificado);
 	                }
-	            }
-	        }
+                }
+            }
 	        else {
 	            $entity->certificados()->update(['eliminar' => 1]);
 	        }
@@ -193,7 +191,8 @@ class EmpresasController extends ControllerBase
 	        
 	        $this->log('update', $id);
 	        return $this->redirect('update');
-	    } else {
+	    }
+	    else {
 	        #DB::rollBack();
 	        $this->log('error_update', $id);
 	        return $this->redirect('error_update');
