@@ -6,6 +6,7 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\RegimenFiscal;
 use App\Http\Models\Administracion\Paises;
+use App\Http\Models\Administracion\Certificados;
 use App\Http\Models\Logs;
 use App;
 use DB;
@@ -17,7 +18,6 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
-use App\Http\Models\Administracion\Certificados;
 
 class EmpresasController extends ControllerBase
 {
@@ -26,9 +26,10 @@ class EmpresasController extends ControllerBase
 		$this->entity = $entity;
 	}
 	
-	
 	public function getDataView($entity = null)
 	{
+	    $cer = 'C:\Users\jfranco\Desktop\CSD_AIS091015H50_20160801150531\CSD_Abisa_2016_AIS091015H50_20160801_150445s.cer';
+	    //print_r($this->readCer($cer));
 	    return [
 	        'regimens'         => RegimenFiscal::where('activo','1')->where('eliminar','0')->pluck('regimen_fiscal','id_regimen_fiscal')->sortBy('regimen_fiscal')->prepend('Selecciona una opcion...',''),
 	        'paises'           => Paises::where('activo','1')->where('eliminar','0')->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
@@ -70,7 +71,7 @@ class EmpresasController extends ControllerBase
 	                    $save_cer = Storage::disk('certificados')->put($request->conexion.'/'.$namecer, file_get_contents($mycer->getRealPath()));
 	                }
 	                
-	                if($file_save && $save_cer) {
+	                if($save_key && $save_cer) {
 	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
 	                    $certificado['key'] = $namekey;
 	                    $certificado['certificado'] = $namecer;
@@ -151,7 +152,7 @@ class EmpresasController extends ControllerBase
 	                    $save_cer = Storage::disk('certificados')->put($request->conexion.'/'.$namecer, file_get_contents($mycer->getRealPath()));
 	                }
 
-	                if($file_save && $save_cer) {
+	                if($save_key && $save_cer) {
 	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
 	                    $certificado['key'] = $namekey;
 	                    $certificado['certificado'] = $namecer;
@@ -212,5 +213,46 @@ class EmpresasController extends ControllerBase
 	    else {
 	        App::abort(404,'No se encontro el archivo o recurso que se solicito.');
 	    }
+	}
+	
+	public function getDatoscer(Request $request)
+	{
+	    $req = $request;
+	    $pathFile = $req->file('cer')->getRealPath();
+	    
+	    $data = $this->readCer($pathFile) ?? [];
+	    $data['cadena_cer'] = $this->CerToPem($pathFile) ?? '';
+	    
+	    return $data;
+	}
+	
+	protected function readCer($pathFile = '')
+	{
+	    if (File::exists($pathFile))
+	    {
+	        $CerContent =  $this->CerToPem($pathFile);
+	        
+	        if(!empty($CerContent))
+	            $data = openssl_x509_parse($CerContent);
+	        else
+	            $data = null;
+    	    
+	        return $data;
+	    }
+	    else
+	        return null;
+	}
+	
+	protected function CerToPem($pathFile = '')
+	{
+	    if (File::exists($pathFile))
+	    {
+	        $CerContent = file_get_contents($pathFile);
+    	    $CerContent =  '-----BEGIN CERTIFICATE-----'.PHP_EOL.chunk_split(base64_encode($CerContent), 64, PHP_EOL).'-----END CERTIFICATE-----'.PHP_EOL;
+    	    
+    	    return $CerContent;
+	    }
+	    else
+	        return null;
 	}
 }
