@@ -82,7 +82,7 @@
             		{{ Form::cText('* Colonia', 'colonia') }}
             	</div>
             	<div class="form-group col-md-4">
-            		{{ Form::cNumber('* Codigo Postal', 'cp') }}
+            		{{ Form::cNumber('* Codigo Postal', 'codigo_postal') }}
             	</div>
             	
             	<div class="form-group col-md-4">
