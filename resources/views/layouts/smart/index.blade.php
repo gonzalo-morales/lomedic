@@ -72,7 +72,7 @@
 @section('content')
 <div class="container-fluid">
 	<div class="row">
-		<div class="col">
+		<div class="col-sm-12">
 			<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-create-url="{{ companyRoute('create') }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}" data-item-export-url="{{companyRoute('export', ['type' => '_ID_'])}}">
 				<div class="col-sm-6">
 					<table class=table bordered striped highlight" hidden>
@@ -109,7 +109,7 @@
 									<input type="checkbox" id="check-{{$row->getKey()}}" name="check-{{$row->getKey()}}" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="{{$row->getKey()}}">
 								</td>
 								@foreach ($fields as $field => $label)
-								<td>{{ object_get($row, $field) }}</td>
+								<td>{{ str_limit(object_get($row, $field),80) }}</td>
 								@endforeach
 								<td class="width-auto not-wrap">
 									<a rv-each-dynamics="collections.itemsOptions" data-item-id="{{$row->getKey()}}" {!!currentEntity()->getDataAttributes($row)!!}></a>

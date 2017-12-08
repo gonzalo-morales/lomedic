@@ -11,13 +11,6 @@
 @endsection
 
 @section('form-content')
-
-@servers(['web' => '127.0.0.1'])
-@task('foo', ['on' => 'web'])
-    dir
-@endtask
-
-
 {{ Form::setModel($data) }}
 <div class="row my-3">
     <div class="col-md-6 card">
