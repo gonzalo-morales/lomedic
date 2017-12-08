@@ -8,7 +8,6 @@ class Certificados extends ModelBase
 {
 	/**
 	 * The table associated with the model.
-	 *
 	 * @var string
 	 */
 	protected $table = 'gen_det_certificados';
@@ -21,14 +20,12 @@ class Certificados extends ModelBase
 
 	/**
 	 * The attributes that are mass assignable.
-	 *
 	 * @var array
 	 */
-	protected $fillable = ['archivo', 'fecha_expedicion', 'fecha_vencimiento', 'activo'];
+	protected $fillable = ['key','certificado','no_certificado','cadena_cer','fecha_expedicion','fecha_vencimiento','activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.
-	 *
 	 * @var bool
 	 */
 	public $timestamps = false;
@@ -38,19 +35,12 @@ class Certificados extends ModelBase
 	 * @var array
 	 */
 	public $rules = [];
-	/*	'area' => ['required','max:50','unique','12'],
-        'clave_area'=>['numeric'],
-	];*/
 
 	/**
 	 * Los atributos que seran visibles en smart-datatable
 	 * @var array
 	 */
-	protected $fields = [
-		'archivo' => 'Archivo',
-		'fecha_expedicion' => 'Fecha Expedicion',
-	    'fecha_vencimiento' => 'Fecha Vencimiento'
-	];
+	protected $fields = [];
 	
 	public function empresa(){
 	    return $this->belongsTo(Empresas::class,'fk_id_empresa');

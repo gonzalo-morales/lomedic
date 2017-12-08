@@ -1,18 +1,4 @@
 $(document).ready(function () {
-	var from_picker = $('#fecha_expedicion').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
-	var to_picker = $('#fecha_vencimiento').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
-
-	from_picker.on('set', function(event) {
-		if ( 'select' in event ) {
-			to_picker.start().clear().set('min', from_picker.get('select'));
-	    }
-
-	    if ( 'clear' in event ) {
-	    	to_picker.clear().set('min', false).stop();
-	    	$('#fecha_vencimiento').prop('readonly', true);
-		  }
-	});
-	
 	$('#fk_id_pais').on('change', function() {
 		var estado = $('#fk_id_estado');
 		
@@ -20,6 +6,7 @@ $(document).ready(function () {
 			estado.val('');
 		}
 		else {
+			$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     		$.ajax({
     		    async: true,
     		    url: estado.data('url'),
@@ -45,6 +32,7 @@ $(document).ready(function () {
 			municipio.val('');
 		}
 		else {
+			$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     		$.ajax({
     		    async: true,
     		    url: municipio.data('url'),
@@ -63,118 +51,90 @@ $(document).ready(function () {
 		}
 	}).trigger('change');
 	
-	
 	$('#agregar-certificado').on('click', function() {
 		let row_id = $('#tCertificados tr').length;
 		
-		certificado = $("#certificado").prop('files');
-		expedicion  = $('#fecha_expedicion').val();
-		vencimiento = $('#fecha_vencimiento').val();
-		
-		if($("#certificado").length == 0 | expedicion == '' | vencimiento == '') {
-			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Selecciona un archivo. Fecha de expedicion y de vencimiento no deben estar vacias',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-		}
-		else {
-			$('#tCertificados').append('<tr>'+
-				'<td>' + certificado[0].name + ' <input id="certificado-'+row_id+'" class="file-anexos" name="certificados['+row_id+'][archivo]" type="file" style="display:none"></td>'+
-				'<td>' + expedicion + '<input name="certificados['+row_id+'][fecha_expedicion]" type="hidden" value="'+expedicion+'"></td>'+
-				'<td>' + vencimiento+' <input name="certificados['+row_id+'][fecha_vencimiento]" type="hidden" value="'+vencimiento+'"></td>'+
-				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button></td>'+
-			'</tr>');
-			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'El certificado se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-			$('#certificado-'+row_id).prop('files',certificado);
-		}
-	});
-
-	/*
-	$('#fk_id_tipo_socio_compra').on('change', function() {
-		console.log($(this).val());
-		$('#fieldProductos').prop('disabled',$(this).val() == '');
-	});
-	
-	$('#agregar-producto').on('click', function() {
-		let row_id = $('#tProductos tr').length;
-		
-		var skus_ids = [];
-    	$('.id_sku').each(function (i) {
-    		skus_ids.push($('.id_sku')[i].value + $('.id_sku').parent().find('.id_upc').value ); 
+		var no_certificados = [];
+    	$('.no_cer').each(function (i) {
+    		no_certificados.push($('.no_cer')[i].value); 
 		});
 		
-		id_sku  = $('#sku option:selected').val();
-		sku  = $('#sku option:selected').text();
-		id_upc  = $('#upc option:selected').val();
-		upc  = id_upc == '' ? '' : $('#upc option:selected').text();
-		tiempo_entrega = $('#tiempo_entrega').val();
-		precio = $("#precio").val();
-		precio_de = $("#precio_de").val();
-		precio_hasta = $("#precio_hasta").val();
+		url = $(this).data('url');
+		key = $("#file_key").prop('files');
+		cer = $("#file_certificado").prop('files');
+		rfc = $("#rfc").val();
+		$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 		
-		if(id_sku == '' | tiempo_entrega == '' | precio == '' | precio_de == '' | precio_hasta == ''){
-			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Los campos, Sku, Tiempo Entrega, Precio, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		if(key.length == 0 | cer.length == 0) {
+			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona los archivos key y cer solicitados.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
-		else if(skus_ids.indexOf(id_sku + id_upc) !== -1) {
-        	$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'El producto seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-        }
 		else {
-			if(id_upc != '') {
-				var url_ajax = $('#upc').data('url');
-				var param_js = upc_js;
-				var params = {'param_js':param_js,'$id_upc':id_upc}
-			}
-			else {
-				var url_ajax = $('#sku').data('url');
-				var param_js = sku_js;
-				var params = {'param_js':param_js,'$id_sku':id_sku}
-			}
-			console.log(params);
-			
-			$.ajax({
-    		    async: true,
-    		    url: url_ajax,
-    		    data: params,
-    		    dataType: 'json',
+			var formData = new FormData();
+            formData.append('cer',cer[0]);
+            
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
                 success: function (data) {
-                	$('#tProductos').append('<tr>'+
-        				'<td>' + sku + '<input class="id_sku" name="productos['+row_id+'][fk_id_sku]" type="hidden" value="'+id_sku+'"></td>'+
-        				'<td>' + upc + '<input class="id_upc" name="productos['+row_id+'][fk_id_upc]" type="hidden" value="'+id_upc+'"></td>'+
-        				'<td>'+data[0].descripcion+'</td>'+
-        				'<td>' + tiempo_entrega + ' <input name="productos['+row_id+'][tiempo_entrega]" type="hidden" value="'+tiempo_entrega+'"></td>'+
-        				'<td>' + precio + ' <input name="productos['+row_id+'][precio]" type="hidden" value="'+precio+'"></td>'+
-        				'<td>' + precio_de + ' <input name="productos['+row_id+'][precio_de]" type="hidden" value="'+precio_de+'"></td>'+
-        				'<td>' + precio_hasta + ' <input name="productos['+row_id+'][precio_hasta]" type="hidden" value="'+precio_hasta+'"></td>'+
-        				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarProducto(this)"> <i class="material-icons">delete</i></button></td>'+
-        			'</tr>');
-        			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-    		    }
-    		});
+                	if(data){
+                		rfc_cer = data.subject.x500UniqueIdentifier.substr(0,13).trim();
+                		cadena_cer = data.cadena_cer;
+                		no_cer = converSerial(data.serialNumberHex);
+                		
+                		f = data.validFrom;
+                		from = new Date("20"+f.substr(0,2)+'-'+f.substr(2,2)+'-'+f.substr(4,2)+'T'+f.substr(6,2)+':'+f.substr(8,2)+':'+f.substr(10,3)).toJSON().replace('T',' ').replace('.000Z','');
+                	
+                		t = data.validTo;
+                		to = new Date("20"+t.substr(0,2)+'-'+t.substr(2,2)+'-'+t.substr(4,2)+'T'+t.substr(6,2)+':'+t.substr(8,2)+':'+t.substr(10,3)).toJSON().replace('T',' ').replace('.000Z','');
+                		
+                		
+                		if(rfc !== rfc_cer)
+                			$.toaster({priority:'danger',title:'¡Error!',message:'El certificado, no coincide con el rfc de la empresa.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                		else if(to < Date.now())
+                			$.toaster({priority:'danger',title:'¡Error!',message:'El certificado ya expiro.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                		else if(no_certificados.indexOf(no_cer) !== -1)
+                			$.toaster({priority:'danger',title:'¡Error!',message:'El certificado seleccionado ya fue agregado anteriormente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                		else {
+                			$('#tCertificados').append('<tr>'+
+            					'<td>' + key[0].name + ' <input id="key-'+row_id+'" class="file-anexos" name="certificados['+row_id+'][key-file]" type="file" style="display:none"></td>'+
+            					'<td>' + cer[0].name + ' <input id="certificado-'+row_id+'" class="file-anexos" name="certificados['+row_id+'][cer-file]" type="file" style="display:none"></td>'+
+            					'<td>' + no_cer + '<input class="no_cer" name="certificados['+row_id+'][no_certificado]" type="hidden" value="'+no_cer+'"></td>'+
+            					'<td>' + from + '<input name="certificados['+row_id+'][fecha_expedicion]" type="hidden" value="'+from+'"></td>'+
+            					'<td>' + to+' <input name="certificados['+row_id+'][fecha_vencimiento]" type="hidden" value="'+to+'"></td>'+
+            					'<td>'+
+	            					'<input name="certificados['+row_id+'][cadena_cer]" type="hidden" value="'+cadena_cer+'">'+
+	            					'<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCertificado(this)"> <i class="material-icons">delete</i></button>'+
+	            				'</td>'+
+            				'</tr>');
+                			$('#key-'+row_id).prop('files',key);
+                			$('#certificado-'+row_id).prop('files',cer);
+            				$.toaster({priority:'success',title:'¡Correcto!',message:'El certificado se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                		}
+                	}
+                },
+                error: function (jqXHR, exception) {
+                    $.toaster({priority:'danger',title:'¡Error '+jqXHR.status+'!',message:'Ha ocurrido un error al tratar de cargar el certificado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                }
+            });
 		}
 	});
-	*/
 });
-
 
 function borrarCertificado(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado la cuenta correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-}
-/*
-function borrarContacto(el) {
-	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado el contacto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado el certificado correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
-function borrarDireccion(el) {
-	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado la diereccion correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+function converSerial(serial) {
+	serie = '';
+	$(serial.split('')).each(function (i,c) {
+		if (i % 2 == 1)
+			serie = serie + c;
+	});
+	return serie;
 }
-
-function borrarAnexo(el) {
-    $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado el anexo correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-}
-
-function borrarProducto(el) {
-	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado el producto correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-}
-*/

@@ -6,6 +6,7 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\RegimenFiscal;
 use App\Http\Models\Administracion\Paises;
+use App\Http\Models\Administracion\Certificados;
 use App\Http\Models\Logs;
 use App;
 use DB;
@@ -17,7 +18,6 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
-use App\Http\Models\Administracion\Certificados;
 
 class EmpresasController extends ControllerBase
 {
@@ -26,9 +26,10 @@ class EmpresasController extends ControllerBase
 		$this->entity = $entity;
 	}
 	
-	
 	public function getDataView($entity = null)
 	{
+	    $cer = 'C:\Users\jfranco\Desktop\CSD_AIS091015H50_20160801150531\CSD_Abisa_2016_AIS091015H50_20160801_150445s.cer';
+	    //print_r($this->readCer($cer));
 	    return [
 	        'regimens'         => RegimenFiscal::where('activo','1')->where('eliminar','0')->pluck('regimen_fiscal','id_regimen_fiscal')->sortBy('regimen_fiscal')->prepend('Selecciona una opcion...',''),
 	        'paises'           => Paises::where('activo','1')->where('eliminar','0')->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
@@ -37,7 +38,7 @@ class EmpresasController extends ControllerBase
 	    ];
 	}
 	
-	/*
+	
 	public function store(Request $request, $company)
 	{
 	    # ¿Usuario tiene permiso para crear?
@@ -46,105 +47,40 @@ class EmpresasController extends ControllerBase
 	    # Validamos request, si falla regresamos pagina
 	    $this->validate($request, $this->entity->rules);
 	    
-	    DB::beginTransaction();
+	    #DB::beginTransaction();
 	    $entity = $this->entity->create($request->all());
 	    
-	    if ($entity)
-	    {
-	        $id = $entity->id_socio_negocio;
+	    if ($entity) {
+	        $id = $entity->id_empresa;
 	        
-	        # Guardamos el detalle de empresas en la que estara disponible
-	        if(isset($request->empresas)) {
-	            $sync = [];
-	            foreach ($request->empresas as $id_empresa=>$active) {
-	                if($active) {
-	                    $sync[] = $id_empresa;
+	        # Guardamos el detalle de los certificados de las empresas
+	        if(isset($request->certificados)){
+	            $certificados = $request->certificados;
+	            
+	            foreach ($certificados as $certificado) {
+	                $save_key = false;
+	                $save_cer = false;
+	                if(isset($certificado['key-file'])) {
+	                    $mykey = $certificado['key-file'];
+	                    $namekey = $mykey->getClientOriginalName();
+	                    $save_key = Storage::disk('certificados')->put($request->conexion.'/'.$namekey, file_get_contents($mykey->getRealPath()));
 	                }
-	            }
-     	            $entity->empresas()->sync($sync);
-	        }
-	        
-	        # Guardamos el detalle de formas de pago para el socio de negocio
-	        if(isset($request->formaspago)) {
-	            $sync = [];
-	            foreach ($request->formaspago as $id_forma=>$active) {
-	                if($active) {
-	                    $sync[] = $id_forma;
+	                if(isset($certificado['cer-file'])) {
+	                    $mycer = $certificado['cer-file'];
+	                    $namecer = $mycer->getClientOriginalName();
+	                    $save_cer = Storage::disk('certificados')->put($request->conexion.'/'.$namecer, file_get_contents($mycer->getRealPath()));
 	                }
-	            }
-	            $entity->formaspago()->sync($sync);
-	        }
-	        
-	        # Guardamos los contactos de los socios de negocio
-	        if(isset($request->contactos)){
-	            $contactos = collect($request->contactos);
-	            
-	            #Insertar o Actualizar la informacion de los contactos
-	            foreach ($contactos as $contacto)
-	            {
-	                array_unshift($contacto, ['fk_id_socio_negocio'=> $id]);
-	                $entity->contactos()->updateOrCreate(['id_contacto' => ($contacto['id_contacto'] ?? null)], $contacto);
-	            }
-	        }
-	        
-	        # Guardamos el detalle de las direcciones de los socios de negocio
-	        if(isset($request->direcciones)){
-	            $direcciones = collect($request->direcciones);
-
-	            #Inserta o Actualiza la informacion del direcciones
-	            foreach ($direcciones as $direccion)
-	            {
-	                array_unshift($direccion, ['fk_id_socio_negocio'=> $id]);
-	                $entity->direcciones()->updateOrCreate(['id_direccion' => ($direccion['id_direccion'] ?? null)], $direccion);
-	            }
-	        }
-	        
-	        # Guardamos el detalle de las cuentas bancarias de los socios de negocio
-	        if(isset($request->cuentas)){
-	            $cuentas = collect($request->cuentas);
-	            
-	            #Inserta o Actualiza la informacion del cuentas
-	            foreach ($cuentas as $cuenta)
-	            {
-	                array_unshift($cuenta, ['fk_id_socio_negocio'=> $id]);
-	                $entity->cuentas()->updateOrCreate(['id_cuenta' => ($cuenta['id_cuenta'] ?? null)], $cuenta);
-	            }
-	        }
-	        
-	        # Guardamos el detalle de los anexos de los socios de negocio
-	        if(isset($request->anexos)){
-	            $anexos = $request->anexos;
-	            
-	            #Inserta o Actualiza la informacion del anexo
-	            foreach ($anexos as $anexo)
-	            {
-	                if(isset($anexo['archivo'])) {
-	                    $myfile = $anexo['archivo'];
-	                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
-	                    $file_save = Storage::disk('socios_anexos')->put($filename, file_get_contents($myfile->getRealPath()));
 	                
-	                    if($file_save) {
-	                        array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
-	                        $anexo['archivo'] = $filename;
-	                        $entity->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
-	                    }
+	                if($save_key && $save_cer) {
+	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
+	                    $certificado['key'] = $namekey;
+	                    $certificado['certificado'] = $namecer;
+	                    $entity->certificados()->updateOrCreate(['id_certificado' => null], $certificado);
 	                }
 	            }
 	        }
 	        
-	        # Guardamos el detalle de los productos de los socios de negocio
-	        if(isset($request->productos)){
-	            $productos = collect($request->productos);
-	            
-	            #Inserta o Actualiza la informacion del productos
-	            foreach ($productos as $producto)
-	            {
-	                array_unshift($producto, ['fk_id_socio_negocio'=> $id]);
-	                $entity->productos()->updateOrCreate(['id_producto' => ($producto['id_producto'] ?? null)], $producto);
-	            }
-	        }
-	        
-	        DB::commit();
+	        #DB::commit();
 	        
 	        # Eliminamos cache
 	        Cache::tags(getCacheTag('index'))->flush();
@@ -152,13 +88,14 @@ class EmpresasController extends ControllerBase
 	        
 	        $this->log('store', $id);
 	        return $this->redirect('store');
-	    } else {
-	        DB::rollBack();
+	    }
+	    else {
+	        #DB::rollBack();
 	        $this->log('error_store');
 	        return $this->redirect('error_store');
 	    }
 	}
-	*/
+	
 	
 	public function update(Request $request, $company, $id)
 	{
@@ -201,21 +138,28 @@ class EmpresasController extends ControllerBase
 	            $entity->certificados()->whereNotIn('id_certificado', $ids_certificados)->update(['eliminar' => 1]);
 	            
 	            #Inserta o Actualiza la informacion del contacto
-	            foreach ($certificados as $certificado)
-	            {
-	                if(isset($certificado['archivo'])) {
-	                    $myfile = $certificado['archivo'];
-	                    $filename = $myfile->getClientOriginalName();
-	                    $file_save = Storage::disk('certificados')->put($request->conexion.'/'.$filename, file_get_contents($myfile->getRealPath()));
-
-    	                if($file_save) {
-    	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
-    	                    $certificado['archivo'] = $filename;
-    	                    $entity->certificados()->updateOrCreate(['id_certificado' => null], $certificado);
-    	                }
+	            foreach ($certificados as $certificado) {
+	                $save_key = false;
+	                $save_cer = false;
+	                if(isset($certificado['key-file'])) {
+	                    $mykey = $certificado['key-file'];
+	                    $namekey = 'key-'.$mykey->getClientOriginalName();
+	                    $save_key = Storage::disk('certificados')->put($request->conexion.'/'.$namekey, file_get_contents($mykey->getRealPath()));
 	                }
-	            }
-	        }
+	                if(isset($certificado['cer-file'])) {
+	                    $mycer = $certificado['cer-file'];
+	                    $namecer = 'cer-'.$mycer->getClientOriginalName();
+	                    $save_cer = Storage::disk('certificados')->put($request->conexion.'/'.$namecer, file_get_contents($mycer->getRealPath()));
+	                }
+
+	                if($save_key && $save_cer) {
+	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
+	                    $certificado['key'] = $namekey;
+	                    $certificado['certificado'] = $namecer;
+	                    $entity->certificados()->updateOrCreate(['id_certificado' => null], $certificado);
+	                }
+                }
+            }
 	        else {
 	            $entity->certificados()->update(['eliminar' => 1]);
 	        }
@@ -248,25 +192,67 @@ class EmpresasController extends ControllerBase
 	        
 	        $this->log('update', $id);
 	        return $this->redirect('update');
-	    } else {
+	    }
+	    else {
 	        #DB::rollBack();
 	        $this->log('error_update', $id);
 	        return $this->redirect('error_update');
 	    }
 	}
 	
-	public function descargar($company, $id)
+	public function descargar($company, $id, $archivo)
 	{
-	    $archivo = Certificados::where('id_certificado',$id)->first();
-	    $file = Storage::disk('certificados')->getDriver()->getAdapter()->getPathPrefix().$archivo->empresa->conexion.'/'.$archivo->archivo;
+	    $certificado = Certificados::where('id_certificado',$id)->first();
+	    $file = Storage::disk('certificados')->getDriver()->getAdapter()->getPathPrefix().$certificado->empresa->conexion.'/'.$certificado->{$archivo};
 	    
 	    if (File::exists($file))
 	    {
-	        Logs::createLog($archivo->getTable(), $company, $archivo->id_certificado, 'descargar', 'Archivo Certificado');
+	        Logs::createLog($certificado->getTable(), $company, $certificado->id_certificado, 'descargar', "Archivo $archivo");
 	        return Response::download($file);
 	    }
 	    else {
 	        App::abort(404,'No se encontro el archivo o recurso que se solicito.');
 	    }
+	}
+	
+	public function getDatoscer(Request $request)
+	{
+	    $req = $request;
+	    $pathFile = $req->file('cer')->getRealPath();
+	    
+	    $data = $this->readCer($pathFile) ?? [];
+	    $data['cadena_cer'] = $this->CerToPem($pathFile) ?? '';
+	    
+	    return $data;
+	}
+	
+	protected function readCer($pathFile = '')
+	{
+	    if (File::exists($pathFile))
+	    {
+	        $CerContent =  $this->CerToPem($pathFile);
+	        
+	        if(!empty($CerContent))
+	            $data = openssl_x509_parse($CerContent);
+	        else
+	            $data = null;
+    	    
+	        return $data;
+	    }
+	    else
+	        return null;
+	}
+	
+	protected function CerToPem($pathFile = '')
+	{
+	    if (File::exists($pathFile))
+	    {
+	        $CerContent = file_get_contents($pathFile);
+    	    $CerContent =  '-----BEGIN CERTIFICATE-----'.PHP_EOL.chunk_split(base64_encode($CerContent), 64, PHP_EOL).'-----END CERTIFICATE-----'.PHP_EOL;
+    	    
+    	    return $CerContent;
+	    }
+	    else
+	        return null;
 	}
 }

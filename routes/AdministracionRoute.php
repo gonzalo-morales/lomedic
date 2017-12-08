@@ -25,7 +25,8 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('devolucionesmotivos', 'Administracion\DevolucionesMotivosController');
 		Route::resource('diagnosticos', 'Administracion\DiagnosticosController');
 		Route::resource('empresas', 'Administracion\EmpresasController');
-		Route::get('empresas/{id}/descargar', 'Administracion\EmpresasController@descargar');
+		Route::get('empresas/{id}/descargar/{archivo}', 'Administracion\EmpresasController@descargar');
+		Route::post('getDatoscer', 'Administracion\EmpresasController@getDatoscer');
 		Route::resource('estados', 'Administracion\EstadosController');
 		Route::resource('familiasproductos', 'Administracion\FamiliasproductosController');
 		Route::resource('formafarmaceutica', 'Administracion\FormaFarmaceuticaController');
@@ -48,6 +49,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('parentescos', 'Administracion\ParentescosController');
 		Route::resource('perfiles', 'Administracion\PerfilesController');
 		Route::resource('presentacionventa', 'Administracion\PresentacionVentaController');
+		Route::resource('seriesdocumentos', 'Administracion\SeriesDocumentosController');
 		Route::resource('seriesskus', 'Administracion\SeriesSkusController');
 		Route::get('getSerie/{id}','Administracion\SeriesSkusController@getSerie');
 		Route::resource('subgrupoproductos', 'Administracion\SubgrupoProductosController');

@@ -3,16 +3,23 @@
 namespace App\Http\Controllers\Proyectos;
 
 use App\Http\Controllers\ControllerBase;
-use App\Http\Models\Inventarios\Upcs;
 use App\Http\Models\Proyectos\ClasificacionesProyectos;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\Proyectos\ProyectosProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\Proyectos\AnexosProyectos;
+use App\Http\Models\Logs;
+use App;
+use DB;
+use File;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class ProyectosController extends ControllerBase
 {
@@ -60,7 +67,9 @@ class ProyectosController extends ControllerBase
 
         $isSuccess = $this->entity->create($request->all());
         if ($isSuccess) {
+            $id = $isSuccess->id_proyecto;
 
+            # Guardamos el detalle de los productos del proyecto
             if(isset($request->_productoProyecto)){
                 foreach ($request->_productoProyecto as $proyecto_producto) {
                     if(empty($proyecto_producto['fk_id_upc'])){
@@ -72,6 +81,27 @@ class ProyectosController extends ControllerBase
                     $proyecto_producto['fk_id_proyecto'] = $isSuccess->id_proyecto;
                     $ProyectosProductos = new ProyectosProductos();
                     $ProyectosProductos->create($proyecto_producto);
+                }
+            }
+            
+            # Guardamos el detalle de los anexos del proyecto
+            if(isset($request->anexos)){
+                $anexos = $request->anexos;
+                
+                #Inserta o Actualiza la informacion del anexo
+                foreach ($anexos as $anexo)
+                {
+                    if(isset($anexo['archivo'])) {
+                        $myfile = $anexo['archivo'];
+                        $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
+                        $file_save = Storage::disk('proyectos_anexos')->put($company.'/'.$id.'/'.$filename, file_get_contents($myfile->getRealPath()));
+                        
+                        if($file_save) {
+                            array_unshift($anexo, ['fk_id_proyecto'=> $id]);
+                            $anexo['archivo'] = $filename;
+                            $isSuccess->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
+                        }
+                    }
                 }
             }
 
@@ -123,7 +153,6 @@ class ProyectosController extends ControllerBase
                         ->first();
                     $productoProyecto->fill($detalle);
                     $productoProyecto->save();
-                    dump('Actualizado');
                 }
             }
             if(isset($request->_productoProyecto)){
@@ -137,9 +166,37 @@ class ProyectosController extends ControllerBase
                     $detalle['fk_id_proyecto'] = $id;
                     $ProyectosProductos = new ProyectosProductos();
                     $ProyectosProductos->create($detalle);
-                    dump('Creado');
                 }
             }
+            
+            # Guardamos el detalle de los anexos del proyecto
+            if(isset($request->anexos)){
+                $anexos = $request->anexos;
+                
+                #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
+                $ids_anexos = collect($anexos)->pluck('id_anexo');
+                $entity->anexos()->whereNotIn('id_anexo', $ids_anexos)->update(['eliminar' => 1]);
+                
+                #Inserta o Actualiza la informacion del contacto
+                foreach ($anexos as $anexo)
+                {
+                    if(isset($anexo['archivo'])) {
+                        $myfile = $anexo['archivo'];
+                        $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
+                        $file_save = Storage::disk('proyectos_anexos')->put($company.'/'.$id.'/'.$filename, file_get_contents($myfile->getRealPath()));
+                        
+                        if($file_save) {
+                            array_unshift($anexo, ['fk_id_proyecto'=> $id]);
+                            $anexo['archivo'] = $filename;
+                            $entity->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
+                        }
+                    }
+                }
+            }
+            else {
+                $entity->anexos()->update(['eliminar' => 1]);
+            }
+            
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
@@ -211,5 +268,21 @@ class ProyectosController extends ControllerBase
             $respuesta[1] = $errores_clave;//Filas con error en la clave
             $respuesta[2] = $errores_upc;//Filas con error en el UPC
         return Response::json($respuesta);
+    }
+    
+    public function descargar($company, $id)
+    {
+        $archivo = AnexosProyectos::where('id_anexo',$id)->first();
+        $file = Storage::disk('proyectos_anexos')->getDriver()->getAdapter()->getPathPrefix().$company.'/'.$archivo->fk_id_proyecto.'/'.$archivo->archivo;
+
+        if (File::exists($file))
+        {
+            
+            Logs::createLog($archivo->getTable(), $company, $archivo->id_anexo, 'descargar', 'Archivo anexo de proyecto');
+            return Response::download($file);
+        }
+        else {
+            App::abort(404,'No se encontro el archivo o recurso que se solicito.');
+        }
     }
 }

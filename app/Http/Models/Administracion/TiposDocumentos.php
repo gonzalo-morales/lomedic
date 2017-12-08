@@ -1,18 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ihernandezt
- * Date: 15/11/2017
- * Time: 16:32
- */
-
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 
 class TiposDocumentos extends ModelBase
 {
-	protected $table = 'gen_cat_tipo_documento';
+    protected $table = 'maestro.gen_cat_tipo_documento';
 
 	/**
 	 * The primary key of the table
@@ -22,17 +15,16 @@ class TiposDocumentos extends ModelBase
 
 	/**
 	 * The attributes that are mass assignable.
-	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre_documento','activo'];//Solicitante devolución. false: localidad; true: proveedor;
+	protected $fillable = ['nombre_documento','activo'];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'nombre_documento' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/'
+		'nombre_documento' => 'required'
 	];
 
 	/**
@@ -43,5 +35,4 @@ class TiposDocumentos extends ModelBase
 		'nombre_documento' => 'Documento',
 		'activo_span' => 'Estado'
 	];
-
 }
