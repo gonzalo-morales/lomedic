@@ -4,7 +4,7 @@ namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 
-class Familiasproductos extends ModelBase
+class FamiliasProductos extends ModelBase
 {
 	/**
 	 * The table associated with the model.

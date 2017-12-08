@@ -22,7 +22,9 @@ class Certificados extends ModelBase
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
-	protected $fillable = ['key','certificado','no_certificado','cadena_cer','fecha_expedicion','fecha_vencimiento','activo'];
+	protected $fillable = ['key','certificado','no_certificado','cadena_cer','fecha_expedicion','fecha_vencimiento','password','activo'];
+	
+	protected $hidden = ['password'];
 
 	/**
 	 * Indicates if the model should be timestamped.

@@ -75,6 +75,7 @@ class EmpresasController extends ControllerBase
 	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
 	                    $certificado['key'] = $namekey;
 	                    $certificado['certificado'] = $namecer;
+	                    $certificado['password'] = bcrypt($certificado['password']);
 	                    $entity->certificados()->updateOrCreate(['id_certificado' => null], $certificado);
 	                }
 	            }
@@ -156,6 +157,7 @@ class EmpresasController extends ControllerBase
 	                    array_unshift($certificado, ['fk_id_empresa'=> $id]);
 	                    $certificado['key'] = $namekey;
 	                    $certificado['certificado'] = $namecer;
+	                    $certificado['password'] = bcrypt($certificado['password']);
 	                    $entity->certificados()->updateOrCreate(['id_certificado' => null], $certificado);
 	                }
                 }

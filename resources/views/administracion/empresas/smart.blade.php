@@ -11,6 +11,13 @@
 @endsection
 
 @section('form-content')
+
+@servers(['web' => '127.0.0.1'])
+@task('foo', ['on' => 'web'])
+    dir
+@endtask
+
+
 {{ Form::setModel($data) }}
 <div class="row my-3">
     <div class="col-md-6 card">
@@ -105,11 +112,14 @@
 	</div>
 	<div class="card-body">
 		<div class="row">
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				{{ Form::cFile('* Archivo Key', 'file_key',['accept'=>'.key']) }}
 			</div>
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				{{ Form::cFile('* Archivo Cer', 'file_certificado',['accept'=>'.cer']) }}
+			</div>
+			<div class="form-group col-md-4">
+				{{ Form::cPassword('* Contrasena','password',['class'=>'form-control']) }}
 			</div>
 		</div>
 		<div class="form-group col-md-12 my-3">
@@ -117,8 +127,8 @@
 				<button id="agregar-certificado" class="btn btn-primary btn-large btn-circle" data-url="{{ companyAction('Administracion\EmpresasController@getDatoscer') }}" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
 			</div>
 		</div>
-		<div>
-			<table class="table responsive-table highlight" id="tCertificados">
+		<div class="col-md-12">
+			<table class="table table-hover table-responsive" id="tCertificados">
 				<thead>
 					<tr>
 						<th>Key</th>
@@ -164,7 +174,6 @@
 			</table>
 		</div>
 	</div><!--/Here ends card-->
-
 </div>
 @endsection
 {{-- DONT DELETE --}}
