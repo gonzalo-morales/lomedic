@@ -291,147 +291,28 @@
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
 	@section('form-title')
-		<h1 class="display-4">Facturas de Proveedores</h1>
+		<h1 class="display-4">Pagos de Facturas</h1>
 	@endsection
-@section('smart-js')
-	<script type="text/javascript">
-        if ( sessionStorage.reloadAfterPageLoad ) {
-            sessionStorage.clear();
-            $.toaster({
-                priority: 'success', title: 'Exito', message: 'Factura cancelada',
-                settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
-            });
-        }
-	</script>
-	@parent
-	<script type="text/javascript">
-        rivets.binders['hide-delete'] = {
-            bind: function (el) {
-                if(el.dataset.fk_id_estatus_factura != 1)
-                {
-                    $(el).hide();
-                }
-            }
-        };
-        rivets.binders['hide-update'] = {
-            bind: function (el) {
-                if(el.dataset.fk_id_estatus_factura != 1)
-                {
-                    $(el).hide();
-                }
-            }
-        };
-		@can('update', currentEntity())
-            window['smart-model'].collections.itemsOptions.edit ={a: {
-            'html': '<i class="material-icons">mode_edit</i>',
-            'class': 'btn is-icon',
-            'rv-get-edit-url': '',
-            'rv-hide-update':'',
-            'data-toggle':'tooltip',
-            'title':'Editar'
-        }};
-		@endcan
-		@can('delete', currentEntity())
-            window['smart-model'].collections.itemsOptions.delete = {a: {
-            'html': '<i class="material-icons">delete</i>',
-            'href' : '#',
-            'class': 'btn is-icon',
-            'rv-on-click': 'actions.showModalCancelar',
-            'rv-get-delete-url': '',
-            'data-delete-type': 'single',
-            'rv-hide-delete':'',
-            'data-toggle':'tooltip',
-            'title':'Cancelar'
-        }};
-		@endcan
-        window['smart-model'].actions.itemsCancel = function(e, rv,motivo){
-            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-            let data = {motivo}
-            $.delete(this.dataset.deleteUrl,data,function (response) {
-                if(response.success){
-                    sessionStorage.reloadAfterPageLoad = true;
-                    location.reload();
-                }
-            });
-        };
-        window['smart-model'].actions.showModalCancelar = function(e, rv) {
-            e.preventDefault();
-            let modal = window['smart-modal'];
-            modal.view = rivets.bind(modal, {
-                title: '¿Estas seguro que deseas cancelar la factura?',
-                content: '<form  id="cancel-form">' +
-                '<div class="alert alert-warning text-center"><span class="text-danger">La cancelación de un documento es irreversible.</span><br>'+
-                'Para continuar, especifique el motivo y de click en cancelar.</div>'+
-                '<div class="form-group">' +
-                '<label for="recipient-name" class="form-control-label">Cancelar:</label>' +
-                '<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +
-                '</div>' +
-                '</form>',
-                buttons: [
-                    {button: {
-                        'text': 'Cerrar',
-                        'class': 'btn btn-secondary',
-                        'data-dismiss': 'modal',
-                    }},
-                    {button: {
-                        'html': 'Cancelar',
-                        'class': 'btn btn-danger',
-                        'rv-on-click': 'action',
-                    }}
-                ],
-                action: function(e,rv) {
-                    var formData = new FormData(document.querySelector('#cancel-form')), convertedJSON = {}, it = formData.entries(), n;
-
-                    while(n = it.next()) {
-                        if(!n || n.done) break;
-                        convertedJSON[n.value[0]] = n.value[1];
-                    }
-                    console.log(convertedJSON);
-                    if(convertedJSON.motivo_cancelacion != ""){
-                    	window['smart-model'].actions.itemsCancel.call(this, e, rv,convertedJSON);
-                    }else{
-                        $.toaster({
-                            priority: 'danger', title: 'Por favor escriba un motivo de la cancelación', message: 'Error al cancelar',
-                            settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
-                        });
-					}
-                }.bind(this),
-                // Opcionales
-                onModalShow: function() {
-
-                    let btn = modal.querySelector('[rv-on-click="action"]');
-
-                    // Copiamos data a boton de modal
-                    for (var i in this.dataset) btn.dataset[i] = this.dataset[i];
-
-                }.bind(this),
-                // onModalHide: function() {}
-            });
-            // Abrimos modal
-            $(modal).modal('show');
-        };
-	</script>
-@endsection
 	@include('layouts.smart.index')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
 	@section('form-title')
-		<h1 class="display-4">Agregar Factura de Proveedor</h1>
+		<h1 class="display-4">Agregar Pago de Factura</h1>
 	@endsection
 	@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
 	@section('form-title')
-		<h1 class="display-4">Editar Factura de Proveedor</h1>
+		<h1 class="display-4">Editar Pago de Factura</h1>
 	@endsection
 	@include('layouts.smart.edit')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('form-title')
-		<h1 class="display-4">Factura de Proveedor</h1>
+		<h1 class="display-4">Pagos de Facturas</h1>
 	@endsection
 	@include('layouts.smart.show')
 @endif

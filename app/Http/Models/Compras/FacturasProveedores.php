@@ -28,12 +28,13 @@ class FacturasProveedores extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_socio_negocio',
+    protected $fillable = [
+        'fk_id_socio_negocio',
         'archivo_xml',
         'archivo_pdf',
         'fk_id_sucursal',
         'observaciones',
-        'serie_folio_factura',
+        'serie_factura',
         'uuid',
         'fecha_factura',
         'fecha_vencimiento',
@@ -44,7 +45,11 @@ class FacturasProveedores extends ModelCompany
         'iva',
         'subtotal',
         'fk_id_moneda',
-        'motivo_cancelacion'
+        'motivo_cancelacion',
+        'fk_id_metodo_pago',
+        'version_sat',
+        'folio_factura',
+        'unidad_medida'
     ];
 
     public $niceNames =[
@@ -62,7 +67,7 @@ class FacturasProveedores extends ModelCompany
     ];
 
     protected $dataColumns = [
-//        'fk_id_estatus_oferta'
+        'fk_id_estatus_factura'
     ];
     /**
      * Los atributos que seran visibles en index-datable
@@ -70,11 +75,11 @@ class FacturasProveedores extends ModelCompany
      */
     protected $fields = [
         'id_factura_proveedor' => 'Número de factura',
-        'serie_folio_factura' => 'Serie y Folio',
+        'serie_folio' => 'Serie y Folio',
         'proveedor.nombre_comercial' => 'Proveedor',
         'sucursal.sucursal' => 'Sucursal',
         'fecha_factura'=>'Fecha creación',
-        'vigencia' => 'Vigencia',
+        'fecha_vencimiento' => 'Vigencia',
         'estatus.estatus' => 'Estatus'
     ];
 
@@ -91,6 +96,11 @@ class FacturasProveedores extends ModelCompany
 //        'descuento_oferta'=>'nullable||regex:/^(\d{0,2}(\.\d{0,4})?\)$/'
     ];
 
+    public function getSerieFolioAttribute()
+    {
+        return $this->serie_factura.' '.$this->folio_factura;
+    }
+
     public function sucursal()
     {
         return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
@@ -98,12 +108,12 @@ class FacturasProveedores extends ModelCompany
 
     public function estatus()
     {
-        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_factura');
+        return $this->hasOne('App\Http\Models\Facturas\EstatusFacturas','id_estatus_factura','fk_id_estatus_factura');
     }
 
     public function proveedor()
     {
-        return $this->belongsTo(SociosNegocio::class,'fk_id_proveedor','id_socio_negocio');
+        return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio','id_socio_negocio');
     }
 
     public function moneda()

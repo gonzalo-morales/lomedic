@@ -63,6 +63,10 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/sat/certificado'),
         ],
+        'factura_proveedor' => [
+            'driver' => 'local',
+            'root' => storage_path('app/facturas/proveedores')
+        ],
         'public_storage' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

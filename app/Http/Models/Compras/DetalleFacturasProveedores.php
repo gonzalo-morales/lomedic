@@ -30,7 +30,7 @@ class DetalleFacturasProveedores extends ModelCompany
      * @var array
      */
     protected $fillable = ['importe',
-        'valor_unitario',
+        'precio_unitario',
         'descripcion',
         'fk_id_clave_unidad',
         'fk_id_clave_producto_servicio',
@@ -40,10 +40,11 @@ class DetalleFacturasProveedores extends ModelCompany
         'fk_id_orden_compra',
         'fk_id_nota_credito',
         'fk_id_factura_proveedor',
+        'unidad'
     ];
 
     public $niceNames =[
-        'valor_unitario'=>'valor unitario',
+        'precio_unitario'=>'precio unitario',
         'fk_id_clave_unidad'=>'clave unidad',
         'fk_id_clave_producto_servicio'=>'clave producto o servicio',
         'cantidad'=>'cantidad',
@@ -90,8 +91,8 @@ class DetalleFacturasProveedores extends ModelCompany
         return $this->hasOne(Impuestos::class,'id_impuesto','fk_id_impuesto');
     }
 
-    public function ordenes()
+    public function orden()
     {
-        return $this->hasOne(Ordenes::class,'id_orden','fk_id_orden');
+        return $this->hasOne(Ordenes::class,'id_orden','fk_id_orden_compra');
     }
 }

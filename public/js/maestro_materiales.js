@@ -2,7 +2,7 @@ var eliminarProyectoProducto=[];
 // Inicializar los datepicker para las fechas necesarias
 $(document).ready(function(){
     $('#form-model').attr('enctype',"multipart/form-data");
-
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     //Inicializar tabla
     window.proyectoProducto = new DataTable('#productosproyectos', {
         fixedHeight: true,

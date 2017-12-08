@@ -385,7 +385,8 @@
             'title':'Ordenar'
         }};
         window['smart-model'].actions.itemsCancel = function(e, rv){
-                $.delete(this.dataset.deleteUrl,function (response) {
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            $.delete(this.dataset.deleteUrl,function (response) {
                     if(response.success){
                         sessionStorage.reloadAfterPageLoad = true;
                         location.reload();

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\ControllerBase;
-use App\Http\Models\Administracion  \Impuestos;
+use App\Http\Models\Administracion\Impuestos;
 use Illuminate\Support\Facades\Response;
 
 class ImpuestosController extends ControllerBase

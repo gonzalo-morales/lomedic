@@ -108,4 +108,7 @@ class SociosNegocio extends ModelBase
 //    public function tipoproveedor(){
 //        return $this->belongsTo(TiposProveedores::class,'fk_id_tipo_proveedor');
 //    }
+    public function ejecutivocompra(){
+        return $this->hasOne(Empleados::class,'id_empleado','fk_id_ejecutivo_compra');
+    }
 }

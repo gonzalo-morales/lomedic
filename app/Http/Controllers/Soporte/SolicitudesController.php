@@ -83,7 +83,7 @@ class SolicitudesController extends ControllerBase
         $created = $this->entity->create($request->all());
         
         if($created) {
-            $files = Input::file('archivo'); dd($files);
+            $files = Input::file('archivo');
             if(!empty($files)) {
                 foreach ($files as $file) {
                     $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$file->getClientOriginalName());

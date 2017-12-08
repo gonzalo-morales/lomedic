@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Administracion;
 
-use App\Http\Models\ModelCompany;
+use App\Http\Models\ModelBase;
 
-class Impuestos extends ModelCompany
+class Impuestos extends ModelBase
 {
     /**
      * The table associated with the model.
@@ -31,7 +31,7 @@ class Impuestos extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['impuesto','porcentaje','activo'];
+    protected $fillable = ['impuesto','porcentaje','activo','tasa_o_cuota','tipo_factor','Descripcion','numero_impuesto'];
     
     protected $fields = [
         'impuesto' => 'Impuesto',

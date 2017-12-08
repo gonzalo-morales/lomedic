@@ -13,7 +13,7 @@ class FormasPago extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'sat_cat_formas_pago';
+	protected $table = 'maestro.sat_cat_formas_pago';
 
 	/**
 	 * The primary key of the table
