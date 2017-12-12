@@ -18,5 +18,7 @@ Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'ventas', 'as' => 'ventas.', 'middleware' => ['auth','share','csrf'] ], function() {
         Route::view("/","ventas.index");
+        
+        Route::resource('facturasclientes','Ventas\FacturasClientesController');
     });
 });

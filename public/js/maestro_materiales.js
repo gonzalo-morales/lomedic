@@ -84,7 +84,7 @@ $(document).ready(function(){
             }else{
                 $( this ).prop('checked',false);
                 $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-                $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes una Clave cliente producto',
+                $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Selecciona antes una Clave cliente producto',
                     settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             }
         }
@@ -98,7 +98,7 @@ $(document).ready(function(){
 
         $.validator.addMethod('minStrict', function (value, element, param) {
             return value > param;
-        },'El número debe ser mayor a {0}');
+        },'El nÃºmero debe ser mayor a {0}');
 
         $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
         $.validator.addMethod('cDigits',$.validator.methods.digits,'El campo debe ser entero');
@@ -129,6 +129,9 @@ $(document).ready(function(){
             cDigits:true,
             minStrict:0
         });
+        $.validator.addClassRules('fk_id_moneda',{
+            cRequerido:true,
+        });
 
         $.validator.addMethod('precio',function (value,element) {
             return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
@@ -148,7 +151,7 @@ $(document).ready(function(){
                 }
             }else{
                 e.preventDefault();
-                $.toaster({priority : 'danger',title : '¡Error!',message : 'La tabla se encuentra vacía.',
+                $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'La tabla se encuentra vacÃ­a.',
                     settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             }
         }else{
@@ -160,7 +163,7 @@ $(document).ready(function(){
             $('.minimo').rules('remove');
             $('.numero_reorden').rules('remove');
             $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atención',
+                priority: 'danger', title: 'Â¡Error!', message: 'Hay campos que requieren de tu atenciÃ³n',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
@@ -208,7 +211,7 @@ function agregarProducto() {
         if($('#form-model').valid()) {
             if ($('#file_xlsx').val().substring($('#file_xlsx').val().lastIndexOf(".")) != '.xlsx') {
                 $.toaster({
-                    priority: 'danger', title: '¡Error!', message: 'Por favor verifica que el archivo sea .xlsx',
+                    priority: 'danger', title: 'Â¡Error!', message: 'Por favor verifica que el archivo sea .xlsx',
                     settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                 });
                 $('#file_xlsx').val('');
@@ -258,7 +261,7 @@ function agregarProducto() {
                             let row_id = proyectoProducto.activeRows.length;
                             let id_upc = 0;
                             let text_upc = 'UPC no seleccionado';
-                            let descripcion_upc = 'Sin descripción';
+                            let descripcion_upc = 'Sin descripciÃ³n';
                             if (value['fk_id_upc']) {
                                 id_upc = value['fk_id_upc'];
                                 text_upc = value['upc'];
@@ -286,14 +289,14 @@ function agregarProducto() {
                             data: arreglo
                         });
                         $.toaster({
-                            priority: 'success', title: '¡Éxito!', message: 'Productos importados con éxito',
+                            priority: 'success', title: 'Â¡Ã‰xito!', message: 'Productos importados con Ã©xito',
                             settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}},
                         });
                         $('.loadingtabla').hide();
                     },
                     error: function () {
                         $.toaster({
-                            priority: 'danger', title: '¡Error!', message: 'Por favor verifica que el layout sea correcto',
+                            priority: 'danger', title: 'Â¡Error!', message: 'Por favor verifica que el layout sea correcto',
                             settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                         });
                         $('.loadingtabla').hide();
@@ -303,7 +306,7 @@ function agregarProducto() {
             }
         }else{
             $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atención',
+                priority: 'danger', title: 'Â¡Error!', message: 'Hay campos que requieren de tu atenciÃ³n',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
@@ -314,7 +317,7 @@ function agregarProducto() {
 
             let id_upc = 0;
             let text_upc = 'UPC no seleccionado';
-            let descripcion_upc = 'Sin descripción';
+            let descripcion_upc = 'Sin descripciÃ³n';
             if ($('#fk_id_upc').val()) {
                 id_upc = $('#fk_id_upc').select2('data')[0].id;
                 text_upc = $('#fk_id_upc').select2('data')[0].text;
@@ -343,13 +346,13 @@ function agregarProducto() {
                 ]
             });
             $.toaster({
-                priority: 'success', title: '¡Éxito!', message: 'Producto agregado con éxito',
+                priority: 'success', title: 'Â¡Ã‰xito!', message: 'Producto agregado con Ã©xito',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
             limpiarCampos();
         } else {
             $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atención',
+                priority: 'danger', title: 'Â¡Error!', message: 'Hay campos que requieren de tu atenciÃ³n',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
@@ -358,7 +361,7 @@ function agregarProducto() {
 
 function borrarFilaProyectoProducto(element) {
     proyectoProducto.rows().remove([$(element).parents('tr').dataIndex]);
-        $.toaster({priority : 'warning',title : '¡Advertencia!',message : 'Se ha eliminado la fila',
+        $.toaster({priority : 'warning',title : 'Â¡Advertencia!',message : 'Se ha eliminado la fila',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
@@ -366,7 +369,7 @@ function limpiarCampos() {
     $('#fk_id_upc').empty().prop('disabled',true);
     $('#activo_upc').prop('checked',false);
     $('#fk_id_clave_cliente_producto').val(0).trigger('change');
-    //Eliminar reglas de validación detalle
+    //Eliminar reglas de validaciÃ³n detalle
     $('#fk_id_upc').rules('remove');
     $('#fk_id_clave_cliente_producto').rules('remove');
 }

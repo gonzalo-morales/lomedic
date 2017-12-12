@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Http\Models\Facturas;
+namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 use DB;
 
-class EstatusFacturas extends ModelBase
+class EstatusDocumentos extends ModelBase
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'maestro.fact_cat_estatus_facturas';
+    protected $table = 'maestro.gen_cat_estatus_documentos';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_estatus_factura';
+    protected $primaryKey = 'id_estatus';
 }

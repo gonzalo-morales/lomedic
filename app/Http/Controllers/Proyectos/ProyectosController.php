@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Models\Administracion\Monedas;
 
 class ProyectosController extends ControllerBase
 {
@@ -27,16 +28,27 @@ class ProyectosController extends ControllerBase
     {
         $this->entity = $entity;
     }
+    
+    public function getDataView($entity = null)
+    {
+        return [
+            'clientes' => SociosNegocio::where('activo', 1)->where('eliminar', 0)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
+            'clasificaciones' => ClasificacionesProyectos::where('activo',1)->pluck('clasificacion','id_clasificacion_proyecto'),
+            'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo','1')->where('eliminar','0')->orderBy('moneda')->pluck('moneda','id_moneda')->prepend('Selecciona una opcion...',''),
+        ];
+    }
 
+    /*
     public function create($company, $attributes = [])
     {
         $attributes = $attributes + ['dataview'=>[
             'clientes' => SociosNegocio::where('activo', 1)->where('eliminar', 0)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
             'clasificaciones' => ClasificacionesProyectos::where('activo',1)->pluck('clasificacion','id_clasificacion_proyecto'),
+            'monedas' => Monedas::where('activo','1')->where('eliminar','0')->pluck('moneda','id_moneda')->sortBy('moneda')->prepend('Selecciona una opcion...',''),
             ]];
 
         return parent::create($company, $attributes);
-    }
+    }*/
 
     public function obtenerProyectos()
     {

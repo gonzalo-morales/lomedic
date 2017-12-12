@@ -163,7 +163,8 @@
 								<th>Descripción UPC</th>
 								<th>Prioridad</th>
 								<th>Cantidad</th>
-								<th>Precio sugerido</th>
+								<th>Precio venta</th>
+								<th>Moneda</th>
 								<th>Máximo</th>
 								<th>Mínimo</th>
 								<th>Punto de reorden</th>
@@ -210,6 +211,13 @@
 												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][precio_sugerido]',
 												bcdiv($ProyectoProducto->precio_sugerido,'1',2),
 												['class'=>'form-control precio_sugerido','maxlength'=>'13'])
+											!!}
+										</td>
+										<td>
+											{!!
+												Form::select('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][fk_id_moneda]', $monedas ?? [],
+												$ProyectoProducto->fk_id_moneda,
+												['class'=>'form-control fk_id_moneda', 'id'=>'productoProyecto'.$ProyectoProducto->id_proyecto_producto])
 											!!}
 										</td>
 										<td>

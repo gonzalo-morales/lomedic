@@ -13,7 +13,7 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row my-3">
-    <div class="col-md-6 card">
+    <div class="col-md-6 card row mx-0">
     	<div class="card-header row text-center">
     		<h5 class="col-sm-12 text-center">DATOS GENERALES</h5>
     	</div>
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-	<div class="col-md-6 card">
+	<div class="col-md-6 card row ml-2">
 		<div class="card-header row text-center">
 			<h5 class="col-sm-12 text-center">DATOS FISCALES</h5>
 		</div>
@@ -112,7 +112,7 @@
 				{{ Form::cFile('* Archivo Cer', 'file_certificado',['accept'=>'.cer']) }}
 			</div>
 			<div class="form-group col-md-4">
-				{{ Form::cPassword('* Contrasena','password',['class'=>'form-control']) }}
+				{{ Form::cPassword('* Contrase&ntilde;a','password') }}
 			</div>
 		</div>
 		<div class="form-group col-md-12 my-3">
@@ -120,8 +120,8 @@
 				<button id="agregar-certificado" class="btn btn-primary btn-large btn-circle" data-url="{{ companyAction('Administracion\EmpresasController@getDatoscer') }}" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
 			</div>
 		</div>
-		<div class="col-md-12">
-			<table class="table table-hover table-responsive" id="tCertificados">
+		<div class="col-md-12 table-responsive">
+			<table class="table table-hover" id="tCertificados">
 				<thead>
 					<tr>
 						<th>Key</th>
