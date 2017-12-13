@@ -45,7 +45,7 @@ class GastosViaje extends ModelBase
      * @var array
      */
     protected $fields = [
-        // 'Folio' => 'Folio'
+        'id_gastos' => 'Folio',
         'fecha' => 'Fecha',
         'nombre_empleado' => 'Empleado',
         'viaje_a' => 'Viaje a',
