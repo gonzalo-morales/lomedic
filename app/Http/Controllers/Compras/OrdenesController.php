@@ -92,8 +92,10 @@ class OrdenesController extends ControllerBase
 
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
+		    $descuento_rows = 0;
 			if(isset($request->_detalles)) {
 				foreach ($request->_detalles as $detalle) {
+				    $descuento_rows += $detalle['descuento_detalle'];
                     if(empty($detalle['fk_id_upc'])){
                         $detalle['fk_id_upc'] = null;
                     }
@@ -113,6 +115,7 @@ class OrdenesController extends ControllerBase
 			    $id_documento = 0;
 			    $tipo_documento = 0;
 			    foreach ($request->detalles as $detalle){
+                    $descuento_rows += $detalle['descuento_detalle'];
                     $id_documento = $detalle['fk_id_documento_parent'];
                     $tipo_documento = $detalle['fk_id_tipo_documento_parent'];
                     if(empty($detalle['fk_id_upc'])){
@@ -142,6 +145,8 @@ class OrdenesController extends ControllerBase
                         break;
 			    }
             }
+            $isSuccess->descuento_total = $descuento_rows + $isSuccess->descuento_general;
+			$isSuccess->save();
             $this->log('store', $isSuccess->id_orden);
             return $this->redirect('store');
 		} else {
@@ -190,19 +195,20 @@ class OrdenesController extends ControllerBase
 		$entity->fill($request->all());
 
 		if ($entity->save()) {
-			if(isset($request->detalles)) {
+            $descuento_rows = 0;
+            if(isset($request->detalles)) {
 				foreach ($request->detalles as $detalle) {
-						$orden_detalle = $entity
-							->findOrFail($id)
-							->detalleOrdenes()
-							->where('id_orden_detalle', $detalle['id_orden_detalle'])
-							->first();
-						$orden_detalle->fill($detalle);
-						$orden_detalle->save();
+                    $orden_detalle = $entity
+                        ->findOrFail($id)
+                        ->detalleOrdenes()
+                        ->where('id_orden_detalle', $detalle['id_orden_detalle'])
+                        ->first();
+                    $descuento_rows += $orden_detalle->descuento_detalle;
 				}
 			}
 			if(isset($request->_detalles)){
 				foreach ($request->_detalles as $detalle){
+                    $descuento_rows += $detalle['descuento_detalle'];
                     if(empty($detalle['fk_id_upc'])){
                         $detalle['fk_id_upc'] = null;
                     }
@@ -218,7 +224,8 @@ class OrdenesController extends ControllerBase
 					$entity->detalleOrdenes()->save(new DetalleOrdenes($detalle));
 				}
 			}
-
+            $entity->descuento_total = $entity->descuento_general + $descuento_rows;
+			$entity->save();
 			$this->log('update', $id);
 			return $this->redirect('update');
 		} else {

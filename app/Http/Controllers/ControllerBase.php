@@ -226,10 +226,10 @@ class ControllerBase extends Controller
                         foreach ($collections as $relationName => $relations) {
                             # Recorremos cada coleccion
                             $primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
-                            
-                            $ids = $relation->pluck($primaryKey);
+
+                            $ids = collect($relations)->pluck($primaryKey);
                             $entity->{$relationName}()->whereNotIn($primaryKey, $ids)->update(['eliminar' => 1]);
-                            
+
                             foreach ($relations as $relation) {
                                 if (array_key_exists($primaryKey, $relation)) {
                                     $entity->{$relationName}()->updateOrCreate([$primaryKey => $relation[$primaryKey]], $relation);

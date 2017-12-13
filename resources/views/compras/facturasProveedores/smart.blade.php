@@ -40,6 +40,26 @@
 		</div>
 	</div>
 </div>
+@else
+<div id="confirmar_eliminar_pago" class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">¿Deseas cancelar el pago?</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Si eliminas el pago no se podrá recuperar</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				<button id="eliminar_pago_button" type="button" data-dismiss="modal" class="btn btn-primary">Eliminar</button>
+			</div>
+		</div>
+	</div>
+</div>
 @endif
 <div class="row">
 	<div class="form-group col-md-3 col-sm-12">
@@ -82,7 +102,10 @@
 			{{Form::Text('fk_id_estatus_factura',$data->estatus->estatus,['disabled','class'=>'form-control'])}}
 		</div>
 		<div class="form-group col-md-2 col-sm-6">
-			{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}
+			{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
+			{{Form::hidden('fk_id_moneda')}}
+			{{Form::label('moneda','Moneda')}}
+			{{Form::Text('moneda','('.$data->moneda->moneda.') '.$data->moneda->descripcion,['disabled','class'=>'form-control'])}}
 		</div>
 		<div class="form-group col-md-2 col-sm-6">
 			{{Form::label('fk_id_forma_pago','Forma Pago')}}
@@ -204,10 +227,10 @@
 											<td>{{$detalle->clave_unidad->clave_unidad}}</td>
 											<td>{{$detalle->descripcion}}</td>
 											<td>{{$detalle->cantidad}}</td>
-											<td>{{$detalle->precio_unitario}}</td>
-											<td>{{$detalle->descuento}}</td>
+											<td>${{number_format($detalle->precio_unitario,2)}}</td>
+											<td>${{number_format($detalle->descuento,2)}}</td>
 											<td>{{$detalle->impuesto->impuesto}}</td>
-											<td>{{$detalle->importe}}</td>
+											<td>${{number_format($detalle->importe,2)}}</td>
 											<td>{{$data->fk_id_estatus_factura == 1 ?
 											 Form::Text('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_orden_compra]',$detalle->fk_id_orden_compra,['class'=>'form-control integer']) :
 											  $detalle->fk_id_orden_compra}}</td>
@@ -216,14 +239,14 @@
 									@elseif($data->version_sat == "3.2")
 										@foreach($data->detalle_facturas_proveedores as $detalle)
 										<tr>
-											<th>{{$detalle->descripcion}}</th>
-											<th>{{$detalle->unidad}}</th>
-											<th>{{$detalle->cantidad}}</th>
-											<th>{{$detalle->precio_unitario}}</th>
-											<th>{{$detalle->importe}}</th>
-											<th>{{$data->fk_id_estatus_factura == 1 ?
+											<td>{{$detalle->descripcion}}</td>
+											<td>{{$detalle->unidad}}</td>
+											<td>{{$detalle->cantidad}}</td>
+											<td>${{number_format($detalle->precio_unitario,2)}}</td>
+											<td>{{$detalle->importe}}</td>
+											<td>{{$data->fk_id_estatus_factura == 1 ?
 											 Form::Text('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_orden_compra]',$detalle->fk_id_orden_compra,['class'=>'form-control integer']) :
-											  $detalle->fk_id_orden_compra}}</th>
+											  $detalle->fk_id_orden_compra}}</td>
 										</tr>
 										@endforeach
 									@endif
@@ -246,37 +269,80 @@
 				</div>
 				@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
 				<div role="tabpanel" class="tab-pane fade" id="tab-pagos" aria-labelledby="pagos-tab">
-					Pagos realizados de esta factura
+					<div class="card">
+						<div class="card-body mt-3">
+							<h1 class="text-success text-center">Pagos</h1>
+							<table id="pagos" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};">
+								<thead id="encabezado_pagos">
+								@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
+									<tr>
+										<th>ID</th>
+										<th>Número Referencia</th>
+										<th>Banco</th>
+										<th>Fecha</th>
+										<th>Monto</th>
+										<th>Forma de pago</th>
+										<th>Moneda</th>
+										<th>Tipo Cambio</th>
+										<th>Observaciones</th>
+										<th></th>
+									</tr>
+								@endif
+								</thead>
+								<tbody id="detalle_pagos">
+								@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
+									{{--@foreach($data->pagos->where('activo','t') as $pago)--}}
+										{{--<tr>--}}
+											{{--<td>{{$pago->id_pago}}</td>--}}
+											{{--<td>{{$pago->numero_referencia}}</td>--}}
+											{{--<td>{{$pago->banco->banco}}</td>--}}
+											{{--<td>{{$pago->fecha_pago}}</td>--}}
+											{{--<td>${{number_format($pago->monto,2)}}</td>--}}
+											{{--<td>{{$pago->forma_pago->descripcion}}</td>--}}
+											{{--<td>{{'('.$pago->moneda->moneda.') '.$pago->moneda->descripcion}}</td>--}}
+											{{--<td>{{number_format($pago->tipo_cambio,2)}}</td>--}}
+											{{--<td>{{$pago->observaciones}}</td>--}}
+											{{--<td><a class="eliminar_pago" href="{{companyAction('Compras\PagosController@destroy',['id'=>$pago->id_pago])}}"><i class="material-icons">cancel</i></a></td>--}}
+										{{--</tr>--}}
+									{{--@endforeach--}}
+								@endif
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 				<div role="tabpanel" class="tab-pane fade" id="tab-ordenes" aria-labelledby="ordenes-tab">
-					<h1 class="text-success text-center">Órdenes relacionadas</h1>
-					<table id="ordenes" class="table responsive-table highlight">
-						<thead id="ordenes_cabecera">
-							<tr>
-								<th>ID</th>
-								<th>Proveedor</th>
-								<th>Fecha del pedido</th>
-								<th>Fecha de entrega</th>
-								<th>Estatus Orden</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody id="ordenes_detalle">
-						@foreach($data->detalle_facturas_proveedores()->select('fk_id_orden_compra')->distinct()->orderBy('fk_id_orden_compra')->get() as $detalle)
-							@if(!empty($detalle->fk_id_orden_compra))
-							<tr>
-								<td>{{$detalle->orden->id_orden}}</td>
-								<td>{{$detalle->orden->proveedor->nombre_comercial}}</td>
-								<td>{{$detalle->orden->fecha_creacion}}</td>
-								<td>{{$detalle->orden->fecha_estimada_entrega}}</td>
-								<td>{{$detalle->orden->estatus->estatus}}</td>
-								<td><a href="{{companyAction('Compras\OrdenesController@show',['id'=>$detalle->orden->id_orden])}}"><i class="material-icons align-middle">visibility</i></a></td>
-							</tr>
-							@endif
-						@endforeach
-						</tbody>
-					</table>
-
+					<div class="card">
+						<div class="card-body mt-3">
+							<h1 class="text-success text-center">Órdenes relacionadas</h1>
+							<table id="ordenes" class="table responsive-table highlight">
+								<thead id="ordenes_cabecera">
+									<tr>
+										<th>ID</th>
+										<th>Proveedor</th>
+										<th>Fecha del pedido</th>
+										<th>Fecha de entrega</th>
+										<th>Estatus Orden</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody id="ordenes_detalle">
+								@foreach($data->detalle_facturas_proveedores()->select('fk_id_orden_compra')->distinct()->orderBy('fk_id_orden_compra')->get() as $detalle)
+									@if(!empty($detalle->fk_id_orden_compra))
+									<tr>
+										<td>{{$detalle->orden->id_orden}}</td>
+										<td>{{$detalle->orden->proveedor->nombre_comercial}}</td>
+										<td>{{$detalle->orden->fecha_creacion}}</td>
+										<td>{{$detalle->orden->fecha_estimada_entrega}}</td>
+										<td>{{$detalle->orden->estatus->estatus}}</td>
+										<td><a href="{{companyAction('Compras\OrdenesController@show',['id'=>$detalle->orden->id_orden])}}"><i class="material-icons align-middle">visibility</i></a></td>
+									</tr>
+									@endif
+								@endforeach
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 				<div role="tabpanel" class="tab-pane fade" id="tab-notas" aria-labelledby="notas-tab">
 					Notas de crédito

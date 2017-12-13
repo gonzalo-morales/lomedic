@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\ModelCompany;
 use DB;
 
@@ -27,7 +28,7 @@ class Ordenes extends ModelCompany
      */
     protected $fillable = ['fk_id_socio_negocio','fk_id_sucursal','fk_id_condicion_pago','fecha_creacion','fecha_estimada_entrega',
         'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_orden','fk_id_tipo_entrega','fk_id_empresa',
-        'tiempo_entrega','importacion'];
+        'tiempo_entrega','importacion','impuesto','subtotal','total_orden','descuento_general','descuento_total'];
 
     public $niceNames =[
         'fk_id_socio_negocio'=>'proveedor',
@@ -85,7 +86,7 @@ class Ordenes extends ModelCompany
 
     public function estatus()
     {
-        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_orden');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_orden');
     }
 
     public function detalleOrdenes()

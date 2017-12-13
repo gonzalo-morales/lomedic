@@ -298,12 +298,13 @@
 					<tr>
 						<td colspan="2"></td>
 						<td colspan="2">
-								{{ Form::label('', 'Subtotal',['class'=>'h5']) }}
+								{{ Form::label('subtotal_lbl', 'Subtotal',['class'=>'h5']) }}
 								<span class="">$</span>
-							{{ Form::label('subtotal', '0.00',['class'=>'h5','id'=>'subtotal']) }}
+							{{ Form::label('subtotal_lbl', '0.00',['class'=>'h5','id'=>'subtotal_lbl']) }}
+							{{Form::hidden('subtotal',null,['id'=>'subtotal'])}}
 							{{--{!! Form::text('subtotal', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}--}}
 						</td>
-						<td colspan="3">
+						<td colspan="4">
 {{--							{{ Form::label('0','',['class'=>'h5','id'=>'descuento_porcentaje']) }}--}}
 							<div class="form-group col-sm-6">
 								{{ Form::label('', 'Descuento: ',['class'=>'h5']) }}
@@ -312,21 +313,23 @@
 									<span class="input-group-addon">%</span>
 									<span class="input-group-addon">=</span>
 									<span class="input-group-addon">$</span>
-									{{--{{ Form::label('', '0.00',['class'=>'h5','id'=>'descuento_moneda']) }}--}}
-									{{Form::text('descuento_moneda',null,['class'=>'form-control','placeholder'=>'00000.00','id'=>'descuento_moneda'])}}
+									{{--{{ Form::label('', '0.00',['class'=>'h5','id'=>'descuento_general']) }}--}}
+									{{Form::text('descuento_general',null,['class'=>'form-control','placeholder'=>'00000.00','id'=>'descuento_general'])}}
+									{{Form::hidden('descuento_total',null,['id'=>'descuento_total'])}}
 								</div>
 							</div>
 						</td>
-						<td colspan="3">
-								{{ Form::label('impuesto', 'Impuesto',['class'=>'h5']) }}
+						<td colspan="2">
+								{{ Form::label('', 'Impuesto',['class'=>'h5']) }}
 								<span>$</span>
-								{{ Form::label('impuesto', '0.0',['class'=>'h5','id'=>'impuesto_total']) }}
+								{{ Form::label('impuesto', '0.0',['class'=>'h5','id'=>'impuesto_lbl']) }}
+								{{Form::hidden('impuesto',null,['id'=>'impuesto_total'])}}
 						</td>
 						<td colspan="3">
 							<div class="input-group">
 								{{ Form::label('total_orden', 'Total',['class'=>'input-group-addon']) }}
 								<span class="input-group-addon">$</span>
-								{!! Form::text('total_orden', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}
+								{!! Form::text('total_orden', null,['class'=>'form-control','readonly','placeholder'=>'0.00']) !!}
 							</div>
 						</td>
 						<td></td>

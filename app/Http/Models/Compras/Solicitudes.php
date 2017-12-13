@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\ModelCompany;
 use DB;
 
@@ -26,7 +27,7 @@ class Solicitudes extends ModelCompany
      * @var array
      */
     protected $fillable = ['fk_id_documento','fk_id_sucursal','fk_id_departamento','fecha_creacion','fecha_necesidad',
-        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_solicitud'];
+        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_solicitud','fk_id_solicitante'];
 
     /**
      * Los atributos que seran visibles en index-datable
@@ -110,7 +111,7 @@ class Solicitudes extends ModelCompany
 
     public function estatus()
     {
-        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_solicitud');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_solicitud');
     }
 
     public function detalleSolicitudes()

@@ -6,7 +6,6 @@ use App\Http\Models\Administracion\Bancos;
 use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\ModelCompany;
 use DB;
-use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Pagos extends ModelCompany
 {
@@ -15,7 +14,7 @@ class Pagos extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'fact_opr_pagos';
+    protected $table = 'fac_opr_pagos';
 
     /**
      * The primary key of the table
@@ -36,7 +35,10 @@ class Pagos extends ModelCompany
         'fk_id_forma_pago',
         'fk_id_moneda',
         'tipo_cambio',
-        'observaciones'
+        'observaciones',
+        'activo',
+        'eliminar',
+        'comprobante'
     ];
 
     public $niceNames =[
@@ -60,7 +62,7 @@ class Pagos extends ModelCompany
         'fecha_pago' => 'Fecha de pago',
         'monto' => 'Monto',
         'forma_pago.forma_pago' => 'Forma pago',
-        'moneda.moneda'=>'Moneda',
+        'moneda.moneda'=>'Moneda'
     ];
 
 //    protected $eagerLoaders = ['proveedor','sucursal'];
@@ -71,10 +73,10 @@ class Pagos extends ModelCompany
      */
     public $rules = [
         'fecha_pago'=>'required',
-        'monto'=>'required||regex:/^(\d{0,2}(\.\d{0,4})?\)$/',
+        'monto'=>'required||regex:/^(\d{0,7}(\.\d{0,2})?)$/',
         'fk_id_forma_pago'=>'required',
         'fk_id_moneda'=>'required',
-        'tipo_cambio'=>'required||regex:(\d{0,4}(\.\d{0,6})?\)$/',
+        'tipo_cambio'=>'required||regex:/^(\d{0,4}(\.\d{0,6})?)$/',
     ];
 
     public function moneda()
