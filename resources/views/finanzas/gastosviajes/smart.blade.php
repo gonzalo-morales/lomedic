@@ -5,15 +5,19 @@
 <div class="row">
 
 {{-- Campos --}}
-  <div class="col-md-5 col-sm-5">
+  <div class="col-md-5 col-sm-12">
     <h5>Datos generales</h5>
     <div class="row">
-{{-- 			<div class="col-md-12 text-center text-success">
-				<h3>Factura No. {{$data->folio}}</h3>
-			</div> --}}
+ 	    <div class="col-md-12 text-center text-success">
+				<h3>{{ !Route::currentRouteNamed(currentRouteName('create')) ? 'Folio No.: '.$data->id_gastos : '' }}</h3>
+			</div>
       <div class="col-md-8 col-sm-8">
         <div class="form-group">
-        	{{ Form::cSelect('* Nombre del Empleado','fk_id_empleado', $empleados ?? [],['data-url'=>companyAction('HomeController@index').'/recursoshumanos.empleados/api','style' =>'width:100%;']) }}
+        	{{ Form::cSelect('* Nombre del Empleado','fk_id_empleado', $empleados ?? [],[
+            'data-url' => companyAction('HomeController@index').'/recursoshumanos.empleados/api',
+            'style' => 'width:100%;',
+            'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
+          ]) }}
         </div>
       </div>
       <div class="col-md-4">
@@ -44,20 +48,20 @@
     <div class="row">
       <div class="col-md-4 col-sm-4">
         <div class="form-group">
-          {{ Form::label('periodo_inicio','* periodo_inicio') }}
+          {{ Form::label('periodo_inicio','* Fecha inicio del viaje') }}
           {{ Form::text('periodo_inicio', null, ['id'=>'periodo_inicio','class'=>'datepicker form-control']) }}
           {{ $errors->has('periodo_inicio') ? HTML::tag('span', $errors->first('periodo_inicio'), ['class' =>'help-block text-danger']) : '' }}
         </div>
       </div>
       <div class="col-md-4 col-sm-4">
         <div class="form-group">
-          {{ Form::label('periodo_fin','* periodo_fin') }}
+          {{ Form::label('periodo_fin','* Fecha final del viaje') }}
           {{ Form::text('periodo_fin', null, ['id'=>'periodo_fin','class'=>'datepicker form-control']) }}
           {{ $errors->has('periodo_fin') ? HTML::tag('span', $errors->first('periodo_fin'), ['class' =>'help-block text-danger']) : '' }}
         </div>
       </div>
       <div class="col-md-4 col-sm-4">
-        {{ Form::cText('total_dias','total_dias', ['readonly'=>'true']) }}
+        {{ Form::cText('Total de días que se viajó','total_dias', ['readonly'=>'true']) }}
       </div>
     </div>
     <div class="row">
@@ -84,10 +88,17 @@
     </div>
   </div><!--/col-md-5 col-sm-5-->
 
-  <div class="col-md-7 col-sm-7">
+  <div class="col-md-7 col-sm-12">
     <h5>Facturas y conceptos</h5>
-    <p>Agrega las facturas realizadas de acuerdo al viaje.</p>
-    <div class="card">
+    @if(Route::currentRouteNamed(currentRouteName('show')))
+    <p><i class="material-icons align-middle text-warning">info</i>Estas son las facturas y/o notas registradas que se realizaron en el viaje</p>
+    @else
+    <p>Agrega las facturas y/o notas realizadas de acuerdo al viaje.</p>
+    @endif
+
+    <div class="card z-depth-1-half">
+    @if(Route::currentRouteNamed(currentRouteName('show')))
+    @else
       <div class="card-header">
         <form id="overallForm">
         <fieldset id="detalle-form">
@@ -129,8 +140,10 @@
         </fieldset>
         </form>
       </div><!--/Here ends the up section-->
+      @endif
+
       <div class="card-body">
-        <table id="factConcepts" class="table table-responsive-sm table-stripped table-hover">
+        <table id="factConcepts" class="table table-responsive-sm table-striped table-hover">
           <thead>
             <tr>
               <th>Folio</th>
@@ -138,26 +151,28 @@
               <th>Subtotal</th>
               <th>IVA(%)</th>
               <th>Total</th>
+              @if(Route::currentRouteNamed(currentRouteName('show')))
+              @else
               <th>Acciones</th>
+              @endif
             </tr>
           </thead>
           <tbody id="detalle-form-body">
             {{-- Si está en edit o show por cada registro $data->detalle as $detalle--}}
             @if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
-              @foreach($data->detalle as $detalle)
+              @foreach($data->detalle->where('eliminar',0) as $row => $detalle)
                 <tr>
-                  <td>{{ $detalle->folio }}</td>
-                  <td>{{ $detalle->tipo->tipo_concepto }}</td>
-                  <td>{{ $detalle->subtotal }}</td>
-                  <td>{{ $detalle->impuestos->impuesto }}</td>
-                  <td>{{ $detalle->total }}</td>
-                  <td>
+                  <td><input type="hidden" value="{{$detalle->id_detalle_gastos}}" name="relations[has][detalle][{{$row}}][id_detalle_gastos]">{{ $detalle->folio }}</td>
+                  <td>{{ $detalle->tipo->tipo_concepto }}{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_tipo]',$detalle->fk_id_tipo) }}</td>
+                  <td>{{ '$'.number_format($detalle->subtotal,2) }}{{ Form::hidden('relations[has][detalle]['.$row.'][subtotal]',$detalle->subtotal,['class' => 'subtotal']) }}</td>
+                  <td>{{ $detalle->impuestos->impuesto }}{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_impuesto]',$detalle->fk_id_impuesto) }}</td>
+                  <td>{{ '$'.number_format($detalle->total,2) }}{{ Form::hidden('relations[has][detalle]['.$row.'][total]',$detalle->total,['class' => 'total']) }}</td>
                     @if(Route::currentRouteNamed(currentRouteName('show')))
-                      <button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50"><i class="material-icons">delete</i></button>
-                      @else
-                        <button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila_edit(this)"><i class="material-icons">delete</i></button>
-                    @endif
+                    @else
+                  <td>
+                    <button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
                   </td>
+                    @endif
                 </tr>
               @endforeach
             @endif

@@ -45,11 +45,12 @@ class GastosRelacionViajes extends ModelBase
      * @var array
      */
     protected $fields = [
+        // 'Folio' => 'Folio'
         'fecha' => 'Fecha',
         'nombre_empleado' => 'Empleado',
         'viaje_a' => 'Viaje a',
         'total_dias'=>'Total de días',
-        'motivo_gasto' => 'Motivo del gasto'
+        'motivo_gasto' => 'Motivo del viaje'
     ];
 
     /**

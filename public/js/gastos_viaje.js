@@ -85,7 +85,7 @@ $(document).ready(function () {
       placeholder: "Seleccione el concepto de la nota",
       allowClear: true
     });
-    $('#fk_id_empleado').select2({
+    $('#fk_id_empleado.select2').select2({
       placeholder: "Seleccione el empleado",
       allowClear: true
     });
@@ -97,7 +97,6 @@ $(document).ready(function () {
       selectMonths: true, // Creates a dropdown to control month
       selectYears: 3, // Creates a dropdown of 3 years to control year
       min: true,
-      klass:{now: true,}
       format: 'yyyy-mm-dd'
     });
 
@@ -111,10 +110,6 @@ $(document).ready(function () {
       onSet: function () {
         $('#periodo_fin').pickadate('picker').set('min', $('#periodo_inicio').pickadate('picker').get('select'));
       },
-      //Al iniciar aseguramos que reestablezca el valor de días totales
-     onStart: function() {
-        $('#total_dias').val("N/A");
-      }
     });
 
     $("#periodo_fin").pickadate({
@@ -297,29 +292,6 @@ function borrarFila(el) {
       settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 };
 
-//FUNCIÓN PARA LIMPIAR LA FILA AL EDITAR
-function borrarFila_edit(el) {
-  var tr = $(el).closest('tr');
-  //Volvemos a calular el total y subtotal general de todos los totales y subtotales en el detalle
-  var trTotal = $(el).parent().parent().find('input.total').val();
-  var trSubtotal = $(el).parent().parent().find('input.subtotal').val();
-  var hiddenTotal = $('#total_detalles').val();
-  var hiddenSubtotal = $('#subtotal_detalles').val();
-  var overallTotal = hiddenTotal - trTotal;
-  var overallSubtotal = hiddenSubtotal - trSubtotal;
-  $('#total_detalles').val(overallTotal.toFixed(2));
-  $('#subtotal_detalles').val(overallSubtotal.toFixed(2));
-
-  tr.fadeOut(400, function(){
-    tr.remove().stop();
-  })
-  //Validamos si nos quedamos sin registros
-  if($('#detalle-form-body > tr').length < 1)
-      validateDetail();
-    else
-      $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
-        settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-}
 
 //FUNCIÓN PARA CALULAR Y SUMAR TODO (TOTALES DE DETALLE)
 function sumarTodosLosTotales(){
