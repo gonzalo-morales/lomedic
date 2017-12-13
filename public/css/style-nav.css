@@ -7,7 +7,7 @@
 .custom-file-control::after {
 	content: "Seleccionar archivo(s)...";
 }
-   
+
 .custom-file-control::before {
 	content: "Examinar";
 }
@@ -46,7 +46,7 @@
     display: flex;
     align-items: stretch;
     height: 10%;
-    overflow: auto;
+    overflow: hidden;
 }
 
 #sidebar {

@@ -44,7 +44,7 @@ class APIController extends Controller
 
 		# Obtenemos entidad
 		$entity = rescue(function() use ($entity) {
-			return resolve('App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', $entity))));
+			return resolve('App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', camel_case($entity)))));
 		});
         if ($entity) {
 

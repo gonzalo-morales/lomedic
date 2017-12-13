@@ -117,6 +117,16 @@ function currentRouteName($route = '')
 }
 
 /**
+ * ¿Es equivalente a la ruta actual?
+ * @param  string  $route - Nombre de la ruta
+ * @return boolean
+ */
+function isCurrentRouteName($route = '')
+{
+    return Route::currentRouteNamed(currentRouteName($route));
+}
+
+/**
  * Obtenemos entidad
  * @return Entity
  */

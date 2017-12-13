@@ -210,6 +210,9 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
 .select2-selection__rendered {
   line-height: 34px !important;
 }
+.form-control.is-invalid + .select2-container--default .select2-selection--single {
+    border-color: #dc3545;
+}
 .font-light {
   font-weight: 300;
 }
@@ -268,7 +271,7 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
     font-family: "Material Icons";
     content: "\E001 \00a0" ;
 }
-.picker__input[readonly] {
+fieldset:not([disabled]) .picker__input[readonly] {
   background: white;
 }
 .picker__input--active.is-invalid,
@@ -388,9 +391,8 @@ a:hover .window {
 .material-icons {
 	cursor: default;
 }
-
-
-.vue-slide-fade {
+/* Vue Transitions */
+.vue-slide-fade-item {
   max-height: 500px;
 }
 /* durations and timing functions.              */
@@ -417,42 +419,17 @@ a:hover .window {
     opacity: 0;
   }
 }
-
 .vue-list-item {
-  max-height: 500px;
+  transition: all .6s;
 }
-.vue-list-slide-fade-enter-active {
-  transition: all .6s ease;
-}
-.vue-list-slide-fade-leave-active {
-  transition: all .4s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.vue-list-slide-fade-enter, .vue-list-slide-fade-leave-to {
-  -webkit-transform: scale(0.9);
-  transform: scale(0.9);
-  max-height: 0px;
-  opacity: 0;
-}
-
-
-
-
-.list-complete-item {
-  transition: all 1s;
-}
-.list-complete-enter, .list-complete-leave-to {
+.vue-list-enter, .vue-list-leave-to {
   -webkit-transform: scale(0.9);
   transform: scale(0.9);
   opacity: 0;
 }
-.list-complete-move {
-  transition: transform 1s;
-}
-.list-complete-leave-active {
+.vue-list-leave-active {
   position: absolute;
-  background: lightgray;
-  width: 1153px;
+  width: 100%;
   display: table;
   table-layout: fixed;
-  z-index: 99;
 }
