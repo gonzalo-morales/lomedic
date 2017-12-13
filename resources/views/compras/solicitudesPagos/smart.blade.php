@@ -42,6 +42,14 @@
 			<div class="col-md-4 col-sm-6">
 				{{Form::cSelectWithDisabled('*Monedas','fk_id_moneda',$monedas ?? [])}}
 			</div>
+			@if(isset($data->fk_id_estatus_solicitud_pago) && $data->fk_id_estatus_solicitud_pago != 1)
+			<div class="col-md-4 col-sm-6">
+				{{Form::cText('Fecha Cancelación','fecha_cancelacion',['disabled'])}}
+			</div>
+			<div class="col-md-8 col-sm-6">
+				{{Form::cTextArea('Motivo Cancelación','motivo_cancelacion',['disabled','rows'=>'5'])}}
+			</div>
+			@endif
 		</div>
 	</div>
 	<div class="form-group col-sm-6 col-md-6">
@@ -129,15 +137,17 @@
 				@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
 					@foreach($data->detalle->where('eliminar',0) as $row=>$detalle)
 					<tr>
-						<td><input type="hidden" value="{{$detalle->id_detalle_solicitud_pago}}" name="relations[has][detalle][{{$row}}][id_detalle_solicitud_pago]">{{$detalle->fk_id_orden_compra ?? 'N/A'}}</td>
+						<td><input class="orden" type="hidden" name="relations[has][detalle][{{$row}}][fk_id_orden_compra]" value="{{$detalle->fk_id_orden_compra ?? 'N/A'}}">{{$detalle->fk_id_orden_compra ?? 'N/A'}}<input type="hidden" value="{{$detalle->id_detalle_solicitud_pago}}" name="relations[has][detalle][{{$row}}][id_detalle_solicitud_pago]"></td>
 						<td>{{$detalle->descripcion}}</td>
 						<td>{{$detalle->cantidad}}</td>
 						<td>{{number_format($detalle->impuesto,2)}}</td>
 						<td>{{number_format($detalle->precio_unitario,2)}}</td>
 						<td>{{number_format($detalle->importe,2)}}</td>
-						@if(Route::currentRouteNamed(currentRouteName('edit')))
-						<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>
-						@endif
+						<td>
+							@if(Route::currentRouteNamed(currentRouteName('edit')))
+							<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>
+							@endif
+						</td>
 					</tr>
 					@endforeach
 				@endif
@@ -167,7 +177,7 @@
 	<script type="text/javascript">
         rivets.binders['hide-delete'] = {
             bind: function (el) {
-                if(el.dataset.fk_id_estatus_factura != 1)
+                if(el.dataset.fk_id_estatus_solicitud_pago != 1)
                 {
                     $(el).hide();
                 }
@@ -175,7 +185,7 @@
         };
         rivets.binders['hide-update'] = {
             bind: function (el) {
-                if(el.dataset.fk_id_estatus_factura != 1)
+                if(el.dataset.fk_id_estatus_solicitud_pago != 1)
                 {
                     $(el).hide();
                 }
@@ -290,12 +300,19 @@
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
+	@section('form-actions')
+		@if($data->fk_id_estatus_solicitud_pago == 1)
+			@parent
+		@else
+			<div class="col-md-12 col-xs-12">
+				<div class="text-right">
+					{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+				</div>
+			</div>
+		@endif
+	@endsection
 	@section('form-title')
 		<h1 class="display-4">Solicitud Pago</h1>
 	@endsection
 	@include('layouts.smart.show')
 @endif
-
-{{--@if (currentRouteName('createSolicitudOrden'))--}}
-	{{--@include('layouts.smart.create')--}}
-{{--@endif--}}

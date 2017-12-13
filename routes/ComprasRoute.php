@@ -42,6 +42,6 @@ Route::prefix('{company}')->group(function () {
         Route::post('getFacturaData','Compras\FacturasProveedoresController@parseXML');
 
         Route::resource('pagos','Compras\PagosController');
-        Route::resource('solicitudesPagos','Compras\SolicitudesPagosController');
+        Route::resource('SolicitudesPagos','Compras\SolicitudesPagosController');
     });
 });

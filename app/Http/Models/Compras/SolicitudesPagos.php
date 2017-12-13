@@ -41,9 +41,9 @@ class SolicitudesPagos extends ModelCompany
         'estatus.estatus' => 'Estatus',
     ];
 
-//    protected $dataColumns = [
-//        'fk_id_estatus_solicitud'
-//    ];
+    protected $dataColumns = [
+        'fk_id_estatus_solicitud_pago'
+    ];
 
     /**
      * Indicates if the model should be timestamped.

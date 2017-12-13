@@ -31,8 +31,8 @@ $(document).ready(function () {
 
     $('#fk_id_orden_compra').change(function () {
         var existe = false;
-        $('#detalle_solicitud_pago > tr').each (function (index,row) {
-            if(row.firstChild.firstChild.value == $('#fk_id_orden_compra').val()){
+        $('#detalle_solicitud_pago tr').each (function (index,row) {
+            if($(this).find('.orden').val() == $('#fk_id_orden_compra').val()){
                 $.toaster({
                     priority: 'danger', title: 'Error', message: 'Ya se ha agregado esta orden',
                     settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
@@ -55,7 +55,7 @@ $(document).ready(function () {
                     var total = +data[0].total_orden;
                     $('#detalle_solicitud_pago').append(
                         '<tr>' +
-                        '<td><input type="hidden" id="index" value="'+index+'"><input type="hidden" name="relations[has][detalle][' + index + '][fk_id_orden_compra]" value="' + data[0].id_orden + '">' + data[0].id_orden + '</td>' +
+                        '<td><input class="orden" type="hidden" name="relations[has][detalle][' + index + '][fk_id_orden_compra]" value="' + data[0].id_orden + '">' + data[0].id_orden + '<input type="hidden" id="index" value="'+index+'"></td>' +
                         '<td><input type="hidden" name="relations[has][detalle][' + index + '][descripcion]" value="Orden de compra ' + data[0].id_orden + '">Orden de compra ' + data[0].id_orden + '</td>' +
                         '<td><input type="hidden" name="relations[has][detalle][' + index + '][cantidad]" value="1">1</td>' +
                         '<td><input type="hidden" name="relations[has][detalle][' + index + '][impuesto]" value="' + impuesto.toFixed(2) + '">' + impuesto.toFixed(2) + '</td>' +
@@ -102,6 +102,11 @@ $(document).ready(function () {
                 '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>' +
                 '</tr>'
             );
+            $.toaster({
+                priority: 'success', title: 'Exito', message: 'Concepto agregado',
+                settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+            });
+            limpiarCampos();
         }
     });
 

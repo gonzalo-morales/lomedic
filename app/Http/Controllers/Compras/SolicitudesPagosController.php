@@ -50,11 +50,42 @@ class SolicitudesPagosController extends ControllerBase
         ];
     }
 
-    public function index($company, $attributes = ['where' => ['eliminar = 0']])
+    public function index($company, $attributes =[])
     {
-        $attributes = ['where'=>[]];
         return parent::index($company, $attributes);
     }
+    public function destroy(Request $request, $company, $idOrIds)
+    {
+        $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
+            ->update(['fk_id_estatus_solicitud_pago' => 3,
+                'motivo_cancelacion'=>$request->motivo['motivo_cancelacion'],
+                'fecha_cancelacion'=>DB::raw('now()')]);
+        if ($isSuccess) {
 
+            $this->log('destroy', $idOrIds);
+
+            if ($request->ajax()) {
+                # Respuesta Json
+                return response()->json([
+                    'success' => true,
+                ]);
+            } else {
+                return $this->redirect('destroy');
+            }
+
+        } else {
+
+            $this->log('error_destroy', $idOrIds);
+
+            if ($request->ajax()) {
+                # Respuesta Json
+                return response()->json([
+                    'success' => false,
+                ]);
+            } else {
+                return $this->redirect('error_destroy');
+            }
+        }
+    }
 }
 
