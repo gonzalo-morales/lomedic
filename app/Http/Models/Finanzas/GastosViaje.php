@@ -8,7 +8,7 @@ use App\Http\Models\RecursosHumanos\Departamentos;
 use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\RecursosHumanos\Puestos;
 
-class GastosRelacionViajes extends ModelBase
+class GastosViaje extends ModelBase
 {
     /**
      * The table associated with the model.

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Finanzas;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\ControllerBase;
-use App\Http\Models\Finanzas\GastosRelacionViajes;
+use App\Http\Models\Finanzas\GastosViaje;
 use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\Administracion\ConceptosViaje;
 use App\Http\Models\Administracion\Impuestos;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class GastosViajeController extends ControllerBase
 {
-    public function __construct(GastosRelacionViajes $entity)
+    public function __construct(GastosViaje $entity)
     {
         $this->entity = $entity;
     }

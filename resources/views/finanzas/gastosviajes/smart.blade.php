@@ -9,7 +9,7 @@
     <h5>Datos generales</h5>
     <div class="row">
  	    <div class="col-md-12 text-center text-success">
-				<h3>{{ !Route::currentRouteNamed(currentRouteName('create')) ? 'Folio No.: '.$data->id_gastos : '' }}</h3>
+				  <h3>{{ isset($data->id_gastos) ? 'Folio No.: '.$data->id_gastos : ''}}</h3>
 			</div>
       <div class="col-md-8 col-sm-8">
         <div class="form-group">
