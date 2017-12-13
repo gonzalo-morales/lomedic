@@ -61,6 +61,11 @@ class Departamentos extends ModelBase
         $this->hasOne('app\Http\Models\Administracion\Usuarios');
     }
 
+    public function empleado()
+    {
+        $this->belongsTo(Empleados::class,'fk_id_departamento');
+    }
+
     public function empresa()
     {
         $this->$this->hasOne('app\Http\Models\Administracion\Empresas');

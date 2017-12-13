@@ -81,5 +81,6 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('regimenesfiscales', 'Administracion\RegimenesFiscalesController');
 		Route::resource('tiposcomprobantes', 'Administracion\TiposComprobantesController');
 		Route::resource('usoscfdis', 'Administracion\UsosCfdisController');
+		Route::resource('conceptosviaje', 'Administracion\ConceptosViajeController');
 	});
 });

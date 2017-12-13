@@ -18,5 +18,6 @@ Route::prefix('{company}')->group(function () {
 
     Route::group(['prefix' => 'finanzas', 'as' => 'finanzas.', 'middleware' => ['auth','share','csrf'] ], function() {
         Route::view("/","finanzas.index");
+        Route::resource('gastosviajes', 'Finanzas\GastosViajeController');
     });
 });

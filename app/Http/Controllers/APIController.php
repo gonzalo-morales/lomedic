@@ -84,6 +84,7 @@ class APIController extends Controller
 
 			# Limite
 			$entity->limit($request['limit'] ?? null);
+			#return $entity->toSql();
 
 			#
 			$collections = $entity->get();

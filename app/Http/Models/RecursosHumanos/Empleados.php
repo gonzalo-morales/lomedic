@@ -90,6 +90,16 @@ class Empleados extends ModelBase
     {
         return $this->belongsToMany(Sucursales::class,'maestro.ges_det_empleado_sucursal','fk_id_empleado','fk_id_sucursal');
     }
+
+    public function departamento()
+    {
+        return $this->belongsTo(Departamentos::class,'fk_id_departamento');
+    }
+
+    public function puesto()
+    {
+        return $this->belongsTo(Puestos::class,'fk_id_puesto');
+    }
     public function ejecutivocompra(){
         return $this->hasOne(SociosNegocio::class,'fk_id_ejecutivo_compra','id_empleado');
     }
