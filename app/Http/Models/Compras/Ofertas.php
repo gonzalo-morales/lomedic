@@ -2,6 +2,10 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Administracion\EstatusDocumentos;
+use App\Http\Models\Administracion\Monedas;
+use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\ModelCompany;
 use DB;
 use App\Http\Models\SociosNegocio\SociosNegocio;
@@ -65,17 +69,17 @@ class Ofertas extends ModelCompany
 
     public function sucursal()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
+        return $this->belongsTo(Sucursales::class,'fk_id_sucursal','id_sucursal');
     }
 
     public function estatus()
     {
-        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_oferta');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_oferta');
     }
 
     public function empresa()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Empresas','fk_id_empresa','id_empresa');
+        return $this->belongsTo(Empresas::class,'fk_id_empresa','id_empresa');
     }
 
     public function proveedor()
@@ -85,11 +89,11 @@ class Ofertas extends ModelCompany
 
     public function moneda()
     {
-        return $this->hasOne('App\Http\Models\Administracion\Monedas','id_moneda','fk_id_moneda');
+        return $this->hasOne(Monedas::class,'id_moneda','fk_id_moneda');
     }
 
     public function DetalleOfertas()
     {
-        return $this->hasMany('App\Http\Models\Compras\DetalleOfertas','fk_id_documento','id_oferta');
+        return $this->hasMany(DetalleOfertas::class,'fk_id_documento','id_oferta');
     }
 }

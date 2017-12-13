@@ -4,6 +4,7 @@ namespace App\Http\Models\Administracion;
 
 use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\ModelBase;
+use App\Http\Models\RecursosHumanos\Empleados;
 
 class Sucursales extends ModelBase
 {
@@ -98,4 +99,8 @@ class Sucursales extends ModelBase
 		return $this->hasMany(Almacenes::class, 'fk_id_sucursal', 'id_sucursal');
 	}
 
+	public function empleados()
+    {
+        return $this->belongsToMany(Empleados::class,'maestro.ges_det_empleado_sucursal','fk_id_sucursal','fk_id_empleado','id_sucursal');
+    }
 }

@@ -16,7 +16,7 @@ class DetalleFacturasProveedores extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'fact_det_facturas_proveedores';
+    protected $table = 'fac_det_facturas_proveedores';
 
     /**
      * The primary key of the table

@@ -20,7 +20,7 @@ $(document).ready(function(){
         footer:true,
     });
     totalOrden();
-    subtotal_original = $('#subtotal').text();
+    subtotal_original = $('#subtotal_lbl').text();
     // console.log(subtotal_original);
     validateDetail();
     if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
@@ -95,10 +95,10 @@ $(document).ready(function(){
         })
     }
     $('#descuento_porcentaje').on('keyup',function () {
-        $('#descuento_moneda').val(((subtotal_original*$(this).val())/100).toFixed(2));
+        $('#descuento_general').val(((subtotal_original*$(this).val())/100).toFixed(2));
         totalOrden();
     });
-    $('#descuento_moneda').on('keyup',function () {
+    $('#descuento_general').on('keyup',function () {
         $('#descuento_porcentaje').val((($(this).val()/subtotal_original)*100).toFixed(4));
         totalOrden();
     });
@@ -239,7 +239,7 @@ function totalOrden() {
 
     let subtotal = 0;
     let impuesto = 0;
-
+    let descuento_total = 0;
     $.each(window.dataTable.data,function () {
         //Del producto
         let cantidad_row = $(this).find('td .cantidad_row').val();
@@ -247,6 +247,7 @@ function totalOrden() {
         let porcentaje_row = $(this).find('td .porcentaje').val()/100;//Decimal
         let descuento_row = $(this).find('td .descuento_row').val();//Decimal
         descuento_row = (descuento_row * precio_row)/100;
+        descuento_total += descuento_row;
         let subtotal_row = (precio_row - descuento_row) * cantidad_row;
         // let total_row = (subtotal_row * porcentaje_row) + subtotal_row;
         //Del total
@@ -254,17 +255,19 @@ function totalOrden() {
         impuesto += subtotal_row * porcentaje_row;
         // console.log('cantidad: '+cantidad_row+' precio: '+precio_row+' porcentaje: '+porcentaje_row+' descuento: '+descuento_row+' impuesto: '+impuesto+' subtotal: '+subtotal_row+' total:'+total_row);
     });
+    subtotal = subtotal - $('#descuento_general').val();
+    descuento_total += +$('#descuento_general').val();
 
-    subtotal = subtotal - $('#descuento_moneda').val();
     // console.log('subtotal: '+subtotal);
     // console.log('impuesto: '+impuesto);
-    let total = (subtotal)+impuesto;
     // console.log('total: '+total);
-
-    $('#subtotal').text(subtotal.toFixed(2));
-    $('#impuesto_total').text(impuesto.toFixed(2));
+    let total = (subtotal)+impuesto;
+    $('#subtotal_lbl').text(subtotal.toFixed(2));
+    $('#subtotal').val(subtotal.toFixed(2));
+    $('#impuesto_lbl').text(impuesto.toFixed(2));
+    $('#impuesto_total').val(impuesto.toFixed(2));
     $('#total_orden').val(total.toFixed(2));
-
+    $('#descuento_total').val(descuento_total.toFixed(2));
 }
 
 function borrarFila(el) {
@@ -331,13 +334,6 @@ function validateDetail() {
         return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
     },'El precio no debe tener más de dos decimales');
     $.validator.addMethod( "greaterThan", function( value, element, param ) {
-
-        if ( this.settings.onfocusout ) {
-            $(element).addClass( "validate-greaterThan-blur" ).on( "blur.validate-greaterThan", function() {
-                $( element ).valid();
-            } );
-        }
-
         return value > param;
     }, "Please enter a greater value." );
     $('#precio_unitario').rules('add',{
@@ -356,12 +352,7 @@ function validateDetail() {
         return this.optional(element) || /^\d{0,2}(\.\d{0,4})?$/g.test(value);
     },'El porcentaje tiene un formato incorrecto');
     $.validator.addMethod( "lessThan", function( value, element, param ) {
-        if ( this.settings.onfocusout ) {
-            $(element).addClass( "validate-greaterThan-blur" ).on( "blur.validate-greaterThan", function() {
-                $( element ).valid();
-            } );
-        }
-        return value < param;
+        return value <= param;
     }, "Please enter a greater value." );
     $('#descuento_porcentaje').rules('add',{
         porcentaje: true,
@@ -372,7 +363,7 @@ function validateDetail() {
             lessThan: 'El porcentaje debe ser menor a 100'
         }
     });
-    $('#descuento_moneda').rules('add',{
+    $('#descuento_general').rules('add',{
         precio: true,
         lessThan: subtotal_original,
         messages: {

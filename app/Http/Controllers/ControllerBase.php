@@ -212,7 +212,7 @@ class ControllerBase extends Controller
 
         # Validamos request, si falla regresamos atras
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-
+        
         DB::beginTransaction();
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
@@ -226,6 +226,10 @@ class ControllerBase extends Controller
                         foreach ($collections as $relationName => $relations) {
                             # Recorremos cada coleccion
                             $primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
+
+                            $ids = collect($relations)->pluck($primaryKey);
+                            $entity->{$relationName}()->whereNotIn($primaryKey, $ids)->update(['eliminar' => 1]);
+
                             foreach ($relations as $relation) {
                                 if (array_key_exists($primaryKey, $relation)) {
                                     $entity->{$relationName}()->updateOrCreate([$primaryKey => $relation[$primaryKey]], $relation);

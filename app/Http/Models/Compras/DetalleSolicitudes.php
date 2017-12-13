@@ -25,7 +25,7 @@ class DetalleSolicitudes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_solicitud','fk_id_sku','fk_id_upc','fk_id_proveedor','cantidad',
+    protected $fillable = ['fk_id_sku','fk_id_upc','fk_id_proveedor','cantidad',
         'fk_id_unidad_medida','fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario'];
 
     /**

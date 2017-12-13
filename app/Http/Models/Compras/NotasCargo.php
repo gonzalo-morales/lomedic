@@ -132,7 +132,7 @@ class FacturasProveedores extends ModelCompany
         return $this->hasMany(DetalleFacturasProveedores::class,'fk_id_factura_proveedor','id_factura_proveedor');
     }
 
-//    public function pagos(){
-//        return $this->hasMany(Pagos::class,'fk_id_factura_proveedor','id_factura_proveedor');
-//    }
+    public function pagos(){
+        return $this->hasMany(Pagos::class,'fk_id_factura_proveedor','id_factura_proveedor');
+    }
 }

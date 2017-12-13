@@ -179,7 +179,7 @@ class FacturasProveedoresController extends ControllerBase
         } else {
 
             $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)
-                ->update(['fk_id_estatus_solicitud' => 3,
+                ->update(['fk_id_estatus_factura' => 3,
                     'motivo_cancelacion'=>$request->motivo_cancelacion,
                     'fecha_cancelacion'=>DB::raw('now()')]);
             if ($isSuccess) {

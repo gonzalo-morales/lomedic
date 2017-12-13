@@ -77,6 +77,7 @@ class SolicitudesController extends ControllerBase
         if(!isset($request->fk_id_solicitante)){
             $request->request->set('fk_id_solicitante',$id_empleado);
         }
+
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules);
 
@@ -87,6 +88,7 @@ class SolicitudesController extends ControllerBase
                 ->first()
                 ->fk_id_departamento);
         $request->request->set('fk_id_estatus_solicitud',1);//Al estarse creando por primer vez, tiene que estar activa
+
         $isSuccess = $this->entity->create($request->all());
 
         if ($isSuccess) {

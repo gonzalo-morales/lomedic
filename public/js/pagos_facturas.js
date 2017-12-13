@@ -5,7 +5,7 @@ $('.datepicker').pickadate({
 });
 
 $(document).ready(function () {
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+
     $('#fk_id_socio_negocio').change(function () {
         $('#loadingcomprador').show();
         $.ajax({
@@ -179,17 +179,6 @@ $(document).ready(function () {
             );
         }
     }
-
-    if($('#pagos').length){
-        if($('#detalle_pagos tr').length < 1){
-            var cantidad_cabecera = $('#encabezado_pagos th').length;
-            $('#detalle_pagos').append(
-                '<tr>' +
-                '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin pagos relacionados</td>' +
-                '</tr>'
-            );
-        }
-    }
     $(".nav-link").click(function (e) {
         e.preventDefault();
         $('#clothing-nav li').each(function () {
@@ -200,34 +189,6 @@ $(document).ready(function () {
         var tab = $(this).prop('href');
         tab = tab.split('#');
         $('#' + tab[1]).addClass('active').addClass('show');
-    });
-
-    $('#reloadpagos').click(function (e) {
-        e.preventDefault();
-        window.location.reload(true);
-    });
-
-    if($('#total_pagado').length){
-        var total = +$('#total_pagado').val();
-        $('#total_pagado').val(total.toFixed(2));
-    }
-
-    //Para eliminar un pago
-    $('.eliminar_pago').click(function (e) {
-        e.preventDefault();
-        $('#eliminar_pago_button').attr('data-id',$(this).attr('href'));
-        $('#confirmar_eliminar_pago').modal('show');
-    });
-
-    $('#eliminar_pago_button').click(function (e) {
-        e.preventDefault();
-        $.delete($('#eliminar_pago_button').attr('data-id'))
-        $('#eliminar_pago_button').removeAttr('data-id');
-    });
-
-    $('#cancelar_deliminar_pago').click(function (e) {
-        e.preventDefault();
-        $('#eliminar_pago_button').removeAttr('data-id');
     });
 });
 
