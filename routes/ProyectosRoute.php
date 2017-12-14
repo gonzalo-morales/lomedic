@@ -23,7 +23,9 @@ Route::prefix('{company}')->group(function () {
         Route::get('getClavesClientes/{id}','Proyectos\ClaveClienteProductosController@obtenerClavesCliente');
         #Route::resource('maestro_materiales','Proyectos\ProyectosProductosController');
         Route::resource('proyectos', 'Proyectos\ProyectosController');
-        Route::get('proyectos/{id}/descargar', 'Proyectos\ProyectosController@descargar');
+        Route::get('proyectos/{id}/descargaranexo', 'Proyectos\ProyectosController@descargaranexo');
+        Route::get('proyectos/{id}/descargarcontrato', 'Proyectos\ProyectosController@descargarcontrato');
+        
         Route::get('getProyectos','Proyectos\ProyectosController@obtenerProyectos');
         Route::post('getProductosProyectos','Proyectos\ProyectosController@loadLayoutProductosProyectos');
         Route::get('getProyectosCliente/{id}','Proyectos\ProyectosController@obtenerProyectosCliente');

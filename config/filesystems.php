@@ -54,6 +54,10 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/sociosnegocio/anexos'),
         ],
+        'proyectos_contratos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/proyectos/contratos'),
+        ],
         'proyectos_anexos' => [
             'driver' => 'local',
             'root' => storage_path('app/proyectos/anexos'),

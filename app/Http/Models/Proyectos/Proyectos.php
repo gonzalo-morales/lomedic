@@ -5,6 +5,7 @@ namespace App\Http\Models\Proyectos;
 use App\Http\Models\ModelCompany;
 use DB;
 use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\Administracion\EstatusDocumentos;
 
 class Proyectos extends ModelCompany
 {
@@ -26,9 +27,7 @@ class Proyectos extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['proyecto','activo','fk_id_cliente','fecha_contrato','fecha_inicio_contrato',
-        'fecha_fin_contrato','numero_contrato','numero_proyecto','monto_adjudicado','fk_id_clasificacion_proyecto',
-        'plazo','representante_legal','numero_fianza'];
+    protected $fillable = ['proyecto','fk_id_cliente','fecha_inicio','fecha_terminacion','fk_id_clasificacion_proyecto','fk_id_estatus','fk_id_localidad','num_evento','fk_id_tipo_evento','fk_id_dependencia','fk_id_subdependencia'];
 
     public $niceNames =[
         'fk_id_cliente'=>'cliente',
@@ -57,28 +56,39 @@ class Proyectos extends ModelCompany
     public $rules = [
         'proyecto' => 'required',
         'fk_id_cliente' => 'required',
-        'fecha_contrato' => 'required',
-        'fk_id_clasificacion_proyecto' => 'required',
-        'monto_adjudicado'=>'regex:/^\d{0,10}(\.\d{0,2})?$/'
+        'fecha_inicio' => 'required',
+        'fecha_terminacion' => 'required',
+        'fk_id_clasificacion_proyecto'=>'required',
+        'fk_id_estatus' => 'required',
+        'fk_id_localidad' => 'required',
     ];
 
     public $fields = [
         'proyecto' => 'Proyecto',
         'cliente.nombre_comercial' => 'Cliente',
-        'numero_contrato' => 'No. Contrato',
-        'fecha_inicio_contrato' => 'Inicio de contrato',
-        'fecha_fin_contrato' => 'Fin de contrato',
-        'activo_span' => 'Estatus'
+        'num_evento' => 'No. Evento',
+        'fecha_inicio' => 'Fecha Inicio',
+        'fecha_terminacion' => 'Fecha Terminacion',
+        'estatus.estatus' => 'Estatus'
     ];
 
     function cliente()
     {
         return $this->hasOne(SociosNegocio::class,'id_socio_negocio','fk_id_cliente');
     }
+    
+    function estatus()
+    {
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus');
+    }
 
-    function ProyectosProductos()
+    function productos()
     {
         return $this->hasMany(ProyectosProductos::class,'fk_id_proyecto','id_proyecto');
+    }
+    
+    public function contratos(){
+        return $this->hasMany(ContratosProyectos::class,'fk_id_proyecto');
     }
     
     public function anexos(){

@@ -8,58 +8,26 @@
 {{ Form::setModel($data) }}
     <h4>Datos del proyecto</h4>
     <div class="row">
-		<div class="form-group col-md-6 col-xs-12">
-			{{Form::cText('* Proyecto','proyecto',['id'=>'proyecto','maxlength'=>'255','data-url'=>companyAction('Proyectos\ProyectosController@obtenerProyectosCliente',['id'=>'?id'])])}}
-		</div>
-		<div class="form-group col-md-6 col-xs-12">
-			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',isset($clientes)?$clientes:[])}}
-			{{--{{Form::cSelectWithDisabled('Cliente','fk_id_cliente',isset($clientes)?$clientes:[],['id'=>'fk_id_cliente'])}}--}}
-			{{--{{Form::label('fk_id_cliente','Cliente')}}--}}
-			{{--{{Form::select('fk_id_cliente',isset($clientes)?$clientes->prepend('...',null):[],null,['id'=>'fk_id_cliente','class'=>'form-control'])}}--}}
+		<div class="form-group col-md-8 col-xs-12">
+			{{Form::cText('* Nombre Proyecto','proyecto',['maxlength'=>'100'])}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
-			{{Form::label('fecha_contrato','* Fecha de creación del contrato')}}
-			{{Form::text('fecha_contrato',null,['id'=>'fecha_contrato',"class"=>'form-control datepicker'])}}
+			{{Form::cSelectWithDisabled('* Tipo Proyecto','fk_id_clasificacion_proyecto',$clasificaciones ?? [])}}
+		</div>
+		<div class="form-group col-md-8 col-xs-12">
+			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',$clientes ?? [])}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
-			{{Form::label('fecha_inicio_contrato','* Fecha inicio del contrato')}}
-			{{Form::text('fecha_inicio_contrato',null,['id'=>'fecha_inicio_contrato',"class"=>'form-control datepicker'])}}
+			{{Form::cSelectWithDisabled('* Estatus','fk_id_estatus',$estatus ?? [])}}
 		</div>
-		<div class="form-group col-md-4 col-xs-12">
-			{{Form::label('fecha_fin_contrato','* Fecha fin del contrato')}}
-			{{Form::text('fecha_fin_contrato',null,['id'=>'fecha_fin_contrato',"class"=>'form-control datepicker'])}}
+		<div class="form-group col-md-8 col-xs-12">
+			{{Form::cSelectWithDisabled('* Localidad','fk_id_localidad',$localidades ?? [])}}
 		</div>
-        <div class="form-group col-md-3 col-xs-12">
-            {{Form::cText('Número de proyecto','numero_proyecto',['maxlength'=>'50'])}}
-        </div>
-		<div class="form-group col-md-3 col-xs-12">
-			{{Form::cText('Número de contrato','numero_contrato',['maxlength'=>'200'])}}
+		<div class="form-group col-md-2 col-xs-12">
+			{{Form::cText('* Fecha Inicio','fecha_inicio')}}
 		</div>
-		<div class="form-group col-md-3 col-xs-12">
-			{{Form::label('monto_adjudicado','Monto adjudicado')}}
-            <i class="material-icons" data-toggle="tooltip" data-placement="top" title="Ej. 9999999999.00">help</i>
-			{{Form::text('monto_adjudicado',isset($data->monto_adjudicado)?number_format($data->monto_adjudicado,2,'.',''):null,['id'=>'monto_adjudicado','class'=>'form-control','maxlength'=>'13'])}}
-		</div>
-		<div class="form-group col-md-3 col-xs-12">
-			{{Form::cSelectWithDisabled('* Clasificación','fk_id_clasificacion_proyecto',isset($clasificaciones)?$clasificaciones:[])}}
-		</div>
-		<div class="form-group col-md-3 col-xs-12">
-			{{Form::cText('Plazo','plazo')}}
-		</div>
-		<div class="form-group col-md-6 col-xs-12">
-			{{Form::cText('Representante legal','representante_legal',['maxlength'=>'200'])}}
-		</div>
-		<div class="form-group col-md-3 col-xs-12">
-			{{Form::cText('Número de fianza','numero_fianza',['maxlength'=>'60'])}}
-		</div>
-		<div class="form-group col-md-12 col-xs-12 text-center">
-            {{Form::cCheckboxSwitch('Activo','activo','1')}}
-			{{--<div data-toggle="buttons">--}}
-				{{--<label class="btn btn-secondary form-check-label {{ !empty($data->activo) || old('activo') ? 'active':''}}">--}}
-					{{--{{Form::checkbox('activo',true,old('activo'),['id'=>'activo',Route::currentRouteNamed(currentRouteName('show'))?'disabled':''])}}--}}
-					{{--Activo--}}
-				{{--</label>--}}
-			{{--</div>--}}
+		<div class="form-group col-md-2 col-xs-12">
+			{{Form::cText('* Fecha Terminacion','fecha_terminacion')}}
 		</div>
 	</div>
 
@@ -69,38 +37,125 @@
     		<h4 class="card-title">Informacion del Proyecto</h4>
             <div class="divider my-2"></div>
 			<ul id="clothing-nav" class="nav nav-pills nav-justified" role="tablist">
-				<li class="nav-item">
-					<a class="nav-link active" role="tab" data-toggle="tab" href="#tab-productosProyectos" id="productosProyectos-tab" aria-controls="productosProyectos" aria-expanded="true">Productos</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-general" id="General-tab" aria-controls="general" aria-expanded="true">General</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-finanzas" id="finanzas-tab" aria-controls="finanzas" aria-expanded="true">Finanzas</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-anexos" id="anexos-tab" aria-controls="anexos" aria-expanded="true">Anexos</a>
-				</li>
+				<li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" href="#tab-licitacion" id="licitacion-tab" aria-controls="licitacion" aria-expanded="true">Licitacion</a></li>
+				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-contratos" id="contratos-tab" aria-controls="contratos" aria-expanded="true">Contratos</a></li>
+				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-productosProyectos" id="productosProyectos-tab" aria-controls="productosProyectos" aria-expanded="true">Productos</a></li>
+				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-anexos" id="anexos-tab" aria-controls="anexos" aria-expanded="true">Anexos</a></li>
+				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-finanzas" id="finanzas-tab" aria-controls="finanzas" aria-expanded="true">Finanzas</a></li>
 			</ul>
 		</div>
 		<!-- Content Panel -->
-			<div id="clothing-nav-content" class="card-body tab-content">
-				<div role="tabpanel" class="tab-pane fade show active" id="tab-productosProyectos" aria-labelledby="productosProyectos-tab">
-					<div class="card">
-						@if(!Route::currentRouteNamed(currentRouteName('show')))
-							<div class="card-header">
-								<fieldset name="detalle-form" id="detalle-form">
-									<div class="row">
-										<div class="form-group input-field col-md-6 col-sm-6">
-                                            <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-                                                Cargando datos... <i class="material-icons align-middle loading">cached</i>
-                                            </div>
-											{{Form::label('fk_id_clave_cliente_producto','* Clave cliente producto')}}
-											{!!Form::select('fk_id_clave_cliente_producto',[],null,['id'=>'fk_id_clave_cliente_producto','disabled','class'=>'form-control','style'=>'width:100%','data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])!!}
-											{{--								{{Form::cSelect('Clave cliente producto','fk_id_clave_cliente_producto',[],['disabled'])}}--}}
-										</div>
-										<div class="form-group input-field col-md-6 col-sm-6">
-                                            <div id="loadingfk_id_upc" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+		<div id="clothing-nav-content" class="card-body tab-content">
+			<div role="tabpanel" class="tab-pane fade show active" id="tab-licitacion" aria-labelledby="licitacion-tab">
+				<div class="row">
+					<div class="form-group col-md-3">
+            			{{Form::cText('No. Evento','num_evento')}}
+            		</div>
+            		<div class="form-group col-md-3">
+            			{{Form::cSelect('Tipo Evento','fk_id_tipo_evento', $tiposeventos ?? [])}}
+            		</div>
+            		<div class="form-group col-md-3">
+            			{{Form::cSelect('Dependencia','fk_id_dependencia', $dependencias ?? [])}}
+            		</div>
+            		<div class="form-group col-md-3">
+            			{{Form::cSelect('Subdependencia','fk_id_subdependencia', $subdependencias ?? [])}}
+            		</div>
+				</div>
+			</div>
+			<div role="tabpanel" class="tab-pane fade" id="tab-contratos" aria-labelledby="contratos-tab">
+				<div class="col-sm-12">
+            		<div class="card z-depth-1-half">
+            			<div class="card-header">
+    						<div class="row">
+    							<div class="form-group col-lg-3 col-md-6">
+                        			{{Form::cText('* Representante legal','representante_legal',['maxlength'=>'200'])}}
+                        		</div>
+    							<div class="form-group col-lg-3 col-md-6">
+    								{{ Form::cText('* No. Contrato', 'num_archivo') }}
+    							</div>
+    							<div class="form-group col-lg-2 col-md-4">
+                        			{{Form::cText('* Fecha inicio','fecha_inicio_contrato',null,['class'=>'datepicker'])}}
+                        		</div>
+                        		<div class="form-group col-lg-2 col-md-4">
+                        			{{Form::cText('* Fecha fin','fecha_fin_contrato',null,['class'=>'datepicker'])}}
+                        		</div>
+    							<div class="form-group col-lg-2 col-md-4">
+    								{{ Form::cFile('* Archivo', 'contrato',['accept'=>'.pdf']) }}
+    							</div>
+    							<div class="form-group col-sm-12 my-3">
+        							<div class="sep sepBtn">
+                						<button id="agregarContrato" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                					</div>
+        						</div>
+    						</div>
+    					</div>
+    					<div class="card-body">
+    						<table class="table responsive-table highlight" id="detalleContratos">
+    							<thead>
+    								<tr>
+    									<th>Representante legal</th>
+    									<th>Num Contrato</th>
+    									<th>Fecha Inicio</th>
+    									<th>Fecha Fin</th>
+    									<th>Archivo</th>
+    									<th></th>
+    								</tr>
+    							</thead>
+    							<tbody>
+    							@if(isset($data->contratos)) 
+        							@foreach($data->contratos->where('eliminar',0) as $row=>$detalle)
+    								<tr>
+    									<td>
+    										{{ Form::hidden('relations[has][contratos]['.$row.'][index]',$row,['class'=>'index']) }}
+    										{{ Form::hidden('relations[has][contratos]['.$row.'][id_contrato]',$detalle->id_contrato) }}
+    										{{$detalle->representante_legal}}
+    									</td>
+    									<td>
+    										{{$detalle->num_contrato}}
+    									</td>
+    									<td>
+    										{{$detalle->fecha_inicio}}
+    									</td>
+    									<td>
+    										{{$detalle->fecha_fin}}
+    									</td>
+    									<td>
+    										{{$detalle->archivo}}
+    									</td>
+    									<td>
+    										<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargarcontrato', ['id' => $detalle->id_contrato])}}" title="Descargar Archivo">
+    											<i class="material-icons">file_download</i>
+    										</a>
+    										@if(Route::currentRouteNamed(currentRouteName('edit')))
+    											<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Contrato"> <i class="material-icons">delete</i></button>
+    										@endif
+    									</td>
+    								</tr>
+        							@endforeach
+        						@endif
+    							</tbody>
+    						</table>
+    					</div>
+    				</div><!--/Here ends card-->
+    			</div>
+			</div>
+				
+			<div role="tabpanel" class="tab-pane fade" id="tab-productosProyectos" aria-labelledby="productosProyectos-tab">
+				<div class="card">
+					@if(!Route::currentRouteNamed(currentRouteName('show')))
+						<div class="card-header">
+							<fieldset name="detalle-form" id="detalle-form">
+								<div class="row">
+									<div class="form-group input-field col-md-6 col-sm-6">
+                                        <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+                                            Cargando datos... <i class="material-icons align-middle loading">cached</i>
+                                        </div>
+										{{Form::label('fk_id_clave_cliente_producto','* Clave cliente producto')}}
+										{!!Form::select('fk_id_clave_cliente_producto',[],null,['id'=>'fk_id_clave_cliente_producto','disabled','class'=>'form-control','style'=>'width:100%','data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])!!}
+										{{--								{{Form::cSelect('Clave cliente producto','fk_id_clave_cliente_producto',[],['disabled'])}}--}}
+									</div>
+									<div class="form-group input-field col-md-6 col-sm-6">
+                                        <div id="loadingfk_id_upc" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                                 Cargando datos... <i class="material-icons align-middle loading">cached</i>
                                             </div>
 											{{Form::label('fk_id_upc','UPC')}}
@@ -139,131 +194,152 @@
 												<div class="sep">
 													<div class="sepBtn">
 														<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large tooltipped "
-															data-position="bottom" data-delay="50" data-tooltip="Agregar" type="button" id="agregar">
-														<i class="material-icons">add</i>
-													</button>
-												</div>
+														data-position="bottom" data-delay="50" data-tooltip="Agregar" type="button" id="agregar">
+													<i class="material-icons">add</i>
+												</button>
 											</div>
 										</div>
-								</div>
-							</fieldset>
-						</div>
-					@endif
-					<div class="card-body">
-						<table id="productosproyectos" class="table-responsive highlight"
-							   @if(isset($data->ProyectosProductos))
-							   data-delete="{{companyAction('Proyectos\ProyectosProductosController@destroy')}}"
-								@endif
-						>
-							<thead>
-							<tr>
-								<th>Clave cliente producto</th>
-								<th>Descripción clave</th>
-								<th>UPC</th>
-								<th>Descripción UPC</th>
-								<th>Prioridad</th>
-								<th>Cantidad</th>
-								<th>Precio venta</th>
-								<th>Moneda</th>
-								<th>Máximo</th>
-								<th>Mínimo</th>
-								<th>Punto de reorden</th>
-								<th>Estatus</th>
-								<th></th>
-							</tr>
-							</thead>
-							<tbody id="tbodyproductosproyectos">
-                            <div class="w-100 h-100 text-center text-white align-middle loadingData loadingtabla" style="display: none;">
-                                Cargando datos... <i class="material-icons align-middle loading">cached</i>
-                            </div>
-							@if( isset( $data->ProyectosProductos ) )
-								@foreach( $data->ProyectosProductos->where('eliminar',false) as $ProyectoProducto )
-									<tr id="{{$ProyectoProducto->id_proyecto_producto}}">
-										<td>
-											{!! Form::hidden('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][id_proyecto_producto]',$ProyectoProducto->id_proyecto_producto) !!}
-											{{$ProyectoProducto->claveClienteProducto->clave_producto_cliente}}
-										</td>
-										<td>
-											{{$ProyectoProducto->claveClienteProducto->sku->descripcion_corta}}
-										</td>
-										<td>
-											{{isset($ProyectoProducto->upc)?$ProyectoProducto->upc->upc:'Sin UPC'}}
-										</td>
-										<td>
-											{{isset($ProyectoProducto->upc)?$ProyectoProducto->upc->descripcion:''}}
-										</td>
-										<td>
-											{!!
-												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][prioridad]',
-												$ProyectoProducto->prioridad,
-												['class'=>'form-control prioridad','maxlength'=>'2'])
-											!!}
-										</td>
-										<td>
-											{!!
-												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][cantidad]',
-												$ProyectoProducto->cantidad,
-												['class'=>'form-control cantidad','maxlength'=>'3'])
-											!!}
-										</td>
-										<td>
-											{!!
-												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][precio_sugerido]',
-												bcdiv($ProyectoProducto->precio_sugerido,'1',2),
-												['class'=>'form-control precio_sugerido','maxlength'=>'13'])
-											!!}
-										</td>
-										<td>
-											{!!
-												Form::select('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][fk_id_moneda]', $monedas ?? [],
-												$ProyectoProducto->fk_id_moneda,
-												['class'=>'form-control fk_id_moneda', 'id'=>'productoProyecto'.$ProyectoProducto->id_proyecto_producto])
-											!!}
-										</td>
-										<td>
-											{!!
-												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][maximo]',
-												$ProyectoProducto->maximo,
-												['class'=>'form-control maximo','maxlength'=>'4'])
-											!!}
-										</td>
-										<td>
-											{!!
-												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][minimo]',
-												$ProyectoProducto->minimo,
-												['class'=>'form-control minimo','maxlength'=>'4'])
-											!!}
-										</td>
-										<td>
-											{!!
-												Form::text('productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][numero_reorden]',
-												$ProyectoProducto->numero_reorden,
-												['class'=>'form-control numero_reorden','maxlength'=>'4'])
-											!!}
-										</td>
-										<td>
-											{!! Form::cCheckbox('','productoProyecto['.$ProyectoProducto->id_proyecto_producto.'][activo]',[!empty($ProyectoProducto->activo)?'checked':'']) !!}
-										</td>
-										<td>
-											{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
-											@if(Route::currentRouteNamed(currentRouteName('edit')))
-												<button class="btn is-icon text-primary bg-white "
-														type="button" data-item-id="{{$ProyectoProducto->id_proyecto_producto}}"
-														id="{{$ProyectoProducto->id_proyecto_producto}}" data-delay="50"
-														onclick="borrarFilaProyectoProducto_edit(this)" data-delete-type="single">
-													<i class="material-icons">delete</i></button>
-											@endif
-										</td>
-									</tr>
-								@endforeach
-							@endif
-							</tbody>
-						</table>
+									</div>
+							</div>
+						</fieldset>
 					</div>
+				@endif
+				<div class="card-body table-responsive">
+					<table id="productosproyectos" class="table highlight"
+						   @if(isset($data->ProyectosProductos))
+						   data-delete="{{companyAction('Proyectos\ProyectosProductosController@destroy')}}"
+							@endif
+						<thead>
+						<tr>
+							<th>Clave cliente producto</th>
+							<th>Descripción clave</th>
+							<th>UPC</th>
+							<th>Descripción UPC</th>
+							<th>Prioridad</th>
+							<th>Cantidad</th>
+							<th>Precio venta</th>
+							<th>Moneda</th>
+							<th>Máximo</th>
+							<th>Mínimo</th>
+							<th>Punto de reorden</th>
+							<th>Estatus</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody id="tbodyproductosproyectos">
+                        <div class="w-100 h-100 text-center text-white align-middle loadingData loadingtabla" style="display: none;">
+                            Cargando datos... <i class="material-icons align-middle loading">cached</i>
+                        </div>
+						@if( isset( $data->productos ) )
+							@foreach( $data->productos->where('eliminar',0) as $row=>$detalle)
+								<tr id="{{$detalle->id_proyecto_producto}}">
+									<td>
+										{{ Form::hidden('relations[has][productos]['.$row.'][index]',$row,['class'=>'index']) }}
+										{{ Form::hidden('relations[has][productos]['.$row.'][id_proyecto_producto]',$detalle->id_proyecto_producto) }}
+										{{$detalle->claveClienteProducto->clave_producto_cliente}}
+									</td>
+									<td>
+										{{$detalle->claveClienteProducto->sku->descripcion_corta}}
+									</td>
+									<td>
+										{{$detalle->upc->upc ?? 'Sin UPC'}}
+									</td>
+									<td>
+										{{$detalle->upc->descripcion ?? ''}}
+									</td>
+									<td>
+										{{ Form::text('relations[has][productos]['.$row.'][prioridad]',$detalle->prioridad,['class'=>'form-control prioridad','maxlength'=>'2']) }}
+									</td>
+									<td>
+										{{ Form::text('relations[has][productos]['.$row.'][cantidad]', $detalle->cantidad,['class'=>'form-control cantidad','maxlength'=>'3']) }}
+									</td>
+									<td>
+										{{ Form::text('relations[has][productos]['.$row.'][precio_sugerido]',number_format($detalle->precio_sugerido,2),['class'=>'form-control precio_sugerido','maxlength'=>'13']) }}
+									</td>
+									<td>
+										{{ Form::select('relations[has][productos]['.$row.'][fk_id_moneda]', $monedas ?? [], $detalle->fk_id_moneda,['class'=>'form-control fk_id_moneda', 'id'=>'productoProyecto'.$detalle->id_proyecto_producto]) }}
+									</td>
+									<td>
+										{{ Form::text('relations[has][productos]['.$row.'][maximo]', $detalle->maximo, ['class'=>'form-control maximo','maxlength'=>'4']) }}
+									</td>
+									<td>
+										{{ Form::text('relations[has][productos]['.$row.'][minimo]', $detalle->minimo, ['class'=>'form-control minimo','maxlength'=>'4']) }}
+									</td>
+									<td>
+										{{ Form::text('relations[has][productos]['.$row.'][numero_reorden]', $detalle->numero_reorden, ['class'=>'form-control numero_reorden','maxlength'=>'4']) }}
+									</td>
+									<td>
+										{{ Form::cCheckbox('','relations[has][productos]['.$row.'][activo]',[!empty($detalle->activo)?'checked':'']) }}
+									</td>
+									<td>
+									@if(Route::currentRouteNamed(currentRouteName('edit')))
+										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Producto"> <i class="material-icons">delete</i></button>
+									@endif
+									</td>
+								</tr>
+							@endforeach
+						@endif
+						</tbody>
+					</table>
 				</div>
 			</div>
-			<div role="tabpanel" class="tab-pane fade" id="tab-general" aria-labelledby="general-tab">
-				Datos generales del proyecto
+		</div>
+			
+			<div role="tabpanel" class="tab-pane fade" id="tab-anexos" aria-labelledby="anexos-tab">
+				<div class="col-sm-12">
+            		<div class="card z-depth-1-half">
+            			<div class="card-header">
+    						<div class="row">
+    							<div class="form-group col-md-6">
+    								{{ Form::cText('* Nombre', 'nombre_archivo') }}
+    							</div>
+    							<div class="form-group col-md-6">
+    								{{ Form::cFile('* Archivo', 'archivo',['accept'=>'.xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf']) }}
+    							</div>
+    							<div class="form-group col-sm-12 my-3">
+        							<div class="sep sepBtn">
+                						<button id="agregarAnexo" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                					</div>
+        						</div>
+    						</div>
+    					</div>
+    					<div class="card-body">
+    						<table class="table responsive-table highlight" id="detalleAnexos">
+    							<thead>
+    								<tr>
+    									<th>Nombre</th>
+    									<th>Archivo</th>
+    									<th>Acción</th>
+    								</tr>
+    							</thead>
+    							<tbody>
+    							@if(isset($data->anexos)) 
+    							@foreach($data->anexos->where('eliminar',0) as $row=>$detalle)
+								<tr>
+									<td>
+										{{ Form::hidden('relations[has][anexos]['.$row.'][index]',$row,['class'=>'index']) }}
+										{{ Form::hidden('relations[has][anexos]['.$row.'][id_anexo]',$detalle->id_anexo,['class'=>'id_anexo']) }}
+										{{$detalle->nombre}}
+									</td>
+									<td>
+										{{$detalle->archivo}}
+									</td>
+									<td>
+										<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargaranexo', ['id' => $detalle->id_anexo])}}" title="Descargar Archivo">
+											<i class="material-icons">file_download</i>
+										</a>
+										@if(Route::currentRouteNamed(currentRouteName('edit')))
+											<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button>
+										@endif
+									</td>
+								</tr>
+    							@endforeach
+    						@endif
+    							</tbody>
+    						</table>
+    					</div>
+    				</div><!--/Here ends card-->
+    			</div>
 			</div>
 			<div role="tabpanel" class="tab-pane fade" id="tab-finanzas" aria-labelledby="finanzas-tab">
 				<div class="row">
@@ -294,59 +370,7 @@
 					</div>
 				</div>
 			</div>
-			<div role="tabpanel" class="tab-pane fade" id="tab-anexos" aria-labelledby="anexos-tab">
-				<div class="col-sm-12">
-            		<div class="card z-depth-1-half">
-            			<div class="card-header">
-    						<div class="row">
-    							<div class="form-group col-md-6">
-    								{{ Form::cText('* Nombre', 'nombre_archivo') }}
-    							</div>
-    							<div class="form-group col-md-6">
-    								{{ Form::cFile('* Archivo', 'archivo',['accept'=>'.xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf']) }}
-    							</div>
-    							<div class="form-group col-sm-12 my-3">
-        							<div class="sep sepBtn">
-                						<button id="agregar-anexo" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
-                					</div>
-        						</div>
-    						</div>
-    					</div>
-    					<div class="card-body">
-    						<table class="table responsive-table highlight" id="tAnexos">
-    							<thead>
-    								<tr>
-    									<th>Nombre</th>
-    									<th>Archivo</th>
-    									<th>Acción</th>
-    								</tr>
-    							</thead>
-    							<tbody>
-    							@if(isset($data->anexos)) 
-    							@foreach($data->anexos->where('eliminar',0) as $key=>$detalle)
-								<tr>
-									<td>
-										{!! Form::hidden('anexos['.$key.'][id_anexo]',$detalle->id_anexo,['class'=>'id_anexo']) !!}
-										{{$detalle->nombre}}
-									</td>
-									<td>
-										{{$detalle->archivo}}
-									</td>
-									<td>
-										<a class="btn is-icon text-primary bg-white" href="{{companyAction('descargar', ['id' => $detalle->id_anexo])}}" title="Descargar Archivo">
-											<i class="material-icons">file_download</i>
-										</a>
-										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button>
-									</td>
-								</tr>
-    							@endforeach
-    						@endif
-    							</tbody>
-    						</table>
-    					</div>
-    				</div><!--/Here ends card-->
-    			</div>
-			</div>
+			
 		</div>
 		<!-- End Content Panel -->
 	</div>
@@ -356,8 +380,8 @@
 	@parent
 	{{ HTML::script(asset('vendor/vanilla-datatables/vanilla-dataTables.js')) }}
     @if (!Route::currentRouteNamed(currentRouteName('index')))
-	{{ HTML::script(asset('js/proyectos.js')) }}
-	{{ HTML::script(asset('js/maestro_materiales.js')) }}
+	{{ HTML::script(asset('js/proyectos/proyectos.js')) }}
+	{{ HTML::script(asset('js/proyectos/maestro_materiales.js')) }}
 	
 <!-- Resources -->
 <style>
