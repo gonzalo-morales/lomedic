@@ -1,4 +1,6 @@
-{{ Form::label($name, $text,['class'=>'w-100']) }}
+@if(!empty($text))
+	{{ Form::label($name, $text,['class'=>'w-100']) }}
+@endif
 <label class="custom-file w-100">
     {{ Form::file($name, collect($attributes ?? [])->reduceWithKeys(function($acc, $item, $key) {
             if (isset($acc['class']) && $key == 'class') $item = "{$acc['class']} $item";

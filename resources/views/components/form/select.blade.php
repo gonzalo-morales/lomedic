@@ -1,4 +1,6 @@
+@if(!empty($text))
 {{ Form::label($name, $text) }}
+@endif
 {{ Form::select($name, $options ?? [], null, collect($attributes ?? [])->reduceWithKeys(function($acc, $item, $key) {
     if (isset($acc['class']) && $key == 'class') $item = "{$acc['class']} $item";
     return array_merge($acc, [$key => $item]);
