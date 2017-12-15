@@ -11,6 +11,7 @@ use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Localidades;
 use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Proyectos\ContratosProyectos;
+use App\Http\Models\Proyectos\TiposEventos;
 use App\Http\Models\Logs;
 use App;
 use DB;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Models\Proyectos\Dependencias;
+use App\Http\Models\Proyectos\Subdependencias;
 
 class ProyectosController extends ControllerBase
 {
@@ -34,11 +37,14 @@ class ProyectosController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'clientes' => SociosNegocio::where('activo', 1)->where('eliminar', 0)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
-            'localidades' => Localidades::where('activo',1)->where('eliminar',0)->pluck('localidad','id_localidad'),
-            'estatus' => EstatusDocumentos::select('estatus','id_estatus')->pluck('estatus','id_estatus'),
-            'clasificaciones' => ClasificacionesProyectos::where('activo',1)->pluck('clasificacion','id_clasificacion_proyecto'),
+            'clientes' => SociosNegocio::where('activo', 1)->where('eliminar', 0)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio')->prepend('Selecciona una opcion...',''),
+            'localidades' => Localidades::where('activo',1)->where('eliminar',0)->pluck('localidad','id_localidad')->prepend('Selecciona una opcion...',''),
+            'estatus' => EstatusDocumentos::select('estatus','id_estatus')->pluck('estatus','id_estatus')->prepend('Selecciona una opcion...',''),
+            'clasificaciones' => ClasificacionesProyectos::where('activo',1)->pluck('clasificacion','id_clasificacion_proyecto')->prepend('Selecciona una opcion...',''),
             'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo','1')->where('eliminar','0')->orderBy('moneda')->pluck('moneda','id_moneda')->prepend('Selecciona una opcion...',''),
+            'tiposeventos' => TiposEventos::where('activo', 1)->where('eliminar', 0)->orderBy('tipo_evento')->pluck('tipo_evento','id_tipo_evento')->prepend('Selecciona una opcion...',''),
+            'dependencias' => Dependencias::where('activo', 1)->where('eliminar', 0)->orderBy('dependencia')->pluck('dependencia','id_dependencia')->prepend('Selecciona una opcion...',''),
+            'subdependencias' => Subdependencias::where('activo', 1)->where('eliminar', 0)->orderBy('subdependencia')->pluck('subdependencia','id_subdependencia')->prepend('Selecciona una opcion...',''),
         ];
     }
     

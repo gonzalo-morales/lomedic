@@ -81,6 +81,21 @@ class Proyectos extends ModelCompany
     {
         return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus');
     }
+    
+    function tipoevento()
+    {
+        return $this->hasOne(TiposEventos::class,'id_tipo_evento','fk_id_tipo_evento');
+    }
+    
+    function dependencia()
+    {
+        return $this->hasOne(Dependencias::class,'id_dependencia','fk_id_dependencia');
+    }
+    
+    function subdependencia()
+    {
+        return $this->hasOne(Subdependencias::class,'id_subdependencia','fk_id_subdependencia');
+    }
 
     function productos()
     {

@@ -4,32 +4,32 @@ namespace App\Http\Models\Proyectos;
 
 use App\Http\Models\ModelBase;
 
-class TiposEventos extends ModelBase
+class Dependencias extends ModelBase
 {
 	/**
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.pry_cat_tipos_eventos';
+	protected $table = 'maestro.gen_cat_dependencias';
 
 	/**
 	 * The primary key of the table
 	 * @var string
 	 */
-	protected $primaryKey = 'id_tipo_evento';
+	protected $primaryKey = 'id_dependencia';
 
 	/**
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
-	protected $fillable = ['tipo_evento','activo'];
+	protected $fillable = ['dependencia','activo'];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-        'tipo_evento' => 'required',
+        'dependencia' => 'required',
 	];
 
 	/**
@@ -37,16 +37,16 @@ class TiposEventos extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-        'tipo_evento' => 'Tipo Evento',
+        'dependencia' => 'Dependencia',
         'activo_span' => 'Estatus'
 	];
 
 	public $niceNames = [
-	    'tipo_evento' => 'Tipo Evento'
+	    'dependencia' => 'Dependencia'
     ];
 
 	function proyecto()
     {
-        return $this->belongsTo(Proyectos::class,'fk_id_tipo_evento');
+        return $this->belongsTo(Proyectos::class,'fk_id_dependencia');
     }
 }
