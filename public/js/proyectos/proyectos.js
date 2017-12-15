@@ -1,10 +1,33 @@
 $(document).ready(function () {
-	$('.datepicker').pickadate({
-		selectMonths: true, // Creates a dropdown to control month
-		selectYears: 2, // Creates a dropdown of 2 years to control year
-		min: new Date(2017,0,1),//Primero de enero del 2017
-		format: 'yyyy-mm-dd'
+	
+	var from_picker = $('#fecha_inicio').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
+	var to_picker = $('#fecha_terminacion').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
+	
+	from_picker.on('set', function(event) {
+		if ( 'select' in event ) {
+			to_picker.start().clear().set('min', from_picker.get('select'));
+	    }
+
+	    if ( 'clear' in event ) {
+	    	to_picker.clear().set('min', false).stop();
+	    	$('#fecha_terminacion').prop('readonly', true);
+		  }
 	});
+	
+	var from_contrato = $('#fecha_inicio_contrato').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
+	var to_contrato = $('#fecha_fin_contrato').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
+	
+	from_contrato.on('set', function(event) {
+		if ( 'select' in event ) {
+			to_contrato.start().clear().set('min', from_contrato.get('select'));
+	    }
+
+	    if ( 'clear' in event ) {
+	    	to_contrato.clear().set('min', false).stop();
+	    	$('#fecha_fin_contrato').prop('readonly', true);
+		  }
+	});
+	
 	
     $(".nav-link").click(function (e) {
         e.preventDefault();
@@ -29,7 +52,7 @@ $(document).ready(function () {
 		archivo = $("#contrato").prop('files');
 		
 		if(representante == '' | contrato == '' | fechainicio == '' | fechafin == '' | $("#archivo").length == 0) {
-			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleContratos').append('<tr>'+
@@ -42,7 +65,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileContrato-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
     
@@ -54,10 +77,10 @@ $(document).ready(function () {
 		archivo = $("#archivo").prop('files');
 		
 		if(nombre == '') {
-			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if($("#archivo").length == 0) {
-			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleAnexos').append('<tr>'+
@@ -67,12 +90,12 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileAnexo-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 });
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
