@@ -26,7 +26,7 @@ class ProyectosProductos extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_clave_cliente_producto','fk_id_upc','prioridad','cantidad','precio_sugerido','activo','fk_id_proyecto','fk_id_moneda','minimo','maximo','numero_reorden'];
+    protected $fillable = ['fk_id_clave_cliente_producto','fk_id_upc','prioridad','cantidad','precio_sugerido','fk_id_proyecto','fk_id_moneda','minimo','maximo','numero_reorden','activo'];
 
     public $niceNames =[
         'fk_id_clave_cliente_producto'=>'clave cliente producto',
@@ -39,11 +39,7 @@ class ProyectosProductos extends ModelCompany
      * The validation rules
      * @var array
      */
-    public $rules = [
-//        'prioridad' => 'required|numeric',
-//        'cantidad' => 'required|numeric',
-//        'precio_sugerido' => 'requried|regex:/^[0-9]+(\.[0-9]{1,2})?$/'
-    ];
+    public $rules = [];
 
     public $fields = [
         'id_proyecto_producto' => 'Proyecto',

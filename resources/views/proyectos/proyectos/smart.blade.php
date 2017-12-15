@@ -1,7 +1,3 @@
-@section('header-top')
-	{{ HTML::style(asset('vendor/vanilla-dataTables/vanilla-dataTables.css')) }}
-@endsection
-
 @section('content-width', 'w-100')
 
 @section('form-content')
@@ -12,22 +8,22 @@
 			{{Form::cText('* Nombre Proyecto','proyecto',['maxlength'=>'100'])}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
-			{{Form::cSelectWithDisabled('* Tipo Proyecto','fk_id_clasificacion_proyecto',$clasificaciones ?? [])}}
+			{{Form::cSelectWithDisabled('* Tipo Proyecto','fk_id_clasificacion_proyecto',$clasificaciones ?? [],['class'=>'select2'])}}
 		</div>
 		<div class="form-group col-md-8 col-xs-12">
-			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',$clientes ?? [])}}
+			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',$clientes ?? [],['class'=>'select2'])}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
 			{{Form::cSelectWithDisabled('* Estatus','fk_id_estatus',$estatus ?? [])}}
 		</div>
 		<div class="form-group col-md-8 col-xs-12">
-			{{Form::cSelectWithDisabled('* Localidad','fk_id_localidad',$localidades ?? [])}}
+			{{Form::cSelectWithDisabled('* Localidad','fk_id_localidad',$localidades ?? [],['class'=>'select2'])}}
 		</div>
 		<div class="form-group col-md-2 col-xs-12">
-			{{Form::cText('* Fecha Inicio','fecha_inicio')}}
+			{{Form::cText('* Fecha Inicio','fecha_inicio',['class'=>' datepicker'])}}
 		</div>
 		<div class="form-group col-md-2 col-xs-12">
-			{{Form::cText('* Fecha Terminacion','fecha_terminacion')}}
+			{{Form::cText('* Fecha Terminacion','fecha_terminacion',['class'=>' datepicker'])}}
 		</div>
 	</div>
 
@@ -52,13 +48,13 @@
             			{{Form::cText('No. Evento','num_evento')}}
             		</div>
             		<div class="form-group col-md-3">
-            			{{Form::cSelect('Tipo Evento','fk_id_tipo_evento', $tiposeventos ?? [])}}
+            			{{Form::cSelectWithDisabled('Tipo Evento','fk_id_tipo_evento', $tiposeventos ?? [],['class'=>'select2'])}}
             		</div>
             		<div class="form-group col-md-3">
-            			{{Form::cSelect('Dependencia','fk_id_dependencia', $dependencias ?? [])}}
+            			{{Form::cSelectWithDisabled('Dependencia','fk_id_dependencia', $dependencias ?? [],['class'=>'select2'])}}
             		</div>
             		<div class="form-group col-md-3">
-            			{{Form::cSelect('Subdependencia','fk_id_subdependencia', $subdependencias ?? [])}}
+            			{{Form::cSelectWithDisabled('Subdependencia','fk_id_subdependencia', $subdependencias ?? [],['class'=>'select2'])}}
             		</div>
 				</div>
 			</div>
@@ -74,10 +70,10 @@
     								{{ Form::cText('* No. Contrato', 'num_archivo') }}
     							</div>
     							<div class="form-group col-lg-2 col-md-4">
-                        			{{Form::cText('* Fecha inicio','fecha_inicio_contrato',null,['class'=>'datepicker'])}}
+                        			{{Form::cText('* Fecha inicio','fecha_inicio_contrato',['class'=>' datepicker'])}}
                         		</div>
                         		<div class="form-group col-lg-2 col-md-4">
-                        			{{Form::cText('* Fecha fin','fecha_fin_contrato',null,['class'=>'datepicker'])}}
+                        			{{Form::cText('* Fecha fin','fecha_fin_contrato',['class'=>' datepicker'])}}
                         		</div>
     							<div class="form-group col-lg-2 col-md-4">
     								{{ Form::cFile('* Archivo', 'contrato',['accept'=>'.pdf']) }}
@@ -89,8 +85,8 @@
         						</div>
     						</div>
     					</div>
-    					<div class="card-body">
-    						<table class="table responsive-table highlight" id="detalleContratos">
+    					<div class="card-body responsive-table">
+    						<table class="table highlight" id="detalleContratos">
     							<thead>
     								<tr>
     									<th>Representante legal</th>
@@ -150,62 +146,52 @@
                                         <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                             Cargando datos... <i class="material-icons align-middle loading">cached</i>
                                         </div>
-										{{Form::label('fk_id_clave_cliente_producto','* Clave cliente producto')}}
-										{!!Form::select('fk_id_clave_cliente_producto',[],null,['id'=>'fk_id_clave_cliente_producto','disabled','class'=>'form-control','style'=>'width:100%','data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])!!}
-										{{--								{{Form::cSelect('Clave cliente producto','fk_id_clave_cliente_producto',[],['disabled'])}}--}}
+										{{Form::cSelect('* Clave cliente producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','disabled'=>true,'data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])}}
 									</div>
 									<div class="form-group input-field col-md-6 col-sm-6">
                                         <div id="loadingfk_id_upc" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-                                                Cargando datos... <i class="material-icons align-middle loading">cached</i>
-                                            </div>
-											{{Form::label('fk_id_upc','UPC')}}
-											<div class="input-group">
-												<span class="input-group-addon">
-													<input type="checkbox" id="activo_upc">
-												</span>
-												{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
-                                                'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
-                                                'class'=>'form-control','style'=>'width:100%']) !!}
-											</div>
+                                            Cargando datos... <i class="material-icons align-middle loading">cached</i>
+                                        </div>
+										{{Form::label('fk_id_upc','UPC')}}
+										<div class="input-group">
+											<span class="input-group-addon">
+												<input type="checkbox" id="activo_upc">
+											</span>
+											{{Form::cSelect(null,'fk_id_upc',$upcs ?? [],['class'=>'index','disabled'=>true,'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id'])])}}
 										</div>
 									</div>
-									<div>
-										<div class="col-sm-12 text-center border">
-											<div class="sep">
-												<div class="sepText bg-light">
-													ó
-												</div>
-											</div>
+									<div class="col-sm-12 text-center border">
+										<div class="sep">
+											<div class="sepText bg-light">ó</div>
 										</div>
-										<p class="text-center mt-2">Puedes descargar un layout e importar el excel</p>
+										<p class="my-2 text-center">Puedes descargar un layout e importar el excel</p>
+    									<div class="row text-center">
+    										<div class="form-goup col-md-12 text-center">
+    											<a href="{{companyAction('layoutProductosProyecto')}}" id="layout" class="btn btn-outline-info btn-lg">Descargar Layout</a>
+    										</div>
+    										<div class="form-goup col-sm-2"></div>
+    										<div class="form-goup col-sm-8">
+    											{{ Form::cFile(null, 'file_xlsx',['accept'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel','data-url'=>companyAction('loadLayoutProductosProyectos')]) }}
+    										</div>
+    										<div class="form-goup col-sm-2">
+    											<div style="display:none;" id="campo_moneda">
+    												{{ Form::cSelectWithDisabled(null,'relations[has][productos][$row_id][fk_id_moneda]', $monedas ?? [],['class'=>'fk_id_moneda']) }}
+    											</div>
+    										</div>
+    									</div>
+										<div class="col-sm-12 text-center mt-3">
+    										<div class="sep sepBtn">
+												<button id="agregarProducto" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
+    										</div>
+    									</div>
 									</div>
-									<div class="row mt-3">
-										<div class="form-goup col-md-6 text-center">
-											<a href="{{companyAction('layoutProductosProyecto')}}" id="layout" class="btn btn-primary">Descargar Layout</a>
-{{--												{!! Form::button('Descargar Layout',['id'=>'layout','class'=>'btn btn-primary','name'=>'layout','href'=>])!!}--}}
-											</div>
-											<div class="form-goup col-md-6">
-												<label class="custom-file">
-													<input type="file" class="custom-file-input" id="file_xlsx" name="file_xlsx" data-url="{{companyAction('loadLayoutProductosProyectos')}}">
-													<span class="custom-file-control"></span>
-												</label>
-											</div>
-											<div class="col-sm-12 text-center">
-												<div class="sep">
-													<div class="sepBtn">
-														<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large tooltipped "
-														data-position="bottom" data-delay="50" data-tooltip="Agregar" type="button" id="agregar">
-													<i class="material-icons">add</i>
-												</button>
-											</div>
-										</div>
-									</div>
-							</div>
-						</fieldset>
+								</div>
+							</fieldset>
+						</div>
 					</div>
 				@endif
 				<div class="card-body table-responsive">
-					<table id="productosproyectos" class="table highlight"
+					<table class="table highlight" id="detalleProductos">
 						   @if(isset($data->ProyectosProductos))
 						   data-delete="{{companyAction('Proyectos\ProyectosProductosController@destroy')}}"
 							@endif
@@ -257,7 +243,7 @@
 										{{ Form::text('relations[has][productos]['.$row.'][precio_sugerido]',number_format($detalle->precio_sugerido,2),['class'=>'form-control precio_sugerido','maxlength'=>'13']) }}
 									</td>
 									<td>
-										{{ Form::select('relations[has][productos]['.$row.'][fk_id_moneda]', $monedas ?? [], $detalle->fk_id_moneda,['class'=>'form-control fk_id_moneda', 'id'=>'productoProyecto'.$detalle->id_proyecto_producto]) }}
+										{{ Form::select('relations[has][productos]['.$row.'][fk_id_moneda]', $monedas ?? [], $detalle->fk_id_moneda, ['class'=>'form-control custom-select fk_id_moneda']) }}
 									</td>
 									<td>
 										{{ Form::text('relations[has][productos]['.$row.'][maximo]', $detalle->maximo, ['class'=>'form-control maximo','maxlength'=>'4']) }}
@@ -273,7 +259,7 @@
 									</td>
 									<td>
 									@if(Route::currentRouteNamed(currentRouteName('edit')))
-										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Producto"> <i class="material-icons">delete</i></button>
+										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Producto"><i class="material-icons">delete</i></button>
 									@endif
 									</td>
 								</tr>

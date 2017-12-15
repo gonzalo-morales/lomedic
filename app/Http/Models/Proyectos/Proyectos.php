@@ -103,10 +103,10 @@ class Proyectos extends ModelCompany
     }
     
     public function contratos(){
-        return $this->hasMany(ContratosProyectos::class,'fk_id_proyecto');
+        return $this->hasMany(ContratosProyectos::class,'fk_id_proyecto','id_proyecto');
     }
     
     public function anexos(){
-        return $this->hasMany(AnexosProyectos::class,'fk_id_proyecto');
+        return $this->hasMany(AnexosProyectos::class,'fk_id_proyecto','id_proyecto');
     }
 }

@@ -29,5 +29,7 @@ $(document).ready(function () {
 		
 		if($('#fk_id_moneda').val() == 100)
 			$('#tipo_cambio').val('1.00');
+		else
+			$('#tipo_cambio').val('');
 	});
 });

@@ -29,7 +29,7 @@ $(document).ready(function () {
 		archivo = $("#contrato").prop('files');
 		
 		if(representante == '' | contrato == '' | fechainicio == '' | fechafin == '' | $("#archivo").length == 0) {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleContratos').append('<tr>'+
@@ -42,7 +42,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileContrato-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
     
@@ -54,10 +54,10 @@ $(document).ready(function () {
 		archivo = $("#archivo").prop('files');
 		
 		if(nombre == '') {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if($("#archivo").length == 0) {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleAnexos').append('<tr>'+

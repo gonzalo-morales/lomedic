@@ -70,7 +70,7 @@
 								<tr>
 									<th>Tipo Relacion</th>
 									<th>Factura</th>
-									<th>Acción</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
