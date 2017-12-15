@@ -32,7 +32,7 @@
 		{{Form::cText('Fecha pago','fecha_pago',['class'=>'datepicker','placeholder'=>'dd-mm-yyyy'])}}
 	</div>
 	<div class="form-group col-md-2 col-sm-6">
-		{{Form::cNumber('Monto','monto',[],$data->monto ?? null)}}
+		{{Form::cNumber('Monto','monto',[],isset($data->monto) ? $data->monto : null)}}
 	</div>
 	<div class="form-group col-md-4 col-sm-6">
 		{{Form::cSelectWithDisabled('Forma de pago','fk_id_forma_pago', $formas_pago ?? [])}}
@@ -41,7 +41,7 @@
 		{{Form::cSelectWithDisabled('Moneda','fk_id_moneda', $monedas ?? [])}}
 	</div>
 	<div class="form-group col-md-4 col-sm-6">
-		{{Form::cNumber('Tipo de Cambio','tipo_cambio',[],$data->tipo_cambio ?? null)}}
+		{{Form::cNumber('Tipo de Cambio','tipo_cambio',[],isset($data->tipo_cambio) ? $data->tipo_cambio : null)}}
 	</div>
 	<div class="form-group col-md-12 col-sm-12 text-center">
 		{{Form::cFile('Comprobante','comprobante_input',['accept'=>'.pdf,image/*'])}}
@@ -120,7 +120,7 @@
 				<tr>
 					<td colspan="3"></td>
 					<td>
-						{{Form::cNumber('Monto Aplicado','monto_aplicado',['disabled'],$data->monto_aplicado ?? null,null,'')}}
+						{{Form::cNumber('Monto Aplicado','monto_aplicado',['disabled'],isset($data->monto_aplicado) ? $data->monto_aplicado : null,null,'')}}
 					</td>
 				</tr>
 			</tfoot>
