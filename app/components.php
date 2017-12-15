@@ -1,7 +1,7 @@
 <?php
 
 Form::component('cText', 'components.form.text', ['text', 'name', 'attributes']);
-Form::component('cNumber', 'components.form.number', ['text', 'name', 'attributes']);
+Form::component('cNumber', 'components.form.number', ['text', 'name', 'attributes', 'value', 'decimal', 'separator']);
 Form::component('cPassword', 'components.form.password', ['text', 'name', 'attributes']);
 Form::component('cDate', 'components.form.date', ['text', 'name', 'attributes']);
 Form::component('cTextArea', 'components.form.textarea', ['text', 'name', 'attributes']);

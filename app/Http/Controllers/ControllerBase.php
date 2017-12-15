@@ -222,18 +222,23 @@ class ControllerBase extends Controller
             if ($request->relations) {
                 foreach ($request->relations as $relationType => $collections) {
                     # Relacion "HAS"
-                    if ($relationType == 'has') {
-                        foreach ($collections as $relationName => $relations) {
-                            # Recorremos cada coleccion
-                            $primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
+                }
+                if ($relationType == 'has') {
+                    foreach ($collections as $relationName => $relations) {
+                        # Recorremos cada coleccion
+                        $primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
 
-                            $ids = collect($relations)->pluck($primaryKey);
+                        $ids = collect($relations)->pluck($primaryKey);
+                        if(!empty($ids)){
                             $entity->{$relationName}()->whereNotIn($primaryKey, $ids)->update(['eliminar' => 1]);
+                        }
+                        else {
+                            $entity->{$relationName}()->update(['eliminar' => 1]);
+                        }
 
-                            foreach ($relations as $relation) {
-                                if (array_key_exists($primaryKey, $relation)) {
-                                    $entity->{$relationName}()->updateOrCreate([$primaryKey => $relation[$primaryKey]], $relation);
-                                }
+                        foreach ($relations as $relation) {
+                            if (array_key_exists($primaryKey, $relation) && $relation[$primaryKey] != -1) {
+                                $entity->{$relationName}()->updateOrCreate([$primaryKey => $relation[$primaryKey]], $relation);
                             }
                         }
                     }

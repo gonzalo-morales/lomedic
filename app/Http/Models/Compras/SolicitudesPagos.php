@@ -26,7 +26,7 @@ class SolicitudesPagos extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_solicitante','fecha_necesaria','fk_id_forma_pago','fk_id_moneda','fk_id_estatus_solicitud_pago','fk_id_sucursal'];
+    protected $fillable = ['fk_id_solicitante','fecha_necesaria','fk_id_forma_pago','fk_id_moneda','fk_id_estatus_solicitud_pago','fk_id_sucursal','total'];
 
     /**
      * Los atributos que seran visibles en index-datable

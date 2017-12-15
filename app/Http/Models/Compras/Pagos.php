@@ -31,14 +31,13 @@ class Pagos extends ModelCompany
         'numero_referencia',
         'fk_id_banco',
         'fecha_pago',
-        'monto',
         'fk_id_forma_pago',
         'fk_id_moneda',
         'tipo_cambio',
         'observaciones',
-        'activo',
         'eliminar',
-        'comprobante'
+        'comprobante',
+        'monto'
     ];
 
     public $niceNames =[
@@ -60,7 +59,7 @@ class Pagos extends ModelCompany
     protected $fields = [
         'id_pago' => 'Número de pago',
         'fecha_pago' => 'Fecha de pago',
-        'monto' => 'Monto',
+        'monto_formated' => 'Monto',
         'forma_pago.forma_pago' => 'Forma pago',
         'moneda.moneda'=>'Moneda'
     ];
@@ -73,11 +72,16 @@ class Pagos extends ModelCompany
      */
     public $rules = [
         'fecha_pago'=>'required',
-        'monto'=>'required||regex:/^(\d{0,7}(\.\d{0,2})?)$/',
+        'monto'=>'required|regex:/^(\d{0,7}(\.\d{0,2})?)$/',
         'fk_id_forma_pago'=>'required',
         'fk_id_moneda'=>'required',
-        'tipo_cambio'=>'required||regex:/^(\d{0,4}(\.\d{0,6})?)$/',
+        'tipo_cambio'=>'required|regex:/^(\d{0,4}(\.\d{0,6})?)$/'
     ];
+
+    public function getMontoFormatedAttribute()
+    {
+        return number_format($this->monto,2);
+    }
 
     public function moneda()
     {
@@ -92,5 +96,10 @@ class Pagos extends ModelCompany
     public function banco()
     {
         return $this->hasOne(Bancos::class,'id_banco','fk_id_banco');
+    }
+
+    public function detalle()
+    {
+        return $this->hasMany(DetallePagos::class,'fk_id_pago','id_pago');
     }
 }

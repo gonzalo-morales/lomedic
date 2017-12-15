@@ -285,26 +285,26 @@
 										<th>Moneda</th>
 										<th>Tipo Cambio</th>
 										<th>Observaciones</th>
-										<th></th>
+										{{--<th></th>--}}
 									</tr>
 								@endif
 								</thead>
 								<tbody id="detalle_pagos">
 								@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
-									{{--@foreach($data->pagos->where('activo','t') as $pago)--}}
-										{{--<tr>--}}
-											{{--<td>{{$pago->id_pago}}</td>--}}
-											{{--<td>{{$pago->numero_referencia}}</td>--}}
-											{{--<td>{{$pago->banco->banco}}</td>--}}
-											{{--<td>{{$pago->fecha_pago}}</td>--}}
-											{{--<td>${{number_format($pago->monto,2)}}</td>--}}
-											{{--<td>{{$pago->forma_pago->descripcion}}</td>--}}
-											{{--<td>{{'('.$pago->moneda->moneda.') '.$pago->moneda->descripcion}}</td>--}}
-											{{--<td>{{number_format($pago->tipo_cambio,2)}}</td>--}}
-											{{--<td>{{$pago->observaciones}}</td>--}}
+									@foreach($data->detallePagos->where('eliminar',false) as $detalle)
+										<tr>
+											<td>{{$detalle->pago->id_pago}}</td>
+											<td>{{$detalle->pago->numero_referencia}}</td>
+											<td>{{$detalle->pago->banco->banco}}</td>
+											<td>{{$detalle->pago->fecha_pago}}</td>
+											<td>${{number_format($detalle->pago->monto,2)}}</td>
+											<td>{{$detalle->pago->forma_pago->descripcion}}</td>
+											<td>{{'('.$detalle->pago->moneda->moneda.') '.$detalle->pago->moneda->descripcion}}</td>
+											<td>{{number_format($detalle->pago->tipo_cambio,2)}}</td>
+											<td>{{$detalle->pago->observaciones}}</td>
 											{{--<td><a class="eliminar_pago" href="{{companyAction('Compras\PagosController@destroy',['id'=>$pago->id_pago])}}"><i class="material-icons">cancel</i></a></td>--}}
-										{{--</tr>--}}
-									{{--@endforeach--}}
+										</tr>
+									@endforeach
 								@endif
 								</tbody>
 							</table>

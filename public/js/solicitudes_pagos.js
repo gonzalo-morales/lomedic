@@ -60,7 +60,7 @@ $(document).ready(function () {
                         '<td><input type="hidden" name="relations[has][detalle][' + index + '][cantidad]" value="1">1</td>' +
                         '<td><input type="hidden" name="relations[has][detalle][' + index + '][impuesto]" value="' + impuesto.toFixed(2) + '">' + impuesto.toFixed(2) + '</td>' +
                         '<td><input type="hidden" name="relations[has][detalle][' + index + '][precio_unitario]" value="' + subtotal.toFixed(2) + '">' + subtotal.toFixed(2) + '</td>' +
-                        '<td><input type="hidden" name="relations[has][detalle][' + index + '][importe]" value="' + total.toFixed(2) + '">' + total.toFixed(2) + '</td>' +
+                        '<td><input class="importe" type="hidden" name="relations[has][detalle][' + index + '][importe]" value="' + total.toFixed(2) + '">' + total.toFixed(2) + '</td>' +
                         '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>' +
                         '</tr>'
                     );
@@ -69,6 +69,7 @@ $(document).ready(function () {
                         priority: 'success', title: 'Exito', message: 'Orden agregada',
                         settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
                     });
+                    total_solicitud()
                 },
                 error: function () {
                     $('#loadingtabla').hide();
@@ -98,7 +99,7 @@ $(document).ready(function () {
                 '<td><input type="hidden" name="relations[has][detalle][' + index + '][cantidad]" value="' + $('#cantidad').val() + '">' + $('#cantidad').val() + '</td>' +
                 '<td><input type="hidden" name="relations[has][detalle][' + index + '][impuesto]" value="' + $('#impuesto').val() + '">' + $('#impuesto').val() + '</td>' +
                 '<td><input type="hidden" name="relations[has][detalle][' + index + '][precio_unitario]" value="' + $('#precio_unitario').val() + '">' + $('#precio_unitario').val() + '</td>' +
-                '<td><input type="hidden" name="relations[has][detalle][' + index + '][importe]" value="' + total.toFixed(2) + '">' + total.toFixed(2) + '</td>' +
+                '<td><input class="importe" type="hidden" name="relations[has][detalle][' + index + '][importe]" value="' + total.toFixed(2) + '">' + total.toFixed(2) + '</td>' +
                 '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>' +
                 '</tr>'
             );
@@ -107,6 +108,7 @@ $(document).ready(function () {
                 settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
             });
             limpiarCampos();
+            total_solicitud();
         }
     });
 
@@ -122,15 +124,23 @@ $(document).ready(function () {
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
     $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la orden correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    total_solicitud();
 }
-
+function total_solicitud() {
+    var total = 0;
+    $('#detalle_solicitud_pago tr').each(function (i,row) {
+        var importe = +$(row).find('.importe').val();
+        // var importe = +$(row).find('name=["relations[has][detalle][' + index + '][importe]"]').val();
+        total += importe;
+    });
+    $('#total').val(total.toFixed(2));
+}
 function limpiarCampos() {
-    $('#descripcion').val('');
-    $('#cantidad').val('');
-    $('#impuesto').val('');
-    $('#precio_unitario').val('');
-    $('#importe').val();
-    $('#descripcion,#cantidad,#impuesto,#precio_unitario').rules('remove');
+    $('#descripcion').val('').rules('remove');
+    $('#cantidad').val('').rules('remove');
+    $('#impuesto').val('').rules('remove');
+    $('#precio_unitario').val('').rules('remove');
+    $('#importe').val('').rules('remove');
 }
 
 function validateDetail() {

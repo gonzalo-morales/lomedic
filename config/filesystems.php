@@ -75,6 +75,10 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/facturas/proveedores')
         ],
+        'pagos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/compras/pagos')
+        ],
         'public_storage' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

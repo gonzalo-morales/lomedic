@@ -134,15 +134,16 @@
 					</tr>
 				</thead>
 				<tbody id="detalle_solicitud_pago">
+				<input type="hidden" name="relations[has][detalle][-1][id_detalle_solicitud_pago]" value="-1">
 				@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
 					@foreach($data->detalle->where('eliminar',0) as $row=>$detalle)
 					<tr>
-						<td><input class="orden" type="hidden" name="relations[has][detalle][{{$row}}][fk_id_orden_compra]" value="{{$detalle->fk_id_orden_compra ?? 'N/A'}}">{{$detalle->fk_id_orden_compra ?? 'N/A'}}<input type="hidden" value="{{$detalle->id_detalle_solicitud_pago}}" name="relations[has][detalle][{{$row}}][id_detalle_solicitud_pago]"></td>
+						<td><input type="hidden" id="index" value="{{$row}}"><input class="orden" type="hidden" name="relations[has][detalle][{{$row}}][fk_id_orden_compra]" value="{{$detalle->fk_id_orden_compra ?? ''}}">{{$detalle->fk_id_orden_compra ?? 'N/A'}}<input type="hidden" value="{{$detalle->id_detalle_solicitud_pago}}" name="relations[has][detalle][{{$row}}][id_detalle_solicitud_pago]"></td>
 						<td>{{$detalle->descripcion}}</td>
 						<td>{{$detalle->cantidad}}</td>
 						<td>{{number_format($detalle->impuesto,2)}}</td>
 						<td>{{number_format($detalle->precio_unitario,2)}}</td>
-						<td>{{number_format($detalle->importe,2)}}</td>
+						<td>{{number_format($detalle->importe,2)}}<input type="hidden" class="importe" name="relations[has][detalle][{{$row}}][importe]" value="{{number_format($detalle->importe,2)}}"></td>
 						<td>
 							@if(Route::currentRouteNamed(currentRouteName('edit')))
 							<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>
@@ -152,6 +153,13 @@
 					@endforeach
 				@endif
 				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="5" style="text-align: right">Total</td>
+						<td>{{Form::Text('total',null,['class'=>'form-control','readonly','id'=>'total'])}}</td>
+						<td></td>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 	</div>
@@ -304,11 +312,8 @@
 		@if($data->fk_id_estatus_solicitud_pago == 1)
 			@parent
 		@else
-			<div class="col-md-12 col-xs-12">
-				<div class="text-right">
-					{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
-				</div>
-			</div>
+			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+
 		@endif
 	@endsection
 	@section('form-title')
