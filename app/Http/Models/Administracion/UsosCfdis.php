@@ -19,14 +19,14 @@ class UsosCfdis extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['uso_cfdi','descripcion','activo'];//Solicitante devolución. false: localidad; true: proveedor;
+	protected $fillable = ['uso_cfdi','descripcion','activo'];//Solicitante devoluciÃ³n. false: localidad; true: proveedor;
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'uso_cfdi' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|Max:3',
+		'uso_cfdi' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|Max:3',
 		'descripcion' => 'required|max:255'
 	];
 
@@ -36,8 +36,8 @@ class UsosCfdis extends ModelBase
 	 */
 	protected $fields = [
 		'uso_cfdi' => 'CFDI',
-		'descripcion' => 'Descripción',
-		'activo_span' => 'Estado'
+		'descripcion' => 'DescripciÃ³n',
+		'activo_span' => 'Estatus'
 	];
 
 }

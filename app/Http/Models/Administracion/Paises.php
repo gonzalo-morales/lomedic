@@ -47,7 +47,7 @@ class Paises extends ModelBase
 	 */
 	protected $fields = [
 		'pais' => 'Pais',
-		'activo_span' => 'Activo'
+		'activo_span' => 'Estatus'
 	];
 
 	/**

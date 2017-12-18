@@ -41,6 +41,6 @@ class ConceptosViaje extends ModelBase
      */
     protected $fields = [
         'tipo_concepto' => 'Metodo de pago',
-        'activo_span' => 'Activo'
+        'activo_span' => 'Estatus'
     ];
 }

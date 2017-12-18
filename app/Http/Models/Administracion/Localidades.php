@@ -35,7 +35,7 @@ class Localidades extends ModelBase
 	 */
 	protected $fields = [
 		'localidad' => 'Localidad',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 
 }

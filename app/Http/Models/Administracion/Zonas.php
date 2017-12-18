@@ -35,7 +35,7 @@ class Zonas extends ModelBase
      */
     protected $fields = [
         'zona' => 'Zona',
-        'activo_span' => 'Estado'
+        'activo_span' => 'Estatus'
     ];
 
 }

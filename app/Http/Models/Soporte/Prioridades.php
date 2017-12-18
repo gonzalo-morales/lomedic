@@ -34,7 +34,7 @@ class Prioridades extends ModelBase
 	 */
 	protected $fields = [
 	    'prioridad' => 'Prioridad',
-	    'activo_span' => 'Activo'
+	    'activo_span' => 'Estatus'
 	];
 
 	/**

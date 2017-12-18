@@ -42,7 +42,7 @@ class Municipios extends ModelBase
 	protected $fields = [
 		'municipio' => 'Municipio',
 		'estado.estado' => 'Estado',
-		'activo_span' => 'Activo',
+		'activo_span' => 'Estatus',
 	];
 
 	/**

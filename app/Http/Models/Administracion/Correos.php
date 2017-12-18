@@ -42,7 +42,7 @@ class Correos extends ModelBase
 		'correo' => 'Correo',
 		'empresa.nombre_comercial' => 'Empresa',
 		'usuario.usuario' => 'Usuario',
-		'activo_span' => 'Estado',
+		'activo_span' => 'Estatus',
 	];
 
 	/**

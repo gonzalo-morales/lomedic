@@ -39,7 +39,7 @@ class TiposComprobantes extends ModelBase
         'tipo_comprobante' => 'Tipo Comprobante',
         'descripcion' => 'Descripción',
         'limite' => 'Límite',
-        'activo_span' => 'Estado'
+        'activo_span' => 'Estatus'
     ];
 
     public $niceNames = [

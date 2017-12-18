@@ -41,7 +41,7 @@
 		@if(isset($row[$field]))
 			<td>{{ $row[$field] }}</td>
 		@else
-			<td>{{ isset($field) ? object_get($row , $field) : '' }}</td>
+			<td>{{ object_get($row , $field) }}</td>
 		@endif
 		@endforeach
 	</tr>

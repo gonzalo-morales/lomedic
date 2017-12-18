@@ -33,7 +33,7 @@ class TiposRelacionesCfdi extends ModelBase
 	protected $fields = [
 		'tipo_relacion' => 'Tipo Relacion',
 		'descripcion' => 'Descripción',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 
 }

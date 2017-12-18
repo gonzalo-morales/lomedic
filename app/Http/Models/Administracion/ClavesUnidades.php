@@ -19,14 +19,14 @@ class ClavesUnidades extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['clave_unidad','descripcion','activo'];//Solicitante devolución. false: localidad; true: proveedor;
+	protected $fillable = ['clave_unidad','descripcion','activo'];//Solicitante devoluciÃ³n. false: localidad; true: proveedor;
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'clave_unidad' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|max:255',
+		'clave_unidad' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
 		'descripcion' => 'required|max:255',
 	];
 
@@ -37,6 +37,6 @@ class ClavesUnidades extends ModelBase
 	protected $fields = [
 		'clave_unidad' => 'Clave',
 		'descripcion' => 'Descripcion',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 }
