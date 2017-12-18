@@ -135,4 +135,9 @@ class FacturasProveedores extends ModelCompany
     public function detallePagos(){
         return $this->hasMany(DetallePagos::class,'fk_id_documento','id_factura_proveedor');
     }
+
+    public function notas()
+    {//Tiene muchas notas por medio de cfdi
+        return $this->hasManyThrough(NotasCreditoProveedor::class,CfdiRelacionesProveedores::class,'fk_id_documento_relacionado','id_nota_credito_proveedor','id_factura_proveedor','fk_id_documento');
+    }
 }
