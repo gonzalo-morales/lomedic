@@ -94,13 +94,14 @@
 				</tr>
 			</thead>
 			<tbody id="pagos_realizados">
+			<input type="hidden" name="relations[has][detalle][-1][id_detalle_pago]" value="-1">
 			@if (Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('show')))
 				@foreach($data->detalle->where('eliminar',0) as $index=>$detalle)
 					<tr>
 						<td>
 							{{$detalle->fk_id_tipo_documento == 7 ? 'Factura no.'.$detalle->fk_id_documento : 'Solicitud no.'.$detalle->fk_id_documento}}
 							{{Form::hidden('index',$index,['id'=>$index])}}
-							{{Form::hidden('relations[has]['.$index.'][id_detalle_pago]',$detalle->id_detalle_pago,['id'=>'id_detalle_pago'])}}
+							{{Form::hidden('relations[has][detalle]['.$index.'][id_detalle_pago]',$detalle->id_detalle_pago,['id'=>'id_detalle_pago'])}}
 						</td>
 						<td>
 							{{$detalle->fk_id_tipo_documento == 7 ? number_format($detalle->facturaproveedor->total,2) : number_format($detalle->solicitudpago->total,2)}}
@@ -110,7 +111,7 @@
 						</td>
 						<td>
 							{{number_format($detalle->monto,2)}}
-							{{Form::hidden('relations[has]['.$index.'][monto]',$detalle->monto,['class'=>'monto'])}}
+							{{Form::hidden('relations[has][detalle]['.$index.'][monto]',$detalle->monto,['class'=>'monto'])}}
 						</td>
 					</tr>
 				@endforeach

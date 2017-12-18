@@ -169,27 +169,27 @@ $(document).ready(function () {
     })
 
     //Si existe la tabla de órdenes
-    if($('#ordenes').length){
-        if($('#ordenes_detalle tr').length < 1){
-            var cantidad_cabecera = $('#ordenes_cabecera th').length;
-            $('#ordenes_detalle').append(
-                '<tr>' +
-                '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin órdenes relacionadas</td>' +
-                '</tr>'
-            );
-        }
-    }
+    // if($('#ordenes').length){
+    //     if($('#ordenes_detalle tr').length < 1){
+    //         var cantidad_cabecera = $('#ordenes_cabecera th').length;
+    //         $('#ordenes_detalle').append(
+    //             '<tr>' +
+    //             '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin órdenes relacionadas</td>' +
+    //             '</tr>'
+    //         );
+    //     }
+    // }
 
-    if($('#pagos').length){
-        if($('#detalle_pagos tr').length < 1){
-            var cantidad_cabecera = $('#encabezado_pagos th').length;
-            $('#detalle_pagos').append(
-                '<tr>' +
-                '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin pagos relacionados</td>' +
-                '</tr>'
-            );
-        }
-    }
+    // if($('#pagos').length){
+    //     if($('#detalle_pagos tr').length < 1){
+    //         var cantidad_cabecera = $('#encabezado_pagos th').length;
+    //         $('#detalle_pagos').append(
+    //             '<tr>' +
+    //             '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin pagos relacionados</td>' +
+    //             '</tr>'
+    //         );
+    //     }
+    // }
     $(".nav-link").click(function (e) {
         e.preventDefault();
         $('#clothing-nav li').each(function () {

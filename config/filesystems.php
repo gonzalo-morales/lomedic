@@ -79,6 +79,10 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/compras/pagos')
         ],
+        'notas_proveedor' => [
+            'driver' => 'local',
+            'root' => storage_path('app/notas/proveedores')
+        ],
         'public_storage' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

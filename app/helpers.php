@@ -506,7 +506,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
         }
         if (!empty($mensaje)) {
             return response()->json([
-                'estatus' => -1,
+                'estatus' => -2,
                 'resultado' => $mensaje
             ]);
         } else {
@@ -583,7 +583,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
                 }
             } else {
                 return response()->json([
-                    'estatus' => -1,
+                    'estatus' => -2,
                     'resultado' => 'Este CFDI no contiene productos',
                 ]);
             }
@@ -638,7 +638,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
 
         if (!empty($mensaje)) {
             return response()->json([
-                'estatus' => -1,
+                'estatus' => -2,
                 'resultado' => $mensaje
             ]);
         }else{
@@ -665,7 +665,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
                 ];
             } else {
                 return response()->json([
-                    'estatus' => -1,
+                    'estatus' => -2,
                     'resultado' => 'Este CFDI no contiene productos',
                 ]);
             }
