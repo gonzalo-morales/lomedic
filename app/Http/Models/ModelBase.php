@@ -82,7 +82,7 @@ class ModelBase extends Model
 	 */
 	public function getActivoTextAttribute()
 	{
-		return $this->activo ? 'Activo' : 'Inactivo';
+	    return isset($this->activo) && $this->activo === true ? 'Activo' : 'Inactivo';
 	}
 
 	/**

@@ -61,7 +61,7 @@ class OrdenesController extends ControllerBase
             'tipo_documento' => \request('tipo_documento'),
             'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
             'clientes' => $clientes,
-            'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+            'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
             ]];
@@ -162,7 +162,7 @@ class OrdenesController extends ControllerBase
                 'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
                 'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'proveedores' => $proveedores,
-                'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+                'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
                 'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
                 'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 			]];
@@ -177,7 +177,7 @@ class OrdenesController extends ControllerBase
                 'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
                 'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'clientes' => $clientes,
-                'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+                'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
                 'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
                 'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 			]];

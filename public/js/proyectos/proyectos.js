@@ -1,5 +1,4 @@
 $(document).ready(function () {
-	
 	var from_picker = $('#fecha_inicio').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	var to_picker = $('#fecha_terminacion').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	
@@ -27,7 +26,6 @@ $(document).ready(function () {
 	    	$('#fecha_fin_contrato').prop('readonly', true);
 		  }
 	});
-	
 	
     $(".nav-link").click(function (e) {
         e.preventDefault();

@@ -8,6 +8,13 @@
     {!! Form::open(['url' => '#', 'id' => 'form-model', 'class' => 'col-md-12']) !!}
 @endsection
 
+@section('header-bottom')
+	@parent
+    <script type="text/javascript">
+    	$('.select2').select2({disabled: true});
+    </script>
+@endsection
+
 @section('form-actions')
     <div class="col-md-12 col-xs-12">
         <div class="text-right">

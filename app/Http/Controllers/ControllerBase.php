@@ -371,43 +371,42 @@ class ControllerBase extends Controller
 
         if (isset($request->ids)) {
             $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);
-            $data = $this->entity->whereIn($this->entity->getKeyName(), $ids)->get();
+            $data = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->whereIn($this->entity->getKeyName(), $ids)->get();
         }
         else {
-            $data = $this->entity->get();
+            $data = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->get();
         }
-
+        
         $fields = $this->entity->getFields();
 
         $alldata = $data->map(function ($data) use($fields) {
             $return = [];
-            foreach ($fields as $field=>$lable)
-                $return[$lable] = html_entity_decode(strip_tags(object_get($data, $field)));
-                return $return;
+            foreach ($fields as $field=>$label) {
+                $return[$field] = html_entity_decode(strip_tags(object_get($data, $field)));
+            }
+            return $return;
         });
-            $data = $alldata;
 
-
-            if($type == 'pdf') {
-                $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
-                $pdf->setPaper('letter','landscape');
-                $pdf->output();
-                $dom_pdf = $pdf->getDomPDF();
-                $canvas = $dom_pdf->get_canvas();
-                $canvas->page_text(38,580,"Página {PAGE_NUM} de {PAGE_COUNT}",null,8,array(0,0,0));
-                return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
-            }
-            else {
-                Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style) {
-                    $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style) {
-                        if($style) {
-                            $sheet->loadView(currentRouteName('smart'), ['fields' => $this->entity->getFields(), 'data' => $data]);
-                        }
-                        else
-                            $sheet->fromArray($alldata);
-                    });
-                })->download($type);
-            }
+        if($type == 'pdf') {
+            $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $alldata]);
+            $pdf->setPaper('letter','landscape');
+            $pdf->output();
+            $dom_pdf = $pdf->getDomPDF();
+            $canvas = $dom_pdf->get_canvas();
+            $canvas->page_text(38,580,"Pagina {PAGE_NUM} de {PAGE_COUNT}",null,8,array(0,0,0));
+            return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
+        }
+        else {
+            Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style) {
+                $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style) {
+                    if($style) {
+                        $sheet->loadView(currentRouteName('smart'), ['fields' => $this->entity->getFields(), 'data' => $data]);
+                    }
+                    else
+                        $sheet->fromArray($alldata);
+                });
+            })->download($type);
+        }
     }
 
     /**

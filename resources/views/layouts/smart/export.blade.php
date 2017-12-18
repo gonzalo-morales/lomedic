@@ -34,11 +34,15 @@
 			@endforeach
 		</tr>
 	</thead>
-	<tbody>
+	<tbody>	
 	@foreach ($data as $row)
 	<tr>
 		@foreach ($fields as $field => $label)
-		<td>{{ isset($field) ? object_get($row , $field) : '' }}</td>
+		@if(isset($row[$field]))
+			<td>{{ $row[$field] }}</td>
+		@else
+			<td>{{ isset($field) ? object_get($row , $field) : '' }}</td>
+		@endif
 		@endforeach
 	</tr>
 	@endforeach
