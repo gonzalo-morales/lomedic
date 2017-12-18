@@ -366,18 +366,24 @@ class ControllerBase extends Controller
         # ¿Usuario tiene permiso para exportar?
         //		$this->authorize('export', $this->entity);
         
-        dd($this->entity->getColumnListing());
+        $colums = $this->entity->getlistColumns();
 
         $type = strtolower($request->type);
         $style = isset($request->style) ? $request->style : false;
 
         if (isset($request->ids)) {
             $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);
-            $data = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->whereIn($this->entity->getKeyName(), $ids)->get();
+            $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->whereIn($this->entity->getKeyName(), $ids);
         }
         else {
-            $data = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->get();
+            $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
         }
+        
+        if(in_array('eliminar',$colums))
+            $query->where('eliminar',0);
+        
+        $data = $query->get();
+        
         
         $fields = $this->entity->getFields();
 
