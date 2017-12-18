@@ -61,7 +61,7 @@ class SolicitudesController extends ControllerBase
                 'skus' => Productos::where('activo','1')
                     ->get()
                     ->pluck('sku','id_sku'),
-                'proyectos' => Proyectos::where('activo',1)
+                'proyectos' => Proyectos::where('fk_id_estatus',1)
                     ->get()
                     ->pluck('proyecto','id_proyecto'),
                 'proveedores' => $proveedores,
