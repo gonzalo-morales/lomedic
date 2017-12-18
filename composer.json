@@ -22,7 +22,8 @@
 		"orchestra/parser" : "~3.5",
 		"predis/predis" : "~1.1",
 		"proengsoft/laravel-jsvalidation" : "~2.1",
-		"renatomarinho/laravel-page-speed" : "~1.8"
+		"renatomarinho/laravel-page-speed" : "~1.8",
+		"laravel/envoy" : "~1.3"
 	},
 	"require-dev" : {
 		"filp/whoops" : "~2.1",
