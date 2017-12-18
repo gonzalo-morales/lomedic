@@ -382,17 +382,11 @@ class ControllerBase extends Controller
         if(in_array('eliminar',$colums))
             $query->where('eliminar',0);
         
-        $data = $query->get();
-        
-        
         $fields = $this->entity->getFields();
+        $data = $query->get();
 
         $alldata = $data->map(function ($data) use($fields) {
-            $return = [];
-            foreach ($fields as $field=>$label) {
-                $return[$field] = html_entity_decode(strip_tags(object_get($data, $field)));
-            }
-            return $return;
+            return $data->only(array_keys($fields));
         });
 
         if($type == 'pdf') {
@@ -407,11 +401,7 @@ class ControllerBase extends Controller
         else {
             Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style,$fields) {
                 $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style,$fields) {
-                    #if($style) {
                         $sheet->loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $alldata]);
-                    #}
-                    #else
-                        #$sheet->fromArray($alldata);
                 });
             })->download($type);
         }
