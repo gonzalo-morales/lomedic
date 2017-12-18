@@ -22,6 +22,7 @@
 <table class="smart-table striped col">
 	<thead>
 		<tr class="teal white-text" style="padding: 10px 0;">
+			<th></th>
 			@if(strtolower($_GET['type']) == 'pdf')
 			<th colspan="{{ count($fields) - 1 }}"> <span class="logo-enterprise">{{ HTML::image(asset("img/logotipos/$menuempresa->logotipo"), 'Logo', ['class'=>'circle responsive-img']) }}</span>
 			@endif
@@ -37,6 +38,7 @@
 	<tbody>	
 	@foreach ($data as $row)
 	<tr>
+		<td></td>
 		@foreach ($fields as $field => $label)
 		@if(isset($row[$field]))
 			<td>{{ $row[$field] }}</td>
