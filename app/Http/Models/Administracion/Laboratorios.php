@@ -42,7 +42,7 @@ class Laboratorios extends ModelBase
 	 */
 	protected $fields = [
 		'laboratorio' => 'Laboratorio',
-		'activo_span' => 'Activo',
+		'activo_span' => 'Estatus',
 	];
 
 	public function usuario()

@@ -40,6 +40,6 @@ class Parentescos extends ModelBase
 	 */
 	protected $fields = [
 		'nombre' => 'Parentesco',
-		'activo_span' => 'Activo'
+		'activo_span' => 'Estatus'
 	];
 }

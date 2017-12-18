@@ -99,6 +99,10 @@ class ModelBase extends Model
 		}
 		return $format;
 	}
+	
+	public function getlistColumns() {
+	    return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+	}
 
 	/**
 	 * Obtenemos columnas-defaults de modelo

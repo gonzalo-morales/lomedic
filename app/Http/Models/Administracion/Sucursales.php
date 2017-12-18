@@ -68,7 +68,7 @@ class Sucursales extends ModelBase
 		'sucursal' => 'Sucursal',
 		'localidad.localidad' => 'Localidad',
 		'tiposucursal.tipo' => 'Tipo de Sucursal',
-		'activo_span' => 'Activo',
+		'activo_span' => 'Estatus',
 	];
 
 	/**

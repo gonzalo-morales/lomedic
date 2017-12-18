@@ -40,7 +40,7 @@ class UnidadesMedicas extends ModelBase
 	 */
 	protected $fields = [
 		'nombre' => 'Descripcion',
-		'activo_span' => 'Activo'
+		'activo_span' => 'Estatus'
 	];
 
 	public function usuario()

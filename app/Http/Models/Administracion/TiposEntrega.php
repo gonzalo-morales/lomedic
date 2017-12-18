@@ -35,6 +35,6 @@ class TiposEntrega extends ModelBase
 	 */
 	protected $fields = [
 		'tipo_entrega' => 'Entrega',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 }

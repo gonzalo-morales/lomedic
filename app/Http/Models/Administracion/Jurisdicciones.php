@@ -48,7 +48,7 @@ class Jurisdicciones extends ModelBase
 	protected $fields = [
 		'jurisdiccion' => 'JurisdicciÃ³n',
 		'estado.estado' => 'Estado',
-		'activo_span' => 'Activo',
+		'activo_span' => 'Estatus',
 	];
 
 	/**

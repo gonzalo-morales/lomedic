@@ -40,6 +40,6 @@ class Patrones extends ModelBase
 	 */
 	protected $fields = [
 		'patron' => 'Parentesco',
-		'activo_span' => 'Activo'
+		'activo_span' => 'Estatus'
 	];
 }

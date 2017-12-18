@@ -363,17 +363,25 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para exportar?
         //		$this->authorize('export', $this->entity);
+        
+        $colums = $this->entity->getlistColumns();
 
         $type = strtolower($request->type);
         $style = isset($request->style) ? $request->style : false;
 
         if (isset($request->ids)) {
             $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);
-            $data = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->whereIn($this->entity->getKeyName(), $ids)->get();
+            $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->whereIn($this->entity->getKeyName(), $ids);
         }
         else {
-            $data = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->get();
+            $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
         }
+        
+        if(in_array('eliminar',$colums))
+            $query->where('eliminar',0);
+        
+        $data = $query->get();
+        
         
         $fields = $this->entity->getFields();
 
@@ -395,13 +403,13 @@ class ControllerBase extends Controller
             return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
         }
         else {
-            Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style) {
-                $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style) {
-                    if($style) {
-                        $sheet->loadView(currentRouteName('smart'), ['fields' => $this->entity->getFields(), 'data' => $data]);
-                    }
-                    else
-                        $sheet->fromArray($alldata);
+            Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style,$fields) {
+                $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style,$fields) {
+                    #if($style) {
+                        $sheet->loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $alldata]);
+                    #}
+                    #else
+                        #$sheet->fromArray($alldata);
                 });
             })->download($type);
         }

@@ -46,7 +46,7 @@ class Monedas extends ModelBase
         'moneda' => 'Metodo de pago',
         'descripcion' => 'Descripción',
         'total_decimales' => 'Total Decimales',
-        'activo_span' => 'Activo'
+        'activo_span' => 'Estatus'
     ];
     /**
      * Indicates if the model should be timestamped.

@@ -42,6 +42,6 @@ class RegimenFiscal extends ModelBase
 	 */
 	protected $fields = [
 		'regimen_fiscal' => 'Regimen Fiscal',
-	    'activo_span' => 'Activo'
+	    'activo_span' => 'Estatus'
 	];
 }

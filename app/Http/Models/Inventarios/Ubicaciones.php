@@ -32,6 +32,11 @@ class Ubicaciones extends ModelBase
     {
         return implode('-', [$this->rack, $this->ubicacion, $this->posicion, $this->nivel]);
     }
+    #Tomamos los valores de almacenes
+    public function almacen()
+    {
+        return $this->belongsTo(Almacenes::class,'fk_id_almacen');
+    }
 
 
 }

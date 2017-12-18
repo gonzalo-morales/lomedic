@@ -41,7 +41,7 @@ class UnidadesMedidas extends ModelBase
      */
     protected $fields = [
         'nombre' => 'Descripcion',
-        'activo_span' => 'Activo'
+        'activo_span' => 'Estatus'
     ];
 
     /**

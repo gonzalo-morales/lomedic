@@ -34,7 +34,7 @@ class Categorias extends ModelBase
 	 */
 	protected $fields = [
 	    'categoria' => 'Categoria',
-	    'activo_span' => 'Activo'
+	    'activo_span' => 'Estatus'
 	];
 
 	/**
