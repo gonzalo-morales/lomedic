@@ -365,6 +365,8 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para exportar?
         //		$this->authorize('export', $this->entity);
+        
+        dd($this->entity->getColumnListing());
 
         $type = strtolower($request->type);
         $style = isset($request->style) ? $request->style : false;
@@ -397,13 +399,13 @@ class ControllerBase extends Controller
             return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
         }
         else {
-            Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style) {
-                $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style) {
-                    if($style) {
-                        $sheet->loadView(currentRouteName('smart'), ['fields' => $this->entity->getFields(), 'data' => $data]);
-                    }
-                    else
-                        $sheet->fromArray($alldata);
+            Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style,$fields) {
+                $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style,$fields) {
+                    #if($style) {
+                        $sheet->loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $alldata]);
+                    #}
+                    #else
+                        #$sheet->fromArray($alldata);
                 });
             })->download($type);
         }
