@@ -34,11 +34,6 @@ class FacturasProveedoresController extends ControllerBase
         ];
     }
 
-    public function index($company, $attributes = '')
-    {
-        return parent::index($company, $attributes);
-    }
-
     public function store(Request $request, $company)
     {
         # ¿Usuario tiene permiso para crear?

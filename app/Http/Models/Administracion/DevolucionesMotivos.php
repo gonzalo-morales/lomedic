@@ -36,12 +36,12 @@ class DevolucionesMotivos extends ModelBase
 	 */
 	protected $fields = [
 		'devolucion_motivo' =>  'Motivo',
-		'solicitante_formated' => 'Solicitante',
+		'solicitante_formated' => 'Devolucion A',
 		'activo_span' => 'Estatus'
 	];
 
 	public function getSolicitanteFormatedAttribute()
 	{
-		return $this->solicitante_devolucion ? 'Proveedor' : 'Localidad';
+		return $this->solicitante_devolucion ? 'Proveedor' : 'Sucursal';
 	}
 }

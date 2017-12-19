@@ -22,11 +22,12 @@
 <table class="smart-table striped col">
 	<thead>
 		<tr class="teal white-text" style="padding: 10px 0;">
-			@if(strtolower($_GET['type']) == 'pdf')
-			<th colspan="{{ count($fields) - 1 }}"> <span class="logo-enterprise">{{ HTML::image(asset("img/logotipos/$menuempresa->logotipo"), 'Logo', ['class'=>'circle responsive-img']) }}</span>
-			@endif
+			<th colspan="{{ count($fields) - 1 }}">
+				@if(strtolower($_GET['type']) == 'pdf')
+				<span class="logo-enterprise">{{ HTML::image(asset("img/logotipos/$menuempresa->logotipo"), 'Logo', ['class'=>'circle responsive-img']) }}</span>
+				@endif
 			{{ $menuempresa->nombre_comercial }} </th>
-			<th class="right-text"> {{ currentEntityBaseName() }} </th>
+			<th class="right-text"> {{ str_singular(currentEntityBaseName()) }} </th>
 		</tr>
 		<tr>
 			@foreach ($fields as $label)

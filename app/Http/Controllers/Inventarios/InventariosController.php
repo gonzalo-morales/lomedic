@@ -63,16 +63,6 @@ class InventariosController extends ControllerBase
 	}
 
 	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index($company, $attributes = [])
-	{
-		return parent::index($company, $attributes);
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request

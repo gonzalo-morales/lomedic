@@ -50,10 +50,6 @@ class SolicitudesPagosController extends ControllerBase
         ];
     }
 
-    public function index($company, $attributes =[])
-    {
-        return parent::index($company, $attributes);
-    }
     public function destroy(Request $request, $company, $idOrIds)
     {
         $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)

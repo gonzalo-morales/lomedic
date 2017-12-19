@@ -53,11 +53,6 @@ class FacturasClientesController extends ControllerBase
         ];
     }
 
-    public function index($company, $attributes = '')
-    {
-        return parent::index($company, $attributes);
-    }
-
     /*
     public function parseXML($company,Request $request)
     {

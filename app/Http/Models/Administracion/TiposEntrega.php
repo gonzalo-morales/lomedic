@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class TiposEntrega extends ModelBase
 {
-	protected $table = 'adm_cat_tipos_entrega';
+	protected $table = 'maestro.adm_cat_tipos_entrega';
 
 	/**
 	 * The primary key of the table
@@ -34,7 +34,7 @@ class TiposEntrega extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'tipo_entrega' => 'Entrega',
+		'tipo_entrega' => 'Tipo Entrega',
 		'activo_span' => 'Estatus'
 	];
 }
