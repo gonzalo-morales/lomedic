@@ -386,13 +386,9 @@ class ControllerBase extends Controller
         
         $fields = $this->entity->getFields();
         $data = $query->get();
-
-        $alldata = $data->map(function ($data) use($fields) {
-            return $data->only(array_keys($fields));
-        });
-
+        
         if($type == 'pdf') {
-            $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $alldata]);
+            $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
             $pdf->setPaper('letter','landscape');
             $pdf->output();
             $dom_pdf = $pdf->getDomPDF();
@@ -401,9 +397,9 @@ class ControllerBase extends Controller
             return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
         }
         else {
-            Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style,$fields) {
-                $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style,$fields) {
-                        $sheet->loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $alldata]);
+            Excel::create(currentEntityBaseName(), function($excel) use($data,$type,$style,$fields) {
+                $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$type,$style,$fields) {
+                        $sheet->loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
                 });
             })->download($type);
         }
