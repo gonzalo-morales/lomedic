@@ -160,7 +160,7 @@ class SolicitudesController extends ControllerBase
                     ->get()
                     ->pluck('impuesto','id_impuesto'),
                 'proyectos'=> Proyectos::select('proyecto', 'id_proyecto')
-                    ->where('activo',1)
+                    ->where('fk_id_estatus',1)
                     ->get()
                     ->pluck('proyecto','id_proyecto'),
                 'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')
