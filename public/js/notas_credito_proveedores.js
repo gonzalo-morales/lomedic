@@ -103,29 +103,41 @@ $(document).ready(function () {
                         $('#uuid').val(data.uuid);
                         $('#version_sat').val(data.version);
                         if(data.version == "3.3"){
+                            $('#fk_id_tipo_relacion').attr('disabled','disabled');
+                            $('#agregar_relacion').attr('disabled','disabled');
+                            $('#fk_id_factura_proveedor').attr('disabled','disabled');
                             $.ajax({
-                                url: $('#uuid').data('url'),
-                                type: 'POST',
-                                data: {uuid:$('#uuid').val()},
-                                success: function (factura) {
-                                    $.each(factura.resultado,function (indice,valor) {
-                                        var id_factura_proveedor = valor.id_factura_proveedor;
-                                        var serie = valor.serie_factura != null ? valor.serie_factura : '';
-                                        var folio = valor.folio_factura != null ? valor.folio_factura : '';
-                                        if($('#relaciones').append(
-                                            '<tr>' +
-                                                '<td>' +
+                                url: $('#fk_id_tipo_relacion').data('url'),
+                                data: {'param_js': tiporelacion_js,$tipo_relacion:data.tipo_relacion},
+                                success:function (relacion) {
+                                    $.ajax({
+                                        url: $('#fk_id_socio_negocio').data('url'),
+                                        type: 'GET',
+                                        data: {'param_js': relacionadas_js, '$uuid':JSON.stringify(data.relacionados)},
+                                        success: function (factura) {
+                                            console.log(factura);
+                                            $.each(factura,function (indice,valor) {
+                                                var id_factura_proveedor = valor.id_factura_proveedor;
+                                                var texto = ''
+                                                if(!valor.serie_factura && !valor.folio_factura){
+                                                    texto = valor.uuid;
+                                                }else{
+                                                    texto = valor.serie_factura + ' ' + valor.folio_factura;
+                                                }
+                                                $('#relaciones').append(
+                                                    '<tr>' +
+                                                    '<td>' +
                                                     '<input type="hidden" name="relations[has][cfdirelacionado]['+indice+'][fk_id_documento_relacionado]" value="'+id_factura_proveedor+'">' +
                                                     '<input type="hidden" name="relations[has][cfdirelacionado]['+indice+'][fk_id_tipo_documento_relacionado]" value="7">' +
                                                     '<input type="hidden" name="relations[has][cfdirelacionado]['+indice+'][fk_id_tipo_documento]" value="11">' +
                                                     id_factura_proveedor +
-                                                '</td>'+
-                                                '<td>'+serie +' '+folio+'</td>' +
-                                                '<td><input type="hidden" name="relations[has][cfdirelacionado]['+indice+'][fk_id_tipo_relacion]"></td>' +
-                                                '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>' +
-                                            '</tr>'
-                                        )){
-
+                                                    '</td>'+
+                                                    '<td>'+texto+'</td>' +
+                                                    '<td><input type="hidden" name="relations[has][cfdirelacionado]['+indice+'][fk_id_tipo_relacion]" value="'+relacion[0].id_sat_tipo_relacion+'">('+data.tipo_relacion+') '+relacion[0].descripcion+'</td>' +
+                                                    '<td></td>' +
+                                                    '</tr>'
+                                                    )
+                                            });
                                         }
                                     });
                                 }

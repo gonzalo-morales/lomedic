@@ -3,6 +3,8 @@
 	@if (!Route::currentRouteNamed(currentRouteName('index')))
 		<script type="text/javascript">
 			var facturas_js = '{{$js_facturas ?? ''}}';
+			var relacionadas_js = '{{$js_relacionadas ?? ''}}';
+			var tiporelacion_js = '{{$js_tiporelacion ?? ''}}';
 		</script>
 		{{HTML::script(asset('js/notas_credito_proveedores.js'))}}
 	@endif
@@ -46,7 +48,7 @@
 			<div class="form-group col-md-6 col-sm-12">
 				{{Form::cSelectWithDisabled('Proveedor','fk_id_socio_negocio',$proveedores ?? [],
 				[!Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : '',
-				'data-url'=>companyAction('HomeController@index').'/Compras.facturasproveedores/api'])}}
+				'data-url'=>companyAction('HomeController@index').'/compras.facturasproveedores/api'])}}
 			</div>
 			<div class="form-group col-md-6 col-sm-12">
 				{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}
@@ -101,7 +103,7 @@
 				<div class="form-goup col-md-6 text-center">
 					{{Form::cFile('XML','archivo_xml_input',['data-url'=>companyAction('parseXML'),'accept'=>'.xml'])}}
 					<input id="archivo_xml_hidden" class="custom-file-input" style="display:none" name="archivo_xml_hidden" type="file">
-					{{Form::hidden('uuid','',['id'=>'uuid','data-url'=>companyAction('getFacturaRelacionada')])}}
+					{{Form::hidden('uuid','',['id'=>'uuid'])}}
 					{{Form::hidden('version_sat','',['id'=>'version_sat'])}}
 				</div>
 				<div class="form-goup col-md-6 text-center">
@@ -131,7 +133,7 @@
 				<h2 class="text-success text-center">Relaciones Facturas</h2>
 			</div>
 			<div class="col-md-5 col-sm-10">
-				{{Form::cSelect('Tipo Relacion','fk_id_tipo_relacion',$relaciones ?? [],[empty($data->version_sat) || $data->version_sat == '3.3' ? 'disabled' : ''])}}
+				{{Form::cSelect('Tipo Relacion','fk_id_tipo_relacion',$relaciones ?? [],[empty($data->version_sat) || $data->version_sat == '3.3' ? 'disabled' : '','data-url'=>companyAction('HomeController@index').'/administracion.tiposrelacionescfdi/api'])}}
 			</div>
 			<div class="col-md-5 col-sm-10">
 				{{Form::cSelect('Factura','fk_id_factura_proveedor',$facturas ?? [],[empty($data->version_sat) || $data->version_sat == '3.3' ? 'disabled' : '','class'=>'select2'])}}
@@ -167,7 +169,9 @@
 									<td>{{$cfdirelacionado->factura->serie_factura.$cfdirelacionado->factura->folio_factura}}</td>
 									<td>{{'('.$cfdirelacionado->tiporelacion->tipo_relacion.') '.$cfdirelacionado->tiporelacion->descripcion}}</td>
 									<td>
-										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>
+										@if($data->version == "3.2")
+											<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>
+										@endif
 									</td>
 								</tr>
 							@endforeach

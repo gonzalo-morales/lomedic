@@ -67,7 +67,7 @@ class FacturasProveedoresController extends ControllerBase
             $request->request->set('iva',$arrayData['Comprobante']['cfdi:Impuestos']['@TotalImpuestosTrasladados']);
             $request->request->set('subtotal',$arrayData['Comprobante']['@SubTotal']);
             $request->request->set('fk_id_moneda',Monedas::where('moneda', 'LIKE', $arrayData['Comprobante']['@Moneda'])->first()->id_moneda);
-            $request->request->set('fk_id_metodo_pago',MetodosPago::where('metodo_pago', 'LIKE', $arrayData['Comprobante']['@MetodoPago'])->first()->id_metodos_pago);
+            $request->request->set('fk_id_metodo_pago',MetodosPago::where('metodo_pago', 'ILIKE', $arrayData['Comprobante']['@MetodoPago'])->first()->id_metodo_pago);
             $request->request->set('folio_factura',isset($arrayData['Comprobante']['@Folio']) ? $arrayData['Comprobante']['@Folio'] : null);
         }else if($request->version_sat == "3.2"){
             $request->request->set('serie_factura',isset($arrayData['Comprobante']['@serie']) ? $arrayData['Comprobante']['@serie'] : null);

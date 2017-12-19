@@ -40,7 +40,9 @@ class NotasCreditoProveedorController extends ControllerBase
             'sucursales' => Sucursales::where('activo','t')->pluck('sucursal','id_sucursal'),
             'relaciones' => TiposRelacionesCfdi::select(db::raw("concat('(',tipo_relacion,') ',descripcion) as text"),'id_sat_tipo_relacion')->where('activo',1)->where('nota_credito',1)->pluck('text','id_sat_tipo_relacion')->prepend('...',0),
             'js_facturas' => Crypt::encryptString('"select":["id_factura_proveedor","serie_factura","folio_factura"], "conditions":[{"where":["version_sat","3.2"]},{"where":["fk_id_socio_negocio",$fk_id_socio_negocio]}]'),
-            'facturas' => $facturas
+            'facturas' => $facturas,
+            'js_relacionadas' => Crypt::encryptString('"select":["id_factura_proveedor","serie_factura","folio_factura","uuid"],"conditions":[{"where":["fk_id_estatus_factura",1]},{"whereIn":["uuid",$uuid]}]'),
+            'js_tiporelacion' => Crypt::encryptString('"select":["id_sat_tipo_relacion","descripcion"],"conditions":[{"where":["tipo_relacion","$tipo_relacion"]}]'),
         ];
     }
 
@@ -75,7 +77,7 @@ class NotasCreditoProveedorController extends ControllerBase
             $request->request->set('iva',$arrayData['Comprobante']['cfdi:Impuestos']['@TotalImpuestosTrasladados']);
             $request->request->set('subtotal',$arrayData['Comprobante']['@SubTotal']);
             $request->request->set('fk_id_moneda',Monedas::where('moneda', 'LIKE', $arrayData['Comprobante']['@Moneda'])->first()->id_moneda);
-            $request->request->set('fk_id_metodo_pago',MetodosPago::where('metodo_pago', 'LIKE', $arrayData['Comprobante']['@MetodoPago'])->first()->id_metodos_pago);
+            $request->request->set('fk_id_metodo_pago',MetodosPago::where('metodo_pago', 'ILIKE', $arrayData['Comprobante']['@MetodoPago'])->first()->id_metodo_pago);
             $request->request->set('folio_factura',isset($arrayData['Comprobante']['@Folio']) ? $arrayData['Comprobante']['@Folio'] : null);
         }else if($request->version_sat == "3.2"){
             $request->request->set('serie_factura',isset($arrayData['Comprobante']['@serie']) ? $arrayData['Comprobante']['@serie'] : null);
@@ -174,16 +176,6 @@ class NotasCreditoProveedorController extends ControllerBase
             return response()->json([
                 'estatus' => -2,
                 'resultado' => "No se pudo leer el XML porque tiene un formato incorrecto",
-            ]);
-        }
-    }
-    public function getFacturaRelacionada($company, Request $request)
-    {
-        $factura_relacionada = FacturasProveedores::select('id_factura_proveedor','serie_factura','folio_factura')->where('uuid',$request->uuid)->get();
-        if($factura_relacionada){
-            return Response()->json([
-                'estatus' => 1,
-                'resultado' => $factura_relacionada,
             ]);
         }
     }
