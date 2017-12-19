@@ -101,7 +101,7 @@ class ModelBase extends Model
 	}
 	
 	public function getlistColumns() {
-	    return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+	    return $this->getConnection()->getSchemaBuilder()->getColumnListing(str_replace('maestro.','',$this->getTable()));
 	}
 
 	/**

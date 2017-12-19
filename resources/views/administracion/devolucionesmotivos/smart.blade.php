@@ -14,7 +14,7 @@
 		<div class="btn-group" data-toggle="buttons">
 			<label class="btn btn-check btn-secondary {{ old('solicitante_devolucion') === "0" || (isset($data->solicitante_devolucion) && $data->solicitante_devolucion === false)  ? 'active':''}}">
 				<input type="radio" name="solicitante_devolucion" id="localidad" autocomplete="off" value="0"
-						{{(old('solicitante_devolucion') === "0" || (!empty($data->solicitante_devolucion) && $data->solicitante_devolucion == 0) ? 'checked':'')}}>Solicitante
+						{{(old('solicitante_devolucion') === "0" || (!empty($data->solicitante_devolucion) && $data->solicitante_devolucion == 0) ? 'checked':'')}}>Sucursal
 			</label>
 			<label class="btn btn-check btn-secondary {{ !empty($data->solicitante_devolucion) || old('solicitante_devolucion') == 1 ? 'active':''}}">
 				<input type="radio" name="solicitante_devolucion" id="proveedor" autocomplete="off" value="1"
@@ -24,7 +24,7 @@
 		@else
 			<div class="btn-group">
 				<label class="btn btn-check btn-secondary {{ old('solicitante_devolucion') === "0" || $data->solicitante_devolucion == 0 ? 'active':''}}">
-					Solicitante
+					Sucursal
 				</label>
 				<label class="btn btn-check btn-secondary {{ !empty($data->solicitante_devolucion) || old('solicitante_devolucion') == 1 ? 'active':''}}">
 					Proveedor

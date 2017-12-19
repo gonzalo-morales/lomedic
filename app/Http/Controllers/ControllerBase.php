@@ -23,7 +23,7 @@ class ControllerBase extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($company, $attributes = ['where'=>['eliminar = 0']])
+    public function index($company, $attributes = [])
     {
         # ¿Usuario tiene permiso para ver?
         //		$this->authorize('view', $this->entity);
@@ -32,6 +32,10 @@ class ControllerBase extends Controller
         $this->log('index');
 
         $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
+        
+        if(in_array('eliminar',$this->entity->getlistColumns())) {
+            $query->where('eliminar',0);
+        }
 
         if(isset($attributes['where'])) {
             foreach ($attributes['where'] as $key=>$condition) {

@@ -29,7 +29,7 @@ class SolicitudesController extends ControllerBase
 
     public function index($company, $attributes = [])
     {
-        $attributes = ['where'=>[],'dataview'=>[
+        $attributes = ['dataview'=>[
             'company'=>$company
         ]];
         return parent::index($company, $attributes);

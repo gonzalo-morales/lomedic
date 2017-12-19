@@ -24,13 +24,7 @@ class EntradasController extends ControllerBase
     {
         $this->entity = $entity;
     }
-
-    public function index($company, $attributes = [])
-    {
-        $attributes = ['where'=>[]];
-        return parent::index($company, $attributes);
-    }
-
+    
     public function getDataView($entity = null)
     {
 //        dd($entity);

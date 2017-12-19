@@ -34,7 +34,7 @@ class AlmacenesController extends ControllerBase
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($company, $attributes = ['where'=>['eliminar = 0']])
+    public function index($company, $attributes = [])
     {
     	// Al crear un almacen, redirige a index (es decir aqui), vamos a calcular el codigo de barras de las ubicaciones asociadas al almacen recien creado
 		Ubicaciones::where('codigo_barras', null)->each(function($ubicacion){
@@ -56,7 +56,4 @@ class AlmacenesController extends ControllerBase
 
 		return parent::index($company, $attributes);
     }
-
-
-
 }

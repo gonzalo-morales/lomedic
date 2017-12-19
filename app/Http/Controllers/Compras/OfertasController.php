@@ -31,10 +31,10 @@ class OfertasController extends ControllerBase
 	{
 		$this->entity = $entity;
 	}
-
+	
 	public function index($company, $attributes = [])
 	{
-		$attributes = ['where'=>[],'dataview'=>[
+		$attributes = ['dataview'=>[
 		    'company'=>$company
         ]];
 		return parent::index($company, $attributes);
