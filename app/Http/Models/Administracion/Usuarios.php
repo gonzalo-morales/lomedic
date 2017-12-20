@@ -43,7 +43,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
      * @var array
      */
     protected $fillable = [
-        'usuario', 'nombre_corto','activo','password','activo','fk_id_empresa_default'
+        'usuario', 'nombre_corto','activo','password','activo','fk_id_empresa_default','fecha_cambio_password','dias_expiracion'
     ];
 
     protected $fields = [

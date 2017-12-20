@@ -16,8 +16,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-
-    Route::group(['prefix' => 'soporte', 'as' => 'soporte.', 'middleware' => ['auth','share','csrf']], function(){
+    Route::group(['prefix' => 'soporte', 'as' => 'soporte.', 'middleware' => ['auth','share','csrf','password_expired']], function(){
         Route::resource('acciones', 'Soporte\AccionesController');
         Route::resource('categorias', 'Soporte\CategoriasController');
         Route::resource('estatustickets', 'Soporte\EstatusTicketsController');

@@ -17,15 +17,18 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 
 Route::get('/', 'HomeController@index')->name('home');
 
+
 Route::get('/phpinfo', function () { phpinfo(); });
 
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::resource('/', 'HomeController', ['middleware' => ['share','csrf']]);
+    Route::resource('/', 'HomeController', ['middleware' => ['share','csrf','password_expired']]);
     Route::get('/phpinfo', function () { phpinfo(); });
+    Route::get('/password/expired', 'Auth\ExpiredPasswordController@expired')->name('password.expired')->middleware(['share','csrf']);
+    Route::post('password/reset', 'Auth\ExpiredPasswordController@reset')->name('password.reset')->middleware(['share','csrf']);
 });
 
-Route::group(['prefix' => '{company}/{entity}', 'middleware' => ['auth', 'share']], function($co) {
+Route::group(['prefix' => '{company}/{entity}', 'middleware' => ['auth','share','password_expired']], function($co) {
 	Route::resource('api', 'APIController');
 });
