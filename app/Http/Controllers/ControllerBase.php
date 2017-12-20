@@ -212,7 +212,7 @@ class ControllerBase extends Controller
 
         # Validamos request, si falla regresamos atras
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-        
+
         DB::beginTransaction();
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
@@ -376,7 +376,7 @@ class ControllerBase extends Controller
         else {
             $data = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->get();
         }
-        
+
         $fields = $this->entity->getFields();
 
         $alldata = $data->map(function ($data) use($fields) {

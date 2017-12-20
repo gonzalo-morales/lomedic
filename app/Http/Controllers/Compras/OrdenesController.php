@@ -10,6 +10,8 @@ use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Solicitudes;
 use App\Http\Models\Compras\Ofertas;
 use App\Http\Models\Compras\Ordenes;
+use App\Http\Models\Compras\CondicionesAutorizacion;
+use App\Http\Models\Compras\AutorizacionOrdenes;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
 use App\Http\Models\Finanzas\CondicionesPago;
@@ -21,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 class OrdenesController extends ControllerBase
 {
@@ -148,6 +151,40 @@ class OrdenesController extends ControllerBase
             $isSuccess->descuento_total = $descuento_rows + $isSuccess->descuento_general;
 			$isSuccess->save();
             $this->log('store', $isSuccess->id_orden);
+
+			// AutorizacionOrdenes
+
+			$condicionesAutorizacion = CondicionesAutorizacion::where('activo',1)->get();
+			foreach ($condicionesAutorizacion as $condicion) {
+				$autorizacion = new AutorizacionOrdenes();
+				$autorizacion->fk_id_orden_compra 		= $isSuccess->id_orden;
+				$autorizacion->fk_id_autorizacion 		= $condicion->id_autorizacion;
+				$autorizacion->fk_id_usuario_autoriza 	= Auth::id();
+
+				if (isset($condicion->campo)) {
+					$campo =  $request->input($condicion->campo);
+					if ($campo > $condicion->rango_de && $campo < $condicion->rango_hasta ) {
+						// TODO: "Put autorizacion ordenes";
+						$autorizacion->estatus = 'PENDIENTE';
+						// dd($request);
+					}
+				}else if (isset($condicion->consulta_sql)) {
+					dd($condicion->consulta_sql);
+					// TODO: Si resultado de la consulta_sql es diferente de null marcar como pendiente sino sin autorizacion
+					$autorizacion->estatus = 'PENDIENTE';
+				}else {
+					$autorizacion->estatus = 'SIN AUTORIZACION';
+				}
+				$autorizacion->save();
+				dd($autorizacion);
+			}
+			die();
+			echo $condicionesAutorizacion->campo;
+			dd($condicionesAutorizacion);
+			if (empty($condicionesAutorizacion->campo)) {
+				dd($company); die();
+			}
+
             return $this->redirect('store');
 		} else {
 			$this->log('error_store');
