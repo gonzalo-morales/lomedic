@@ -19,14 +19,14 @@ class ClavesProductosServicios extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['clave_producto_servicio','descripcion','vigencia','activo'];//Solicitante devolución. false: localidad; true: proveedor;
+	protected $fillable = ['clave_producto_servicio','descripcion','vigencia','activo'];//Solicitante devoluciÃ³n. false: localidad; true: proveedor;
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'clave_producto_servicio' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|max:255',
+		'clave_producto_servicio' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
 		'descripcion' => 'required|max:255',
 		'vigencia' => 'nullable|date'
 	];
@@ -39,7 +39,7 @@ class ClavesProductosServicios extends ModelBase
 		'clave_producto_servicio' => 'Clave',
 		'descripcion' => 'Descripcion',
 		'vigencia' => 'Vigencia',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 
 }

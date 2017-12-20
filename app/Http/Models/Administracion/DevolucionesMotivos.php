@@ -19,14 +19,14 @@ class DevolucionesMotivos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['devolucion_motivo', 'solicitante_devolucion','activo'];//Solicitante devolución. false: localidad; true: proveedor;
+	protected $fillable = ['devolucion_motivo', 'solicitante_devolucion','activo'];//Solicitante devoluciÃ³n. false: localidad; true: proveedor;
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'devolucion_motivo' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+		'devolucion_motivo' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
         'solicitante_devolucion' => 'required|numeric'
 	];
 
@@ -36,12 +36,12 @@ class DevolucionesMotivos extends ModelBase
 	 */
 	protected $fields = [
 		'devolucion_motivo' =>  'Motivo',
-		'solicitante_formated' => 'Solicitante',
-		'activo_span' => 'Estado'
+		'solicitante_formated' => 'Devolucion A',
+		'activo_span' => 'Estatus'
 	];
 
 	public function getSolicitanteFormatedAttribute()
 	{
-		return $this->solicitante_devolucion ? 'Proveedor' : 'Localidad';
+		return $this->solicitante_devolucion ? 'Proveedor' : 'Sucursal';
 	}
 }

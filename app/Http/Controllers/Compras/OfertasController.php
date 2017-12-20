@@ -31,10 +31,10 @@ class OfertasController extends ControllerBase
 	{
 		$this->entity = $entity;
 	}
-
+	
 	public function index($company, $attributes = [])
 	{
-		$attributes = ['where'=>[],'dataview'=>[
+		$attributes = ['dataview'=>[
 		    'company'=>$company
         ]];
 		return parent::index($company, $attributes);
@@ -51,7 +51,7 @@ class OfertasController extends ControllerBase
             'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
             'clientes' => $clientes,
             'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
-            'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+            'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
             'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
             'solicitud' => Solicitudes::find($id_solicitud),
         ]];
@@ -119,7 +119,7 @@ class OfertasController extends ControllerBase
                 'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'proveedores'=>$proveedores,
                 'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
-                'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+                'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
                 'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
                 'company' => $company
 			]];
@@ -137,7 +137,7 @@ class OfertasController extends ControllerBase
                 'clientes' => $clientes,
                 'proveedores' => $proveedores,
                 'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
-                'proyectos' => Proyectos::where('activo',1)->pluck('proyecto','id_proyecto'),
+                'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
                 'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
 			]];
 		return parent::edit($company, $id, $attributes);

@@ -99,6 +99,10 @@ class ModelBase extends Model
 		}
 		return $format;
 	}
+	
+	public function getlistColumns() {
+	    return $this->getConnection()->getSchemaBuilder()->getColumnListing(str_replace('maestro.','',$this->getTable()));
+	}
 
 	/**
 	 * Obtenemos columnas-defaults de modelo

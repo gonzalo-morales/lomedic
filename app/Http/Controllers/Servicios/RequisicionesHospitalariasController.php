@@ -40,14 +40,6 @@ class RequisicionesHospitalariasController extends ControllerBase
         ];
     }
 
-    public function index($company, $attributes = [])
-    {
-
-        return parent::index($company, $attributes = []);
-
-    }
-
-
     /**
      * Show the form for creating a new resource.
      *

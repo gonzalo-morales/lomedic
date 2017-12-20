@@ -43,6 +43,6 @@ class MetodosPago extends ModelBase
     protected $fields = [
         'metodo_pago' => 'Metodo de pago',
         'descripcion' => 'Descripción',
-        'activo_span' => 'Activo',
+        'activo_span' => 'Estatus',
     ];
 }

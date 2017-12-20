@@ -35,12 +35,6 @@ class RecetasController extends ControllerBase
         $this->areas = Areas::all();
     }
 
-    public function index($company, $attributes = [])
-    {
-        $attributes = ['where'=>[]];
-        return parent::index($company, $attributes);
-    }
-
     public function getDataView($entity =  null)
     {
         return [

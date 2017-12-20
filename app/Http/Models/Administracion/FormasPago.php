@@ -45,7 +45,7 @@ class FormasPago extends ModelBase
 	protected $fields = [
 		'forma_pago' => 'No. Forma de Pago',
 		'descripcion' => 'Descripcion',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 
 

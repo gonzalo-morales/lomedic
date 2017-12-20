@@ -32,12 +32,6 @@ class OrdenesController extends ControllerBase
 		$this->entity = $entity;
 	}
 
-	public function index($company, $attributes = [])
-	{
-		$attributes = ['where'=>[]];
-		return parent::index($company, $attributes);
-	}
-
 	public function create($company, $attributes =[])
 	{
         switch (\request('tipo_documento')){

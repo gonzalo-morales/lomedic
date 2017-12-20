@@ -4,11 +4,12 @@
 @section('header-bottom')
 	@parent
 	<script type="text/javascript">
-        	var proyectos_js = '{{ $js_proyectos ?? '' }}';
-        </script>
+		var clientes_js = '{{ $js_clientes ?? '' }}';
+    	var proyectos_js = '{{ $js_proyectos ?? '' }}';
+    	var sucursales_js = '{{ $js_sucursales ?? '' }}';
+    </script>
 	{{ HTML::script(asset('js/ventas/facturasclientes.js')) }}
 @endsection
-
 
 @section('form-content')
 	{{ Form::setModel($data) }}
@@ -18,14 +19,14 @@
     			{{Form::cSelect('* Empresa','fk_id_empresa', $empresas ?? [])}}
     		</div>
     		<div class="form-group col-md-6">
-    			{{Form::cSelect('* Cliente','fk_id_cliente', $clientes ?? [])}}
+    			{{Form::cSelect('* Cliente','fk_id_socio_negocio', $clientes ?? [], ['data-url'=>companyAction('HomeController@index').'/sociosnegocio.sociosnegocio/api'])}}
     		</div>
     		
     		<div class="form-group col-md-6">
     			{{Form::cSelect('* Proyecto','fk_id_proyecto', $proyectos ?? [], ['data-url'=>companyAction('HomeController@index').'/proyectos.proyectos/api'])}}
     		</div>
     		<div class="form-group col-md-6">
-    			{{Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [])}}
+    			{{Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [], ['data-url'=>companyAction('HomeController@index').'/administracion.sucursales/api'])}}
     		</div>
     	
     		<div class="form-group col-md-5">
@@ -66,33 +67,33 @@
         	</div>
         	<div class="card-body row table-responsive">
         		<table class="table highlight mt-3" id="tContactos">
-							<thead>
-								<tr>
-									<th>Tipo Relacion</th>
-									<th>Factura</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-							@if(isset($data->relaciones)) 
-    							@foreach($data->relaciones->where('eliminar',0) as $key=>$detalle)
-								<tr>
-									<td>
-										{!! Form::hidden('contactos['.$key.'][id_contacto]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
-										{{$detalle->tipocontacto->tipo_contacto}}
-										{!! Form::hidden('contactos['.$key.'][fk_id_tipo_contacto]',$detalle->fk_id_tipo_contacto,['class'=>'fk_id_tipo_contacto']) !!}
-									</td>
-									<td>
-										{{$detalle->nombre}}
-										{!! Form::hidden('contactos['.$key.'][nombre]',$detalle->nombre) !!} 
-									</td>
-							
-									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>
-								</tr>
-    							@endforeach
-    						@endif
-							</tbody>
-						</table>
+					<thead>
+						<tr>
+							<th>Tipo Relacion</th>
+							<th>Factura</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					@if(isset($data->relaciones)) 
+						@foreach($data->relaciones->where('eliminar',0) as $key=>$detalle)
+						<tr>
+							<td>
+								{!! Form::hidden('contactos['.$key.'][id_contacto]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
+								{{$detalle->tipocontacto->tipo_contacto}}
+								{!! Form::hidden('contactos['.$key.'][fk_id_tipo_contacto]',$detalle->fk_id_tipo_contacto,['class'=>'fk_id_tipo_contacto']) !!}
+							</td>
+							<td>
+								{{$detalle->nombre}}
+								{!! Form::hidden('contactos['.$key.'][nombre]',$detalle->nombre) !!} 
+							</td>
+					
+							<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>
+						</tr>
+						@endforeach
+					@endif
+					</tbody>
+				</table>
         	</div>
 		</div>
 	</div>

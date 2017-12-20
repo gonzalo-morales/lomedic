@@ -18,7 +18,7 @@ class TiposProductosProyectosController extends ControllerBase
     public function create($company, $attributes = [])
     {
         $attributes = $attributes + ['dataview'=>[
-           'proyectos' => Proyectos::where('activo', '1')->pluck('proyecto','id_proyecto'),
+           'proyectos' => Proyectos::where('fk_id_estatus', '1')->pluck('proyecto','id_proyecto'),
         ]];
 
         return parent::create($company, $attributes);
@@ -27,7 +27,7 @@ class TiposProductosProyectosController extends ControllerBase
     public function show($company, $id, $attributes = [])
     {
         $attributes = $attributes + ['dataview'=>[
-                'proyectos' => Proyectos::where('activo', '1')->pluck('proyecto','id_proyecto'),
+                'proyectos' => Proyectos::where('fk_id_estatus', '1')->pluck('proyecto','id_proyecto'),
             ]];
         return parent::show($company, $id, $attributes);
     }
@@ -35,7 +35,7 @@ class TiposProductosProyectosController extends ControllerBase
     public function edit($company, $id, $attributes = [])
     {
         $attributes = $attributes + ['dataview'=>[
-                'proyectos' => Proyectos::where('activo', '1')->pluck('proyecto','id_proyecto'),
+                'proyectos' => Proyectos::where('fk_id_estatus', '1')->pluck('proyecto','id_proyecto'),
             ]];
         return parent::edit($company, $id, $attributes);
     }

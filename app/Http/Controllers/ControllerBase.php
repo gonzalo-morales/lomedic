@@ -23,7 +23,7 @@ class ControllerBase extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($company, $attributes = ['where'=>['eliminar = 0']])
+    public function index($company, $attributes = [])
     {
         # ¿Usuario tiene permiso para ver?
         //		$this->authorize('view', $this->entity);
@@ -32,6 +32,10 @@ class ControllerBase extends Controller
         $this->log('index');
 
         $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
+
+        if(in_array('eliminar',$this->entity->getlistColumns())) {
+            $query->where('eliminar',0);
+        }
 
         if(isset($attributes['where'])) {
             foreach ($attributes['where'] as $key=>$condition) {
@@ -217,28 +221,26 @@ class ControllerBase extends Controller
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
         if ($entity->save()) {
-
             # Si tienes relaciones
             if ($request->relations) {
                 foreach ($request->relations as $relationType => $collections) {
                     # Relacion "HAS"
-                }
-                if ($relationType == 'has') {
-                    foreach ($collections as $relationName => $relations) {
-                        # Recorremos cada coleccion
-                        $primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
+                    if ($relationType == 'has') {
+                        foreach ($collections as $relationName => $relations) {
+                            # Recorremos cada coleccion
+                            $primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
 
-                        $ids = collect($relations)->pluck($primaryKey);
-                        if(!empty($ids)){
-                            $entity->{$relationName}()->whereNotIn($primaryKey, $ids)->update(['eliminar' => 1]);
-                        }
-                        else {
-                            $entity->{$relationName}()->update(['eliminar' => 1]);
-                        }
+                            $ids = collect($relations)->pluck($primaryKey);
+                            if (!empty($ids)) {
+                                $entity->{$relationName}()->whereNotIn($primaryKey, $ids)->update(['eliminar' => 1]);
+                            } else {
+                                $entity->{$relationName}()->update(['eliminar' => 1]);
+                            }
 
-                        foreach ($relations as $relation) {
-                            if (array_key_exists($primaryKey, $relation) && $relation[$primaryKey] != -1) {
-                                $entity->{$relationName}()->updateOrCreate([$primaryKey => $relation[$primaryKey]], $relation);
+                            foreach ($relations as $relation) {
+                                if (array_key_exists($primaryKey, $relation) && $relation[$primaryKey] != -1) {
+                                    $entity->{$relationName}()->updateOrCreate([$primaryKey => $relation[$primaryKey]], $relation);
+                                }
                             }
                         }
                     }
@@ -366,29 +368,27 @@ class ControllerBase extends Controller
         # ¿Usuario tiene permiso para exportar?
         //		$this->authorize('export', $this->entity);
 
+        $colums = $this->entity->getlistColumns();
+
         $type = strtolower($request->type);
         $style = isset($request->style) ? $request->style : false;
 
         if (isset($request->ids)) {
             $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);
-            $data = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->whereIn($this->entity->getKeyName(), $ids)->get();
+            $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->whereIn($this->entity->getKeyName(), $ids);
         }
         else {
-            $data = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->get();
+            $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
         }
 
-        $fields = $this->entity->getFields();
+        if(in_array('eliminar',$colums))
+            $query->where('eliminar',0);
 
-        $alldata = $data->map(function ($data) use($fields) {
-            $return = [];
-            foreach ($fields as $field=>$label) {
-                $return[$field] = html_entity_decode(strip_tags(object_get($data, $field)));
-            }
-            return $return;
-        });
+        $fields = $this->entity->getFields();
+        $data = $query->get();
 
         if($type == 'pdf') {
-            $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $alldata]);
+            $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
             $pdf->setPaper('letter','landscape');
             $pdf->output();
             $dom_pdf = $pdf->getDomPDF();
@@ -397,13 +397,9 @@ class ControllerBase extends Controller
             return $pdf->stream(currentEntityBaseName().'.pdf')->header('Content-Type',"application/$type");
         }
         else {
-            Excel::create(currentEntityBaseName(), function($excel) use($data,$alldata,$type,$style) {
-                $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$alldata,$type,$style) {
-                    if($style) {
-                        $sheet->loadView(currentRouteName('smart'), ['fields' => $this->entity->getFields(), 'data' => $data]);
-                    }
-                    else
-                        $sheet->fromArray($alldata);
+            Excel::create(currentEntityBaseName(), function($excel) use($data,$type,$style,$fields) {
+                $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$type,$style,$fields) {
+                        $sheet->loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
                 });
             })->download($type);
         }
