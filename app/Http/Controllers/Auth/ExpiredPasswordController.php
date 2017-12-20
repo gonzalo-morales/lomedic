@@ -42,11 +42,15 @@ class ExpiredPasswordController extends Controller
 	        return redirect()->back()->withErrors(['confirmar' => 'Confirmacion de la contrase&ntilde;a no coincide.']);
 	    }
 	    
+	    // Checking current and new is diferent password
+	    if (Hash::check($request->password, $request->user()->password)) {
+	        return redirect()->back()->withErrors(['password' => 'La nueva contrase&ntilde;a no pude ser igual a la actual.']);
+	    }
+	    
 	    $request->user()->update([
 	        'password' => bcrypt($request->password),
 	        'fecha_cambio_password' => Carbon::now()->toDateTimeString()
 	    ]);
-	    #return response()->json(['success' => true, 'data' => $request->toArray()])->header("Vary", "Accept");
-	    return redirect()->back()->with(['status' => 'Password changed successfully']);
+	    return redirect()->back();
 	}
 }
