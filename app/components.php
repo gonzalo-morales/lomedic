@@ -5,8 +5,8 @@ Form::component('cNumber', 'components.form.number', ['text', 'name', 'attribute
 Form::component('cPassword', 'components.form.password', ['text', 'name', 'attributes']);
 Form::component('cDate', 'components.form.date', ['text', 'name', 'attributes']);
 Form::component('cTextArea', 'components.form.textarea', ['text', 'name', 'attributes']);
-Form::component('cSelect', 'components.form.select', ['text', 'name', 'options', 'attributes']);
-Form::component('cSelectWithDisabled', 'components.form.select_disabled', ['text', 'name', 'options', 'attributes']);
+Form::component('cSelect', 'components.form.select', ['text', 'name', 'options', 'selectAttributes','optionsAttributes']);
+Form::component('cSelectWithDisabled', 'components.form.select_disabled', ['text', 'name', 'options', 'selectAttributes','optionsAttributes']);
 Form::component('cCheckbox', 'components.form.checkbox', ['text', 'name', 'attributes', 'value']);
 Form::component('cCheckboxYesOrNo', 'components.form.checkbox_yes_or_no', ['text', 'name', 'attributes']);
 Form::component('cCheckboxBtn', 'components.form.checkbox_btn', ['label', 'text', 'name', 'value', 'textoff']);

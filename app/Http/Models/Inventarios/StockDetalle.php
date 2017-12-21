@@ -4,20 +4,20 @@ namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
 
-class StockDetalle extends ModelCompany
+class Stock extends ModelCompany
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'inv_det_stock';
+    protected $table = 'inv_opr_stock';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_detalle_stock';
+    protected $primaryKey = 'id_stock';
 
     /**
      * The attributes that are mass assignable.
@@ -78,7 +78,7 @@ class StockDetalle extends ModelCompany
     }
 
     /**
-     * Obtenemos almacen relacionado
+     * Obtenemos ubicacion relacionada
      * @return @belongsTo
      */
     public function ubicacion()

@@ -15,8 +15,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-
-    Route::group(['prefix' => 'estadisticas', 'as' => 'estadisticas.', 'middleware' => ['share','csrf'] ], function() {
+    Route::group(['prefix' => 'estadisticas', 'as' => 'estadisticas.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
         Route::post('pgetLocalidades','Estadisticas\PedidosController@getLocalidades')->name('pedidos.getlocalidades');
         Route::post('rgetLocalidades','Estadisticas\RequisicionesController@getLocalidades')->name('requisiciones.getlocalidades');
         Route::post('egetLocalidades','Estadisticas\RecetasController@getLocalidades')->name('recetas.getlocalidades');

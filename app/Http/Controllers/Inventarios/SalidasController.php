@@ -8,6 +8,8 @@ use App\Http\Models\Administracion\TiposEntrega;
 use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Inventarios\Salidas;
+use App\Http\Models\Inventarios\StockDetalle;
+use App\Http\Models\Inventarios\Ubicaciones;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\SociosNegocio\DireccionesSociosNegocio;
 use App\Http\Models\SociosNegocio\SociosNegocio;
@@ -32,12 +34,28 @@ class SalidasController extends ControllerBase
 		$proyectos = [];
 		$sucursales_entrega = [];
 		$upcs = [];
+		$skus_data = [];
+		$skus = Productos::has('upcs')->get()->tap(function($collection) use (&$skus_data) {
+			$skus_data = $collection->mapWithKeys(function($item) {
+				return [$item['id_sku'] => [
+					'data-sku' => $item['sku'],
+					'data-descripcion_corta' => $item['descripcion_corta']
+				]];
+			})->toArray();
+		})->pluck('sku_descripcion','id_sku');
 
 		#
 		if ($entity) {
 			$proyectos = Proyectos::where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('proyecto','id_proyecto');
 			$sucursales_entrega = DireccionesSociosNegocio::where('fk_id_socio_negocio', $entity->fk_id_socio_negocio)->where('fk_id_tipo_direccion', 2)->get()->pluck('direccion_concat','id_direccion');
-			$entity->detalle()->with(['sku', 'upc', 'almacen'])->get()->each(function($item, $index) use (&$upcs) {
+			#
+			if (isCurrentRouteName(currentRouteName('pendings'))) {
+				$entity_upcs = $entity->detalle()->where('cantidad_pendiente', '!=',0);
+			} else {
+				$entity_upcs = $entity->detalle();
+			}
+			$entity_upcs->with(['sku', 'upc', 'almacen'])->get()->each(function($item, $index) use (&$upcs) {
+				// dump($item->toArray());
 				$upcs[$index] = $item->toArray();
 				$upcs[$index]['sku'] = $item->sku->sku;
 				$upcs[$index]['upc'] = $item->upc->upc;
@@ -45,22 +63,30 @@ class SalidasController extends ControllerBase
 				$upcs[$index]['descripcion'] = $item->upc->descripcion;
 				$upcs[$index]['almacen'] = $item->almacen->almacen;
 				$upcs[$index]['sucursal'] = $item->almacen->sucursal->sucursal;
+				if (isCurrentRouteName(currentRouteName('pendings'))) {
+					$upcs[$index]['id_detalle'] = null;
+					$upcs[$index]['cantidad_solicitada'] = $upcs[$index]['cantidad_pendiente'];
+					$upcs[$index]['cantidad_surtida'] = 0;
+					$upcs[$index]['cantidad_pendiente'] = 0;
+				}
 			});
 		}
 
 		return [
 			'tipos_salida' => TipoSalida::all()->pluck('salida', 'id_tipo'),
-			'clientes' => SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
+			'clientes' => SociosNegocio::on(request()->company)->has('proyectos')->where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->with('proyectos')->pluck('nombre_comercial','id_socio_negocio'),
 			'proyectos' => $proyectos,
 			'sucursales_entrega' => $sucursales_entrega,
 			'tipos_entrega' => TiposEntrega::all()->pluck('tipo_entrega', 'id_tipo_entrega'),
-			'skus' => Productos::all()->pluck('sku_descripcion','id_sku'),
-			'almacenes' => Almacenes::with('sucursal')->get()->pluck('almacen_sucursal_concat','id_almacen'),
+			'skus' => $skus,
+			'skus_data' => $skus_data,
 			'upcs' => $upcs,
-			'api_proyectos' => Crypt::encryptString('"conditions": [{"where":["fk_id_cliente", "$fk_id_cliente"]}], "only": ["id_proyecto", "proyecto"]'),
-			'api_direcciones' => Crypt::encryptString('"conditions": [{"where":["fk_id_socio_negocio", "$fk_id_socio_negocio"]},{"where":["fk_id_tipo_direccion", "2"]}], "only": ["id_direccion", "direccion_concat"]'),
-			'api_sku' => Crypt::encryptString('"select": ["id_sku","sku","descripcion"], "conditions": [{"where": ["id_sku", "$id_sku"]}], "with": ["upcs:id_upc,descripcion,marca,upc"]'),
-			'api_verify_stock' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$fk_id_almacen"]}, {"where": ["codigo_barras", "$codigo_barras"]}],"orderBy": [["id_detalle", "DESC"]], "limit": 1'),
+			'api_proyectos' => Crypt::encryptString('"select": ["id_proyecto", "proyecto"], "conditions": [{"where":["fk_id_cliente", "$fk_id_cliente"]}]'),
+			'api_direcciones' => Crypt::encryptString('"select": ["calle", "num_exterior", "num_interior", "codigo_postal", "id_direccion", "fk_id_estado","fk_id_municipio"], "conditions": [{"where":["fk_id_socio_negocio", "$fk_id_socio_negocio"]},{"where":["fk_id_tipo_direccion", "2"]}], "append": ["direccion_concat"]'),
+			'api_sku' => Crypt::encryptString('"select": ["id_sku","sku","descripcion"], "conditions": [{"where": ["id_sku", "$fk_id_sku"]}], "with": ["upcs:id_upc,descripcion,marca,upc"]'),
+
+			'api_verify_stock' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$fk_id_almacen"]}, {"where": ["fk_id_upc", "$fk_id_upc"]}]'),
+			'api_ubicaciones' => Crypt::encryptString('"select":["lote","stock","fk_id_ubicacion"],"with": ["ubicacion:id_ubicacion,nivel,posicion,rack,ubicacion,fk_id_almacen", "ubicacion.almacen:id_almacen,almacen,fk_id_sucursal", "ubicacion.almacen.sucursal:id_sucursal,sucursal"], "conditions": [{"where": ["fk_id_sku", "$fk_id_sku"]}, {"where": ["fk_id_upc", "$fk_id_upc"]}]'),
 		];
 	}
 
@@ -72,11 +98,34 @@ class SalidasController extends ControllerBase
 	 */
 	public function store(Request $request, $company)
 	{
+		# ¿Salida completa?
+		$notPendings = collect($request->relations['has']['detalle'])->every(function ($item) {
+			return $item['cantidad_pendiente'] == 0;
+		});
+		$request->request->add([
+			# 0: Abierto, 1: Cerrado, 2: Cancelado, 3: Surtido Parcial, 4: Surtido
+		    'estatus' => $notPendings ? 4 : 3,
+		]);
 		$request->request->add([
 		    'fecha_salida' => Carbon::now()
 		]);
-		// dump($request->all());
+		// dd( $request->all() );
 		return parent::store($request, $company);
 	}
 
+	public function pendings(Request $request, $company, $salida) {
+		// SAME TO EDIT
+        $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
+
+        try {
+            $data = $this->entity->findOrFail($salida);
+        } catch (\Exception $e) {
+            return \App::abort(404,$e->getMessage());
+        }
+
+        return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
+            'data' => $data,
+            'validator' => $validator
+        ] + $this->getDataView($data));
+	}
 }
