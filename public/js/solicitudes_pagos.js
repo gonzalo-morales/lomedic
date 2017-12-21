@@ -5,7 +5,67 @@ $('.datepicker').pickadate({
 });
 
 $(document).ready(function () {
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    //Para las autorizaciones de solicitudes de compras
+    $('input[type=radio][name=fk_id_estatus]').change(function () {
+        if($(this).val() == 4){//Si es autorizada
+            $('#observaciones').attr('readonly','readonly');
+            $('#observaciones').empty();
+        }else{
+            $('#observaciones').removeAttr('readonly');
+        }
+    });
+    $('.condicion').click(function () {
+        $('#motivo_autorizacion').val($(this).parent().parent().find('td:first-child').text());
+        // $('#fk_id_estatus\\ ').prop('checked',true);
+        $('#id_autorizacion').val($(this).parent().parent().find('td input:first').val());
+        $('#observaciones').val($(this).parent().parent().find('td input:first').next('input').val());
+        if($(this).parent().parent().find('td input:last').val() == 3){
+            $('#fk_id_estatus\\ 3').prop('checked',true);
+        }else if($(this).parent().parent().find('td input:last').val() == 4){
+            $('#fk_id_estatus\\ 4').prop('checked',true);
+        }
+    });
+
+    $('#guardar_autorizacion').click(function (e) {
+       if($('input[type=radio][name=fk_id_estatus]:checked').val() == 3 && !$('#observaciones').val()) {
+           $.toaster({
+               priority: 'danger', title: 'Error', message: 'Por favor escribe un motivo de rechazo',
+               settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+           });
+       }else if(!$('input[type=radio][name=fk_id_estatus]:checked').val()){
+           $.toaster({
+               priority: 'danger', title: 'Error', message: 'Por favor selecciona si se autoriza o no',
+               settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+           });
+        }else{
+           $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+           var autorizar_url = $('#id_autorizacion').data('url').replace('?id',$('#id_autorizacion').val());
+           $.ajax({
+               url:autorizar_url,
+               type:'PUT',
+               data:{
+                   observaciones:$('#observaciones').val(),
+                   fk_id_estatus:$('input[type=radio][name=fk_id_estatus]:checked').val()
+               },
+               success:function (data) {
+                   if(data.status == 1){
+                       $('#autorizacion').modal('toggle');
+                       $.toaster({
+                           priority: 'success', title: 'Éxito', message: 'Se ha actualizado la información de la autorización',
+                           settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+                       });
+                   }else{
+                       $.toaster({
+                           priority: 'danger', title: 'Error', message: 'Ha ocurrido un error',
+                           settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+                       });
+                   }
+               }
+           });
+       }
+    });
+    //Aquí termina la parte de las autorizaciones
+
     $('#fk_id_solicitante').change(function () {
         $('#fk_id_sucursal').empty();
         $('#loadingsucursales').show();
@@ -119,6 +179,11 @@ $(document).ready(function () {
         var total = impuesto + ( subtotal* cantidad);
         $('#importe').val(total.toFixed(2));
     });
+
+    $('#reload').click(function (e) {
+        e.preventDefault();
+        window.location.reload(true);
+    })
 });
 
 function borrarFila(el) {
