@@ -6,12 +6,13 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Sucursales;
+use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Solicitudes;
 use App\Http\Models\Compras\Ofertas;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\CondicionesAutorizacion;
-use App\Http\Models\Compras\AutorizacionOrdenes;
+use App\Http\Models\Compras\Autorizaciones;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
 use App\Http\Models\Finanzas\CondicionesPago;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class OrdenesController extends ControllerBase
 {
@@ -146,38 +148,8 @@ class OrdenesController extends ControllerBase
 			$isSuccess->save();
             $this->log('store', $isSuccess->id_orden);
 
-			// AutorizacionOrdenes
-
-			$condicionesAutorizacion = CondicionesAutorizacion::where('activo',1)->get();
-			foreach ($condicionesAutorizacion as $condicion) {
-				$autorizacion = new AutorizacionOrdenes();
-				$autorizacion->fk_id_orden_compra 		= $isSuccess->id_orden;
-				$autorizacion->fk_id_autorizacion 		= $condicion->id_autorizacion;
-				$autorizacion->fk_id_usuario_autoriza 	= Auth::id();
-
-				if (isset($condicion->campo)) {
-					$campo =  $request->input($condicion->campo);
-					if ($campo > $condicion->rango_de && $campo < $condicion->rango_hasta ) {
-						// TODO: "Put autorizacion ordenes";
-						$autorizacion->estatus = 'PENDIENTE';
-						// dd($request);
-					}
-				}else if (isset($condicion->consulta_sql)) {
-					dd($condicion->consulta_sql);
-					// TODO: Si resultado de la consulta_sql es diferente de null marcar como pendiente sino sin autorizacion
-					$autorizacion->estatus = 'PENDIENTE';
-				}else {
-					$autorizacion->estatus = 'SIN AUTORIZACION';
-				}
-				$autorizacion->save();
-				dd($autorizacion);
-			}
-			die();
-			echo $condicionesAutorizacion->campo;
-			dd($condicionesAutorizacion);
-			if (empty($condicionesAutorizacion->campo)) {
-				dd($company); die();
-			}
+			// dd($isSuccess->id_orden);
+			$this->evaluarCondiciones($request, $isSuccess->id_orden);
 
             return $this->redirect('store');
 		} else {
@@ -204,6 +176,8 @@ class OrdenesController extends ControllerBase
 	{
 	    $clientes = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
 
+		// dd(Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento', 3));
+
 		$attributes = $attributes+['dataview'=>[
                 'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
                 'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
@@ -211,6 +185,9 @@ class OrdenesController extends ControllerBase
                 'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
                 'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
                 'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
+                'condicionesAutorizacion' => Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento', 3),
+                'autorizaciones' => Autorizaciones::all()->where('fk_id_documento',$id)->where('fk_id_tipo_documento', 3),
+                'usuario' => Usuarios::find(Auth::id())->where('id_usuario', Auth::id())->first(),
 			]];
 		return parent::edit($company, $id, $attributes);
 	}
@@ -388,5 +365,40 @@ class OrdenesController extends ControllerBase
         $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
 	    return Response::json($proveedores);
     }
+
+	public function evaluarCondiciones($request ,$id_orden){
+		// AutorizacionOrdenes
+		$condicionesAutorizacion = CondicionesAutorizacion::where('activo',1)->where('fk_id_tipo_documento', 3)->get();
+		foreach ($condicionesAutorizacion as $condicion) {
+			$autorizacion = new Autorizaciones();
+			$autorizacion->fk_id_documento			= $id_orden;
+			$autorizacion->fk_id_tipo_documento 	= 3; // Para Orden de Compra
+			$autorizacion->fk_id_condicion 			= $condicion->id_condicion;
+			$autorizacion->fk_id_usuario_autoriza 	= Auth::id();
+			$autorizacion->fecha_creacion			= Carbon::now()->format('Y-m-d');
+			$checkCampos = false;
+			if (isset($condicion->campo)) {
+				$campo =  $request->input($condicion->campo);
+				if ($campo >= $condicion->rango_de && $campo <= $condicion->rango_hasta ) {
+					$checkCampos = true;
+					// $autorizacion->fk_id_estatus			= 2; // Pendiente
+				}
+			}else
+			if (isset($condicion->consulta_sql)) {
+				// dd($condicion->consulta_sql);
+				// TODO: Si resultado de la consulta_sql es diferente de null marcar como pendiente sino sin autorizacion
+				$checkCampos = true;
+				// $autorizacion->fk_id_estatus			= 2; // Pendiente
+			}
+
+			if($checkCampos){
+				$autorizacion->fk_id_estatus			= 2; // Pendiente
+			}else {
+				$autorizacion->fk_id_estatus			= 1; // Sin Autorización
+			}
+			$autorizacion->save();
+		}
+	}
+
 
 }

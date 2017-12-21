@@ -352,20 +352,41 @@
 						<tr>
 							<th>Nombre</th>
 							<th>Estatus</th>
-							<th>Fecha de Autorización</th>
+							<th>Fecha Creación</th>
+							<th>Fecha Autorización</th>
 							<th>Autorizó</th>
 							<th>Motivo</th>
+							<th>Observaciones</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-					@if(isset($data->contratos))
-						@foreach($data->contratos->where('eliminar',0) as $row=>$detalle)
+					@if( isset($autorizaciones) )
+						@foreach( $autorizaciones->where('eliminar',0) as $row=>$detalle )
 							<tr>
 								<td>
 									{{-- {{ Form::hidden('relations[has][contratos]['.$row.'][index]',$row,['class'=>'index']) }} --}}
 									{{-- {{ Form::hidden('relations[has][contratos]['.$row.'][id_contrato]',$detalle->id_contrato) }} --}}
-									{{-- {{}} --}}
+									{{ $detalle->condiciones->nombre }}
+
+								</td>
+								<td>
+									{{ $detalle->estatusAutorizacion->estatus }}
+								</td>
+								<td>
+									{{ $detalle->fecha_creacion }}
+								</td>
+								<td>
+									@if($detalle->fecha_autorizacion <> '')
+										{{ $detalle->fecha_autorizacion }}
+									@else
+										{{ "---" }}
+									@endif
+
+								</td>
+								<td>
+									{{-- {{ $detalle->id_autorizacion }} --}}
+									{{-- {{ $usuario->nombre_corto }} --}}
 								</td>
 								<td>
 									{{-- {{}} --}}
@@ -374,18 +395,15 @@
 									{{-- {{}} --}}
 								</td>
 								<td>
-									{{-- {{}} --}}
-								</td>
-								<td>
-									{{-- {{}} --}}
-								</td>
-								<td>
-									<a class="btn is-icon text-primary bg-white" href="{{companyAction('autorizarOrden', ['id' => $detalle->id_contrato])}}" title="Autorizar">
-										<i class="material-icons">Check</i>
+									<a class="btn is-icon text-primary bg-white"  id="autorizar" title="Autorizar">
+										<i class="material-icons">check</i>
 									</a>
 									@if(Route::currentRouteNamed(currentRouteName('edit')))
 										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Contrato"> <i class="material-icons">delete</i></button>
 									@endif
+								</td>
+								<td>
+									{{-- {{}} --}}
 								</td>
 							</tr>
 						@endforeach
@@ -399,6 +417,38 @@
 		</div><!--/Here ends card-->
 	</div>
 </div>
+
+<div id="autorizarCondicion" class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Autorización de Orden</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="input-group-btn" role="group" aria-label="choiceAutorizar" >
+                    <label class="btn btn-check btn-default active">
+                        <input type="radio" name="choiceAutorizar" checked="checked" autocomplete="off" value="afiliado" class="">Autorizar
+                    </label>
+                    <label class="btn btn-check btn-default">
+                        <input type="radio" name="choiceAutorizar" autocomplete="off" value="externo" class="btn btn-default">Rechazar
+                    </label>
+                </div>
+				{{ Form::label('observaciones','* Observaciones') }}
+	            {{ Form::text('observaciones', null, ['id'=>'observaciones','class'=>'form-control','placeholder'=>'Observación']) }}
+	            {{ $errors->has('observaciones') ? HTML::tag('span', $errors->first('observaciones'), ['class'=>'help-block deep-orange-text']) : '' }}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				<button id="llenarAutorizacion" type="button" data-dismiss="modal" class="btn btn-primary">Guardar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 
 @endsection
 

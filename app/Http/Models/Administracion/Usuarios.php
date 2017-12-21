@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use App\Notifications\MyResetPassword;
+use App\Http\Models\Compras\CondicionesAutorizacion;
 
 class Usuarios extends ModelBase implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
@@ -65,7 +66,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         'nombre_corto' => 'required',
         'usuario' => 'required',
     ];
-    
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new MyResetPassword($token));
@@ -99,6 +100,11 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
     public function permisos()
     {
         return $this->belongsToMany(Permisos::class, 'ges_det_permisos_usuarios', 'fk_id_usuario', 'fk_id_permiso');
+    }
+
+    public function condiciones()
+    {
+       return $this->belongsToMany(CondicionesAutorizacion::class,'com_det_usuarios_autorizados','fk_id_usuario','fk_id_condicion');
     }
 
     /**
@@ -147,14 +153,14 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
      * @return array
      */
     public $modulos_menu = null;
-    
+
     public function modulos_anidados($empresa = null, $idmenu = null)
     {
         $empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
         $this->modulos_menu = $this->modulos_menu ?: $this->getmenu($empresa);
 
         $menu = $this->modulos_menu->where('fk_id_modulo_hijo','=',$idmenu);
-        
+
         foreach ($menu as $key=>$itemMenu) {
             $menu[$key]->submodulos = $this->modulos_anidados($empresa,$itemMenu->id_modulo);
         }
@@ -165,7 +171,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
     {
         $empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
         $id_empresa = isset($empresa->id_empresa) ? $empresa->id_empresa : 0;
-        
+
         $modulos = Modulos::where('eliminar','=',0)->where('activo','=',1)->where('accion_menu','=',1)
         ->wherein('id_modulo',$this->getpermisos()->pluck('id_permiso'))
         ->leftJoin('ges_det_modulos','fk_id_modulo','id_modulo')

@@ -8,6 +8,7 @@ $('.datepicker').pickadate({
     format: 'yyyy/mm/dd'
 });
 $(document).ready(function(){
+
     //Inicializar tabla
     window.dataTable = new DataTable('#productos', {
         fixedHeight: true,
@@ -106,6 +107,9 @@ $(document).ready(function(){
             }
         })
     }
+    $('#autorizar').click(function(){
+        $('#autorizarCondicion').modal('show');
+    });
     $('#descuento_porcentaje').on('keyup',function () {
         $('#descuento_general').val(((subtotal_original*$(this).val())/100).toFixed(2));
         totalOrden();

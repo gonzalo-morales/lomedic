@@ -15,6 +15,7 @@ class CreateCompAutorizacionOrdenes extends Migration
     {
         Schema::connection('abisa')->create('com_det_autorizaciones', function (Blueprint $table) {
             $table->increments('id_autorizacion');
+            $table->integer('fk_id_documento');
             $table->integer('fk_id_tipo_documento');
             $table->integer('fk_id_condicion');
             $table->integer('fk_id_usuario_autoriza');
@@ -25,6 +26,8 @@ class CreateCompAutorizacionOrdenes extends Migration
             $table->boolean('activo')->default(true);
             $table->boolean('eliminar')->default(false);
 
+            $table->foreign('fk_id_tipo_documento')->references('id_tipo_documento')->on('maestro.gen_cat_tipo_documento')
+                ->onUpdate('restrict')->onDelete('restrict');
             $table->foreign('fk_id_condicion')->references('id_condicion')->on('com_cat_condiciones_autorizacion')
                 ->onUpdate('restrict')->onDelete('restrict');
             $table->foreign('fk_id_usuario_autoriza')->references('id_usuario')->on('maestro.ges_cat_usuarios')
@@ -34,6 +37,7 @@ class CreateCompAutorizacionOrdenes extends Migration
         });
         Schema::connection('lomedic')->create('com_det_autorizaciones', function (Blueprint $table) {
             $table->increments('id_autorizacion');
+            $table->integer('fk_id_documento');
             $table->integer('fk_id_tipo_documento');
             $table->integer('fk_id_condicion');
             $table->integer('fk_id_usuario_autoriza');
@@ -44,6 +48,8 @@ class CreateCompAutorizacionOrdenes extends Migration
             $table->boolean('activo')->default(true);
             $table->boolean('eliminar')->default(false);
 
+            $table->foreign('fk_id_tipo_documento')->references('id_tipo_documento')->on('maestro.gen_cat_tipo_documento')
+                ->onUpdate('restrict')->onDelete('restrict');
             $table->foreign('fk_id_condicion')->references('id_condicion')->on('com_cat_condiciones_autorizacion')
                 ->onUpdate('restrict')->onDelete('restrict');
             $table->foreign('fk_id_usuario_autoriza')->references('id_usuario')->on('maestro.ges_cat_usuarios')

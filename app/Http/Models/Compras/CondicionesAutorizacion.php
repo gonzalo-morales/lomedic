@@ -4,6 +4,7 @@ namespace App\Http\Models\Compras;
 
 // use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Administracion\Usuarios;
 use DB;
 
 class CondicionesAutorizacion extends ModelCompany
@@ -26,13 +27,13 @@ class CondicionesAutorizacion extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['nombre','campo','rango_de','rango_hasta','consulta_sql','tipo_documento','activo','eliminar'];
+    protected $fillable = ['nombre','campo','rango_de','rango_hasta','consulta_sql','fk_id_tipo_documento','activo','eliminar'];
 
     public $niceNames =[
     ];
 
     protected $dataColumns = [
-        'campo'
+        'campo',
     ];
     /**
      * Los atributos que seran visibles en index-datable
@@ -41,7 +42,7 @@ class CondicionesAutorizacion extends ModelCompany
     // protected $fields = [
     // ];
 
-    // protected $eagerLoaders = ['autorizacionOrden'];
+    // protected $eagerLoaders = ['usuarios'];
 
     /**
      * The validation rules
@@ -50,6 +51,13 @@ class CondicionesAutorizacion extends ModelCompany
     public $rules = [
         'nombre' => 'required'
     ];
+
+
+    public function usuarios()
+    {
+        // return $this->belongsToMany('app\Http\Models\Administracion\Usuarios', 'com_det_usuarios_autorizados', 'fk_id_condicion', 'fk_id_usuario');
+        return $this->belongsToMany(Usuarios::class,'com_det_usuarios_autorizados');
+    }
 
 
 }

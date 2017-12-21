@@ -4,9 +4,10 @@ namespace App\Http\Models\Compras;
 
 // use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Compras\CondicionesAutorizacion;
 use DB;
 
-class AutorizacionOrdenes extends ModelCompany
+class Autorizaciones extends ModelCompany
 {
     /**
      * The table associated with the model.
@@ -26,7 +27,7 @@ class AutorizacionOrdenes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_tipo_documento','fk_id_condicion','fk_id_usuario_autoriza','fk_id_estatus','fecha_creacion','fecha_autorizacion','observaciones','activo','eliminar'];
+    protected $fillable = ['fk_id_documento','fk_id_tipo_documento','fk_id_condicion','fk_id_usuario_autoriza','fk_id_estatus','fecha_creacion','fecha_autorizacion','observaciones','activo','eliminar'];
 
     public $niceNames =[
         // 'nombre'=>'nombre',
@@ -36,7 +37,8 @@ class AutorizacionOrdenes extends ModelCompany
     ];
 
     protected $dataColumns = [
-        'campo'
+        'campo',
+        'estatus'
     ];
     /**
      * Los atributos que seran visibles en index-datable
@@ -45,12 +47,11 @@ class AutorizacionOrdenes extends ModelCompany
     // protected $fields = [
     // ];
 
-    // protected $eagerLoaders = ['condicionAutorizacion'];
+    protected $eagerLoaders = ['estatus'];
 
-    // function getNombreCompletoAttribute() {
-    //     return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
-    // }
-
+    function setEstatusAttribute(){
+        return $this->estatus->id_estatus;
+    }
     /**
      * The validation rules
      * @var array
@@ -62,5 +63,25 @@ class AutorizacionOrdenes extends ModelCompany
         'estatus'                   => 'required'
     ];
 
+    public function documento()
+    {
+        return $this->hasOne('App\Http\Models\Compras\Ordenes','id_orden','fk_id_documento');
+    }
+    public function tipoDocumento()
+    {
+        return $this->hasOne('App\Http\Models\Administracion\TiposDocumentos','id_tipo_documento','fk_id_tipo_documento');
+    }
+    public function estatus()
+    {
+        return $this->hasOne('App\Http\Models\Administracion\EstatusDocumentos','id_estatus','fk_id_estatus');
+    }
+    public function estatusAutorizacion()
+    {
+        return $this->hasOne('App\Http\Models\Compras\EstatusAutorizacion','id_estatus','fk_id_estatus');
+    }
+    public function condiciones()
+    {
+        return $this->hasOne(CondicionesAutorizacion::class,'id_condicion','fk_id_condicion');
+    }
 
 }
