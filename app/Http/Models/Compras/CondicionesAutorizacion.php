@@ -3,6 +3,8 @@
 namespace App\Http\Models\Compras;
 
 // use App\Http\Models\Administracion\EstatusDocumentos;
+use App\Http\Models\Administracion\TiposDocumentos;
+use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Administracion\Usuarios;
 use DB;
@@ -52,12 +54,18 @@ class CondicionesAutorizacion extends ModelCompany
         'nombre' => 'required'
     ];
 
+    public function tipodocumento()
+    {
+        return $this->hasOne(TiposDocumentos::class,'id_tipo_documento','fk_id_tipo_documento');
+    }
 
     public function usuarios()
     {
-        // return $this->belongsToMany('app\Http\Models\Administracion\Usuarios', 'com_det_usuarios_autorizados', 'fk_id_condicion', 'fk_id_usuario');
-        return $this->belongsToMany(Usuarios::class,'com_det_usuarios_autorizados');
+        return $this->belongsToMany(Usuarios::class,'com_det_usuarios_autorizados','fk_id_condicion','fk_id_usuario');
     }
 
-
+    public function autorizaciones()
+    {
+        return $this->belongsTo(Autorizaciones::class,'fk_id_condicion','id_condicion');
+    }
 }

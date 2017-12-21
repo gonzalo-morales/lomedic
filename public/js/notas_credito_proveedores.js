@@ -191,84 +191,6 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('submit',function (e) {
-
-        $.validator.addMethod('minStrict', function (value, element, param) {
-            return (value > param);
-        },'El valor debe ser mayor a {0} y numérico');
-        $.validator.addMethod('cDigits',$.validator.methods.digits,'El campo debe ser entero');
-        $.validator.addClassRules('integer',{
-            minStrict:-1,
-            cDigits:true
-        });
-
-        if(!$('#form-model').valid()){
-            e.preventDefault();
-        }
-    })
-
-    //Si existe la tabla de órdenes
-    if($('#ordenes').length){
-        if($('#ordenes_detalle tr').length < 1){
-            var cantidad_cabecera = $('#ordenes_cabecera th').length;
-            $('#ordenes_detalle').append(
-                '<tr>' +
-                '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin órdenes relacionadas</td>' +
-                '</tr>'
-            );
-        }
-    }
-
-    if($('#pagos').length){
-        if($('#detalle_pagos tr').length < 1){
-            var cantidad_cabecera = $('#encabezado_pagos th').length;
-            $('#detalle_pagos').append(
-                '<tr>' +
-                '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin pagos relacionados</td>' +
-                '</tr>'
-            );
-        }
-    }
-    $(".nav-link").click(function (e) {
-        e.preventDefault();
-        $('#clothing-nav li').each(function () {
-            $(this).children().removeClass('active');
-        });
-        $('.tab-pane').removeClass('active').removeClass('show');
-        $(this).addClass('active');
-        var tab = $(this).prop('href');
-        tab = tab.split('#');
-        $('#' + tab[1]).addClass('active').addClass('show');
-    });
-
-    $('#reloadpagos').click(function (e) {
-        e.preventDefault();
-        window.location.reload(true);
-    });
-
-    if($('#total_pagado').length){
-        var total = +$('#total_pagado').val();
-        $('#total_pagado').val(total.toFixed(2));
-    }
-
-    //Para eliminar un pago
-    $('.eliminar_pago').click(function (e) {
-        e.preventDefault();
-        $('#eliminar_pago_button').attr('data-id',$(this).attr('href'));
-        $('#confirmar_eliminar_pago').modal('show');
-    });
-
-    $('#eliminar_pago_button').click(function (e) {
-        e.preventDefault();
-        $.delete($('#eliminar_pago_button').attr('data-id'))
-        $('#eliminar_pago_button').removeAttr('data-id');
-    });
-
-    $('#cancelar_deliminar_pago').click(function (e) {
-        e.preventDefault();
-        $('#eliminar_pago_button').removeAttr('data-id');
-    });
-
     $('#agregar_relacion').click(function (e) {
         if($('#fk_id_tipo_relacion').val() > 0 && $('#fk_id_factura_proveedor').val() > 0){
             var i = $('#relaciones tr').length;
@@ -276,11 +198,11 @@ $(document).ready(function () {
             $('#relaciones').append(
                 '<tr>' +
                 '<td>' +
-                '<input type="hidden" id="index" value="'+index+'">' +
-                '<input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_documento_relacionado]" value="'+$('#fk_id_factura_proveedor').val()+'">'+
-                '<input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_tipo_documento_relacionado]" value="7">' +
-                '<input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_tipo_documento]" value="11">' +
-                $('#fk_id_factura_proveedor').val()+
+                    '<input type="hidden" id="index" value="'+index+'">' +
+                    '<input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_documento_relacionado]" value="'+$('#fk_id_factura_proveedor').val()+'">'+
+                    '<input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_tipo_documento_relacionado]" value="7">' +
+                    '<input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_tipo_documento]" value="11">' +
+                    $('#fk_id_factura_proveedor').val()+
                 '</td>'+
                 '<td>'+$('#fk_id_factura_proveedor').select2('data')[0].text+'</td>' +
                 '<td><input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_tipo_relacion]" value="'+$('#fk_id_tipo_relacion').val()+'">'+$('#fk_id_tipo_relacion option:selected').text()+'</td>' +

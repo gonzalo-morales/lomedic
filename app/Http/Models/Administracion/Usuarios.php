@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Administracion;
 
+use App\Http\Models\Compras\CondicionesAutorizacion;
 use App\Http\Models\ModelBase;
 use Illuminate\Support\Collection;
 use Illuminate\Auth\Authenticatable;
@@ -30,7 +31,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
      *
      * @var string
      */
-    protected $table = 'adm_cat_usuarios';
+    protected $table = 'maestro.adm_cat_usuarios';
 
     /**
      * The primary key of the table
@@ -179,5 +180,15 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         ->orderBy('id_modulo');
 
         return $modulos->get();
+    }
+
+    public function autorizacionessolicitudes()
+    {
+        return $this->belongsToMany(DetalleCondicionesAutorizaciones::class,'com_det_autorizaciones_usuarios','fk_id_usuario','id_usuario');
+    }
+
+    public function condiciones()
+    {
+        return $this->belongsToMany(CondicionesAutorizacion::class,'com_det_usuarios_autorizados','fk_id_usuario','fk_id_condicion');
     }
 }

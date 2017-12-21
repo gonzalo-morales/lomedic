@@ -88,4 +88,13 @@ class SolicitudesPagos extends ModelCompany
         return $this->empleado->nombre." ".$this->empleado->apellido_paterno." ".$this->empleado->apellido_materno;
     }
 
+    public function autorizaciones()
+    {
+        return $this->hasMany(Autorizaciones::class,'fk_id_documento','id_solicitud_pago');
+    }
+
+    public function estatusautorizacion()
+    {
+        return $this->hasOne(EstatusAutorizaciones::class,'id_estatus','fk_id_estatus_autorizacion');
+    }
 }
