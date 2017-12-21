@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Inventarios\SalidasController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,8 +32,9 @@ Route::prefix('{company}')->group(function () {
         Route::resource('inventarios','Inventarios\InventariosController');
         // Route::get('solicitudes-salida/{solicitud}/salidas', 'Inventarios\SolicitudesSalidaController@index')->name('some');
         Route::resource('solicitudes-salida','Inventarios\SolicitudesSalidaController');
-        // Route::resource('solicitudes-salida.salidas','Inventarios\SolicitudesSalidaController');
+        Route::resource('solicitudes-salida.salidas','Inventarios\SolicitudesSalidaController');
         Route::resource('salidas','Inventarios\SalidasController');
+        Route::get('salidas/{salida}/pendientes','Inventarios\SalidasController@pendings')->name('salidas.pendings');
         Route::resource('solicitudes-entrada','Inventarios\SolicitudesEntradaController');
         Route::post('getDetalleEntrada','Inventarios\EntradasController@getDetalleEntrada')->name('entradas.getDetalleEntrada');
         Route::post('guardarEntrada','Inventarios\EntradasController@guardarEntrada')->name('entradas.guardarEntrada');

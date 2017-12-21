@@ -80,6 +80,15 @@ class Stock extends ModelCompany
 		return $this->belongsTo(Ubicaciones::class, 'fk_id_ubicacion','id_ubicacion');
 	}
 
+    /**
+     * Obtenemos ubicacion relacionada
+     * @return @belongsTo
+     */
+    public function dummy()
+    {
+        return $this->belongsTo(Ubicaciones::class, 'fk_id_ubicacion', 'id_ubicacion');
+    }
+
 	/**
 	 * Obtenemos almacen relacionadas a inventario
 	 * @return @belongsTo

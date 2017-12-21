@@ -64,9 +64,13 @@ class Productos extends ModelCompany
     public $rules = [];
 
     public function getSkuDescripcionAttribute() {
-        return $this->sku . ' - ' . $this-> descripcion_corta;
+        return $this->sku . ' - ' . $this->descripcion_corta;
     }
 
+    /**
+     * Obtenemos upcs relacionados a skus
+     * @return @belongsToMany
+     */
     public function upcs()
     {
         return $this->belongsToMany(Upcs::class,'inv_det_sku_upc','fk_id_sku','fk_id_upc');

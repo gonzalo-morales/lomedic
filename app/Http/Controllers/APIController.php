@@ -18,6 +18,8 @@ $.get('http://localhost:8000/abisa/administracion.paises/api', {
 	//orderBy: [['id_pais', 'DESC']],
 	limit: 5,
 	//pluck: ['pais', 'id_pais']
+	//only: ['pais']
+	//"append": ["direccion_concat"]
 }, function(response){
 	//console.log(response)
 })
@@ -92,6 +94,10 @@ class APIController extends Controller
 			# Pluck collection
 			if (isset($request['pluck'])) {
 			    $collections = call_user_func_array([$collections, 'pluck'], $request['pluck']);
+			}
+
+			if (isset($request['append'])) {
+				$collections = $collections->map->append($request['append']);
 			}
 
 			if (isset($request['only'])) {
