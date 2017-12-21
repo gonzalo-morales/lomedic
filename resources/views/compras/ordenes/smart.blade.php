@@ -355,7 +355,7 @@
 							<th>Fecha Creación</th>
 							<th>Fecha Autorización</th>
 							<th>Autorizó</th>
-							<th>Motivo</th>
+							{{-- <th>Motivo</th> --}}
 							<th>Observaciones</th>
 							<th></th>
 						</tr>
@@ -388,9 +388,8 @@
 									{{-- {{ $detalle->id_autorizacion }} --}}
 									{{-- {{ $usuario->nombre_corto }} --}}
 								</td>
-								<td>
-									{{-- {{}} --}}
-								</td>
+								{{-- <td>
+								</td> --}}
 								<td>
 									{{-- {{}} --}}
 								</td>

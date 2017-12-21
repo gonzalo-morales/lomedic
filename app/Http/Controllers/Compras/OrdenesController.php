@@ -187,7 +187,7 @@ class OrdenesController extends ControllerBase
                 'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
                 'condicionesAutorizacion' => Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento', 3),
                 'autorizaciones' => Autorizaciones::all()->where('fk_id_documento',$id)->where('fk_id_tipo_documento', 3),
-                'usuario' => Usuarios::find(Auth::id())->where('id_usuario', Auth::id())->first(),
+                'usuario' => Usuarios::where('id_usuario', Auth::id())->first(),
 			]];
 		return parent::edit($company, $id, $attributes);
 	}
