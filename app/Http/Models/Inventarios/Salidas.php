@@ -15,7 +15,7 @@ class Salidas extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'inv_salidas';
+    protected $table = 'inv_opr_salidas';
 
     /**
      * The primary key of the table
@@ -28,7 +28,7 @@ class Salidas extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_tipo_salida', 'fk_id_socio_negocio', 'fk_id_proyecto', 'entrega_por', 'nombre_conductor', 'placas_vehiculo', 'paqueteria', 'fk_tipo_entrega', 'fk_id_direccion_entrega', 'fecha_entrega', 'fecha_salida'];
+    protected $fillable = ['fk_tipo_salida', 'fk_id_socio_negocio', 'fk_id_proyecto', 'entrega_por', 'nombre_conductor', 'placas_vehiculo', 'paqueteria', 'fk_tipo_entrega', 'fk_id_direccion_entrega', 'fecha_entrega', 'fecha_salida', 'estatus'];
 
     /**
      * Los atributos que seran visibles en index-datable
@@ -92,6 +92,14 @@ class Salidas extends ModelCompany
 
             case 2:
                 $estatus = 'Cancelado';
+                break;
+
+            case 3:
+                $estatus = 'Surtido Parcial';
+                break;
+
+            case 4:
+                $estatus = 'Surtido';
                 break;
 
             default:

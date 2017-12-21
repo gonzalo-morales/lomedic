@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class Ubicaciones extends ModelBase
 {
-    protected $table = 'inv_cat_ubicaciones';
+    protected $table = 'maestro.inv_cat_ubicaciones';
 
     /**
      * The primary key of the table
@@ -36,6 +36,11 @@ class Ubicaciones extends ModelBase
     public function almacen()
     {
         return $this->belongsTo(Almacenes::class,'fk_id_almacen');
+    }
+
+    public function stock()
+    {
+        return $this->hasMany(StockDetalle::class, 'fk_id_ubicacion', 'id_ubicacion');
     }
 
 
