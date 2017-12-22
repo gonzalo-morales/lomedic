@@ -57,7 +57,7 @@
         			{{Form::cSelect('* Tipo Relacion','fk_id_tipo_relacion', $tiposrelacion ?? [])}}
         		</div>
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturas ?? [])}}
+        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2'])}}
         		</div>
         		<div class="form-group col-md-12 my-2">
 					<div class="sep sepBtn">
@@ -205,17 +205,45 @@
     				</tr>
     			</thead>
     			<tbody>
-    			@if(isset($data->relaciones)) 
-    				@foreach($data->relaciones->where('eliminar',0) as $key=>$detalle)
+    			@if(isset($data->detalle)) 
+    				@foreach($data->detalle->where('eliminar',0) as $key=>$detalle)
     				<tr>
     					<td>
-    						{!! Form::hidden('contactos['.$key.'][id_contacto]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
-    						{{$detalle->tipocontacto->tipo_contacto}}
-    						{!! Form::hidden('contactos['.$key.'][fk_id_tipo_contacto]',$detalle->fk_id_tipo_contacto,['class'=>'fk_id_tipo_contacto']) !!}
+    						{!! Form::hidden('contactos['.$key.'][id_factura_detalle]',$detalle->id_factura_detalle,['class'=>'id_factura_detalle']) !!}
+    						{{$detalle->claveproducto->clave_producto_servicio}}
+    						{!! Form::hidden('contactos['.$key.'][fk_id_clave_producto_servicio]',$detalle->fk_id_clave_producto_servicio,['class'=>'fk_id_clave_producto_servicio']) !!}
     					</td>
     					<td>
-    						{{$detalle->nombre}}
-    						{!! Form::hidden('contactos['.$key.'][nombre]',$detalle->nombre) !!} 
+    						{{$detalle->sku->sku}}
+    						{!! Form::hidden('contactos['.$key.'][fk_id_sku]',$detalle->fk_id_sku) !!} 
+    					</td>
+    					<td>
+    						{{$detalle->upc->descripcion}}<br>
+    						{{$detalle->sku->descripcion}}
+    					</td>
+    					<td>
+    						{{$detalle->unidadmedida->clave_unidad.' - '.$detalle->unidadmedida->descripcion}}
+    					</td>
+    					<td>
+    						{{$detalle->cantidad}}
+    					</td>
+    					<td>
+    						{{$detalle->precio_unitario}}
+    					</td>
+    					<td>
+    						{{$detalle->descuento}}
+    					</td>
+    					<td>
+    						{{$detalle->impuesto->impuesto}}
+    					</td>
+    					<td>
+    						{{$detalle->pedimento}}
+    					</td>
+    					<td>
+    						{{$detalle->cuenta_predial}}
+    					</td>
+    					<td>
+    						{{$detalle->importe}}
     					</td>
     			
     					<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>

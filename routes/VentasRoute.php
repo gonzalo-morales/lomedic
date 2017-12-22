@@ -18,5 +18,8 @@ Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'ventas', 'as' => 'ventas.', 'middleware' => ['auth','share','csrf','password_expired']], function() {
         Route::view("/","ventas.index");
         Route::resource('facturasclientes','Ventas\FacturasClientesController');
+        Route::resource('pedidos','Ventas\PedidosController');
+        Route::get('pedidos/{id}/descargaranexo', 'Ventas\PedidosController@descargaranexo');
+        Route::get('getLayoutProductosPedidos','Ventas\PedidosController@layoutProductos');
     });
 });
