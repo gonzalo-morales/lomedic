@@ -3,13 +3,11 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
-use Illuminate\Support\HtmlString;
 
 class MetodosPago extends ModelBase
 {
 	/**
 	 * The table associated with the model.
-	 *
 	 * @var string
 	 */
 	protected $table = 'sat_cat_metodos_pago';
@@ -18,11 +16,10 @@ class MetodosPago extends ModelBase
 	 * The primary key of the table
 	 * @var string
 	 */
-	protected $primaryKey = 'id_metodos_pago';
+	protected $primaryKey = 'id_metodo_pago';
 
 	/**
 	 * The attributes that are mass assignable.
-	 *
 	 * @var array
 	 */
 	protected $fillable = ['metodo_pago', 'descripcion', 'activo'];
