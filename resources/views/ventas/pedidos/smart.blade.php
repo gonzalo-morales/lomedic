@@ -3,10 +3,11 @@
 @section('header-bottom')
 	@parent
 	<script type="text/javascript">
-		var clientes_js = '{{ $js_clientes ?? '' }}';
-    	var proyectos_js = '{{ $js_proyectos ?? '' }}';
-    	var sucursales_js = '{{ $js_sucursales ?? '' }}';
-    	var contratos_js = '{{ $js_contratos ?? '' }}';
+		var clientes_js =   "{{ $js_clientes ?? '' }}";
+    	var proyectos_js =  "{{ $js_proyectos ?? '' }}";
+    	var sucursales_js = "{{ $js_sucursales ?? '' }}";
+    	var contratos_js =  "{{ $js_contratos ?? '' }}";
+    	var modeldata =     "{!! $data->toJson() ?? '' }}";
     </script>
     {{ HTML::script(asset('js/ventas/pedidos.js')) }}
 @endsection
@@ -46,7 +47,7 @@
         	</div>
         	<div class="card-body row">
         		<div class="form-group col-md-12 col-xs-12">
-        			{{Form::cText('* No. Pedido / Orden','no_pedido')}}
+        			{{Form::cText('* No. Pedido / Orden del Cliente','no_pedido')}}
         		</div>
         		<div class="form-group col-md-6 col-xs-12">
         			{{Form::cText('* Fecha Pedido','fecha_pedido',['class'=>' datepicker '])}}
@@ -85,7 +86,7 @@
                                             <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                                 Cargando datos... <i class="material-icons align-middle loading">cached</i>
                                             </div>
-    										{{Form::cSelect('* Clave cliente producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','disabled'=>true,'data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])}}
+    										{{Form::cSelectWithDisabled('* Clave cliente producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','disabled'=>empty($productos),'data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])}}
     									</div>
     									<div class="form-group input-field col-md-5 col-sm-6">
                                             <div id="loadingfk_id_upc" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">

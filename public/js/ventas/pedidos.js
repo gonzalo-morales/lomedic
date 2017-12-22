@@ -22,33 +22,6 @@ $(document).ready(function () {
     		    }
     		});
 		}
-		
-		$('#detalleProductos tbody tr').remove();
-
-        let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$(this).val());
-        $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
-        $('#loadingfk_id_clave_cliente_producto').show();
-        $.ajax({
-            url: _url,
-            dataType:'json',
-            success:function (data) {
-                let option = $('<option/>');
-                option.val(0);
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                if (Object.keys(data).length == 0)
-                    option.text('No se encontraron elementos');
-                else
-                    option.text('...');
-
-                $('#fk_id_clave_cliente_producto').prepend(option).select2({
-                    minimumResultsForSearch:'50',
-                    data:data,
-                }).attr('disabled',false);
-                $('#loadingfk_id_clave_cliente_producto').hide();
-            }
-        });
-		
 	});
 	
 	$('#fk_id_socio_negocio').on('change', function() {
@@ -64,12 +37,14 @@ $(document).ready(function () {
     		    data: {'param_js':proyectos_js,$fk_id_cliente:$(this).val()},
     		    dataType: 'json',
                 success: function (data) {
-                	$("#fk_id_proyecto option").remove();
+                	$("#fk_id_proyecto").empty();
                 	proyecto.append('<option value="" disabled>Selecciona una Opcion...</option>')
                     $.each(data, function(){
                     	proyecto.append('<option value="'+ this.id_proyecto +'">'+ this.proyecto +'</option>')
                     });
-                	proyecto.val('');
+                	if(data.length !== 0) {
+                		proyecto.val(modeldata.fk_id_proyecto);
+                	}
                 	proyecto.prop('disabled', (data.length == 0)); 
     		    }
     		});
@@ -81,7 +56,7 @@ $(document).ready(function () {
     		    data: {'param_js':sucursales_js,$fk_id_cliente:$(this).val()},
     		    dataType: 'json',
                 success: function (data) {
-                	$("#fk_id_sucursal option").remove();
+                	$("#fk_id_sucursal").empty();
                 	sucursal.append('<option value="" disabled>Selecciona una Opcion...</option>')
                     $.each(data, function(){
                     	sucursal.append('<option value="'+this.id_sucursal+'">'+this.sucursal+'</option>')
@@ -90,8 +65,101 @@ $(document).ready(function () {
                 	sucursal.prop('disabled', (data.length == 0)); 
     		    }
     		});
+    		
+    		$('#detalleProductos tbody tr').remove();
+    		$('#fk_id_clave_cliente_producto options').empty();
+    		
+    		$('#fk_id_clave_cliente_producto').select2({
+    			ajax: {
+    			    url: $('#fk_id_clave_cliente_producto').data('url').replace('?id',$(this).val()),
+    			    processResults: function (data) {
+    			    	return {
+    			    		results: data
+    			    	};
+    			    }
+    			}
+    		});
 		}
+	}).trigger('change');
+
+	
+	
+	
+	
+	
+	/*
+	on('focus', function (e) {
+		//alert('is focus');
+		let _url = $(this).data('url').replace('?id',$('#fk_id_socio_negocio').val());
+        //$(this).empty().prop('disabled',true);
+        $('#loadingfk_id_clave_cliente_producto').show();
+        $.ajax({
+            url: _url,
+            dataType:'json',
+            success:function (data) {
+                let option = $('<option/>');
+                option.val(0);
+                option.attr('disabled','disabled');
+                option.attr('selected','selected');
+                if (Object.keys(data).length == 0)
+                    option.text('No se encontraron elementos');
+                else
+                    option.text('...');
+
+                try {
+	                $('#fk_id_clave_cliente_producto').prepend(option).select2({
+	                    minimumResultsForSearch:'50',
+	                    data:data,
+	                }).attr('disabled',false);
+                }
+                catch (e) {
+                	console.log(e);
+                }
+                $('#loadingfk_id_clave_cliente_producto').hide();
+            },
+        	error:function (e) {
+        		$('#loadingfk_id_clave_cliente_producto').hide();
+        	}
+        });
 	});
+	*/
+	
+	//$('#fk_id_clave_cliente_producto').trigger('focus');
+	
+	$('#activo_upc').on('change',function () {
+        if( !this.checked ){
+            $( this ).parent().nextAll( "select" ).val(0).trigger('change').prop( "disabled", !this.checked ).empty();
+        }else{
+            if($('#fk_id_clave_cliente_producto').val()){
+                $('#loadingfk_id_upc').show();
+                let _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_clave_cliente_producto').select2('data')[0].fk_id_sku);
+                $('#fk_id_upc').empty();
+                $.ajax({
+                    url: _url,
+                    dataType: 'json',
+                    success: function (data) {
+                        let option = $('<option/>');
+                        option.val(0);
+                        option.attr('disabled','disabled');
+                        option.attr('selected','selected');
+                        if (Object.keys(data).length == 0)
+                            option.text('No se encontraron elementos');
+                        else
+                            option.text('...');
+                        $('#fk_id_upc').attr('disabled',false).select2({
+                            minimumResultsForSearch: 15,
+                            data: data
+                        }).prepend(option);
+                        $('#loadingfk_id_upc').hide();
+                    }
+                });
+            }else{
+                $( this ).prop('checked',false);
+                $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+                $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Selecciona antes una Clave cliente producto',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            }
+        }
+    });
 	
 	$('#agregarProducto').on('click', function() {
     	var i = $('#detalleProductos tr').length;
@@ -154,3 +222,8 @@ $(document).ready(function () {
 			$('#tipo_cambio').val('');
 	});
 });
+
+function borrarFila(el) {
+    $(el).parent().parent('tr').remove();
+    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+}
