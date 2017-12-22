@@ -24,8 +24,8 @@ class NumerosCuentaController extends ControllerBase
 	{
 		return [
 			'companies' => Empresas::active()->select(['razon_social','id_empresa'])->orderBy('razon_social')->pluck('razon_social','id_empresa'),
-		    'bancos' => Bancos::select(['razon_social','id_banco'])->orderBy('razon_social')->pluck('banco','id_banco'),
-		    'monedas' => Monedas::select(['descripcion','id_moneda'])->orderBy('descripcion')->pluck('descripcion','id_moneda')
+		    'bancos' => Bancos::select(['razon_social','id_banco'])->orderBy('razon_social')->pluck('razon_social','id_banco'),
+		    'monedas' => Monedas::select(['descripcion','id_moneda'])->orderBy('descripcion')->pluck('descripcion','id_moneda'),
 		];
 	}
 
