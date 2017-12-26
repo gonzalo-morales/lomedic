@@ -241,11 +241,14 @@ class ControllerBase extends Controller
                             } else {
                                 $entity->{$relationName}()->update(['eliminar' => 1]);
                             }
+                            
+                            if(isset($relations['-1'])) {
+                                unset($relations['-1']);
+                            }
 
                             foreach ($relations as $relation) {
-                                if (array_key_exists($primaryKey, $relation) && $relation[$primaryKey] != -1) {
-                                    $entity->{$relationName}()->updateOrCreate([$primaryKey => $relation[$primaryKey]], $relation);
-                                }
+                                $primary_id = isset($relation[$primaryKey]) && $relation[$primaryKey] != 1 ? $relation[$primaryKey] : null;
+                                $entity->{$relationName}()->updateOrCreate([$primaryKey => $primary_id], $relation);
                             }
                         }
                     }
