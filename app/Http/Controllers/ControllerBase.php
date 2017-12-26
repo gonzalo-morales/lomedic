@@ -118,7 +118,12 @@ class ControllerBase extends Controller
                 foreach ($request->relations as $relationType => $collections) {
                     # Relacion "HAS"
                     if ($relationType == 'has') {
-                        foreach ($collections as $relationName => $relations) $isSuccess->{$relationName}()->createMany($relations);
+                            foreach ($collections as $relationName => $relations){
+                                if(isset($relations['-1'])) {
+                                    unset($relations['-1']);
+                                }
+                                $isSuccess->{$relationName}()->createMany($relations);
+                            }
                     }
                 }
             }
