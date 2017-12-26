@@ -4,6 +4,9 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div id="app" data-api-endpoint="{{ companyRoute('api.index', ['entity' => '#ENTITY#'], false) }}">
+	@if (isCurrentRouteName(currentRouteName('pendings')))
+	<input type="hidden" name="id_salida_pendiente" value="{{ request()->salida }}">
+	@endif
 	<div class="row">
 		<div class="col-sm-4">
 			<div class="form-group" v-cloak>
@@ -274,6 +277,7 @@
 									<input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][cantidad_pendiente]'" v-bind:value="upc.cantidad_pendiente">
 									<input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_ubicacion]'" v-bind:value="upc.fk_id_ubicacion">
 									<input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_almacen]'" v-bind:value="upc.fk_id_almacen">
+									<input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][lote]'" v-bind:value="upc.lote">
 									<input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][eliminar]'" v-bind:value="upc.eliminar">
 								</th>
 								<td>
@@ -323,19 +327,181 @@
 			</div>
 		</div>
 	</div>
-
 </div>
-
-
 @endsection
 
 @section('header-bottom')
 @parent
 <script src="{{ asset('vendor/vue/vue.js') }}"></script>
 <script type="text/javascript">
+if (window['smart-model']) {
+	rivets.binders['get-pending-url'] = {
+		bind: function (el) {
+			if (el.dataset.estatus_text.toLowerCase() !== 'surtido parcial') {
+				$(el).hide();
+			} else {
+				el.href = '{{ companyRoute('pendings', ['salida' => '#ID#' ]) }}'.replace('#ID#', el.dataset.itemId);
+			}
+		}
+	};
+	rivets.binders['hide-update-or-delete'] = {
+		bind: function (el) {
+			if (el.dataset.estatus_text.toLowerCase() !== 'abierto') {
+				$(el).hide();
+			}
+		}
+	};
+	rivets.binders['hide-header-update-or-delete'] = {
+		routine: function(el, value) {
+			if (value.length > 0) {
+				var showMe = rivets.formatters.values(window['smart-model'].collections.items).reduce(function(acc,item) {
+					acc.push([].reduce.call(datatable.data[item].cells, function(acc, ceil, index) {
+						if (datatable.activeHeadings[index].textContent !== '') {
+							acc[datatable.activeHeadings[index].textContent.trim(' ').toLowerCase()] = ceil.textContent.trim(' ').toLowerCase();
+						}
+					    return acc;
+					}, {}))
+					return acc;
+				}, []).every(function(a){
+					return a.estatus === 'abierto';
+				})
+				if (showMe) {
+					$(el).show();
+				} else {
+					$(el).hide();
+				}
+			}
+		}
+	};
+	@can('delete', currentEntity())
+	window['smart-model'].collections.headerOptionsOnChecks.splice(1, 1, {button: {
+		'class': 'btn btn-danger',
+		'rv-on-click': 'actions.showModalCancel',
+		'data-delete-type': 'multiple',
+		'data-delete-url': '{{companyRoute('destroyMultiple')}}',
+		'html': '<i class="material-icons left align-middle">not_interested</i>Cancelar (<span rv-text="collections.items | length"></span>)',
+		'rv-hide-header-update-or-delete':'collections.items',
+	}});
+	@endcan
+	@can('update', currentEntity())
+	window['smart-model'].collections.itemsOptions.edit = {a: {
+		'html': '<i class="material-icons">mode_edit</i>',
+		'class': 'btn is-icon',
+		'rv-get-edit-url': '',
+		'rv-hide-update-or-delete':'',
+		'data-toggle':'tooltip',
+		'title':'Editar'
+	}};
+	@endcan
+	@can('delete', currentEntity())
+	window['smart-model'].collections.itemsOptions.delete = {a: {
+		'html': '<i class="material-icons">not_interested</i>',
+		'href' : '#',
+		'class': 'btn is-icon',
+		'rv-on-click': 'actions.showModalCancel',
+		'rv-get-delete-url': '',
+		'data-delete-type': 'single',
+		'rv-hide-update-or-delete':'',
+		'data-toggle':'tooltip',
+		'title':'Cancelar'
+	}};
+	window['smart-model'].collections.itemsOptions.pendings = {a: {
+		'html': '<i class="material-icons">assignment_return</i>',
+		'class': 'btn is-icon',
+		'rv-get-pending-url': '',
+		'data-toggle':'tooltip',
+		'title':'Surtir Pendientes'
+	}};
+	@endcan
+	window['smart-model'].actions.showModalCancel = function(e, rv) {
+		e.preventDefault();
 
-$(function(){
-if ($('#app').length) {
+		let modal = window['smart-modal'];
+		modal.view = rivets.bind(modal, {
+			title: '¿Estas seguro que deseas cancelar la solicitud?',
+			content: '<form  id="cancel-form">' +
+			'<div class="alert alert-warning text-center"><span class="text-danger">La cancelación de un documento es irreversible.</span><br>'+
+			'Para continuar, especifique el motivo y de click en cancelar.</div>'+
+			'<div class="form-group">' +
+			'<label for="recipient-name" class="form-control-label">Motivo de cancelación:</label>' +
+			'<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +
+			'</div>' +
+			'</form>',
+			buttons: [
+				{button: {
+					'text': 'Cerrar',
+					'class': 'btn btn-secondary',
+					'data-dismiss': 'modal',
+				}},
+				{button: {
+					'html': 'Cancelar',
+					'class': 'btn btn-danger',
+					'rv-on-click': 'action',
+				}}
+			],
+			action: function(e) {
+				var formData = new FormData(document.querySelector('#cancel-form')), convertedJSON = {}, it = formData.entries(), n;
+				while(n = it.next()) {
+					if(!n || n.done) break;
+					convertedJSON[n.value[0]] = n.value[1];
+				}
+				window['smart-model'].actions.itemsCancel.call(this, e, rv, convertedJSON);
+			}.bind(this),
+			// Opcionales
+			onModalShow: function() {
+				let btn = modal.querySelector('[rv-on-click="action"]');
+				// Copiamos data a boton de modal
+				for (var i in this.dataset) btn.dataset[i] = this.dataset[i];
+			}.bind(this),
+		});
+		// Abrimos modal
+		$(modal).modal('show');
+	};
+	window['smart-model'].actions.itemsCancel = function(e, rv, motivo){
+		e.preventDefault();
+		if(!motivo.motivo_cancelacion){
+			$.toaster({
+				priority : 'danger',
+				title : '¡Error!',
+				message : 'Por favor escribe un motivo por el que se está cancelando el documento.',
+	            settings:{'timeout': 10000, 'toaster':{'css':{'top':'5em'}}}
+			});
+		}else{
+			let data, tablerows;
+			let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
+			switch (this.dataset.deleteType) {
+				case 'multiple':
+					data =  {ids: rivets.formatters.keys(rv.collections.items),'_token':token, motivo_cancelacion: motivo.motivo_cancelacion};
+					tablerows = rivets.formatters.values(rv.collections.items);
+				break;
+				case 'single':
+					data =  {'_token':token, motivo_cancelacion: motivo.motivo_cancelacion};
+					tablerows = [this.parentNode.parentNode.dataIndex];
+				break;
+			}
+
+			$(window['smart-modal']).modal('hide');
+
+			$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+			$.delete(this.dataset.deleteUrl, data, function (response) {
+				if(response.success){
+					sessionStorage.cancelCallback = true;
+					location.reload();
+				}
+			})
+		}
+	};
+	if ( sessionStorage.cancelCallback ) {
+		sessionStorage.clear();
+		$.toaster({
+			priority: 'success', title: 'Exito', message: 'Documento cancelado correctamente.',
+			settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
+		});
+	}
+}
+
+$(function(){if ($('#app').length) {
 
 	var ID = function () {
 		return '_' + Math.random().toString(36).substr(2, 9);
@@ -355,6 +521,10 @@ if ($('#app').length) {
 			$(el).select2(!binding.modifiers.theme ? {} : {escapeMarkup: function (markup) { return markup; }, templateResult: vnode.context[el.dataset.s2Theme]}).on('select2:select', function(e) {
 				el.dispatchEvent(new Event('change', { target: e.target }));
 			});
+		} else {
+			if (binding.oldValue !== binding.value && document.body === document.activeElement) {
+				el.parentNode.querySelector('.select2-selection').focus()
+			}
 		}
 		el.style.display = 'none';
 		$(el).val(binding.value).trigger('change')
@@ -604,15 +774,13 @@ if ($('#app').length) {
 				}
 			},
 			verifyStock: function(upc) {
-				console.log('verifyStock', upc)
 				if (upc.stock === '---') {
-					var endpoint = this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.stock_detalle');
+					var endpoint = this.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.stock');
 					return this.enQueue(function() {
-						return $.get(endpoint, { param_js: '{{$api_verify_stock ?? ''}}', $fk_id_almacen: upc.fk_id_almacen, $fk_id_upc: upc.fk_id_upc}, function(data) {
-							var stock = data.length > 0 ? data[0].cantidad_toma: 0;
-							this.stock = stock;
-							this.cantidad_surtida = Math.min(stock, upc.cantidad_solicitada);
-							this.cantidad_pendiente = Math.max(upc.cantidad_solicitada - stock, 0);
+						return $.get(endpoint, { param_js: '{{$api_verify_stock ?? ''}}', $fk_id_almacen: upc.fk_id_almacen, $fk_id_ubicacion: upc.fk_id_ubicacion, $fk_id_sku: upc.fk_id_sku, $fk_id_upc: upc.fk_id_upc}, function(data) {
+							this.stock = data.length > 0 ? data[0].stock: 0;
+							this.cantidad_surtida = Math.min(this.stock, upc.cantidad_solicitada);
+							this.cantidad_pendiente = Math.max(upc.cantidad_solicitada - this.stock, 0);
 						}.bind(this))
 					}.bind(upc))
 				} else {
@@ -635,7 +803,6 @@ if ($('#app').length) {
 				}.bind(this))
 			},
 			afterAppend: function (el) {
-				console.log('afterAppend' )
 				if (el.dataIndex != 'empty') {
 					var upc = this.upcs[el.dataIndex];
 					if (upc.id_detalle === null) {
@@ -694,8 +861,7 @@ if ($('#app').length) {
 			}).validate().destroy();
 		},
 	});
-}
-})
+}})
 </script>
 @endsection
 
