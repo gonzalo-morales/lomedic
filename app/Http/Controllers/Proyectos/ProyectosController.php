@@ -20,12 +20,13 @@ use DB;
 use File;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Models\Administracion\Sucursales;
+use App\Http\Models\Proyectos\CaracterEventos;
+use App\Http\Models\Proyectos\FormasAdjudicacion;
 
 class ProyectosController extends ControllerBase
 {
@@ -36,6 +37,11 @@ class ProyectosController extends ControllerBase
     
     public function getDataView($entity = null)
     {
+        $sucursales = null;
+        if(!empty($entity)){
+            $sucursales = Sucursales::where('fk_id_cliente',$entity->fk_id_cliente)->get();
+        }
+
         return [
             'clientes' => SociosNegocio::where('activo', 1)->where('eliminar', 0)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
             'localidades' => Localidades::where('activo',1)->where('eliminar',0)->pluck('localidad','id_localidad'),
@@ -45,6 +51,12 @@ class ProyectosController extends ControllerBase
             'tiposeventos' => TiposEventos::where('activo', 1)->where('eliminar', 0)->orderBy('tipo_evento')->pluck('tipo_evento','id_tipo_evento'),
             'dependencias' => Dependencias::where('activo', 1)->where('eliminar', 0)->orderBy('dependencia')->pluck('dependencia','id_dependencia'),
             'subdependencias' => Subdependencias::where('activo', 1)->where('eliminar', 0)->orderBy('subdependencia')->pluck('subdependencia','id_subdependencia'),
+            'caracterevento' => CaracterEventos::where('activo',1)->where('eliminar',0)->orderBy('caracter_evento')->pluck('caracter_evento','id_caracter_evento'),
+            'formaadjudicacion' => FormasAdjudicacion::where('activo',1)->where('eliminar',0)->orderBy('forma_adjudicacion')->pluck('forma_adjudicacion','id_forma_adjudicacion'),
+            'sucursales' => $sucursales,
+            'js_licitacion' => Crypt::encryptString('"select":["tipo_evento","dependencia","subdependencia","unidad","caracter_evento","forma_adjudicacion","pena_convencional","tope_pena_convencional"],"conditions":[{"where":["no_oficial","$num_evento"]}]'),
+            'js_sucursales' => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"conditions":[{"where":["fk_id_cliente",$fk_id_cliente]},{"where":["activo","1"]}]'),
+            'js_contratos'=> Crypt::encryptString('"select":["representante_legal_cliente","no_contrato","vigencia_fecha_inicio","vigencia_fecha_fin"],"conditions":[{"where":["no_contrato","$num_contrato"]}]'),
         ];
     }
     

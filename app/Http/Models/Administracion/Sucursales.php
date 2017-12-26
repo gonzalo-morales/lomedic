@@ -5,6 +5,7 @@ namespace App\Http\Models\Administracion;
 use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\ModelBase;
 use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Sucursales extends ModelBase
 {
@@ -75,7 +76,7 @@ class Sucursales extends ModelBase
 	 * Atributos de carga optimizada
 	 * @var array
 	 */
-	protected $eagerLoaders = ['localidad','tiposucursal'];
+	protected $eagerLoaders = ['localidad','tiposucursal','cliente'];
 
 	public function tiposucursal() {
 		return $this->hasOne(TipoSucursal::class, 'id_tipo', 'fk_id_tipo');
@@ -102,5 +103,10 @@ class Sucursales extends ModelBase
 	public function empleados()
     {
         return $this->belongsToMany(Empleados::class,'maestro.ges_det_empleado_sucursal','fk_id_sucursal','fk_id_empleado','id_sucursal');
+    }
+
+    public function cliente()
+    {
+        return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio','id_socio_negocio');
     }
 }

@@ -31,6 +31,26 @@ $(document).ready(function(){
                 $('#loadingfk_id_clave_cliente_producto').hide();
             }
         });
+        $('#loadingsucursales').show();
+        $.ajax({
+            url: $('#fk_id_cliente').data('url'),
+            data: {
+                'param_js':sucursales_js,
+                $fk_id_cliente:$('#fk_id_cliente').val()
+            },
+            dataType:'JSON',
+            success: function (data) {
+                let option = $('<option/>');
+                option.val(0);
+                option.text('...');
+                option.attr('disabled','disabled');
+                option.attr('selected','selected');
+                $('#fk_id_sucursal').empty().prepend(option).select2({
+                    data:data
+                });
+                $('#loadingsucursales').hide();
+            }
+        });
     });
     
     //Por si se selecciona un UPC
@@ -54,10 +74,10 @@ $(document).ready(function(){
                             option.text('No se encontraron elementos');
                         else
                             option.text('...');
-                        $('#fk_id_upc').attr('disabled',false).select2({
+                        $('#fk_id_upc').attr('disabled',false).prepend(option).select2({
                             minimumResultsForSearch: 15,
                             data: data
-                        }).prepend(option);
+                        });
                         $('#loadingfk_id_upc').hide();
                     }
                 });
