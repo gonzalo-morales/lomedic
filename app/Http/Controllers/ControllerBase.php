@@ -207,12 +207,12 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para actualizar?
         //		$this->authorize('update', $this->entity);
-
+//        dd($request->all());
         $request->request->set('activo',!empty($request->request->get('activo')));
 
         # Validamos request, si falla regresamos atras
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-        
+//        dd($request);
         DB::beginTransaction();
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
