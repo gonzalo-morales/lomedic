@@ -3,6 +3,7 @@
 namespace App\Http\Models\Servicios;
 
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Inventarios\Productos;
 
 class RecetasDetalle extends ModelCompany
 {
@@ -24,8 +25,8 @@ class RecetasDetalle extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['id_receta','clave_cliente','id_cuadro','cantidad_pedida','cantidad_surtida','dosis',
-        'en_caso_presentar','recurrente','fecha_surtido','veces_surtir','veces_surtidas'];
+    protected $fillable = ['fk_id_receta','fk_id_cuadro','cantidad_pedida','cantidad_surtida','dosis',
+        'en_caso_presentar','recurrente','fecha_surtido','veces_surtir','veces_surtidas','eliminar','fk_id_sku'];
 
     /**
      * The validation rules
@@ -49,7 +50,7 @@ class RecetasDetalle extends ModelCompany
 
     public function producto()
     {
-        return $this->hasOne('App\Http\Models\Captura\CuadroProductos','clave_cliente','clave_cliente');
+        return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
     }
 
 }
