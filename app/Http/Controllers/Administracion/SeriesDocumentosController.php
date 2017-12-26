@@ -26,9 +26,4 @@ class SeriesDocumentosController extends ControllerBase
 	        'tiposdocumentos' => TiposDocumentos::select(['id_tipo_documento', 'nombre_documento'])->orderBy('nombre_documento')->pluck('nombre_documento','id_tipo_documento'),
 	    ];
 	}
-	
-	public function index($company, $attributes = [])
-	{
-	    return parent::index($company,$attributes);
-	}
 }

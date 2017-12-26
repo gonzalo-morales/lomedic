@@ -40,6 +40,6 @@ class MotivosAjustes extends ModelBase
 	 */
 	protected $fields = [
 		'descripcion' => 'Laboratorio',
-		'activo_span' => 'Activo',
+		'activo_span' => 'Estatus',
 	];
 }

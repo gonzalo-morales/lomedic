@@ -44,7 +44,7 @@ class SatMunicipios extends ModelBase
 		'sat_municipio' => 'Código SAT del municipio',
 		'municipio' => 'Municipio',
 		'sat_estado' => 'Abreviatura Estado',
-		'activo_span' => 'Activo'
+		'activo_span' => 'Estatus'
 	];
 
 	// /**

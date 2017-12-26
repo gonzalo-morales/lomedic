@@ -450,11 +450,11 @@ function xmlToArray($xml, $options = array()) {
 }
 
 function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tipo_comprobante){
-//Función comprobar(arrayData,id_socio_negocio,company)
-    $rfc_emisor = SociosNegocio::find($fk_id_socio_negocio)->first()->rfc;
-    $rfc_receptor = Empresas::where('conexion','LIKE',$company)->first()->rfc;
+//Función comprobar(arrayData,id_socio_negocio,company,tipo de comprobante I= ingreso y E= egreso )
     $version = "";
     $uuid = "";
+    $tipo_relacion = null;
+    $relacionados = [];
     $mensaje = '';
     $detalles = array();
     //Para comprobar la versión y saber como obtener los datos de la factura
@@ -504,9 +504,22 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
         } else {
             $uuid = $arrayData['Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital']['@UUID'];
         }
+
+//        print_r($arrayData);
+
+        if(isset($arrayData['Comprobante']['cfdi:CfdiRelacionados'])){
+            $tipo_relacion = $arrayData['Comprobante']['cfdi:CfdiRelacionados']['@TipoRelacion'];
+            if(isset($arrayData['Comprobante']['cfdi:CfdiRelacionados']['cfdi:CfdiRelacionado'][0])){
+                foreach ($arrayData['Comprobante']['cfdi:CfdiRelacionados']['cfdi:CfdiRelacionado'] as $cfdi){
+                    $relacionados[] = $cfdi['@UUID'];
+                }
+            }else{
+                $relacionados[0] = $arrayData['Comprobante']['cfdi:CfdiRelacionados']['cfdi:CfdiRelacionado']['@UUID'];
+            }
+        }
         if (!empty($mensaje)) {
             return response()->json([
-                'estatus' => -1,
+                'estatus' => -2,
                 'resultado' => $mensaje
             ]);
         } else {
@@ -583,7 +596,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
                 }
             } else {
                 return response()->json([
-                    'estatus' => -1,
+                    'estatus' => -2,
                     'resultado' => 'Este CFDI no contiene productos',
                 ]);
             }
@@ -638,7 +651,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
 
         if (!empty($mensaje)) {
             return response()->json([
-                'estatus' => -1,
+                'estatus' => -2,
                 'resultado' => $mensaje
             ]);
         }else{
@@ -665,7 +678,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
                 ];
             } else {
                 return response()->json([
-                    'estatus' => -1,
+                    'estatus' => -2,
                     'resultado' => 'Este CFDI no contiene productos',
                 ]);
             }
@@ -680,6 +693,8 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
         'estatus' => 1,
         'resultado' => $detalles,
         'uuid' => $uuid,
-        'version' => $version
+        'version' => $version,
+        'tipo_relacion' => $tipo_relacion,
+        'relacionados' => $relacionados
     ]);
 }

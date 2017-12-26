@@ -34,7 +34,7 @@ class Impactos extends ModelBase
 	 */
 	protected $fields = [
 	    'impacto' => 'Impacto',
-	    'activo_span' => 'Activo'
+	    'activo_span' => 'Estatus'
 	];
 
 	/**

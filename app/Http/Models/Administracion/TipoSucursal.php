@@ -35,7 +35,7 @@ class TipoSucursal extends ModelBase
 	 */
 	protected $fields = [
 		'tipo' => 'Tipo de Sucursal',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 
 	public $niceNames = [

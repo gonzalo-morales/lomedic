@@ -2,9 +2,11 @@
 
 namespace App\Http\Models\SociosNegocio;
 
-use App\Http\Models\ModelBase;
-use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Administracion\FormasPago;
+use App\Http\Models\Administracion\Sucursales;
+use App\Http\Models\ModelBase;
+use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
 
 class SociosNegocio extends ModelBase
@@ -20,7 +22,7 @@ class SociosNegocio extends ModelBase
      * @var string
      */
     protected $primaryKey = 'id_socio_negocio';
-    
+
     public $timestamps = false;
 
     /**
@@ -30,9 +32,9 @@ class SociosNegocio extends ModelBase
     protected $fillable = ['fk_id_tipo_socio','fk_id_forma_pago','fk_id_tipo_entrega','fk_id_sucursal_entrega','fk_id_usuario_modificacion',
     'razon_social','rfc','nombre_comercial','telefono','sitio_web','monto_credito','dias_credito','monto_minimo_facturacion','fecha_modificacion',
     'ejecutivo_venta','fk_id_ramo','fk_id_pais_origen','fk_id_moneda','activo'];
-    
+
     protected $eagerLoaders = ['ramo','tiposocioventa','tiposociocompra'];
-    
+
     protected $fields = [
         'razon_social' => 'Razon Social',
         'rfc' => 'RFC',
@@ -41,7 +43,7 @@ class SociosNegocio extends ModelBase
         'tipos_socios' => 'Tipo Socio',
         'activo_text' => 'Estatus'
     ];
-    
+
     public $rules = [ /*
         'razon_social' => 'required|min:5',
         'rfc' => 'required',
@@ -59,9 +61,9 @@ class SociosNegocio extends ModelBase
         'condiciones_pago.forma_pago' => 'required',
         'condiciones_pago.cuentas' => 'required',*/
     ];
-    
+
     public $niceNames = [];
-    
+
     public function getTiposSociosAttribute()
     {
         $venta = $this->tiposocioventa->tipo_socio ?? '';
@@ -110,5 +112,19 @@ class SociosNegocio extends ModelBase
 //    }
     public function ejecutivocompra(){
         return $this->hasOne(Empleados::class,'id_empleado','fk_id_ejecutivo_compra');
+    }
+
+    /**
+     * Obtenemos proyectos relacionados
+     * @return @hasMany
+     */
+    public function proyectos()
+    {
+        return $this->hasMany(Proyectos::class, 'fk_id_cliente', 'id_socio_negocio');
+    }
+
+    public function sucursalcliente()
+    {
+        return $this->hasOne(Sucursales::class,'fk_id_cliente','id_socio_negocio');
     }
 }

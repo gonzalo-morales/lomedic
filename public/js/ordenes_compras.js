@@ -19,6 +19,18 @@ $(document).ready(function(){
         },
         footer:true,
     });
+
+    window.dataTableCondiciones = new DataTable('#condicionesAutorizar', {
+        fixedHeight: true,
+        fixedColumns: true,
+        searchable: false,
+        perPageSelect: false,
+        labels:{
+            info: "Mostrando del registro {start} al {end} de {rows}"
+        },
+        footer:true,
+    });
+
     totalOrden();
     subtotal_original = $('#subtotal_lbl').text();
     // console.log(subtotal_original);

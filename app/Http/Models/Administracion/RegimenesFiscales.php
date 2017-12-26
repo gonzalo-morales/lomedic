@@ -35,7 +35,7 @@ class RegimenesFiscales extends ModelBase
      */
     protected $fields = [
         'regimen_fiscal' => 'Régimen fiscal',
-        'activo_span' => 'Estado'
+        'activo_span' => 'Estatus'
     ];
 
     public $niceNames = [

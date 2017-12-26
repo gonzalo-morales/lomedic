@@ -24,5 +24,4 @@ class EstadosController extends ControllerBase
 			'paises' => Paises::select(['id_pais', 'pais'])->orderBy('pais')->pluck('pais','id_pais'),
 		];
 	}
-
 }

@@ -16,7 +16,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::group(['prefix' => 'recursos_humanos', 'as' => 'recursos_humanos.', 'middleware' => ['auth','share','csrf']], function(){
+    Route::group(['prefix' => 'recursos_humanos', 'as' => 'recursos_humanos.', 'middleware' => ['auth','share','csrf','password_expired']], function(){
         Route::view("/","recursos_humanos.index");
         Route::resource('causasbajas', 'RecursosHumanos\CausasBajasController');
         Route::resource('departamentos', 'RecursosHumanos\DepartamentosController');

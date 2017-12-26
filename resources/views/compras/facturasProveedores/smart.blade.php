@@ -291,20 +291,26 @@
 								</thead>
 								<tbody id="detalle_pagos">
 								@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
-									@foreach($data->detallePagos->where('eliminar',false) as $detalle)
+									@if(!empty($data->detallePagos))
+										@foreach($data->detallePagos->where('eliminar',false) as $detalle)
+											<tr>
+												<td>{{$detalle->pago->id_pago}}</td>
+												<td>{{$detalle->pago->numero_referencia}}</td>
+												<td>{{$detalle->pago->banco->banco}}</td>
+												<td>{{$detalle->pago->fecha_pago}}</td>
+												<td>${{number_format($detalle->pago->monto,2)}}</td>
+												<td>{{$detalle->pago->forma_pago->descripcion}}</td>
+												<td>{{'('.$detalle->pago->moneda->moneda.') '.$detalle->pago->moneda->descripcion}}</td>
+												<td>{{number_format($detalle->pago->tipo_cambio,2)}}</td>
+												<td>{{$detalle->pago->observaciones}}</td>
+												{{--<td><a class="eliminar_pago" href="{{companyAction('Compras\PagosController@destroy',['id'=>$pago->id_pago])}}"><i class="material-icons">cancel</i></a></td>--}}
+											</tr>
+										@endforeach
+									@else
 										<tr>
-											<td>{{$detalle->pago->id_pago}}</td>
-											<td>{{$detalle->pago->numero_referencia}}</td>
-											<td>{{$detalle->pago->banco->banco}}</td>
-											<td>{{$detalle->pago->fecha_pago}}</td>
-											<td>${{number_format($detalle->pago->monto,2)}}</td>
-											<td>{{$detalle->pago->forma_pago->descripcion}}</td>
-											<td>{{'('.$detalle->pago->moneda->moneda.') '.$detalle->pago->moneda->descripcion}}</td>
-											<td>{{number_format($detalle->pago->tipo_cambio,2)}}</td>
-											<td>{{$detalle->pago->observaciones}}</td>
-											{{--<td><a class="eliminar_pago" href="{{companyAction('Compras\PagosController@destroy',['id'=>$pago->id_pago])}}"><i class="material-icons">cancel</i></a></td>--}}
+											<td colspan="9">Sin pagos</td>
 										</tr>
-									@endforeach
+									@endif
 								@endif
 								</tbody>
 							</table>
@@ -337,6 +343,10 @@
 										<td>{{$detalle->orden->estatus->estatus}}</td>
 										<td><a href="{{companyAction('Compras\OrdenesController@show',['id'=>$detalle->orden->id_orden])}}"><i class="material-icons align-middle">visibility</i></a></td>
 									</tr>
+									@else
+									<tr>
+										<td colspan="6">Sin órdenes relacionadas</td>
+									</tr>
 									@endif
 								@endforeach
 								</tbody>
@@ -345,7 +355,43 @@
 					</div>
 				</div>
 				<div role="tabpanel" class="tab-pane fade" id="tab-notas" aria-labelledby="notas-tab">
-					Notas de crédito
+					<div class="card">
+						<div class="card-body mt-3">
+							<h1 class="text-success text-center">Notas de Crédito</h1>
+							<table class="table">
+								<thead>
+								<tr>
+									<th>#</th>
+									<th>Serie y Nota</th>
+									<th>Total</th>
+									<th>Moneda</th>
+									<th>Proveedor</th>
+									<th></th>
+								</tr>
+								</thead>
+								<tbody>
+								@if(!empty($data->notas))
+								@foreach($data->notas as $key => $nota)
+									<tr>
+										<td>{{$nota->id_nota_credito_proveedor}}</td>
+										<td>{{$nota->serie_factura.$nota->folio_factura}}</td>
+										<td>{{$nota->total}}</td>
+										<td>{{'('.$nota->moneda->moneda.') '.$nota->moneda->descripcion}}</td>
+										<td>{{$nota->proveedor->nombre_comercial}}</td>
+										<td>
+											<a href="{{companyAction('Compras\NotasCreditoProveedorController@show',['id'=>$nota->id_nota_credito_proveedor])}}"><i class="material-icons align-middle">visibility</i></a>
+										</td>
+									</tr>
+									@endforeach
+								@else
+									<tr>
+										<td colspan="6">Sin notas de crédito</td>
+									</tr>
+								@endif
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 				@endif
 			</div>

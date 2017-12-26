@@ -10,12 +10,19 @@ use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Salidas extends ModelCompany
 {
+    # Estatus
+    public const ABIERTO = 0;
+    public const CERRADO = 1;
+    public const CANCELADO = 2;
+    public const SURTIDO_PARCIAL = 3;
+    public const SURTIDO = 4;
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'inv_salidas';
+    protected $table = 'inv_opr_salidas';
 
     /**
      * The primary key of the table
@@ -28,7 +35,7 @@ class Salidas extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_tipo_salida', 'fk_id_socio_negocio', 'fk_id_proyecto', 'entrega_por', 'nombre_conductor', 'placas_vehiculo', 'paqueteria', 'fk_tipo_entrega', 'fk_id_direccion_entrega', 'fecha_entrega', 'fecha_salida'];
+    protected $fillable = ['fk_tipo_salida', 'fk_id_socio_negocio', 'fk_id_proyecto', 'entrega_por', 'nombre_conductor', 'placas_vehiculo', 'paqueteria', 'fk_tipo_entrega', 'fk_id_direccion_entrega', 'fecha_entrega', 'fecha_salida', 'estatus', 'id_salida_pendiente', 'motivo_cancelacion'];
 
     /**
      * Los atributos que seran visibles en index-datable
@@ -40,6 +47,14 @@ class Salidas extends ModelCompany
         'sucursal_entrega.direccion_concat' => 'Sucursal de entrega',
         'fecha_entrega' => 'Fecha de entrega',
         'estatus_text' => 'Estatus',
+    ];
+
+    /**
+     * Atributos a injectar en las options-row del smart-index
+     * @var array
+     */
+    protected $dataColumns = [
+        'estatus_text'
     ];
 
     /**
@@ -82,16 +97,24 @@ class Salidas extends ModelCompany
      */
     public function getEstatusTextAttribute() {
         switch ($this->estatus) {
-            case 0:
+            case self::ABIERTO:
                 $estatus = 'Abierto';
                 break;
 
-            case 1:
+            case self::CERRADO:
                 $estatus = 'Cerrado';
                 break;
 
-            case 2:
+            case self::CANCELADO:
                 $estatus = 'Cancelado';
+                break;
+
+            case self::SURTIDO_PARCIAL:
+                $estatus = 'Surtido Parcial';
+                break;
+
+            case self::SURTIDO:
+                $estatus = 'Surtido';
                 break;
 
             default:

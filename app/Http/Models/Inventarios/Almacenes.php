@@ -35,7 +35,7 @@ class Almacenes extends ModelBase
 		'almacen' => 'Almacen',
 		'sucursal.sucursal' => 'Sucursal',
 		'ubicaciones_total' => 'Ubicaciones',
-		'activo_span' => 'Activo'
+		'activo_span' => 'Estatus'
 	];
 
 	/**

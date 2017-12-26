@@ -49,7 +49,7 @@ class Areas extends ModelBase
 	protected $fields = [
 		'area' => 'Area',
 		'clave_area' => 'Clave',
-	    'activo_span' => 'Activo'
+	    'activo_span' => 'Estatus'
 	];
 
 }

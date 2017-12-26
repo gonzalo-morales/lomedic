@@ -34,7 +34,7 @@ class Subcategorias extends ModelBase
 	 */
 	protected $fields = [
 	    'subcategoria' => 'Subcategoria',
-	    'activo_span' => 'Activo'
+	    'activo_span' => 'Estatus'
 	];
 
 	/**

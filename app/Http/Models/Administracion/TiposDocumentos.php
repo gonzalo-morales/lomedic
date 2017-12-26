@@ -33,6 +33,6 @@ class TiposDocumentos extends ModelBase
 	 */
 	protected $fields = [
 		'nombre_documento' => 'Documento',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 }

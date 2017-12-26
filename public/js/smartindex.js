@@ -231,8 +231,8 @@ window['smart-model'] = {
 
 			let modal = window['smart-modal'];
 			modal.view = rivets.bind(modal, {
-				title: 'Ãƒâ€šÃ‚Â¿Estas seguro?',
-				content: 'Una vez eliminado(s) no podrÃƒÆ’Ã‚Â¡s recuperarlo(s).',
+				title: '¿Estas seguro?',
+				content: 'Una vez eliminado(s) no podrás recuperarlo(s).',
 				buttons: [
 					{button: {
 						'text': 'Cancelar',
@@ -271,12 +271,12 @@ window['smart-model'] = {
 
 			switch (this.dataset.deleteType) {
 				case 'multiple':
-				data =  {ids: rivets.formatters.keys(rv.collections.items),'_token':token};
-				tablerows = rivets.formatters.values(rv.collections.items);
+					data =  {ids: rivets.formatters.keys(rv.collections.items),'_token':token};
+					tablerows = rivets.formatters.values(rv.collections.items);
 				break;
 				case 'single':
-				data =  {'_token':token};
-				tablerows = [this.parentNode.parentNode.dataIndex];
+					data =  {'_token':token};
+					tablerows = [this.parentNode.parentNode.dataIndex];
 				break;
 			}
 

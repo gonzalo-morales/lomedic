@@ -9,21 +9,22 @@ use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\ModelCompany;
 use DB;
 use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\Compras\CfdiRelacionesProveedores;
 
-class FacturasProveedores extends ModelCompany
+class NotasCreditoProveedor extends ModelCompany
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'fac_opr_facturas_proveedores';
+    protected $table = 'fac_opr_notas_credito_proveedor';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_factura_proveedor';
+    protected $primaryKey = 'id_nota_credito_proveedor';
 
     /**
      * The attributes that are mass assignable.
@@ -39,11 +40,9 @@ class FacturasProveedores extends ModelCompany
         'serie_factura',
         'uuid',
         'fecha_factura',
-        'fecha_vencimiento',
         'fk_id_forma_pago',
         'total',
-        'fk_id_estatus_factura',
-        'total_pagado',
+        'fk_id_estatus_nota',
         'iva',
         'subtotal',
         'fk_id_moneda',
@@ -51,7 +50,6 @@ class FacturasProveedores extends ModelCompany
         'fk_id_metodo_pago',
         'version_sat',
         'folio_factura',
-        'unidad_medida'
     ];
 
     public $niceNames =[
@@ -61,7 +59,6 @@ class FacturasProveedores extends ModelCompany
         'fk_id_sucursal'=>'sucursal',
         'serie_folio_factura'=>'serie y folio',
         'fecha_factura'=>'fecha factura',
-        'fecha_vencimiento'=>'fecha vencimiento',
         'fk_id_forma_pago'=>'forma pago',
         'fk_id_estatus_factura'=>'estatus factura',
         'total_pagado'=>'total pagado',
@@ -69,19 +66,18 @@ class FacturasProveedores extends ModelCompany
     ];
 
     protected $dataColumns = [
-        'fk_id_estatus_factura'
+        'fk_id_estatus_nota'
     ];
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
     protected $fields = [
-        'id_factura_proveedor' => 'Número de factura',
+        'id_nota_credito_proveedor' => 'Número de Nota',
         'serie_folio' => 'Serie y Folio',
         'proveedor.nombre_comercial' => 'Proveedor',
         'sucursal.sucursal' => 'Sucursal',
         'fecha_factura'=>'Fecha creación',
-        'fecha_vencimiento' => 'Vigencia',
         'estatus.estatus' => 'Estatus'
     ];
 
@@ -92,8 +88,8 @@ class FacturasProveedores extends ModelCompany
      * @var array
      */
     public $rules = [
-//        'fk_id_sucursal'=>'required',
-//        'fk_id_proveedor'=>'required',
+        'fk_id_sucursal'=>'required',
+        'fk_id_proveedor'=>'required',
 //        'fk_id_moneda'=>'required',
 //        'descuento_oferta'=>'nullable||regex:/^(\d{0,2}(\.\d{0,4})?\)$/'
     ];
@@ -110,7 +106,7 @@ class FacturasProveedores extends ModelCompany
 
     public function estatus()
     {
-        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_factura');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_nota');
     }
 
     public function proveedor()
@@ -128,11 +124,11 @@ class FacturasProveedores extends ModelCompany
         return $this->hasOne(FormasPago::class,'id_forma_pago','fk_id_forma_pago');
     }
 
-    public function detalle_facturas_proveedores(){
-        return $this->hasMany(DetalleFacturasProveedores::class,'fk_id_factura_proveedor','id_factura_proveedor');
+    public function detalle(){
+        return $this->hasMany(DetalleNotasCreditoProveedor::class,'fk_id_documento','id_nota_credito_proveedor');
     }
-
-    public function pagos(){
-        return $this->hasMany(Pagos::class,'fk_id_factura_proveedor','id_factura_proveedor');
+    public function cfdirelacionado()
+    {
+        return $this->hasMany(CfdiRelacionesProveedores::class,'fk_id_documento','id_nota_credito_proveedor');
     }
 }

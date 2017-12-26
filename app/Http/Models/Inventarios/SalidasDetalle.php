@@ -24,7 +24,7 @@ class SalidasDetalle extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_salida', 'fk_id_sku', 'fk_id_upc', 'cantidad', 'fk_id_almacen', 'eliminar'];
+    protected $fillable = ['fk_id_salida', 'fk_id_sku', 'fk_id_upc', 'fk_id_almacen', 'cantidad_solicitada', 'cantidad_surtida', 'cantidad_pendiente', 'fk_id_ubicacion', 'lote','eliminar'];
 
     /*
      * Los atributos que seran visibles en index-datable
@@ -75,6 +75,15 @@ class SalidasDetalle extends ModelCompany
     public function almacen()
     {
         return $this->belongsTo(Almacenes::class, 'fk_id_almacen', 'id_almacen');
+    }
+
+    /**
+     * Obtenemos ubicaciones relacionadas
+     * @return @belongsTo
+     */
+    public function ubicacion()
+    {
+        return $this->belongsTo(Ubicaciones::class, 'fk_id_ubicacion', 'id_ubicacion');
     }
 
 

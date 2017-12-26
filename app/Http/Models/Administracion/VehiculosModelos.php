@@ -31,7 +31,7 @@ class VehiculosModelos extends ModelBase
      * @var array
      */
     public $rules = [
-        'modelo' => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+        'modelo' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
         'fk_id_marca' => 'required|numeric'
     ];
 
@@ -42,7 +42,7 @@ class VehiculosModelos extends ModelBase
     protected $fields = [
         'modelo' => 'Modelo',
         'marca.marca' => 'Marca',
-        'activo_span' => 'Activo'
+        'activo_span' => 'Estatus'
     ];
 
     /**

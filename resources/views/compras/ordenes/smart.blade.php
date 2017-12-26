@@ -340,6 +340,66 @@
 		</div>
 	</div>
 </div>
+
+{{-- Mostrar solo a usuarios autorizados para autorizar ordenes de compra --}}
+<div class="row">
+	<div class="col-sm-12">
+		<h3>Autorizaciones Pendientes</h3>
+		<div class="card z-depth-1-half">
+			<div class="card-body responsive-table">
+				<table class="table highlight" id="condicionesAutorizar">
+					<thead>
+						<tr>
+							<th>Nombre</th>
+							<th>Estatus</th>
+							<th>Fecha de Autorización</th>
+							<th>Autorizó</th>
+							<th>Motivo</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					@if(isset($data->contratos))
+						@foreach($data->contratos->where('eliminar',0) as $row=>$detalle)
+							<tr>
+								<td>
+									{{-- {{ Form::hidden('relations[has][contratos]['.$row.'][index]',$row,['class'=>'index']) }} --}}
+									{{-- {{ Form::hidden('relations[has][contratos]['.$row.'][id_contrato]',$detalle->id_contrato) }} --}}
+									{{-- {{}} --}}
+								</td>
+								<td>
+									{{-- {{}} --}}
+								</td>
+								<td>
+									{{-- {{}} --}}
+								</td>
+								<td>
+									{{-- {{}} --}}
+								</td>
+								<td>
+									{{-- {{}} --}}
+								</td>
+								<td>
+									<a class="btn is-icon text-primary bg-white" href="{{companyAction('autorizarOrden', ['id' => $detalle->id_contrato])}}" title="Autorizar">
+										<i class="material-icons">Check</i>
+									</a>
+									@if(Route::currentRouteNamed(currentRouteName('edit')))
+										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Contrato"> <i class="material-icons">delete</i></button>
+									@endif
+								</td>
+							</tr>
+						@endforeach
+					@endif
+					</tbody>
+					<tfoot>
+
+					</tfoot>
+				</table>
+			</div>
+		</div><!--/Here ends card-->
+	</div>
+</div>
+
 @endsection
 
 {{-- DONT DELETE --}}

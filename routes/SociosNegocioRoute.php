@@ -16,7 +16,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::group(['prefix' => 'sociosnegocio', 'as' => 'sociosnegocio.', 'middleware' => ['auth','share','csrf'] ], function() {
+    Route::group(['prefix' => 'sociosnegocio', 'as' => 'sociosnegocio.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
         Route::view("/","sociosnegocio.index");
         Route::resource('sociosnegocio', 'SociosNegocio\SociosNegocioController');
         Route::get('sociosnegocio/{id}/descargar', 'SociosNegocio\SociosNegocioController@descargar');

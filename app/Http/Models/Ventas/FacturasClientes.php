@@ -87,7 +87,7 @@ class FacturasClientes extends ModelCompany
         return $this->hasOne(FormasPago::class,'id_forma_pago','fk_id_forma_pago');
     }
 
-    public function detallefactura(){
-        return $this->hasMany(DetalleFacturasProveedores::class,'fk_id_factura_proveedor','id_factura_proveedor');
+    public function detalle(){
+        return $this->hasMany(FacturasClientesDetalle::class,'fk_id_factura','id_factura');
     }
 }

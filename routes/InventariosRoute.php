@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Inventarios\SalidasController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,8 +17,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-
-    Route::group(['prefix' => 'inventarios', 'as' => 'inventarios.', 'middleware' => ['auth','share','csrf'] ], function() {
+    Route::group(['prefix' => 'inventarios', 'as' => 'inventarios.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
         Route::view("/","inventarios.index");
         Route::resource('cbn','Inventarios\CbnController');
         Route::resource('productos', 'Inventarios\ProductosController');
@@ -31,10 +32,12 @@ Route::prefix('{company}')->group(function () {
         Route::resource('inventarios','Inventarios\InventariosController');
         // Route::get('solicitudes-salida/{solicitud}/salidas', 'Inventarios\SolicitudesSalidaController@index')->name('some');
         Route::resource('solicitudes-salida','Inventarios\SolicitudesSalidaController');
-        // Route::resource('solicitudes-salida.salidas','Inventarios\SolicitudesSalidaController');
+        Route::resource('solicitudes-salida.salidas','Inventarios\SolicitudesSalidaController');
         Route::resource('salidas','Inventarios\SalidasController');
+        Route::get('salidas/{salida}/pendientes','Inventarios\SalidasController@pendings')->name('salidas.pendings');
         Route::resource('solicitudes-entrada','Inventarios\SolicitudesEntradaController');
         Route::post('getDetalleEntrada','Inventarios\EntradasController@getDetalleEntrada')->name('entradas.getDetalleEntrada');
         Route::post('guardarEntrada','Inventarios\EntradasController@guardarEntrada')->name('entradas.guardarEntrada');
+        Route::resource('stock','Inventarios\StockController');
     });
 });

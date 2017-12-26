@@ -42,7 +42,7 @@ class MotivosNotas extends ModelBase
 	protected $fields = [
 		'motivo' => 'Laboratorio',
 		'tipo_formated' => 'Tipo',
-		'activo_span' => 'Activo',
+		'activo_span' => 'Estatus',
 	];
 
 	public function getTipoFormatedAttribute()

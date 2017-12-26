@@ -62,6 +62,10 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/proyectos/anexos'),
         ],
+        'pedidos_anexos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/pedidos/anexos'),
+        ],
         'logotipos' => [
             'driver' => 'local',
             'root' => public_path('img/logotipos'),
@@ -78,6 +82,10 @@ return [
         'pagos' => [
             'driver' => 'local',
             'root' => storage_path('app/compras/pagos')
+        ],
+        'notas_proveedor' => [
+            'driver' => 'local',
+            'root' => storage_path('app/notas/proveedores')
         ],
         'public_storage' => [
             'driver' => 'local',

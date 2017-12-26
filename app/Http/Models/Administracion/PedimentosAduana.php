@@ -41,7 +41,7 @@ class PedimentosAduana extends ModelBase
 		'patente' => 'Patente',
 		'ejercicio' => 'Ejercicio',
 		'Cantidad' => 'Cantidad',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 
 }

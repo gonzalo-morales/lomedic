@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class TiposRelacionesCfdi extends ModelBase
 {
-	protected $table = 'sat_tipos_relaciones';
+	protected $table = 'maestro.sat_tipos_relaciones';
 
 	/**
 	 * The primary key of the table
@@ -33,7 +33,7 @@ class TiposRelacionesCfdi extends ModelBase
 	protected $fields = [
 		'tipo_relacion' => 'Tipo Relacion',
 		'descripcion' => 'Descripción',
-		'activo_span' => 'Estado'
+		'activo_span' => 'Estatus'
 	];
 
 }

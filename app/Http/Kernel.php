@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'share' => \App\Http\Middleware\Share::class,
         'csrf' => \App\Http\Middleware\VerifyCsrfToken::class,
+        'password_expired' => \App\Http\Middleware\PasswordExpired::class,
     ];
 }
