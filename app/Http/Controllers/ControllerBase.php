@@ -266,77 +266,42 @@ class ControllerBase extends Controller
      * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $company, $idOrIds)
+    public function destroy(Request $request, $company, $idOrIds, $attributes = ['eliminar' => 't'])
     {
         # ¿Usuario tiene permiso para eliminar?
         //		$this->authorize('delete', $this->entity);
 
-        # Unico
-        if (!is_array($idOrIds)) {
+        $idOrIds = !is_array($idOrIds) ? [$idOrIds] : $idOrIds;
 
-            DB::beginTransaction();
-            $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)->update(['eliminar' => 't']);
-            if ($isSuccess) {
+        DB::beginTransaction();
+        $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)->update($attributes);
+        if ($isSuccess) {
 
-                DB::commit();
-                $this->log('destroy', $idOrIds);
+            DB::commit();
+            # Shorthand
+            foreach ($idOrIds as $id) $this->log('destroy', $id);
 
-                # Eliminamos cache
-                Cache::tags(getCacheTag('index'))->flush();
+            # Eliminamos cache
+            Cache::tags(getCacheTag('index'))->flush();
 
-                if ($request->ajax()) {
-                    # Respuesta Json
-                    return ['success' => true];
-                } else {
-                    return $this->redirect('destroy');
-                }
-
+            if ($request->ajax()) {
+                # Respuesta Json
+                return ['success' => true];
             } else {
-
-                DB::rollBack();
-                $this->log('error_destroy', $idOrIds);
-
-                if ($request->ajax()) {
-                    # Respuesta Json
-                    return ['success' => false];
-                } else {
-                    return $this->redirect('error_destroy');
-                }
+                return $this->redirect('destroy');
             }
 
-            # Multiple
         } else {
 
-            DB::beginTransaction();
-            $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)->update(['eliminar' => 't']);
-            if ($isSuccess) {
+            DB::rollBack();
+            # Shorthand
+            foreach ($idOrIds as $id) $this->log('error_destroy', $id);
 
-                DB::commit();
-                # Shorthand
-                foreach ($idOrIds as $id) $this->log('destroy', $id);
-
-                # Eliminamos cache
-                Cache::tags(getCacheTag('index'))->flush();
-
-                if ($request->ajax()) {
-                    # Respuesta Json
-                    return ['success' => true];
-                } else {
-                    return $this->redirect('destroy');
-                }
-
+            if ($request->ajax()) {
+                # Respuesta Json
+                return ['success' => false];
             } else {
-
-                DB::rollBack();
-                # Shorthand
-                foreach ($idOrIds as $id) $this->log('error_destroy', $id);
-
-                if ($request->ajax()) {
-                    # Respuesta Json
-                    return ['success' => false];
-                } else {
-                    return $this->redirect('error_destroy');
-                }
+                return $this->redirect('error_destroy');
             }
         }
     }

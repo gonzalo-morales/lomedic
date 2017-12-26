@@ -62,6 +62,7 @@ class SalidasController extends ControllerBase
 				$upcs[$index]['marca'] = $item->upc->marca;
 				$upcs[$index]['descripcion'] = $item->upc->descripcion;
 				$upcs[$index]['almacen'] = $item->almacen->almacen;
+				$upcs[$index]['ubicacion'] = $item->ubicacion->nomenclatura;
 				$upcs[$index]['sucursal'] = $item->almacen->sucursal->sucursal;
 				if (isCurrentRouteName(currentRouteName('pendings'))) {
 					$upcs[$index]['id_detalle'] = null;
@@ -84,8 +85,7 @@ class SalidasController extends ControllerBase
 			'api_proyectos' => Crypt::encryptString('"select": ["id_proyecto", "proyecto"], "conditions": [{"where":["fk_id_cliente", "$fk_id_cliente"]}]'),
 			'api_direcciones' => Crypt::encryptString('"select": ["calle", "num_exterior", "num_interior", "codigo_postal", "id_direccion", "fk_id_estado","fk_id_municipio"], "conditions": [{"where":["fk_id_socio_negocio", "$fk_id_socio_negocio"]},{"where":["fk_id_tipo_direccion", "2"]}], "append": ["direccion_concat"]'),
 			'api_sku' => Crypt::encryptString('"select": ["id_sku","sku","descripcion"], "conditions": [{"where": ["id_sku", "$fk_id_sku"]}], "with": ["upcs:id_upc,descripcion,marca,upc"]'),
-
-			'api_verify_stock' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$fk_id_almacen"]}, {"where": ["fk_id_upc", "$fk_id_upc"]}]'),
+			'api_verify_stock' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$fk_id_almacen"]},{"where": ["fk_id_ubicacion", "$fk_id_ubicacion"]},{"where": ["fk_id_sku", "$fk_id_sku"]}, {"where": ["fk_id_upc", "$fk_id_upc"]}]'),
 			'api_ubicaciones' => Crypt::encryptString('"select":["lote","stock","fk_id_ubicacion"],"with": ["ubicacion:id_ubicacion,nivel,posicion,rack,ubicacion,fk_id_almacen", "ubicacion.almacen:id_almacen,almacen,fk_id_sucursal", "ubicacion.almacen.sucursal:id_sucursal,sucursal"], "conditions": [{"where": ["fk_id_sku", "$fk_id_sku"]}, {"where": ["fk_id_upc", "$fk_id_upc"]}]'),
 		];
 	}
@@ -98,34 +98,43 @@ class SalidasController extends ControllerBase
 	 */
 	public function store(Request $request, $company)
 	{
+		# PENDIENTE --->
 		# ¿Salida completa?
-		$notPendings = collect($request->relations['has']['detalle'])->every(function ($item) {
-			return $item['cantidad_pendiente'] == 0;
-		});
+		// $notPendings = collect($request->relations['has']['detalle'])->every(function ($item) {
+		// 	return $item['cantidad_pendiente'] == 0;
+		// });
+		// $request->request->add([
+		// 	# 0: Abierto, 1: Cerrado, 2: Cancelado, 3: Surtido Parcial, 4: Surtido
+		// 	'estatus' => $notPendings ? 4 : 3,
+		// ]);
+		# PENDIENTE <---
 		$request->request->add([
-			# 0: Abierto, 1: Cerrado, 2: Cancelado, 3: Surtido Parcial, 4: Surtido
-		    'estatus' => $notPendings ? 4 : 3,
+			'fecha_salida' => Carbon::now()
 		]);
-		$request->request->add([
-		    'fecha_salida' => Carbon::now()
-		]);
-		// dd( $request->all() );
 		return parent::store($request, $company);
 	}
 
+	/**
+	 * Formulario para crear registro usando informacion pre-cargada
+	 *
+	 * @param  integer  $salida
+	 * @return \Illuminate\Http\Response
+	 */
 	public function pendings(Request $request, $company, $salida) {
-		// SAME TO EDIT
-        $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
+		return parent::edit($company, $salida);
+	}
 
-        try {
-            $data = $this->entity->findOrFail($salida);
-        } catch (\Exception $e) {
-            return \App::abort(404,$e->getMessage());
-        }
-
-        return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
-            'data' => $data,
-            'validator' => $validator
-        ] + $this->getDataView($data));
+	/**
+	 * Cancelamos regristro
+	 *
+	 * @param  integer  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy(Request $request, $company, $idOrIds, $attributes = [])
+	{
+		return parent::destroy($request, $company, $idOrIds, [
+			'motivo_cancelacion' => $request->motivo_cancelacion ?? '',
+			'estatus' => Salidas::CANCELADO
+		]);
 	}
 }
