@@ -6,7 +6,6 @@ namespace App\Http\Models\Compras;
 use App\Http\Models\Administracion\TiposDocumentos;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\ModelCompany;
-use App\Http\Models\Administracion\Usuarios;
 use DB;
 
 class CondicionesAutorizacion extends ModelCompany

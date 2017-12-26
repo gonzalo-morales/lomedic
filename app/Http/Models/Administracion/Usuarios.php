@@ -13,7 +13,6 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use App\Notifications\MyResetPassword;
-use App\Http\Models\Compras\CondicionesAutorizacion;
 
 class Usuarios extends ModelBase implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
@@ -103,11 +102,6 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         return $this->belongsToMany(Permisos::class, 'ges_det_permisos_usuarios', 'fk_id_usuario', 'fk_id_permiso');
     }
 
-    public function condiciones()
-    {
-       return $this->belongsToMany(CondicionesAutorizacion::class,'com_det_usuarios_autorizados','fk_id_usuario','fk_id_condicion');
-    }
-
     /**
      * Obtenemos permisos asignados al usuario
      * @return array
@@ -184,7 +178,8 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 
     public function autorizacionessolicitudes()
     {
-        return $this->belongsToMany(DetalleCondicionesAutorizaciones::class,'com_det_autorizaciones_usuarios','fk_id_usuario','id_usuario');
+        return $this->belongsToMany(DetalleCondicionesAutorizaciones::class,'com_det_usuarios_autorizados','fk_id_usuario','id_usuario');
+        // return $this->belongsToMany(DetalleCondicionesAutorizaciones::class,'com_det_autorizaciones_usuarios','fk_id_usuario','id_usuario');
     }
 
     public function condiciones()

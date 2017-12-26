@@ -61,22 +61,6 @@ class Autorizaciones extends ModelCompany
     {
         return $this->hasOne('App\Http\Models\Compras\Ordenes','id_orden','fk_id_documento');
     }
-    public function tipoDocumento()
-    {
-        return $this->hasOne('App\Http\Models\Administracion\TiposDocumentos','id_tipo_documento','fk_id_tipo_documento');
-    }
-    public function estatus()
-    {
-        return $this->hasOne('App\Http\Models\Administracion\EstatusDocumentos','id_estatus','fk_id_estatus');
-    }
-    public function estatusAutorizacion()
-    {
-        return $this->hasOne('App\Http\Models\Compras\EstatusAutorizacion','id_estatus','fk_id_estatus');
-    }
-    public function condiciones()
-    {
-        return $this->hasOne(CondicionesAutorizacion::class,'id_condicion','fk_id_condicion');
-    }
 
     public function solicitudpago()
     {

@@ -123,4 +123,18 @@ class Ordenes extends ModelCompany
         return $this->hasOne('App\Http\Models\Inventarios\Upcs','id_upc','fk_id_upc');
     }
 
+    public function usuarios()
+    {
+        return $this->hasOne(Usuarios::class,'fk_id_usuario','id_usuario');
+    }
+
+    public function autorizaciones()
+    {
+        return $this->hasMany(Autorizaciones::class,'fk_id_documento','id_orden');
+    }
+
+    public function estatusautorizacion()
+    {
+        return $this->hasOne(EstatusAutorizaciones::class,'id_estatus','fk_id_estatus_autorizacion');
+    }
 }
