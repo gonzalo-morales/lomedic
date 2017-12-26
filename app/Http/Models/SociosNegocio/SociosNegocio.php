@@ -4,6 +4,7 @@ namespace App\Http\Models\SociosNegocio;
 
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\FormasPago;
+use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\ModelBase;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
@@ -120,5 +121,10 @@ class SociosNegocio extends ModelBase
     public function proyectos()
     {
         return $this->hasMany(Proyectos::class, 'fk_id_cliente', 'id_socio_negocio');
+    }
+
+    public function sucursalcliente()
+    {
+        return $this->hasOne(Sucursales::class,'fk_id_cliente','id_socio_negocio');
     }
 }

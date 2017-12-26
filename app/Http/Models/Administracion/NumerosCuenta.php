@@ -51,7 +51,7 @@ class NumerosCuenta extends ModelBase
 	protected $fields = [
 		'numero_cuenta' => 'Número de cuenta',
 		'banco.razon_social' => 'Banco',
-		'moneda.moneda' => 'Moneda',
+		'moneda.descripcion' => 'Moneda',
 		'empresa.razon_social' => 'Empresa',
 	];
 

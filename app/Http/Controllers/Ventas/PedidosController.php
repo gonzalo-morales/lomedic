@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Proyectos;
+namespace App\Http\Controllers\Ventas;
 
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Proyectos\ClasificacionesProyectos;
@@ -20,43 +20,54 @@ use DB;
 use File;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Models\Ventas\Pedidos;
 use App\Http\Models\Administracion\Sucursales;
-use App\Http\Models\Proyectos\CaracterEventos;
-use App\Http\Models\Proyectos\FormasAdjudicacion;
+use App\Http\Models\Administracion\Usuarios;
+use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\RecursosHumanos\Empleados;
 
-class ProyectosController extends ControllerBase
+class PedidosController extends ControllerBase
 {
-    public function __construct(Proyectos $entity)
+    public function __construct(Pedidos $entity)
     {
         $this->entity = $entity;
     }
     
     public function getDataView($entity = null)
     {
-        $sucursales = null;
-        if(!empty($entity)){
-            $sucursales = Sucursales::where('fk_id_cliente',$entity->fk_id_cliente)->get();
-        }
-
+        $empresa_actual = Empresas::where('activo',1)->where('eliminar',0)->where('conexion',request()->company)->first();
         return [
-            'clientes' => SociosNegocio::where('activo', 1)->where('eliminar', 0)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
             'localidades' => Localidades::where('activo',1)->where('eliminar',0)->pluck('localidad','id_localidad'),
-            'estatus' => EstatusDocumentos::select('estatus','id_estatus')->pluck('estatus','id_estatus'),
+            'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('eliminar',0)->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')
+                ->whereHas('empresas', function($q) use($empresa_actual) {
+                    $q->where('id_empresa','=',$empresa_actual->id_empresa);
+                })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
+                
+            'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto','id_proyecto')->where('eliminar',0)->where('fk_id_estatus',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('proyecto','id_proyecto'),
+            'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["proyecto", "ASC"]]'),
+            
+            'sucursales' => empty($entity) ? [] : Sucursales::select('sucursal','id_sucursal')->where('eliminar',0)->where('activo',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('sucursal','id_sucursal'),
+            'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["sucursal", "ASC"]]'),
+            
+            'contratos' => empty($entity) ? [] : ContratosProyectos::select('num_contrato','id_contrato')->where('eliminar',0)->where('fk_id_proyecto', $entity->fk_id_proyecto)->pluck('num_contrato','id_contrato'),
+            'js_contratos' => Crypt::encryptString('"select":["id_proyecto"], "conditions":[{"where":["id_proyecto","$id_proyecto"]}], "with":["contratos:id_contrato,num_contrato,fk_id_proyecto"]'),
+            'ejecutivos' => empty($entity) ? [] : Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno)nombre_empleado, id_empleado")->where('activo',1)->where('eliminar',0)->where('fk_id_departamento',19)->orderBy('nombre_empleado')->pluck('nombre_empleado','id_empleado'),
+            'estatus' => empty($entity) ? EstatusDocumentos::select('estatus','id_estatus')->where('id_estatus',1)->pluck('estatus','id_estatus') : EstatusDocumentos::select('estatus','id_estatus')->where('id_estatus',$entity->fk_id_estatus)->pluck('estatus','id_estatus'),
+            
+            'productos' => empty($entity) ? [] : ClaveClienteProductos::select('id_clave_cliente_producto as id','clave_producto_cliente as text','descripcion as descripcionClave','fk_id_sku')->where('fk_id_cliente',$entity->fk_id_socio_negocio)->pluck('descripcion','id_clave_cliente_producto'),
+            
+            
             'clasificaciones' => ClasificacionesProyectos::where('activo',1)->pluck('clasificacion','id_clasificacion_proyecto'),
             'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo','1')->where('eliminar','0')->orderBy('moneda')->pluck('moneda','id_moneda'),
             'tiposeventos' => TiposEventos::where('activo', 1)->where('eliminar', 0)->orderBy('tipo_evento')->pluck('tipo_evento','id_tipo_evento'),
             'dependencias' => Dependencias::where('activo', 1)->where('eliminar', 0)->orderBy('dependencia')->pluck('dependencia','id_dependencia'),
             'subdependencias' => Subdependencias::where('activo', 1)->where('eliminar', 0)->orderBy('subdependencia')->pluck('subdependencia','id_subdependencia'),
-            'caracterevento' => CaracterEventos::where('activo',1)->where('eliminar',0)->orderBy('caracter_evento')->pluck('caracter_evento','id_caracter_evento'),
-            'formaadjudicacion' => FormasAdjudicacion::where('activo',1)->where('eliminar',0)->orderBy('forma_adjudicacion')->pluck('forma_adjudicacion','id_forma_adjudicacion'),
-            'sucursales' => $sucursales,
-            'js_licitacion' => Crypt::encryptString('"select":["tipo_evento","dependencia","subdependencia","unidad","caracter_evento","forma_adjudicacion","pena_convencional","tope_pena_convencional"],"conditions":[{"where":["no_oficial","$num_evento"]}]'),
-            'js_sucursales' => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"conditions":[{"where":["fk_id_cliente",$fk_id_cliente]},{"where":["activo","1"]}]'),
-            'js_contratos'=> Crypt::encryptString('"select":["representante_legal_cliente","no_contrato","vigencia_fecha_inicio","vigencia_fecha_fin"],"conditions":[{"where":["no_contrato","$num_contrato"]}]'),
         ];
     }
     
@@ -70,26 +81,10 @@ class ProyectosController extends ControllerBase
                 if(isset($detalle['file'])) {
                     $myfile = $detalle['file'];
                     $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
-                    $file_save = Storage::disk('proyectos_anexos')->put($company.'/'.$id.'/'.$filename, file_get_contents($myfile->getRealPath()));
+                    $file_save = Storage::disk('pedidos_anexos')->put($company.'/'.$id.'/'.$filename, file_get_contents($myfile->getRealPath()));
                     
                     if($file_save)
                         $request->relations->has->anexos->{$row}->set('archivo',$filename);
-                }
-            }
-        }
-        
-        #Guardamos los archivos de los contratos en la ruta especificada
-        if(isset($request->relations->has->contratos)){
-            $detalles = $request->relations->has->contratos;
-            foreach ($detalles as $row=>$detalle)
-            {
-                if(isset($detalle['file'])) {
-                    $myfile = $detalle['file'];
-                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
-                    $file_save = Storage::disk('proyectos_contratos')->put($company.'/'.$id.'/'.$filename, file_get_contents($myfile->getRealPath()));
-                    
-                    if($file_save)
-                        $request->relations->has->contratos->{$row}->set('archivo',$filename);
                 }
             }
         }
@@ -107,7 +102,7 @@ class ProyectosController extends ControllerBase
                 if(isset($detalle['file'])) {
                     $myfile = $detalle['file'];
                     $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
-                    $file_save = Storage::disk('proyectos_anexos')->put($company.'/'.$id.'/'.$filename, file_get_contents($myfile->getRealPath()));
+                    $file_save = Storage::disk('pedidos_anexos')->put($company.'/'.$id.'/'.$filename, file_get_contents($myfile->getRealPath()));
                     
                     if($file_save)
                         $request->relations->has->anexos->{$row}->set('archivo',$filename);
@@ -115,45 +110,19 @@ class ProyectosController extends ControllerBase
             }
         }
         
-        #Guardamos los archivos de los contratos en la ruta especificada
-        if(isset($request->relations->has->contratos)){
-            $detalles = $request->relations->has->contratos;
-            foreach ($detalles as $row=>$detalle)
-            {
-                if(isset($detalle['file'])) {
-                    $myfile = $detalle['file'];
-                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
-                    $file_save = Storage::disk('proyectos_contratos')->put($company.'/'.$id.'/'.$filename, file_get_contents($myfile->getRealPath()));
-                    
-                    if($file_save)
-                        $request->relations->has->contratos->{$row}->set('archivo',$filename);
-                }
-            }
-        }
         return parent::update($request, $company, $id);
     }
     
-    public function obtenerProyectos()
+    public function layoutProductos()
     {
-        $proyectos = Proyectos::select('id_proyecto as id','proyecto as text')->where('eliminar',0)->get();
-        return $proyectos->toJson();
-    }
-    
-    public function obtenerProyectosCliente($company,$id)
-    {
-        return Response::json($this->entity->where('fk_id_cliente',$id)->select('proyecto as text','id_proyecto as id')->get());
-    }
-
-    public function layoutProductosProyecto()
-    {
-        Excel::create('producto_proyecto_layout', function($excel){
+        Excel::create('producto_layout', function($excel){
             $excel->sheet(currentEntityBaseName(), function($sheet){
-                $sheet->fromArray(['*Clave cliente producto','UPC','*Prioridad','*Cantidad','*Precio sugerido','*Máximo','*Mínimo','*Número reorden']);
+                $sheet->fromArray(['* Cantidad','* Clave cliente producto','UPC']);
             });
         })->download('xlsx');
     }
 
-    public function loadLayoutProductosProyectos($company,Request $request)
+    public function loadLayoutProductos($company,Request $request)
     {
         $respuesta = [];
         $data_xlsx = Excel::load($request->file('file')->getRealPath(), function($reader) { })->get();
@@ -199,25 +168,11 @@ class ProyectosController extends ControllerBase
     public function descargaranexo($company, $id)
     {
         $archivo = AnexosProyectos::where('id_anexo',$id)->first();
-        $file = Storage::disk('proyectos_anexos')->getDriver()->getAdapter()->getPathPrefix().$company.'/'.$archivo->fk_id_proyecto.'/'.$archivo->archivo;
+        $file = Storage::disk('pedidos_anexos')->getDriver()->getAdapter()->getPathPrefix().$company.'/'.$archivo->fk_id_proyecto.'/'.$archivo->archivo;
 
         if (File::exists($file))
         {
             Logs::createLog($archivo->getTable(), $company, $archivo->id_anexo, 'descargar', 'Archivo anexo de proyecto');
-            return Response::download($file);
-        }
-        else
-            App::abort(404,'No se encontro el archivo o recurso que se solicito.');
-    }
-    
-    public function descargarcontrato($company, $id)
-    {
-        $archivo = ContratosProyectos::where('id_contrato',$id)->first();
-        $file = Storage::disk('proyectos_contratos')->getDriver()->getAdapter()->getPathPrefix().$company.'/'.$archivo->fk_id_proyecto.'/'.$archivo->archivo;
-        
-        if (File::exists($file))
-        {
-            Logs::createLog($archivo->getTable(), $company, $archivo->id_contrato, 'descargar', 'Archivo contrato de proyecto');
             return Response::download($file);
         }
         else

@@ -11,13 +11,19 @@
 			{{Form::cSelectWithDisabled('* Tipo Proyecto','fk_id_clasificacion_proyecto',$clasificaciones ?? [],['class'=>'select2'])}}
 		</div>
 		<div class="form-group col-md-8 col-xs-12">
-			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',$clientes ?? [],['class'=>'select2'])}}
+			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',$clientes ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/Administracion.sucursales/api'])}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
 			{{Form::cSelectWithDisabled('* Estatus','fk_id_estatus',$estatus ?? [])}}
 		</div>
-		<div class="form-group col-md-8 col-xs-12">
+		<div class="form-group col-md-4 col-xs-12">
 			{{Form::cSelectWithDisabled('* Localidad','fk_id_localidad',$localidades ?? [],['class'=>'select2'])}}
+		</div>
+		<div class="form-group col-md-4">
+			<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+				Cargando sucursales... <i class="material-icons align-middle loading">cached</i>
+			</div>
+			{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal',$sucursales ?? [],['class'=>'select2'])}}
 		</div>
 		<div class="form-group col-md-2 col-xs-12">
 			{{Form::cText('* Fecha Inicio','fecha_inicio',['class'=>' datepicker'])}}
@@ -43,6 +49,11 @@
 		<!-- Content Panel -->
 		<div id="clothing-nav-content" class="card-body tab-content">
 			<div role="tabpanel" class="tab-pane fade show active" id="tab-licitacion" aria-labelledby="licitacion-tab">
+				<div class="form-group">
+					<div id="loadinglicitacion" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+						Cargando licitación... <i class="material-icons align-middle loading">cached</i>
+					</div>
+				</div>
 				<div class="row">
 					<div class="form-group col-md-3">
             			{{Form::cText('No. Evento','num_evento')}}
@@ -56,6 +67,35 @@
             		<div class="form-group col-md-3">
             			{{Form::cSelectWithDisabled('Subdependencia','fk_id_subdependencia', $subdependencias ?? [],['class'=>'select2'])}}
             		</div>
+					<div class="form-group col-md-3">
+						{{Form::cSelectWithDisabled('Caracter del evento','fk_id_caracter_evento',$caracterevento ?? [],['class'=>'select2'])}}
+					</div>
+					<div class="form-group col-md-3">
+						{{Form::cSelectWithDisabled('Forma de adjudicación','fk_id_forma_adjudicacion',$formaadjudicacion ?? [],['class'=>'select2'])}}
+					</div>
+					<div class="form-group col-md-3">
+						<div>
+							<label for="pena_convencional" class="float-left">Pena Convencional</label>
+							<label for="tope_pena_convencional" class="float-right">Tope Pena Convencional</label>
+						</div>
+						<div class="input-group">
+						<input name="pena_convencional" id="pena_convencional" type="number" class="form-control">
+							<span class="input-group-addon">%</span>
+						<input name="tope_pena_convencional" id="tope_pena_convencional" type="number" class="form-control">
+							<span class="input-group-addon">%</span>
+						</div>
+					</div>
+					<div class="row col-md-12 text-center">
+						<div class="form-goup col-md-4 text-center">
+							<button type="button" data-url="{{companyAction('HomeController@index').'/Liciplus.licitaciones/api'}}" id="importar_liciplus" disabled class="btn btn-info btn-lg">LICIPLUS</button>
+						</div>
+						<div class="form-goup col-md-4 text-center">
+							<button type="button" data-url="{{companyAction('HomeController@index').'/Liciplus.contratos/api'}}" id="importar_contratos" disabled class="btn btn-info btn-lg">Importar Contratos</button>
+						</div>
+						<div class="form-goup col-md-4 text-center">
+							<button type="button" data-url="#" id="importar_productos" disabled class="btn btn-info btn-lg">Importar Productos</button>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div role="tabpanel" class="tab-pane fade" id="tab-contratos" aria-labelledby="contratos-tab">
@@ -67,7 +107,7 @@
                         			{{Form::cText('* Representante legal','representante_legal',['maxlength'=>'200'])}}
                         		</div>
     							<div class="form-group col-lg-3 col-md-6">
-    								{{ Form::cText('* No. Contrato', 'num_archivo') }}
+    								{{ Form::cText('* No. Contrato', 'num_contrato') }}
     							</div>
     							<div class="form-group col-lg-2 col-md-4">
                         			{{Form::cText('* Fecha inicio','fecha_inicio_contrato',['class'=>' datepicker'])}}
@@ -269,7 +309,7 @@
 					</table>
 				</div>
 			</div>
-		</div>
+
 			
 			<div role="tabpanel" class="tab-pane fade" id="tab-anexos" aria-labelledby="anexos-tab">
 				<div class="col-sm-12">
@@ -368,7 +408,11 @@
     @if (!Route::currentRouteNamed(currentRouteName('index')))
 	{{ HTML::script(asset('js/proyectos/proyectos.js')) }}
 	{{ HTML::script(asset('js/proyectos/maestro_materiales.js')) }}
-	
+	<script type="text/javascript">
+		var licitacion_js = '{{$js_licitacion ?? ''}}';
+		var sucursales_js = '{{$js_sucursales ?? ''}}';
+        var contratos_js = '{{$js_contratos ?? ''}}';
+	</script>
 <!-- Resources -->
 <style>
     #chart-sales, #chart-gastos, #chart-compras, #chart-rentabilidad {

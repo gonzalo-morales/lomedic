@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class Localidades extends ModelBase
 {
-	protected $table = 'gen_cat_localidades';
+	protected $table = 'maestro.gen_cat_localidades';
 
 	/**
 	 * The primary key of the table
@@ -37,6 +37,4 @@ class Localidades extends ModelBase
 		'localidad' => 'Localidad',
 		'activo_span' => 'Estatus'
 	];
-
 }
-

@@ -10,16 +10,14 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 $Conecctions = implode('|',array_keys(config('database.connections')));
 
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::group(['prefix' => 'ventas', 'as' => 'ventas.', 'middleware' => ['auth','share','csrf','password_expired']], function() {
-        Route::view("/","ventas.index");
-        Route::resource('facturasclientes','Ventas\FacturasClientesController');
-        Route::resource('pedidos','Ventas\PedidosController');
-        Route::get('pedidos/{id}/descargaranexo', 'Ventas\PedidosController@descargaranexo');
-        Route::get('getLayoutProductosPedidos','Ventas\PedidosController@layoutProductos');
+    Route::group(['prefix' => 'liciplus', 'as' => 'liciplus.', 'middleware' => ['auth','share','csrf','password_expired']], function(){
+        Route::resource('licitaciones', 'Liciplus\LicitacionesController');
+        Route::resource('contratos','Liciplus\ContratosController');
     });
 });
