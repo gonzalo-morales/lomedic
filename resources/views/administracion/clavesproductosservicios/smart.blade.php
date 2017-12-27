@@ -9,7 +9,6 @@
         $('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 3, // Creates a dropdown of 3 years to control year
-            min: true,
             format: 'yyyy-mm-dd'
         });
     </script>
