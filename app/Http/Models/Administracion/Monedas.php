@@ -45,7 +45,7 @@ class Monedas extends ModelBase
     protected $fields = [
         'moneda' => 'Abreviatura Moneda',
         'descripcion' => 'Descripción',
-        'total_decimales' => 'Total Decimales',
+        'total_decimales' => 'Cantidad Decimales',
         'activo_span' => 'Estatus'
     ];
     /**
