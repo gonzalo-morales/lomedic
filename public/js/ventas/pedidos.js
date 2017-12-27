@@ -137,8 +137,6 @@ $(document).ready(function () {
             precio_unitario = 0;
             importe = 0;
             
-            console.log(descripcion);
-            
             if(cantidad == '' | fk_id_clave == '') {
     			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir la cantidad y la clave del producto.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     		}
@@ -158,7 +156,7 @@ $(document).ready(function () {
         }
         else {
         	$('.loadingtabla').show();
-            // $('.loadingtabla').attr('style','display:block');
+            
             var xlsx = $('#file_xlsx').prop('files')[0];
             var formData = new FormData();
             formData.append('file', xlsx);
@@ -200,16 +198,10 @@ $(document).ready(function () {
 	                        clave = value['clave_cliente_producto'];
 	                        descripcion = value['descripcion_clave'];
 	                        fk_id_upc = value['fk_id_upc'] ? value['fk_id_upc'] : '';
-	                        upc = value['descripcion_upc'] ? value['descripcion_upc'] : '';
-	                        
-	                        let id_upc = 0;
-	                        let text_upc = '';
-	                        let descripcion_upc = '';
-	                        if (value['fk_id_upc']) {
-	                            id_upc = value['fk_id_upc'];
-	                            text_upc = value['upc'];
-	                            descripcion_upc = value['descripcion_upc'];
-	                        }
+	                        upc = value['upc'] ? value['upc'] : '';
+	                        descripcion_upc = value['descripcion_upc'] ? value['descripcion_upc'] : '';
+	                        precio_unitario = 0;
+	                        importe = 0;
 	                        
 	                        $('#detalleProductos').append('<tr>'+
 	            				'<td><input class="index" name="relations[has][detalle]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
@@ -217,19 +209,19 @@ $(document).ready(function () {
 	            				'<td><input name="relations[has][detalle]['+row_id+'][fk_id_clave_cliente_producto]" type="hidden" value="'+fk_id_clave+'">'+clave+'</td>'+
 	            				'<td>'+descripcion+'</td>'+
 	            				'<td><input name="relations[has][detalle]['+row_id+'][fk_id_upc]" type="hidden" value="'+fk_id_upc+'">'+upc+'</td>'+
-	            				'<td>'+upc+'</td>'+
+	            				'<td>'+descripcion_upc+'</td>'+
 	            				'<td><input name="relations[has][detalle]['+row_id+'][precio_unitario]" type="hidden" value="'+precio_unitario+'">'+precio_unitario+'</td>'+
 	            				'<td><input name="relations[has][detalle]['+row_id+'][importe]" type="hidden" value="'+importe+'">'+importe+'</td>'+
 	            				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 	            			'</tr>');
 	                    });
-	                    $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
 	                    $('.loadingtabla').hide();
+	                    $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
                     }
                 },
                 error: function () {
-                    $.toaster({priority: 'danger', title: 'Â¡Error!', message: 'Por favor verifica que el layout sea correcto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
-                    $('.loadingtabla').hide();
+                	$('.loadingtabla').hide();
+                    $.toaster({priority: 'danger', title: '¡Error!', message: 'Por favor verifica que el layout sea correcto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
                 }
             });
             $('#file_xlsx').val('');
@@ -244,10 +236,10 @@ $(document).ready(function () {
 		archivo = $("#archivo").prop('files');
 		
 		if(nombre == '') {
-			$.toaster({priority:'danger',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if($("#archivo").length == 0) {
-			$.toaster({priority:'danger',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleAnexos').append('<tr>'+
@@ -257,7 +249,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileAnexo-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 	
