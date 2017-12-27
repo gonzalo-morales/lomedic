@@ -40,7 +40,7 @@ class Ubicaciones extends ModelBase
 
     public function stock()
     {
-        return $this->hasMany(StockDetalle::class, 'fk_id_ubicacion', 'id_ubicacion');
+        return $this->hasMany(Stock::class, 'fk_id_ubicacion', 'id_ubicacion');
     }
 
 

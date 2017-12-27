@@ -91,10 +91,12 @@ class Productos extends ModelCompany
     {
         return $this->belongsTo(SubgrupoProductos::class,'fk_id_subgrupo','id_subgrupo');
     }
-
     public function clave_cliente_productos()
     {
         return $this->hasOne(ClaveClienteProductos::class,'fk_id_sku','id_sku');
     }
-
+    public function sku()
+    {
+        return $this->belongsTo(Productos::class, 'fk_id_sku', 'id_sku');
+    }
 }
