@@ -9,24 +9,63 @@
 namespace App\Http\Controllers\Servicios;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Servicios\RequisicionesHospitalarias;
 use App\Http\Models\Administracion\Areas;
 use App\Http\Models\Administracion\Sucursales;
-use App\Http\Models\Administracion\Usuarios;
-//use App\Http\Models\Inventarios\Productos;
-//use App\Http\Models\Inventarios\ProductosLicitacion;
-use App\Http\Models\Servicios\EstatusRequisiciones;
-use Illuminate\Support\Facades\Redirect;
+use App\Http\Models\Inventarios\Productos;
 use Illuminate\Http\Request;
+
 use DB;
 
 class RequisicionesHospitalariasController extends ControllerBase
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+
+
+    public function __construct(RequisicionesHospitalarias $entity)
+    {
+        $this->entity = $entity;
+    }
+
+    public function getDataView($entity = null)
+    {
+
+
+        return [
+            'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo', 1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
+            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->where('activo',1)->pluck('nombre_corto','id_usuario')->prepend('Selecciona una opcion...', ''),
+            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('Selecciona una opcion...', ''),
+
+//            'tipo_servicio' => [0 => 'afiliado', 1 => 'externo'],
+//            'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
+//            'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo', '1')->pluck('diagnostico', 'id_diagnostico'),
+        ];
+
+
+    }
+
+    public function getMedicamentos($company, Request $request)
+    {
+
+        $json = [];
+
+        $term = $request->medicamento;
+        $skus = Productos::where('activo', '1')->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'LIKE', '%' . $term . '%')->orWhere('descripcion', 'LIKE', '%' . $term . '%')->get();
+
+        foreach ($skus as $sku) {
+            $json[] = ['id' => (int)$sku->id_sku,
+                'text' => $sku->descripcion,
+                'cantidad_presentacion' => $sku->clave_cliente_productos['cantidad_presentacion'],
+                'familia' => $sku->fk_id_familia,
+                'tope_receta' => $sku->clave_cliente_productos['tope_receta'],
+                'disponible' => $sku->clave_cliente_productos['disponibilidad'],
+                'id_cuadro' => $sku->fk_id_proyecto
+            ];
+        }
+        return json_encode($json);
+
+    }
+    /*
     public function __construct(RequisicionesHospitalarias $entity)
     {
         $this->entity = $entity;
@@ -34,21 +73,21 @@ class RequisicionesHospitalariasController extends ControllerBase
 
     public function getDataView()
     {
-        return [
-            // 'companies' => Empresas::active()->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
-            // 'users' => Usuarios::active()->select(['nombre_corto','id_usuario'])->pluck('nombre_corto','id_usuario')
-        ];
+        return [];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function index($company, $attributes = [])
+    {
+
+        return parent::index($company, $attributes = []);
+
+    }
+
+
+
     public function create($company, $attributes =[])
     {
-        # ¿Usuario tiene permiso para crear?
-        // $this->authorize('create', $this->entity);
+
 
         $data = $this->entity->getColumnsDefaultsValues();
         $localidades = Sucursales::where('tipo',0)->where('id_cliente',135)
@@ -84,28 +123,10 @@ class RequisicionesHospitalariasController extends ControllerBase
         }
 
 
-//        $this->validate($request, $this->entity->rules);
-//
-//        $isSuccess = $this->entity->create($request->all());
-//        if ($isSuccess) {
-//
-//            # Eliminamos cache
-//            Cache::tags(getCacheTag('index'))->flush();
-//
-//            $this->log('store', $isSuccess->id_banco);
             return $this->redirect('store');
-//        } else {
-//            $this->log('error_store');
-//            return $this->redirect('error_store');
-//        }
+
     }
 
-    /**
-     * Display the specified resource
-     *
-     * @param  integer $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($company, $id, $attributes = [])
     {
 
@@ -144,43 +165,37 @@ class RequisicionesHospitalariasController extends ControllerBase
             ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  integer $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function surtir(Request $request, $company, $id, $attributes = [])
     {
-        # �Usuario tiene permiso para surtir?
-        // $this->authorize('update', $this->entity);
-        
+
+
         if ($request->isMethod('get')) {
             $datos_requisicion = RequisicionesHospitalarias::all()->where('id_requisicion','=',$id)->first();
-    
+
             $localidad = RequisicionesHospitalarias::join('cat_localidad','ss_qro_requisicion.id_localidad','=','cat_localidad.id_localidad')
                 ->where('ss_qro_requisicion.id_requisicion','=',$id)
                 ->select('cat_localidad.id_localidad','cat_localidad.localidad')
                 ->get();
-    
+
             $usuario = RequisicionesHospitalarias::join('adm_usuario','ss_qro_requisicion.id_solicitante','=','adm_usuario.id_usuario')
                 ->select(DB::raw("CONCAT(adm_usuario.nombre,' ',adm_usuario.paterno,' ',adm_usuario.materno) AS nombre"))
                 ->where('ss_qro_requisicion.id_requisicion','=',$id)
                 ->pluck('nombre');
-    
+
             $estatus = EstatusRequisiciones::all()->pluck('estatus','id_estatus');
-    
+
             $detalle_requisicion = DB::select("SELECT rd.*, a.area, substring(cp.descripcion from 1 for 250) as descripcion
                 FROM ss_qro_requisicion_detalle as rd
                 LEFT JOIN cat_area as a ON a.id_area = rd.id_area
                 LEFT JOIN cat_cuadro c ON C.id_cuadro = rd.id_cuadro
                 LEFT JOIN cat_cuadro_producto cp ON cp.id_cuadro = c.id_cuadro AND c.id_cliente = 135 AND cp.estatus = '1' AND cp.clave_cliente = rd.clave_cliente
                 WHERE rd.id_requisicion = $id");
-    
-    
+
+
             $data = $this->entity->findOrFail($id);
             $dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
-    
+
             return view(currentRouteName('smart'), $dataview+[
                 'data'=>$data,
                 'localidades'=>$localidad->pluck('sucursal','id_sucursal'),
@@ -255,5 +270,5 @@ class RequisicionesHospitalariasController extends ControllerBase
         return json_encode($areas);
     }
 
-
+*/
 }

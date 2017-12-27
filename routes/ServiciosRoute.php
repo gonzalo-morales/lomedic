@@ -20,6 +20,7 @@ Route::prefix('{company}')->group(function () {
 	    Route::post('getAfiliados','Servicios\RecetasController@getAfiliados')->name('recetas.getAfiliados');
 	    Route::post('getDiagnosticos','Servicios\RecetasController@getDiagnosticos')->name('recetas.getDiagnosticos');
 	    Route::post('getMedicamentos','Servicios\RecetasController@getMedicamentos')->name('recetas.getMedicamentos');
+	    //Route::post('getMedicamentos','Servicios\RequisicionesHospitalariasController@getMedicamentos')->name('requisicioneshospitalarias.getMedicamentos');
 	    Route::post('verifyStock','Servicios\RecetasController@verifyStock')->name('recetas.verifyStock');
 	    Route::post('verifyStockSurtir','Servicios\RecetasController@verifyStockSurtir')->name('recetas.verifyStockSurtir');
 	    Route::get('recetas/{id}/surtirReceta','Servicios\RecetasController@surtirReceta')->name('recetas.surtirReceta');

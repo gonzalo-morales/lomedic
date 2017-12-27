@@ -31,20 +31,20 @@ class Recetas extends ModelCompany
      */
     protected $fillable = ['id_sucursal', 'fecha','id_afiliacion','id_dependiente','id_medico','id_diagnostico',
         'id_programa','id_estatus_receta','id_area','nombre_paciente_no_afiliado','observaciones','id_usuario_creacion',
-        'id_usuario_creacion','id_usuario_modificacion','fecha_modificacion','peso','altura','presion'];
+        'id_usuario_creacion','id_usuario_modificacion','fecha_modificacion','peso','altura','presion_sistolica','presion_diastolica'];
 
     /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'peso' => 'between:0,999.99',
-        'altura' => 'between:0,9.99',
-        'presion1' => 'between:0,999.99',
-        'presion2' => 'between:0,999.99',
-        'id_diagnostico' => 'required|numeric',
-        'id_afiliacion' => 'required_without:nombre_paciente_no_afiliado',
-        'nombre_paciente_no_afiliado' => 'required_without:id_afiliacion'
+//        'peso' => 'between:0,999.99',
+//        'altura' => 'between:0,9.99',
+//        'presion1' => 'between:0,999.99',
+//        'presion2' => 'between:0,999.99',
+//        'id_diagnostico' => 'required|numeric',
+//        'id_afiliacion' => 'required_without:nombre_paciente_no_afiliado',
+//        'nombre_paciente_no_afiliado' => 'required_without:id_afiliacion'
     ];
 
     /**
@@ -128,6 +128,6 @@ class Recetas extends ModelCompany
 
     public function detalles()
     {
-        return $this->belongsToMany(RecetasDetalle::class,'id_receta','fk_id_receta');
+        return $this->hasMany(RecetasDetalle::class,'fk_id_receta','id_receta');
     }
 }
