@@ -98,6 +98,10 @@ class Pedidos extends ModelCompany
     }
 
     public function detalle(){
-        return $this->hasMany(FacturasClientesDetalle::class,'fk_id_documento','id_pedido');
+        return $this->hasMany(PedidosDetalle::class,'fk_id_documento','id_pedido');
+    }
+    
+    public function anexos(){
+        return $this->hasMany(PedidosAnexos::class,'fk_id_pedido','id_pedido');
     }
 }

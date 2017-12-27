@@ -80,7 +80,7 @@ class PedidosDetalle extends ModelCompany
     
     public function clavecliente()
     {
-        return $this->hasOne(ClaveClienteProductos::class,'id_clave_cliente','fk_id_clave_cliente');
+        return $this->hasOne(ClaveClienteProductos::class,'id_clave_cliente_producto','fk_id_clave_cliente_producto');
     }
     
     public function unidadmedida()

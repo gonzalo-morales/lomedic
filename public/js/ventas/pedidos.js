@@ -1,4 +1,7 @@
 $(document).ready(function () {
+	$('#form-model').attr('enctype',"multipart/form-data");
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    
 	$('#fk_id_proyecto').on('change', function() {
 		let contrato = $('#fk_id_contrato');
 		
@@ -66,7 +69,7 @@ $(document).ready(function () {
     		    }
     		});
     		
-    		$('#detalleProductos tbody tr').remove();
+    		//$('#detalleProductos tbody tr').remove();
     		$('#fk_id_clave_cliente_producto options').empty();
     		
     		$('#fk_id_clave_cliente_producto').select2({
@@ -82,50 +85,6 @@ $(document).ready(function () {
 		}
 	}).trigger('change');
 
-	
-	
-	
-	
-	
-	/*
-	on('focus', function (e) {
-		//alert('is focus');
-		let _url = $(this).data('url').replace('?id',$('#fk_id_socio_negocio').val());
-        //$(this).empty().prop('disabled',true);
-        $('#loadingfk_id_clave_cliente_producto').show();
-        $.ajax({
-            url: _url,
-            dataType:'json',
-            success:function (data) {
-                let option = $('<option/>');
-                option.val(0);
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                if (Object.keys(data).length == 0)
-                    option.text('No se encontraron elementos');
-                else
-                    option.text('...');
-
-                try {
-	                $('#fk_id_clave_cliente_producto').prepend(option).select2({
-	                    minimumResultsForSearch:'50',
-	                    data:data,
-	                }).attr('disabled',false);
-                }
-                catch (e) {
-                	console.log(e);
-                }
-                $('#loadingfk_id_clave_cliente_producto').hide();
-            },
-        	error:function (e) {
-        		$('#loadingfk_id_clave_cliente_producto').hide();
-        	}
-        });
-	});
-	*/
-	
-	//$('#fk_id_clave_cliente_producto').trigger('focus');
-	
 	$('#activo_upc').on('change',function () {
         if( !this.checked ){
             $( this ).parent().nextAll( "select" ).val(0).trigger('change').prop( "disabled", !this.checked ).empty();
@@ -164,28 +123,117 @@ $(document).ready(function () {
 	$('#agregarProducto').on('click', function() {
     	var i = $('#detalleProductos tr').length;
         var row_id = i > 0 ? +$('#detalleProductos tr:last').find('#index').val()+1 : 0;
-		
-        /*
-		nombre = $('#nombre_archivo').val();
-		archivo = $("#archivo").prop('files');
-		
-		if(nombre == '') {
-			$.toaster({priority:'danger',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-		}
-		else if($("#archivo").length == 0) {
-			$.toaster({priority:'danger',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-		}
-		else {
-			$('#detalleAnexos').append('<tr>'+
-				'<td><input class="index" name="relations[has][anexos]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
-					'<input name="relations[has][anexos]['+row_id+'][nombre]" type="hidden" value="'+nombre+'">'+nombre+'</td>'+
-				'<td><input name="relations[has][anexos]['+row_id+'][file]" type="file" id="fileAnexo-'+row_id+'" style="display:none">'+archivo[0].name+'</td>'+
-				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
-			'</tr>');
-			$('#fileAnexo-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-		}
-		*/
+        archivo = $('#file_xlsx').prop('files');
+        
+        if(archivo.length == 0) {
+        	cantidad = $('#cantidad').val();
+            fk_id_clave = $('#fk_id_clave_cliente_producto option:selected').val();
+            fk_id_sku = $('#fk_id_clave_cliente_producto').select2('data')[0].fk_id_sku;
+            clave = $('#fk_id_clave_cliente_producto option:selected').text();
+            descripcion = $('#fk_id_clave_cliente_producto').select2('data')[0].descripcionClave;
+            fk_id_upc = $('#fk_id_upc option:selected').val();
+            upc = $('#fk_id_upc option:selected').text();
+            
+            precio_unitario = 0;
+            importe = 0;
+            
+            console.log(descripcion);
+            
+            if(cantidad == '' | fk_id_clave == '') {
+    			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir la cantidad y la clave del producto.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    		}
+            else {
+            	$('#detalleProductos').append('<tr>'+
+        				'<td><input class="index" name="relations[has][detalle]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
+        					'<input name="relations[has][detalle]['+row_id+'][cantidad]" type="hidden" value="'+cantidad+'">'+cantidad+'</td>'+
+        				'<td><input name="relations[has][detalle]['+row_id+'][fk_id_clave_cliente_producto]" type="hidden" value="'+fk_id_clave+'">'+clave+'</td>'+
+        				'<td>'+descripcion+'</td>'+
+        				'<td><input name="relations[has][detalle]['+row_id+'][fk_id_upc]" type="hidden" value="'+fk_id_upc+'">'+upc+'</td>'+
+        				'<td>'+upc+'</td>'+
+        				'<td><input name="relations[has][detalle]['+row_id+'][precio_unitario]" type="hidden" value="'+precio_unitario+'">'+precio_unitario+'</td>'+
+        				'<td><input name="relations[has][detalle]['+row_id+'][importe]" type="hidden" value="'+importe+'">'+importe+'</td>'+
+        				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
+        			'</tr>');
+            }
+        }
+        else {
+        	$('.loadingtabla').show();
+            // $('.loadingtabla').attr('style','display:block');
+            var xlsx = $('#file_xlsx').prop('files')[0];
+            var formData = new FormData();
+            formData.append('file', xlsx);
+            formData.append('fk_id_cliente', $('#fk_id_socio_negocio').val());
+            formData.append('fk_id_proyecto', $('#fk_id_proyecto').val());
+            
+            $.ajax({
+                url: $('#file_xlsx').data('url'),
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function (data) {
+                    let messages = '';
+                    $.each(data.error, function (index, value) {
+                    	messages += '<br>Error en fila '+(parseInt(index) + parseInt(1))+':';
+                    	if(value['cantidad'])
+                    		messages += ' cantidad no debe ser menor a 0,';
+                    	if(value['clave_producto'])
+                    		messages += ' clave de producto no valida,';
+                    	if(value['upc'])
+                    		messages += ' upc no valido.';
+                    });
+                    
+                    if(messages != '') {
+                    	$('.loadingtabla').hide();
+                    	$.toaster({priority: 'danger',title: 'Las siguientes filas contienen error.',message: '<br>'+messages,settings: {'toaster': {'css': {'top': '5em'}}, 'donotdismiss': ['danger']}});
+                    }
+                    else {
+	                    $.each(data.data, function (index, value) {
+	                    	var i = $('#detalleProductos tr').length;
+	                        var row_id = i > 0 ? +$('#detalleProductos tr:last').find('.index').val()+1 : 0;
+	                        
+	                        cantidad = value['cantidad'];
+	                        fk_id_clave = value['id_clave_cliente_producto'];
+	                        fk_id_sku = value['fk_id_sku'];
+	                        clave = value['clave_cliente_producto'];
+	                        descripcion = value['descripcion_clave'];
+	                        fk_id_upc = value['fk_id_upc'] ? value['fk_id_upc'] : '';
+	                        upc = value['descripcion_upc'] ? value['descripcion_upc'] : '';
+	                        
+	                        let id_upc = 0;
+	                        let text_upc = '';
+	                        let descripcion_upc = '';
+	                        if (value['fk_id_upc']) {
+	                            id_upc = value['fk_id_upc'];
+	                            text_upc = value['upc'];
+	                            descripcion_upc = value['descripcion_upc'];
+	                        }
+	                        
+	                        $('#detalleProductos').append('<tr>'+
+	            				'<td><input class="index" name="relations[has][detalle]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
+	            					'<input name="relations[has][detalle]['+row_id+'][cantidad]" type="hidden" value="'+cantidad+'">'+cantidad+'</td>'+
+	            				'<td><input name="relations[has][detalle]['+row_id+'][fk_id_clave_cliente_producto]" type="hidden" value="'+fk_id_clave+'">'+clave+'</td>'+
+	            				'<td>'+descripcion+'</td>'+
+	            				'<td><input name="relations[has][detalle]['+row_id+'][fk_id_upc]" type="hidden" value="'+fk_id_upc+'">'+upc+'</td>'+
+	            				'<td>'+upc+'</td>'+
+	            				'<td><input name="relations[has][detalle]['+row_id+'][precio_unitario]" type="hidden" value="'+precio_unitario+'">'+precio_unitario+'</td>'+
+	            				'<td><input name="relations[has][detalle]['+row_id+'][importe]" type="hidden" value="'+importe+'">'+importe+'</td>'+
+	            				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
+	            			'</tr>');
+	                    });
+	                    $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
+	                    $('.loadingtabla').hide();
+                    }
+                },
+                error: function () {
+                    $.toaster({priority: 'danger', title: 'Â¡Error!', message: 'Por favor verifica que el layout sea correcto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
+                    $('.loadingtabla').hide();
+                }
+            });
+            $('#file_xlsx').val('');
+        }
 	});
 	
 	$('#agregarAnexo').on('click', function() {
