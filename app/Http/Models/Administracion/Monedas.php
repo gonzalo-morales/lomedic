@@ -43,9 +43,9 @@ class Monedas extends ModelBase
      * @var array
      */
     protected $fields = [
-        'moneda' => 'Metodo de pago',
+        'moneda' => 'Abreviatura Moneda',
         'descripcion' => 'Descripción',
-        'total_decimales' => 'Total Decimales',
+        'total_decimales' => 'Cantidad Decimales',
         'activo_span' => 'Estatus'
     ];
     /**

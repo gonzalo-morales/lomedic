@@ -6,6 +6,7 @@ use App\Http\Models\ModelCompany;
 use App\Http\Models\Administracion\SubgrupoProductos;
 use App\Http\Models\Administracion\SeriesSkus;
 use App\Http\Models\Administracion\UnidadesMedidas;
+use App\Http\Models\Proyectos\ClaveClienteProductos;
 
 class Productos extends ModelCompany
 {
@@ -89,5 +90,13 @@ class Productos extends ModelCompany
     public function subgrupo()
     {
         return $this->belongsTo(SubgrupoProductos::class,'fk_id_subgrupo','id_subgrupo');
+    }
+    public function clave_cliente_productos()
+    {
+        return $this->hasOne(ClaveClienteProductos::class,'fk_id_sku','id_sku');
+    }
+    public function sku()
+    {
+        return $this->belongsTo(Productos::class, 'fk_id_sku', 'id_sku');
     }
 }

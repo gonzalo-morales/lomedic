@@ -20,6 +20,7 @@ Route::prefix('{company}')->group(function () {
         Route::resource('facturasclientes','Ventas\FacturasClientesController');
         Route::resource('pedidos','Ventas\PedidosController');
         Route::get('pedidos/{id}/descargaranexo', 'Ventas\PedidosController@descargaranexo');
-        Route::get('getLayoutProductosPedidos','Ventas\PedidosController@layoutProductos');
+        Route::get('LayoutProductosPedidos','Ventas\PedidosController@layoutProductos');
+        Route::post('ImportarProductosPedido','Ventas\PedidosController@importarProductos');
     });
 });

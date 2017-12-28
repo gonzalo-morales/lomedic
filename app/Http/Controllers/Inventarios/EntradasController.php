@@ -27,15 +27,14 @@ class EntradasController extends ControllerBase
     
     public function getDataView($entity = null)
     {
-//        dd($entity);
-
+        
+        
+        
         if($entity == null)
         {
-            $productos_entrada = '';
+            $datos_documento = '';
         }
-        else
-        {
-//            $datos_entrada = $entity->datosEntrada($entity->numero_documento,$entity->fk_id_tipo_documento);
+        else {
             switch ($entity->fk_id_tipo_documento)
             {
                     case 1:
@@ -45,51 +44,43 @@ class EntradasController extends ControllerBase
                         $datos_documento = '';
                         break;
                     case 3:
-                        $datos_documento = Ordenes::where('id_orden',$entity->numero_documento)
-                            ->first();
+                        $datos_documento = Ordenes::where('id_orden',$entity->numero_documento)->first();
                         break;
             }
-
-            if($datos_documento != '')
-            {
-
-
-                $datos_orden['sucursales'] = $datos_documento->sucursales;
-                $datos_orden['proveedor'] = $datos_documento->proveedor;
-                $detalle_documento = $datos_documento->detalleOrdenes;
-
-                foreach ( $datos_documento->detalleOrdenes as $id_row => $detalle)
-                {
-                    $detalle_productos[$id_row]['sku'] = $detalle->sku->sku;
-                    $detalle_productos[$id_row]['sku_descripcion'] = $detalle->sku->descripcion;
-                    $detalle_productos[$id_row]['upc'] = $detalle->upc['upc'];
-                    $detalle_productos[$id_row]['nombre_cliente'] = $detalle->cliente['nombre_comercial'];
-                    $detalle_productos[$id_row]['nombre_proyecto'] = $detalle->proyecto['proyecto'];
-                    $detalle_productos[$id_row]['cantidad'] = $detalle->cantidad;
-                    $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($entity->fk_id_tipo_documento,$entity->numero_documento,$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_orden_detalle);
-                    $detalle_productos[$id_row]['lote'] = $detalle->entradaDetalle['lote'];
-                    $detalle_productos[$id_row]['fecha_caducidad'] = $detalle->entradaDetalle['fecha_caducidad'];
-                }
-
-                $data = [
-                    'datos_documento' => $datos_orden ,
-                    'detalle_documento' => $detalle_documento,
-                    'dato_entrada'=>$datos_documento,
-                    'detalle_entrada'=>$detalle_productos];
-
-            }
-            else
-            {
-                $data = [];
-            }
-
-            return $data ;
         }
 
-//        return [
-////            'tipo_documento' => TiposDocumentos::pluck('nombre_documento','id_tipo_documento')->sortBy('nombre_documento')->prepend('Selecciona una opcion...',''),
-////            'productos_entrada' =>  $productos_entrada,
-//        ];
+        if($datos_documento != '')
+        {
+            $datos_orden['sucursales'] = $datos_documento->sucursales;
+            $datos_orden['proveedor'] = $datos_documento->proveedor;
+            $detalle_documento = $datos_documento->detalleOrdenes;
+
+            foreach ( $datos_documento->detalleOrdenes as $id_row => $detalle)
+            {
+                $detalle_productos[$id_row]['sku'] = $detalle->sku->sku;
+                $detalle_productos[$id_row]['sku_descripcion'] = $detalle->sku->descripcion;
+                $detalle_productos[$id_row]['upc'] = $detalle->upc['upc'];
+                $detalle_productos[$id_row]['nombre_cliente'] = $detalle->cliente['nombre_comercial'];
+                $detalle_productos[$id_row]['nombre_proyecto'] = $detalle->proyecto['proyecto'];
+                $detalle_productos[$id_row]['cantidad'] = $detalle->cantidad;
+                $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($entity->fk_id_tipo_documento,$entity->numero_documento,$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_orden_detalle);
+                $detalle_productos[$id_row]['lote'] = $detalle->entradaDetalle['lote'];
+                $detalle_productos[$id_row]['fecha_caducidad'] = $detalle->entradaDetalle['fecha_caducidad'];
+            }
+
+            $data = [
+                'datos_documento' => $datos_orden ,
+                'detalle_documento' => $detalle_documento,
+                'dato_entrada'=>$datos_documento,
+                'detalle_entrada'=>$detalle_productos];
+
+        }
+        else
+        {
+            $data = [];
+        }
+
+        return $data ;
     }
 
     public function create($company, $attributes =[])

@@ -227,7 +227,7 @@ class SolicitudesController extends ControllerBase
         }
     }
 
-    public function destroy(Request $request, $company, $idOrIds)
+    public function destroy(Request $request, $company, $idOrIds, $attributes = [])
     {
         if (!is_array($idOrIds)) {
             $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)

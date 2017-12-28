@@ -86,7 +86,7 @@
                                             <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                                 Cargando datos... <i class="material-icons align-middle loading">cached</i>
                                             </div>
-    										{{Form::cSelectWithDisabled('* Clave cliente producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','disabled'=>empty($productos),'data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])}}
+    										{{Form::cSelectWithDisabled('* Clave producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','disabled'=>empty($productos),'data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])}}
     									</div>
     									<div class="form-group input-field col-md-5 col-sm-6">
                                             <div id="loadingfk_id_upc" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
@@ -111,17 +111,12 @@
         										</div>
         										<div class="form-goup col-sm-2"></div>
         										<div class="form-goup col-sm-8">
-        											{{ Form::cFile(null, 'file_xlsx',['accept'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel','data-url'=>companyAction('loadLayoutProductosProyectos')]) }}
+        											{{ Form::cFile(null, 'file_xlsx',['accept'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel','data-url'=>companyAction('importarProductos')]) }}
         										</div>
         										<div class="form-goup col-sm-2">
         											<div style="display:none;" id="campo_moneda">
         												{{ Form::cSelectWithDisabled(null,'relations[has][productos][$row_id][fk_id_moneda]', $monedas ?? [],['class'=>'fk_id_moneda']) }}
         											</div>
-        										</div>
-        									</div>
-    										<div class="col-sm-12 text-center mt-3">
-        										<div class="sep sepBtn">
-    												<button id="agregarProducto" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
         										</div>
         									</div>
     									</div>
@@ -143,8 +138,8 @@
     						<thead>
     						<tr>
     							<th>Cantidad</th>
-    							<th>Clave cliente producto</th>
-    							<th>Descripción clave</th>
+    							<th>Clave producto</th>
+    							<th>Descripción Producto</th>
     							<th>UPC</th>
     							<th>Descripción UPC</th>
     							<th>Precio Unitario</th>
@@ -156,46 +151,31 @@
                             <div class="w-100 h-100 text-center text-white align-middle loadingData loadingtabla" style="display: none;">
                                 Cargando datos... <i class="material-icons align-middle loading">cached</i>
                             </div>
-    						@if( isset( $data->detalles ) )
+    						@if(isset($data->detalle))
     							@foreach( $data->detalle->where('eliminar',0) as $row=>$detalle)
     								<tr id="{{$detalle->id_proyecto_producto}}">
     									<td>
     										{{ Form::hidden('relations[has][detalle]['.$row.'][index]',$row,['class'=>'index']) }}
     										{{ Form::hidden('relations[has][detalle]['.$row.'][id_pedido_detalle]',$detalle->id_pedido_detalle) }}
-    										{{$detalle->claveClienteProducto->clave_producto_cliente}}
+    										{{ $detalle->cantidad }}
     									</td>
     									<td>
-    										{{$detalle->claveClienteProducto->sku->descripcion_corta}}
+    										{{ $detalle->clavecliente->clave_producto_cliente }}
     									</td>
     									<td>
-    										{{$detalle->upc->upc ?? 'Sin UPC'}}
+    										{{ $detalle->clavecliente->descripcion }}
+    									</td>
+    									<td>
+    										{{$detalle->upc->upc ?? ''}}
     									</td>
     									<td>
     										{{$detalle->upc->descripcion ?? ''}}
     									</td>
     									<td>
-    										{{ Form::text('relations[has][detalle]['.$row.'][prioridad]',$detalle->prioridad,['class'=>'form-control prioridad','maxlength'=>'2']) }}
+    										{{ $detalle->precio_unitario }}
     									</td>
     									<td>
-    										{{ Form::text('relations[has][detalle]['.$row.'][cantidad]', $detalle->cantidad,['class'=>'form-control cantidad','maxlength'=>'3']) }}
-    									</td>
-    									<td>
-    										{{ Form::text('relations[has][detalle]['.$row.'][precio_sugerido]',number_format($detalle->precio_sugerido,2),['class'=>'form-control precio_sugerido','maxlength'=>'13']) }}
-    									</td>
-    									<td>
-    										{{ Form::select('relations[has][detalle]['.$row.'][fk_id_moneda]', $monedas ?? [], $detalle->fk_id_moneda, ['class'=>'form-control custom-select fk_id_moneda']) }}
-    									</td>
-    									<td>
-    										{{ Form::text('relations[has][detalle]['.$row.'][maximo]', $detalle->maximo, ['class'=>'form-control maximo','maxlength'=>'4']) }}
-    									</td>
-    									<td>
-    										{{ Form::text('relations[has][detalle]['.$row.'][minimo]', $detalle->minimo, ['class'=>'form-control minimo','maxlength'=>'4']) }}
-    									</td>
-    									<td>
-    										{{ Form::text('relations[has][detalle]['.$row.'][numero_reorden]', $detalle->numero_reorden, ['class'=>'form-control numero_reorden','maxlength'=>'4']) }}
-    									</td>
-    									<td>
-    										{{ Form::cCheckbox('','relations[has][detalle]['.$row.'][activo]',[!empty($detalle->activo)?'checked':'']) }}
+    										{{ $detalle->total }}
     									</td>
     									<td>
     									@if(Route::currentRouteNamed(currentRouteName('edit')))

@@ -7,7 +7,7 @@
 		$(document).ready(function() {
         	$("#primer_numero").on('change',function(){
             	var primero = parseInt($("#primer_numero").val());
-        		$("#numero_siguiente").val(primero);
+        		$("#siguiente_numero").val(primero);
         		$("#ultimo_numero").attr('min',primero+1);
         	});
         });
@@ -30,7 +30,7 @@
         {{ Form::cNumber('Ultimo Numero','ultimo_numero') }}
     </div>
     <div class="form-group col-md-4 col-lg-2">
-        {{ Form::cNumber('Siguiente Numero','numero_siguiente',['readonly'=>true]) }}
+        {{ Form::cNumber('Siguiente Numero','siguiente_numero',['readonly'=>true]) }}
     </div>
     <div class="form-group col-md-4 col-lg-2">
         {{ Form::cText('Sufijo','sufijo', null) }}

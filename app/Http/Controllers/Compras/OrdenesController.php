@@ -265,7 +265,7 @@ class OrdenesController extends ControllerBase
 		}
 	}
 
-	public function destroy(Request $request, $company, $idOrIds,$attributes = [])
+	public function destroy(Request $request, $company, $idOrIds, $attributes = [])
 	{
 	    if($request->url() != companyAction('Compras\OrdenesController@destroyDetail')){
             if (!is_array($idOrIds)) {

@@ -8,49 +8,32 @@
   <div class="col-sm-12">
     <h5>Datos generales</h5>
     <div class="row">
-      <div class="col-md-3 col-sm-6 col-12">
+      <div class="col-md-6 col-sm-12">
         <div class="form-group">
-          {{ Form::cSelect('* Localidades','fk_id_localidad', $localidades ?? [],[
-            'data-url' => companyAction('HomeController@index').'/administracion.localidades/api',
-            'style' => 'width:100%;',
-            'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
-          ]) }}
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6 col-12">
-        <div class="form-group">
-        <div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-          Cargando datos... <i class="material-icons align-middle loading">cached</i>
-        </div>
-          {{ Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [],[
+          {{ Form::cSelect('* Sucursales','fk_id_sucursal', $sucursales ?? [],[
             'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',
             'style' => 'width:100%;',
             'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
           ]) }}
         </div>
       </div>
-      <div class="col-md-3 col-sm-6 col-12">
+      <div class="col-md-6 col-sm-12">
         <div class="form-group">
         <div id="loadingalmacenes" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-          Cargando datos... <i class="material-icons align-middle loading">cached</i>
+          Cargando almacenes... <i class="material-icons align-middle loading">cached</i>
         </div>
-          {{ Form::cSelect('* Almacén','fk_id_almacen', $almacenes ?? [],[
+          {{ Form::cSelect('* Almacenes','fk_id_almacen', $almacenes ?? [],[
             'data-url' => companyAction('HomeController@index').'/inventarios.almacenes/api',
             'style' => 'width:100%;',
             'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
           ]) }}
         </div>
       </div>
-      <div class="col-md-3 col-sm-6 col-12">
+      <div class="col-12">
         <div class="form-group">
-        <div id="loadingubicaciones" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-          Cargando datos... <i class="material-icons align-middle loading">cached</i>
-        </div>
-          {{ Form::cSelect('* Ubicación','fk_id_ubicacion', $ubicaciones ?? [],[
-            'data-url' => companyAction('HomeController@index').'/inventarios.ubicaciones/api',
-            'style' => 'width:100%;',
-            'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
-          ]) }}
+          {{ Form::hidden(Auth::id()) }}
+          {{ Form::hidden($fechaActual) }}
+          {{ Form::hidden('total_productos','0', ['id'=>'total_productos']) }}
         </div>
       </div>
     </div>
@@ -64,10 +47,25 @@
         <form id="overallForm">
         <fieldset id="detalle-form">
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-6 col-sm-12">
             <div class="form-group">
-              {{ Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [],[
-                'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',
+            <div id="loadingskus" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+              Cargando sku(s)... <i class="material-icons align-middle loading">cached</i>
+            </div>
+              {{ Form::cSelect('* SKU','fk_id_sku', $skus ?? [],[
+                'data-url' => companyAction('HomeController@index').'/inventarios.stock/api',
+                'style' => 'width:100%;',
+                'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
+              ]) }}
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+            <div id="loadingupcs" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+              Cargando upc(s)... <i class="material-icons align-middle loading">cached</i>
+            </div>
+              {{ Form::cSelect('* UPC(s)','fk_id_upc', $upcs ?? [],[
+                'data-url' => companyAction('HomeController@index').'/inventarios.stock/api',
                 'style' => 'width:100%;',
                 'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
               ]) }}
@@ -89,16 +87,18 @@
         <table id="factConcepts" class="table table-responsive-sm table-striped table-hover">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Folio</th>
-              <th>Tipo</th>
-              <th>Subtotal</th>
-              <th>IVA(%)</th>
-              <th>Total</th>
+              <th>SKU</th>
+              <th>UPC(s)</th>
+              <th>Lote</th>
+              <th>Fecha Caducidad</th>
+              <th>Almacen/Ubicación actual</th>
+              <th>Stock o cantidad actual</th>
+              <th>Nueva Ubicación</th>
+              <th>Cantidad a mover</th>
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody id="detalle-form-body">
+          <tbody id="detalle-form-body" class="no-data">
             {{-- Si está en edit o show por cada registro $data->detalle as $detalle--}}
 {{--             @if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
               @foreach($data->detalle->where('eliminar',0) as $row => $detalle)
@@ -130,11 +130,10 @@
 @parent
 	<script type="text/javascript">
     // Variables para tomar los datos relacionados
-  	var js_almacen = '{{ $almacen_js ?? '' }}';
-  	var js_sucursal = '{{ $sucursal_js ?? '' }}';
-    var js_ubicacion = '{{ $ubicacion_js ?? '' }}';
+    var js_almacen = '{{ $almacen_js ?? '' }}'
+    var js_sku = '{{ $sku_js ?? '' }}'
   </script>
-	<script src="{{ asset('js/stock.js') }}"></script>
+	<script src="{{ asset('js/movimiento_almacen.js') }}"></script>
 @endsection
 
 {{-- DONT DELETE --}}

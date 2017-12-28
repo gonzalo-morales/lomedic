@@ -46,7 +46,7 @@ class PagosController extends ControllerBase
         return parent::store($request, $company);
     }
 
-    public function destroy(Request $request, $company, $idOrIds)
+    public function destroy(Request $request, $company, $idOrIds, $attributes = [])
     {
         DB::beginTransaction();
         $isSuccess = $this->entity->where($this->entity->getKeyName(), [$idOrIds])->update(['eliminar' => 't','activo'=>'f']);

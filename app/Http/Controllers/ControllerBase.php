@@ -20,13 +20,12 @@ class ControllerBase extends Controller
 
     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Http\Response
      */
     public function index($company, $attributes = [])
     {
         # ¿Usuario tiene permiso para ver?
-        //		$this->authorize('view', $this->entity);
+        //$this->authorize('view', $this->entity);
 
         # Log
         $this->log('index');
@@ -76,13 +75,12 @@ class ControllerBase extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
      * @return \Illuminate\Http\Response
      */
     public function create($company, $attributes =[])
     {
         # ¿Usuario tiene permiso para crear?
-        //		$this->authorize('create', $this->entity);
+        //$this->authorize('create', $this->entity);
 
         $data = $this->entity->getColumnsDefaultsValues();
         $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
@@ -95,14 +93,13 @@ class ControllerBase extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $company)
     {
         # ¿Usuario tiene permiso para crear?
-        //		$this->authorize('create', $this->entity);
+        //$this->authorize('create', $this->entity);
 
         $request->request->set('activo',!empty($request->request->get('activo')));
 
@@ -144,14 +141,13 @@ class ControllerBase extends Controller
 
     /**
      * Display the specified resource
-     *
      * @param  integer $id
      * @return \Illuminate\Http\Response
      */
     public function show($company, $id, $attributes =[])
     {
         # ¿Usuario tiene permiso para ver?
-        //		$this->authorize('view', $this->entity);
+        //$this->authorize('view', $this->entity);
         # Log
         $this->log('show', $id);
 
@@ -173,23 +169,19 @@ class ControllerBase extends Controller
             if (request()->with) {
                 $data->load(request()->with);
             }
-
-            // return $['some' => 'haha'];
-            //return ['success' => true, 'data' => $data->toArray()];
             return response()->json(['success' => true, 'data' => $data->toArray()])->header("Vary", "Accept");
         }
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
      * @param  integer $id
      * @return \Illuminate\Http\Response
      */
     public function edit($company, $id, $attributes =[])
     {
         # ¿Usuario tiene permiso para actualizar?
-        //		$this->authorize('update', $this->entity);
+        //$this->authorize('update', $this->entity);
 
         $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 
@@ -207,7 +199,6 @@ class ControllerBase extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  integer  $id
      * @return \Illuminate\Http\Response
@@ -215,7 +206,7 @@ class ControllerBase extends Controller
     public function update(Request $request, $company, $id)
     {
         # ¿Usuario tiene permiso para actualizar?
-        //		$this->authorize('update', $this->entity);
+        //$this->authorize('update', $this->entity);
 
         $request->request->set('activo',!empty($request->request->get('activo')));
 
@@ -241,11 +232,14 @@ class ControllerBase extends Controller
                             } else {
                                 $entity->{$relationName}()->update(['eliminar' => 1]);
                             }
+                            
+                            if(isset($relations['-1'])) {
+                                unset($relations['-1']);
+                            }
 
                             foreach ($relations as $relation) {
-                                if (array_key_exists($primaryKey, $relation) && $relation[$primaryKey] != -1) {
-                                    $entity->{$relationName}()->updateOrCreate([$primaryKey => $relation[$primaryKey]], $relation);
-                                }
+                                $primary_id = isset($relation[$primaryKey]) && $relation[$primaryKey] != 1 ? $relation[$primaryKey] : null;
+                                $entity->{$relationName}()->updateOrCreate([$primaryKey => $primary_id], $relation);
                             }
                         }
                     }
@@ -267,14 +261,13 @@ class ControllerBase extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
      * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $company, $idOrIds, $attributes = ['eliminar' => 't'])
     {
         # ¿Usuario tiene permiso para eliminar?
-        //		$this->authorize('delete', $this->entity);
+        //$this->authorize('delete', $this->entity);
 
         $idOrIds = !is_array($idOrIds) ? [$idOrIds] : $idOrIds;
 
@@ -320,7 +313,7 @@ class ControllerBase extends Controller
     public function destroyMultiple(Request $request, $company)
     {
         # ¿Usuario tiene permiso para eliminar?
-        //		$this->authorize('delete', $this->entity);
+        //$this->authorize('delete', $this->entity);
 
         # Shorthand
         if ($request->ids) return $this->destroy($request, $company, $request->ids);
@@ -336,7 +329,7 @@ class ControllerBase extends Controller
     public function export(Request $request, $company)
     {
         # ¿Usuario tiene permiso para exportar?
-        //		$this->authorize('export', $this->entity);
+        //$this->authorize('export', $this->entity);
 
         $colums = $this->entity->getlistColumns();
 
@@ -387,35 +380,27 @@ class ControllerBase extends Controller
             case 'index':
                 Logs::createLog($this->entity->getTable(), request()->company, null, 'index', null);
                 break;
-
             case 'show':
                 Logs::createLog($this->entity->getTable(), request()->company, $id, 'ver', null);
                 break;
-
             case 'store':
                 Logs::createLog($this->entity->getTable(), request()->company, $id, 'crear', 'Registro insertado');
                 break;
-
             case 'error_store':
                 Logs::createLog($this->entity->getTable(), request()->company, null, 'crear', 'Error al insertar');
                 break;
-
             case 'update':
                 Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', 'Registro actualizado');
                 break;
-
             case 'error_update':
                 Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', 'Error al editar');
                 break;
-
             case 'destroy':
                 Logs::createLog($this->entity->getTable(), request()->company, $id, 'eliminar', 'Registro eliminado');
                 break;
-
             case 'error_destroy':
                 Logs::createLog($this->entity->getTable(), request()->company, $id, 'eliminar', 'Error al eliminar');
                 break;
-
             default:
                 break;
         }
@@ -427,31 +412,24 @@ class ControllerBase extends Controller
             case 'store':
                 $message = ['type'=> 'toast_success', 'text' => 'Registro creado correctamente.'];
                 break;
-
             case 'error_store':
                 $message = ['type'=> 'toast_error', 'text' => 'No fue posible crear registro.'];
                 break;
-
             case 'update':
                 $message = ['type'=> 'toast_success', 'text' => 'Registro actualizado correctamente.'];
                 break;
-
             case 'error_update':
                 $message = ['type'=> 'toast_error', 'text' => 'No fue posible actualizar registro.'];
                 break;
-
             case 'destroy':
                 $message = ['type'=> 'toast_success', 'text' => 'Registro (s) eliminado correctamente.'];
                 break;
-
             case 'error_destroy':
                 $message = ['type'=> 'toast_error', 'text' => 'No fue posible eliminar registro (s).'];
                 break;
-
             default:
                 break;
         }
-
         return redirect(companyRoute('index'))->with('message', $message);
     }
 }
