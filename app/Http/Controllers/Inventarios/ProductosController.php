@@ -11,7 +11,7 @@ use App\Http\Models\Administracion\SubgrupoProductos;
 use App\Http\Models\Administracion\UnidadesMedidas;
 use App\Http\Models\Administracion\SeriesSkus;
 use App\Http\Models\Administracion\Impuestos;
-use App\Http\Models\Administracion\Familiasproductos;
+use App\Http\Models\Administracion\FamiliasProductos;
 use App\Http\Models\Administracion\PresentacionVenta;
 use App\Http\Models\SociosNegocio\TiposSocioNegocio;
 use App\Http\Models\Inventarios\Upcs;
@@ -75,7 +75,7 @@ class ProductosController extends ControllerBase
             'unidadmedida' => UnidadesMedidas::where('eliminar',0)->where('activo',1)->pluck('nombre','id_unidad_medida')->sortBy('nombre')->prepend('Selecciona una unidad de medida',''),
             'subgrupo' => collect($subgrupos ?? [])->prepend('Selecciona un subgrupo','')->toArray(),
             'impuesto' => Impuestos::where('eliminar',0)->where('activo',1)->pluck('impuesto','id_impuesto')->sortBy('impuesto')->prepend('Selecciona una opcion...',''),
-            'familia' => Familiasproductos::where('eliminar',0)->where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('Selecciona una familia...',''),
+            'familia' => FamiliasProductos::where('eliminar',0)->where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('Selecciona una familia...',''),
             'presentacionventa' => PresentacionVenta::where('eliminar',0)->where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('Selecciona una Presentacion de venta...',''),
             'sociosnegocio' => SociosNegocio::where('activo',1)->where('eliminar',0)->whereNotNull('fk_id_tipo_socio_compra')
                 ->pluck('nombre_comercial','id_socio_negocio')->sortBy('nombre_comercial')->prepend('Selecciona un Proveedor...',''),
