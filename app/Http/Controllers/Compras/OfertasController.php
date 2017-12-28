@@ -187,7 +187,7 @@ class OfertasController extends ControllerBase
 		}
 	}
 
-	public function destroy(Request $request, $company, $idOrIds)
+	public function destroy(Request $request, $company, $idOrIds, $attributes = [])
 	{
         if(!isset($request->ids)){
             if (!is_array($idOrIds)) {
