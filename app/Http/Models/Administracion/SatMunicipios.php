@@ -41,7 +41,7 @@ class SatMunicipios extends ModelBase
 	 * @var array
 	 */
 	protected $fields = [
-		'sat_municipio' => 'Código SAT del municipio',
+		'sat_municipio' => 'Código municipio',
 		'municipio' => 'Municipio',
 		'sat_estado' => 'Abreviatura Estado',
 		'activo_span' => 'Estatus'

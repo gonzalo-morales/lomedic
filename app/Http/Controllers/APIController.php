@@ -29,27 +29,21 @@ class APIController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
-	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index($company, $entity)
 	{
 		$str_json = '{'.Crypt::decryptString(request()->param_js).'}';
 		$param_array = request()->all();
-
-
 		$json = str_replace(array_keys($param_array),$param_array,$str_json);
 
 		$request = json_decode($json,true);
-
-	    // $request = request()->all();
 
 		# Obtenemos entidad
 		$entity = rescue(function() use ($entity) {
 			return resolve('App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', camel_case($entity)))));
 		});
         if ($entity) {
-
             # Select especific fields
 		    $entity = call_user_func_array([$entity, 'select'], $request['select'] ?? []);
 
@@ -86,9 +80,7 @@ class APIController extends Controller
 
 			# Limite
 			$entity->limit($request['limit'] ?? null);
-			#return $entity->toSql();
 
-			#
 			$collections = $entity->get();
 
 			# Pluck collection
@@ -110,7 +102,6 @@ class APIController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
-	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function create($company, $attributes =[])
@@ -119,7 +110,6 @@ class APIController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
-	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -129,7 +119,6 @@ class APIController extends Controller
 
 	/**
 	 * Display the specified resource
-	 *
 	 * @param  integer $id
 	 * @return \Illuminate\Http\Response
 	 */
@@ -139,7 +128,6 @@ class APIController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
-	 *
 	 * @param  integer $id
 	 * @return \Illuminate\Http\Response
 	 */
@@ -149,7 +137,6 @@ class APIController extends Controller
 
 	/**
 	 * Update the specified resource in storage.
-	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  integer  $id
 	 * @return \Illuminate\Http\Response
@@ -160,7 +147,6 @@ class APIController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
-	 *
 	 * @param  integer  $id
 	 * @return \Illuminate\Http\Response
 	 */
