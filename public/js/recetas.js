@@ -566,7 +566,7 @@ function eliminarFila(el)
 {
 
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 
     // $(a).closest('tr').remove();
     // if($('.medicine_detail tr').length <= 0)

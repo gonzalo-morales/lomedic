@@ -30,8 +30,6 @@ class RecetasController extends ControllerBase
 
     public function getDataView($entity = null)
     {
-
-
         return [
             'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo', 1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
             'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('Selecciona una opcion...', ''),
@@ -80,7 +78,10 @@ class RecetasController extends ControllerBase
         $skus = Productos::where('activo', '1')->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'LIKE', '%' . $term . '%')->orWhere('descripcion', 'LIKE', '%' . $term . '%')->get();
 
         foreach ($skus as $sku) {
-            $json[] = ['id' => (int)$sku->id_sku,
+            $json[] = [
+                'id' => (int)$sku->id_sku,
+                'fk_id_clave_cliente_producto' => $sku->clave_cliente_productos['id_clave_cliente_producto'],
+                'clave_cliente_producto' => $sku->clave_cliente_productos['clave_producto_cliente'],
                 'text' => $sku->descripcion,
                 'cantidad_presentacion' => $sku->clave_cliente_productos['cantidad_presentacion'],
                 'familia' => $sku->fk_id_familia,
