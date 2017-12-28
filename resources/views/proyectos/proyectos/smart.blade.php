@@ -2,6 +2,22 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
+<div id="confirmacion" class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Cambio de cliente</h5>
+			</div>
+			<div class="modal-body">
+				Recuerda que al cambiar el cliente se eliminarán los datos actuales del proyecto, tales como las licitaciones, contratos, productos, anexos y finanzas
+			</div>
+			<div class="modal-footer">
+				<button id="cancelarcambiocliente" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				<button id="confirmar" type="button" class="btn btn-primary">Guardar</button>
+			</div>
+		</div>
+	</div>
+</div>
     <h4>Datos del proyecto</h4>
     <div class="row">
 		<div class="form-group col-md-8 col-xs-12">
@@ -85,6 +101,7 @@
 							<span class="input-group-addon">%</span>
 						</div>
 					</div>
+					@if(Route::currentRouteNamed(currentRouteName('create')))
 					<div class="row col-md-12 text-center">
 						<div class="form-goup col-md-4 text-center">
 							<button type="button" data-url="{{companyAction('HomeController@index').'/Liciplus.licitaciones/api'}}" id="importar_liciplus" disabled class="btn btn-info btn-lg">LICIPLUS</button>
@@ -93,9 +110,10 @@
 							<button type="button" data-url="{{companyAction('HomeController@index').'/Liciplus.contratos/api'}}" id="importar_contratos" disabled class="btn btn-info btn-lg">Importar Contratos</button>
 						</div>
 						<div class="form-goup col-md-4 text-center">
-							<button type="button" data-url="#" id="importar_productos" disabled class="btn btn-info btn-lg">Importar Productos</button>
+							<button type="button" data-url="{{companyAction('HomeController@index').'/Liciplus.partidas/api'}}" id="importar_productos" disabled class="btn btn-info btn-lg">Importar Productos</button>
 						</div>
 					</div>
+					@endif
 				</div>
 			</div>
 			<div role="tabpanel" class="tab-pane fade" id="tab-contratos" aria-labelledby="contratos-tab">
@@ -215,20 +233,19 @@
     										</div>
     										<div class="form-goup col-sm-2">
     											<div style="display:none;" id="campo_moneda">
-    												{{ Form::cSelectWithDisabled(null,'relations[has][productos][$row_id][fk_id_moneda]', $monedas ?? [],['class'=>'fk_id_moneda']) }}
+    												{{ Form::cSelectWithDisabled(null,'relations[has][productos][$row_id][fk_id_moneda]', $monedas ?? [],['class'=>'fk_id_moneda'],['100'=>['selected']]) }}
     											</div>
     										</div>
     									</div>
 										<div class="col-sm-12 text-center mt-3">
     										<div class="sep sepBtn">
-												<button id="agregarProducto" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
+												<button id="agregarProducto" data-url="{{companyAction('Proyectos\ProyectosController@getClavesClientesProductos')}}" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
     										</div>
     									</div>
 									</div>
 								</div>
 							</fieldset>
 						</div>
-					</div>
 				@endif
 				<div class="card-body table-responsive">
 					<table class="table highlight" id="detalleProductos">
@@ -307,13 +324,14 @@
 						@endif
 						</tbody>
 					</table>
+					</div>
 				</div>
 			</div>
 
 			
 			<div role="tabpanel" class="tab-pane fade" id="tab-anexos" aria-labelledby="anexos-tab">
-				<div class="col-sm-12">
-            		<div class="card z-depth-1-half">
+				{{--<div class="col-sm-12">--}}
+            		<div class="card">
             			<div class="card-header">
     						<div class="row">
     							<div class="form-group col-md-6">
@@ -365,7 +383,7 @@
     						</table>
     					</div>
     				</div><!--/Here ends card-->
-    			</div>
+    			{{--</div>--}}
 			</div>
 			<div role="tabpanel" class="tab-pane fade" id="tab-finanzas" aria-labelledby="finanzas-tab">
 				<div class="row">
@@ -412,6 +430,7 @@
 		var licitacion_js = '{{$js_licitacion ?? ''}}';
 		var sucursales_js = '{{$js_sucursales ?? ''}}';
         var contratos_js = '{{$js_contratos ?? ''}}';
+        var partidas_js = '{{$js_partidas ?? ''}}'
 	</script>
 <!-- Resources -->
 <style>

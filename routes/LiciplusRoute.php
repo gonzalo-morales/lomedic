@@ -19,5 +19,6 @@ Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'liciplus', 'as' => 'liciplus.', 'middleware' => ['auth','share','csrf','password_expired']], function(){
         Route::resource('licitaciones', 'Liciplus\LicitacionesController');
         Route::resource('contratos','Liciplus\ContratosController');
+        Route::resource('partidas','Liciplus\PartidasController');
     });
 });

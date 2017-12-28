@@ -40,7 +40,7 @@ class SolicitudesPagosController extends ControllerBase
         ];
     }
 
-    public function destroy(Request $request, $company, $idOrIds)
+    public function destroy(Request $request, $company, $idOrIds,$attributes = [])
     {
         $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
             ->update(['fk_id_estatus_solicitud_pago' => 3,
