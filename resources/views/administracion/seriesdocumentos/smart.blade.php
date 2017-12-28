@@ -7,7 +7,7 @@
 		$(document).ready(function() {
         	$("#primer_numero").on('change',function(){
             	var primero = parseInt($("#primer_numero").val());
-        		$("#numero_siguiente").val(primero);
+        		$("#siguiente_numero").val(primero);
         		$("#ultimo_numero").attr('min',primero+1);
         	});
         });
