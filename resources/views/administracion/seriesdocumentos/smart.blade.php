@@ -30,7 +30,7 @@
         {{ Form::cNumber('Ultimo Numero','ultimo_numero') }}
     </div>
     <div class="form-group col-md-4 col-lg-2">
-        {{ Form::cNumber('Siguiente Numero','numero_siguiente',['readonly'=>true]) }}
+        {{ Form::cNumber('Siguiente Numero','siguiente_numero',['readonly'=>true]) }}
     </div>
     <div class="form-group col-md-4 col-lg-2">
         {{ Form::cText('Sufijo','sufijo', null) }}
