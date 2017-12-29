@@ -52,6 +52,11 @@ function companyAction($action = '', $params = [])
 	}
 }
 
+function ApiAction($action = '')
+{
+    return companyAction('HomeController@index')."/$action/api";
+}
+
 /**
  * Obtenemos accion de ruta actual
  * @param  string $action - Acción por la que reemplazar
