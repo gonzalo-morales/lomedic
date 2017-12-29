@@ -8,6 +8,12 @@ use DB;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\EstatusDocumentos;
+use App\Http\Models\Finanzas\CondicionesPago;
+use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Administracion\UsosCfdis;
+use App\Http\Models\Administracion\Certificados;
+use App\Http\Models\Administracion\MetodosPago;
+use App\Http\Models\Administracion\TiposComprobantes;
 
 class FacturasClientes extends ModelCompany
 {
@@ -61,6 +67,21 @@ class FacturasClientes extends ModelCompany
      * @var array
      */
     public $rules = [];
+    
+    public function empresa()
+    {
+        return $this->hasOne(Empresas::class,'id_empresa','fk_id_empresa');
+    }
+    
+    public function certificado()
+    {
+        return $this->hasOne(Certificados::class,'id_certificado','fk_id_certificado');
+    }
+    
+    public function usocfdi()
+    {
+        return $this->hasOne(UsosCfdis::class,'id_uso_cfdi','fk_id_uso_cfdi');
+    }
 
     public function sucursal()
     {
@@ -85,6 +106,21 @@ class FacturasClientes extends ModelCompany
     public function formapago()
     {
         return $this->hasOne(FormasPago::class,'id_forma_pago','fk_id_forma_pago');
+    }
+    
+    public function metodopago()
+    {
+        return $this->hasOne(MetodosPago::class,'id_metodo_pago','fk_id_metodo_pago');
+    }
+    
+    public function tipocomprobante()
+    {
+        return $this->hasOne(TiposComprobantes::class,'id_tipo_comprobante','fk_id_tipo_comprobante');
+    }
+    
+    public function condicionpago()
+    {
+        return $this->hasOne(CondicionesPago::class,'id_condicion_pago','fk_id_condicion_pago');
     }
 
     public function detalle(){

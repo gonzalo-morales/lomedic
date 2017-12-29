@@ -62,11 +62,6 @@ class FacturasClientesDetalle extends ModelCompany
         return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_factura');
     }
     
-    public function tipodocumento()
-    {
-        return $this->hasOne(TiposDocumentos::class,'id_tipo_documento','fk_id_tipo_documento');
-    }
-    
     public function claveproducto()
     {
         return $this->hasOne(ClavesProductosServicios::class,'id_clave_producto_servicio','fk_id_clave_producto_servicio');
@@ -84,7 +79,7 @@ class FacturasClientesDetalle extends ModelCompany
     
     public function clavecliente()
     {
-        return $this->hasOne(ClaveClienteProductos::class,'id_clave_cliente','fk_id_clave_cliente');
+        return $this->hasOne(ClaveClienteProductos::class,'id_clave_cliente_producto','fk_id_clave_cliente');
     }
     
     public function unidadmedida()
@@ -92,7 +87,7 @@ class FacturasClientesDetalle extends ModelCompany
         return $this->hasOne(ClavesUnidades::class,'id_clave_unidad','fk_id_unidad_medida');
     }
     
-    public function impuesto()
+    public function impuestos()
     {
         return $this->hasOne(Impuestos::class,'id_impuesto','fk_id_impuesto');
     }

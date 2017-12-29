@@ -256,7 +256,7 @@ class EmpresasController extends ControllerBase
 	        if($type == 'cer')
 	           $PemContent =  '-----BEGIN CERTIFICATE-----'.PHP_EOL.chunk_split(base64_encode($FileContent), 64, PHP_EOL).'-----END CERTIFICATE-----'.PHP_EOL;
 	        elseif($type == 'key')
-	        $PemContent =  openssl_pkey_get_private('-----BEGIN PRIVATE KEY-----'.PHP_EOL.chunk_split(base64_encode($FileContent), 64, PHP_EOL).'-----END PRIVATE KEY-----'.PHP_EOL);
+	           $PemContent =  openssl_pkey_get_private('-----BEGIN PRIVATE KEY-----'.PHP_EOL.chunk_split(base64_encode($FileContent), 64, PHP_EOL).'-----END PRIVATE KEY-----'.PHP_EOL);
     	    
 	        return $PemContent;
 	    }
