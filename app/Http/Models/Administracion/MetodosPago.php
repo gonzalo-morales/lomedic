@@ -10,7 +10,7 @@ class MetodosPago extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'sat_cat_metodos_pago';
+	protected $table = 'maestro.sat_cat_metodos_pago';
 
 	/**
 	 * The primary key of the table

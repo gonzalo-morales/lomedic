@@ -67,11 +67,12 @@ $(document).ready(function () {
 		$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 		
 		if(key.length == 0 | cer.length == 0) {
-			$.toaster({priority:'danger',title:'Â¡Error!',message:'Selecciona los archivos key y cer solicitados.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Selecciona los archivos key y cer solicitados.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			var formData = new FormData();
             formData.append('cer',cer[0]);
+            formData.append('key',key[0]);
             
             $.ajax({
                 url: url,
@@ -85,6 +86,7 @@ $(document).ready(function () {
                 	if(data){
                 		rfc_cer = data.subject.x500UniqueIdentifier.substr(0,13).trim();
                 		cadena_cer = data.cadena_cer;
+                		cadena_key = data.cadena_key;
                 		no_cer = converSerial(data.serialNumberHex);
                 		
                 		f = data.validFrom;
@@ -95,11 +97,11 @@ $(document).ready(function () {
                 		
                 		
                 		if(rfc !== rfc_cer)
-                			$.toaster({priority:'danger',title:'Â¡Error!',message:'El certificado, no coincide con el rfc de la empresa.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'El certificado, no coincide con el rfc de la empresa.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 		else if(to < Date.now())
-                			$.toaster({priority:'danger',title:'Â¡Error!',message:'El certificado ya expiro.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'El certificado ya expiro.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 		else if(no_certificados.indexOf(no_cer) !== -1)
-                			$.toaster({priority:'danger',title:'Â¡Error!',message:'El certificado seleccionado ya fue agregado anteriormente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'El certificado seleccionado ya fue agregado anteriormente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 		else {
                 			$('#tCertificados').append('<tr>'+
             					'<td>' + key[0].name + ' <input id="key-'+row_id+'" class="file-anexos" name="certificados['+row_id+'][key-file]" type="file" style="display:none"></td>'+
@@ -110,17 +112,18 @@ $(document).ready(function () {
             					'<td>'+
             						'<input name="certificados['+row_id+'][password]" type="hidden" value="'+pass+'">'+
 	            					'<input name="certificados['+row_id+'][cadena_cer]" type="hidden" value="'+cadena_cer+'">'+
+	            					'<input name="certificados['+row_id+'][cadena_key]" type="hidden" value="'+cadena_key+'">'+
 	            					'<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCertificado(this)"> <i class="material-icons">delete</i></button>'+
 	            				'</td>'+
             				'</tr>');
                 			$('#key-'+row_id).prop('files',key);
                 			$('#certificado-'+row_id).prop('files',cer);
-            				$.toaster({priority:'success',title:'Â¡Correcto!',message:'El certificado se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            				$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'El certificado se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 		}
                 	}
                 },
                 error: function (jqXHR, exception) {
-                    $.toaster({priority:'danger',title:'Â¡Error '+jqXHR.status+'!',message:'Ha ocurrido un error al tratar de cargar el certificado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                    $.toaster({priority:'danger',title:'Ã‚Â¡Error '+jqXHR.status+'!',message:'Ha ocurrido un error al tratar de cargar el certificado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 }
             });
 		}
@@ -129,7 +132,7 @@ $(document).ready(function () {
 
 function borrarCertificado(el) {
 	$(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado el certificado correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado el certificado correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function converSerial(serial) {

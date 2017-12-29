@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class TiposComprobantes extends ModelBase
 {
-    protected $table = 'sat_cat_tipos_comprobantes';
+    protected $table = 'maestro.sat_cat_tipos_comprobantes';
 
     /**
      * The primary key of the table

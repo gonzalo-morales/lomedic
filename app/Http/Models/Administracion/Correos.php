@@ -41,7 +41,7 @@ class Correos extends ModelBase
 	protected $fields = [
 		'correo' => 'Correo',
 		'empresa.nombre_comercial' => 'Empresa',
-		'usuario.usuario' => 'Usuario',
+		'usuario.nombre_corto' => 'Usuario',
 		'activo_span' => 'Estatus',
 	];
 
