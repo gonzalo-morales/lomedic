@@ -307,7 +307,7 @@
     						{{$detalle->descuento}}
     					</td>
     					<td>
-    						{{$detalle->impuesto->impuesto}}
+    						{{$detalle->impuestos->impuesto}}
     					</td>
     					<td>
     						{{Form::cText('','cuenta_predial')}}

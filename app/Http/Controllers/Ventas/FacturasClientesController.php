@@ -42,65 +42,6 @@ class FacturasClientesController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
-        if(!empty($entity)) {
-        
-        $cfdi = new CFDI([
-            'Serie' => $entity->serie,
-            'Folio' => $entity->folio,
-            'Fecha' => str_replace(' ','T',$entity->fecha_timbrado),
-            'FormaPago' => $entity->formapago->forma_pago,
-            'NoCertificado' => $entity->certificado->no_certificado,
-            'CondicionesDePago' => $entity->condicionpago->condicion_pago,
-            'Subtotal' => $entity->subtotal,
-            'Descuento' => $entity->descuento,
-            'Moneda' => $entity->moneda->moneda,
-            'TipoCambio' => $entity->tipo_cambio,
-            'Total' => $entity->total,
-            'TipoDeComprobante' => $entity->tipocomprobante->tipo_comprobante,
-            'MetodoPago' => $entity->metodopago->metodo_pago,
-            'LugarExpedicion' => '64000',
-        ], $entity->certificado->cadena_cer, $entity->certificado->cadena_key);
-        
-        $cfdi->add(new Emisor([
-            'Rfc' => $entity->empresa->rfc,
-            'Nombre' => $entity->empresa->razon_social,
-            'RegimenFiscal' => $entity->empresa->fk_id_regimen_fiscal,
-        ]));
-        
-        $cfdi->add(new Receptor([
-            'Rfc' =>  $entity->cliente->rfc,
-            'Nombre' => $entity->cliente->razon_social,
-            'ResidenciaFiscal' => 'MXN',
-            'NumRegIdTrib' => '121585958',
-            'UsoCFDI' => $entity->usocfdi->uso_cfdi,
-        ]));
-        
-        foreach ($entity->detalle as $row) {
-            $concepto = new Concepto([
-                'ClaveProdServ' => $row->claveproducto->clave_producto_servicio,
-                'NoIdentificacion' => $row->clavecliente->clave_producto_cliente,
-                'Cantidad' => $row->cantidad,
-                'ClaveUnidad' => $row->unidadmedida->clave_unidad,
-                'Unidad' => $row->unidadmedida->descripcion,
-                'Descripcion' => $row->descripcion,
-                'ValorUnitario' => $row->precio_unitario,
-                'Importe' => $row->importe,
-                'Descuento' => $row->descuento,
-            ]);
-            
-            $concepto->add(new Retencion([
-                'Impuesto' => $row->impuestos->numero_impuesto,
-                'Importe' => $row->impuesto,
-            ]));
-            
-            $cfdi->add($concepto);
-        }
-        
-        #file_put_contents(base_path().'/prueba.xml',$cfdi->getXML());
-        
-        dump($cfdi->getXML());
-        dd();
-        }
         return [
             'empresas' => Empresas::where('activo',1)->where('eliminar',0)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('Selecciona una opcion...',''),
             'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa",$id_empresa]}, {"where": ["eliminar",0]}], "limit": "1"'),
@@ -131,6 +72,70 @@ class FacturasClientesController extends ControllerBase
             'tiposrelacion' => TiposRelacionesCfdi::selectRaw("CONCAT(tipo_relacion,' - ',descripcion) as tipo_relacion, id_sat_tipo_relacion")->where('activo',1)->where('eliminar',0)->where('factura',1)->orderBy('tipo_relacion')->pluck('tipo_relacion','id_sat_tipo_relacion')->prepend('Selecciona una opcion...',''),
             'facturasrelacionadas' =>FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_factura")->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_factura')->prepend('Selecciona una opcion...',''),
         ];
+    }
+    
+    
+    public function generarXml($company,Request $request)
+    {
+        if(!empty($entity)) {
+            
+             $cfdi = new CFDI([
+             'Serie' => $entity->serie,
+             'Folio' => $entity->folio,
+             'Fecha' => str_replace(' ','T',$entity->fecha_timbrado),
+             'FormaPago' => $entity->formapago->forma_pago,
+             'NoCertificado' => $entity->certificado->no_certificado,
+             'CondicionesDePago' => $entity->condicionpago->condicion_pago,
+             'Subtotal' => $entity->subtotal,
+             'Descuento' => $entity->descuento,
+             'Moneda' => $entity->moneda->moneda,
+             'TipoCambio' => $entity->tipo_cambio,
+             'Total' => $entity->total,
+             'TipoDeComprobante' => $entity->tipocomprobante->tipo_comprobante,
+             'MetodoPago' => $entity->metodopago->metodo_pago,
+             'LugarExpedicion' => '64000',
+             ], $entity->certificado->cadena_cer, $entity->certificado->cadena_key);
+             
+             $cfdi->add(new Emisor([
+             'Rfc' => $entity->empresa->rfc,
+             'Nombre' => $entity->empresa->razon_social,
+             'RegimenFiscal' => $entity->empresa->fk_id_regimen_fiscal,
+             ]));
+             
+             $cfdi->add(new Receptor([
+             'Rfc' =>  $entity->cliente->rfc,
+             'Nombre' => $entity->cliente->razon_social,
+             'ResidenciaFiscal' => 'MXN',
+             'NumRegIdTrib' => '121585958',
+             'UsoCFDI' => $entity->usocfdi->uso_cfdi,
+             ]));
+             
+             foreach ($entity->detalle as $row) {
+             $concepto = new Concepto([
+             'ClaveProdServ' => $row->claveproducto->clave_producto_servicio,
+             'NoIdentificacion' => $row->clavecliente->clave_producto_cliente,
+             'Cantidad' => $row->cantidad,
+             'ClaveUnidad' => $row->unidadmedida->clave_unidad,
+             'Unidad' => $row->unidadmedida->descripcion,
+             'Descripcion' => $row->descripcion,
+             'ValorUnitario' => $row->precio_unitario,
+             'Importe' => $row->importe,
+             'Descuento' => $row->descuento,
+             ]);
+             
+             $concepto->add(new Retencion([
+             'Impuesto' => $row->impuestos->numero_impuesto,
+             'Importe' => $row->impuesto,
+             ]));
+             
+             $cfdi->add($concepto);
+             }
+             
+             #file_put_contents(base_path().'/prueba.xml',$cfdi->getXML());
+             
+             dump($cfdi->getXML());
+             dd();
+        }
     }
 
     /*
