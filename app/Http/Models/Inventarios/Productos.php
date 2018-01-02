@@ -99,4 +99,8 @@ class Productos extends ModelCompany
     {
         return $this->belongsTo(Productos::class, 'fk_id_sku', 'id_sku');
     }
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class, 'id_sku', 'fk_id_sku');
+    }
 }

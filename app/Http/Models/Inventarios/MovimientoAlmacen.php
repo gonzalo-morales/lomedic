@@ -6,6 +6,7 @@ use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\Inventarios\MovimientoAlmacenDetalle;
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Administracion\Usuarios;
 
 class MovimientoAlmacen extends ModelCompany
 {
@@ -31,7 +32,6 @@ class MovimientoAlmacen extends ModelCompany
 		'fk_id_usuario',
 		'fk_id_sucursal',
 		'fk_id_almacen',
-		'fecha_operacion',
 		'total_productos'
 	];
 
@@ -40,11 +40,11 @@ class MovimientoAlmacen extends ModelCompany
 	 * @var array
 	 */
 	protected $fields = [
-		'fk_id_usuario' => 'Usuario',
-		'fk_id_sucursal' => 'Sucursal',
-		'fk_id_almacen' => 'Almacen',
+		'usuario.nombre_corto' => 'Usuario',
+		'sucursal.sucursal' => 'Sucursal',
+		'almacen.almacen' => 'Almacen',
 		'fecha_operacion' => 'Fecha que se registró el cambio',
-		'total_productos' => 'Cantidad de productos'
+		'total_productos' => 'Cantidad de productos en que se realizó cambio'
 	];
 
 	/**
@@ -81,7 +81,6 @@ class MovimientoAlmacen extends ModelCompany
 	{
 		return $this->hasMany(MovimientoAlmacenDetalle::class, 'fk_id_movimiento', 'id_movimiento');
 	}
-
 	/**
 	 * Obtenemos sucursal relacionadas a inventario
 	 * @return @belongsTo
@@ -98,5 +97,8 @@ class MovimientoAlmacen extends ModelCompany
 	{
 		return $this->belongsTo(Usuarios::class, 'fk_id_usuario', 'id_usuario');
 	}
-
+	public function almacen()
+	{
+		return $this->belongsTo(Almacenes::class, 'fk_id_almacen', 'id_almacen');
+	}
 }

@@ -26,15 +26,12 @@ class MovimientoAlmacenDetalle extends ModelCompany
      */
     protected $fillable = [
         'fk_id_stock',
-        'fk_id_almacen',
-        'fk_id_ubicacion',
-        'fk_id_upc',
         'fk_id_sku',
+        'fk_id_upc',
         'lote',
         'fecha_caducidad',
+        'fk_id_ubicacion',
         'stock',
-        'costo',
-        'apartados',
         'activo'
     ];
 
@@ -62,32 +59,20 @@ class MovimientoAlmacenDetalle extends ModelCompany
      */
     // public $niceNames = [];
 
-    // /**
-    //  * Obtenemos sku relacionado
-    //  * @return @belongsTo
-    //  */
-    // public function sku()
-    // {
-    //     return $this->belongsTo(Productos::class, 'fk_id_sku', 'id_sku');
-    // }
-
-    // /**
-    //  * Obtenemos upc relacionado
-    //  * @return @belongsTo
-    //  */
-    // public function upc()
-    // {
-    //     return $this->belongsTo(Upcs::class, 'fk_id_upc', 'id_upc');
-    // }
-
-    // /**
-    //  * Obtenemos almacen relacionado
-    //  * @return @belongsTo
-    //  */
-    // public function ubicacion()
-    // {
-    //     return $this->belongsTo(Ubicaciones::class, 'fk_id_ubicacion', 'id_ubicacion');
-    // }
-
-
+    public function tipo()
+    {
+        return $this->hasOne(MovimientoAlmacen::class,'id_movimiento','fk_id_movimiento');
+    }
+    public function sku()
+    {
+        return $this->hasOne(Productos::class, 'id_sku', 'fk_id_sku');
+    }  
+    public function upcs()
+    {
+        return $this->hasOne(Upcs::class,'id_upc','fk_id_upc');
+    }
+    public function ubicacion()
+    {
+        return $this->hasOne(Ubicaciones::class,'id_ubicacion','fk_id_ubicacion');
+    }
 }

@@ -71,7 +71,7 @@ class DetalleGastosRelacionViajes extends ModelBase
 
     public function tipo()
     {
-        return $this->hasOne(ConceptosViaje::class,'id_concepto','fk_id_tipo');
+        return $this->hasOne(GastosViaje::class,'id_concepto','fk_id_tipo');
     }
     public function impuestos()
     {

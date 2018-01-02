@@ -1,11 +1,106 @@
+var stock = [];
 $(document).ready(function () {
+     /*---------------ESTO ES EN EL CASO DE QUE ESTÉ EN EDITAR---------------*/
+  if(window.location.href.toString().indexOf('editar') > -1){
+    var idalmacen = $('#fk_id_almacen option:selected').val();
+    $.get($('#fk_id_almacen').data('url2'),{'param_js':js_ubicacion,$fk_id_almacen:idalmacen}, function(data){
+      var options = [];
+      /* Si hay resultados... */
+      if (data.length > 0) {
+        options.push('<option value="0" selected disabled>Selecciona la Ubicación...</option>'); 
+        for (var i = 0; i < data.length; i++) {
+          options.push('<option value="' + data[i].id_ubicacion + '">' + data[i].ubicacion + '</option>');
+        };
+      }
+      //Agregamos todo al select2
+      $('.fk_id_ubicacion').append(options.join(''));
+    })
+    //Obtenemos los datos del url del sku...
+    $.get($('#fk_id_sku').data('url'), {'param_js':js_sku,$fk_id_almacen:idalmacen}, function(data){
+      var options = [];
+      /* Si hay resultados... */
+      if (data.length > 0) {
+        options.push('<option value="0" selected disabled>Selecciona el SKU que requiera...</option>'); 
+        for (var i = 0; i < data.length; i++) {
+          options.push('<option data-sku=\''+ JSON.stringify(data[i]) +'\' value="' + data[i].id_stock + '">' + data[i].sku.sku + '</option>');
+        };
+      //Agregamos todo al select2
+      $('#fk_id_sku').append(options.join(''));
+      $('#loadingskus').hide();
+      $('#fk_id_sku').select2({
+        escapeMarkup: function (markup) { return markup; },
+        placeholder: 'Seleccione el SKU que requiera del inventario',
+        templateResult: formatSku,
+        templateSelection: formatSkuSelection,
+        disabled:false,
+      });
+      } else {
+        $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'No hay SKU(s) registrado(s) en este almacen. Le recomendamos intentar con otro Almacén.',
+          settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
+        $('#loadingskus').hide();
+        $('#fk_id_sku').select2({
+          placeholder: "No encontramos SKUs :(...",
+          disabled:true
+        });
+      }
+      //Mostramos los valores de upc al seleccionar el sku
+      $('#fk_id_sku').on('change',function(){
+        $('#loadingupcs').show();
+        $('#fk_id_upc').empty();
+        var options = [];
+        /* Si hay resultados */
+        if (data.length > 0) {
+          for (var i = 0; i < data.length; i++) {
+            //Validamos que sea el mismo id del valor seleccionado ;)
+            if($(this).val() == data[i].id_stock){
+              options.push('<option data-upc-name="'+ data[i].upc.nombre_comercial +'" data-upc-desc="'+ data[i].upc.descripcion +'" value="' + data[i].upc.id_upc + '">' + data[i].upc.upc + '</option>');
+            }
+          };
+        }
+        $('#fk_id_upc').append(options.join(''));
+        $('#loadingupcs').hide();
+        $('#fk_id_upc').select2({
+          escapeMarkup: function (markup) { return markup; },
+          placeholder: 'Seleccione el SKU que requiera del inventario',
+          templateResult: formatUpc,
+          templateSelection: formatUpcSelection,
+          disabled:false,
+          multiple:true,
+          allowClear:true,
+          tags: true,
+          tokenSeparators: [',', ' ']
+        });
+      });// <-- Aquí termina el onChange de sku
+    }) // <-- Aquí termina la función de petición ajax
+  }
+
   //Iniciamos los selects, fechas y tooltips
-  initSelect2();
+  $('#fk_id_sucursal.select2').select2({
+    placeholder: "Seleccione la sucursal",
+    disabled: false
+  });
+  $('#fk_id_sku.select2').select2({
+    placeholder: "Para iniciar es necesario indicar la Ubicación",
+    disabled: true
+  });
+  $('#fk_id_upc.select2').select2({
+    placeholder: "Para iniciar es necesario indicar la Ubicación",
+    disabled: true
+  });
+  $('#fk_id_almacen.select2').select2({
+    placeholder: "Para iniciar es necesario indicar la Ubicación",
+    //disabled: true
+  });
+  $('.fk_id_ubicacion.select2').select2({
+    placeholder: "Para iniciar es necesario indicar la Ubicación",
+    disabled: false
+  });
   $('[data-toggle]').tooltip();
 
-  /*---------------FUNCIONES OBTENER SKU Y MOSTRARLO DE MANERA SEXY---------------*/
+  /*---------------FUNCIONES OBTENER ALMACENES---------------*/
   $('#fk_id_sucursal').on('change', function() {
     $('#fk_id_almacen').empty();
+    $('.fk_id_ubicacion').empty();
     $('#fk_id_sku').empty();
     $('#fk_id_upc').empty();
     $('#loadingalmacenes').show();
@@ -33,7 +128,7 @@ $(document).ready(function () {
       });
       } else {
         $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'No hay almacenes registrados en esta sucursal. Intenta con otra Sucursal.',
-          settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+          settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
         $('#loadingalmacenes').hide();
         $('#fk_id_almacen').select2({
           placeholder: 'No hay almacenes en la sucursal :(...',
@@ -43,13 +138,28 @@ $(document).ready(function () {
     })
   }); // <-- Aquí termina el onChange de sucursales
 
+/*---------------FUNCIONES OBTENER SKU Y UPC PARA MOSTRARLO DE MANERA SEXY---------------*/
   $('#fk_id_almacen').on('change',function(){
     $('#fk_id_sku').empty();
     $('#fk_id_upc').empty();
+    $('.fk_id_ubicacion').empty();
     $('#loadingskus').show();
     var idalmacen = $('#fk_id_almacen option:selected').val();
+    //Obtenemos los datos del url de almacen para ubicaciones...
+    $.get($('#fk_id_almacen').data('url2'),{'param_js':js_ubicacion,$fk_id_almacen:idalmacen}, function(data){
+      var options = [];
+      /* Si hay resultados... */
+      if (data.length > 0) {
+        options.push('<option value="0" selected disabled>Selecciona la Ubicación...</option>'); 
+        for (var i = 0; i < data.length; i++) {
+          options.push('<option value="' + data[i].id_ubicacion + '">' + data[i].ubicacion + '</option>');
+        };
+      }
+      //Agregamos todo al select2
+      $('.fk_id_ubicacion').append(options.join(''));
+    })
+    //Obtenemos los datos del url del sku...
     $.get($('#fk_id_sku').data('url'), {'param_js':js_sku,$fk_id_almacen:idalmacen}, function(data){
-      var dataUbicaciones = JSON.parse($('#fk_id_almacen option:selected').data('data').element.dataset.ubicaciones).ubicaciones;
       var options = [];
       /* Si hay resultados... */
       if (data.length > 0) {
@@ -69,7 +179,7 @@ $(document).ready(function () {
       });
       } else {
         $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'No hay SKU(s) registrado(s) en este almacen. Le recomendamos intentar con otro Almacén.',
-          settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+          settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
         $('#loadingskus').hide();
         $('#fk_id_sku').select2({
           placeholder: "No encontramos SKUs :(...",
@@ -89,14 +199,6 @@ $(document).ready(function () {
               options.push('<option data-upc-name="'+ data[i].upc.nombre_comercial +'" data-upc-desc="'+ data[i].upc.descripcion +'" value="' + data[i].upc.id_upc + '">' + data[i].upc.upc + '</option>');
             }
           };
-        } else {
-          $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'No hay UPC(s) registrado(s) en este SKU. Le recomendamos intentar con otro SKU.',
-            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-          $('#loadingupcs').hide();
-          $('#fk_id_upc').select2({
-            placeholder: "No encontramos SKUs :(...",
-            disabled:true
-          });
         }
         $('#fk_id_upc').append(options.join(''));
         $('#loadingupcs').hide();
@@ -112,7 +214,7 @@ $(document).ready(function () {
           tokenSeparators: [',', ' ']
         });
       });// <-- Aquí termina el onChange de sku
-    })
+    }) // <-- Aquí termina la función de petición ajax
   }) // <-- Aquí termina el onChange de almacen
 
 
@@ -124,17 +226,13 @@ $(document).ready(function () {
       var dd = fechaActual.getDate();
       var mm = fechaActual.getMonth()+1; //January is 0!
       var yyyy = fechaActual.getFullYear();
-
       if(dd<10) {
           dd = '0'+dd
       } 
-
       if(mm<10) {
           mm = '0'+mm
       } 
-
       fechaActual = mm + '/' + dd + '/' + yyyy;
-
       // theme here ...
       var data = JSON.parse(sku.element.dataset.sku)
       //Condicionamos la fecha para advertir al usuario de la caducidad
@@ -150,7 +248,6 @@ $(document).ready(function () {
         "<div class='select2-result-pers__avatar'><img src='img/sku.png'/></div>" +
         "<div class='select2-result-pers__meta'>" +
         "<div class='select2-result-pers__text'>" + sku.text + "</div>";
-
       //Condiciones para el caso de que exista el dato
       if (data.sku.descripcion) {
         markup += "<div class='select2-result-pers__descripcion'>" + data.sku.descripcion + "</div>";
@@ -187,7 +284,6 @@ $(document).ready(function () {
         "<div class='select2-result-pers__avatar'><img src='img/upc.png'/></div>" +
         "<div class='select2-result-pers__meta'>" +
         "<div class='select2-result-pers__text'>" + upc.text + "</div>";
-
       //Condiciones para el caso de que exista el dato
       if (data.upcName) {
         markup += "<div class='select2-result-pers__descripcion'>" + data.upcName + "</div>";
@@ -202,7 +298,6 @@ $(document).ready(function () {
         "<div class='select2-result-pers__presentacion text-success mr-3'><i class='material-icons align-middle'>info</i> " + data.upcDesc + "</div>" +
         "</div>" +
         "</div></div>";
-
         return markup;
       }
     }
@@ -212,25 +307,6 @@ $(document).ready(function () {
     return upc.text;
   }
 
-  //FUNCIÓN PARA INICIAR LOS SELECTS
-  function initSelect2(){
-    $('#fk_id_sucursal.select2').select2({
-      placeholder: "Seleccione la sucursal",
-      disabled: false
-    });
-    $('#fk_id_sku.select2').select2({
-      placeholder: "Para iniciar es necesario indicar la Ubicación",
-      disabled: true
-    });
-    $('#fk_id_upc.select2').select2({
-      placeholder: "Para iniciar es necesario indicar la Ubicación",
-      disabled: true
-    });
-    $('#fk_id_almacen.select2').select2({
-      placeholder: "Para iniciar es necesario indicar la Ubicación",
-      disabled: true
-    });
-  };
 /*
   --- FORMULARIO DE DETALLE PARA MOVIMIENTO ALMACEN ---
 */
@@ -264,42 +340,23 @@ $(document).ready(function () {
   var upcData = $('#fk_id_upc').select2('data');
   var almacenData = $('#fk_id_sku option:selected').data('sku').almacen;
   var ubicacionData = $('#fk_id_sku option:selected').data('sku').ubicacion;
-
-  // console.log($campoSkuData);
-  // console.log(skuDataSet);
-  // console.log(skuData);
-  // console.log(upcData);
-  // console.log(almacenData);
-  // console.log(ubicacionData);
-
   //Imprimir cada upc agregado
   if (upcData.length > 0) {
     // console.log(upcData.length)
     for (var i = 0; i < upcData.length; i++) {
       tableData.append(
-          //fk_id_sku y id_stock
-        '<tr><th>'+ '<img style="max-height:40px" src="img/sku.png" alt="sku"/> ' + sku +'<input type="hidden" id="index" value="'+row_id+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_stock]" value="'+skuDataSet.id_stock+'"/><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+skuDataSet.fk_id_sku+'"</th>' +
-        //fk_id_upc(s)
-        '<td>'+ '<img style="max-height:40px" src="img/upc.png" alt="upc"/> ' + upcData[i].text + '<input class="upc-unique" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+upcData[i].id+'"/>'+'</td>' +
-        //lote
-        '<td>'+ '<div class="input-group"><span class="input-group-addon">'+ '<i class="material-icons align-middle">label</i> ' +'</span><input type="text" class="form-control" name="relations[has][detalle]['+row_id+'][lote]" value="'+skuDataSet.lote+'"/></div>' + '</td>' +
-        //fecha_caducidad
+        '<tr><th>'+ '<img style="max-height:40px" src="img/sku.png" alt="sku"/> ' + sku +'<input type="hidden" id="index" value="'+row_id+'"><input class="element_stock" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_stock]" value="'+skuDataSet.id_stock+'"/><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+skuDataSet.fk_id_sku+'"</th>' +
+        '<td>'+ '<img style="max-height:40px" src="img/upc.png" alt="upc"/> ' + upcData[i].text + '<input class="upc-unique" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+upcData[i].id+'"/>'+'</td>' +
         '<td class="align-middle">'+ '<i class="material-icons align-middle">today</i> ' +skuDataSet.fecha_caducidad +'<input type="hidden" name="relations[has][detalle]['+row_id+'][fecha_caducidad]" value="'+skuDataSet.fecha_caducidad+'"/>' + '</td>' +
-        //fk_id_almacen
-        //fk_id_ubicacion
-        '<td class="align-middle">'+ almacenData.almacen +' / '+ ubicacionData.ubicacion +'</td>' +
-        //cantidad-stock
-        '<td class="align-middle">'+ '<i class="material-icons align-middle">shopping_basket</i> ' + skuDataSet.stock +'<input  type="hidden" value="'+skuDataSet.stock+'"/>' + '</td>' +
-        //fk_id_almacen
-        //fk_id_ubicacion
-        '<td>'+ '<select name="relations[has][detalle]['+row_id+'][fk_id_ubicacion]" class="form-control ubicaciones select2 custom-select"></select>' + '</td>' +
-        //cantidad-stock
-        '<td>'+ '<div class="input-group"><span class="input-group-addon">'+ '<i class="material-icons align-middle">shopping_basket</i> ' +'</span><input type="text" style="max-width: 5em;" class="form-control" name="relations[has][detalle]['+row_id+'][stock]" value="'+skuDataSet.stock+'"/></div>' + '</td>' +
-        //acciones
+        '<td class="align-middle">'+ '<i data-toggle="Lote" data-placement="top" title="Lote" data-original-title="Lote" class="material-icons align-middle">label</i> ' + skuDataSet.lote + '<br>' + almacenData.almacen +' / '+ ubicacionData.ubicacion +'<br>' + '<i data-toggle="Stock actual" data-placement="top" title="Stock actual" data-original-title="Stock actual" class="material-icons align-middle">shopping_basket</i> ' + skuDataSet.stock +'<input  type="hidden" value="'+skuDataSet.stock+'"/>' + '</td>' +
+        '<td>'+ $('#campo_ubicacion').html().replace('$row_id',row_id).replace('$row_id',row_id) +'</td>'+
+        '<td>'+ '<div class="input-group"><span class="input-group-addon">'+ '<i class="material-icons align-middle">label</i> ' +'</span><input style="min-width:60px" type="text" class="form-control" name="relations[has][detalle]['+row_id+'][lote]" value="'+skuDataSet.lote+'"/></div>' + '</td>' +
+        '<td>'+ '<div class="input-group"><span class="input-group-addon">'+ '<i class="material-icons align-middle">shopping_basket</i> ' +'</span><input type="number" style="width: 80px" class="form-control cantidad_stock" name="relations[has][detalle]['+row_id+'][stock]" value="'+skuDataSet.stock+'"/></div>' + '</td>' +
         '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
       );
     };
   }
+  $('[data-toggle]').tooltip();
     $.toaster({priority : 'success',title : '¡Éxito!',message : 'SKU/UPC(s) agregados con éxito, ahora puedes editar la nueva ubicación',
       settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
     });
@@ -331,7 +388,7 @@ $(document).ready(function () {
         required: 'Es necesario seleccionar el UPC para posteriormente agregar a la tabla los datos'
       }
     });
-    // $('#stock').rules('add',{
+    // $('.cantidad_stock').rules('add',{
     //     required: true,
     //     number: true,
     //     messages:{
@@ -345,6 +402,7 @@ $(document).ready(function () {
   //FUNCIÓN PARA LIMPIAR LOS CAMPOS
   function limpiarCampos() {
     //Eliminar reglas de validación detalle
+    $('#fk_id_sucursal').rules('remove');
     $('#fk_id_almacen').rules('remove');
     $('#fk_id_sku').rules('remove');
     $('#fk_id_upc').rules('remove');
@@ -364,6 +422,10 @@ $(document).ready(function () {
   //     })
   //   }
   // }
+  $('#calculame').on('click', function(e){
+    e.preventDefault();
+    cantidadStock();
+  })
 
 });// <-- Aquí termina el document.ready
 
@@ -379,3 +441,38 @@ function borrarFila(el) {
   $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
       settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 };
+
+//FUNCIÓN PARA VALIDAR LA CANTIDAD DE STOCK
+function cantidadStock(){
+  var sum = 0;
+  var almacenOpcion = $('#fk_id_almacen option:selected').data('data').id
+  //Empezamos por obtener todos los valores de las opciones
+  $('#fk_id_sku option').each(function(i,val){
+    if(val.dataset || val.val() > 0){
+      $.each(val.dataset,function(i2,json){
+        var arreglo = [];
+        // idStock.push(JSON.parse(json).id_stock)
+        arreglo.id_stock = JSON.parse(json).id_stock;
+        arreglo.stock = JSON.parse(json).stock;
+        stock.push(arreglo);
+      })
+      console.log(stock)
+    }
+  })
+
+ for (var i = 0; i < stock.length; i++) {
+  var idStock =  $(row).find('.element_stock').val();
+  if(idStock = stock[i].id_stock){
+    cantidadStock +=
+   }
+
+ }
+ 
+  $('#detalle-form-body tr').each(function(index, row){
+    var sumarCantidadStock =  $(row).find('.cantidad_stock').val();
+     sum += parseInt(sumarCantidadStock)
+  })
+    console.log(sum)
+// $('.cantidad_stock').each(function(i,val){
+//     console.log(val.value)
+}
