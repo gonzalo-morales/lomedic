@@ -18,9 +18,10 @@ Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'servicios', 'as' => 'servicios.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
         Route::view("/","servicios.index");
 	    Route::post('getAfiliados','Servicios\RecetasController@getAfiliados')->name('recetas.getAfiliados');
+        Route::post('getProyectos','Servicios\RecetasController@getProyectos')->name('recetas.getProyectos');
 	    Route::post('getDiagnosticos','Servicios\RecetasController@getDiagnosticos')->name('recetas.getDiagnosticos');
-	    Route::post('getMedicamentos','Servicios\RecetasController@getMedicamentos')->name('recetas.getMedicamentos');
-	    Route::post('getMedicamentos','Servicios\RecetasController@getMedicamentos')->name('requisicioneshospitalarias.getMedicamentos');
+        Route::post('getMedicamentos','Servicios\RecetasController@getMedicamentos')->name('recetas.getMedicamentos');
+//	    Route::post('getMedicamentos','Servicios\SurtidoRequisicionHospitalariaController@getMedicamentos')->name('requisicioneshospitalarias.getMedicamentos');
 	    Route::post('verifyStock','Servicios\RecetasController@verifyStock')->name('recetas.verifyStock');
 	    Route::post('verifyStockSurtir','Servicios\RecetasController@verifyStockSurtir')->name('recetas.verifyStockSurtir');
 	    Route::get('recetas/{id}/surtirReceta','Servicios\RecetasController@surtirReceta')->name('recetas.surtirReceta');

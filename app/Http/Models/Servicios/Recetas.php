@@ -8,6 +8,7 @@ use App\Http\Models\Administracion\Diagnosticos;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\Medicos;
 use App\Http\Models\Administracion\Programas;
+use App\Http\Models\Proyectos\Proyectos;
 
 class Recetas extends ModelCompany
 {
@@ -29,9 +30,9 @@ class Recetas extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['id_sucursal', 'fecha','id_afiliacion','id_dependiente','id_medico','id_diagnostico',
-        'id_programa','id_estatus_receta','id_area','nombre_paciente_no_afiliado','observaciones','id_usuario_creacion',
-        'id_usuario_creacion','id_usuario_modificacion','fecha_modificacion','peso','altura','presion_sistolica','presion_diastolica'];
+    protected $fillable = ['fk_id_sucursal', 'fecha','fk_id_afiliacion','fk_id_dependiente','fk_id_medico','fk_id_diagnostico',
+        'fk_id_programa','fk_id_estatus_receta','fk_id_area','nombre_paciente_no_afiliado','observaciones',
+        'fecha_modificacion','peso','altura','presion_sistolica','presion_diastolica','fk_id_proyecto'];
 
     /**
      * The validation rules
@@ -125,7 +126,10 @@ class Recetas extends ModelCompany
     {
         return $this->belongsTo(EstatusRecetas::class,'fk_id_estatus_receta','id_estatus_receta');
     }
-
+    public function proyecto()
+    {
+        return $this->hasMany(Proyectos::class,'fk_id_proyecto','id_proyecto');
+    }
     public function detalles()
     {
         return $this->hasMany(RecetasDetalle::class,'fk_id_receta','id_receta');

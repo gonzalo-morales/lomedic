@@ -12,6 +12,7 @@ use App\Http\Models\Administracion\Afiliaciones;
 use App\Http\Models\Administracion\Areas;
 use App\Http\Models\Administracion\Diagnosticos;
 use App\Http\Models\Servicios\Recetas;
+use App\Http\Models\Proyectos\Proyectos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Models\Inventarios\Productos;
@@ -38,6 +39,7 @@ class RecetasController extends ControllerBase
             'tipo_servicio' => [0 => 'afiliado', 1 => 'externo'],
             'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
             'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo', '1')->pluck('diagnostico', 'id_diagnostico'),
+            'proyectos' => empty($entity) ? [] : Proyectos::where('id_proyecto', $entity->fk_id_proyecto)->where('eliminar', 'false')->pluck('proyecto', 'id_proyecto'),
         ];
 
 
@@ -93,4 +95,14 @@ class RecetasController extends ControllerBase
         return json_encode($json);
 
     }
+    public function getProyectos($company, Request $request)
+    {
+
+        $detalle_requision = Proyectos::where('fk_id_sucursal',$request->fk_id_sucursal)
+            ->pluck('proyecto','id_proyecto')
+            ->toJson();
+
+        return $detalle_requision;
+    }
+
 }

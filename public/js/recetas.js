@@ -44,13 +44,30 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $(".unidad").select2();
-    $('.medico').select2();
-    $('.programa').select2();
-    $('.area').select2();
+    // $(".unidad").select2();
+    // $('.medico').select2();
+    // $('.programa').select2();
+    // $('.area').select2();
+
+    let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+    $('#fk_id_sucursal').on('change', function() {
+        $.ajax({
+            type: "POST",
+            url: $(this).data('url'),
+            data: {'fk_id_sucursal':$(this).val(),'_token':token},
+            dataType: "json",
+            success:function(data) {
+                $('#fk_id_proyecto').empty();
+                $.each(data, function(key, value) {
+                    $('#fk_id_proyecto').append('<option value="'+ key +'">'+ value +'</option>');
+                });
+                $('#fk_id_proyecto').val('');
+            }
+        });
+    });
 
     initPaciente();
-    let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+    // let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
     $("#fk_id_diagnostico").select2({
         placeholder: 'Escriba el diagnóstico del paciente',
         ajax: {
@@ -337,7 +354,7 @@ $(document).ready(function () {
                 '<th scope="row">' + medicamento[0].id + '</th>' +
                 '<td>' +
                 '<p><input name="relations[has][detalles][' + filas + '][id_receta_detalle]" type="hidden" value=""/></p>' +
-                '<p><input id="clave_cliente' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][fk_id_sku]" type="hidden" value="' + medicamento[0].id + '"/>' + medicamento[0].text + '</p>' +
+                '<p><input id="clave_cliente' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][fk_id_clave_cliente_producto]" type="hidden" value="' + medicamento[0].id + '"/>' + medicamento[0].text + '</p>' +
                 '<p><input id="tbdosis' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][dosis]" type="hidden" value="' + dosis_hidden + ' cada ' + tiempo_hidden + ' por ' + duracion_hidden + '" />' + dosis_text + ' cada ' + tiempo_text + ' por ' + duracion_text + '</p>' +
                 '<p><input id="tbcantidad_pedida' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][cantidad_pedida]" type="hidden" value="' + cantidad_final + '" />Recoger hoy: ' + cantidad_final + '</p>' +
                 '<p><input id="tben_caso_presentar' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][en_caso_presentar]" type="hidden" value="' + nota_medicamento + '" />' + nota_medicamento + '</p>' +
@@ -387,6 +404,7 @@ $(document).ready(function () {
 
     //ValidaciÃ³n de medicamentos
     $('#guardar').on('click',function (e) {
+
         $('#medicamento_modal').text('');
         var medicamento = [];
         var medicamento_agotado = [];
