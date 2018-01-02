@@ -19,7 +19,7 @@ class TiposComprobantes extends ModelBase
      *
      * @var array
      */
-    protected $fillable = ['tipo_comprobante','activo'];
+    protected $fillable = ['tipo_comprobante','descripcion','limite','activo'];
 
     /**
      * The validation rules
