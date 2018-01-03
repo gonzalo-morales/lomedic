@@ -75,7 +75,7 @@ class OrdenesController extends ControllerBase
             'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
-			'estatus' => 1,
+			'estatus' => 2,
             ]];
 		 return parent::create($company,$attributes);
 	}
@@ -174,6 +174,12 @@ class OrdenesController extends ControllerBase
 	public function show($company,$id,$attributes = [])
 	{
 	    $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
+		$estatus = Ordenes::where('id_orden',$id)->pluck('fk_id_estatus_autorizacion','id_orden')->first();
+		if ($estatus == 1 || $estatus == 3) {
+			$estatus = 1;
+		}else {
+			$estatus = 2;
+		}
 		$attributes = $attributes+['dataview'=>[
 				'detalles' => $this->entity->find($id)->detalleOrdenes->where('cerrado',false),
                 'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
@@ -183,7 +189,7 @@ class OrdenesController extends ControllerBase
                 'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
                 'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 				'condiciones'=>Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1)->where('eliminar',0),
-				'estatus' => 1,
+				'estatus' => $estatus,
 			]];
 		return parent::show($company,$id,$attributes);
 	}
@@ -292,7 +298,7 @@ class OrdenesController extends ControllerBase
 		}
 	}
 
-	public function destroy(Request $request, $company, $idOrIds)
+	public function destroy(Request $request, $company, $idOrIds, $attributes = [])
 	{
 	    if($request->url() != companyAction('Compras\OrdenesController@destroyDetail')){
             if (!is_array($idOrIds)) {

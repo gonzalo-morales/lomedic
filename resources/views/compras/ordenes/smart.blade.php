@@ -13,16 +13,34 @@
 @section('content-width', 's12')
 
 @section('form-actions')
+	{{-- {{ dd($data) }} --}}
    <div class="col-md-12 col-xs-12">
        <div class="text-right">
-           @can('create', currentEntity())
-               {{ link_to(companyRoute('create'), 'Nuevo', ['class'=>'btn btn-primary progress-button']) }}
-           @endcan
-           @can('update', currentEntity())
-               @if($estatus == 1)
-                   {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info progress-button']) }}
-               @endif
-           @endcan
+		   @if(!Route::currentRouteNamed(currentRouteName('create')))
+	           @can('create', currentEntity())
+	               {{ link_to(companyRoute('create'), 'Nuevo', ['class'=>'btn btn-primary progress-button']) }}
+	           @endcan
+		   @else
+			   {{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+		   @endif
+		   @if(Route::currentRouteNamed(currentRouteName('show')))
+	           @can('update', currentEntity())
+	               @if($data->fk_id_estatus_autorizacion == 1 || $data->fk_id_estatus_autorizacion == 3)
+	                   {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info progress-button']) }}
+	               @endif
+			   @endcan
+		   @endif
+		   @if(Route::currentRouteNamed(currentRouteName('edit')))
+				@if($data->fk_id_estatus_autorizacion == 1 || $data->fk_id_estatus_autorizacion == 3)
+					{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+				@endif
+		   @endif
+		   @if(Route::currentRouteNamed(currentRouteName('update')))
+		   		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+		   @endif
+		   {{-- @if(Route::currentRouteNamed(currentRouteName('index')))
+			   {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info progress-button']) }}
+		   @endif --}}
            {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
        </div>
    </div>
@@ -480,7 +498,7 @@
 		<script type="text/javascript">
 			rivets.binders['hide-delete'] = {
 				bind: function (el) {
-					if(el.dataset.fk_id_estatus_orden != 1)
+					if(el.dataset.fk_id_estatus_orden != 1 || el.dataset.fk_id_estatus_autorizacion == 2 || el.dataset.fk_id_estatus_autorizacion == 4)
 					{
 						$(el).hide();
 					}
@@ -488,7 +506,7 @@
 			};
 			rivets.binders['hide-update'] = {
 				bind: function (el) {
-					if(el.dataset.fk_id_estatus_orden != 1)
+					if(el.dataset.fk_id_estatus_orden != 1 || el.dataset.fk_id_estatus_autorizacion == 2 || el.dataset.fk_id_estatus_autorizacion == 4)
 					{
 						$(el).hide();
 					}

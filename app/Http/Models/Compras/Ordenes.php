@@ -38,7 +38,8 @@ class Ordenes extends ModelCompany
     ];
 
     protected $dataColumns = [
-        'fk_id_estatus_orden'
+        'fk_id_estatus_orden',
+        'fk_id_estatus_autorizacion'
     ];
     /**
      * Los atributos que seran visibles en index-datable
@@ -51,6 +52,7 @@ class Ordenes extends ModelCompany
         'fecha_creacion' => 'Fecha del pedido',
         'fecha_estimada_entrega' => 'Fecha de entrega',
         'estatus.estatus' => 'Estatus de la orden',
+        'estatusautorizacion.estatus' => 'Estatus autorización',
         'empresa.nombre_comercial' => 'Empresa'
     ];
 
