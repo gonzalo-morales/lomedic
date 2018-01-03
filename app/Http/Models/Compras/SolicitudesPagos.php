@@ -3,6 +3,7 @@
 namespace App\Http\Models\Compras;
 
 use App\Http\Models\Administracion\EstatusDocumentos;
+use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\ModelCompany;
 use DB;
 
@@ -35,10 +36,11 @@ class SolicitudesPagos extends ModelCompany
     protected $fields = [
         'id_solicitud_pago' => 'Número Solicitud',
         'solicitante_formated'  => 'Solicitante',
-        'sucursal.sucursal' => 'Sucursal',
-        'fecha_solicitud' => 'Fecha de solicitud',
+        'sucursales.sucursal' => 'Sucursal',
+        'fecha_solicitud_formated' => 'Fecha de solicitud',
         'fecha_necesaria' => 'Fecha necesidad',
         'estatus.estatus' => 'Estatus',
+        'estatusautorizacion.estatus' => 'Estatus Autorización'
     ];
 
     protected $dataColumns = [
@@ -96,5 +98,10 @@ class SolicitudesPagos extends ModelCompany
     public function estatusautorizacion()
     {
         return $this->hasOne(EstatusAutorizaciones::class,'id_estatus','fk_id_estatus_autorizacion');
+    }
+
+    public function getFechaSolicitudFormatedAttribute()
+    {
+        return date_format(date_create($this->fecha_solicitud),"Y-m-d H:i:s");
     }
 }

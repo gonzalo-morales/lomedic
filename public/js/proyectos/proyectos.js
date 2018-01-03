@@ -122,18 +122,21 @@ $(document).ready(function () {
 			dataType:'JSON',
 			success: function (data) {
 				if(data.length > 0){
-					let tipo_evento = data[0].tipo_evento.split('||');
+					var tipo_evento = data[0].tipo_evento.split('||');
 					$('#fk_id_tipo_evento').val(tipo_evento[0]).trigger('change');
-					let dependencia = data[0].dependencia.split('||');
+					var dependencia = data[0].dependencia.split('||');
 					dependencia = dependencia.length == 1 ? [0,dependencia] : dependencia;
 					$('#fk_id_dependencia').val(dependencia[0]).trigger('change');
-                    let subdependencia = data[0].subdependencia.split('||');
+                    var subdependencia = data[0].subdependencia.split('||');
                     subdependencia = subdependencia.length == 1 ? [0,subdependencia] : subdependencia;
                     $('#fk_id_subdependencia').val(subdependencia[0]).trigger('change');
-                    let caracter_evento = data[0].caracter_evento.split('||');
+                    var modalidad_entrega = data[0].modalidad_entrega.split('||');
+                    modalidad_entrega = modalidad_entrega.length == 1 ? [0,modalidad_entrega] : modalidad_entrega;
+                    $('#fk_id_modalidad_entrega').val(modalidad_entrega[0]).trigger('change');
+                    var caracter_evento = data[0].caracter_evento.split('||');
                     caracter_evento = caracter_evento.length == 1 ? [0,caracter_evento] : caracter_evento;
                     $('#fk_id_caracter_evento').val(caracter_evento[0]).trigger('change');
-                    let forma_adjudicacion = data[0].forma_adjudicacion.split('||');
+                    var forma_adjudicacion = data[0].forma_adjudicacion.split('||');
                     forma_adjudicacion =  forma_adjudicacion.length == 1 ? [0,forma_adjudicacion] : forma_adjudicacion;
                     $('#fk_id_forma_adjudicacion').val(forma_adjudicacion[0]).trigger('change');
                     $('#pena_convencional').val(data[0].pena_convencional);
@@ -164,7 +167,7 @@ $(document).ready(function () {
                     $.toaster({priority:'info',title:'LICIPLUS',message:'No se encontraron contratos relacionados',
                         settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 				}else{
-					let repetidos = [];
+					var repetidos = [];
 					$.each(data,function (indice,dato) {
 						// alert(dato);
 						$('#detalleContratos > tbody > tr').each(function () {
@@ -233,7 +236,7 @@ $(document).ready(function () {
 						dataType: 'JSON',
 						type: 'POST',
 						success: function (respuesta) {
-                            let error = '';
+                            var error = '';
                             $.each(respuesta[1], function (index,clave) {
                                 error += clave + ', ';
                             });
@@ -257,9 +260,9 @@ $(document).ready(function () {
                                     settings: {'toaster': {'css': {'top': '5em'}}, 'donotdismiss': ['danger'],},
                                 });
                             //Importar las filas a la tabla
-                            let repetidos = [];
+                            var repetidos = [];
                             $.each(respuesta[0], function (index, value) {
-                            	let repetido = false;
+                            	var repetido = false;
                                 $('#detalleProductos > tbody > tr').each(function () {
                                     if( value.clave == $(this).find('span').text()){
                                         repetidos.push(value.clave);
@@ -267,11 +270,11 @@ $(document).ready(function () {
                                     }
                                 });
                                 if(!repetido){
-                                    let i = $('#detalleProductos tbody tr').length;
-                                    let row_id = i > 0 ? +$('#detalleProductos tr:last').find('.index').val()+1 : 0;
-                                    let id_upc = 0;
-                                    let text_upc = 'Sin UPC';
-                                    let descripcion_upc = '';
+                                    var i = $('#detalleProductos tbody tr').length;
+                                    var row_id = i > 0 ? +$('#detalleProductos tr:last').find('.index').val()+1 : 0;
+                                    var id_upc = 0;
+                                    var text_upc = 'Sin UPC';
+                                    var descripcion_upc = '';
                                     if (value['fk_id_upc']) {
                                         id_upc = value['fk_id_upc'];
                                         text_upc = value['codigo_barras'];
@@ -348,14 +351,14 @@ $(document).ready(function () {
         $('#importar_productos').attr('disabled','disabled');
 
         //En productos carga las claves relacionadas con el cliente actual
-        let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
+        var _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
         $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
         $('#loadingfk_id_clave_cliente_producto').show();
         $.ajax({
             url: _url,
             dataType:'json',
             success:function (data) {
-                let option = $('<option/>');
+                var option = $('<option/>');
                 option.val(0);
                 option.attr('disabled','disabled');
                 option.attr('selected','selected');
@@ -380,7 +383,7 @@ $(document).ready(function () {
             },
             dataType:'JSON',
             success: function (data) {
-                let option = $('<option/>');
+                var option = $('<option/>');
                 option.val(0);
                 option.text('...');
                 option.attr('disabled','disabled');
@@ -399,7 +402,6 @@ $(document).ready(function () {
     });
 
     $(document).on('submit',function (e) {
-        e.preventDefault();
         $.validator.addMethod('minStrict', function (value, element, param) {
             return value > param;
         },'El numero debe ser mayor a {0}');

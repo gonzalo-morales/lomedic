@@ -16,6 +16,13 @@ $.get('http://localhost:8000/abisa/administracion.paises/api', {
 	//has: ['estados'],
 	//whereHas: [{'estados':{'where':['fk_id_pais', 42]}}]
 	//orderBy: [['id_pais', 'DESC']],
+    //joins:[
+            {"leftJoin":
+                ["fac_opr_facturas_clientes as fc","fc.id_factura","=","fac_det_facturas_clientes.fk_id_factura"
+            ]},
+            {"join":
+                ["pry_cat_clave_cliente_productos as cc","cc.id_clave_cliente_producto","=","fac_det_facturas_clientes.fk_id_clave_cliente"
+            ]}],
 	limit: 5,
 	//pluck: ['pais', 'id_pais']
 	//only: ['pais']
@@ -44,6 +51,14 @@ class APIController extends Controller
 			return resolve('App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', camel_case($entity)))));
 		});
         if ($entity) {
+
+            # Si hay JOINS
+            foreach (($request['joins'] ?? []) as $joins){
+                foreach ($joins as $join => $args){
+                    $entity = call_user_func_array([$entity, $join], $args);
+                }
+            }
+//            exit();
             # Select especific fields
 		    $entity = call_user_func_array([$entity, 'select'], $request['select'] ?? []);
 
