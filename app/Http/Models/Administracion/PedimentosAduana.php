@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 
 class PedimentosAduana extends ModelBase
 {
-	protected $table = 'sat_cat_pedimentos_aduana';
+	protected $table = 'maestro.sat_cat_pedimentos_aduana';
 
 	/**
 	 * The primary key of the table
@@ -16,10 +15,9 @@ class PedimentosAduana extends ModelBase
 
 	/**
 	 * The attributes that are mass assignable.
-	 *
 	 * @var array
 	 */
-	protected $fillable = ['aduana','patente','ejercicio','cantidad','activo'];//Solicitante devolución. false: localidad; true: proveedor;
+	protected $fillable = ['aduana','patente','ejercicio','cantidad','activo'];
 
 	/**
 	 * The validation rules
@@ -40,8 +38,7 @@ class PedimentosAduana extends ModelBase
 		'aduana' => 'No. Aduana',
 		'patente' => 'Patente',
 		'ejercicio' => 'Ejercicio',
-		'Cantidad' => 'Cantidad',
+		'cantidad' => 'Cantidad',
 		'activo_span' => 'Estatus'
 	];
-
 }

@@ -34,7 +34,7 @@ class Bancos extends ModelBase
 	  'banco' => 'Banco',
 	  'rfc' => 'RFC',
 	  'razon_social' => 'Razón Social',
-	  'nacional' => 'Nacional'
+	  'nacional_text' => 'Nacional'
 	];
 
 	/**
@@ -45,6 +45,11 @@ class Bancos extends ModelBase
 		'razon_social' => 'required',
 		'banco' => 'required',
 	];
+	
+	public function getNacionalTextAttribute()
+	{
+	    return isset($this->nacional) && $this->nacional === true ? 'Si' : 'No';
+	}
 
 	public function numeroscuenta()
 	{

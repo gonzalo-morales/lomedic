@@ -10,7 +10,7 @@ class Certificados extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'gen_det_certificados';
+	protected $table = 'maestro.gen_det_certificados';
 
 	/**
 	 * The primary key of the table
@@ -22,7 +22,7 @@ class Certificados extends ModelBase
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
-	protected $fillable = ['key','certificado','no_certificado','cadena_cer','fecha_expedicion','fecha_vencimiento','password','activo'];
+	protected $fillable = ['key','certificado','no_certificado','cadena_cer','cadena_key','fecha_expedicion','fecha_vencimiento','password','activo'];
 	
 	protected $hidden = ['password'];
 

@@ -220,10 +220,12 @@ class EmpresasController extends ControllerBase
 	public function getDatoscer(Request $request)
 	{
 	    $req = $request;
-	    $pathFile = $req->file('cer')->getRealPath();
+	    $pathCer = $req->file('cer')->getRealPath();
+	    $pathKey = $req->file('key')->getRealPath();
 	    
-	    $data = $this->readCer($pathFile) ?? [];
-	    $data['cadena_cer'] = $this->CerToPem($pathFile) ?? '';
+	    $data = $this->readCer($pathCer) ?? [];
+	    $data['cadena_cer'] = $this->FileToPem($pathCer,'cer') ?? '';
+	    $data['cadena_key'] = $this->FileToPem($pathKey,'key') ?? '';
 	    
 	    return $data;
 	}
@@ -232,7 +234,7 @@ class EmpresasController extends ControllerBase
 	{
 	    if (File::exists($pathFile))
 	    {
-	        $CerContent =  $this->CerToPem($pathFile);
+	        $CerContent =  $this->FileToPem($pathFile);
 	        
 	        if(!empty($CerContent))
 	            $data = openssl_x509_parse($CerContent);
@@ -245,14 +247,18 @@ class EmpresasController extends ControllerBase
 	        return null;
 	}
 	
-	protected function CerToPem($pathFile = '')
+	protected function FileToPem($pathFile = '',$type='cer')
 	{
 	    if (File::exists($pathFile))
 	    {
-	        $CerContent = file_get_contents($pathFile);
-    	    $CerContent =  '-----BEGIN CERTIFICATE-----'.PHP_EOL.chunk_split(base64_encode($CerContent), 64, PHP_EOL).'-----END CERTIFICATE-----'.PHP_EOL;
+            $PemContent = null;
+	        $FileContent = file_get_contents($pathFile);
+	        if($type == 'cer')
+	           $PemContent =  '-----BEGIN CERTIFICATE-----'.PHP_EOL.chunk_split(base64_encode($FileContent), 64, PHP_EOL).'-----END CERTIFICATE-----'.PHP_EOL;
+	        elseif($type == 'key')
+	           $PemContent =  openssl_pkey_get_private('-----BEGIN PRIVATE KEY-----'.PHP_EOL.chunk_split(base64_encode($FileContent), 64, PHP_EOL).'-----END PRIVATE KEY-----'.PHP_EOL);
     	    
-    	    return $CerContent;
+	        return $PemContent;
 	    }
 	    else
 	        return null;

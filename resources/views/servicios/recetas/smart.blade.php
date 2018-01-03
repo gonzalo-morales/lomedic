@@ -25,60 +25,67 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" role="tabpanel">
                                             <div class="row">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-3">
                                                     <div class="form-group">
-                                                        {{ Form::cSelect('Unidad', 'fk_id_sucursal', $localidades ?? [],['class'=>'select2']) }}
+                                                        {{ Form::cSelect('Unidad', 'fk_id_sucursal', $localidades ?? [],['class'=>'select2','data-url'=>companyRoute('getProyectos')]) }}
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        {{ Form::cSelect('Proyecto', 'fk_id_proyecto', $proyectos ?? [],['class'=>'select2']) }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
                                                     <div class="form-group">
                                                         {{ Form::cSelect('Medico', 'fk_id_medico', $medicos ?? [],['class'=>'select2']) }}
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-3">
                                                     <div class="form-group">
                                                         {{ Form::cSelect('Programa', 'fk_id_programa', $programas ?? [],['class'=>'select2']) }}
                                                     </div>
                                                 </div>
                                             </div><!--/row forms-->
                                             <div class="row">
-                                                <div class="col-md-2 col-sm-12">
+                                                <div class="col-sm-3">
                                                     <div class="form-group">
                                                         {{Form::cCheckboxBtn('Tipo de servicio','Afiliado','tipo_servicio',(empty($data->fk_id_afiliacion) ? 0 : 1),'Externo')}}
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-3">
                                                     <div class="form-group">
                                                         {{ Form::cSelect('Afiliación/Paciente', 'fk_id_dependiente', $afiliados ?? [],['class'=>'select2','data-url'=>companyRoute('getAfiliados')]) }}
                                                         {{Form::hidden('fk_id_afiliacion',null,['id'=>'fk_id_afiliacion'])}}
                                                         {{Form::text('nombre_paciente_no_afiliado',null,['id'=>'nombre_paciente_no_afiliado','class'=>'form-control','style'=>'display:none'])}}
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-3">
                                                     <div class="form-group">
                                                         {{ Form::cSelect('Área de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-sm-4 col-xs-12">
+                                                <div class="col-sm-3">
                                                     <div class="form-group">
                                                         {{ Form::cSelect('Diagnóstico', 'fk_id_diagnostico', $diagnosticos ?? [],['class'=>'select2','data-url'=>companyRoute('getDiagnosticos')]) }}
 
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-2 col-xs-12">
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-sm-2 col-xs-6">
                                                     <div class="form-group">
                                                         {{ Form::cText('Peso:', 'peso',['class'=>'form-control peso'])}}
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-2 col-xs-12">
+                                                <div class="col-sm-2 col-xs-6">
                                                     <div class="form-group">
                                                         {{ Form::cText('Altura:', 'altura',['class'=>'form-control peso'])}}
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4 col-xs-12">
+                                                <div class="col-sm-4 col-xs-6">
                                                     <div class="form-group">
                                                         <label for="presion">Presión:</label>
                                                         <div class="input-group">
@@ -191,7 +198,7 @@
                                                     <th scope="row">{{$detalle->producto['id_sku']}}</th>
                                                     <td>
                                                         <input name="relations[has][detalles][{{$row}}][id_receta_detalle]" type="hidden" value="{{$detalle->id_receta_detalle}}">
-                                                        <p><input id="clave_cliente" name="relations[has][detalles][{{$row}}][fk_id_sku]" type="hidden" value="{{$detalle->producto['id_sku']}}">{{$detalle->producto['descripcion']}}</p>
+                                                        <p><input id="clave_cliente" name="relations[has][detalles][{{$row}}][fk_id_clave_cliente_producto]" type="hidden" value="{{$detalle->producto['id_sku']}}">{{$detalle->producto['descripcion']}}</p>
                                                         <p><input id="tbdosis" name="relations[has][detalles][{{$row}}][dosis]" type="hidden" value="{{$detalle->dosis}}">{{$detalle->dosis}}</p>
                                                         <input id="tbveces_surtir" name="relations[has][detalles][{{$row}}][veces_surtir]" type="hidden" value="{{$detalle->veces_surtidas}}">
                                                     </td>
@@ -257,7 +264,7 @@
                                                                     <td>
                                                                         <p><input id="clave_cliente" name="_detalle[{{$detalle->producto['id_sku']}}][clave_cliente]" type="hidden" value="{{$detalle->producto['id_sku']}}">{{$detalle->producto['descripcion']}}</p>
                                                                         <p><input id="tbdosis" name="_detalle[{{$detalle->producto['id_sku']}}][dosis]" type="hidden" value="{{$detalle->dosis}}">{{$detalle->dosis}}</p>
-                                                                        <input id="_detalle" name="_detalle[{{$detalle->producto['id_sku']}}][fk_id_cuadro]" type="hidden" value="{{$detalle->fk_id_sku}}">
+                                                                        <input id="_detalle" name="_detalle[{{$detalle->producto['id_sku']}}][fk_id_cuadro]" type="hidden" value="{{$detalle->fk_id_clave_cliente_producto}}">
                                                                         <input id="tbveces_surtir" name="_detalle[{{$detalle->producto['id_sku']}}][veces_surtir]" type="hidden" value="{{$detalle->veces_surtidas}}">
                                                                     </td>
                                                                     <td>{{$detalle->cantidad_pedida}}</td>

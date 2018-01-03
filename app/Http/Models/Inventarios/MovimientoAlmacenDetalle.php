@@ -4,20 +4,20 @@ namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
 
-class Stock extends ModelCompany
+class MovimientoAlmacenDetalle extends ModelCompany
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'inv_opr_stock';
+    protected $table = 'inv_det_movimiento_almacen';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_stock';
+    protected $primaryKey = 'id_detalle_movimiento';
 
     /**
      * The attributes that are mass assignable.
@@ -28,9 +28,9 @@ class Stock extends ModelCompany
         'fk_id_stock',
         'fk_id_sku',
         'fk_id_upc',
-        'fk_id_ubicacion',
         'lote',
         'fecha_caducidad',
+        'fk_id_ubicacion',
         'stock',
         'activo'
     ];
@@ -59,32 +59,20 @@ class Stock extends ModelCompany
      */
     // public $niceNames = [];
 
-    /**
-     * Obtenemos sku relacionado
-     * @return @belongsTo
-     */
+    public function tipo()
+    {
+        return $this->hasOne(MovimientoAlmacen::class,'id_movimiento','fk_id_movimiento');
+    }
     public function sku()
     {
-        return $this->belongsTo(Productos::class, 'fk_id_sku', 'id_sku');
-    }
-
-    /**
-     * Obtenemos upc relacionado
-     * @return @belongsTo
-     */
-    public function upc()
+        return $this->hasOne(Productos::class, 'id_sku', 'fk_id_sku');
+    }  
+    public function upcs()
     {
-        return $this->belongsTo(Upcs::class, 'fk_id_upc', 'id_upc');
+        return $this->hasOne(Upcs::class,'id_upc','fk_id_upc');
     }
-
-    /**
-     * Obtenemos ubicacion relacionada
-     * @return @belongsTo
-     */
     public function ubicacion()
     {
-        return $this->belongsTo(Ubicaciones::class, 'fk_id_ubicacion', 'id_ubicacion');
+        return $this->hasOne(Ubicaciones::class,'id_ubicacion','fk_id_ubicacion');
     }
-
-
 }

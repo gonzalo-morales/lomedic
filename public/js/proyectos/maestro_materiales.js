@@ -5,54 +5,11 @@ $(document).ready(function(){
     $('#form-model').attr('enctype',"multipart/form-data");
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     
-    $('#fk_id_cliente').on('change',function () {
-        $('#detalleProductos tbody tr').remove();
+    // $('#fk_id_cliente').on('change',function () {
+    //
+    // });
 
-        let _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$(this).val());
-        $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
-        $('#loadingfk_id_clave_cliente_producto').show();
-        $.ajax({
-            url: _url,
-            dataType:'json',
-            success:function (data) {
-                let option = $('<option/>');
-                option.val(0);
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                if (Object.keys(data).length == 0)
-                    option.text('No se encontraron elementos');
-                else
-                    option.text('...');
 
-                $('#fk_id_clave_cliente_producto').prepend(option).select2({
-                    minimumResultsForSearch:'50',
-                    data:data,
-                }).attr('disabled',false);
-                $('#loadingfk_id_clave_cliente_producto').hide();
-            }
-        });
-        $('#loadingsucursales').show();
-        $.ajax({
-            url: $('#fk_id_cliente').data('url'),
-            data: {
-                'param_js':sucursales_js,
-                $fk_id_cliente:$('#fk_id_cliente').val()
-            },
-            dataType:'JSON',
-            success: function (data) {
-                let option = $('<option/>');
-                option.val(0);
-                option.text('...');
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                $('#fk_id_sucursal').empty().prepend(option).select2({
-                    data:data
-                });
-                $('#loadingsucursales').hide();
-            }
-        });
-    });
-    
     //Por si se selecciona un UPC
     $('#activo_upc').on('change',function () {
         if( !this.checked ){
@@ -138,7 +95,7 @@ $(document).ready(function(){
                             //Importar las filas a la tabla
                             let arreglo = [];
                             $.each(data[0], function (index, value) {
-                            	var i = $('#detalleProductos tr').length;
+                            	var i = $('#detalleProductos tbody tr').length;
                                 var row_id = i > 0 ? +$('#detalleProductos tr:last').find('.index').val()+1 : 0;
                                 let id_upc = 0;
                                 let text_upc = 'Sin UPC';
@@ -152,7 +109,7 @@ $(document).ready(function(){
                                 $('#detalleProductos').append('<tr>'+
                             		'<td><input class="index" name="relations[has][productos]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
                             			'<input class="index" name="relations[has][productos]['+row_id+'][id_proyecto_producto]" type="hidden" value="">'+
-                            			$('<input type="hidden" name="relations[has][productos]['+row_id+'][fk_id_clave_cliente_producto]" value="'+value['id_clave_cliente_producto']+'" />')[0].outerHTML + value['clave_cliente_producto']+'</td>'+
+                            			'<input type="hidden" name="relations[has][productos]['+row_id+'][fk_id_clave_cliente_producto]" value="'+value['id_clave_cliente_producto']+'" /><span>' + value['clave_cliente_producto']+'</span></td>'+
                             		'<td>'+value['descripcion_clave']+'</td>'+
                             		'<td>'+$('<input type="hidden" name="relations[has][productos][' + row_id + '][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc+'</td>'+
                             		'<td>'+descripcion_upc+'</td>'+
@@ -235,77 +192,6 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on('submit',function (e) {
-
-        $.validator.addMethod('minStrict', function (value, element, param) {
-            return value > param;
-        },'El numero debe ser mayor a {0}');
-
-        $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
-        $.validator.addMethod('cDigits',$.validator.methods.digits,'El campo debe ser entero');
-        $.validator.addClassRules('prioridad',{
-            cRequerido: true,
-            cDigits: true,
-            minStrict: 0
-        });
-
-        $.validator.addClassRules('cantidad',{
-            cRequerido: true,
-            cDigits: true,
-            minStrict: 0
-        });
-
-        $.validator.addClassRules('maximo',{
-           cRequerido:true,
-            cDigits:true,
-            minStrict:0
-        });
-        $.validator.addClassRules('minimo',{
-            cRequerido:true,
-            cDigits:true,
-            minStrict:0
-        });
-        $.validator.addClassRules('numero_reorden',{
-            cRequerido:true,
-            cDigits:true,
-            minStrict:0
-        });
-        $.validator.addClassRules('fk_id_moneda',{
-            cRequerido:true,
-        });
-
-        $.validator.addMethod('precio',function (value,element) {
-            return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-        },'Verifica la cantidad. Ej. 9999999999.00');
-        $.validator.addClassRules('precio_sugerido',{
-            cRequerido: true,
-            precio: true,
-            minStrict: 0
-        });
-
-        if($('#form-model').valid()){
-            if(proyectoProducto.activeRows.length>0){
-                if(eliminarProyectoProducto.length>0) {
-                    let url = $('#productosproyectos').data('delete');
-                    $.delete(url, {ids: eliminarProyectoProducto});
-                }
-            }else{
-                e.preventDefault();
-                $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'La tabla se encuentra vacia.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-            }
-        }else{
-            e.preventDefault();
-            $('.prioridad').rules('remove');
-            $('.cantidad').rules('remove');
-            $('.precio_sugerido').rules('remove');
-            $('.maximo').rules('remove');
-            $('.minimo').rules('remove');
-            $('.numero_reorden').rules('remove');
-            $.toaster({
-                priority: 'danger', title: 'Â¡Error!', message: 'Hay campos que requieren de tu atencion',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
-            });
-        }
-    });
 
     if($('#fk_id_cliente').val()){
         if($('#detalle-form').length > 0) {

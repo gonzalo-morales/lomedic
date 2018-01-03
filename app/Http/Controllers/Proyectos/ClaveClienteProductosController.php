@@ -3,11 +3,7 @@
 namespace App\Http\Controllers\Proyectos;
 
 use App\Http\Controllers\ControllerBase;
-use App\Http\Models\Proyectos\ClasificacionesProyectos;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
-use App\Http\Models\Proyectos\Proyectos;
-use App\Http\Models\SociosNegocio\SociosNegocio;
-use Illuminate\Support\Facades\Response;
 
 class ClaveClienteProductosController extends ControllerBase
 {

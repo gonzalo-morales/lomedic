@@ -12,6 +12,7 @@ use App\Http\Models\Administracion\Afiliaciones;
 use App\Http\Models\Administracion\Areas;
 use App\Http\Models\Administracion\Diagnosticos;
 use App\Http\Models\Servicios\Recetas;
+use App\Http\Models\Proyectos\Proyectos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Models\Inventarios\Productos;
@@ -30,8 +31,6 @@ class RecetasController extends ControllerBase
 
     public function getDataView($entity = null)
     {
-
-
         return [
             'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo', 1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
             'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('Selecciona una opcion...', ''),
@@ -40,6 +39,7 @@ class RecetasController extends ControllerBase
             'tipo_servicio' => [0 => 'afiliado', 1 => 'externo'],
             'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
             'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo', '1')->pluck('diagnostico', 'id_diagnostico'),
+            'proyectos' => empty($entity) ? [] : Proyectos::where('id_proyecto', $entity->fk_id_proyecto)->where('eliminar', 'false')->pluck('proyecto', 'id_proyecto'),
         ];
 
 
@@ -80,7 +80,10 @@ class RecetasController extends ControllerBase
         $skus = Productos::where('activo', '1')->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'LIKE', '%' . $term . '%')->orWhere('descripcion', 'LIKE', '%' . $term . '%')->get();
 
         foreach ($skus as $sku) {
-            $json[] = ['id' => (int)$sku->id_sku,
+            $json[] = [
+                'id' => (int)$sku->id_sku,
+                'fk_id_clave_cliente_producto' => $sku->clave_cliente_productos['id_clave_cliente_producto'],
+                'clave_cliente_producto' => $sku->clave_cliente_productos['clave_producto_cliente'],
                 'text' => $sku->descripcion,
                 'cantidad_presentacion' => $sku->clave_cliente_productos['cantidad_presentacion'],
                 'familia' => $sku->fk_id_familia,
@@ -92,4 +95,14 @@ class RecetasController extends ControllerBase
         return json_encode($json);
 
     }
+    public function getProyectos($company, Request $request)
+    {
+
+        $detalle_requision = Proyectos::where('fk_id_sucursal',$request->fk_id_sucursal)
+            ->pluck('proyecto','id_proyecto')
+            ->toJson();
+
+        return $detalle_requision;
+    }
+
 }

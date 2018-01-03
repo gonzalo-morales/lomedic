@@ -15,7 +15,7 @@ class ProyectosProductosController extends ControllerBase
         $this->entity = $entity;
     }
 
-    public function destroy(Request $request, $company, $idOrIds)
+    public function destroy(Request $request, $company, $idOrIds, $attributes = [])
     {
         # ¿Usuario tiene permiso para eliminar?
 //        $this->authorize('delete', $this->entity);

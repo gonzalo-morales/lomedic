@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class TiposComprobantes extends ModelBase
 {
-    protected $table = 'sat_cat_tipos_comprobantes';
+    protected $table = 'maestro.sat_cat_tipos_comprobantes';
 
     /**
      * The primary key of the table
@@ -19,7 +19,7 @@ class TiposComprobantes extends ModelBase
      *
      * @var array
      */
-    protected $fillable = ['tipo_comprobante','activo'];
+    protected $fillable = ['tipo_comprobante','descripcion','limite','activo'];
 
     /**
      * The validation rules
@@ -28,7 +28,7 @@ class TiposComprobantes extends ModelBase
     public $rules = [
         'tipo_comprobante' => 'required|max:10',
         'descripcion' => 'required|max:255',
-        'limite' => 'required|numeric|max:255'
+        'limite' => 'required|numeric'
     ];
 
     /**

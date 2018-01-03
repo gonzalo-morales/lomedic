@@ -52,6 +52,11 @@ class Empresas extends ModelBase
 	{
 		return self::where('activo','=','1');
 	}
+	
+	public function regimenfiscal()
+	{
+	    return $this->hasOne(RegimenesFiscales::class,'id_regimen_fiscal','fk_id_regimen_fiscal');
+	}
 
 	/**
 	 * Obtenemos los modulos relacionados a la empresa

@@ -38,6 +38,6 @@ Route::prefix('{company}')->group(function () {
         Route::resource('solicitudes-entrada','Inventarios\SolicitudesEntradaController');
         Route::post('getDetalleEntrada','Inventarios\EntradasController@getDetalleEntrada')->name('entradas.getDetalleEntrada');
         Route::post('guardarEntrada','Inventarios\EntradasController@guardarEntrada')->name('entradas.guardarEntrada');
-        Route::resource('stock','Inventarios\StockController');
+        Route::resource('movimiento-almacen','Inventarios\MovimientoAlmacenController');
     });
 });

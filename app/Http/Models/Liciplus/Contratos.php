@@ -16,7 +16,7 @@ class Contratos extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'no_oficial';
+//    protected $primaryKey = 'no_contrato';
 
     public function licitacion(){
         return $this->belongsTo(Licitaciones::class,'no_oficial','no_oficial');

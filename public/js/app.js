@@ -227,5 +227,34 @@ $(document).ready(function(){
     });
 
     $('#form-model .select2').select2();
+
+    $('.custom-file-input').on('change', function (ev) {
+        file_name(this);
+    });
+
 });
+
+function file_name(obj) {
+    const $input = $(obj);
+    const target = $input.data('target');
+    const $target = $(target);
+
+    if($input.val()) {
+        if (!$target.length)
+            return console.error('Invalid target for custom file', $input);
+
+        if (!$target.attr('data-content'))
+            return console.error('Invalid `data-content` for custom file target', $input);
+
+        // set original content so we can revert if user deselects file
+        if (!$target.attr('data-original-content'))
+            $target.attr('data-original-content', $target.attr('data-content'));
+
+        const input = $input.get(0);
+
+        let name = input.files[0].name ? input.files[0].name : $input.val();
+
+        $target.attr('data-content', name);
+    }
+}
 

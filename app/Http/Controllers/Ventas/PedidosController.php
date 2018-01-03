@@ -31,6 +31,7 @@ use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\Ventas\PedidosAnexos;
 
 class PedidosController extends ControllerBase
 {
@@ -50,7 +51,7 @@ class PedidosController extends ControllerBase
                 })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
                 
             'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto','id_proyecto')->where('eliminar',0)->where('fk_id_estatus',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('proyecto','id_proyecto'),
-            'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["proyecto", "ASC"]]'),
+            'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "sortBy":["proyecto"]'),
             
             'sucursales' => empty($entity) ? [] : Sucursales::select('sucursal','id_sucursal')->where('eliminar',0)->where('activo',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('sucursal','id_sucursal'),
             'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["sucursal", "ASC"]]'),
@@ -122,57 +123,66 @@ class PedidosController extends ControllerBase
         })->download('xlsx');
     }
 
-    public function loadLayoutProductos($company,Request $request)
+    public function ImportarProductos($company,Request $request)
     {
         $respuesta = [];
         $data_xlsx = Excel::load($request->file('file')->getRealPath(), function($reader) { })->get();
 
         $data_xlsx = $data_xlsx->toArray();
         $data = [];
-        $errores_clave = [];
-        $errores_upc = [];
-        foreach ($data_xlsx as $num=>$row) {
-            $success_clave = false;
-            $success_upc = false;
-            $proyecto = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)->where('clave_producto_cliente','LIKE',$row['clave_cliente_producto'])->first();
-            if(empty($proyecto)){
-                $errores_clave[$num] = $row['clave_cliente_producto'];
+        $errores = [];
+        
+        
+        foreach ($data_xlsx as $num=>$row)
+        {
+            
+            if($row['cantidad'] <= 0)
+                $errores[$num]['cantidad'] = $row['cantidad'];
+                
+            $ClaveCliente = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)->where('clave_producto_cliente','=',$row['clave_cliente_producto'])->first();
+            
+            if(empty($ClaveCliente)){
+                $errores[$num]['clave_producto'] = $row['clave_cliente_producto'];
             }else{
-                $row['id_clave_cliente_producto'] = $proyecto->id_clave_cliente_producto;
-                $row['descripcion_clave'] = $proyecto->descripcion;
-                $success_clave = true;
+                $row['id_clave_cliente_producto'] = $ClaveCliente->id_clave_cliente_producto;
+                $row['descripcion_clave'] = $ClaveCliente->descripcion;
             }
 
-            if(!empty($row['upc']) && $success_clave){
-                $upc = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)->where('clave_producto_cliente','LIKE',$row['clave_cliente_producto'])->first()->sku()->first()->upcs()->where('upc',$row['upc'])->first();
+            if(!empty($row['upc']) && !empty($ClaveCliente)){
+                $sku = $ClaveCliente->sku()->first();
+                if(!empty($sku)){
+                    $row['fk_id_sku'] = $sku->id_sku;
+                }
+                $upc = $ClaveCliente->sku()->first()->upcs()->where('upc',$row['upc'])->first();
                 if(empty($upc)){
-                    $errores_upc[$num] = $row['upc'];
+                    $errores[$num]['upc'] = $row['upc'];
                 }else{
                     $row['fk_id_upc'] = $upc->id_upc;
                     $row['descripcion_upc'] = $upc->descripcion;
-                    $success_upc = true;
                 }
-            }else{
-                $success_upc = true;
             }
-            if(($success_clave && $success_upc)){
+            
+            if(!isset($errores[$num])) {
                 $data[] = $row;
             }
         }
-        $respuesta[0] = $data;//Filas que sí se encontraron al final
-        $respuesta[1] = $errores_clave;//Filas con error en la clave
-        $respuesta[2] = $errores_upc;//Filas con error en el UPC
+        
+        
+        $respuesta['data']  = $data;//Filas que sí se encontraron al final
+        $respuesta['error'] = $errores;//Filas con error
+
         return Response::json($respuesta);
+        
     }
     
     public function descargaranexo($company, $id)
     {
-        $archivo = AnexosProyectos::where('id_anexo',$id)->first();
+        $archivo = PedidosAnexos::where('id_anexo',$id)->first();
         $file = Storage::disk('pedidos_anexos')->getDriver()->getAdapter()->getPathPrefix().$company.'/'.$archivo->fk_id_proyecto.'/'.$archivo->archivo;
 
         if (File::exists($file))
         {
-            Logs::createLog($archivo->getTable(), $company, $archivo->id_anexo, 'descargar', 'Archivo anexo de proyecto');
+            Logs::createLog($archivo->getTable(), $company, $archivo->id_anexo, 'descargar', 'Archivo anexo de pedido');
             return Response::download($file);
         }
         else
