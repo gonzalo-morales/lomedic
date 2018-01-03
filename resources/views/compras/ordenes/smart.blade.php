@@ -498,7 +498,7 @@
 		<script type="text/javascript">
 			rivets.binders['hide-delete'] = {
 				bind: function (el) {
-					if(el.dataset.fk_id_estatus_orden != 1 || el.dataset.fk_id_estatus_autorizacion == 2 || el.dataset.fk_id_estatus_autorizacion == 4)
+					if(el.dataset.fk_id_estatus_orden != 1 {{-- || el.dataset.fk_id_estatus_autorizacion == 2 || el.dataset.fk_id_estatus_autorizacion == 4 --}})
 					{
 						$(el).hide();
 					}
@@ -506,7 +506,7 @@
 			};
 			rivets.binders['hide-update'] = {
 				bind: function (el) {
-					if(el.dataset.fk_id_estatus_orden != 1 || el.dataset.fk_id_estatus_autorizacion == 2 || el.dataset.fk_id_estatus_autorizacion == 4)
+					if(el.dataset.fk_id_estatus_orden != 1 {{--|| el.dataset.fk_id_estatus_autorizacion == 2 || el.dataset.fk_id_estatus_autorizacion == 4 --}})
 					{
 						$(el).hide();
 					}
