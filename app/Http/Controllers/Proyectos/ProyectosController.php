@@ -104,7 +104,9 @@ class ProyectosController extends ControllerBase
         $arreglo = $request->relations;
         unset($arreglo['has']['productos']['$row_id']);
         $request->merge(["relations"=>$arreglo]);
-        return parent::store($request, $company);
+        
+        $return = parent::store($request, $company);
+        return $return['redirect'];
     }
     
     public function update(Request $request, $company, $id)
@@ -149,7 +151,9 @@ class ProyectosController extends ControllerBase
         $arreglo = $request->relations;
         unset($arreglo['has']['productos']['$row_id']);
         $request->merge(["relations"=>$arreglo]);
-        return parent::update($request, $company, $id);
+        
+        $return = parent::update($request, $company, $id);
+        return $return['redirect'];
     }
     
     public function obtenerProyectos()

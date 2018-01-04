@@ -225,7 +225,7 @@ class EmpresasController extends ControllerBase
 	    
 	    $data = $this->readCer($pathCer) ?? [];
 	    $data['cadena_cer'] = $this->FileToPem($pathCer,'cer') ?? '';
-	    $data['cadena_key'] = $this->FileToPem($pathKey,'key') ?? '';
+	    $data['cadena_key'] = $this->FileToPem($pathKey,'key',$req->pass) ?? '';
 	    
 	    return $data;
 	}
@@ -247,7 +247,7 @@ class EmpresasController extends ControllerBase
 	        return null;
 	}
 	
-	protected function FileToPem($pathFile = '',$type='cer')
+	protected function FileToPem($pathFile = '',$type='cer',$pass='')
 	{
 	    if (File::exists($pathFile))
 	    {
@@ -255,9 +255,15 @@ class EmpresasController extends ControllerBase
 	        $FileContent = file_get_contents($pathFile);
 	        if($type == 'cer')
 	           $PemContent =  '-----BEGIN CERTIFICATE-----'.PHP_EOL.chunk_split(base64_encode($FileContent), 64, PHP_EOL).'-----END CERTIFICATE-----'.PHP_EOL;
-	        elseif($type == 'key')
-	           $PemContent =  openssl_pkey_get_private('-----BEGIN PRIVATE KEY-----'.PHP_EOL.chunk_split(base64_encode($FileContent), 64, PHP_EOL).'-----END PRIVATE KEY-----'.PHP_EOL);
-    	    
+	        elseif($type == 'key') {
+	            $comand = 'openssl pkcs8 -inform DER -in '.$pathFile.' -passin pass:'.$pass.' -out '.$pathFile.'.pem';
+	            @exec($comand, $output);
+	            
+	            if(file_exists($pathFile.'.pem')){
+	                $PemContent = file_get_contents($pathFile.'.pem');
+	                unlink($pathFile.'.pem');
+	            }
+	        }
 	        return $PemContent;
 	    }
 	    else

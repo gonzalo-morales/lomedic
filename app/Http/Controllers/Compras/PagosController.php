@@ -43,7 +43,8 @@ class PagosController extends ControllerBase
         $fileName = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
         Storage::disk('pagos')->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName, file_get_contents($myfile->getRealPath()));
         $request->request->set('comprobante',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName, file_get_contents($myfile->getRealPath()));
-        return parent::store($request, $company);
+        $return = parent::store($request, $company);
+        return $return['redirect'];
     }
 
     public function destroy(Request $request, $company, $idOrIds, $attributes = [])

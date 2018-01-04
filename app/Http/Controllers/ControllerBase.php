@@ -107,8 +107,8 @@ class ControllerBase extends Controller
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
         DB::beginTransaction();
-        $isSuccess = $this->entity->create($request->all());
-        if ($isSuccess) {
+        $entity = $this->entity->create($request->all());
+        if ($entity) {
 
             # Si tienes relaciones
             if ($request->relations) {
@@ -119,7 +119,7 @@ class ControllerBase extends Controller
                                 if(isset($relations['-1'])) {
                                     unset($relations['-1']);
                                 }
-                                $isSuccess->{$relationName}()->createMany($relations);
+                                $entity->{$relationName}()->createMany($relations);
                             }
                     }
                 }
@@ -130,13 +130,14 @@ class ControllerBase extends Controller
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
-            $this->log('store', $isSuccess->id_banco);
-            return $this->redirect('store');
+            $this->log('store', $entity->id_banco);
+            $redirect = $this->redirect('store');
         } else {
             DB::rollBack();
             $this->log('error_store');
-            return $this->redirect('error_store');
+            $redirect = $this->redirect('error_store');
         }
+        return compact('entity','redirect');
     }
 
     /**
@@ -251,12 +252,13 @@ class ControllerBase extends Controller
             Cache::tags(getCacheTag('index'))->flush();
 
             $this->log('update', $id);
-            return $this->redirect('update');
+            $redirect = $this->redirect('update');
         } else {
             DB::rollBack();
             $this->log('error_update', $id);
-            return $this->redirect('error_update');
+            $redirect = $this->redirect('error_update');
         }
+        return compact('entity','redirect');
     }
 
     /**

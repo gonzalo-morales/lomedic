@@ -73,6 +73,7 @@ class InventariosController extends ControllerBase
 		$request->request->add([
 			'fecha_creacion' => Carbon::now()
 		]);
-		return parent::store($request, $company);
+		$return = parent::store($request, $company);
+		return $return['redirect'];
 	}
 }

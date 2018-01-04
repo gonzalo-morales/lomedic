@@ -86,7 +86,8 @@ class NotasCreditoProveedorController extends ControllerBase
             $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
         }
         $request->request->set('fk_id_estatus_nota',1);
-        return parent::store($request, $company);
+        $return = parent::store($request, $company);
+        return $return['redirect'];
     }
 
     public function destroy(Request $request, $company, $idOrIds, $attributes = [])

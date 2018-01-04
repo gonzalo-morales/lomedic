@@ -46,7 +46,8 @@ class FamiliasproductosController extends ControllerBase
         if($request->activo == 'on')
             {$request->request->set('activo',1);}
 
-        return parent::store($request, $company);
+        $return = parent::store($request, $company);
+        return $return['redirect'];
     }
 
     /**

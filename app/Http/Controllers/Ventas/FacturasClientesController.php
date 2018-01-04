@@ -31,7 +31,9 @@ use Charles\CFDI\Node\Relacionado;
 use Charles\CFDI\Node\Emisor;
 use Charles\CFDI\Node\Receptor;
 use Charles\CFDI\Node\Concepto;
-use Charles\CFDI\Node\Impuesto\Retencion;
+use Charles\CFDI\Node\Impuesto\Traslado;
+use Charles\CFDI\Node\Impuestos;
+use Charles\CFDI\Node\Traslados;
 
 class FacturasClientesController extends ControllerBase
 {
@@ -74,69 +76,162 @@ class FacturasClientesController extends ControllerBase
         ];
     }
     
-    
-    public function generarXml($company,Request $request)
+    public function store(Request $request, $company)
     {
+        $return = parent::store($request, $company);
+        
+        $datos = $return["entity"];
+        
+        if($datos)
+            $xml = $this->generarXml($datos->id_factura);
+        
+        return $return["redirect"];
+    }
+    
+    public function update(Request $request, $company, $id)
+    {
+        $return = parent::update($request, $company, $id);
+        
+        $datos = $return["entity"];
+        
+        if($datos && $request->save !== true)
+        {
+            $xml = $this->generarXml($datos->id_factura);
+            if($request->timbrar == true && !empty($xml))
+                $this->timbrar($xml,$id);
+        }
+            
+        return $return["redirect"];
+    }
+    
+    public function generarXml($id)
+    {
+        $entity = $this->entity->findOrFail($id);
+        
         if(!empty($entity)) {
             
              $cfdi = new CFDI([
-             'Serie' => $entity->serie,
-             'Folio' => $entity->folio,
-             'Fecha' => str_replace(' ','T',$entity->fecha_timbrado),
-             'FormaPago' => $entity->formapago->forma_pago,
-             'NoCertificado' => $entity->certificado->no_certificado,
-             'CondicionesDePago' => $entity->condicionpago->condicion_pago,
-             'Subtotal' => $entity->subtotal,
-             'Descuento' => $entity->descuento,
-             'Moneda' => $entity->moneda->moneda,
-             'TipoCambio' => $entity->tipo_cambio,
-             'Total' => $entity->total,
-             'TipoDeComprobante' => $entity->tipocomprobante->tipo_comprobante,
-             'MetodoPago' => $entity->metodopago->metodo_pago,
-             'LugarExpedicion' => '64000',
+                 'Version'=>'3.3',
+                 'Serie' => $entity->serie,
+                 'Folio' => $entity->folio,
+                 'Fecha' => str_replace(' ','T',substr($entity->fecha_creacion,0,19)),
+                 'FormaPago' => $entity->formapago->forma_pago,
+                 'NoCertificado' => $entity->certificado->no_certificado,
+                 'CondicionesDePago' => $entity->condicionpago->condicion_pago,
+                 'SubTotal' => number_format($entity->subtotal,2,'.',''),
+                 #'Descuento' => number_format($entity->descuento,2,'.',''),
+                 'Moneda' => $entity->moneda->moneda,
+                 'TipoCambio' => round($entity->tipo_cambio,4),
+                 'Total' => number_format($entity->total,2,'.',''),
+                 'TipoDeComprobante' => $entity->tipocomprobante->tipo_comprobante,
+                 'MetodoPago' => $entity->metodopago->metodo_pago,
+                 'LugarExpedicion' => '64000',
              ], $entity->certificado->cadena_cer, $entity->certificado->cadena_key);
              
              $cfdi->add(new Emisor([
-             'Rfc' => $entity->empresa->rfc,
-             'Nombre' => $entity->empresa->razon_social,
-             'RegimenFiscal' => $entity->empresa->fk_id_regimen_fiscal,
+                 'Rfc' => $entity->empresa->rfc,
+                 'Nombre' => $entity->empresa->razon_social,
+                 'RegimenFiscal' => $entity->empresa->fk_id_regimen_fiscal,
              ]));
              
              $cfdi->add(new Receptor([
-             'Rfc' =>  $entity->cliente->rfc,
-             'Nombre' => $entity->cliente->razon_social,
-             'ResidenciaFiscal' => 'MXN',
-             'NumRegIdTrib' => '121585958',
-             'UsoCFDI' => $entity->usocfdi->uso_cfdi,
+                 'Rfc' =>  $entity->cliente->rfc,
+                 'Nombre' => $entity->cliente->razon_social,
+                 #'ResidenciaFiscal' => 'MXN',
+                 #'NumRegIdTrib' => '121585958',
+                 'UsoCFDI' => $entity->usocfdi->uso_cfdi,
              ]));
              
+             $Impuestos = [];
              foreach ($entity->detalle as $row) {
-             $concepto = new Concepto([
-             'ClaveProdServ' => $row->claveproducto->clave_producto_servicio,
-             'NoIdentificacion' => $row->clavecliente->clave_producto_cliente,
-             'Cantidad' => $row->cantidad,
-             'ClaveUnidad' => $row->unidadmedida->clave_unidad,
-             'Unidad' => $row->unidadmedida->descripcion,
-             'Descripcion' => $row->descripcion,
-             'ValorUnitario' => $row->precio_unitario,
-             'Importe' => $row->importe,
-             'Descuento' => $row->descuento,
-             ]);
-             
-             $concepto->add(new Retencion([
-             'Impuesto' => $row->impuestos->numero_impuesto,
-             'Importe' => $row->impuesto,
-             ]));
-             
-             $cfdi->add($concepto);
+                 $concepto = new Concepto([
+                     'ClaveProdServ' => $row->claveproducto->clave_producto_servicio,
+                     'NoIdentificacion' => $row->clavecliente->clave_producto_cliente,
+                     'Cantidad' => $row->cantidad,
+                     'ClaveUnidad' => $row->unidadmedida->clave_unidad,
+                     'Unidad' => $row->unidadmedida->descripcion,
+                     'Descripcion' => $row->descripcion,
+                     'ValorUnitario' => number_format($row->precio_unitario,2,'.',''),
+                     'Importe' => number_format($row->importe,2,'.',''),
+                     #'Descuento' => number_format($row->descuento,2,'.',''),
+                 ]);
+                 
+                 $impuesto = $concepto->add(new Traslado([
+                     'Impuesto' => $row->impuestos->numero_impuesto,
+                     'TipoFactor' => $row->impuestos->tipo_factor,
+                     'TasaOCuota' => $row->impuestos->tasa_o_cuota,
+                     'Importe' => number_format($row->impuesto,2,'.',''),
+                     'Base' => number_format(($row->importe - $row->descuento),2,'.',''),
+                 ]));
+                 
+                 $Impuestos[$row->impuestos->numero_impuesto][$row->impuestos->tipo_factor][$row->impuestos->tasa_o_cuota] = 
+                 ($Impuestos[$row->impuestos->numero_impuesto][$row->impuestos->tipo_factor][$row->impuestos->tasa_o_cuota] ?? 0) + round($row->impuesto,2);
+                 
+                 $cfdi->add($concepto);
              }
              
-             #file_put_contents(base_path().'/prueba.xml',$cfdi->getXML());
+             $TotalTrasladados = $entity->impuestos;
+             $impuestos = new Impuestos(['TotalImpuestosTrasladados' => number_format($entity->impuestos,2,'.','')]);
              
-             dump($cfdi->getXML());
-             dd();
+             foreach ($Impuestos as $numero=>$Impuesto) {
+                 foreach ($Impuesto as $tipo => $TImpuesto) {
+                     foreach ($TImpuesto as $tasa => $importe) {
+                         $impuestos->add(new Traslados([
+                             'Impuesto' => $numero,
+                             'TipoFactor' => $tipo,
+                             'TasaOCuota' => $tasa,
+                             'Importe' => number_format($importe,2,'.',''),
+                         ]));
+                         $TotalTrasladados = $TotalTrasladados + $importe;
+                     }
+                 }
+             }
+             
+             $cfdi->add($impuestos);
+             
+             $request = request();
+             
+             $request->request->set('xml_original',$cfdi->getXML());
+             $request->request->set('sello_cdfi',$cfdi->getSello());
+             $request->request->set('save',true);
+             
+             $this->update($request, request()->company, $id);
+             
+             return $cfdi->getXML();
         }
+        return null;
     }
+    
+    public function timbrar($xml,$id)
+    {
+        $return = timbrar(['cfdi'=>$xml]);
+        
+        if($return->status == '200') {
+            if(in_array($return->resultados->status,['200','307'])){
+                $request = request();
+                $request->request->set('cadena_original',$return->resultados->cadenaOriginal);
+                $request->request->set('certificado_sat',$return->resultados->certificadoSAT);
+                $request->request->set('xml_timbrado',$return->resultados->cfdiTimbrado);
+                $request->request->set('fecha_timbrado',str_replace('T',' ',substr($return->resultados->fechaTimbrado,0,19)));
+                
+                $request->request->set('sello_sat',$return->resultados->selloSAT);
+                $request->request->set('uuid',$return->resultados->uuid);
+                $request->request->set('version_tfd',$return->resultados->versionTFD);
+                $request->request->set('codigo_qr',base64_encode($return->resultados->qrCode));
+                $request->request->set('save',true);
+                
+                $this->update($request, request()->company, $id);
+            }
+            else
+                dd($return->resultados->mensaje);
+        }
+        else
+            dd($return);
+
+        
+        return $return;
+    }
+    
 
     /*
     public function parseXML($company,Request $request)

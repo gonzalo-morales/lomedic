@@ -90,7 +90,8 @@ class PedidosController extends ControllerBase
             }
         }
         
-        return parent::store($request, $company);
+        $return = parent::store($request, $company);
+        return $return['redirect'];
     }
     
     public function update(Request $request, $company, $id)
@@ -111,7 +112,8 @@ class PedidosController extends ControllerBase
             }
         }
         
-        return parent::update($request, $company, $id);
+        $return = parent::update($request, $company, $id);
+        return $return['redirect'];
     }
     
     public function layoutProductos()

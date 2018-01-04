@@ -5,6 +5,8 @@ use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\MetodosPago;
 use App\Http\Models\Administracion\RegimenesFiscales;
+#use SoapClient;
+#use SoapFault;
 /**
  * Obtenemos arreglo accion de ruta personalizada
  * @param  string $action - Acción por la que reemplazar
@@ -200,6 +202,19 @@ function array_merge_recursive_simple($paArray1, $paArray2)
     return $paArray1;
 }
 
+function timbrar($params = [],$connections = null) {
+    
+    $config = config('wsdl.connections.'.($connections ?? config('wsdl.default')));
+    
+    try {
+        $client = new SoapClient($config['url'], $config['options']);
+        $response = $client->__soapCall($config['function'], ['parameters' => $config['parameters']+$params]);
+    }catch(SoapFault $fault){
+        return collect(['status'=>$fault->faultcode,'mensaje'=>"SOAPFault: ".$fault->faultcode." - ".$fault->faultstring]);
+    }
+    
+    return $response->return;
+}
 
 function num2letras($num, $fem = false, $dec = true,$moneda = 'pesos',$abreviaturaMoneda = 'M.N.') {
 

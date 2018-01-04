@@ -111,7 +111,8 @@ class SalidasController extends ControllerBase
 		$request->request->add([
 			'fecha_salida' => Carbon::now()
 		]);
-		return parent::store($request, $company);
+		$return = parent::store($request, $company);
+		return $return['redirect'];
 	}
 
 	/**
