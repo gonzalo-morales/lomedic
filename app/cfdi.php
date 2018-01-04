@@ -4,12 +4,11 @@ use Charles\CFDI\Node\Relacionado;
 use Charles\CFDI\Node\Emisor;
 use Charles\CFDI\Node\Receptor;
 use Charles\CFDI\Node\Concepto;
-use Charles\CFDI\Node\Impuestos;
-use Charles\CFDI\Node\Traslados;
 use Charles\CFDI\Node\Impuesto\Traslado;
 use Charles\CFDI\Node\Impuesto\Retencion;
-use Illuminate\Support\Collection;
-use Charles\CFDI\Node\Retenciones;
+use App\Http\CFDI\Node\Impuestos;
+use App\Http\CFDI\Node\Traslados;
+use App\Http\CFDI\Node\Retenciones;
 
 function generarXml($datos = [])
 {
@@ -25,7 +24,6 @@ function generarXml($datos = [])
             if(isset($datos['receptor'])) {
                 $cfdi->add(new Receptor($datos['receptor']));
             }
-        
             
             $subtotal = 0;
             $descuentos = 0;
@@ -70,16 +68,6 @@ function generarXml($datos = [])
                 }
             }
             
-            $ImpuestosTotales = [];
-            if(array_key_exists('traslado', $impuestos)) {
-                $ImpuestosTotales['TotalImpuestosTrasladados'] = $traslado;
-            }
-            if(array_key_exists('retencion', $impuestos)) {
-                $ImpuestosTotales['TotalImpuestosRetenidos'] = $retencion;
-            }
-            
-            $nImpuestos = new Impuestos($ImpuestosTotales);
-            
             $addImpuestos = [];
             foreach ($impuestos as $tipo=>$imp) {
                 foreach ($imp as $nImpuesto=>$Factor) {
@@ -95,6 +83,15 @@ function generarXml($datos = [])
                     }
                 }
             }
+            
+            if(isseT($addImpuestos['traslado'])) {
+                $ImpuestosTotales['TotalImpuestosTrasladados'] = $addImpuestos['traslado']['Importe'];
+            }
+            if(isseT($addImpuestos['retencion'])) {
+                $ImpuestosTotales['TotalImpuestosTrasladados'] = $addImpuestos['retencion']['Importe'];
+            }
+            
+            $nImpuestos = new Impuestos($ImpuestosTotales);
 
             if(isseT($addImpuestos['traslado'])) {
                 $nImpuestos->add(new Traslados($addImpuestos['traslado']));
