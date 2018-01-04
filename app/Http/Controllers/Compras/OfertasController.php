@@ -58,7 +58,7 @@ class OfertasController extends ControllerBase
         return parent::create($company,$attributes);
 	}
 
-	public function store(Request $request, $company)
+	public function store(Request $request, $company, $compact = false)
 	{
         # ¿Usuario tiene permiso para crear?
 //		$this->authorize('create', $this->entity);
@@ -143,7 +143,7 @@ class OfertasController extends ControllerBase
 		return parent::edit($company, $id, $attributes);
 	}
 
-	public function update(Request $request, $company, $id)
+	public function update(Request $request, $company, $id, $compact = false)
 	{
 		# ¿Usuario tiene permiso para actualizar?
 //		$this->authorize('update', $this->entity);

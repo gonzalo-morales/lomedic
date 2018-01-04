@@ -34,7 +34,7 @@ class FacturasProveedoresController extends ControllerBase
         ];
     }
 
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
         # ¿Usuario tiene permiso para crear?
         //		$this->authorize('create', $this->entity);
@@ -99,7 +99,7 @@ class FacturasProveedoresController extends ControllerBase
         }
     }
 
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         # ¿Usuario tiene permiso para actualizar?
         //		$this->authorize('update', $this->entity);

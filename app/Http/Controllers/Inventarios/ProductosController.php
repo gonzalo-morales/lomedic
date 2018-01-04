@@ -27,7 +27,7 @@ class ProductosController extends ControllerBase
         $this->entity = $entity;
     }
 
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         # ¿Usuario tiene permiso para actualizar?
         #$this->authorize('update', $this->entity);

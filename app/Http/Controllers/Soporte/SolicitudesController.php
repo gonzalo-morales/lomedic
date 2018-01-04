@@ -69,7 +69,7 @@ class SolicitudesController extends ControllerBase
         ]);
     }
 
-    public function store(Request $request, $company) // Para crear un nuevo ticket
+    public function store(Request $request, $company, $compact = false) // Para crear un nuevo ticket
     {
         $id_solicitante = !empty($request->request->get('empleado_solicitud')) ? $request->request->get('empleado_solicitud') : $request->request->get('id_solicitante');
         
@@ -128,7 +128,7 @@ class SolicitudesController extends ControllerBase
         return parent::show($company, $id, $attributes);
     }
 
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         $entity = $this->entity->findOrFail($id);
         
