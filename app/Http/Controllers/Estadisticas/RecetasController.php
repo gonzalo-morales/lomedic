@@ -17,7 +17,7 @@ class RecetasController extends ControllerBase
 	    ]);
 	}
 	
-	public function store(Request $request, $company)
+	public function store(Request $request, $company, $compact = false)
 	{
 	    $fecha_inicio = isset($request->fecha_ini) ? $request->fecha_ini : '1900-01-01';
 	    $fecha_fin = isset($request->fecha_fin) ? $request->fecha_fin : '1900-01-01';
