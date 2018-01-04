@@ -68,11 +68,11 @@ class FacturasClientesController extends ControllerBase
             $xml = generarXml($this->datos_cfdi($datos->id_factura));
             
             if(!empty($xml)) {
-                $request->request->add(['xml_original'=>$xml->xml,'sello_cdfi'=>$xml->sello]);
+                $request->request->add(['xml_original'=>$xml['xml'],'sello_cdfi'=>$xml['sello']]);
             }
             
             if($request->timbrar == true && !empty($xml))
-                $timbrado = timbrar($xml->xml);
+                $timbrado = timbrar($xml['xml']);
                 
             if(isset($timbrado) && $timbrado->status == '200') {
                 if(in_array($timbrado->resultados->status,['200','307'])) {
@@ -105,11 +105,13 @@ class FacturasClientesController extends ControllerBase
             $xml = generarXml($this->datos_cfdi($datos->id_factura));
             
             if(!empty($xml)) {
-                $request->request->add(['xml_original'=>$xml->xml,'sello_cdfi'=>$xml->sello]);
+                $request->request->add(['xml_original'=>$xml['xml'],'sello_cdfi'=>$xml['sello']]);
             }
 
+            #dd($xml['xml']);
+            
             if($request->timbrar == true && !empty($xml))
-                $timbrado = timbrar($xml->xml);
+                $timbrado = timbrar($xml['xml']);
             
             if(isset($timbrado) && $timbrado->status == '200') {
                 if(in_array($timbrado->resultados->status,['200','307'])) {
@@ -124,6 +126,8 @@ class FacturasClientesController extends ControllerBase
                         'codigo_qr'=>base64_encode($timbrado->resultados->qrCode),
                     ]);
                 }
+                else
+                    dd($timbrado);
             }
             $request->request->set('save',true);
             $return = parent::update($request, $company, $id, $compact);
@@ -148,15 +152,17 @@ class FacturasClientesController extends ControllerBase
                 'FormaPago' => $entity->formapago->forma_pago,
                 'NoCertificado' => $entity->certificado->no_certificado,
                 'CondicionesDePago' => $entity->condicionpago->condicion_pago,
-                'SubTotal' => number_format($entity->subtotal,2,'.',''),
-                #'Descuento' => number_format($entity->descuento,2,'.',''),
+                #'SubTotal' => number_format($entity->subtotal,2,'.',''),
                 'Moneda' => $entity->moneda->moneda,
                 'TipoCambio' => round($entity->tipo_cambio,4),
-                'Total' => number_format($entity->total,2,'.',''),
+                #'Total' => number_format($entity->total,2,'.',''),
                 'TipoDeComprobante' => $entity->tipocomprobante->tipo_comprobante,
                 'MetodoPago' => $entity->metodopago->metodo_pago,
                 'LugarExpedicion' => '64000',
             ];
+            
+            if($entity->descuento > 0)
+                $return['cfdi']['Descuento'] = number_format($entity->descuento,2,'.','');
         
             $return['emisor'] = [
                 'Rfc' => $entity->empresa->rfc,
@@ -172,8 +178,29 @@ class FacturasClientesController extends ControllerBase
                 'UsoCFDI' => $entity->usocfdi->uso_cfdi,
             ];
         
-            foreach ($entity->detalle as $row) {
-                $return['conceptos'][] = [
+            foreach ($entity->detalle as $i=>$row)
+            {
+                $impuesto = [];
+                if($row->impuestos->retencion) {
+                    $impuesto['retencion'] = [
+                        'Impuesto' => $row->impuestos->numero_impuesto,
+                        'TipoFactor' => $row->impuestos->tipo_factor,
+                        'TasaOCuota' => $row->impuestos->tasa_o_cuota,
+                        'Importe' => number_format($row->impuesto,2,'.',''),
+                        'Base' => number_format(($row->importe),2,'.',''),
+                    ];
+                }
+                else {
+                    $impuesto['traslado'] = [
+                        'Impuesto' => $row->impuestos->numero_impuesto,
+                        'TipoFactor' => $row->impuestos->tipo_factor,
+                        'TasaOCuota' => $row->impuestos->tasa_o_cuota,
+                        'Importe' => number_format($row->impuesto,2,'.',''),
+                        'Base' => number_format(($row->importe),2,'.',''),
+                    ];
+                }
+                
+                $concepto = [
                     'ClaveProdServ' => $row->claveproducto->clave_producto_servicio,
                     'NoIdentificacion' => $row->clavecliente->clave_producto_cliente,
                     'Cantidad' => $row->cantidad,
@@ -181,18 +208,13 @@ class FacturasClientesController extends ControllerBase
                     'Unidad' => $row->unidadmedida->descripcion,
                     'Descripcion' => $row->descripcion,
                     'ValorUnitario' => number_format($row->precio_unitario,2,'.',''),
-                    'Importe' => number_format($row->importe,2,'.',''),
-                    #'Descuento' => number_format($row->descuento,2,'.',''),
-                    'impuestos' => [
-                        'traslado' => [
-                            'Impuesto' => $row->impuestos->numero_impuesto,
-                            'TipoFactor' => $row->impuestos->tipo_factor,
-                            'TasaOCuota' => $row->impuestos->tasa_o_cuota,
-                            'Importe' => number_format($row->impuesto,2,'.',''),
-                            'Base' => number_format(($row->importe - $row->descuento),2,'.',''),
-                        ],
-                    ],
+                    'Importe' => ($row->cantidad * number_format($row->precio_unitario,2,'.','')) - number_format($row->descuento,2,'.',''),
+                    'impuestos' => [$impuesto]
                 ];
+                if($row->descuento > 0)
+                    $concepto['Descuento'] = number_format($row->descuento,2,'.','');
+                
+                $return['conceptos'][] = $concepto;
             }
         }
         return $return;
