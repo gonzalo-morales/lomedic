@@ -96,7 +96,7 @@ class ControllerBase extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
         # ¿Usuario tiene permiso para crear?
         //$this->authorize('create', $this->entity);
@@ -137,7 +137,8 @@ class ControllerBase extends Controller
             $this->log('error_store');
             $redirect = $this->redirect('error_store');
         }
-        return compact('entity','redirect');
+        
+        return $compact ? compact('entity','redirect') : $redirect;
     }
 
     /**
@@ -204,7 +205,7 @@ class ControllerBase extends Controller
      * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         # ¿Usuario tiene permiso para actualizar?
         //$this->authorize('update', $this->entity);
@@ -258,7 +259,7 @@ class ControllerBase extends Controller
             $this->log('error_update', $id);
             $redirect = $this->redirect('error_update');
         }
-        return compact('entity','redirect');
+        return $compact ? compact('entity','redirect') : $redirect;
     }
 
     /**

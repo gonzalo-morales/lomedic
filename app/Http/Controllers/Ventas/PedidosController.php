@@ -72,7 +72,7 @@ class PedidosController extends ControllerBase
         ];
     }
     
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
         #Guardamos los archivos de los anexos en la ruta especificada
         if(isset($request->relations->has->anexos)){
@@ -90,11 +90,10 @@ class PedidosController extends ControllerBase
             }
         }
         
-        $return = parent::store($request, $company);
-        return $return['redirect'];
+        return parent::store($request, $company, $compact);
     }
     
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         #Guardamos los archivos de los anexos en la ruta especificada
         if(isset($request->relations->has->anexos)){
@@ -112,8 +111,7 @@ class PedidosController extends ControllerBase
             }
         }
         
-        $return = parent::update($request, $company, $id);
-        return $return['redirect'];
+        return parent::update($request, $company, $id, $compact);
     }
     
     public function layoutProductos()

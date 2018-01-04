@@ -20,10 +20,9 @@ class AplicacionesMedicamentosController extends ControllerBase
 
 	}
 
-	public function update(Request $request, $company, $id)
+	public function update(Request $request, $company, $id, $compact = false)
     {
-        $return = parent::update($request, $company, $id);
-        return $return['redirect'];
+        return parent::update($request, $company, $id, $compact);
     }
 
 

@@ -65,13 +65,12 @@ class SolicitudesSalidaController extends ControllerBase
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $company)
+	public function store(Request $request, $company, $compact = false)
 	{
 		$request->request->add([
 			'fecha_solicitud' => Carbon::now()
 		]);
-		$return = parent::store($request, $company);
-		return $return['redirect'];
+		return parent::store($request, $company, $compact);
 	}
 
 }

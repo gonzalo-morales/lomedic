@@ -202,15 +202,16 @@ function array_merge_recursive_simple($paArray1, $paArray2)
     return $paArray1;
 }
 
-function timbrar($params = [],$connections = null) {
-    
+function wsdlService($function = '',$params = [],$connections = null)
+{    
     $config = config('wsdl.connections.'.($connections ?? config('wsdl.default')));
+    $call = $function ?? $config['function'];
     
     try {
-        $client = new SoapClient($config['url'], $config['options']);
-        $response = $client->__soapCall($config['function'], ['parameters' => $config['parameters']+$params]);
-    }catch(SoapFault $fault){
-        return collect(['status'=>$fault->faultcode,'mensaje'=>"SOAPFault: ".$fault->faultcode." - ".$fault->faultstring]);
+        $client = new SoapClient($config['url'], $config['options'] ?? []);
+        $response = $client->__soapCall($call, ['parameters' => ($config['parameters']??[])+$params]);
+    }catch(SoapFault $f){
+        return collect(['status'=>$f->faultcode,'mensaje'=>"SOAPFault: ".$f->faultcode." - ".$f->faultstring]);
     }
     
     return $response->return;

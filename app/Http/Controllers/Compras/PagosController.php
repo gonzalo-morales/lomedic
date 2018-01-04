@@ -36,15 +36,13 @@ class PagosController extends ControllerBase
         ];
     }
 
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
-
         $myfile = $request->file('comprobante_input');
         $fileName = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
         Storage::disk('pagos')->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName, file_get_contents($myfile->getRealPath()));
         $request->request->set('comprobante',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName, file_get_contents($myfile->getRealPath()));
-        $return = parent::store($request, $company);
-        return $return['redirect'];
+        return parent::store($request, $company, $compact);
     }
 
     public function destroy(Request $request, $company, $idOrIds, $attributes = [])
