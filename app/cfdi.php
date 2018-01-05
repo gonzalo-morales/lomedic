@@ -101,12 +101,13 @@ function generarXml($datos = [])
                 $ImpuestosTotales['TotalImpuestosTrasladados'] = $addImpuestos['retencion']['Importe'];
             }
             
-            $nImpuestos = new Impuestos($ImpuestosTotales);
+            if(isset($ImpuestosTotales))
+                $nImpuestos = new Impuestos($ImpuestosTotales);
 
-            if(isseT($addImpuestos['traslado'])) {
+            if(isset($addImpuestos['traslado'])) {
                 $nImpuestos->add(new Traslados($addImpuestos['traslado']));
             }
-            if(isseT($addImpuestos['retencion'])) {
+            if(isset($addImpuestos['retencion'])) {
                 $nImpuestos->add(new Retenciones($addImpuestos['retencion']));
             }
             
@@ -115,8 +116,10 @@ function generarXml($datos = [])
             
             $cfdi = new CFDI($datos['cfdi'], $datos['certificado'], $datos['key']);
             
-            foreach ($relacionados as $node) {
-                $cfdi->add($node);
+            if(isset($relacionados)) {
+                foreach ($relacionados as $node) {
+                    $cfdi->add($node);
+                }
             }
             
             if(isset($emisor))
@@ -125,11 +128,14 @@ function generarXml($datos = [])
             if(isset($receptor))
                 $cfdi->add($receptor);
             
-            foreach ($conceptos as $node) {
-                $cfdi->add($node);
+            if(isset($conceptos)) {
+                foreach ($conceptos as $node) {
+                    $cfdi->add($node);
+                }
             }
             
-            $cfdi->add($nImpuestos);
+            if(isset($nImpuestos))
+                $cfdi->add($nImpuestos);
             
             return $cfdi->getXML();
         }
