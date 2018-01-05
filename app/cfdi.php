@@ -109,7 +109,7 @@ function generarXml($datos = [])
             
             $cfdi->add($nImpuestos);
             
-            return ['xml' => $cfdi->getXML(), 'sello'=>$cfdi->getSello()];
+            return $cfdi->getXML();
         }
     }
     return null;

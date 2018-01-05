@@ -68,11 +68,11 @@ class FacturasClientesController extends ControllerBase
             $xml = generarXml($this->datos_cfdi($datos->id_factura));
             
             if(!empty($xml)) {
-                $request->request->add(['xml_original'=>$xml['xml'],'sello_cdfi'=>$xml['sello']]);
+                $request->request->add(['xml_original'=>$xml]);
             }
             
             if($request->timbrar == true && !empty($xml))
-                $timbrado = timbrar($xml['xml']);
+                $timbrado = timbrar($xml);
                 
             if(isset($timbrado) && $timbrado->status == '200') {
                 if(in_array($timbrado->resultados->status,['200','307'])) {
@@ -105,13 +105,13 @@ class FacturasClientesController extends ControllerBase
             $xml = generarXml($this->datos_cfdi($datos->id_factura));
             
             if(!empty($xml)) {
-                $request->request->add(['xml_original'=>$xml['xml'],'sello_cdfi'=>$xml['sello']]);
+                $request->request->add(['xml_original'=>$xml]);
             }
 
             #dd($xml['xml']);
             
             if($request->timbrar == true && !empty($xml))
-                $timbrado = timbrar($xml['xml']);
+                $timbrado = timbrar($xml);
             
             if(isset($timbrado) && $timbrado->status == '200') {
                 if(in_array($timbrado->resultados->status,['200','307'])) {
