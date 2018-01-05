@@ -9,12 +9,24 @@ use Charles\CFDI\Node\Impuesto\Retencion;
 use App\Http\CFDI\Node\Impuestos;
 use App\Http\CFDI\Node\Traslados;
 use App\Http\CFDI\Node\Retenciones;
+use Charles\CFDI\Node\CuentaPredial;
+use Charles\CFDI\Node\InformacionAduanera;
 
 function generarXml($datos = [])
 {
     if(!empty($datos)) {
 
         if(isset($datos['cfdi'])) {
+            
+            $relacionados = [];
+            if(isset($datos['relacionados'])) {
+                foreach ($datos['relacionados'] as $row)
+                {
+                    $relacionado = new Relacionado($row);
+                    $relacionados[] = $relacionado;
+                }
+            }
+            
             if(isset($datos['emisor'])) {
                 $emisor = new Emisor($datos['emisor']);
             }
@@ -55,6 +67,12 @@ function generarXml($datos = [])
                             ($impuestos[$tipo][$impuesto['Impuesto']][$impuesto['TipoFactor']][$impuesto['TasaOCuota']] ?? 0);
                         $totalImpuestos = $totalImpuestos + ($impuesto['Importe'] ?? 0);
                     }
+                    
+                    if(isset($row['cuentapredial']))
+                        $concepto->add(new CuentaPredial(['Numero' => $row['cuentapredial']]));
+                    
+                    if(isset($row['pedimento']))
+                        $concepto->add(new InformacionAduanera(['NumeroPedimento' => $row['pedimento']]));
                     
                     $conceptos[] = $concepto;
                 }
@@ -97,6 +115,10 @@ function generarXml($datos = [])
             
             $cfdi = new CFDI($datos['cfdi'], $datos['certificado'], $datos['key']);
             
+            foreach ($relacionados as $node) {
+                $cfdi->add($node);
+            }
+            
             if(isset($emisor))
                 $cfdi->add($emisor);
             
@@ -117,10 +139,10 @@ function generarXml($datos = [])
 
 function timbrar($xml)
 {
-    return wsdlService('timbrar',['cfdi'=>$xml],'solucionfactible');
+    return wsdlService('timbrar',['cfdi'=>$xml],'solucionfactible_timbrado');
 }
 
-function cancelar($uuid,$certificado)
+function cancelar($rfc,$uuid,$cer,$key,$pass,$email)
 {
-    return wsdlService('cancelar',['uuid'=>$uuid,'cer'=>$certificado],'solucionfactible');
+    return wsdlService('cancelarAsincrono',['rfcEmisor'=>$rfc,'uuid'=>$uuid,'csdCer'=>$cer,'csdKey'=>$key,'csdPassword'=>$pass,'emailNotifica'=>$email],'solucionfactible_cancelacion');
 }

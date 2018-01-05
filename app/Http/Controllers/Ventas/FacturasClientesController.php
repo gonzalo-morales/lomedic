@@ -163,6 +163,14 @@ class FacturasClientesController extends ControllerBase
             
             if($entity->descuento > 0)
                 $return['cfdi']['Descuento'] = number_format($entity->descuento,2,'.','');
+            
+            foreach ($entity->relacionados as $i=>$row)
+            {
+                $return['relacionados'][] = [
+                    'TipoRelacion'=>$row->tiporelacion->tipo_relacion,
+                    'UUID'=>$row->tiporelacion->documento->uuid,
+                ];
+            }
         
             $return['emisor'] = [
                 'Rfc' => $entity->empresa->rfc,
@@ -213,6 +221,12 @@ class FacturasClientesController extends ControllerBase
                 ];
                 if($row->descuento > 0)
                     $concepto['Descuento'] = number_format($row->descuento,2,'.','');
+                
+                if(!empty($row->cuenta_predial))
+                    $concepto['cuentapredial'] = $row->cuenta_predial;
+                
+                if(!empty($row->pedimento))
+                    $concepto['pedimento'] = $row->pedimento;
                 
                 $return['conceptos'][] = $concepto;
             }

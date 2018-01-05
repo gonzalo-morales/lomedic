@@ -67,7 +67,9 @@ class FacturasClientes extends ModelCompany
      * The validation rules
      * @var array
      */
-    public $rules = [];
+    public $rules = [
+        'fecha_creacion'=>''
+    ];
     
     public function empresa()
     {
@@ -125,6 +127,10 @@ class FacturasClientes extends ModelCompany
     }
 
     public function detalle(){
+        return $this->hasMany(FacturasClientesDetalle::class,'fk_id_factura','id_factura');
+    }
+    
+    public function relacionados(){
         return $this->hasMany(FacturasClientesDetalle::class,'fk_id_factura','id_factura');
     }
 }
