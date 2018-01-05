@@ -152,3 +152,8 @@ function cancelar($rfc,$uuid,$cer,$key,$pass,$email)
 {
     return wsdlService('cancelarAsincrono',['rfcEmisor'=>$rfc,'uuid'=>$uuid,'csdCer'=>$cer,'csdKey'=>$key,'csdPassword'=>$pass,'emailNotifica'=>$email],'solucionfactible_cancelacion');
 }
+
+function confirmar_cancelacion($uuid)
+{
+    return wsdlService('getStatusCancelacionAsincrona',['transactionId'=>$uuid],'solucionfactible_cancelacion');
+}

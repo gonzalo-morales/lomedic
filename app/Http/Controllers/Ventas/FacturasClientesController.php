@@ -18,8 +18,8 @@ use App\Http\Models\Administracion\SeriesDocumentos;
 use App\Http\Models\Administracion\Municipios;
 use App\Http\Models\Administracion\Estados;
 use App\Http\Models\Administracion\Paises;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
+use File;
 
 class FacturasClientesController extends ControllerBase
 {
@@ -32,21 +32,21 @@ class FacturasClientesController extends ControllerBase
 	{
         return [
             'empresas' => Empresas::where('activo',1)->where('eliminar',0)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('Selecciona una opcion...',''),
-            'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa",$id_empresa]}, {"where": ["eliminar",0]}], "limit": "1"'),
+            'js_empresa' => encrypt('"conditions": [{"where": ["id_empresa",$id_empresa]}, {"where": ["eliminar",0]}], "limit": "1"'),
             'regimens' => RegimenesFiscales::select('regimen_fiscal','id_regimen_fiscal')->where('activo',1)->where('eliminar',0)->orderBy('regimen_fiscal')->pluck('regimen_fiscal','id_regimen_fiscal')->prepend('...',''),
             'series' => SeriesDocumentos::select('prefijo','id_serie')->where('activo',1)->where('fk_id_tipo_documento',4)->pluck('prefijo','id_serie'),
-            'js_series' => Crypt::encryptString('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["activo",1]}]'),
+            'js_series' => encrypt('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["activo",1]}]'),
             'municipios' => Municipios::select('municipio','id_municipio')->where('activo',1)->where('eliminar',0)->pluck('municipio','id_municipio')->prepend('...',''),
             'estados' => Estados::select('estado','id_estado')->where('activo',1)->where('eliminar',0)->pluck('estado','id_estado')->prepend('...',''),
             'paises' => Paises::select('pais','id_pais')->where('activo',1)->where('eliminar',0)->pluck('pais','id_pais')->prepend('...',''),
-            'js_clientes' => Crypt::encryptString('"select": ["razon_social", "id_socio_negocio"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_tipo_socio_venta",1]}], "whereHas":[{"empresas":{"where":["id_empresa","$id_empresa"]}}]'),
+            'js_clientes' => encrypt('"select": ["razon_social", "id_socio_negocio"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_tipo_socio_venta",1]}], "whereHas":[{"empresas":{"where":["id_empresa","$id_empresa"]}}]'),
             'clientes' => empty($entity) ? [] : SociosNegocio::where('fk_id_tipo_socio_venta',1)->whereHas('empresas', function ($query) use($entity) {
                 $query->where('id_empresa','=',$entity->fk_id_empresa);
             })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio')->prepend('Selecciona una opcion...',''),
-            'js_cliente' => Crypt::encryptString('"conditions": [{"where": ["id_socio_negocio",$id_socio_negocio]}, {"where": ["eliminar",0]}], "limit": "1"'),
-            'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["proyecto", "ASC"]]'),
+            'js_cliente' => encrypt('"conditions": [{"where": ["id_socio_negocio",$id_socio_negocio]}, {"where": ["eliminar",0]}], "limit": "1"'),
+            'js_proyectos' => encrypt('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["proyecto", "ASC"]]'),
             'proyectos' => empty($entity) ? [] : Proyectos::where('id_proyecto',$entity->fk_id_proyecto)->pluck('proyecto','id_proyecto')->prepend('Selecciona una opcion...',''),
-            'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["sucursal", "ASC"]]'),
+            'js_sucursales' => encrypt('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["sucursal", "ASC"]]'),
             'sucursales' => Sucursales::where('activo',1)->orderBy('sucursal')->pluck('sucursal','id_sucursal')->prepend('Selecciona una opcion...',''),
             'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo','1')->where('eliminar','0')->orderBy('moneda')->pluck('moneda','id_moneda')->prepend('Selecciona una opcion...',''),
             'metodospago' => MetodosPago::selectRaw("CONCAT(metodo_pago,' - ',descripcion) as metodo_pago, id_metodo_pago")->where('activo','1')->where('eliminar','0')->orderBy('metodo_pago')->pluck('metodo_pago','id_metodo_pago')->prepend('Selecciona una opcion...',''),
@@ -65,7 +65,8 @@ class FacturasClientesController extends ControllerBase
         $datos = $return["entity"];
         
         if($datos) {
-            $xml = generarXml($this->datos_cfdi($datos->id_factura));
+            $id = $datos->id_factura;
+            $xml = generarXml($this->datos_cfdi($id));
             
             if(!empty($xml)) {
                 $request->request->add(['xml_original'=>$xml]);
@@ -89,6 +90,7 @@ class FacturasClientesController extends ControllerBase
                 }
             }
             $request->request->set('save',true);
+            
             $return = parent::update($request, $company, $id, $compact);
         }
         return $return["redirect"];
@@ -102,7 +104,7 @@ class FacturasClientesController extends ControllerBase
         
         if($datos && $request->save !== true)
         {
-            $xml = generarXml($this->datos_cfdi($datos->id_factura));
+            $xml = generarXml($this->datos_cfdi($id));
             
             if(!empty($xml)) {
                 $request->request->add(['xml_original'=>$xml]);
@@ -133,6 +135,47 @@ class FacturasClientesController extends ControllerBase
             $return = parent::update($request, $company, $id, $compact);
         }
         return $return["redirect"];
+    }
+    
+    public function destroy(Request $request, $company, $idOrIds, $attributes = ['fk_id_estatus'=>3])
+    {
+        $ids = !is_array($idOrIds) ? [$idOrIds] : $idOrIds;
+        
+        foreach ($ids as $id)
+        {
+            $entity = $this->entity->find($id)->where('fk_id_estatus','<>',3);
+            
+            if(!empty($entity)) {
+                
+                $rfc = $entity->empresa->rfc;
+                $uuid = $entity->uuid;
+                $cer = $this->getfile($entity->empresa->conexion,$entity->certificado->certificado);
+                $key = $this->getfile($entity->empresa->conexion,$entity->certificado->key);
+                $pass = decrypt($entity->certificado->password);
+                $email = $entity->empresa->email;
+                
+                $cancelacion = cancelar($rfc,$uuid,$cer,$key,$pass,$email);
+                
+                if($cancelacion->return->status == 200)
+                {
+                    $estatusCancelacion = confirmar_cancelacion($uuid);
+                    if($estatusCancelacion->return->status == 200)
+                        $entity->update($attributes);
+                }
+            }
+        }
+        
+        return parent::destroy($request, $company, $idOrIds, $attributes);
+    }
+    
+    protected function getfile($empresa,$archivo)
+    {
+        $return = null;
+        $file = Storage::disk('certificados')->getDriver()->getAdapter()->getPathPrefix().$empresa.'/'.$archivo;
+        if (File::exists($file)) {
+            $return = file_get_contents($file);
+        }
+        return $return;
     }
     
     protected function datos_cfdi($id)
