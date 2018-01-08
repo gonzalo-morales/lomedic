@@ -34,6 +34,7 @@ $(document).ready(function () {
 	});
 	
 	$('#fk_id_socio_negocio').on('change', function() {
+		let val = $('#fk_id_socio_negocio option:selected').val();
 		let proyecto = $('#fk_id_proyecto');
 
 		if($(this).val() == '') {
@@ -78,9 +79,11 @@ $(document).ready(function () {
     		//$('#detalleProductos tbody tr').remove();
     		$('#fk_id_clave_cliente_producto options').empty();
     		
+    		console.log($('#fk_id_clave_cliente_producto').data('url').replace('?id',val));
+    		
     		$('#fk_id_clave_cliente_producto').select2({
     			ajax: {
-    			    url: $('#fk_id_clave_cliente_producto').data('url').replace('?id',$(this).val()),
+    			    url: $('#fk_id_clave_cliente_producto').data('url').replace('?id',val),
     			    processResults: function (data) {
     			    	return {
     			    		results: data
@@ -121,7 +124,7 @@ $(document).ready(function () {
             }else{
                 $( this ).prop('checked',false);
                 $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-                $.toaster({priority : 'danger',title : 'Ã‚Â¡Error!',message : 'Selecciona antes una Clave cliente producto',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes una Clave cliente producto',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             }
         }
     });
@@ -143,8 +146,8 @@ $(document).ready(function () {
             precio_unitario = 0;
             importe = 0;
             
-            if(cantidad == '' | fk_id_clave == '') {
-    			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir la cantidad y la clave del producto.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            if(cantidad == '' | fk_id_clave == '' | fk_id_clave == '0') {
+    			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir la cantidad y la clave del producto.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     		}
             else {
             	$('#detalleProductos').append('<tr>'+
@@ -158,6 +161,7 @@ $(document).ready(function () {
         				'<td><input name="relations[has][detalle]['+row_id+'][importe]" type="hidden" value="'+importe+'">'+importe+'</td>'+
         				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
         			'</tr>');
+            	$.toaster({priority:'success',title:'¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             }
         }
         else {
