@@ -1,5 +1,5 @@
 @section('content-width', 's12')
-@section('form-title', 'Facturas de Clientes')
+@section('form-title', 'Notas de Crédito de Clientes')
 
 @section('header-bottom')
 	@parent
@@ -143,7 +143,7 @@
 					<thead>
 						<tr>
 							<th>Tipo Relacion</th>
-							<th>Factura</th>
+							<th>Documento</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -152,7 +152,7 @@
 						@foreach($data->relaciones->where('eliminar',0) as $row=>$detalle)
 						<tr>
 							<td>
-								{!! Form::hidden('relations[has][relaciones]['.$row.'][id_relacion]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
+								{!! Form::hidden('relations[has][relaciones]['.$row.'][id_relacion_cfdi_cliente]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
 								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_tipo_relacion]',$detalle->fk_id_tipo_relacion,['class'=>'fk_id_tipo_relacion']) !!}
 								{{$detalle->tiporelacion->tipo_relacion}}
 							</td>
@@ -190,7 +190,7 @@
 					{{Form::cNumber('* Precio Unitario','precio_unitario')}}
 				</div>
 				<div class="form-group col-md-3">
-					{{Form::cNumber('* Descuento','descuento')}}
+					{{Form::cNumber('* Descuento','descuento_producto')}}
 				</div>
 				<div class="form-group col-md-3">
 					{{Form::cSelect('* Impuesto','fk_id_impuesto', $impuestos ?? [], ['class'=>'select2','data-url'=>ApiAction('administracion.impuestos')])}}
@@ -281,7 +281,7 @@
     				
     				<tr>
     					<th>SUBTOTAL</th>
-    					<td>$ 11,000.00</td>
+						<td>{{Form::hidden('subtotal',null,['id'=>'subtotal'])}}<span id="subtotal_span"></span></td>
     					<td>&nbsp;</td>
     				</tr>
     				<tr>
@@ -291,27 +291,36 @@
     				</tr>
     				<tr>
     					<th>TOTAL DESCUENTOS</th>
-    					<td>$ 1,000.00</td>
+    					<td><span id="descuento_span"></span></td>
     					<td>&nbsp;</td>
     				</tr>
-    				<tr>
-    					<th>IMPUESTOS</th>
-    					<td>&nbsp;</td>
-    					<td>&nbsp;</td>
-    				</tr>
-    				<tr>
-    					<th class="pl-4">IVA 16%</th>
-    					<td>$ 1,600.00</td>
+    				<tr id="impuestos_factura" data-toggle="collapse" data-target="#impuestos_accordion" class="clickable">
+    					<th><button type="button" data-tooltip="Ver descripción de impuestos" data-toggle="tooltip" title="Ver descripción de impuestos" class="btn btn-secondary is-icon"><i class="material-icons add">add</i></button> IMPUESTOS</th>
+    					<td>{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}<span id="impuesto_label"></span></td>
     					<td>&nbsp;</td>
     				</tr>
-    				<tr>
-    					<th class="pl-4">IEPS</th>
-    					<td>$ 1,000.00</td>
-    					<td>&nbsp;</td>
-    				</tr>
+					<tr>
+						<td colspan="3">
+							<div id="impuestos_accordion" class="collapse">
+								<table id="impuestos_descripcion" class="w-100 text-right">
+									<tbody></tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+    				{{--<tr>--}}
+    					{{--<th class="pl-4">IVA 16%</th>--}}
+    					{{--<td>$ 1,600.00</td>--}}
+    					{{--<td>&nbsp;</td>--}}
+    				{{--</tr>--}}
+    				{{--<tr>--}}
+    					{{--<th class="pl-4">IEPS</th>--}}
+    					{{--<td>$ 1,000.00</td>--}}
+    					{{--<td>&nbsp;</td>--}}
+    				{{--</tr>--}}
     				<tr>
     					<th>TOTAL</th>
-    					<td>$ 12,600.00</td>
+    					<td>{{Form::hidden('total',null,['id'=>'total'])}}<span id="total_span"></span></td>
     					<td>&nbsp;</td>
     				</tr>
     			</tbody>

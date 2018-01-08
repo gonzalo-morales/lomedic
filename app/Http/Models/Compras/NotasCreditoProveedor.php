@@ -7,6 +7,9 @@ use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Ventas\CfdiRelacionesClientes;
+use App\Http\Models\Ventas\FacturasClientes;
+use App\Http\Models\Ventas\NotasCreditoClientes;
 use DB;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Compras\CfdiRelacionesProveedores;
@@ -127,8 +130,18 @@ class NotasCreditoProveedor extends ModelCompany
     public function detalle(){
         return $this->hasMany(DetalleNotasCreditoProveedor::class,'fk_id_documento','id_nota_credito_proveedor');
     }
-    public function cfdirelacionado()
+    public function facturas()
     {
-        return $this->hasMany(CfdiRelacionesProveedores::class,'fk_id_documento','id_nota_credito_proveedor');
+        return $this->hasManyThrough(FacturasClientes::class,CfdiRelacionesClientes::class,'fk_id_documento_relacionado','id_nota_credito','id_factura','fk_id_documento');
+    }
+
+    public function notascredito()
+    {
+        return $this->hasManyThrough(NotasCreditoClientes::class,CfdiRelacionesClientes::class,'fk_id_documento_relacionado','id_nota_credito','id_nota_credito','fk_id_documento');
+    }
+
+    public function relaciones()
+    {
+        return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_nota_credito');
     }
 }

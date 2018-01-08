@@ -44,8 +44,7 @@ class APIController extends Controller
 		$param_array = request()->all();
 		$json = str_replace(array_keys($param_array),$param_array,$str_json);
 
-		$request = json_decode($json,true);
-
+        $request = json_decode($json,true);
 		# Obtenemos entidad
 		$entity = rescue(function() use ($entity) {
 			return resolve('App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', camel_case($entity)))));
@@ -61,7 +60,9 @@ class APIController extends Controller
 //            exit();
             # Select especific fields
 		    $entity = call_user_func_array([$entity, 'select'], $request['select'] ?? []);
-
+            if(isset($request['distinct'])) {
+                $entity = call_user_func_array([$entity, 'distinct'], $request['distinct'] ?? []);
+            }
 			# Si hay eagerloaders
 		    $entity = $entity->with($request['with'] ?? []);
 

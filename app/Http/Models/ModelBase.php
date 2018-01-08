@@ -112,7 +112,7 @@ class ModelBase extends Model
 	{
 		$columns = $this->getConnection()->getDoctrineSchemaManager()->listTableDetails($this->getTable())->getColumns();
 		return array_map(function($column) {
-			return $column->getDefault();
+			return $column->getDefault() == 'now()' ? date("Y-m-d H:i:s") : $column->getDefault();
 		}, $columns );
 	}
 
@@ -150,7 +150,7 @@ class ModelBase extends Model
                 elseif(in_array($type,['Integer','Decimal'])) {
                     array_push($rules[$col],'digits_between:0,'.$prop['length']);
                 }
-                elseif(!in_array($type,['Text'])) {
+                elseif(!in_array($type,['Text','DateTime'])) {
                     array_push($rules[$col],'max:'.$prop['length']);
                 }
 

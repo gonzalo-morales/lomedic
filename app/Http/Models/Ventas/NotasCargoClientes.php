@@ -15,7 +15,7 @@ use App\Http\Models\Administracion\Certificados;
 use App\Http\Models\Administracion\MetodosPago;
 use App\Http\Models\Administracion\TiposComprobantes;
 
-class NotasCreditoClientes extends ModelCompany
+class NotasCargoClientes extends ModelCompany
 {
     /**
      * The table associated with the model.
