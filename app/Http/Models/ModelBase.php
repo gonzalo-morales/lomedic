@@ -150,7 +150,7 @@ class ModelBase extends Model
                 elseif(in_array($type,['Integer','Decimal'])) {
                     array_push($rules[$col],'digits_between:0,'.$prop['length']);
                 }
-                elseif(!in_array($type,['Text','DateTime'])) {
+                elseif(!in_array($type,['Text','Date','DateTime'])) {
                     array_push($rules[$col],'max:'.$prop['length']);
                 }
 
