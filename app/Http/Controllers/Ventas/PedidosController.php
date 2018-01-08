@@ -90,6 +90,8 @@ class PedidosController extends ControllerBase
             }
         }
         
+        #dd($request->all());
+        
         return parent::store($request, $company, $compact);
     }
     

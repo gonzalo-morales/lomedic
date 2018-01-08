@@ -78,9 +78,6 @@ $(document).ready(function () {
     		
     		//$('#detalleProductos tbody tr').remove();
     		$('#fk_id_clave_cliente_producto options').empty();
-    		
-    		console.log($('#fk_id_clave_cliente_producto').data('url').replace('?id',val));
-    		
     		$('#fk_id_clave_cliente_producto').select2({
     			ajax: {
     			    url: $('#fk_id_clave_cliente_producto').data('url').replace('?id',val),
@@ -130,8 +127,8 @@ $(document).ready(function () {
     });
 	
 	$('#agregarProducto').on('click', function() {
-    	var i = $('#detalleProductos tr').length;
-        var row_id = i > 0 ? +$('#detalleProductos tr:last').find('#index').val()+1 : 0;
+    	var i = $('#detalleProductos tbody tr').length;
+        var row_id = i > 0 ? +$('#detalleProductos tbody tr:last').find('.index').val()+1 : 0;
         archivo = $('#file_xlsx').prop('files');
         
         if(archivo.length == 0) {
@@ -140,11 +137,15 @@ $(document).ready(function () {
             fk_id_sku = $('#fk_id_clave_cliente_producto').select2('data')[0].fk_id_sku;
             clave = $('#fk_id_clave_cliente_producto option:selected').text();
             descripcion = $('#fk_id_clave_cliente_producto').select2('data')[0].descripcionClave;
-            fk_id_upc = $('#fk_id_upc option:selected').val();
+
+        	fk_id_upc = $('#fk_id_upc').val() == null ? '' : $('#fk_id_upc option:selected').val();
+            
+            console.log(fk_id_upc);
+            
             upc = $('#fk_id_upc option:selected').text();
             
             precio_unitario = 0;
-            importe = 0;
+            importe = cantidad * precio_unitario;
             
             if(cantidad == '' | fk_id_clave == '' | fk_id_clave == '0') {
     			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir la cantidad y la clave del producto.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});

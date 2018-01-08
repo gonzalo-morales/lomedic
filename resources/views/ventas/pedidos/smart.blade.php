@@ -172,10 +172,10 @@
     										{{$detalle->upc->descripcion ?? ''}}
     									</td>
     									<td>
-    										{{ $detalle->precio_unitario }}
+    										{{ number_format($detalle->precio_unitario,2) }}
     									</td>
     									<td>
-    										{{ $detalle->total }}
+    										{{ number_format($detalle->importe,2) }}
     									</td>
     									<td>
     									@if(Route::currentRouteNamed(currentRouteName('edit')))
