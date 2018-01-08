@@ -10,6 +10,7 @@
 		var series_js     = '{{ $js_series ?? '' }}';
     	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
+    	var contratos_js = '{{ $js_contratos ?? '' }}';
     </script>
 	{{ HTML::script(asset('js/ventas/facturasclientes.js')) }}
 @endsection
@@ -115,6 +116,9 @@
         		</div>
         		<div class="form-group col-md-6">
         			{{Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [], ['class'=>'select2','data-url'=>ApiAction('administracion.sucursales')])}}
+        		</div>
+        		<div class="form-group col-md-6">
+        			{{Form::cSelect('Contrato','fk_id_contrato', $contratos ?? [], ['data-url'=>ApiAction('proyectos.proyectos')])}}
         		</div>
         	</div>
     	</div>

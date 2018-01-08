@@ -68,7 +68,6 @@ class FacturasClientes extends ModelCompany
      * @var array
      */
     public $rules = [
-        'fecha_creacion'=>''
     ];
     
     public function empresa()

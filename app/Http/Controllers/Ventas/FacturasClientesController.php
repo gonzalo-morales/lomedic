@@ -18,8 +18,11 @@ use App\Http\Models\Administracion\SeriesDocumentos;
 use App\Http\Models\Administracion\Municipios;
 use App\Http\Models\Administracion\Estados;
 use App\Http\Models\Administracion\Paises;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use File;
+use App\Http\Models\Proyectos\ContratosProyectos;
 
 class FacturasClientesController extends ControllerBase
 {
@@ -32,21 +35,23 @@ class FacturasClientesController extends ControllerBase
 	{
         return [
             'empresas' => Empresas::where('activo',1)->where('eliminar',0)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('Selecciona una opcion...',''),
-            'js_empresa' => encrypt('"conditions": [{"where": ["id_empresa",$id_empresa]}, {"where": ["eliminar",0]}], "limit": "1"'),
+            'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa","$id_empresa"]}, {"where": ["eliminar","0"]}]'),
             'regimens' => RegimenesFiscales::select('regimen_fiscal','id_regimen_fiscal')->where('activo',1)->where('eliminar',0)->orderBy('regimen_fiscal')->pluck('regimen_fiscal','id_regimen_fiscal')->prepend('...',''),
             'series' => SeriesDocumentos::select('prefijo','id_serie')->where('activo',1)->where('fk_id_tipo_documento',4)->pluck('prefijo','id_serie'),
-            'js_series' => encrypt('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["activo",1]}]'),
+            'js_series' => Crypt::encryptString('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["activo",1]}]'),
             'municipios' => Municipios::select('municipio','id_municipio')->where('activo',1)->where('eliminar',0)->pluck('municipio','id_municipio')->prepend('...',''),
             'estados' => Estados::select('estado','id_estado')->where('activo',1)->where('eliminar',0)->pluck('estado','id_estado')->prepend('...',''),
             'paises' => Paises::select('pais','id_pais')->where('activo',1)->where('eliminar',0)->pluck('pais','id_pais')->prepend('...',''),
-            'js_clientes' => encrypt('"select": ["razon_social", "id_socio_negocio"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_tipo_socio_venta",1]}], "whereHas":[{"empresas":{"where":["id_empresa","$id_empresa"]}}]'),
+            'js_clientes' => Crypt::encryptString('"select": ["razon_social", "id_socio_negocio"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_tipo_socio_venta",1]}], "whereHas":[{"empresas":{"where":["id_empresa","$id_empresa"]}}]'),
             'clientes' => empty($entity) ? [] : SociosNegocio::where('fk_id_tipo_socio_venta',1)->whereHas('empresas', function ($query) use($entity) {
                 $query->where('id_empresa','=',$entity->fk_id_empresa);
             })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio')->prepend('Selecciona una opcion...',''),
-            'js_cliente' => encrypt('"conditions": [{"where": ["id_socio_negocio",$id_socio_negocio]}, {"where": ["eliminar",0]}], "limit": "1"'),
-            'js_proyectos' => encrypt('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["proyecto", "ASC"]]'),
+            'js_cliente' => Crypt::encryptString('"conditions": [{"where": ["id_socio_negocio",$id_socio_negocio]}, {"where": ["eliminar",0]}], "limit": "1"'),
+            'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["proyecto", "ASC"]]'),
             'proyectos' => empty($entity) ? [] : Proyectos::where('id_proyecto',$entity->fk_id_proyecto)->pluck('proyecto','id_proyecto')->prepend('Selecciona una opcion...',''),
-            'js_sucursales' => encrypt('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["sucursal", "ASC"]]'),
+            'contratos' => empty($entity) ? [] : ContratosProyectos::where('id_contrato',$entity->fk_id_contrato)->pluck('num_contrato','id_contrato')->prepend('Selecciona una opcion...',''),
+            'js_contratos' => Crypt::encryptString('"select":["id_proyecto"], "conditions":[{"where":["id_proyecto","$id_proyecto"]}], "with":["contratos:id_contrato,num_contrato,fk_id_proyecto"]'),
+            'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["sucursal", "ASC"]]'),
             'sucursales' => Sucursales::where('activo',1)->orderBy('sucursal')->pluck('sucursal','id_sucursal')->prepend('Selecciona una opcion...',''),
             'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo','1')->where('eliminar','0')->orderBy('moneda')->pluck('moneda','id_moneda')->prepend('Selecciona una opcion...',''),
             'metodospago' => MetodosPago::selectRaw("CONCAT(metodo_pago,' - ',descripcion) as metodo_pago, id_metodo_pago")->where('activo','1')->where('eliminar','0')->orderBy('metodo_pago')->pluck('metodo_pago','id_metodo_pago')->prepend('Selecciona una opcion...',''),
@@ -143,10 +148,9 @@ class FacturasClientesController extends ControllerBase
         
         foreach ($ids as $id)
         {
-            $entity = $this->entity->find($id)->where('fk_id_estatus','<>',3);
+            $entity = $this->entity->where('fk_id_estatus','<>',3)->find($id);
             
             if(!empty($entity)) {
-                
                 $rfc = $entity->empresa->rfc;
                 $uuid = $entity->uuid;
                 $cer = $this->getfile($entity->empresa->conexion,$entity->certificado->certificado);
@@ -154,14 +158,23 @@ class FacturasClientesController extends ControllerBase
                 $pass = decrypt($entity->certificado->password);
                 $email = $entity->empresa->email;
                 
+                $estatusCancelacion = confirmar_cancelacion($uuid);
+                if($estatusCancelacion->status == 200) {
+                    $entity->update($attributes);
+                }
+                
                 $cancelacion = cancelar($rfc,$uuid,$cer,$key,$pass,$email);
                 
-                if($cancelacion->return->status == 200)
+                if($cancelacion->status == 200)
                 {
                     $estatusCancelacion = confirmar_cancelacion($uuid);
-                    if($estatusCancelacion->return->status == 200)
+                    if($estatusCancelacion->status == 200)
                         $entity->update($attributes);
+                    else
+                        dd($cancelacion);
                 }
+                else
+                    dd($cancelacion);
             }
         }
         
