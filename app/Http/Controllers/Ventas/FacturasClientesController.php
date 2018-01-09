@@ -208,24 +208,16 @@ class FacturasClientesController extends ControllerBase
                 'FormaPago' => $entity->formapago->forma_pago,
                 'NoCertificado' => $entity->certificado->no_certificado,
                 'CondicionesDePago' => $entity->condicionpago->condicion_pago,
-                #'SubTotal' => number_format($entity->subtotal,2,'.',''),
                 'Moneda' => $entity->moneda->moneda,
                 'TipoCambio' => round($entity->tipo_cambio,4),
-                #'Total' => number_format($entity->total,2,'.',''),
                 'TipoDeComprobante' => $entity->tipocomprobante->tipo_comprobante,
                 'MetodoPago' => $entity->metodopago->metodo_pago,
                 'LugarExpedicion' => '64000',
             ];
             
-            if($entity->descuento > 0)
-                $return['cfdi']['Descuento'] = number_format($entity->descuento,2,'.','');
-            
-            foreach ($entity->relacionados as $i=>$row)
+            foreach ($entity->relaciones as $i=>$row)
             {
-                $return['relacionados'][] = [
-                    'TipoRelacion'=>$row->tiporelacion->tipo_relacion,
-                    'UUID'=>$row->tiporelacion->documento->uuid,
-                ];
+                $return['relacionados'][$row->tiporelacion->tipo_relacion][] = ['UUID'=>$row->documento->uuid];
             }
         
             $return['emisor'] = [
@@ -260,7 +252,7 @@ class FacturasClientesController extends ControllerBase
                         'TipoFactor' => $row->impuestos->tipo_factor,
                         'TasaOCuota' => $row->impuestos->tasa_o_cuota,
                         'Importe' => number_format($row->impuesto,2,'.',''),
-                        'Base' => number_format(($row->importe),2,'.',''),
+                        'Base' => number_format(($row->importe),2,'.','') - number_format(($row->descuento),2,'.',''),
                     ];
                 }
                 
@@ -272,7 +264,7 @@ class FacturasClientesController extends ControllerBase
                     'Unidad' => $row->unidadmedida->descripcion,
                     'Descripcion' => $row->descripcion,
                     'ValorUnitario' => number_format($row->precio_unitario,2,'.',''),
-                    'Importe' => ($row->cantidad * number_format($row->precio_unitario,2,'.','')) - number_format($row->descuento,2,'.',''),
+                    'Importe' => ($row->cantidad * number_format($row->precio_unitario,2,'.','')),
                     'impuestos' => [$impuesto]
                 ];
                 if($row->descuento > 0)

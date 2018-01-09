@@ -11,6 +11,7 @@ use App\Http\CFDI\Node\Traslados;
 use App\Http\CFDI\Node\Retenciones;
 use Charles\CFDI\Node\CuentaPredial;
 use Charles\CFDI\Node\InformacionAduanera;
+use App\Http\CFDI\Node\Relacionados;
 
 function generarXml($datos = [])
 {
@@ -20,10 +21,14 @@ function generarXml($datos = [])
             
             $relacionados = [];
             if(isset($datos['relacionados'])) {
-                foreach ($datos['relacionados'] as $row)
+                foreach($datos['relacionados'] as $tipo =>$relaciones)
                 {
-                    $relacionado = new Relacionado($row);
-                    $relacionados[] = $relacionado;
+                    $tiporelacion = new Relacionados(['tipoRelacion'=>$tipo]);
+                    foreach($relaciones as $relacion) {
+                        $tiporelacion->add(new Relacionado($row));
+                    }
+                    
+                    $relacionados[] = $tiporelacion;
                 }
             }
             

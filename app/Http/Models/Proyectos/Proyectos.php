@@ -83,10 +83,12 @@ class Proyectos extends ModelCompany
         'fecha_terminacion' => 'Fecha Terminacion',
         'estatus.estatus' => 'Estatus'
     ];
+    
+    protected $eagerLoaders = ['estatus','cliente'];
 
     function cliente()
     {
-        return $this->hasOne(SociosNegocio::class,'id_socio_negocio','fk_id_cliente');
+        return $this->belongsTo(SociosNegocio::class,'fk_id_cliente');
     }
     
     function estatus()

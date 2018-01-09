@@ -129,7 +129,7 @@ class FacturasClientes extends ModelCompany
         return $this->hasMany(FacturasClientesDetalle::class,'fk_id_factura','id_factura');
     }
     
-    public function relacionados(){
-        return $this->hasMany(FacturasClientesDetalle::class,'fk_id_factura','id_factura');
+    public function relaciones(){
+        return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_factura');
     }
 }

@@ -11,6 +11,8 @@ use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\TipoSucursal;
 use App\Http\Models\Administracion\Zonas;
 use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\Administracion\Empresas;
 
 class SucursalesController extends ControllerBase
 {
@@ -40,6 +42,7 @@ class SucursalesController extends ControllerBase
 								})->pluck('municipio','id_municipio'),
 				'sucursales' => $this->entity->select(['sucursal','id_sucursal'])->where('activo', 1)->pluck('sucursal','id_sucursal'),
 				'tipos' => TipoSucursal::select(['tipo','id_tipo'])->where('activo', 1)->pluck('tipo','id_tipo'),
+				'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('eliminar',0)->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
 			];
 		}
 		return [
@@ -48,6 +51,7 @@ class SucursalesController extends ControllerBase
 			'paises' => Paises::select(['pais','id_pais'])->where('activo', 1)->pluck('pais','id_pais'),
 			'sucursales' => $this->entity->select(['sucursal','id_sucursal'])->where('activo', 1)->pluck('sucursal','id_sucursal'),
 			'tipos' => TipoSucursal::select(['tipo','id_tipo'])->where('activo', 1)->pluck('tipo','id_tipo'),
+		    'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('eliminar',0)->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
 		];
 	}
 

@@ -190,7 +190,7 @@
     			<div  class="tab-pane active" id="concepto" role="tabpanel">
     				<div class="row py-2">
         				<div class="form-group col-md-6">
-                			{{Form::cSelect('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2'])}}
+                			{{Form::cSelect('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2','data-url'=>ApiAction('sociosnegocio.sociosnegocio')])}}
                 		</div>
                 		<div class="form-group col-md-6">
                 			{{Form::cSelect('* Descripcion','descripcion', $descripciones ?? [])}}
@@ -205,7 +205,7 @@
                 			{{Form::cNumber('* Descuento','descuento')}}
                 		</div>
                 		<div class="form-group col-md-3">
-                			{{Form::cSelect('* Impuesto','fk_id_impuesto', $tiposrelaciones ?? [], ['class'=>'select2'])}}
+                			{{Form::cSelect('* Impuesto','fk_id_impuesto', $impuestos ?? [], ['class'=>'select2'])}}
                 		</div>
                 		@if(!Route::currentRouteNamed(currentRouteName('view')))
                 		<div class="form-group col-md-12 my-2">
