@@ -1,6 +1,5 @@
 <?php
 use Charles\CFDI\CFDI;
-use Charles\CFDI\Node\Relacionado;
 use Charles\CFDI\Node\Emisor;
 use Charles\CFDI\Node\Receptor;
 use Charles\CFDI\Node\Concepto;
@@ -12,6 +11,7 @@ use App\Http\CFDI\Node\Retenciones;
 use Charles\CFDI\Node\CuentaPredial;
 use Charles\CFDI\Node\InformacionAduanera;
 use App\Http\CFDI\Node\Relacionados;
+use App\Http\CFDI\Node\Relacionado;
 
 function generarXml($datos = [])
 {
