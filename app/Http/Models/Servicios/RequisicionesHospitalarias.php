@@ -43,7 +43,7 @@ class RequisicionesHospitalarias extends ModelCompany
         'fk_id_usuario_captura',
         'fk_id_usuario_modifica',
         'fecha_modifica',
-        'fk_id_estatus_requisicion',
+        'fk_id_estatus_requisicion_hospitalaria',
         'fk_id_solicitante'
     ];
 

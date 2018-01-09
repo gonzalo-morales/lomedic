@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Http\Controllers\Controller;
 use App\Http\Models\Logs;
 use Illuminate\Http\Request;
@@ -10,14 +8,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade as PDF;
-
 class ControllerBase extends Controller
 {
     public function getDataView($entity = null)
     {
         return [];
     }
-
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\Response
@@ -26,53 +22,40 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para ver?
         //$this->authorize('view', $this->entity);
-
         # Log
         $this->log('index');
-
         $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
-
         if(in_array('eliminar',$this->entity->getlistColumns())) {
             $query->where('eliminar',0);
         }
-
         if(isset($attributes['where'])) {
             foreach ($attributes['where'] as $key=>$condition) {
                 $query->where(DB::raw($condition));
             }
         }
-
         if (!request()->ajax()) {
             return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
-                'fields' => $this->entity->getFields(),
-                'data' => $query->limit(20)->get(),
-            ]);
-
+                    'fields' => $this->entity->getFields(),
+                    'data' => $query->limit(20)->get(),
+                ]);
             # Ajax
         } else {
             $appendable = $this->entity->getAppendableFields();
-
             # Retorna resultados, los cache antes si no existen
             $cache = Cache::tags(getCacheTag())->rememberForever(getCacheKey(), function() use ($query, $appendable) {
-
                 $all = $query->get();
-
                 $page = request()->page ?: 1;
                 $perPage = 4000;
-
                 $items = $all->forPage($page, $perPage)->each(function($item) use ($appendable) {
                     $item->setAppends($appendable);
                 });
-
-                    # Eliminamos primeros 20 registros en pagina #1
-                    if( $page == 1) $items = $items->slice(20);
-
-                    return (new LengthAwarePaginator($items, $all->count(), $perPage, $page));
+                # Eliminamos primeros 20 registros en pagina #1
+                if( $page == 1) $items = $items->slice(20);
+                return (new LengthAwarePaginator($items, $all->count(), $perPage, $page));
             });
-                return $cache;
+            return $cache;
         }
     }
-
     /**
      * Show the form for creating a new resource.
      * @return \Illuminate\Http\Response
@@ -81,16 +64,13 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para crear?
         //$this->authorize('create', $this->entity);
-
         $data = $this->entity->getColumnsDefaultsValues();
         $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
-
         return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
-            'data' => $data,
-            'validator' => $validator
-        ] + $this->getDataView());
+                'data' => $data,
+                'validator' => $validator
+            ] + $this->getDataView());
     }
-
     /**
      * Store a newly created resource in storage.
      * @param  \Illuminate\Http\Request  $request
@@ -100,36 +80,29 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para crear?
         //$this->authorize('create', $this->entity);
-
         $request->request->set('activo',!empty($request->request->get('activo')));
-
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-
         DB::beginTransaction();
         $isSuccess = $this->entity->create($request->all());
         if ($isSuccess) {
-
             # Si tienes relaciones
             if ($request->relations) {
                 foreach ($request->relations as $relationType => $collections) {
                     # Relacion "HAS"
                     if ($relationType == 'has') {
-                            foreach ($collections as $relationName => $relations){
-                                if(isset($relations['-1'])) {
-                                    unset($relations['-1']);
-                                }
-                                $isSuccess->{$relationName}()->createMany($relations);
+                        foreach ($collections as $relationName => $relations){
+                            if(isset($relations['-1'])) {
+                                unset($relations['-1']);
                             }
+                            $isSuccess->{$relationName}()->createMany($relations);
+                        }
                     }
                 }
             }
-
             DB::commit();
-
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
-
             $this->log('store', $isSuccess->id_banco);
             return $this->redirect('store');
         } else {
@@ -138,7 +111,6 @@ class ControllerBase extends Controller
             return $this->redirect('error_store');
         }
     }
-
     /**
      * Display the specified resource
      * @param  integer $id
@@ -150,29 +122,23 @@ class ControllerBase extends Controller
         //$this->authorize('view', $this->entity);
         # Log
         $this->log('show', $id);
-
         try {
             $data = $this->entity->findOrFail($id);
         } catch (\Exception $e) {
             return \App::abort(404,implode(' ',$e->errorInfo));
         }
-
         header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
         header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-
         if (!request()->ajax()) {
             return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + ['data'=>$data] + $this->getDataView($data));
-
             # Ajax
         } else {
-
             if (request()->with) {
                 $data->load(request()->with);
             }
             return response()->json(['success' => true, 'data' => $data->toArray()])->header("Vary", "Accept");
         }
     }
-
     /**
      * Show the form for editing the specified resource.
      * @param  integer $id
@@ -182,21 +148,17 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para actualizar?
         //$this->authorize('update', $this->entity);
-
         $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
-
         try {
             $data = $this->entity->findOrFail($id);
         } catch (\Exception $e) {
             return \App::abort(404,$e->getMessage());
         }
-
         return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
-            'data' => $data,
-            'validator' => $validator
-        ] + $this->getDataView($data));
+                'data' => $data,
+                'validator' => $validator
+            ] + $this->getDataView($data));
     }
-
     /**
      * Update the specified resource in storage.
      * @param  \Illuminate\Http\Request  $request
@@ -207,12 +169,9 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para actualizar?
         //$this->authorize('update', $this->entity);
-
         $request->request->set('activo',!empty($request->request->get('activo')));
-
         # Validamos request, si falla regresamos atras
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-
         DB::beginTransaction();
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
@@ -225,18 +184,16 @@ class ControllerBase extends Controller
                         foreach ($collections as $relationName => $relations) {
                             # Recorremos cada coleccion
                             $primaryKey = $entity->{$relationName}()->getRelated()->getKeyName();
-
                             $ids = collect($relations)->pluck($primaryKey);
                             if (!empty($ids)) {
                                 $entity->{$relationName}()->whereNotIn($primaryKey, $ids)->update(['eliminar' => 1]);
                             } else {
                                 $entity->{$relationName}()->update(['eliminar' => 1]);
                             }
-                            
+
                             if(isset($relations['-1'])) {
                                 unset($relations['-1']);
                             }
-
                             foreach ($relations as $relation) {
                                 $primary_id = isset($relation[$primaryKey]) && $relation[$primaryKey] != 1 ? $relation[$primaryKey] : null;
                                 $entity->{$relationName}()->updateOrCreate([$primaryKey => $primary_id], $relation);
@@ -246,10 +203,8 @@ class ControllerBase extends Controller
                 }
             }
             DB::commit();
-
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
-
             $this->log('update', $id);
             return $this->redirect('update');
         } else {
@@ -258,7 +213,6 @@ class ControllerBase extends Controller
             return $this->redirect('error_update');
         }
     }
-
     /**
      * Remove the specified resource from storage.
      * @param  integer  $id
@@ -268,33 +222,25 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para eliminar?
         //$this->authorize('delete', $this->entity);
-
         $idOrIds = !is_array($idOrIds) ? [$idOrIds] : $idOrIds;
-
         DB::beginTransaction();
         $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)->update($attributes);
         if ($isSuccess) {
-
             DB::commit();
             # Shorthand
             foreach ($idOrIds as $id) $this->log('destroy', $id);
-
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
-
             if ($request->ajax()) {
                 # Respuesta Json
                 return ['success' => true];
             } else {
                 return $this->redirect('destroy');
             }
-
         } else {
-
             DB::rollBack();
             # Shorthand
             foreach ($idOrIds as $id) $this->log('error_destroy', $id);
-
             if ($request->ajax()) {
                 # Respuesta Json
                 return ['success' => false];
@@ -303,7 +249,6 @@ class ControllerBase extends Controller
             }
         }
     }
-
     /**
      * Remove multiple resources from storage.
      * @param  Request $request
@@ -314,13 +259,10 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para eliminar?
         //$this->authorize('delete', $this->entity);
-
         # Shorthand
         if ($request->ids) return $this->destroy($request, $company, $request->ids);
-
         return ['success' => false];
     }
-
     /**
      * Obtenemos reporte
      * @param  string $company
@@ -330,12 +272,9 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para exportar?
         //$this->authorize('export', $this->entity);
-
         $colums = $this->entity->getlistColumns();
-
         $type = strtolower($request->type);
         $style = isset($request->style) ? $request->style : false;
-
         if (isset($request->ids)) {
             $ids = is_array($request->ids) ? $request->ids : explode(',',$request->ids);
             $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC')->whereIn($this->entity->getKeyName(), $ids);
@@ -343,13 +282,10 @@ class ControllerBase extends Controller
         else {
             $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
         }
-
         if(in_array('eliminar',$colums))
             $query->where('eliminar',0);
-
         $fields = $this->entity->getFields();
         $data = $query->get();
-
         if($type == 'pdf') {
             $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
             $pdf->setPaper('letter','landscape');
@@ -362,12 +298,11 @@ class ControllerBase extends Controller
         else {
             Excel::create(currentEntityBaseName(), function($excel) use($data,$type,$style,$fields) {
                 $excel->sheet(currentEntityBaseName(), function($sheet) use($data,$type,$style,$fields) {
-                        $sheet->loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
+                    $sheet->loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
                 });
             })->download($type);
         }
     }
-
     /**
      * Insertamos log
      * @param  string $type
@@ -405,7 +340,6 @@ class ControllerBase extends Controller
                 break;
         }
     }
-
     public function redirect($type)
     {
         switch ($type) {

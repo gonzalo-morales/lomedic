@@ -31,6 +31,27 @@ $(document).ready(function () {
             return
         }
 
+
+        $('#fk_id_sucursal').select2();
+        // $('#id_receta').select2();
+        let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+        $('#fk_id_sucursal').on('change', function() {
+            $.ajax({
+                type: "POST",
+                url: $(this).data('url'),
+                data: {'fk_id_sucursal':$(this).val(),'_token':token},
+                dataType: "json",
+                success:function(data) {
+                    $('#fk_id_requisiciones_hospitalarias').empty();
+                    $.each(data, function(key, value) {
+                        $('#fk_id_requisiciones_hospitalarias').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                    $('#fk_id_requisiciones_hospitalarias').val('');
+                }
+            });
+        });
+
+
         var filas = $('.medicine_detail tr').length;
         var agregar = true;
 

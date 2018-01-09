@@ -2,11 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: ihernandezt
- * Date: 27/12/2017
- * Time: 04:51
+ * Date: 3/1/2018
+ * Time: 11:19
  */
 
-namespace App\Http\Models\Servicios;
+namespace App\Http\Models\Inventarios;
 
 use App\Http\Controllers\Inventarios\SurtidoRequisicionHospitalariaController;
 use App\Http\Models\Administracion\Areas;
@@ -20,20 +20,20 @@ use App\Http\Models\Proyectos\ClaveClienteProductos;
 //use App\Http\Models\Administracion\Usuarios;
 
 
-class RequisicionesHospitalariasDetalle extends ModelCompany
+class SurtidoRequisicionHospitalariaDetalle extends ModelCompany
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'req_det_requisiciones';
+    protected $table = 'req_det_surtido_requisicion_hospitalaria';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_detalle_requisicion';
+    protected $primaryKey = 'id_detalle_requisicion_hospitalaria';
 
     /**
      * The attributes that are mass assignable.
@@ -41,12 +41,12 @@ class RequisicionesHospitalariasDetalle extends ModelCompany
      * @var array
      */
     protected $fillable = [
-        'id_detalle_requisicion',
-        'fk_id_requisicion',
-        'fk_id_area',
+        'id_detalle_requisicion_hospitalaria',
+        'fk_id_surtido_requisicion',
         'fk_id_clave_cliente_producto',
         'cantidad_solicitada',
-        'cantidad_surtida'
+        'cantidad_surtida',
+        'eliminar'
     ];
 
     /**
@@ -83,11 +83,11 @@ class RequisicionesHospitalariasDetalle extends ModelCompany
 //    {
 //        return $this->hasOne(Sucursales::class,'id_sucursal','id_sucursal');
 //    }
-
-    public function area()
-    {
-        return $this->hasOne(Areas::class,'id_area','fk_id_area');
-    }
+//
+//    public function area()
+//    {
+//        return $this->hasOne(Areas::class,'id_area','fk_id_area');
+//    }
     public function claveClienteProducto()
     {
         return $this->hasOne(ClaveClienteProductos::class,'id_clave_cliente_producto','fk_id_clave_cliente_producto');

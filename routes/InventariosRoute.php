@@ -39,5 +39,9 @@ Route::prefix('{company}')->group(function () {
         Route::post('getDetalleEntrada','Inventarios\EntradasController@getDetalleEntrada')->name('entradas.getDetalleEntrada');
         Route::post('guardarEntrada','Inventarios\EntradasController@guardarEntrada')->name('entradas.guardarEntrada');
         Route::resource('movimiento-almacen','Inventarios\MovimientoAlmacenController');
+        Route::resource('surtido-requisicion','Inventarios\SurtidoRequisicionHospitalariaController');
+        Route::resource('surtido-receta','Inventarios\SurtidoRecetaController');
+        Route::post('surtido-requisicion/getRequisiciones','Inventarios\SurtidoRequisicionHospitalariaController@getRequisiciones')->name('surtido-requisicion.getRequisiciones');
+        Route::post('surtido-requisicion/getRequisicionDetalle','Inventarios\SurtidoRequisicionHospitalariaController@getRequisicionDetalle')->name('surtido-requisicion.getRequisicionDetalle');
     });
 });
