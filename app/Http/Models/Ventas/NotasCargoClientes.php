@@ -21,13 +21,13 @@ class NotasCargoClientes extends ModelCompany
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'fac_opr_notas_credito_clientes';
+    protected $table = 'fac_opr_notas_cargo_clientes';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_nota_credito';
+    protected $primaryKey = 'id_nota_cargo';
 
     /**
      * The attributes that are mass assignable.
@@ -127,7 +127,8 @@ class NotasCargoClientes extends ModelCompany
         return $this->hasMany(NotasCreditoClientesDetalle::class,'fk_id_nota_credito','id_nota_credito');
     }
 
-    public function relaciones(){
+    public function relaciones()
+    {
         return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_nota_credito');
     }
 

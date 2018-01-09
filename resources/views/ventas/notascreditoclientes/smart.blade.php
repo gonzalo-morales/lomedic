@@ -11,6 +11,7 @@
     	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
     	var productos_facturas_js  = '{{ $js_productos_facturas ?? '' }}';
+        var productos_notascargo_js  = '{{ $js_productos_notascargo ?? '' }}';
     	var impuestos_js  = '{{ $js_impuestos ?? '' }}';
     </script>
 	{{ HTML::script(asset('js/ventas/notascreditoclientes.js')) }}
@@ -124,12 +125,18 @@
 		<div class="card col-lg-5">
 			<div class="card-header row">
 				<h5 class="col-md-12 text-center">CFDI Relacionados</h5>
-    			<div class="form-group col-md-6">
+    			<div class="form-group col-md-12">
         			{{Form::cSelect('* Tipo Relacion','fk_id_tipo_relacion', $tiposrelacion ?? [])}}
         		</div>
-        		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2'])}}
+        		<div class="form-group col-md-5">
+        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.facturasclientesdetalle')])}}
         		</div>
+				<div class="form-group col-md-2 d-flex align-items-center justify-content-center">
+					<span>O</span>
+				</div>
+				<div class="form-group col-md-5">
+					{{Form::cSelect('* Nota Cargo','fk_id_nota_cargo_relacion', $notascargorelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.notascargoclientesdetalle')])}}
+				</div>
         		@if(!Route::currentRouteNamed(currentRouteName('view')))
         		<div class="form-group col-md-12 my-2">
 					<div class="sep sepBtn">
@@ -181,7 +188,7 @@
 					<div id="loadingfk_id_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 						Cargando datos... <i class="material-icons align-middle loading">cached</i>
 					</div>
-					{{Form::cSelect('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2','data-url'=>ApiAction('ventas.facturasclientesdetalle')])}}
+					{{Form::cSelect('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2'])}}
 				</div>
 				<div class="form-group col-md-3">
 					{{Form::cNumber('* Cantidad','cantidad')}}
@@ -296,7 +303,7 @@
     				</tr>
     				<tr id="impuestos_factura" data-toggle="collapse" data-target="#impuestos_accordion" class="clickable">
     					<th><button type="button" data-tooltip="Ver descripción de impuestos" data-toggle="tooltip" title="Ver descripción de impuestos" class="btn btn-secondary is-icon"><i class="material-icons add">add</i></button> IMPUESTOS</th>
-    					<td>{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}<span id="impuesto_label"></span></td>
+    					<td>{{Form::hidden('impuestos',null,['id'=>'impuestos'])}}<span id="impuesto_label"></span></td>
     					<td>&nbsp;</td>
     				</tr>
 					<tr>
