@@ -49,21 +49,16 @@ class PedidosController extends ControllerBase
                 ->whereHas('empresas', function($q) use($empresa_actual) {
                     $q->where('id_empresa','=',$empresa_actual->id_empresa);
                 })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
-                
             'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto','id_proyecto')->where('eliminar',0)->where('fk_id_estatus',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('proyecto','id_proyecto'),
             'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "sortBy":["proyecto"]'),
-            
             'sucursales' => empty($entity) ? [] : Sucursales::select('sucursal','id_sucursal')->where('eliminar',0)->where('activo',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('sucursal','id_sucursal'),
             'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "orderBy": [["sucursal", "ASC"]]'),
-            
             'contratos' => empty($entity) ? [] : ContratosProyectos::select('num_contrato','id_contrato')->where('eliminar',0)->where('fk_id_proyecto', $entity->fk_id_proyecto)->pluck('num_contrato','id_contrato'),
             'js_contratos' => Crypt::encryptString('"select":["id_proyecto"], "conditions":[{"where":["id_proyecto","$id_proyecto"]}], "with":["contratos:id_contrato,num_contrato,fk_id_proyecto"]'),
             'ejecutivos' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno)nombre_empleado, id_empleado")->where('activo',1)->where('eliminar',0)->where('fk_id_departamento',19)->orderBy('nombre_empleado')->pluck('nombre_empleado','id_empleado'),
             'estatus' => empty($entity) ? EstatusDocumentos::select('estatus','id_estatus')->where('id_estatus',1)->pluck('estatus','id_estatus') : EstatusDocumentos::select('estatus','id_estatus')->where('id_estatus',$entity->fk_id_estatus)->pluck('estatus','id_estatus'),
-            
             'productos' => empty($entity) ? [] : ClaveClienteProductos::select('id_clave_cliente_producto as id','clave_producto_cliente as text','descripcion as descripcionClave','fk_id_sku')->where('fk_id_cliente',$entity->fk_id_socio_negocio)->pluck('descripcion','id_clave_cliente_producto'),
-            
-            
+            'monedas' => Monedas::where('activo',1)->where('eliminar',0)->pluck('descripcion','id_moneda'),
             'clasificaciones' => ClasificacionesProyectos::where('activo',1)->pluck('clasificacion','id_clasificacion_proyecto'),
             'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo','1')->where('eliminar','0')->orderBy('moneda')->pluck('moneda','id_moneda'),
             'tiposeventos' => TiposEventos::where('activo', 1)->where('eliminar', 0)->orderBy('tipo_evento')->pluck('tipo_evento','id_tipo_evento'),

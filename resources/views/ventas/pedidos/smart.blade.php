@@ -55,6 +55,9 @@
         		<div class="form-group col-md-6 col-xs-12">
         			{{Form::cText('* Fecha Limite','fecha_limite',['class'=>' datepicker '])}}
         		</div>
+        		<div class="form-group col-md-12 col-xs-12">
+        			{{Form::cSelectWithDisabled('* Moneda','fk_id_moneda',$monedas ?? [],['class'=>'select2'])}}
+        		</div>
 				<div class="form-group col-md-12 col-xs-12">
         			{{Form::cSelectWithDisabled('* Estatus','fk_id_estatus',$estatus ?? [],['disabled'=>true])}}
         		</div>

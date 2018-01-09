@@ -38,6 +38,7 @@ function generarXml($datos = [])
             $subtotal = 0;
             $totalImpuestos = 0;
             $impuestos = [];
+            $descuentos = 0;
             if(isset($datos['conceptos'])) {
                 foreach ($datos['conceptos'] as $row)
                 {
@@ -45,6 +46,8 @@ function generarXml($datos = [])
                     if(isset($detalle['impuestos'])) {
                         unset($detalle['impuestos']);
                     }
+                    
+                    $descuentos = $descuentos + ($detalle['Descuento'] ?? 0);
                     
                     $concepto = new Concepto($detalle);
                     
@@ -111,8 +114,11 @@ function generarXml($datos = [])
                 $nImpuestos->add(new Retenciones($addImpuestos['retencion']));
             }
             
+            if($descuentos != 0)
+                $datos['cfdi']['Descuento'] = $descuentos;
+            
             $datos['cfdi']['SubTotal'] = $subtotal;
-            $datos['cfdi']['Total'] = $subtotal - ($datos['cfdi']['Descuento'] ?? 0) + $totalImpuestos;
+            $datos['cfdi']['Total'] = $subtotal - $descuentos + $totalImpuestos;
             
             $cfdi = new CFDI($datos['cfdi'], $datos['certificado'], $datos['key']);
             

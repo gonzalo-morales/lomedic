@@ -28,7 +28,7 @@
     		{{Form::cSelectWithDisabled('* Sku','fk_id_sku',$skus ?? [],['class'=>'select2'])}}
     	</div>
 		<div class="form-group col-md-6">
-    		{{Form::cSelectWithDisabled('* Upc','fk_id_upc',$upcs ?? [],['class'=>'select2'])}}
+    		{{Form::cSelectWithDisabled('Upc','fk_id_upc',$upcs ?? [],['class'=>'select2'])}}
     	</div>
 		<div class="form-group col-md-4">
 			{{Form::cText('* Marca','marca')}}
