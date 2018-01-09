@@ -25,7 +25,7 @@ function generarXml($datos = [])
                 {
                     $tiporelacion = new Relacionados(['tipoRelacion'=>$tipo]);
                     foreach($relaciones as $relacion) {
-                        $tiporelacion->add(new Relacionado($row));
+                        $tiporelacion->add(new Relacionado($relacion));
                     }
                     
                     $relacionados[] = $tiporelacion;

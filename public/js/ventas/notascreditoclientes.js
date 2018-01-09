@@ -223,7 +223,7 @@ $(document).ready(function () {
 
                 var subtotal = (cantidad*precio_unitario)-descuento;
                 var impuesto_producto = (subtotal*impuesto);
-                var total = subtotal + impuesto_producto;
+                var total = subtotal;
                 total = total.toFixed(2);
 
                 $('#tConceptos tbody').append(
@@ -239,7 +239,7 @@ $(document).ready(function () {
                     '<td><input type="hidden" value="'+data_impuesto.descripcion+'" class="tipo_impuesto"><input type="hidden" class="porcentaje" value="'+data_impuesto.porcentaje+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="'+$('#fk_id_impuesto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][impuesto]" class="impuesto" value="'+impuesto_producto.toFixed(2	)+'"><span>'+$('#fk_id_impuesto option:selected').text()+'</span><br><span style="font-size: 11px"><b>$'+impuesto_producto.toFixed(2)+'<b/></span></td>' +
                     '<td><input type="text" name="relations[has][detalle]['+row_id+'][pedimento]" class="form-control pedimento"></td>' +
                     '<td><input type="text" name="relations[has][detalle]['+row_id+'][cuenta_predial]" class="form-control cuenta_predial"></td>' +
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][total]" class="total" value="'+total+'">$'+total+'</td>' +
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][importe]" class="total" value="'+total+'">$'+total+'</td>' +
                     '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this,\'total\')" data-tooltip="Producto"> <i class="material-icons">delete</i></button></td>' +
                     '</tr>'
                 );

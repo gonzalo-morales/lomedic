@@ -82,7 +82,9 @@ class NotasCreditoClientesController extends ControllerBase
                 "distinct":[],
                 "conditions":[
                     {"whereIn":["fk_id_factura",$fk_id_factura]},
-                    {"where":["fac_det_facturas_clientes.eliminar",0]}],
+                    {"where":["fac_det_facturas_clientes.eliminar",0]},
+                    {"whereNotNull":["fc.uuid"]}
+                ],
                 "joins":[
                     {"join":["fac_opr_facturas_clientes as fc","fc.id_factura","=","fac_det_facturas_clientes.fk_id_factura"]},
                     {"join":["pry_cat_clave_cliente_productos as cc","cc.id_clave_cliente_producto","=","fac_det_facturas_clientes.fk_id_clave_cliente"]},
@@ -100,6 +102,7 @@ class NotasCreditoClientesController extends ControllerBase
                 "conditions":[
                     {"whereIn":["fk_id_nota_cargo",$fk_id_nota_cargo]},
                     {"where":["fac_det_notas_cargo_clientes.eliminar",0]}],
+                    {"whereNotNull":["fc.uuid"]}
                 "joins":[
                     {"join":["fac_opr_notas_cargo_clientes as fc","fc.id_nota_cargo","=","fac_det_notas_cargo_clientes.fk_id_nota_cargo"]},
                     {"join":["pry_cat_clave_cliente_productos as cc","cc.id_clave_cliente_producto","=","fac_det_notas_cargo_clientes.fk_id_clave_cliente"]},
@@ -173,7 +176,7 @@ class NotasCreditoClientesController extends ControllerBase
             }
 
             #dd($xml['xml']);
-
+            $timbrado = null;
             if($request->timbrar == true && !empty($xml))
                 $timbrado = timbrar($xml);
 
@@ -192,6 +195,9 @@ class NotasCreditoClientesController extends ControllerBase
                 }
                 else
                     dd($timbrado);
+            }
+            else{
+                dd($timbrado);
             }
             $request->request->set('save',true);
             $return = parent::update($request, $company, $id, $compact);
@@ -216,24 +222,16 @@ class NotasCreditoClientesController extends ControllerBase
                 'FormaPago' => $entity->formapago->forma_pago,
                 'NoCertificado' => $entity->certificado->no_certificado,
                 'CondicionesDePago' => $entity->condicionpago->condicion_pago,
-                #'SubTotal' => number_format($entity->subtotal,2,'.',''),
                 'Moneda' => $entity->moneda->moneda,
                 'TipoCambio' => round($entity->tipo_cambio,4),
-                #'Total' => number_format($entity->total,2,'.',''),
                 'TipoDeComprobante' => $entity->tipocomprobante->tipo_comprobante,
                 'MetodoPago' => $entity->metodopago->metodo_pago,
                 'LugarExpedicion' => '64000',
             ];
 
-            if($entity->descuento > 0)
-                $return['cfdi']['Descuento'] = number_format($entity->descuento,2,'.','');
-
             foreach ($entity->relaciones as $i=>$row)
             {
-                $return['relacionados'][] = [
-                    'TipoRelacion'=>$row->tiporelacion->tipo_relacion,
-                    'UUID'=>$row->documento->uuid,
-                ];
+                $return['relacionados'][$row->tiporelacion->tipo_relacion][] = ['UUID'=>$row->documento->uuid];
             }
 
             $return['emisor'] = [
@@ -268,7 +266,7 @@ class NotasCreditoClientesController extends ControllerBase
                         'TipoFactor' => $row->impuestos->tipo_factor,
                         'TasaOCuota' => $row->impuestos->tasa_o_cuota,
                         'Importe' => number_format($row->impuesto,2,'.',''),
-                        'Base' => number_format(($row->importe),2,'.',''),
+                        'Base' => number_format(($row->importe),2,'.','') - number_format(($row->descuento),2,'.',''),
                     ];
                 }
 
@@ -280,7 +278,7 @@ class NotasCreditoClientesController extends ControllerBase
                     'Unidad' => $row->unidadmedida->descripcion,
                     'Descripcion' => $row->descripcion,
                     'ValorUnitario' => number_format($row->precio_unitario,2,'.',''),
-                    'Importe' => ($row->cantidad * number_format($row->precio_unitario,2,'.','')) - number_format($row->descuento,2,'.',''),
+                    'Importe' => ($row->cantidad * number_format($row->precio_unitario,2,'.','')),
                     'impuestos' => [$impuesto]
                 ];
                 if($row->descuento > 0)
