@@ -38,6 +38,9 @@ class Empleados extends ModelBase
         'nombre' => 'Nombre',
         'apellido_paterno' => 'Apellido Paterno',
         'apellido_materno' => 'Apellido Materno',
+        'departamento.descripcion' => 'Departamento',
+        'puesto.descripcion' => 'Puesto',
+        'numero_imss' => 'No. Seguro',
         'fecha_nacimiento' => 'Fecha Nacimiento',
         'correo_personal' => 'Correo Personal',
         'telefono' => 'Telefono'

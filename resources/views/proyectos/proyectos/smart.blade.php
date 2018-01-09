@@ -84,6 +84,9 @@
             			{{Form::cSelectWithDisabled('Subdependencia','fk_id_subdependencia', $subdependencias ?? [],['class'=>'select2'])}}
             		</div>
 					<div class="form-group col-md-3">
+						{{Form::cSelectWithDisabled('Modalidad entrega','fk_id_modalidad_entrega', $modalidadesentrega ?? [],['class'=>'select2'])}}
+					</div>
+					<div class="form-group col-md-3">
 						{{Form::cSelectWithDisabled('Caracter del evento','fk_id_caracter_evento',$caracterevento ?? [],['class'=>'select2'])}}
 					</div>
 					<div class="form-group col-md-3">
@@ -95,9 +98,9 @@
 							<label for="tope_pena_convencional" class="float-right">Tope Pena Convencional</label>
 						</div>
 						<div class="input-group">
-						<input name="pena_convencional" id="pena_convencional" type="number" class="form-control">
+							<input name="pena_convencional" id="pena_convencional" type="number" class="form-control">
 							<span class="input-group-addon">%</span>
-						<input name="tope_pena_convencional" id="tope_pena_convencional" type="number" class="form-control">
+							<input name="tope_pena_convencional" id="tope_pena_convencional" type="number" class="form-control">
 							<span class="input-group-addon">%</span>
 						</div>
 					</div>

@@ -69,7 +69,7 @@ class SolicitudesController extends ControllerBase
         return parent::create($company,$attributes);
     }
 
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
         $id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
         # ¿Usuario tiene permiso para crear?
@@ -179,7 +179,7 @@ class SolicitudesController extends ControllerBase
         return parent::edit($company, $id, $attributes);
     }
 
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         # ¿Usuario tiene permiso para actualizar?
         $this->authorize('update', $this->entity);

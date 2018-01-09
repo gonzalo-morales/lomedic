@@ -66,7 +66,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         'nombre_corto' => 'required',
         'usuario' => 'required',
     ];
-    
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new MyResetPassword($token));
@@ -148,14 +148,14 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
      * @return array
      */
     public $modulos_menu = null;
-    
+
     public function modulos_anidados($empresa = null, $idmenu = null)
     {
         $empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
         $this->modulos_menu = $this->modulos_menu ?: $this->getmenu($empresa);
 
         $menu = $this->modulos_menu->where('fk_id_modulo_hijo','=',$idmenu);
-        
+
         foreach ($menu as $key=>$itemMenu) {
             $menu[$key]->submodulos = $this->modulos_anidados($empresa,$itemMenu->id_modulo);
         }
@@ -166,7 +166,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
     {
         $empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
         $id_empresa = isset($empresa->id_empresa) ? $empresa->id_empresa : 0;
-        
+
         $modulos = Modulos::where('eliminar','=',0)->where('activo','=',1)->where('accion_menu','=',1)
         ->wherein('id_modulo',$this->getpermisos()->pluck('id_permiso'))
         ->leftJoin('ges_det_modulos','fk_id_modulo','id_modulo')
@@ -178,7 +178,8 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 
     public function autorizacionessolicitudes()
     {
-        return $this->belongsToMany(DetalleCondicionesAutorizaciones::class,'com_det_autorizaciones_usuarios','fk_id_usuario','id_usuario');
+        return $this->belongsToMany(DetalleCondicionesAutorizaciones::class,'com_det_usuarios_autorizados','fk_id_usuario','id_usuario');
+        // return $this->belongsToMany(DetalleCondicionesAutorizaciones::class,'com_det_autorizaciones_usuarios','fk_id_usuario','id_usuario');
     }
 
     public function condiciones()

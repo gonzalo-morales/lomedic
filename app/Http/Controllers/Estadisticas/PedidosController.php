@@ -17,7 +17,7 @@ class PedidosController extends ControllerBase
 	    ]);
 	}
 	
-	public function store(Request $request, $company)
+	public function store(Request $request, $company, $compact = false)
 	{
 	    $fecha_inicio = isset($request->datetimepicker1) ? $request->datetimepicker1 : '1900-01-01';
 	    $fecha_fin = isset($request->datetimepicker2) ? $request->datetimepicker2 : '1900-01-01';

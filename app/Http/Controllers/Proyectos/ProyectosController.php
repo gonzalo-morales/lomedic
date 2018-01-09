@@ -27,6 +27,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Proyectos\CaracterEventos;
 use App\Http\Models\Proyectos\FormasAdjudicacion;
+use App\Http\Models\Proyectos\ModalidadesEntrega;
 
 class ProyectosController extends ControllerBase
 {
@@ -53,15 +54,16 @@ class ProyectosController extends ControllerBase
             'subdependencias' => Subdependencias::where('activo', 1)->where('eliminar', 0)->orderBy('subdependencia')->pluck('subdependencia','id_subdependencia'),
             'caracterevento' => CaracterEventos::where('activo',1)->where('eliminar',0)->orderBy('caracter_evento')->pluck('caracter_evento','id_caracter_evento'),
             'formaadjudicacion' => FormasAdjudicacion::where('activo',1)->where('eliminar',0)->orderBy('forma_adjudicacion')->pluck('forma_adjudicacion','id_forma_adjudicacion'),
+            'modalidadesentrega' => ModalidadesEntrega::where('activo',1)->where('eliminar',0)->orderBy('modalidad_entrega')->pluck('modalidad_entrega','id_modalidad_entrega'),
             'sucursales' => $sucursales,
-            'js_licitacion' => Crypt::encryptString('"select":["tipo_evento","dependencia","subdependencia","unidad","caracter_evento","forma_adjudicacion","pena_convencional","tope_pena_convencional"],"conditions":[{"where":["no_oficial","$num_evento"]}]'),
+            'js_licitacion' => Crypt::encryptString('"select":["tipo_evento","dependencia","subdependencia","unidad","modalidad_entrega","caracter_evento","forma_adjudicacion","pena_convencional","tope_pena_convencional"],"conditions":[{"where":["no_oficial","$num_evento"]}]'),
             'js_sucursales' => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"conditions":[{"where":["fk_id_cliente",$fk_id_cliente]},{"where":["activo","1"]}]'),
             'js_contratos' => Crypt::encryptString('"select":["representante_legal_cliente","no_contrato","vigencia_fecha_inicio","vigencia_fecha_fin"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
             'js_partidas' => Crypt::encryptString('"select":["clave","descripcion","cantidad_maxima","cantidad_minima","codigo_barras","costo"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
         ];
     }
     
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
         #Guardamos los archivos de los anexos en la ruta especificada
         if(isset($request->relations['has']['anexos'])){
@@ -102,10 +104,11 @@ class ProyectosController extends ControllerBase
         $arreglo = $request->relations;
         unset($arreglo['has']['productos']['$row_id']);
         $request->merge(["relations"=>$arreglo]);
-        return parent::store($request, $company);
+        
+        return parent::store($request, $company, $compact);
     }
     
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         #Guardamos los archivos de los anexos en la ruta especificada
         if(isset($request->relations['has']['anexos'])){
@@ -147,7 +150,8 @@ class ProyectosController extends ControllerBase
         $arreglo = $request->relations;
         unset($arreglo['has']['productos']['$row_id']);
         $request->merge(["relations"=>$arreglo]);
-        return parent::update($request, $company, $id);
+        
+        return parent::update($request, $company, $id, $compact);
     }
     
     public function obtenerProyectos()

@@ -41,12 +41,12 @@ class FamiliasproductosController extends ControllerBase
 		return parent::create($company,$attributes);
 	}
 
-	public function store(Request $request, $company)
+	public function store(Request $request, $company, $compact = false)
     {
         if($request->activo == 'on')
             {$request->request->set('activo',1);}
 
-        return parent::store($request, $company);
+        return parent::store($request, $company, $compact);
     }
 
     /**

@@ -12,6 +12,40 @@
 
 @section('content-width', 's12')
 
+@section('form-actions')
+	{{-- {{ dd($data) }} --}}
+   <div class="col-md-12 col-xs-12">
+       <div class="text-right">
+		   @if(!Route::currentRouteNamed(currentRouteName('create')))
+	           @can('create', currentEntity())
+	               {{ link_to(companyRoute('create'), 'Nuevo', ['class'=>'btn btn-primary progress-button']) }}
+	           @endcan
+		   @else
+			   {{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+		   @endif
+		   @if(Route::currentRouteNamed(currentRouteName('show')))
+	           @can('update', currentEntity())
+	               @if($data->fk_id_estatus_autorizacion == 1 || $data->fk_id_estatus_autorizacion == 3)
+	                   {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info progress-button']) }}
+	               @endif
+			   @endcan
+		   @endif
+		   @if(Route::currentRouteNamed(currentRouteName('edit')))
+				@if($data->fk_id_estatus_autorizacion == 1 || $data->fk_id_estatus_autorizacion == 3)
+					{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+				@endif
+		   @endif
+		   @if(Route::currentRouteNamed(currentRouteName('update')))
+		   		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+		   @endif
+		   {{-- @if(Route::currentRouteNamed(currentRouteName('index')))
+			   {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info progress-button']) }}
+		   @endif --}}
+           {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+       </div>
+   </div>
+@endsection
+
 @section('form-content')
 {{ Form::setModel($data) }}
 @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
@@ -227,8 +261,8 @@
 								</td>
 							</tr>
 						@endforeach
-					@elseif( isset( $data->detalleOrdenes ) )
-						@foreach( $data->detalleOrdenes as $detalle)
+					@elseif( isset( $detalles ) )
+						@foreach( $detalles as $detalle)
 							<tr>
 								<td>
 									{{isset($detalle->fk_id_documento_parent)?$detalle->fk_id_tipo_documento_parent.' - '.$detalle->fk_id_documento_parent:'N/A'}}
@@ -342,63 +376,109 @@
 </div>
 
 {{-- Mostrar solo a usuarios autorizados para autorizar ordenes de compra --}}
-<div class="row">
-	<div class="col-sm-12">
-		<h3>Autorizaciones Pendientes</h3>
-		<div class="card z-depth-1-half">
-			<div class="card-body responsive-table">
-				<table class="table highlight" id="condicionesAutorizar">
-					<thead>
-						<tr>
-							<th>Nombre</th>
-							<th>Estatus</th>
-							<th>Fecha de Autorización</th>
-							<th>Autorizó</th>
-							<th>Motivo</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-					@if(isset($data->contratos))
-						@foreach($data->contratos->where('eliminar',0) as $row=>$detalle)
+@if(!empty($data->autorizaciones) && $data->fk_id_estatus_autorizacion != 1)
+<div id="autorizaciones" class="row card z-depth-1-half">
+	<div class="card-header">
+		<div class="col-md-12 col-sm-12">
+			<h3 class="text-danger text-center">Autorizaciones</h3>
+		</div>
+	</div>
+	<div class="card-body">
+		<div class="text-right">
+			<a href="#" class="btn p-2 btn-dark" id="reload"><i class="material-icons align-middle">cached</i>Recargar</a>
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Condición</th>
+					<th>Fecha</th>
+					<th>Estatus</th>
+					<th>Fecha estatus</th>
+					<th>Autorizó</th>
+					<th>Observación</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody id="autorizaciones_detalle">
+				@foreach($data->autorizaciones->where('activo',1)->where('eliminar',0) as $autorizacion)
+					@foreach($condiciones as $condicion)
+						@if($autorizacion->fk_id_condicion == $condicion->id_condicion)
 							<tr>
+								<td>{{$autorizacion->condicion->nombre}}{{Form::hidden('',$autorizacion->id_autorizacion)}}{{Form::hidden('',$autorizacion->observaciones)}}{{Form::hidden('',$autorizacion->fk_id_estatus)}}</td>
+								<td>{{$autorizacion->fecha_creacion}}</td>
+								@if($autorizacion->fk_id_estatus == 1)
+									<td>{{$autorizacion->estatus->estatus}}</td>
+								@elseif($autorizacion->fk_id_estatus == 2)
+									<td class="text-info">{{$autorizacion->estatus->estatus}}</td>
+								@elseif($autorizacion->fk_id_estatus == 3)
+									<td class="text-danger">{{$autorizacion->estatus->estatus}}</td>
+								@else
+									<td class="text-success">{{$autorizacion->estatus->estatus}}</td>
+								@endif
+								<td>{{$autorizacion->fecha_autorizacion}}</td>
+								@if($autorizacion->fk_id_estatus == 4)
+									@if($autorizacion->usuario->nombre_corto <> '')
+										<td>{{$autorizacion->usuario->nombre_corto}}</td>
+									@else
+										<td>--</td>
+									@endif
+								@else
+									<td>--</td>
+								@endif
+								<td>{{$autorizacion->observaciones}}</td>
 								<td>
-									{{-- {{ Form::hidden('relations[has][contratos]['.$row.'][index]',$row,['class'=>'index']) }} --}}
-									{{-- {{ Form::hidden('relations[has][contratos]['.$row.'][id_contrato]',$detalle->id_contrato) }} --}}
-									{{-- {{}} --}}
-								</td>
-								<td>
-									{{-- {{}} --}}
-								</td>
-								<td>
-									{{-- {{}} --}}
-								</td>
-								<td>
-									{{-- {{}} --}}
-								</td>
-								<td>
-									{{-- {{}} --}}
-								</td>
-								<td>
-									<a class="btn is-icon text-primary bg-white" href="{{companyAction('autorizarOrden', ['id' => $detalle->id_contrato])}}" title="Autorizar">
-										<i class="material-icons">Check</i>
-									</a>
 									@if(Route::currentRouteNamed(currentRouteName('edit')))
-										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Contrato"> <i class="material-icons">delete</i></button>
+									 {{--Ventana de autorizaciones --}}
+									<button class="condicion text-primary btn btn_tables is-icon eliminar bg-white" type="button" data-toggle="modal" data-target="#autorizacion">
+									<i class="material-icons">new_releases</i>
+									</button>
 									@endif
 								</td>
 							</tr>
-						@endforeach
-					@endif
-					</tbody>
-					<tfoot>
-
-					</tfoot>
-				</table>
-			</div>
-		</div><!--/Here ends card-->
+						@endif
+					@endforeach
+				@endforeach
+			</tbody>
+		</table>
 	</div>
 </div>
+@endif
+
+<div id="autorizacion" class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">¿Autorizar el pago?</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					{{Form::hidden('',null,['id'=>'id_autorizacion','data-url'=>companyAction('Compras\AutorizacionesController@update',['id'=>'?id'])])}}
+					<div class="form-group col-md-12 col-sm-6">
+						{{Form::label('','Tipo de autorizacion')}}
+						{{Form::text('',null,['class'=>'form-control','readonly','id'=>'motivo_autorizacion'])}}
+					</div>
+					<div class="form-group text-center col-md-12 col-sm-6">
+						{{Form::cRadio('¿Autorizado?','fk_id_estatus',[4=>'Autorizado',3=>'No Autorizado'])}}
+					</div>
+					<div class="form-group col-md-12 col-sm-12">
+						{{Form::cTextArea('Motivo','observaciones',['readonly','style'=>'resize:none;'])}}
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				@if(Route::currentRouteNamed(currentRouteName('edit')))
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				<button id="guardar_autorizacion" type="button" class="btn btn-primary">Guardar</button>
+				@endif
+			</div>
+		</div>
+	</div>
+</div>
+
+
 
 @endsection
 
@@ -418,7 +498,7 @@
 		<script type="text/javascript">
 			rivets.binders['hide-delete'] = {
 				bind: function (el) {
-					if(el.dataset.fk_id_estatus_orden != 1)
+					if(el.dataset.fk_id_estatus_orden != 1 {{-- || el.dataset.fk_id_estatus_autorizacion == 2 || el.dataset.fk_id_estatus_autorizacion == 4 --}})
 					{
 						$(el).hide();
 					}
@@ -426,7 +506,7 @@
 			};
 			rivets.binders['hide-update'] = {
 				bind: function (el) {
-					if(el.dataset.fk_id_estatus_orden != 1)
+					if(el.dataset.fk_id_estatus_orden != 1 {{--|| el.dataset.fk_id_estatus_autorizacion == 2 || el.dataset.fk_id_estatus_autorizacion == 4 --}})
 					{
 						$(el).hide();
 					}

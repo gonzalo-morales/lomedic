@@ -10,6 +10,7 @@
 		var series_js     = '{{ $js_series ?? '' }}';
     	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
+    	var contratos_js = '{{ $js_contratos ?? '' }}';
     </script>
 	{{ HTML::script(asset('js/ventas/facturasclientes.js')) }}
 @endsection
@@ -115,6 +116,9 @@
         		</div>
         		<div class="form-group col-md-6">
         			{{Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [], ['class'=>'select2','data-url'=>ApiAction('administracion.sucursales')])}}
+        		</div>
+        		<div class="form-group col-md-6">
+        			{{Form::cSelect('Contrato','fk_id_contrato', $contratos ?? [], ['data-url'=>ApiAction('proyectos.proyectos')])}}
         		</div>
         	</div>
     	</div>
@@ -373,6 +377,18 @@
     	</div>
 	</div>
 @endsection
+
+@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-actions')
+        <div class="col-md-12 col-xs-12">
+            <div class="text-right">
+            	{{ Form::button('Guardar y Timbrar', ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+                {{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-secondary progress-button']) }}
+                {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+            </div>
+        </div>
+    @endsection
+@endif
 
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))

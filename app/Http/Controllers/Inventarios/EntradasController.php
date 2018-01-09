@@ -93,7 +93,7 @@ class EntradasController extends ControllerBase
         return parent::create($company,$attributes);
     }
 
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
 
         $nueva_entrada = Entradas::create(['fk_id_tipo_documento'=>$_POST['fk_id_tipo_documento'],

@@ -55,8 +55,10 @@ $(document).ready(function () {
     		});
     		
     		$.ajax({
+    			async: true,
 			    url: $(this).data('url'),
 			    data: {'param_js':empresa_js,$id_empresa:$(this).val()},
+			    dataType: 'json',
 	            success: function (data) {
 	            	$("#rfc").val(data[0].rfc);
 	            	$("#fk_id_regimen_fiscal").val(data[0].fk_id_regimen_fiscal);
@@ -75,10 +77,14 @@ $(document).ready(function () {
 		$('#fk_id_socio_negocio').trigger('change');
 	}).trigger('change');
 	
+	$('#timbrar').on('click', function(e) {
+		$("#form-model").append('<input name="timbrar" type="hidden" value="1">');
+	});
+	
 	$('#fk_id_socio_negocio').on('change', function() {
 		let proyecto = $('#fk_id_proyecto');
 		let sucursal = $('#fk_id_sucursal');
-		let val = $('#fk_id_socio_negocio option:selected').val()
+		let val = $('#fk_id_socio_negocio option:selected').val();
 
 		if(!val) {
 			$("#fk_id_proyecto option").remove();
@@ -139,6 +145,33 @@ $(document).ready(function () {
 		}
 	}).trigger('change');
 	
+	$('#fk_id_proyecto').on('change', function() {
+		let val = $('#fk_id_proyecto option:selected').val();
+		let contrato = $('#fk_id_contrato');
+
+		if(!val) {
+			$("#fk_id_contrato option").remove();
+			contrato.prop('disabled',true);
+		}
+		else {
+    		$.ajax({
+    		    async: true,
+    		    url: contrato.data('url'),
+    		    data: {'param_js':contratos_js,$id_proyecto:val},
+    		    dataType: 'json',
+                success: function (data) {
+                	$("#fk_id_contrato option").remove();
+                	contrato.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                    $.each(data[0].contratos, function(){ 
+                    	contrato.append('<option value="'+this.id_contrato+'">'+this.num_contrato+'</option>')
+                    });
+                	contrato.val('');
+                	contrato.prop('disabled', (data.length == 0)); 
+    		    }
+    		});
+		}
+	});
+	
 	$('#fk_id_moneda').on('change', function() {
 		$('#tipo_cambio').attr('readonly',$('#fk_id_moneda').val() == 100);
 		
@@ -158,7 +191,7 @@ $(document).ready(function () {
 		factura = $('#fk_id_factura_relacion option:selected').text();
 		
 		if(id_tipo == '' | id_factura == '') {
-			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleRelaciones').append('<tr>'+
@@ -169,7 +202,7 @@ $(document).ready(function () {
 				'<td><input name="relations[has][relaciones]['+row_id+'][fk_id_factura]" type="hidden" value="'+id_factura+'">'+factura+'</td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-			$.toaster({priority:'success',title:'Â¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		
 	});
@@ -178,5 +211,5 @@ $(document).ready(function () {
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }

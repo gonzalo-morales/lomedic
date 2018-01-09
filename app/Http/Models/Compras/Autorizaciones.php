@@ -5,6 +5,7 @@ namespace App\Http\Models\Compras;
 use App\Http\Models\Administracion\TiposDocumentos;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Compras\CondicionesAutorizacion;
 use DB;
 
 class Autorizaciones extends ModelCompany
@@ -33,8 +34,7 @@ class Autorizaciones extends ModelCompany
         'fk_id_estatus'=>'estatus autorización'
     ];
 
-    protected $dataColumns = [
-    ];
+    protected $dataColumns = [];
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
@@ -44,12 +44,11 @@ class Autorizaciones extends ModelCompany
          'estatus.estatus'=>'Estatus'
      ];
 
-    // protected $eagerLoaders = ['condicionAutorizacion'];
+    protected $eagerLoaders = ['estatus'];
 
-    // function getNombreCompletoAttribute() {
-    //     return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
-    // }
-
+    function setEstatusAttribute(){
+        return $this->estatus->id_estatus;
+    }
     /**
      * The validation rules
      * @var array
@@ -58,6 +57,10 @@ class Autorizaciones extends ModelCompany
         'observaciones'=>'requiredif:fk_id_estatus,3'
     ];
 
+    public function documento()
+    {
+        return $this->hasOne('App\Http\Models\Compras\Ordenes','id_orden','fk_id_documento');
+    }
 
     public function solicitudpago()
     {

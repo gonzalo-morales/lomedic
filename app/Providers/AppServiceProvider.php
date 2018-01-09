@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
 		});
 
 		// HTML Components
-		require_once __DIR__ . '/../components.php';
+		require_once app_path().'/components.php';
 	}
 
 	/**
@@ -48,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
 	public function register()
 	{
 		//
-		require_once __DIR__ . '/../helpers.php';
+	    require_once app_path().'/helpers.php';
+	    require_once app_path().'/cfdi.php';
 	}
 }

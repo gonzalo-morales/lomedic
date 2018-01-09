@@ -86,7 +86,6 @@
       </div><!--/card-header-->
   @endif
       <div class="card-body">
-        <button id="calculame">Let´s do this!</button>
         <table id="factConcepts" class="table table-responsive-md table-striped table-hover">
           <thead>
             <tr>
@@ -95,9 +94,9 @@
               <th>UPC(s)</th>
               <th>Fecha Caducidad</th>
               <th>Lote/Almacen-Ubicación/Stock Actual</th>
-              <th>Nueva Ubicación</th>
-              <th>Nuevo Lote</th>
-              <th>Cantidad a mover</th>
+              <th>* Nueva Ubicación</th>
+              <th>* Nuevo Lote</th>
+              <th>* Cantidad a mover</th>
               <th>Acciones</th>
               @else
               <th>SKU</th>

@@ -19,7 +19,7 @@ class SeguimientoSolicitudesController extends ControllerBase
         $this->entity = $entity;
     }
 
-    public function store(Request $request, $company) // Para crear un nuevo ticket
+    public function store(Request $request, $company, $compact = false) // Para crear un nuevo ticket
     {
         $this->validate($request, $this->entity->rules);
         

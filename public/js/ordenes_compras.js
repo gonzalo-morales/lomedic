@@ -8,6 +8,7 @@ $('.datepicker').pickadate({
     format: 'yyyy/mm/dd'
 });
 $(document).ready(function(){
+
     //Inicializar tabla
     window.dataTable = new DataTable('#productos', {
         fixedHeight: true,
@@ -20,16 +21,16 @@ $(document).ready(function(){
         footer:true,
     });
 
-    window.dataTableCondiciones = new DataTable('#condicionesAutorizar', {
-        fixedHeight: true,
-        fixedColumns: true,
-        searchable: false,
-        perPageSelect: false,
-        labels:{
-            info: "Mostrando del registro {start} al {end} de {rows}"
-        },
-        footer:true,
-    });
+    // window.dataTableCondiciones = new DataTable('#autorizaciones', {
+    //     fixedHeight: true,
+    //     fixedColumns: true,
+    //     searchable: false,
+    //     perPageSelect: false,
+    //     labels:{
+    //         info: "Mostrando del registro {start} al {end} de {rows}"
+    //     },
+    //     footer:true,
+    // });
 
     totalOrden();
     subtotal_original = $('#subtotal_lbl').text();
@@ -95,17 +96,93 @@ $(document).ready(function(){
             $('#fecha_estimada_entrega').val(anio+'/'+mes+'/'+dia);
         });
         $(document).on('submit',function (e) {
+            // e.preventDefault();
             if(dataTable.activeRows.length > 0){
                 if(a.length>0) {
+                    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
                     let url = $('#productos').data('delete');
                     $.delete(url, {ids: a});
                     a = [];
                 }
             }else{
                 e.preventDefault();
+                $.toaster({
+                    priority: 'danger', title: '¡Advertencia!', message: 'La orden de compra debe tener al menos un detalle',
+                    settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+                });
             }
-        })
+        });
     }
+    $('#autorizar').click(function(){
+        $('#autorizarCondicion').modal('show');
+    });
+
+    //Para las autorizaciones de solicitudes de compras
+    $('input[type=radio][name=fk_id_estatus]').change(function () {
+        if($(this).val() == 4){//Si es autorizada
+            $('#observaciones').attr('readonly','readonly');
+            $('#observaciones').empty();
+        }else{
+            $('#observaciones').removeAttr('readonly');
+        }
+    });
+    $('.condicion').click(function () {
+        $('#motivo_autorizacion').val($(this).parent().parent().find('td:first-child').text());
+        // $('#fk_id_estatus\\ ').prop('checked',true);
+        $('#id_autorizacion').val($(this).parent().parent().find('td input:first').val());
+        $('#observaciones').val($(this).parent().parent().find('td input:first').next('input').val());
+        if($(this).parent().parent().find('td input:last').val() == 3){
+            $('#fk_id_estatus\\ 3').prop('checked',true);
+        }else if($(this).parent().parent().find('td input:last').val() == 4){
+            $('#fk_id_estatus\\ 4').prop('checked',true);
+        }
+    });
+
+    $('#guardar_autorizacion').click(function (e) {
+       if($('input[type=radio][name=fk_id_estatus]:checked').val() == 3 && !$('#observaciones').val()) {
+           $.toaster({
+               priority: 'danger', title: 'Error', message: 'Por favor escribe un motivo de rechazo',
+               settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+           });
+       }else if(!$('input[type=radio][name=fk_id_estatus]:checked').val()){
+           $.toaster({
+               priority: 'danger', title: 'Error', message: 'Por favor selecciona si se autoriza o no',
+               settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+           });
+        }else{
+           $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+           var autorizar_url = $('#id_autorizacion').data('url').replace('?id',$('#id_autorizacion').val());
+           $.ajax({
+               url:autorizar_url,
+               type:'PUT',
+               data:{
+                   observaciones:$('#observaciones').val(),
+                   fk_id_estatus:$('input[type=radio][name=fk_id_estatus]:checked').val()
+               },
+               success:function (data) {
+                   if(data.status == 1){
+                       $('#autorizacion').modal('toggle');
+                       $.toaster({
+                           priority: 'success', title: 'Éxito', message: 'Se ha actualizado la información de la autorización',
+                           settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+                       });
+                   }else{
+                       $.toaster({
+                           priority: 'danger', title: 'Error', message: 'Ha ocurrido un error',
+                           settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+                       });
+                   }
+               }
+           });
+       }
+    });
+
+    $('#reload').click(function (e) {
+        e.preventDefault();
+        window.location.reload(true);
+    })
+    //Aquí termina la parte de las autorizaciones
+
     $('#descuento_porcentaje').on('keyup',function () {
         $('#descuento_general').val(((subtotal_original*$(this).val())/100).toFixed(2));
         totalOrden();
@@ -310,78 +387,82 @@ function limpiarCampos() {
     $('#cantidad').val('1');
     $('#precio_unitario').val('');
     //Eliminar reglas de validación detalle
-    $('#fk_id_sku').rules('remove');
-    $('#fk_id_upc').rules('remove');
-    $('#fk_id_proyecto').rules('remove');
-    $('#fecha_necesario').rules('remove');
-    $('#cantidad').rules('remove');
-    $('#fk_id_impuesto').rules('remove');
-    $('#precio_unitario').rules('remove');
+    if ($("#fk_id_sku").length > 0) {
+        $('#fk_id_sku').rules('remove');
+        $('#fk_id_upc').rules('remove');
+        $('#fk_id_proyecto').rules('remove');
+        $('#fecha_necesario').rules('remove');
+        $('#cantidad').rules('remove');
+        $('#fk_id_impuesto').rules('remove');
+        $('#precio_unitario').rules('remove');
+    }
 }
 
 function validateDetail() {
-    $('#fk_id_sku').rules('add',{
-        required: true,
-        messages:{
-            required: 'Selecciona un SKU'
-        }
-    });
-    $('#cantidad').rules('add',{
-        required: true,
-        number: true,
-        range: [1,9999],
-        messages:{
-            required: 'Ingresa una cantidad',
-            number: 'El campo debe ser un número',
-            range: 'El número debe ser entre 1 y 9999'
-        }
-    });
-    $('#fk_id_impuesto').rules('add',{
-        required: true,
-        messages:{
-            required: 'Selecciona un tipo de impuesto'
-        }
-    });
-    $.validator.addMethod('precio',function (value,element) {
-        return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-    },'El precio no debe tener más de dos decimales');
-    $.validator.addMethod( "greaterThan", function( value, element, param ) {
-        return value > param;
-    }, "Please enter a greater value." );
-    $('#precio_unitario').rules('add',{
-        required: true,
-        number: true,
-        precio:true,
-        greaterThan:0,
-        messages:{
-            required: 'Ingresa un precio unitario',
-            number: 'El campo debe ser un número',
-            greaterThan: 'El número debe ser mayor a 0',
-            precio: 'El precio no debe tener más de dos decimales'
-        }
-    });
-    $.validator.addMethod('porcentaje',function (value,element) {
-        return this.optional(element) || /^\d{0,2}(\.\d{0,4})?$/g.test(value);
-    },'El porcentaje tiene un formato incorrecto');
-    $.validator.addMethod( "lessThan", function( value, element, param ) {
-        return value <= param;
-    }, "Please enter a greater value." );
-    $('#descuento_porcentaje').rules('add',{
-        porcentaje: true,
-        greaterThan: -1,
-        lessThan: 100,
-        messages:{
-            greaterThan: 'El número no debe ser menor a 0',
-            lessThan: 'El porcentaje debe ser menor a 100'
-        }
-    });
-    $('#descuento_general').rules('add',{
-        precio: true,
-        lessThan: subtotal_original,
-        messages: {
-            lessThan: 'El descuento no debe ser mayor al subtotal'
-        }
-    });
+    if ($("#fk_id_sku").length>0) {
+        $('#fk_id_sku').rules('add',{
+            required: true,
+            messages:{
+                required: 'Selecciona un SKU'
+            }
+        });
+        $('#cantidad').rules('add',{
+            required: true,
+            number: true,
+            range: [1,9999],
+            messages:{
+                required: 'Ingresa una cantidad',
+                number: 'El campo debe ser un número',
+                range: 'El número debe ser entre 1 y 9999'
+            }
+        });
+        $('#fk_id_impuesto').rules('add',{
+            required: true,
+            messages:{
+                required: 'Selecciona un tipo de impuesto'
+            }
+        });
+        $.validator.addMethod('precio',function (value,element) {
+            return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
+        },'El precio no debe tener más de dos decimales');
+        $.validator.addMethod( "greaterThan", function( value, element, param ) {
+            return value > param;
+        }, "Please enter a greater value." );
+        $('#precio_unitario').rules('add',{
+            required: true,
+            number: true,
+            precio:true,
+            greaterThan:0,
+            messages:{
+                required: 'Ingresa un precio unitario',
+                number: 'El campo debe ser un número',
+                greaterThan: 'El número debe ser mayor a 0',
+                precio: 'El precio no debe tener más de dos decimales'
+            }
+        });
+        $.validator.addMethod('porcentaje',function (value,element) {
+            return this.optional(element) || /^\d{0,2}(\.\d{0,4})?$/g.test(value);
+        },'El porcentaje tiene un formato incorrecto');
+        $.validator.addMethod( "lessThan", function( value, element, param ) {
+            return value <= param;
+        }, "Please enter a greater value." );
+        $('#descuento_porcentaje').rules('add',{
+            porcentaje: true,
+            greaterThan: -1,
+            lessThan: 100,
+            messages:{
+                greaterThan: 'El número no debe ser menor a 0',
+                lessThan: 'El porcentaje debe ser menor a 100'
+            }
+        });
+        $('#descuento_general').rules('add',{
+            precio: true,
+            lessThan: subtotal_original,
+            messages: {
+                lessThan: 'El descuento no debe ser mayor al subtotal'
+            }
+        });
+    }
 }
 
 function borrarFila_edit(el) {

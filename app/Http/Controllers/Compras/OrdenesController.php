@@ -6,12 +6,13 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\Sucursales;
+use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Solicitudes;
 use App\Http\Models\Compras\Ofertas;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\CondicionesAutorizacion;
-use App\Http\Models\Compras\AutorizacionOrdenes;
+use App\Http\Models\Compras\Autorizaciones;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
 use App\Http\Models\Finanzas\CondicionesPago;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class OrdenesController extends ControllerBase
 {
@@ -31,6 +33,18 @@ class OrdenesController extends ControllerBase
 	{
 		$this->entity = $entity;
 	}
+	public function index($company, $attributes=[]){
+		$attributes = $attributes+['dataview'=>[
+				'detalles' => $this->entity->detalleOrdenes->where('cerrado',false),
+				'estatus' => 1,
+			]];
+			return parent::index($company,$attributes);
+	}
+
+	// public function getDataView($entity = null)
+    // {
+	// 	return [];
+	// }
 
 	public function create($company, $attributes =[])
 	{
@@ -61,11 +75,12 @@ class OrdenesController extends ControllerBase
             'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
+			'estatus' => 2,
             ]];
 		 return parent::create($company,$attributes);
 	}
 
-	public function store(Request $request, $company)
+	public function store(Request $request, $company, $compact = false)
 	{
         # ¿Usuario tiene permiso para crear?
 		$this->authorize('create', $this->entity);
@@ -146,38 +161,8 @@ class OrdenesController extends ControllerBase
 			$isSuccess->save();
             $this->log('store', $isSuccess->id_orden);
 
-			// AutorizacionOrdenes
-
-			$condicionesAutorizacion = CondicionesAutorizacion::where('activo',1)->get();
-			foreach ($condicionesAutorizacion as $condicion) {
-				$autorizacion = new AutorizacionOrdenes();
-				$autorizacion->fk_id_orden_compra 		= $isSuccess->id_orden;
-				$autorizacion->fk_id_autorizacion 		= $condicion->id_autorizacion;
-				$autorizacion->fk_id_usuario_autoriza 	= Auth::id();
-
-				if (isset($condicion->campo)) {
-					$campo =  $request->input($condicion->campo);
-					if ($campo > $condicion->rango_de && $campo < $condicion->rango_hasta ) {
-						// TODO: "Put autorizacion ordenes";
-						$autorizacion->estatus = 'PENDIENTE';
-						// dd($request);
-					}
-				}else if (isset($condicion->consulta_sql)) {
-					dd($condicion->consulta_sql);
-					// TODO: Si resultado de la consulta_sql es diferente de null marcar como pendiente sino sin autorizacion
-					$autorizacion->estatus = 'PENDIENTE';
-				}else {
-					$autorizacion->estatus = 'SIN AUTORIZACION';
-				}
-				$autorizacion->save();
-				dd($autorizacion);
-			}
-			die();
-			echo $condicionesAutorizacion->campo;
-			dd($condicionesAutorizacion);
-			if (empty($condicionesAutorizacion->campo)) {
-				dd($company); die();
-			}
+			// dd($isSuccess->id_orden);
+			// $this->evaluarCondiciones($request, $isSuccess->id_orden);
 
             return $this->redirect('store');
 		} else {
@@ -189,13 +174,22 @@ class OrdenesController extends ControllerBase
 	public function show($company,$id,$attributes = [])
 	{
 	    $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
+		$estatus = Ordenes::where('id_orden',$id)->pluck('fk_id_estatus_autorizacion','id_orden')->first();
+		if ($estatus == 1 || $estatus == 3) {
+			$estatus = 1;
+		}else {
+			$estatus = 2;
+		}
 		$attributes = $attributes+['dataview'=>[
+				'detalles' => $this->entity->find($id)->detalleOrdenes->where('cerrado',false),
                 'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
                 'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'proveedores' => $proveedores,
                 'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
                 'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
                 'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
+				'condiciones'=>Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1)->where('eliminar',0),
+				'estatus' => $estatus,
 			]];
 		return parent::show($company,$id,$attributes);
 	}
@@ -203,19 +197,58 @@ class OrdenesController extends ControllerBase
 	public function edit($company,$id,$attributes = [])
 	{
 	    $clientes = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
+		$estatus = Ordenes::where('id_orden',$id)->pluck('fk_id_estatus_autorizacion','id_orden')->first();
+		if ($estatus == 1 || $estatus == 3) {
+			$estatus = 1;
+		}else {
+			$estatus = 2;
+		}
 
 		$attributes = $attributes+['dataview'=>[
+				'detalles' => $this->entity->find($id)->detalleOrdenes->where('cerrado',false),
                 'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
                 'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'clientes' => $clientes,
                 'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
                 'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
                 'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
+				'condiciones'=> Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1)->where('eliminar',0),
+				'estatus' => $estatus,
 			]];
 		return parent::edit($company, $id, $attributes);
 	}
 
-	public function update(Request $request, $company, $id)
+	/*public function update(Request $request, $company, $id, $compact = false)
+	{
+		# ¿Usuario tiene permiso para actualizar?
+		// $this->authorize('update', $this->entity);
+
+		# Validamos request, si falla regresamos atras
+		$this->validate($request, $this->entity->rules);
+		$entity = $this->entity->findOrFail($id);
+		if(isset($request->_detalles)){
+			$descuento_rows = 0;
+			foreach ($request->_detalles as $detalle){
+				$descuento_rows += $detalle['descuento_detalle'];
+				if(empty($detalle['fk_id_upc'])){
+					$detalle['fk_id_upc'] = null;
+				}
+				if(empty($detalle['fk_id_cliente'])){
+					$detalle['fk_id_cliente'] = null;
+				}
+				if(empty($detalle['fk_id_proyecto'])){
+					$detalle['fk_id_proyecto'] = null;
+				}
+				if(empty($detalle['fecha_necesario'])){
+					$detalle['fecha_necesario'] = null;
+				}
+			}
+			$entity->descuento_total = $entity->descuento_general + $descuento_rows;
+		}
+		return parent::update($request, $company, $id, $compact);
+	}*/
+
+	public function update(Request $request, $company, $id, $compact = false)
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);
@@ -321,6 +354,7 @@ class OrdenesController extends ControllerBase
                     } else {
                         return $this->redirect('destroy');
                     }
+					return $this->redirect('destroy');
 
                 } else {
 
@@ -339,7 +373,10 @@ class OrdenesController extends ControllerBase
             }
         }else{
             DetalleOrdenes::whereIn('id_orden_detalle', $request->ids)->update(['cerrado' => 't']);
-            return true;
+            // return true;
+			return response()->json([
+				'success' => true,
+			]);
         }
 	}
 
@@ -388,5 +425,4 @@ class OrdenesController extends ControllerBase
         $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
 	    return Response::json($proveedores);
     }
-
 }

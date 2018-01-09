@@ -28,13 +28,13 @@ class CondicionesAutorizacion extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['nombre','campo','rango_de','rango_hasta','consulta_sql','tipo_documento','activo','eliminar'];
+    protected $fillable = ['nombre','campo','rango_de','rango_hasta','consulta_sql','fk_id_tipo_documento','activo','eliminar'];
 
     public $niceNames =[
     ];
 
     protected $dataColumns = [
-        'campo'
+        'campo',
     ];
     /**
      * Los atributos que seran visibles en index-datable
@@ -43,7 +43,7 @@ class CondicionesAutorizacion extends ModelCompany
     // protected $fields = [
     // ];
 
-    // protected $eagerLoaders = ['autorizacionOrden'];
+    // protected $eagerLoaders = ['usuarios'];
 
     /**
      * The validation rules

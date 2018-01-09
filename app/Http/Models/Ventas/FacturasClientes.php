@@ -35,13 +35,14 @@ class FacturasClientes extends ModelCompany
      */
     protected $fillable = [
         'fk_id_socio_negocio', 'fk_id_proyecto', 'fk_id_empresa', 'fk_id_sucursal', 'fk_id_certificado', 'fk_id_tipo_comprobante',
-        'fk_id_tipo_relacion', 'fk_id_foma_pago', 'fk_id_metodo_pago', 'fk_id_uso_cfdi', 'fk_id_moneda', 'tipo_cambio', 'descuento',
+        'fk_id_forma_pago', 'fk_id_metodo_pago', 'fk_id_uso_cfdi', 'fk_id_moneda', 'tipo_cambio', 'descuento', 'fk_id_serie',
         'subtotal', 'impuestos', 'total', 'serie', 'folio', 'fecha_creacion', 'fecha_vencimiento', 'fecha_timbrado', 'fk_id_estatus',
-        'version_cdfi', 'no_certificado_sat', 'sello_sat', 'sello_cdfi', 'uuid', 'observaciones', 'fk_id_condicion_pago', 'total_pagado'
+        'version_cdfi', 'certificado_sat', 'sello_sat', 'sello_cdfi', 'uuid', 'observaciones', 'fk_id_condicion_pago', 'total_pagado',
+        'xml_original','xml_timbrado','cadena_original','version_tfd','codigo_qr'
     ];
 
-    public $niceNames =[];
-
+    public $niceNames = [];
+    
     protected $dataColumns = [];
     /**
      * Los atributos que seran visibles en index-datable
@@ -66,7 +67,8 @@ class FacturasClientes extends ModelCompany
      * The validation rules
      * @var array
      */
-    public $rules = [];
+    public $rules = [
+    ];
     
     public function empresa()
     {
@@ -124,6 +126,10 @@ class FacturasClientes extends ModelCompany
     }
 
     public function detalle(){
+        return $this->hasMany(FacturasClientesDetalle::class,'fk_id_factura','id_factura');
+    }
+    
+    public function relacionados(){
         return $this->hasMany(FacturasClientesDetalle::class,'fk_id_factura','id_factura');
     }
 }
