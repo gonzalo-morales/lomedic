@@ -23,9 +23,9 @@ function generarXml($datos = [])
             if(isset($datos['relacionados'])) {
                 foreach($datos['relacionados'] as $tipo =>$relaciones)
                 {
-                    $tiporelacion = new Relacionados(['tipoRelacion'=>$tipo]);
+                    $tiporelacion = new Relacionados(['TipoRelacion'=>$tipo]);
                     foreach($relaciones as $relacion) {
-                        $tiporelacion->add(new Relacionado($row));
+                        $tiporelacion->add(new Relacionado($relacion));
                     }
                     
                     $relacionados[] = $tiporelacion;
@@ -120,10 +120,10 @@ function generarXml($datos = [])
             }
             
             if($descuentos != 0)
-                $datos['cfdi']['Descuento'] = $descuentos;
+                $datos['cfdi']['Descuento'] = number_format($descuentos,2);
             
-            $datos['cfdi']['SubTotal'] = $subtotal;
-            $datos['cfdi']['Total'] = $subtotal - $descuentos + $totalImpuestos;
+            $datos['cfdi']['SubTotal'] = number_format($subtotal,2);
+            $datos['cfdi']['Total'] = number_format($subtotal - $descuentos + $totalImpuestos,2);
             
             $cfdi = new CFDI($datos['cfdi'], $datos['certificado'], $datos['key']);
             

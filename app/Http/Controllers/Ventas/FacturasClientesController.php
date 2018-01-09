@@ -264,7 +264,7 @@ class FacturasClientesController extends ControllerBase
                     'Unidad' => $row->unidadmedida->descripcion,
                     'Descripcion' => $row->descripcion,
                     'ValorUnitario' => number_format($row->precio_unitario,2,'.',''),
-                    'Importe' => ($row->cantidad * number_format($row->precio_unitario,2,'.','')),
+                    'Importe' => number_format($row->cantidad * $row->precio_unitario,2,'.',''),
                     'impuestos' => [$impuesto]
                 ];
                 if($row->descuento > 0)

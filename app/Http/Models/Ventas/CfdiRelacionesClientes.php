@@ -37,16 +37,16 @@ class CfdiRelacionesClientes extends ModelCompany
 
     function documento()
     {
-        switch($this->fk_id_tipo_documento)
+    switch($this->fk_id_tipo_documento_relacionado)
         {
             case 4://Factura
-                return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_documento');
+                return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_documento_relacionado');
                 break;
             case 5://Crédito
-                return $this->hasOne(NotasCreditoClientes::class,'id_nota_credito','fk_id_documento');
+                return $this->hasOne(NotasCreditoClientes::class,'id_nota_credito','fk_id_documento_relacionado');
                 break;
             case 6://Cargo
-                return $this->hasOne(NotasCargoClientes::class,'id_nota_cargo','fk_id_documento');
+                return $this->hasOne(NotasCargoClientes::class,'id_nota_cargo','fk_id_documento_relacionado');
                 break;
         }
     }
