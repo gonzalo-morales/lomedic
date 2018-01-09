@@ -25,5 +25,5 @@ class Relacionados extends Node
      *
      * @var string
      */
-    protected $nodeName = 'cfdi:cfdiRelacionados';
+    protected $nodeName = 'cfdi:CfdiRelacionados';
 }

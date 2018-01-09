@@ -37,7 +37,7 @@ class CfdiRelacionesClientes extends ModelCompany
 
     function documento()
     {
-        switch($this->fk_id_tipo_documento_relacionado)
+    switch($this->fk_id_tipo_documento_relacionado)
         {
             case 4://Factura
                 return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_documento_relacionado');
