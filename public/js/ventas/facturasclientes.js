@@ -183,26 +183,30 @@ $(document).ready(function () {
 	
 	
 	$('#agregarRelacion').on('click', function() {
-		var i = $('#detalleRelaciones tr').length;
-        var row_id = i > 0 ? +$('#detalleRelaciones tr:last').find('.index').val()+1 : 0;
+		var i = $('#detalleRelaciones tbody tr').length;
+        var row_id = i > 0 ? +$('#detalleRelaciones tbody tr:last').find('.index').val()+1 : 0;
 		id_tipo = $('#fk_id_tipo_relacion option:selected').val();
 		tipo_relacion = $('#fk_id_tipo_relacion option:selected').text();
 		id_factura = $('#fk_id_factura_relacion option:selected').val();
 		factura = $('#fk_id_factura_relacion option:selected').text();
 		
 		if(id_tipo == '' | id_factura == '') {
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleRelaciones').append('<tr>'+
 				'<td>' +
 					'<input name="relations[has][relaciones]['+row_id+'][index]" class="index" type="hidden" value="'+row_id+'">'+
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_documento]" type="hidden" value="4">'+
 				    '<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_relacion]" type="hidden" value="'+id_tipo+'">'+tipo_relacion+
 				'</td>'+
-				'<td><input name="relations[has][relaciones]['+row_id+'][fk_id_factura]" type="hidden" value="'+id_factura+'">'+factura+'</td>'+
+				'<td>'+
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_documento_relacionado]" type="hidden" value="'+id_factura+'">'+factura+
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_documento_relacionado]" type="hidden" value="4">'+
+				'</td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-			$.toaster({priority:'success',title:'¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Â¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		
 	});
@@ -211,5 +215,5 @@ $(document).ready(function () {
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
