@@ -11,26 +11,26 @@ use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\Administracion\ClavesUnidades;
 use App\Http\Models\Administracion\Impuestos;
 
-class NotasCreditoClientesDetalle extends ModelCompany
+class NotasCargoClientesDetalle extends ModelCompany
 {
     /**
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'fac_det_notas_credito_clientes';
+    protected $table = 'fac_det_notas_cargo_clientes';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_nota_credito_detalle';
+    protected $primaryKey = 'id_nota_cargo_detalle';
 
     /**
      * The attributes that are mass assignable.
      * @var array
      */
     protected $fillable = [
-        'fk_id_nota_credito','fk_id_clave_producto_servicio','fk_id_sku','fk_id_upc','fk_id_clave_cliente','descripcion',
+        'fk_id_nota_cargoo','fk_id_clave_producto_servicio','fk_id_sku','fk_id_upc','fk_id_clave_cliente','descripcion',
         'fk_id_unidad_medida','unidad','cantidad','precio_unitario','importe','eliminar','fk_id_moneda','fk_id_impuesto',
         'descuento','pedimento','cuenta_predial','impuesto','fk_id_documento_relacionado','fk_id_tipo_documento_relacionado'
     ];
@@ -42,9 +42,7 @@ class NotasCreditoClientesDetalle extends ModelCompany
      * Los atributos que seran visibles en index-datable
      * @var array
      */
-    protected $fields = [
-        
-    ];
+    protected $fields = [];
 
     protected $eagerLoaders = [];
 
@@ -56,7 +54,7 @@ class NotasCreditoClientesDetalle extends ModelCompany
     
     public function nota()
     {
-        return $this->hasOne(NotasCreditoClientes::class,'id_nota_credito','fk_id_nota_credito');
+        return $this->hasOne(NotasCreditoClientes::class,'id_nota_cargo','fk_id_nota_cargo');
     }
     
     public function claveproducto()
@@ -98,8 +96,9 @@ class NotasCreditoClientesDetalle extends ModelCompany
     {
         return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_documento_relacionado');
     }
-    public function notacargo()
+
+    public function notacredito()
     {
-        return $this->hasOne(NotasCargoClientes::class,'id_nota_cargo','fk_id_documento_relacionado');
+        return $this->hasOne(FacturasClientes::class,'id_nota_credito','fk_id_documento_relacionado');
     }
 }

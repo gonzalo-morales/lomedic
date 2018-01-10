@@ -1,6 +1,5 @@
 <?php
 use Charles\CFDI\CFDI;
-use Charles\CFDI\Node\Relacionado;
 use Charles\CFDI\Node\Emisor;
 use Charles\CFDI\Node\Receptor;
 use Charles\CFDI\Node\Concepto;
@@ -11,6 +10,8 @@ use App\Http\CFDI\Node\Traslados;
 use App\Http\CFDI\Node\Retenciones;
 use Charles\CFDI\Node\CuentaPredial;
 use Charles\CFDI\Node\InformacionAduanera;
+use App\Http\CFDI\Node\Relacionados;
+use App\Http\CFDI\Node\Relacionado;
 
 function generarXml($datos = [])
 {
@@ -20,10 +21,14 @@ function generarXml($datos = [])
             
             $relacionados = [];
             if(isset($datos['relacionados'])) {
-                foreach ($datos['relacionados'] as $row)
+                foreach($datos['relacionados'] as $tipo =>$relaciones)
                 {
-                    $relacionado = new Relacionado($row);
-                    $relacionados[] = $relacionado;
+                    $tiporelacion = new Relacionados(['TipoRelacion'=>$tipo]);
+                    foreach($relaciones as $relacion) {
+                        $tiporelacion->add(new Relacionado($relacion));
+                    }
+                    
+                    $relacionados[] = $tiporelacion;
                 }
             }
             
@@ -115,10 +120,10 @@ function generarXml($datos = [])
             }
             
             if($descuentos != 0)
-                $datos['cfdi']['Descuento'] = $descuentos;
+                $datos['cfdi']['Descuento'] = number_format($descuentos,2);
             
-            $datos['cfdi']['SubTotal'] = $subtotal;
-            $datos['cfdi']['Total'] = $subtotal - $descuentos + $totalImpuestos;
+            $datos['cfdi']['SubTotal'] = number_format($subtotal,2);
+            $datos['cfdi']['Total'] = number_format($subtotal - $descuentos + $totalImpuestos,2);
             
             $cfdi = new CFDI($datos['cfdi'], $datos['certificado'], $datos['key']);
             

@@ -11,7 +11,6 @@ class Sucursales extends ModelBase
 {
 	/**
 	 * The table associated with the model.
-	 *
 	 * @var string
 	 */
 	protected $table = 'maestro.ges_cat_sucursales';
@@ -39,23 +38,7 @@ class Sucursales extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	// public $rules = [
-	// 	'sucursal' => 'required',
-	// 	'fk_id_tipo' => 'required',
-	// 	'fk_id_localidad' => 'required',
-	// 	'responsable' => 'required',
-	// 	'telefono_1' => 'required',
-	// 	'calle' => 'required',
-	// 	'numero_interior' => 'required',
-	// 	'numero_exterior' => 'required',
-	// 	'colonia' => 'required',
-	// 	'codigo_postal' => 'required',
-	// 	'fk_id_pais' => 'required',
-	// 	'fk_id_estado' => 'required',
-	// 	'fk_id_municipio' => 'required',
-	// 	'inventario' => 'required',
-	// 	'embarque' => 'required',
-	// ];
+	public $rules = [];
 
 	public $niceNames = [
 		'fk_id_localidad' => 'localidad',
@@ -68,6 +51,7 @@ class Sucursales extends ModelBase
 	protected $fields = [
 		'sucursal' => 'Sucursal',
 		'localidad.localidad' => 'Localidad',
+	    'cliente.nombre_comercial' => 'Cliente',
 		'tiposucursal.tipo' => 'Tipo de Sucursal',
 		'activo_span' => 'Estatus',
 	];
@@ -91,10 +75,6 @@ class Sucursales extends ModelBase
 		return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_sucursal','id_sucursal');
 	}
 
-	/**
-	 * Obtenemos almacenes relacionados a sucursal
-	 * @return @hasMany
-	 */
 	public function almacenes()
 	{
 		return $this->hasMany(Almacenes::class, 'fk_id_sucursal', 'id_sucursal');
@@ -107,6 +87,6 @@ class Sucursales extends ModelBase
 
     public function cliente()
     {
-        return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio','id_socio_negocio');
+        return $this->belongsTo(SociosNegocio::class,'fk_id_cliente');
     }
 }

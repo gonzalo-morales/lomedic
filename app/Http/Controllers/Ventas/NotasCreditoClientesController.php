@@ -19,6 +19,7 @@ use App\Http\Models\Administracion\SeriesDocumentos;
 use App\Http\Models\Administracion\Municipios;
 use App\Http\Models\Administracion\Estados;
 use App\Http\Models\Administracion\Paises;
+use App\Http\Models\Ventas\NotasCargoClientes;
 use App\Http\Models\Ventas\NotasCreditoClientes;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
@@ -71,11 +72,12 @@ class NotasCreditoClientesController extends ControllerBase
             'condicionespago' => CondicionesPago::select('condicion_pago','id_condicion_pago')->where('activo','1')->where('eliminar','0')->orderBy('condicion_pago')->pluck('condicion_pago','id_condicion_pago')->prepend('Selecciona una opcion...',''),
             'usoscfdi' => UsosCfdis::selectRaw("CONCAT(uso_cfdi,' - ',descripcion) as uso_cfdi, id_uso_cfdi")->where('activo','1')->where('eliminar','0')->orderBy('uso_cfdi')->pluck('uso_cfdi','id_uso_cfdi')->prepend('Selecciona una opcion...',''),
             'tiposrelacion' => TiposRelacionesCfdi::selectRaw("CONCAT(tipo_relacion,' - ',descripcion) as tipo_relacion, id_sat_tipo_relacion")->where('activo',1)->where('eliminar',0)->where('nota_credito',1)->orderBy('tipo_relacion')->pluck('tipo_relacion','id_sat_tipo_relacion')->prepend('Selecciona una opcion...',''),
-            'facturasrelacionadas' =>FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_factura")->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_factura')->prepend('Selecciona una opcion...',''),
+            'facturasrelacionadas' =>FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_factura")->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_factura')->prepend('Selecciona una opcion...','0'),
+            'notascargorelacionadas'=>NotasCargoClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as notacargo, id_nota_cargo")->whereNotNull('uuid')->orderBy('notacargo')->pluck('notacargo','id_nota_cargo')->prepend('Selecciona una opcion...','0'),
             'js_productos_facturas' => Crypt::encryptString('
                 "select": ["sku.id_sku","cc.id_clave_cliente_producto","sku.fk_id_unidad_medida","fk_id_factura","cc.fk_id_clave_producto_servicio",
                             "id_factura_detalle","fc.serie","fc.folio","cc.clave_producto_cliente","sku.sku","upc.id_upc","upc.descripcion",
-                            "cps.clave_producto_servicio","um.nombre as unidad_medida"
+                            "cps.clave_producto_servicio","um.nombre as unidad_medida","fac_det_facturas_clientes.fk_id_tipo_documento"
                 ],
                 "distinct":[],
                 "conditions":[
@@ -84,6 +86,23 @@ class NotasCreditoClientesController extends ControllerBase
                 "joins":[
                     {"join":["fac_opr_facturas_clientes as fc","fc.id_factura","=","fac_det_facturas_clientes.fk_id_factura"]},
                     {"join":["pry_cat_clave_cliente_productos as cc","cc.id_clave_cliente_producto","=","fac_det_facturas_clientes.fk_id_clave_cliente"]},
+                    {"join":["inv_cat_skus as sku","sku.id_sku","=","cc.fk_id_sku"]},
+                    {"join":["maestro.inv_cat_upcs as upc","upc.id_upc","=","cc.fk_id_upc"]},
+                    {"join":["maestro.sat_cat_claves_productos_servicios as cps","cps.id_clave_producto_servicio","=","cc.fk_id_clave_producto_servicio"]},
+                    {"join":["maestro.gen_cat_unidades_medidas as um","um.id_unidad_medida","=","cc.fk_id_unidad_medida"]}
+                ]'),
+            'js_productos_notascargo' => Crypt::encryptString('
+                "select": ["sku.id_sku","cc.id_clave_cliente_producto","sku.fk_id_unidad_medida","fk_id_nota_cargo","cc.fk_id_clave_producto_servicio",
+                            "id_nota_cargo_detalle","fc.serie","fc.folio","cc.clave_producto_cliente","sku.sku","upc.id_upc","upc.descripcion",
+                            "cps.clave_producto_servicio","um.nombre as unidad_medida","fac_det_notas_cargo_clientes.fk_id_tipo_documento"
+                ],
+                "distinct":[],
+                "conditions":[
+                    {"whereIn":["fk_id_nota_cargo",$fk_id_nota_cargo]},
+                    {"where":["fac_det_notas_cargo_clientes.eliminar",0]}],
+                "joins":[
+                    {"join":["fac_opr_notas_cargo_clientes as fc","fc.id_nota_cargo","=","fac_det_notas_cargo_clientes.fk_id_nota_cargo"]},
+                    {"join":["pry_cat_clave_cliente_productos as cc","cc.id_clave_cliente_producto","=","fac_det_notas_cargo_clientes.fk_id_clave_cliente"]},
                     {"join":["inv_cat_skus as sku","sku.id_sku","=","cc.fk_id_sku"]},
                     {"join":["maestro.inv_cat_upcs as upc","upc.id_upc","=","cc.fk_id_upc"]},
                     {"join":["maestro.sat_cat_claves_productos_servicios as cps","cps.id_clave_producto_servicio","=","cc.fk_id_clave_producto_servicio"]},
@@ -98,7 +117,13 @@ class NotasCreditoClientesController extends ControllerBase
     
     public function store(Request $request, $company, $compact = false)
     {
-        $return = parent::store($request, $company, $compact);
+        foreach ($request->relations['has']['relaciones'] as $row =>$detalle){
+            $arreglo = $request->relations;
+            $arreglo['has']['relaciones'][$row]['fk_id_tipo_documento'] = 5;
+            $request->merge(['relations'=>$arreglo]);
+        }
+
+        $return = parent::store($request, $company, true);
 
         $datos = $return["entity"];
 
@@ -127,8 +152,8 @@ class NotasCreditoClientesController extends ControllerBase
                 }
             }
             $request->request->set('save',true);
-            $id = $datos->id_factura;
-            $return = parent::update($request, $company, $id, $compact);
+            $id = $datos->id_nota_credito;
+            $return = parent::update($request, $company, $id, true);
         }
         return $return["redirect"];
     }
@@ -203,11 +228,11 @@ class NotasCreditoClientesController extends ControllerBase
             if($entity->descuento > 0)
                 $return['cfdi']['Descuento'] = number_format($entity->descuento,2,'.','');
 
-            foreach ($entity->relacionados as $i=>$row)
+            foreach ($entity->relaciones as $i=>$row)
             {
                 $return['relacionados'][] = [
                     'TipoRelacion'=>$row->tiporelacion->tipo_relacion,
-                    'UUID'=>$row->tiporelacion->documento->uuid,
+                    'UUID'=>$row->documento->uuid,
                 ];
             }
 

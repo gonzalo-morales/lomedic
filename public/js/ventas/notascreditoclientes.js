@@ -156,22 +156,32 @@ $(document).ready(function () {
         $('#loadingfk_id_producto').show();
         var i = $('#detalleRelaciones tbody tr').length;
         var row_id = i > 0 ? +$('#detalleRelaciones tr:last').find('.index').val()+1 : 0;
-		id_tipo = $('#fk_id_tipo_relacion option:selected').val();
-		tipo_relacion = $('#fk_id_tipo_relacion option:selected').text();
-		id_factura = $('#fk_id_factura_relacion option:selected').val();
-		factura = $('#fk_id_factura_relacion option:selected').text();
+		var id_tipo = $('#fk_id_tipo_relacion option:selected').val();
+		var tipo_relacion = $('#fk_id_tipo_relacion option:selected').text();
+		var tipo_documento = 0;
+		var id_documento = 0;
+		var documento = '';
+		if($('#fk_id_factura_relacion').val()){
+			tipo_documento = 4;
+            id_documento = $('#fk_id_factura_relacion').val();
+            documento = $('#fk_id_factura_relacion option:selected').text();
+        }else if($('#fk_id_nota_credito_relacion').val()){
+			tipo_documento = 6;
+            id_documento = $('#fk_id_nota_credito_relacion').val();
+            documento = $('#fk_id_nota_credito_relacion option:selected').text();
+        }
 
 		var existe = false;
 		$('#detalleRelaciones tbody tr').each(function (index,row) {
-			if($(row).find('input:last').val() == id_factura){
+			if($(row).find('input:last').val() == id_documento && tipo_documento == $(row).find('.tipo_documento').val()){
 				existe = true;
 			}
         });
 		
-		if(!id_tipo || !id_factura) {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		if(!id_tipo || !id_documento) {
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el tipo de relacion y el documento a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}else if(existe){
-            $.toaster({priority:'danger',title:'¡Error!',message:'Factura ya agregada.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            $.toaster({priority:'danger',title:'¡Error!',message:'Documento ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleRelaciones').append('<tr>'+
@@ -180,22 +190,23 @@ $(document).ready(function () {
 				    '<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_relacion]" type="hidden" value="'+id_tipo+'">'+tipo_relacion+
 				'</td>'+
 				'<td>' +
-					'<input name="relations[has][relaciones]['+row_id+'][fk_id_documento_relacionado]" type="hidden" value="'+id_factura+'">' +//Falta validación por nota de cargo o factura
-					'<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_documento_relacionado]" type="hidden" value="4">'+factura+'' +
+	                '<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_documento_relacionado]" class="tipo_documento" type="hidden" value="'+tipo_documento+'">'+documento+'' +
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_documento_relacionado]" type="hidden" value="'+id_documento+'">' +
 				'</td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this,\'cfdi\')" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$.toaster({priority:'success',title:'¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 			cargar_productos();
         }
-	});
+        $('#loadingfk_id_producto').hide();
+    });
 
 	$('#agregar-concepto').click(function () {
 		validateDetail();
 		if($('#form-model').valid()){
 			var existe = false;
 			$('#tConceptos tbody tr').each(function (index,row) {
-                if($(row).find('.detalle').val() == $('#fk_id_producto').val()){
+                if($(row).find('.detalle').val() == $('#fk_id_producto').val() && $(row).find('.tipo_documento').val() == $('#fk_id_producto').select2().find(":selected").data("producto").fk_id_tipo_documento){
                 	existe = true;
 				}
             });
@@ -217,7 +228,7 @@ $(document).ready(function () {
 
                 $('#tConceptos tbody').append(
                     '<tr>' +
-                    '<td><input type="hidden" class="index" value="'+row_id+'"><input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_relacionado]" class="factura" value="'+producto.fk_id_factura+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_relacionado]" class="tipo_documento" value="'+producto.fk_id_factura+'">'+producto.serie+'-'+producto.folio+'</td>' +
+                    '<td><input type="hidden" class="index" value="'+row_id+'"><input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_relacionado]" class="factura" value="'+producto.fk_id_factura+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_relacionado]" class="tipo_documento" value="'+producto.fk_id_tipo_documento+'">'+producto.serie+'-'+producto.folio+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_producto_servicio]" value="'+producto.fk_id_clave_producto_servicio+'">'+producto.clave_producto_servicio+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_cliente]" value="'+producto.id_clave_cliente_producto+'">'+producto.clave_producto_cliente+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descripcion]" value="'+producto.descripcion+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+producto.id_upc+'">'+producto.descripcion+'</td>' +
@@ -236,6 +247,7 @@ $(document).ready(function () {
                 limpiarCampos();
 			}else{
                 $.toaster({priority:'danger',title:'¡Error!',message:'Producto ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                limpiarCampos();
 			}
         }
     });
@@ -273,13 +285,22 @@ $(document).ready(function () {
             });
 		}
 
-		if($('#descuento').val() > $('#subtotal').val()){
+		if(+$('#descuento').val() > +$('#subtotal').val()){
 			e.preventDefault();
             $.toaster({
                 priority: 'danger', title: 'Â¡Error!', message: 'El descuento general no puede ser mayor al subtotal',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
 		}
-    })
+    });
+    $("#fk_id_factura_relacion").on('select2:selecting',function() {
+    	$('#fk_id_nota_cargo_relacion').val(0).trigger('change');
+    });
+    $("#fk_id_nota_cargo_relacion").on('select2:selecting',function() {
+        $('#fk_id_factura_relacion').val(0).trigger('change');
+    });
+    $('#timbrar').on('click', function(e) {
+        $("#form-model").append('<input name="timbrar" type="hidden" value="1">');
+    });
 });
 
 function borrarFila(el,tipo = null) {
@@ -287,9 +308,10 @@ function borrarFila(el,tipo = null) {
     switch(tipo){
 		case 'cfdi':
 			cargar_productos();
-            var factura_eliminada = $(el).parent().parent('tr').children('td').slice(1).find('input').val();
+            var factura_eliminada = $(el).parent().parent('tr').find('input:last').val();
+            var tipo_factura_eliminada = $(el).parent().parent('tr').find('.tipo_documento').val();
             $('#tConceptos tbody tr').each(function (index,row) {
-            	if($(row).find('.factura').val() == factura_eliminada){
+            	if($(row).find('.factura').val() == factura_eliminada && $(row).find('.tipo_documento').val() == tipo_factura_eliminada){
                     $(row).remove();
 				}
             });
@@ -364,7 +386,7 @@ function total_factura() {
 			'</tr>'
     });
 	$('#impuestos_descripcion').append(impuestos_html);
-	$('#impuesto').val(impuesto);
+	$('#impuestos').val(impuesto);
 	$('#impuesto_label').text('$'+impuesto);
 
 	total = total - +$('#descuento').val();
@@ -379,17 +401,47 @@ function cargar_productos() {
     $('#loadingfk_id_producto').show();
     $('#fk_id_producto').empty();
     var facturas = [];
+    var notascargo = []
     $('#detalleRelaciones > tbody > tr').each(function (index,row) {
-        facturas.push(+$(this).children('td').slice(1).find('input').val());
+        if($(row).find('.tipo_documento').val() == 4){//Si es factura
+            facturas.push(+$(this).find('input:last').val());
+        }else if($(row).find('.tipo_documento').val() == 6){//Si es nota de cargo
+            notascargo.push(+$(this).find('input:last').val());
+        }
+
     });
     $.ajax({
         async: true,
-        url: $('#fk_id_producto').data('url'),
+        url: $('#fk_id_factura_relacion').data('url'),
         data: {'param_js':productos_facturas_js,$fk_id_factura:JSON.stringify(facturas)},
         dataType: 'json',
         success: function (datos) {
             $.each(datos,function (index,row) {
                 $('#fk_id_producto').append('<option data-producto=\''+JSON.stringify(row)+'\' value="'+row.id_factura_detalle+'">'+row.clave_producto_cliente+'</option>');
+            });
+            $('#fk_id_producto').select2({
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                placeholder: 'Seleccione un producto',
+                templateResult: formatProducto,
+                templateSelection: formatProductoSelection,
+            });
+            $('#loadingfk_id_producto').hide();
+        },
+        error: function () {
+            $('#loadingfk_id_producto').hide();
+        }
+    });
+    $('#loadingfk_id_producto').show();
+    $.ajax({
+        async: true,
+        url: $('#fk_id_nota_cargo_relacion').data('url'),
+        data: {'param_js':productos_notascargo_js,$fk_id_nota_cargo:JSON.stringify(notascargo)},
+        dataType: 'json',
+        success: function (datos) {
+            $.each(datos,function (index,row) {
+                $('#fk_id_producto').append('<option data-producto=\''+JSON.stringify(row)+'\' value="'+row.id_nota_cargo_detalle+'">'+row.clave_producto_cliente+'</option>');
             });
             $('#fk_id_producto').select2({
                 escapeMarkup: function (markup) {
@@ -417,9 +469,17 @@ function formatProducto (producto) {
             "<div class='select2-result-pers__meta'>" +
             "<div class='select2-result-pers__text'>" + producto.text + "</div>";
 
+        var tipo_documento = '';
+        if(data.fk_id_tipo_documento == 4){
+        	tipo_documento = "factura";
+		}else if(data.fk_id_tipo_documento == 6){
+        	tipo_documento = "nota de cargo";
+		}
+
         markup += "<div class='select2-result-pers__factura'>Factura: " + data.serie+'-'+data.folio + "</div>";
         markup += "<div class='select2-result-pers__sku'>SKU: " + data.sku+ "</div>";
         markup += "<div class='select2-result-pers__upc'>Descripcion: " + data.descripcion+ "</div>";
+        markup += "<div class='select2-result-pers__tipodocumento'>Tipo documento: " + tipo_documento+ "</div>";
         markup += "</div></div>";
         return markup;
     }

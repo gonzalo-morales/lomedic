@@ -19,6 +19,7 @@ Route::prefix('{company}')->group(function () {
         Route::view("/","ventas.index");
         Route::resource('facturasclientes','Ventas\FacturasClientesController');
         Route::resource('notascreditoclientes','Ventas\NotasCreditoClientesController');
+        Route::resource('notascargoclientes','Ventas\NotasCargoClientesController');
         Route::resource('pedidos','Ventas\PedidosController');
         Route::get('pedidos/{id}/descargaranexo', 'Ventas\PedidosController@descargaranexo');
         Route::get('LayoutProductosPedidos','Ventas\PedidosController@layoutProductos');

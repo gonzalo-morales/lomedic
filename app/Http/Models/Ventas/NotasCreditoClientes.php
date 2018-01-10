@@ -35,9 +35,10 @@ class NotasCreditoClientes extends ModelCompany
      */
     protected $fillable = [
         'fk_id_socio_negocio', 'fk_id_proyecto', 'fk_id_empresa', 'fk_id_sucursal', 'fk_id_certificado', 'fk_id_tipo_comprobante',
-        'fk_id_tipo_relacion', 'fk_id_foma_pago', 'fk_id_metodo_pago', 'fk_id_uso_cfdi', 'fk_id_moneda', 'tipo_cambio', 'descuento',
-        'subtotal', 'impuestos', 'total', 'serie', 'folio', 'fecha_creacion', 'fecha_vencimiento', 'fecha_timbrado', 'fk_id_estatus',
-        'version_cdfi', 'no_certificado_sat', 'sello_sat', 'sello_cdfi', 'uuid', 'observaciones', 'fk_id_condicion_pago', 'total_pagado'
+        'fk_id_forma_pago', 'fk_id_metodo_pago', 'fk_id_uso_cfdi', 'fk_id_moneda', 'tipo_cambio', 'descuento', 'fk_id_serie',
+        'subtotal', 'impuestos', 'total', 'serie', 'folio', 'fecha_creacion', 'fecha_timbrado', 'fk_id_estatus',
+        'version_cdfi', 'certificado_sat', 'sello_sat', 'sello_cdfi', 'uuid', 'observaciones', 'fk_id_condicion_pago', 'total_pagado',
+        'xml_original','xml_timbrado','cadena_original','version_tfd','codigo_qr'
     ];
 
     public $niceNames =[];
@@ -67,17 +68,17 @@ class NotasCreditoClientes extends ModelCompany
      * @var array
      */
     public $rules = [];
-    
+
     public function empresa()
     {
         return $this->hasOne(Empresas::class,'id_empresa','fk_id_empresa');
     }
-    
+
     public function certificado()
     {
         return $this->hasOne(Certificados::class,'id_certificado','fk_id_certificado');
     }
-    
+
     public function usocfdi()
     {
         return $this->hasOne(UsosCfdis::class,'id_uso_cfdi','fk_id_uso_cfdi');
@@ -107,17 +108,17 @@ class NotasCreditoClientes extends ModelCompany
     {
         return $this->hasOne(FormasPago::class,'id_forma_pago','fk_id_forma_pago');
     }
-    
+
     public function metodopago()
     {
         return $this->hasOne(MetodosPago::class,'id_metodo_pago','fk_id_metodo_pago');
     }
-    
+
     public function tipocomprobante()
     {
         return $this->hasOne(TiposComprobantes::class,'id_tipo_comprobante','fk_id_tipo_comprobante');
     }
-    
+
     public function condicionpago()
     {
         return $this->hasOne(CondicionesPago::class,'id_condicion_pago','fk_id_condicion_pago');
@@ -130,5 +131,4 @@ class NotasCreditoClientes extends ModelCompany
     public function relaciones(){
         return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_nota_credito');
     }
-
 }

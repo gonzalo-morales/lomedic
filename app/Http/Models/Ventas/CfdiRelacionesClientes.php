@@ -13,13 +13,13 @@ class CfdiRelacionesClientes extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'fac_det_cfdi_relaciones_proveedores';
+    protected $table = 'fac_det_cfdi_relaciones_clientes';
 
     /**
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_relacion_cfdi_clientes';
+    protected $primaryKey = 'id_relacion_cfdi_cliente';
 
     /**
      * The attributes that are mass assignable.
@@ -35,13 +35,20 @@ class CfdiRelacionesClientes extends ModelCompany
         'eliminar'
     ];
 
-    function notaCreditoCliente()
+    function documento()
     {
-        return $this->belongsTo(NotasCreditoClientes::class,'fk_id_documento','id_nota_credito');
-    }
-    function factura()
-    {
-        return $this->belongsTo(FacturasClientes::class,'fk_id_documento','id_factura');
+    switch($this->fk_id_tipo_documento_relacionado)
+        {
+            case 4://Factura
+                return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_documento_relacionado');
+                break;
+            case 5://Crédito
+                return $this->hasOne(NotasCreditoClientes::class,'id_nota_credito','fk_id_documento_relacionado');
+                break;
+            case 6://Cargo
+                return $this->hasOne(NotasCargoClientes::class,'id_nota_cargo','fk_id_documento_relacionado');
+                break;
+        }
     }
     function tiporelacion()
     {
