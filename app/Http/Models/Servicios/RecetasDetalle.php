@@ -4,6 +4,7 @@ namespace App\Http\Models\Servicios;
 
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Inventarios\Productos;
+use App\Http\Models\Proyectos\ClaveClienteProductos;
 
 class RecetasDetalle extends ModelCompany
 {
@@ -51,6 +52,10 @@ class RecetasDetalle extends ModelCompany
     public function producto()
     {
         return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
+    }
+    public function claveClienteProducto()
+    {
+        return $this->hasOne(ClaveClienteProductos::class,'id_clave_cliente_producto','fk_id_clave_cliente_producto');
     }
 
 }
