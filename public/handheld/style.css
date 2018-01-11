@@ -27,6 +27,10 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
     text-align: right;
     padding-right: 10px;
 }
+.table-columns .column.left {
+    text-align: left;
+    padding-left: 10px;
+}
 .table-columns .form-control {
     width: 95%;
     padding: 2px;
@@ -40,7 +44,9 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
 .table-columns .readonly {
     border: 0px;
 }
-
+.display-none{
+    display: none;
+}
 .table-equal {
     width: 100%;
     border-collapse: collapse;

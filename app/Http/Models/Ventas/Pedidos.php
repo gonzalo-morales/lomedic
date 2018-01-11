@@ -10,6 +10,7 @@ use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Finanzas\CondicionesPago;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\Administracion\Localidades;
+use App\Http\Models\Inventarios\SolicitudesSalidaDetalle;
 
 class Pedidos extends ModelCompany
 {
@@ -98,11 +99,17 @@ class Pedidos extends ModelCompany
         return $this->hasOne(CondicionesPago::class,'id_condicion_pago','fk_id_condicion_pago');
     }
 
-    public function detalle(){
+    public function detalle()
+    {
         return $this->hasMany(PedidosDetalle::class,'fk_id_documento','id_pedido');
     }
     
-    public function anexos(){
+    public function anexos()
+    {
         return $this->hasMany(PedidosAnexos::class,'fk_id_pedido','id_pedido');
+    }
+    public function solicitudes()
+    {
+        return $this->belongsTo(SolicitudesSalidaDetalle::class,'fk_id_pedido','id_pedido');
     }
 }

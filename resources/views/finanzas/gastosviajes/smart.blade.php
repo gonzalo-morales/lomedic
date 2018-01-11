@@ -6,13 +6,16 @@
     <div class="row">
     
     {{-- Campos --}}
-      <div class="col-md-5 col-sm-12">
+      <div class="col-sm-12 col-md-5">
         <h5>Datos generales</h5>
         <div class="row">
+          @if(Route::currentRouteNamed(currentRouteName('show')))
      	    <div class="col-md-12 text-center text-success">
     				  <h3>{{ isset($data->id_gastos) ? 'Folio No.: '.$data->id_gastos : ''}}</h3>
+              <h6><i class="material-icons align-middle">today </i>{{ isset($data->fecha) ? $data->fecha : ''}}</h6>
     			</div>
-          <div class="col-md-8 col-sm-8">
+          @endif
+          <div class="col-md-12">
             <div class="form-group">
             	{{ Form::cSelect('* Nombre del Empleado','fk_id_empleado', $empleados ?? [],[
                 'data-url' => companyAction('HomeController@index').'/recursoshumanos.empleados/api',
@@ -21,14 +24,9 @@
               ]) }}
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              {{ Form::label('fecha','* Fecha') }}
-              {{ Form::text('fecha', null, ['id'=>'fecha','class'=>'datepicker form-control']) }}
-              {{ $errors->has('fecha') ? HTML::tag('span', $errors->first('fecha'), ['class' =>'help-block text-danger']) : '' }}
-            </div>
-          </div>
         </div>
+        @if(Route::currentRouteNamed(currentRouteName('show')))
+        @else
         <div class="row">
           <div class="col-md-4 col-sm-4">
             <div class="form-group">
@@ -46,6 +44,7 @@
             </div>
           </div>
         </div>
+        @endif
         <div class="row">
           <div class="col-md-4 col-sm-4">
             <div class="form-group">
@@ -85,6 +84,7 @@
           <div class="col-12">
           	{{ Form::hidden('total_detalles',null, ['id'=>'total_detalles']) }}
             {{ Form::hidden('subtotal_detalles',null, ['id'=>'subtotal_detalles']) }}
+            {{ Form::hidden('fecha', $fechaActual ?? '') }}
           </div>
         </div>
       </div><!--/col-md-5 col-sm-5-->
@@ -164,7 +164,7 @@
                   @foreach($data->detalle->where('eliminar',0) as $row => $detalle)
                     <tr>
                       <td><input type="hidden" value="{{$detalle->id_detalle_gastos}}" name="relations[has][detalle][{{$row}}][id_detalle_gastos]">{{ $detalle->folio }}</td>
-                      <td>{{ $detalle->tipo->tipo_concepto }}{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_tipo]',$detalle->fk_id_tipo) }}</td>
+                      <td>{{ $detalle->concepto->tipo_concepto }}{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_tipo]',$detalle->fk_id_tipo) }}</td>
                       <td>{{ '$'.number_format($detalle->subtotal,2) }}{{ Form::hidden('relations[has][detalle]['.$row.'][subtotal]',$detalle->subtotal,['class' => 'subtotal']) }}</td>
                       <td>{{ $detalle->impuestos->impuesto }}{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_impuesto]',$detalle->fk_id_impuesto) }}</td>
                       <td>{{ '$'.number_format($detalle->total,2) }}{{ Form::hidden('relations[has][detalle]['.$row.'][total]',$detalle->total,['class' => 'total']) }}</td>

@@ -6,6 +6,41 @@
     <div class="row">
     
     {{-- Campos --}}
+
+    <div id="confirmacionsucursal" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Cambio de Sucursal</h5>
+          </div>
+          <div class="modal-body">
+            Recuerda que al cambiar la <b>sucursal</b> perderás toda la información y avances que tengas en este momento
+          </div>
+          <div class="modal-footer">
+            <button id="cancelarcambiosucursal" type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+            <button id="confirmarsucursal" type="button" class="btn btn-danger">Borrar y cambiar sucursal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="confirmacionalmacen" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Cambio de Almacen</h5>
+          </div>
+          <div class="modal-body">
+            Recuerda que al cambiar el <b>almacén</b> perderás toda la información y avances que tengas en este momento
+          </div>
+          <div class="modal-footer">
+            <button id="cancelarcambioalmacen" type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+            <button id="confirmaralmacen" type="button" class="btn btn-danger">Borrar y cambiar almacén</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
       <div class="col-sm-12">
         <h5>Datos generales</h5>
         <div class="row">

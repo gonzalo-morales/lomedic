@@ -8,23 +8,25 @@
 <form id="form" method="post">
 	{{ csrf_field() }}
 	<input type="hidden" name="fk_id_pedido" value="{{ $solicitud }}">
-	<input type="hidden" name="fk_id_detalle_solicitud" value="{{ $solicitudes->id_detalle }}">
+	<input type="hidden" name="fk_id_detalle_solicitud" value="{{ $solicitud->id_detalle }}">
 	<div>
 		<table class="table-columns">
 			<tr>
 				<td class="column right">
-					<label>SKU</label>
+					<label>SKU: <b>{{ $solicitud->sku->sku }}</b></label>
+					<input class="form-control readonly display-none" name="fk_id_sku" type="text" value="{{ $solicitud->fk_id_sku ?? '' }}" readonly>
 				</td>
-				<td class="column">
-					<input class="form-control readonly" name="fk_id_sku" type="text" value="{{-- {{ $solicitudes->fk_id_sku }} --}}" readonly>
+				<td class="column left">
+					<label>UPC: <b>{{ $solicitud->upc->upc }}</b></label>
+					<input class="form-control readonly display-none" name="fk_id_sku" type="text" value="{{ $solicitud->fk_id_upc ?? '' }}" readonly>
 				</td>
 			</tr>
 			<tr>
 				<td class="column right">
-					<label for="ubicacion">UPC</label>
+					<label for="ubicacion">Producto Escaneado</label>
 				</td>
 				<td class="column">
-					<input class="form-control" name="fk_id_upc" type="text" value="{{-- {{ $solicitud->fk_id_upc ?? '' }} --}}">
+					<input class="form-control" name="fk_id_upc" type="text" value="">
 				</td>
 			</tr>
 			<tr>
@@ -32,7 +34,7 @@
 					<label>Cantidad solicitada</label>
 				</td>
 				<td class="column">
-					<input class="form-control readonly total_db" name="cantidad_solicitada_salida" type="text" value="{{-- {{ $solicitud->cantidad_solicitada_salida }} --}}" readonly>
+					<input class="form-control readonly total_db" name="cantidad_solicitada_salida" type="text" value="{{ $solicitud->cantidad_solicitada_salida }}" readonly>
 				</td>
 			</tr>
 			<tr>
