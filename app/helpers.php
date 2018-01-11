@@ -53,6 +53,10 @@ function companyAction($action = '', $params = [])
 		return '#';
 	}
 }
+function smart($route = null) {
+    $route = !empty($route) ? $route : Route::currentRouteName();
+    return 'layouts.smart'.substr($route,strrpos($route,'.'),strlen($route));
+}
 
 function ApiAction($action = '')
 {

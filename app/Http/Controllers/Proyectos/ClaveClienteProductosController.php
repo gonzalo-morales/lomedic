@@ -22,16 +22,15 @@ class ClaveClienteProductosController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'clientes' => SociosNegocio::where('activo',1)->where('eliminar',0)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio')->prepend('Selecciona una opcion...',''),
-            'unidadesmedidas' => UnidadesMedidas::where('activo',1)->where('eliminar',0)->orderBy('nombre')->pluck('nombre','id_unidad_medida')->prepend('Selecciona una opcion...',''),
-            'clavesproductos' => ClavesProductosServicios::selectRaw("id_clave_producto_servicio, CONCAT(clave_producto_servicio,' - ',descripcion) as descripcion")->where('activo',1)->where('eliminar',0)->orderBy('descripcion')
-                ->limit(100)->pluck('descripcion','id_clave_producto_servicio')->prepend('Selecciona una opcion...',''),
+            'clientes' => SociosNegocio::where('activo',1)->where('eliminar',0)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
+            'unidadesmedidas' => UnidadesMedidas::where('activo',1)->where('eliminar',0)->orderBy('nombre')->pluck('nombre','id_unidad_medida'),
+            #'clavesproductos' => ClavesProductosServicios::selectRaw("id_clave_producto_servicio, CONCAT(clave_producto_servicio,' - ',descripcion) as descripcion")->where('activo',1)->where('eliminar',0)
+            #    ->orderBy('descripcion')->pluck('descripcion','id_clave_producto_servicio'),
             'clavesunidades' => ClavesUnidades::selectRaw("id_clave_unidad, CONCAT(clave_unidad,' - ',descripcion) as descripcion")->where('activo',1)->where('eliminar',0)->orderBy('descripcion')
-                ->pluck('descripcion','id_clave_unidad')->prepend('Selecciona una opcion...',''),
-            'impuestos' => Impuestos::where('activo',1)->where('eliminar',0)->pluck('impuesto','id_impuesto')->prepend('Selecciona una opcion...',''),
-            
-            'skus' => Productos::where('activo',1)->where('eliminar',0)->pluck('descripcion_corta','id_sku')->prepend('Selecciona una opcion...',''),
-            'upcs' => Upcs::where('activo',1)->where('eliminar',0)->pluck('nombre_comercial','id_upc')->prepend('Selecciona una opcion...',''),
+                ->pluck('descripcion','id_clave_unidad'),
+            'impuestos' => Impuestos::where('activo',1)->where('eliminar',0)->orderBy('impuesto')->pluck('impuesto','id_impuesto'),
+            'skus' => Productos::selectRaw("id_sku, CONCAT(sku,' - ',descripcion_corta) as descripcion")->where('activo',1)->where('eliminar',0)->orderBy('descripcion')->pluck('descripcion','id_sku'),
+            'upcs' => Upcs::selectRaw("id_upc, CONCAT(upc,' - ',nombre_comercial) as descripcion")->where('activo',1)->where('eliminar',0)->orderBy('descripcion')->pluck('descripcion','id_upc'),
             ];
     }
 
