@@ -88,7 +88,7 @@
                 </div>
 
                 <ul id="menu-conten" class="list-unstyled components text-center">
-                	{!! Form::text('filter',null,['id'=>'filter-menu','placeholder'=>'Buscar en menu','class'=>'mt-2 p-1']) !!}
+                	{!! Form::cText(null,'filter-menu',['placeholder'=>'Buscar en menu','class'=>'mt-2 p-1']) !!}
                     @if(isset($menu))
         				@each('partials.menu', $menu, 'modulo')
         			@endif

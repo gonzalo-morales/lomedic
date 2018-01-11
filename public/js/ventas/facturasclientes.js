@@ -1,6 +1,12 @@
 $(document).ready(function () {
 	$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 	
+	$('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 3, // Creates a dropdown of 3 years to control year
+        format: 'yyyy-mm-dd'
+    });
+	
 	$('#fk_id_empresa').on('change', function() {
 		let cliente = $('#fk_id_socio_negocio');
 		let series = $('#fk_id_serie');

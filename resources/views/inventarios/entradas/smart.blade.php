@@ -1,12 +1,11 @@
+@extends(smart())
 @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/pickadate/default.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/pickadate/default.date.css') }}">
 @endsection
-@section('form-actions')
-@endsection
-
+@section('content-width', 's12')
 
 @section('header-bottom')
 	@parent
@@ -16,19 +15,14 @@
 	<script type="text/javascript" src="{{ asset('js/pickadate/translations/es_Es.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/toaster.js') }}"></script>
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
-	{{--@if (!Route::currentRouteNamed(currentRouteName('index')))--}}
 	@if (!Route::currentRouteNamed(currentRouteName('index'))) )
 		<script type="text/javascript" src="{{ asset('js/entradas.js') }}"></script>
 		{{--@endif--}}
 	@endif
-
 @endsection
-
-@section('content-width', 's12')
 
 @section('form-content')
 	{{ Form::setModel($data) }}
-
 	@if (Route::currentRouteNamed(currentRouteName('create')) || Route::currentRouteNamed(currentRouteName('show')) )
 		<div class="row">
 			<div class="col-sm-12">
@@ -160,34 +154,4 @@
 			</div>
 		</div>
 	@endif
-
 @endsection
-
-
-
-
-
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-@section('extraButtons')
-	@parent
-	{!!isset($data->id_orden) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_orden]), '<i class="material-icons">print</i> Imprimir', ['class'=>'btn btn-default imprimir'])) : ''!!}
-@endsection
-@include('layouts.smart.show')
-@endif
-
-{{--@if (currentRouteName('createSolicitudOrden'))--}}
-{{--@include('layouts.smart.create')--}}
-{{--@endif--}}

@@ -1,10 +1,11 @@
+@extends(smart())
 @section('form-title', 'Solicitudes de Compra')
+
 @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
 @endsection
 @section('header-bottom')
 	@parent
-	{{--<script type="text/javascript" src="{{ asset('js/jquery.ui.autocomplete2.js') }}"></script>--}}
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if(!Route::currentRouteNamed(currentRouteName('index')))
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
@@ -12,10 +13,9 @@
 @endsection
 
 @section('form-content')
-{{ Form::setModel($data) }}
+	{{ Form::setModel($data) }}
 	<div class="row">
 		<div class="form-group col-md-4 col-sm-6">
-	{{--		{!! Form::text(array_has($data,'fk_id_solicitante')?'solicitante_formated':'solicitante',null, ['id'=>'solicitante','autocomplete'=>'off','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados'),'data-url2'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')]) !!}--}}
 			{{ Form::label('fk_id_solicitante', '* Solicitante') }}
 			{!! Form::select('fk_id_solicitante',isset($empleados)?$empleados:[],null,['id'=>'fk_id_solicitante','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado'),'class'=>'form-control','style'=>'width:100%']) !!}
 			{{ $errors->has('fk_id_solicitante') ? HTML::tag('span', $errors->first('fk_id_solicitante'), ['class'=>'help-block deep-orange-text']) : '' }}
@@ -251,7 +251,7 @@
 
 
 
-@if (Route::currentRouteNamed(currentRouteName('index')))
+@index
 	@section('smart-js')
 		<script type="text/javascript">
             if ( sessionStorage.reloadAfterPageLoad ) {
@@ -427,25 +427,17 @@
         };
 	</script>
 	@endsection
-
-	@include('layouts.smart.index')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@section('form-title')
-		<h1 class="display-4">Agregar Solicitud</h1>
-	@endsection
-	@include('layouts.smart.create')
+@crear
+	@section('form-title','Agregar Solicitud')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@section('form-title')
-		<h1 class="display-4">Editar Solicitud</h1>
-	@endsection
-	@include('layouts.smart.edit')
+@editar
+	@section('form-title','Editar Solicitud')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('show')))
+@ver
 	@section('extraButtons')
 		@parent
 		{!! HTML::decode(link_to(companyAction('Compras\SolicitudesController@impress',['id'=>$data->id_solicitud]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
@@ -453,8 +445,5 @@
 			{!! HTML::decode(link_to(url($company.'/compras/'.$data->id_solicitud.'/1/ordenes/crear'),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
 		@endif
 	@endsection
-	@section('form-title')
-		<h1 class="display-4">Datos de la Solicitud</h1>
-	@endsection
-	@include('layouts.smart.show')
+	@section('form-title','Datos de la Solicitud')
 @endif

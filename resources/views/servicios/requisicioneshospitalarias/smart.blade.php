@@ -1,18 +1,15 @@
+@extends(smart())
+@section('content-width', 's12')
+
 @section('header-bottom')
     @parent
-
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
         <script type="text/javascript" src="{{ asset('js/requisicioneshospitalarias.js') }}"></script>
     @endif
-
 @endsection
-@section('content-width', 's12')
 
 @section('form-content')
     {{ Form::setModel($data) }}
-
-    {{--@if (Route::currentRouteNamed(currentRouteName('create')) || Route::currentRouteNamed(currentRouteName('show')))--}}
-
     <div class="row">
         <div class="col-sm-12">
             <div class="card z-depth-1-half">
@@ -62,7 +59,7 @@
 
                                                             <div class="col-sm-4">
                                                                 <div class="form-group">
-                                                                    {{ Form::cSelect('Área de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
+                                                                    {{ Form::cSelect('Ã�rea de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-4">
@@ -95,7 +92,7 @@
                                         <table class="table highlight mt-3" id="tContactos">
                                             <thead>
                                             <tr>
-                                                <th>Área de la consulta</th>
+                                                <th>Ã�rea de la consulta</th>
                                                 <th>Codigo</th>
                                                 <th>Medicamento</th>
                                                 <th>Cantidad</th>
@@ -136,158 +133,8 @@
                                     </div>
                                 </div>
                             </div>
-                        {{--@else--}}
-                            {{--@if($data->fk_id_estatus_receta == 2)--}}
-                                {{--<h1>Esta receta ya fue surtida en su totalidad y no se puede editar.</h1>--}}
-                            {{--@elseif($data->fk_id_estatus_receta == 3)--}}
-                                {{--<h1>Esta receta esta siendo surtida parcialmente y no se puede editar.</h1>--}}
-                            {{--@elseif($data->fk_id_estatus_receta == 4)--}}
-                                {{--<h1>Esta receta esta cancelada y no se puede editar.</h1>--}}
-                            {{--@endif--}}
-                        {{--@endif--}}
-
-
-
-                    </div>
+                    	</div>
                     </div>
                 </div>
             </div>
-
-
-        @endsection
-
-
-
-{{--@endif--}}
-
-
-
-
-{{--@if (Route::currentRouteNamed(currentRouteName('surtir')))--}}
-{{--@section('form-title', 'Surtir requisicion')--}}
-{{--@section('form-header')--}}
-    {{--{!! Form::open(['method'=>'put', 'url' => companyRoute('surtir'), 'id' => 'form-model', 'class' => 'col-sm-12']) !!}--}}
-{{--@endsection--}}
-
-{{--@section('form-actions')--}}
-
-    {{--<div class="text-right ">--}}
-        {{--@if(in_array($data->id_estatus,[1,2]))--}}
-            {{--<button type="submit" id="surtir_requisicion" onclick="return surtirRequisicion()" class="btn btn-danger"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Guardar</button>--}}
-        {{--@endif--}}
-        {{--<a class="btn btn-default" href="{{ companyRoute('index') }}"> Cerrar</a>--}}
-    {{--</div>--}}
-{{--@endsection--}}
-
-{{--<div class="panel-body">--}}
-
-    {{--<div class="row">--}}
-        {{--<div class="col-sm-4">--}}
-            {{--<div class="form-group">--}}
-                {{--{{ Form::label('id_localidad', 'Localidad:') }}--}}
-                {{--{{ Form::select('id_localidad', $localidades, null, ['id'=>'id_localidad','class'=>'js-data-example-ajax1 form-control','style'=>'width:100%','disabled'=>'true']) }}--}}
-                {{--{{ $errors->has('id_localidad') ? HTML::tag('span', $errors->first('id_localidad'), ['class'=>'help-block deep-orange-text']) : '' }}--}}
-            {{--</div>--}}
-        {{--</div>--}}
-        {{--<div class="col-sm-4">--}}
-            {{--<div class="form-group">--}}
-                {{--{{ Form::label('id_solicitante', 'Solicitante:') }}--}}
-                {{--{{ Form::select('id_solicitante', $solicitante, null, ['id'=>'id_solicitante','class'=>'js-data-example-ajax1 form-control','style'=>'width:100%','disabled'=>'true']) }}--}}
-                {{--{{ $errors->has('id_solicitante') ? HTML::tag('span', $errors->first('id_solicitante'), ['class'=>'help-block deep-orange-text']) : '' }}--}}
-            {{--</div>--}}
-        {{--</div>--}}
-        {{--<div class="col-sm-2 col-xs-6">--}}
-            {{--<div class="form-group">--}}
-                {{--{{ Form::label('id_estatus', 'Estatus:') }}--}}
-                {{--{{ Form::select('id_estatus', $estatus, null, ['id'=>'id_estatus','class'=>'js-data-example-ajax1 form-control','style'=>'width:100%','disabled'=>'true']) }}--}}
-                {{--{{ $errors->has('id_estatus') ? HTML::tag('span', $errors->first('id_estatus'), ['class'=>'help-block deep-orange-text']) : '' }}--}}
-            {{--</div>--}}
-        {{--</div>--}}
-        {{--<div class="col-sm-2 col-xs-6">--}}
-            {{--<div class="form-group">--}}
-                {{--<label for="fecha">*Fecha:</label>--}}
-                {{--<div id="datetimepicker3" class="input-group">--}}
-                    {{--<input type="text" class="form-control" name="fecha_requerido" value="{{$datos_requisicion->fecha_requerido}}" data-format="yyyy-MM-dd" disabled='true'>--}}
-                    {{--<span class="input-group-btn add-on">--}}
-                                {{--<button data-date-icon="icon-calendar" class="btn btn-check" type="button"><span class="glyphicon glyphicon-calendar"></span></button>--}}
-                              {{--</span>--}}
-                {{--</div><!-- /input-group -->--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div><!--/row-->--}}
-
-    {{--<div class="divider"></div>--}}
-    {{--<div class="row">--}}
-        {{--<div class="col-md-12 table-responsive" >--}}
-            {{--<table class="table table-hover table-striped">--}}
-                {{--<thead>--}}
-                {{--<tr>--}}
-                    {{--<th>Área</th>--}}
-                    {{--<th>Clave</th>--}}
-                    {{--<th>Producto</th>--}}
-                    {{--<th>Cantidad solicitada</th>--}}
-                    {{--<th>Cantidad surtida</th>--}}
-                    {{--<th>Cantidad a surtir</th>--}}
-                {{--</tr>--}}
-                {{--</thead>--}}
-                {{--<tbody id="lista_productos">--}}
-                {{--@foreach($detalle_requisicion as $index => $detalle)--}}
-                    {{--<tr>--}}
-                        {{--<td>{{$detalle->area}}</td>--}}
-                        {{--<td>{{$detalle->clave_cliente}}</td>--}}
-                        {{--<td>{{$detalle->descripcion}}</td>--}}
-                        {{--<td>{{$detalle->cantidad_pedida}}</td>--}}
-                        {{--<td>{{$detalle->cantidad_surtida}}</td>--}}
-                        {{--<td>--}}
-                            {{--<div class="input-group">--}}
-                                {{--@if( $detalle->cantidad_surtida < $detalle->cantidad_pedida )--}}
-                                    {{--<input type="number" class="form-control" id="renglon_{{$index}}" name="datos_requisicion[{{$index}}][cantidad]" placeholder="Ej: 6" maxlength="4">--}}
-                                    {{--<input type="hidden" name="datos_requisicion[{{$index}}][id]" value="{{$detalle->id_requisicion_detalle}}">--}}
-                                    {{--<input type="hidden" name="datos_requisicion[{{$index}}][cantidad_surtida]" value="{{$detalle->cantidad_surtida}}">--}}
-                                {{--@else--}}
-                                    {{--<label>Producto entregado en su totalidad</label>--}}
-                                {{--@endif--}}
-                            {{--</div><!-- /input-group -->--}}
-                        {{--</td>--}}
-                    {{--</tr>--}}
-                {{--@endforeach--}}
-                {{--</tbody>--}}
-            {{--</table>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-{{--</div><!--/panel-body-->--}}
-
-{{--@endif--}}
-{{--@endsection--}}
-
-
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('create')))
-    @include('layouts.smart.create')
-@endif
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    {{--@section('title', 'Requisiciones Hospitalarias')--}}
-@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-    @include('layouts.smart.edit')
-@endif
-@if (Route::currentRouteNamed(currentRouteName('surtir')))
-    @include('layouts.smart.edit')
-    {{--<script>--}}
-        {{--var detalle_requisicion = {!!json_encode($detalle_requisicion)!!};--}}
-    {{--</script>--}}
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', ' Datos de las Requisiciones Hospitalarias')
-@include('layouts.smart.show')
-
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-    @include('layouts.smart.export')
-@endif
-
-
+@endsection
