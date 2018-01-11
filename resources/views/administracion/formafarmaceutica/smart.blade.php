@@ -5,14 +5,10 @@
     {{ Form::setModel($data) }}
     <div class="row">
         <div class="form-group col-md-6 col-xs-12">
-            {{ Form::label('forma_farmaceutica', 'Forma Farmaceutica') }}
-            {{ Form::text('forma_farmaceutica', null, ['id'=>'forma_farmaceutica','class'=>'form-control']) }}
-            {{ $errors->has('forma_farmaceutica') ? HTML::tag('span', $errors->first('forma_farmaceutica'), ['class'=>'help-block deep-orange-text']) : '' }}
+            {{ Form::cText('Forma Farmaceutica','forma_farmaceutica') }}
         </div>
         <div class="form-group col-md-6 col-xs-12">
-            {{ Form::label('descripcion', 'Descripcion') }}
-            {{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'form-control']) }}
-            {{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block deep-orange-text']) : '' }}
+            {{ Form::cText('Descripcion','descripcion') }}
         </div>
         <div  class="col-md-12 text-center mt-2">
             <div class="alert alert-warning" role="alert">

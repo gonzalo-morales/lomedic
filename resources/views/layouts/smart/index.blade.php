@@ -109,7 +109,7 @@
 									<input type="checkbox" id="check-{{$row->getKey()}}" name="check-{{$row->getKey()}}" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="{{$row->getKey()}}">
 								</td>
 								@foreach ($fields as $field => $label)
-								<td>{{ str_limit(object_get($row, $field),80) }}</td>
+								<td>{{ str_limit(object_get($row, $field),90) }}</td>
 								@endforeach
 								<td class="width-auto not-wrap">
 									<a rv-each-dynamics="collections.itemsOptions" data-item-id="{{$row->getKey()}}" {!!currentEntity()->getDataAttributes($row)!!}></a>

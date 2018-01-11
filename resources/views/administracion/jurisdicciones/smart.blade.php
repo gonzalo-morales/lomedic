@@ -5,16 +5,12 @@
     {{ Form::setModel($data) }}
     <div class="row">
         <div class="form-group col-md-12 col-xs-12">
-            {{ Form::label('jurisdiccion', 'Jurisdicción') }}
-            {{ Form::text('jurisdiccion', null, ['id'=>'jurisdiccion','class'=>'form-control']) }}
-            {{ $errors->has('jurisdiccion') ? HTML::tag('span', $errors->first('jurisdiccion'), ['class'=>'help-block deep-orange-text']) : '' }}
+            {{ Form::cText('Jurisdicción','jurisdiccion') }}
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-12 col-xs-12">
-            {{ Form::label('fk_id_estado', 'Estado') }}
-            {{ Form::select('fk_id_estado', isset($states)?$states:[],null, ['id'=>'fk_id_estado','class'=>'form-control']) }}
-            {{ $errors->has('fk_id_estado') ? HTML::tag('span', $errors->first('fk_id_estado'), ['class'=>'help-block deep-orange-text']) : '' }}
+            {{ Form::select('Estado','fk_id_estado',$states ?? []) }}
         </div>
     </div>
     <div  class="col-md-12 text-center mt-2">

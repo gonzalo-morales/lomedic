@@ -5,19 +5,13 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="col-sm-4 col-md-12">
-    		{{ Form::text('nombre', null, ['id'=>'nombre','class'=>'validate']) }}
-    		{{ Form::label('nombre', '* Nombre') }}
-    		{{ $errors->has('nombre') ? HTML::tag('span', $errors->first('nombre'), ['class'=>'help-block text-danger']) : '' }}
+    		{{ Form::cText('* Nombre','nombre') }}
     	</div>
     	<div class="col-sm-4 col-md-12">
-    		{{ Form::text('url', null, ['id'=>'url','class'=>'validate']) }}
-    		{{ Form::label('url', '* Url') }}
-    		{{ $errors->has('url') ? HTML::tag('span', $errors->first('url'), ['class'=>'help-block text-danger']) : '' }}
+    		{{ Form::cText('* Url','url') }}
     	</div>
     	<div class="col-sm-4 col-md-12">
-    		{{ Form::text('icono', null, ['id'=>'icono','class'=>'validate']) }}
-    		{{ Form::label('icono', '* Icono') }}
-    		{{ $errors->has('icono') ? HTML::tag('span', $errors->first('icono'), ['class'=>'help-block text-danger']) : '' }}
+    		{{ Form::cText('* Icono','icono') }}
     	</div>
     </div>
     <div class="row">

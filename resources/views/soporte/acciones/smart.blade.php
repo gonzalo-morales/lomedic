@@ -5,14 +5,10 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-6 col-xs-12">
-    		{{ Form::label('accion', '* Acción') }}
-    		{{ Form::text('accion', null, ['id'=>'accion','class'=>'form-control']) }}
-    		{{ $errors->has('accion') ? HTML::tag('span', $errors->first('accion'), ['class'=>'help-block deep-orange-text']) : '' }}
+    		{{ Form::cText('* Acción','accion') }}
     	</div>
     	<div class="form-group col-md-6 col-xs-12">
-    		{{ Form::label('fk_id_subcategoria', '* Subcategoria') }}
-    		{{ Form::select('fk_id_subcategoria', (isset($subcategorys) ? $subcategorys : []),null, ['id'=>'fk_id_subcategoria','class'=>'form-control']) }}
-    		{{ $errors->has('fk_id_subcategoria') ? HTML::tag('span', $errors->first('fk_id_subcategoria'), ['class'=>'help-block deep-orange-text']) : '' }}
+    		{{ Form::cSelect('* Subcategoria','fk_id_subcategoria'$subcategorys ?? []) }}
     	</div>
     	<div  class="col-md-12 text-center mt-4">
     		<div class="alert alert-warning" role="alert">

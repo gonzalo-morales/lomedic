@@ -43,8 +43,7 @@
 												<div class="col-12 col-md-6 col-lg-4">
 													@if(Route::currentRouteNamed(currentRouteName('create')))
 														<div class="form-group">
-															{{ Form::label('entrada_escaner', 'Entradas a escanear') }}
-															{!! Form::text('entrada_escaner',null,['id'=>'entrada_escaner','class'=>'form-control','placeholder'=>'Codigo de la entrada a escanear.','data-url'=>companyRoute('getDetalleEntrada')]) !!}
+															{!! Form::cText('Entradas a escanear','entrada_escaner',['placeholder'=>'Codigo de la entrada a escanear.','data-url'=>companyRoute('getDetalleEntrada')]) !!}
 														</div>
 													@endif
 

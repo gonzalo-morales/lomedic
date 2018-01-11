@@ -5,9 +5,7 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-12 col-xs-12">
-    		{{ Form::label('impacto', '* Impacto') }}
-    		{{ Form::text('impacto', null, ['id'=>'impacto','class'=>'form-control']) }}
-    		{{ $errors->has('impacto') ? HTML::tag('span', $errors->first('impacto'), ['class'=>'help-block deep-orange-text']) : '' }}
+    		{{ Form::cText('* Impacto','impacto') }}
     	</div>
     	<div  class="col-md-12 text-center mt-4">
     		<div class="alert alert-warning" role="alert">

@@ -4,8 +4,6 @@
 @section('form-content')
     {{ Form::setModel($data) }}
     <div class="row">
-    
-    {{-- Campos --}}
       <div class="col-sm-12 col-md-5">
         <h5>Datos generales</h5>
         <div class="row">
@@ -48,16 +46,12 @@
         <div class="row">
           <div class="col-md-4 col-sm-4">
             <div class="form-group">
-              {{ Form::label('periodo_inicio','* Fecha inicio del viaje') }}
-              {{ Form::text('periodo_inicio', null, ['id'=>'periodo_inicio','class'=>'datepicker form-control']) }}
-              {{ $errors->has('periodo_inicio') ? HTML::tag('span', $errors->first('periodo_inicio'), ['class' =>'help-block text-danger']) : '' }}
+              {{ Form::cText('* Fecha inicio del viaje','periodo_inicio',['class'=>'datepicker']) }}
             </div>
           </div>
           <div class="col-md-4 col-sm-4">
             <div class="form-group">
-              {{ Form::label('periodo_fin','* Fecha final del viaje') }}
-              {{ Form::text('periodo_fin', null, ['id'=>'periodo_fin','class'=>'datepicker form-control']) }}
-              {{ $errors->has('periodo_fin') ? HTML::tag('span', $errors->first('periodo_fin'), ['class' =>'help-block text-danger']) : '' }}
+              {{ Form::cText('* Fecha final del viaje','periodo_fin',['class'=>'datepicker']) }}
             </div>
           </div>
           <div class="col-md-4 col-sm-4">
@@ -67,18 +61,14 @@
         <div class="row">
           <div class="col-md-12 col-sm-12">
             <div class="form-group">
-              {{ Form::label('motivo_gasto','* Motivo del viaje:') }}
-              {{ Form::textarea('motivo_gasto', null, ['id'=>'motivo_gasto','class'=>'form-control','rows'=>'2']) }}
-              {{ $errors->has('motivo_gasto') ? HTML::tag('span', $errors->first('motivo_gasto'), ['class' =>'help-block text-danger']) : '' }}
+              {{ Form::cTextArea('* Motivo del viaje:','motivo_gasto', ['rows'=>3]) }}
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12 col-sm-12">
             <div class="form-group">
-              {{ Form::label('viaje_a','* Destino:') }}
-              {{ Form::text('viaje_a', null, ['id'=>'viaje_a','class'=>'form-control']) }}
-              {{ $errors->has('viaje_a') ? HTML::tag('span', $errors->first('viaje_a'), ['class' =>'help-block text-danger']) : '' }}
+              {{ Form::cText('* Destino:','viaje_a') }}
             </div>
           </div>
           <div class="col-12">

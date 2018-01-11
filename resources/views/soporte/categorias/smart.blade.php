@@ -5,9 +5,7 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-12 col-xs-12">
-    		{{ Form::label('categoria', '* Categoria') }}
-    		{{ Form::text('categoria', null, ['id'=>'categoria','class'=>'form-control']) }}
-    		{{ $errors->has('categoria') ? HTML::tag('span', $errors->first('categoria'), ['class'=>'help-block deep-orange-text']) : '' }}
+    		{{ Form::cText('* Categoria','categoria') }}
     	</div>
     	<div  class="col-md-12 text-center mt-4">
     		<div class="alert alert-warning" role="alert">

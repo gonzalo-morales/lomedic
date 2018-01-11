@@ -5,14 +5,10 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-6 col-xs-12">
-    		{{ Form::label('metodo_pago', 'Método de pago') }}
-    		{{ Form::text('metodo_pago', null, ['id'=>'metodo_pago','class'=>'form-control']) }}
-    		{{ $errors->has('metodo_pago') ? HTML::tag('span', $errors->first('metodo_pago'), ['class'=>'help-block text-danger']) : '' }}
+    		{{ Form::cText('Método de pago','metodo_pago') }}
     	</div>
     	<div class="form-group col-md-6 col-xs-12">
-    		{{ Form::label('descripcion', 'Descripción') }}
-    		{{ Form::text('descripcion', null, ['id'=>'descripcion','class'=>'form-control']) }}
-    		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block text-danger']) : '' }}
+    		{{ Form::cText('Descripción','descripcion') }}
     	</div>
     	<div  class="col-md-12 text-center mt-2">
     		<div class="alert alert-warning" role="alert">
