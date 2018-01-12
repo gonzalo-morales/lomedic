@@ -62,7 +62,8 @@ $(document).ready(function () {
                     $.each(data, function(){
                     	series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
                     });
-                	series.prop('disabled', (data.length == 0)); 
+                	series.prop('disabled', (data.length == 0));
+                    series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
     		    }
     		});
     		
@@ -301,6 +302,24 @@ $(document).ready(function () {
     $('#timbrar').on('click', function(e) {
         $("#form-model").append('<input name="timbrar" type="hidden" value="1">');
     });
+    $('#fk_id_serie').on('change',function () {
+        let url = $(this).data('url');
+        $.ajax({
+            async: true,
+            url: url,
+            data: {'param_js':serie_js,$id_serie:$(this).val()},
+            dataType: 'json',
+            success: function (data) {
+            	if(data[0].sufijo){
+                    $('#serie').val(data[0].prefijo+'-'+data[0].sufijo);
+                }else{
+                    $('#serie').val(data[0].prefijo);
+                }
+            	var folio = !data[0].siguiente_numero ? 1 : +data[0].siguiente_numero;
+            	$('#folio').val(folio);
+            }
+        });
+    })
 });
 
 function borrarFila(el,tipo = null) {
