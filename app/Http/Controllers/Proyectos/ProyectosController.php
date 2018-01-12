@@ -105,7 +105,25 @@ class ProyectosController extends ControllerBase
         unset($arreglo['has']['productos']['$row_id']);
         $request->merge(["relations"=>$arreglo]);
         
-        return parent::store($request, $company, $compact);
+        $return = parent::store($request, $company, true);
+        
+        /*
+        if(!empty($return['entity']))
+        {
+            $email = 'juan.franco@lomedic.com';
+            $options = [
+                'asunto' => 'Nuevo Proyecto',
+                'saludo'=>'Se a creado un nuevo proyecto "'.$return['entity']->proyecto.'"',
+                'toplinea' => 'Se genero un nuevo proyecto para '.$return['entity']->cliente->nombre_comercial,
+                'link' => 'Ver Proyecto',
+                'href' => companyRoute('show', ['id' => $return['entity']->id_proyecto])
+            ];
+            
+            $return['entity']->sendNotification($email,$options);
+        }
+        */
+        
+        return $return['redirect'];
     }
     
     public function update(Request $request, $company, $id, $compact = false)

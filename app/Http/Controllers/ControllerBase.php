@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -82,7 +81,7 @@ class ControllerBase extends Controller
         # ¿Usuario tiene permiso para crear?
         //$this->authorize('create', $this->entity);
 
-        $data = $this->entity->getColumnsDefaultsValues();
+        $data = !isset($attributes['id']) ? $this->entity->getColumnsDefaultsValues() : $this->entity->find($attributes['id']);
         $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 
         return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
@@ -130,7 +129,8 @@ class ControllerBase extends Controller
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
-            $this->log('store', $entity->id_banco);
+            $primaryKey = $entity->getKeyName();
+            $this->log('store', $entity->{$primaryKey});
             $redirect = $this->redirect('store');
         } else {
             DB::rollBack();
@@ -393,7 +393,10 @@ class ControllerBase extends Controller
                 Logs::createLog($this->entity->getTable(), request()->company, null, 'crear', 'Error al insertar');
                 break;
             case 'update':
-                Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', 'Registro actualizado');
+                $coment = $this->entity->isDirty($this->entity->getFillable()) ? 'Registro actualizado' : 'Registro sin cambios';
+                
+                
+                Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', $coment);
                 break;
             case 'error_update':
                 Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', 'Error al editar');

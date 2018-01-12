@@ -395,5 +395,5 @@
 
 		@endif
 	@endsection
-	@section('form-title','Solicitud Pago</h1>
+	@section('form-title','Solicitud Pago')
 @endif

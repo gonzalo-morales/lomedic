@@ -384,13 +384,7 @@
 @endsection
 
 @if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-actions')
-        <div class="col-md-12 col-xs-12">
-            <div class="text-right">
-            	{{ Form::button('Guardar y Timbrar', ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
-                {{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-secondary progress-button']) }}
-                {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
-            </div>
-        </div>
+    @section('left-actions')
+		{{ Form::button('Guardar y Timbrar', ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-info progress-button']) }}
     @endsection
 @endif

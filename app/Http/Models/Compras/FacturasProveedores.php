@@ -82,7 +82,7 @@ class FacturasProveedores extends ModelCompany
         'sucursal.sucursal' => 'Sucursal',
         'fecha_factura'=>'Fecha creación',
         'fecha_vencimiento' => 'Vigencia',
-        'estatus.estatus' => 'Estatus'
+        //'estatus.estatus' => 'Estatus'
     ];
 
 //    protected $eagerLoaders = ['proveedor','sucursal'];

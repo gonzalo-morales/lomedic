@@ -39,31 +39,13 @@ class SolicitudesController extends ControllerBase
     {
         $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
         $attributes = $attributes+['dataview'=>[
-                'sucursalesempleado' => $this->entity->first()
-                    ->empleado()->first()
-                    ->sucursales()->get()
-                    ->pluck('sucursal','id_sucursal'),
-                'detalles' => $this->entity
-                    ->first()
-                    ->detalleSolicitudes()->where('cerrado','0')->get(),
-                'impuestos'=> Impuestos::select('id_impuesto','impuesto')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('impuesto','id_impuesto'),
-                'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('nombre','id_unidad_medida'),
-                'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('nombre','id_empleado'),
-                'skus' => Productos::where('activo','1')
-                    ->get()
-                    ->pluck('sku','id_sku'),
-                'proyectos' => Proyectos::where('fk_id_estatus',1)
-                    ->get()
-                    ->pluck('proyecto','id_proyecto'),
+                'sucursalesempleado' => $this->entity->first()->empleado()->first()->sucursales()->pluck('sucursal','id_sucursal'),
+                'detalles' => $this->entity->first()->detalleSolicitudes()->where('cerrado','0')->get(),
+                'impuestos'=> Impuestos::select('id_impuesto','impuesto')->where('activo',1)->pluck('impuesto','id_impuesto'),
+                'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')->where('activo',1)->pluck('nombre','id_unidad_medida'),
+                'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')->where('activo',1)->pluck('nombre','id_empleado'),
+                'skus' => Productos::where('activo','1')->pluck('sku','id_sku'),
+                'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
                 'proveedores' => $proveedores,
             ]];
         return parent::create($company,$attributes);

@@ -40,7 +40,7 @@ class UsuariosController extends ControllerBase
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($company, $attributes = Array())
+    public function create($company, $attributes = [])
     {
 
         $companies = Empresas::all();

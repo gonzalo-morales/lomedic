@@ -82,7 +82,7 @@
     	<div class="form-group col-md-3 col-sm-6">
     		{{Form::cText('Fecha vencimiento','fecha_vencimiento',['class'=>'datepicker','placeholder'=>'Vence'])}}
     	</div>
-    	@inroute(['create','index'])
+    	@inroute(['edit','show'])
     		<div class="form-group col-md-2 col-sm-6">
     			{{Form::label('serie_folio_factura','Serie y Folio',['style'=>'display: block;text-align: center;'])}}
     			<div class="input-group">
@@ -98,7 +98,7 @@
     		</div>
     		<div class="form-group col-md-2 col-sm-6">
     			{{Form::label('fk_id_estatus_factura','Estatus Factura')}}
-    			{{Form::Text('fk_id_estatus_factura',$data->estatus->estatus,['disabled','class'=>'form-control'])}}
+    			{{Form::Text('fk_id_estatus_factura',$data->estatus->estatus ?? '',['disabled','class'=>'form-control'])}}
     		</div>
     		<div class="form-group col-md-2 col-sm-6">
     			{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
@@ -192,7 +192,7 @@
 							<h1 class="text-success text-center">Productos facturados</h1>
 							<table id="factura" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};">
 								<thead id="encabezado_factura">
-								@inroute(['create','index'])
+								@inroute(['edit','show'])
 									@if($data->version_sat == "3.3")
 										<tr>
 											<th>Clave Producto Servicio</th>
@@ -218,7 +218,7 @@
 								@endif
 								</thead>
 								<tbody id="productos_facturados">
-								@inroute(['create','index'])
+								@inroute(['edit','show'])
 									@if($data->version_sat == "3.3")
 										@foreach($data->detalle_facturas_proveedores as $detalle)
 										<tr>
@@ -260,13 +260,14 @@
 						Cargando pdf... <i class="material-icons align-middle loading">cached</i>
 					</div>
 					<div>
-						<object id="pdf" data="{!! !Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')) ?
-						 'data:application/pdf;base64,'.base64_encode(file_get_contents(Storage::disk('factura_proveedor')->getDriver()->getAdapter()->getPathPrefix().$data->archivo_pdf)) :
-						  ''!!}" style="display: block" type="application/pdf" width="100%" height="1100" >
+						<object id="pdf" data="{!! !Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index'))
+							&& file_exists(Storage::disk('factura_proveedor')->getDriver()->getAdapter()->getPathPrefix().($data->archivo_pdf ??'.pdf')) ?
+							'data:application/pdf;base64,'.base64_encode(file_get_contents(Storage::disk('factura_proveedor')->getDriver()->getAdapter()->getPathPrefix().$data->archivo_pdf)) :
+							'' !!}" style="display: block" type="application/pdf" width="100%" height="1100" >
 						</object>
 					</div>
 				</div>
-				@inroute(['create','index'])
+				@inroute(['edit','show'])
 				<div role="tabpanel" class="tab-pane fade" id="tab-pagos" aria-labelledby="pagos-tab">
 					<div class="card">
 						<div class="card-body mt-3">
@@ -339,7 +340,7 @@
 										<td>{{$detalle->orden->proveedor->nombre_comercial}}</td>
 										<td>{{$detalle->orden->fecha_creacion}}</td>
 										<td>{{$detalle->orden->fecha_estimada_entrega}}</td>
-										<td>{{$detalle->orden->estatus->estatus}}</td>
+										<td>{{$detalle->orden->estatus->estatus ?? ''}}</td>
 										<td><a href="{{companyAction('Compras\OrdenesController@show',['id'=>$detalle->orden->id_orden])}}"><i class="material-icons align-middle">visibility</i></a></td>
 									</tr>
 									@else
