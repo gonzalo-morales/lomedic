@@ -9,12 +9,16 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
 .square{float: left;width: 45.5%;align-self:center;margin: 0.2%;height: 63px;text-align: center;color: #fff;text-decoration: none;padding:5px;overflow: hidden;z-index: 0;white-space:normal;word-wrap: break-word;border:none;}
 .form-control{border: 1px solid #ced4da; background-color: #fff;width: 100%;padding: 2px;}
 .actionBtn{width:32%;height:44px; padding:0; line-height:40px;}
-
+.text-red{color:#dc3545;}
 /* Lista almacen */
 #navigation{display: block; width:100%;}
 .list-item{display: block;width: 100%;margin: 0.2%;min-height: 34px;text-align: center;color: #111;overflow: hidden;z-index: 0;word-wrap: break-word;border:1px solid #f4f4f4;text-decoration: none;font-size: 14px;font-family: 'Arial, Helvetica, sans-serif';line-height: 30px;background-color: #007bff;color:#fff;}
 .list-item:active{background-color:#ccc;line-height: 30px;}
-
+.loadingData {position: absolute;z-index: 999;background: #000;top: 0;left: 0;}
+.text-white {color: #fff!important;}
+.text-center {text-align: center!important;}
+.h-100 {height: 100%!important;}
+.align-middle {vertical-align: middle!important;}
 .table-columns {
     width: 100%;
     border-collapse: collapse;
@@ -46,6 +50,9 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
 }
 .display-none{
     display: none;
+}
+.display-block{
+    display: block !important;
 }
 .table-equal {
     width: 100%;

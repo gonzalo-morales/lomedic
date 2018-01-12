@@ -71,12 +71,14 @@ class HandheldController extends Controller
 		// dd($solicitud);
 		return view('handheld.solicitud', [
 			'solicitud' => $solicitud,
+			'codigo_barras_js' => Crypt::encryptString('"conditions": [{"where": ["upc", "$upc"]}], "only": ["descripcion"]'),
 		]);
 	}
 
 	public function solicitud_detalle_store(Request $request, $company)
 	{
-		InventariosDetalle::create( $request->all() );
+		// dd($request->all());
+		SolicitudesDetalleSurtido::create( $request->all() );
 		return redirect(companyRoute('handheld.solicitudes', ['id' => $request->fk_id_solicitud]))->with('message', 'Registro almacenado.');
 	}
 }

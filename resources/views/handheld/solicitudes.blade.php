@@ -1,7 +1,7 @@
 @extends('handheld.layout')
 
 @section('title', 'Handheld - Solicitudes')
-
+{{ session('message') ? HTML::tag('p', session('message'), ['class'=>'success-message']) : '' }}
 @section('content')
 	<p style="text-align: center;margin-bottom:0;">Selecciona el pedido disponible <b>asignado:</b></p>
 	<div id="navigation">
