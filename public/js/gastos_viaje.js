@@ -152,6 +152,14 @@ $(document).ready(function () {
     };
   };
 
+  $(document).on('submit', function(e){
+    if($('#detalle-form-body > tr').length == 0){
+      e.preventDefault();
+      $.toaster({priority : 'danger',title : '¡Error!',message : 'Para guardar es necesario que mínimo agregues una factura/nota',
+        settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
+    }
+  })
+
 /*
   --- FORMULARIO DE DETALLE PARA FACTURAS ---
 */
@@ -178,7 +186,7 @@ $(document).ready(function () {
       limpiarCampos();
     } else {
         $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
-          settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+          settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
     }
     // limpiamos el formulario
     sumarTodosLosTotales();
@@ -201,7 +209,7 @@ $(document).ready(function () {
     + '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
     );
     $.toaster({priority : 'success',title : '¡Éxito!',message : 'Factura/Nota agregada con éxito',
-      settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
+      settings:{'timeout':1000,'toaster':{'css':{'top':'5em'}}}
     });
   };
 
@@ -209,6 +217,7 @@ $(document).ready(function () {
   function validateDetail() {
     $('#folio_fac').rules('add',{
       required: true,
+      maxlength: 15,
       messages:{
         required: 'Ingresa el número de folio o número de la nota'
       }
@@ -253,10 +262,7 @@ $(document).ready(function () {
 
   //FUNCIÓN PARA LIMPIAR LOS CAMPOS
   function limpiarCampos() {
-    $('#fk_id_tipo').val(0).select2({
-      placeholder: "Seleccione el concepto de la nota",
-      allowClear: true
-    });
+    initSelect2();
     $('#fk_id_impuesto').val(0)
     $('#folio_fac').val('');
     $('#subtotal_fac').val('');
@@ -289,7 +295,7 @@ function borrarFila(el) {
     tr.remove().stop();
   })
   $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
-      settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+      settings:{'timeout':1000,'toaster':{'css':{'top':'5em'}}}});
 };
 
 

@@ -1,3 +1,4 @@
+@extends(smart())
 @section('content-width', 's12')
 @section('form-title', 'Notas de Crédito de Clientes')
 
@@ -339,32 +340,11 @@
 @endsection
 @if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('create')))
 @section('form-actions')
-	<div class="col-md-12 col-xs-12">
-		<div class="text-right">
-			{{ Form::button('Guardar y Timbrar', ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
-			{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-secondary progress-button']) }}
-			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
-		</div>
-	</div>
+    <div class="col-md-12 col-xs-12">
+        <div class="text-right">
+            {{ Form::button('Guardar y Timbrar', ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+            {{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-secondary progress-button']) }}
+            {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+        </div>
+    </div>
 @endsection
-@endif
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
-@endif

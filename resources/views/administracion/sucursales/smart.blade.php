@@ -1,3 +1,4 @@
+@extends(smart())
 @section('content-width', 's12 m7 xl8 offset-xl2')
 
 @section('form-content')
@@ -40,23 +41,18 @@
     			<div class="form-group col-md-6">
     				{{ Form::cText('Calle', 'calle') }}
     			</div>
-    
     			<div class="form-group col-md-3">
     				{{ Form::cText('Num. Interior', 'numero_interior') }}
     			</div>
-    
     			<div class="form-group col-md-3">
     				{{ Form::cText('Num. Exterior', 'numero_exterior') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cText('Colonia', 'colonia') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cText('Codigo Postal', 'codigo_postal') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cSelectWithDisabled('Pais', 'fk_id_pais', $paises ?? [], [
     					'class' => 'select2 select-cascade',
@@ -66,7 +62,6 @@
     					'data-target-value' => 'estados,id_estado,estado'
     				]) }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cSelect('Estado', 'fk_id_estado', $estados ?? [], [
     					'class' => 'select2 select-cascade',
@@ -77,18 +72,15 @@
     					'data-target-value' => 'municipios,id_municipio,municipio'
     				]) }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cSelect('Municipio', 'fk_id_municipio', $municipios ?? [], [
     					'class' => 'select2',
     					'targeted' => 'fk_id_municipio',
     				]) }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cText('Latitud', 'latitud') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cText('Longitud', 'longitud') }}
     			</div>
@@ -101,39 +93,30 @@
     			<div class="form-group col-md-4 col-12">
     				{{ Form::cText('Registro sanitario', 'registro_sanitario') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cCheckboxYesOrNo('¿Tiene inventario?', 'inventario') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cCheckboxYesOrNo('¿Tiene enbarque?', 'enbarque') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cText('Tipo batallón', 'tipo_batallon') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cText('Region', 'region') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cText('Zona militar', 'zona_militar') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cText('Clave presupuestal', 'clave_presupuestal') }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cSelectWithDisabled('Sucursal proveedora', 'id_sucursal_proveedor', $sucursales ?? []) }}
     			</div>
-    
     			<div class="form-group col-md-4">
     				{{ Form::cSelectWithDisabled('Jurisdiccion', 'id_jurisdiccion') }}
     			</div>
-    
     		</div>
     	</div>
     	<div  class="col-md-12 text-center mt-4">
@@ -144,24 +127,3 @@
     	</div>
     </div>
 @endsection
-
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-@include('layouts.smart.export')
-@endif

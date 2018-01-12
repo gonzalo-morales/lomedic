@@ -6,10 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\Inventarios\Inventarios;
 use App\Http\Models\Inventarios\InventariosDetalle;
+use App\Http\Models\Inventarios\SolicitudesSalida;
+use App\Http\Models\Inventarios\SolicitudesSalidaDetalle;
 use App\Http\Models\Inventarios\Ubicaciones;
+use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\Inventarios\SolicitudesDetalleSurtido;
 use App\Http\Models\Inventarios\Upcs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Auth;
 
 class HandheldController extends Controller
 {
@@ -49,4 +54,29 @@ class HandheldController extends Controller
 		return redirect(companyRoute('handheld.inventarios-inventario', ['id' => $request->fk_id_inventario]))->with('message', 'Registro almacenado.');
 	}
 
+	//NANDO'S stuff
+	public function solicitudes($company)
+	{
+		return view('handheld.solicitudes', [
+			# solicitudes con tipo de captura handheld
+			'solicitudes' => SolicitudesSalidaDetalle::whereHas('empleados',function ($q){
+				$q->where('fk_id_empleado',Auth::user()->fk_id_empleado)->with('pedidos');
+			})->get(),
+		]);
+		// dd($solicitudes);
+	}
+
+	public function solicitud(Request $request, $company, SolicitudesSalidaDetalle $solicitud)
+	{
+		// dd($solicitud);
+		return view('handheld.solicitud', [
+			'solicitud' => $solicitud,
+		]);
+	}
+
+	public function solicitud_detalle_store(Request $request, $company)
+	{
+		InventariosDetalle::create( $request->all() );
+		return redirect(companyRoute('handheld.solicitudes', ['id' => $request->fk_id_solicitud]))->with('message', 'Registro almacenado.');
+	}
 }

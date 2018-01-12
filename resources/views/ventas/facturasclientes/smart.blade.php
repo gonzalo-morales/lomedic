@@ -1,3 +1,4 @@
+@extends(smart())
 @section('content-width', 's12')
 @section('form-title', 'Facturas de Clientes')
 
@@ -64,15 +65,18 @@
     			<h5 class="col-md-12 text-center">Informacion del CFDI</h5>
         	</div>
         	<div class="card-body row">
-        		<div class="form-group col-md-4">
+        		<div class="form-group col-md-6">
         			{{Form::cSelect('* Serie','fk_id_serie', $series ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.seriesdocumentos')])}}
         		</div>
-        		<div class="form-group col-md-3">
+        		<div class="form-group col-md-6">
         			{{Form::hidden('serie')}}
         			{{Form::cText('* Folio','folio',['readonly'=>true])}}
         		</div>
-        		<div class="form-group col-md-5">
+        		<div class="form-group col-md-6">
         			{{Form::cText('* Fecha','fecha_creacion',['readonly'=>true])}}
+        		</div>
+        		<div class="form-group col-md-6">
+        			{{Form::cText('* Fecha Vencimiento','fecha_vencimiento',['class'=>'datepicker'])}}
         		</div>
         	
         		<div class="form-group col-md-7">
@@ -389,25 +393,4 @@
             </div>
         </div>
     @endsection
-@endif
-
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
 @endif

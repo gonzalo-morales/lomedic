@@ -1,5 +1,24 @@
+@extends(smart())
 @section('content-width', 's12')
-
+@section('header-bottom')
+	@parent
+	<script type="text/javascript">
+        $("#fk_id_clave_producto_servicio").select2({
+            minimumInputLength:3,
+            ajax:{
+                url: $(this).data('url'),
+                dataType: 'json',
+                data: function (params) {
+                    return {term: params.term};
+                },
+                processResults: function (data) {
+                    return {results: data}
+                }
+            }
+        });
+    </script>
+	{{ HTML::script(asset('js/ventas/facturasclientes.js')) }}
+@endsection
 @section('form-content')
 	{{ Form::setModel($data) }}
     <div class="row">
@@ -86,23 +105,3 @@
     	</div>
     </div>
 @endsection
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
-@endif

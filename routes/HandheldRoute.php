@@ -20,5 +20,8 @@ Route::prefix('{company}')->group(function () {
 		Route::get('inventarios/{inventario}', 'HandheldController@inventario')->name('inventarios-inventario');
 		Route::get('inventarios', 'HandheldController@inventarios')->name('inventarios');
 		Route::post('inventarios', 'HandheldController@inventario_detalle_store')->name('inventarios-inventario-detalle-store');
+		Route::get('solicitudes/{solicitud}', 'HandheldController@solicitud')->name('solicitudes-solicitud');
+		Route::get('solicitudes', 'HandheldController@solicitudes')->name('solicitudes');
+		Route::post('solicitudes', 'HandheldController@solicitud_detalle_store')->name('solicitudes-solicitud-detalle-store');
 	});
 });
