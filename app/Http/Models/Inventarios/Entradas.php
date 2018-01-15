@@ -42,7 +42,7 @@ class Entradas extends ModelCompany
      */
     protected $fields = [
         'id_entrada_almacen' => 'Número Entrada',
-        'fk_id_tipo_documento' => 'Tipo docuemnto',
+        'fk_id_tipo_documento' => 'Tipo documento',
         'numero_documento' => 'Numero de documento',
         'referencia_documento' => 'Referencia del documentos',
         'fecha_entrada' => 'Fecha de entrada',

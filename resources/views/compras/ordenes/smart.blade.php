@@ -284,7 +284,7 @@
 								</td>
 								<td>
 									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
-									{{isset($detalle->cliente->nombre_corto)?$detalle->cliente->nombre_corto:'Sin cliente'}}
+									{{isset($detalle->cliente->nombre_comercial)?$detalle->cliente->nombre_comercial:'Sin cliente'}}
 								</td>
 								<td>
 									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
