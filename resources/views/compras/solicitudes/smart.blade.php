@@ -151,8 +151,8 @@
 							</tr>
 						</thead>
 						<tbody>
-						@if( isset( $detalles ) )
-							@foreach( $detalles as $detalle)
+						@if( isset( $data->detalleSolicitudes ) )
+							@foreach( $data->detalleSolicitudes as $detalle)
 								<tr>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][id_solicitud_detalle]',$detalle->id_solicitud_detalle) !!}
@@ -178,7 +178,7 @@
 											{!! Form::select('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
 													isset($proyectos) ? $proyectos->prepend('...','0') : null,
 													$detalle->fk_id_proyecto,['id'=>'detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
-													'class'=>'detalle_select','style'=>'width:100%'])
+													'class'=>'form-control detalle_select','style'=>'width:100%'])
 											!!}
 										@endif
 									</td>
@@ -203,7 +203,7 @@
 											{{$detalle->impuesto->impuesto}}
 										@else
 											{!! Form::select('detalles['.$detalle->id_solicitud_detalle.'][fk_id_impuesto]',$impuestos,
-													$detalle->fk_id_impuesto,['class'=>'detalle_select','style'=>'width:100%','id'=>'fk_id_impuesto'.$detalle->id_solicitud_detalle,
+													$detalle->fk_id_impuesto,['class'=>'form-control detalle_select','style'=>'width:100%','id'=>'fk_id_impuesto'.$detalle->id_solicitud_detalle,
 													'onchange'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")'])
 											!!}
 										@endif
@@ -304,7 +304,7 @@
 		 };
          rivets.binders['get-offer-url'] = {
              bind: function (el) {
-				 el.href = el.href.replace('#','{{$company}}/compras/solicitudes/'+el.dataset.itemId+'/ofertas/crear');
+				 el.href = el.href.replace('#','{{$menuempresa->conexion}}/compras/solicitudes/'+el.dataset.itemId+'/ofertas/crear');
              }
 		 };
 		 @can('update', currentEntity())
@@ -342,7 +342,7 @@
 		window['smart-model'].collections.itemsOptions.supply = {a: {
 		'html': '<i class="material-icons">shopping_cart</i>',
 {{--		'href' : '{!! companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>'#ID#']) !!}',--}}
-		'href' : '{!! url($company."/compras/#ID#/1/ordenes/crear") !!}',
+		'href' : '{!! url($menuempresa->conexion."/compras/#ID#/1/ordenes/crear") !!}',
 		'class': 'btn is-icon',
 		'rv-hide-comprar':'',
 		'rv-get-comprar-url':'',
@@ -442,7 +442,8 @@
 		@parent
 		{!! HTML::decode(link_to(companyAction('Compras\SolicitudesController@impress',['id'=>$data->id_solicitud]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
 		@if($data->fk_id_estatus_solicitud == 1)
-			{!! HTML::decode(link_to(url($company.'/compras/'.$data->id_solicitud.'/1/ordenes/crear'),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
+			{!! HTML::decode(link_to(url($menuempresa->conexion.'/compras/'.$data->id_solicitud.'/1/ordenes/crear'),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
+			{!! HTML::decode(link_to(url($menuempresa->conexion.'/compras/solicitudes/'.$data->id_solicitud.'/ofertas/crear'),'<i class="material-icons align-middle">attach_money</i> Oferta',['class'=>'btn btn-info'])) !!}
 		@endif
 	@endsection
 	@section('form-title','Datos de la Solicitud')
