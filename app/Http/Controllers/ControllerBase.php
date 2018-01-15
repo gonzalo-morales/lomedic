@@ -64,7 +64,7 @@ class ControllerBase extends Controller
             $appendable = $this->entity->getAppendableFields();
             
             # Retorna resultados, los cache antes si no existen
-            #$cache = Cache::tags(getCacheTag())->rememberForever(getCacheKey(), function() use ($query, $appendable) {
+            $cache = Cache::tags(getCacheTag())->rememberForever(getCacheKey(), function() use ($query, $appendable) {
 
                 $all = $query->get();
 
@@ -83,8 +83,8 @@ class ControllerBase extends Controller
 
                 #dd(new LengthAwarePaginator($items, $all->count(), $perPage, $page));
                 return (new LengthAwarePaginator($items, $all->count(), $perPage, $page));
-            #});
-                #return $cache;
+            });
+                return $cache;
         }
     }
 
