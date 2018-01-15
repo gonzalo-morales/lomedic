@@ -57,10 +57,8 @@ class ControllerBase extends Controller
                 'fields' => $this->entity->getFields(),
                 'data' => $items,
             ]);
-
-            # Ajax
-        } else {
-            
+        }
+        else { # is Ajax
             $appendable = $this->entity->getAppendableFields();
             
             # Retorna resultados, los cache antes si no existen
@@ -75,13 +73,10 @@ class ControllerBase extends Controller
                     $item->setAppends($appendable);
                     $item->setAttribute('data-atributes', currentEntity()->getDataAttributes($item));
                 });
-                
-                    #print_r($items);
 
                 # Eliminamos primeros 20 registros en pagina #1
                 if( $page == 1) $items = $items->slice(20);
 
-                #dd(new LengthAwarePaginator($items, $all->count(), $perPage, $page));
                 return (new LengthAwarePaginator($items, $all->count(), $perPage, $page));
             });
                 return $cache;

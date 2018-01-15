@@ -283,7 +283,7 @@
          rivets.binders['hide-oferta'] = {
                  bind: function (el) {
     				 if(el.dataset.fk_id_estatus_solicitud != 1)
-    				 { console.log(el.dataset.fk_id_estatus_solicitud);
+    				 {
     				     $(el).hide();
     				 }
                  }
