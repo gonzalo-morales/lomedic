@@ -39,7 +39,7 @@ class SolicitudesController extends ControllerBase
             'empleados' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre, id_empleado")->where('eliminar',0)->where('activo',1)->orderBy('nombre')->pluck('nombre','id_empleado'),
             'sucursalesempleado' => !empty($entity) ? 
                 $this->entity->sucursales()->where('eliminar',0)->where('activo',1)->orderBy('sucursal')->pluck('sucursal','id_sucursal') : 
-                Auth::user()->empleado->sucursales->where('eliminar',0)->where('activo',1)->orderBy('sucursal')->pluck('sucursal','id_sucursal'),
+                Auth::user()->empleado->sucursales->where('eliminar',0)->where('activo',1)->pluck('sucursal','id_sucursal'),
         ];
     }
 
