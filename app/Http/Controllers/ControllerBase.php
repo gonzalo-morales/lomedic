@@ -42,17 +42,29 @@ class ControllerBase extends Controller
         }
 
         if (!request()->ajax()) {
+            $appendable = $this->entity->getAppendableFields();
+            $all = $query->limit(20)->get();
+            
+            $page = request()->page ?: 1;
+            $perPage = 4000;
+            
+            $items = $all->forPage($page, $perPage)->each(function($item) use ($appendable) {
+                $item->setAppends($appendable);
+                $item->setAttribute('data-atributes', $this->entity->getDataAttributes($item));
+            });
+            
             return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
                 'fields' => $this->entity->getFields(),
-                'data' => $query->limit(20)->get(),
+                'data' => $items,
             ]);
 
             # Ajax
         } else {
+            
             $appendable = $this->entity->getAppendableFields();
-
+            
             # Retorna resultados, los cache antes si no existen
-            $cache = Cache::tags(getCacheTag())->rememberForever(getCacheKey(), function() use ($query, $appendable) {
+            #$cache = Cache::tags(getCacheTag())->rememberForever(getCacheKey(), function() use ($query, $appendable) {
 
                 $all = $query->get();
 
@@ -61,14 +73,18 @@ class ControllerBase extends Controller
 
                 $items = $all->forPage($page, $perPage)->each(function($item) use ($appendable) {
                     $item->setAppends($appendable);
+                    $item->setAttribute('data-atributes', currentEntity()->getDataAttributes($item));
                 });
+                
+                    #print_r($items);
 
-                    # Eliminamos primeros 20 registros en pagina #1
-                    if( $page == 1) $items = $items->slice(20);
+                # Eliminamos primeros 20 registros en pagina #1
+                if( $page == 1) $items = $items->slice(20);
 
-                    return (new LengthAwarePaginator($items, $all->count(), $perPage, $page));
-            });
-                return $cache;
+                #dd(new LengthAwarePaginator($items, $all->count(), $perPage, $page));
+                return (new LengthAwarePaginator($items, $all->count(), $perPage, $page));
+            #});
+                #return $cache;
         }
     }
 

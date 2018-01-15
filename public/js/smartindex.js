@@ -231,8 +231,8 @@ window['smart-model'] = {
 
 			let modal = window['smart-modal'];
 			modal.view = rivets.bind(modal, {
-				title: '¿Estas seguro?',
-				content: 'Una vez eliminado(s) no podrás recuperarlo(s).',
+				title: 'Â¿Estas seguro?',
+				content: 'Una vez eliminado(s) no podrÃ¡s recuperarlo(s).',
 				buttons: [
 					{button: {
 						'text': 'Cancelar',
@@ -485,9 +485,8 @@ function getItems($page) {
 			let id = item[primary];
 			let collection_item = {};
 			collection_item['input'] = '<input type="checkbox" id="check-'+id+'" name="check-'+id+'" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="'+id+'">';
-			$.each(columns, function(index, column) {
-				// console.log(column);
 
+			$.each(columns, function(index, column) {
 				try{
 					collection_item[column] = (new Function('str', 'return eval("this." + str);')).call(item, column);
 				}catch(err){
@@ -498,8 +497,8 @@ function getItems($page) {
                 }
 			});
 
-
-			collection_item['actions'] = '<a rv-each-dynamics="collections.itemsOptions" data-item-id="'+id+'"></a>';
+			$attr = item['data-atributes'] !== undefined ? item['data-atributes'] : ''
+			collection_item['actions'] = '<a rv-each-dynamics="collections.itemsOptions" data-item-id="'+id+'" '+$attr+' ></a>';
 			collection.push(collection_item);
 		});
 
