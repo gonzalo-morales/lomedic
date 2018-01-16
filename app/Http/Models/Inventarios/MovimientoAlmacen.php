@@ -33,7 +33,8 @@ class MovimientoAlmacen extends ModelCompany
 		'fk_id_usuario',
 		'fk_id_sucursal',
 		'fk_id_almacen',
-		'total_productos'
+		'total_productos',
+		'fecha_operacion'
 	];
 
 	/*

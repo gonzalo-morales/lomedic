@@ -122,9 +122,7 @@
                     // only: ['descripcion']
                 }, function(response){
                     if (response.length > 0) {
-                        console.log(response[0].id_upc)
                         $('#scan').attr('style','border:1px solid green');
-                        // alert('ya acabe')
                         $('#loadingupc').hide();
                         $('#scan').attr('disabled', false);
                         $('#scan').val(response[0].upc)
