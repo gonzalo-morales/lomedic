@@ -28,7 +28,7 @@ Route::prefix('{company}')->group(function () {
 		Route::get('empresas/{id}/descargar/{archivo}', 'Administracion\EmpresasController@descargar');
 		Route::post('getDatoscer', 'Administracion\EmpresasController@getDatoscer');
 		Route::resource('estados', 'Administracion\EstadosController');
-		Route::resource('familiasproductos', 'Administracion\FamiliasproductosController');
+		Route::resource('familiasproductos', 'Administracion\FamiliasProductosController');
 		Route::resource('formafarmaceutica', 'Administracion\FormaFarmaceuticaController');
 		Route::resource('grupoproductos', 'Administracion\GrupoProductosController');
 		Route::resource('impuestos', 'Administracion\ImpuestosController');
