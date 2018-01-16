@@ -204,7 +204,7 @@
                 			{{ Form::cSelect('Unidad Medida Venta', 'fk_id_unidad_medida_venta', $unidadmedida ?? [],['class'=>'select2']) }}
                 		</div>
         	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
-                			{{ Form::cSelect('Presentacion de Venta', 'fk_id_presentacion_venta', $unidadmedida ?? [],['class'=>'select2']) }}
+                			{{ Form::cSelect('Presentacion de Venta', 'fk_id_presentacion_venta', $presentacionventa ?? [],['class'=>'select2']) }}
                 		</div>
         	  		</div>
                 </div>
