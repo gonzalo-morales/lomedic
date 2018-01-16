@@ -7,6 +7,7 @@ use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\Inventarios\MovimientoAlmacenDetalle;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Administracion\Usuarios;
+use App\Http\Models\Inventarios\Stock;
 
 class MovimientoAlmacen extends ModelCompany
 {
@@ -97,8 +98,14 @@ class MovimientoAlmacen extends ModelCompany
 	{
 		return $this->belongsTo(Usuarios::class, 'fk_id_usuario', 'id_usuario');
 	}
+
 	public function almacen()
 	{
 		return $this->belongsTo(Almacenes::class, 'fk_id_almacen', 'id_almacen');
+	}
+
+	public function stock(){
+
+		return $this->hasMany(Stock::class, 'fk_id_stock', 'id_stock');
 	}
 }

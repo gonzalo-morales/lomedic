@@ -10,6 +10,7 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
 .form-control{border: 1px solid #ced4da; background-color: #fff;width: 100%;padding: 2px;}
 .actionBtn{width:32%;height:44px; padding:0; line-height:40px;}
 .text-red{color:#dc3545;}
+.text-description{font-size:12px; font-style: italic; color:#3a3a3a;}
 /* Lista almacen */
 #navigation{display: block; width:100%;}
 .list-item{display: block;width: 100%;margin: 0.2%;min-height: 34px;text-align: center;color: #111;overflow: hidden;z-index: 0;word-wrap: break-word;border:1px solid #f4f4f4;text-decoration: none;font-size: 14px;font-family: 'Arial, Helvetica, sans-serif';line-height: 30px;background-color: #007bff;color:#fff;}
@@ -34,6 +35,11 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;}
 .table-columns .column.left {
     text-align: left;
     padding-left: 10px;
+}
+.table-columns .column.center{
+    text-align: center;
+    padding-left: 5px;
+    padding-right:5px;
 }
 .table-columns .form-control {
     width: 95%;

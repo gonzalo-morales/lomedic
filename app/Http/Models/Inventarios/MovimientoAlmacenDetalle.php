@@ -26,6 +26,7 @@ class MovimientoAlmacenDetalle extends ModelCompany
      */
     protected $fillable = [
         'fk_id_stock',
+        'fk_id_movimiento',
         'fk_id_sku',
         'fk_id_upc',
         'lote',
@@ -75,4 +76,9 @@ class MovimientoAlmacenDetalle extends ModelCompany
     {
         return $this->hasOne(Ubicaciones::class,'id_ubicacion','fk_id_ubicacion');
     }
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class, 'fk_id_stock', 'fk_id_stock');
+    }
+
 }

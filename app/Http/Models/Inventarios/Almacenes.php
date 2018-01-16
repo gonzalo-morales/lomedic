@@ -95,4 +95,5 @@ class Almacenes extends ModelBase
 	public function sucursal() {
 		return $this->belongsTo(Sucursales::class, 'fk_id_sucursal', 'id_sucursal');
 	}
+
 }
