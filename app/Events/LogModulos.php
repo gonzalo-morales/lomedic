@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class Autorizaciones
+class LogModulos
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     
@@ -21,7 +21,7 @@ class Autorizaciones
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($entity,$company,$action,$comment)
     {
         $this->options = compact('entity','company','action','comment');
     }

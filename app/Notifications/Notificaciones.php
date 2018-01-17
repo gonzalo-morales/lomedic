@@ -23,7 +23,8 @@ class Notificaciones extends Notification
         ->greeting($this->options['saludo'] ?? '')
         ->line($this->options['toplinea'] ?? '')
         ->action($this->options['link'] ?? config('app.name'), $this->options['href'] ?? route('home'))
-        ->line($this->options['btnlinea'] ?? '')
-        ->salutation(config('app.name'));
+        #->line($this->options['btnlinea'] ?? '')
+        ->salutation(config('app.name'))
+        ->markdown('vendor.notifications.email',[]);
     }
 }

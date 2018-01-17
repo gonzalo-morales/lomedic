@@ -231,8 +231,8 @@ window['smart-model'] = {
 
 			let modal = window['smart-modal'];
 			modal.view = rivets.bind(modal, {
-				title: 'Â¿Estas seguro?',
-				content: 'Una vez eliminado(s) no podrÃ¡s recuperarlo(s).',
+				title: 'Ã‚Â¿Estas seguro?',
+				content: 'Una vez eliminado(s) no podrÃƒÂ¡s recuperarlo(s).',
 				buttons: [
 					{button: {
 						'text': 'Cancelar',

@@ -16,6 +16,12 @@ class EventServiceProvider extends ServiceProvider
 		'App\Events\Event' => [
 			'App\Listeners\EventListener',
 		],
+	    'App\Events\EventBase' => [
+	        'App\Listeners\Notify',
+	    ],
+	    'App\Events\LogModulos' => [
+	        'App\Listeners\SaveLogDB',
+	    ],
 	];
 
 	/**
