@@ -63,6 +63,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('tipocombustible', 'Administracion\TipoCombustibleController');
 		Route::resource('tipodocumento', 'Administracion\TipoDocumentosController');
 		Route::resource('tipoentrega', 'Administracion\TipoEntregaController');
+		Route::resource('tipoinventario', 'Administracion\TipoInventarioController');
 		Route::resource('tipoproductos', 'Administracion\TipoProductosController');
 		Route::resource('tiposucursal', 'Administracion\TipoSucursalController');
 		Route::resource('unidadesmedicas', 'Administracion\UnidadesMedicasController');
