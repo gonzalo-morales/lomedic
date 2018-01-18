@@ -61,8 +61,6 @@ class NotasCreditoClientes extends ModelCompany
         'estatus.estatus' => 'Estatus'
     ];
 
-    protected $eagerLoaders = [];
-
     /**
      * The validation rules
      * @var array

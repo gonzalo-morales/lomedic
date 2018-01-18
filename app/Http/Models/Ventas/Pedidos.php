@@ -3,7 +3,6 @@ namespace App\Http\Models\Ventas;
 
 use App\Http\Models\ModelCompany;
 use App\Http\Models\SociosNegocio\SociosNegocio;
-use DB;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\EstatusDocumentos;
@@ -24,7 +23,7 @@ class Pedidos extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_pedido';
+    protected $primaryKey = 'id_documento';
 
     /**
      * The attributes that are mass assignable.
@@ -44,7 +43,7 @@ class Pedidos extends ModelCompany
      * @var array
      */
     protected $fields = [
-        'id_pedido' => 'No. Pedido',
+        'id_documento' => 'No. Pedido',
         'cliente.nombre_comercial' => 'Cliente',
         'proyecto.proyecto' => 'Proyecto',
         'localidad.localidad' => 'Localidad',
@@ -53,10 +52,8 @@ class Pedidos extends ModelCompany
         'fecha_limite' => 'Fecha Limite',
         'total' => 'Total',
         'moneda.descripcion' => 'Moneda',
-        'estatus.estatus' => 'Estatus'
+        'estatus.estatus' => 'Estatus'}
     ];
-
-    protected $eagerLoaders = ['cliente','proyecto','sucursal','localidad'];
 
     /**
      * The validation rules
@@ -101,15 +98,15 @@ class Pedidos extends ModelCompany
 
     public function detalle()
     {
-        return $this->hasMany(PedidosDetalle::class,'fk_id_documento','id_pedido');
+        return $this->hasMany(PedidosDetalle::class,'fk_id_documento','id_documento');
     }
     
     public function anexos()
     {
-        return $this->hasMany(PedidosAnexos::class,'fk_id_pedido','id_pedido');
+        return $this->hasMany(PedidosAnexos::class,'fk_id_documento','id_documento');
     }
     public function solicitudes()
     {
-        return $this->belongsTo(SolicitudesSalidaDetalle::class,'fk_id_pedido','id_pedido');
+        return $this->belongsTo(SolicitudesSalidaDetalle::class,'fk_id_documento','id_documento');
     }
 }

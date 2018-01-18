@@ -13,6 +13,8 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class Autorizaciones
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    
+    public $options;
 
     /**
      * Create a new event instance.
@@ -21,7 +23,7 @@ class Autorizaciones
      */
     public function __construct()
     {
-        //
+        $this->options = compact('entity','company','action','comment');
     }
 
     /**
@@ -31,6 +33,6 @@ class Autorizaciones
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return [];
     }
 }

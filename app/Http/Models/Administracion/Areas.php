@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
@@ -8,7 +7,6 @@ class Areas extends ModelBase
 {
 	/**
 	 * The table associated with the model.
-	 *
 	 * @var string
 	 */
 	protected $table = 'maestro.gen_cat_areas';
@@ -21,14 +19,12 @@ class Areas extends ModelBase
 
 	/**
 	 * The attributes that are mass assignable.
-	 *
 	 * @var array
 	 */
 	protected $fillable = ['area', 'clave_area','activo'];
 
 	/**
 	 * Indicates if the model should be timestamped.
-	 *
 	 * @var bool
 	 */
 	public $timestamps = false;
@@ -38,9 +34,6 @@ class Areas extends ModelBase
 	 * @var array
 	 */
 	public $rules = [];
-	/*	'area' => ['required','max:50','unique','12'],
-        'clave_area'=>['numeric'],
-	];*/
 
 	/**
 	 * Los atributos que seran visibles en smart-datatable
@@ -51,5 +44,4 @@ class Areas extends ModelBase
 		'clave_area' => 'Clave',
 	    'activo_span' => 'Estatus'
 	];
-
 }

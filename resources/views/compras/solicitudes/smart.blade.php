@@ -254,8 +254,6 @@
 
 {{-- DONT DELETE --}}
 
-
-
 @index
 	@section('smart-js')
 		<script type="text/javascript">
@@ -273,6 +271,7 @@
          	bind: function (el) {
          		if(el.dataset.fk_id_estatus_solicitud != 1)
          		{
+             		console.log(el);
          			$(el).hide();
          		}
          	}

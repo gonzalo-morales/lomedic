@@ -35,12 +35,6 @@ class Stock extends ModelCompany
     ];
 
     /**
-     * Atributos de carga optimizada
-     * @var array
-     */
-    // protected $eagerLoaders = [];
-
-    /**
      * The validation rules
      * @var array
      */

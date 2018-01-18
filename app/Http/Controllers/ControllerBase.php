@@ -2,21 +2,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Models\Logs;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade as PDF;
+use Event;
+use App\Events\LogModulos;
 
 class ControllerBase extends Controller
-{
+{    
     public function getDataView($entity = null)
     {
         return [];
     }
-
+    
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\Response
@@ -27,8 +28,8 @@ class ControllerBase extends Controller
         //$this->authorize('view', $this->entity);
 
         # Log
-        $this->log('index');
-
+        event(new LogModulos($this->entity, $company, 'index' , null));
+        
         $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
 
         if(in_array('eliminar',$this->entity->getlistColumns())) {
@@ -91,7 +92,10 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para crear?
         //$this->authorize('create', $this->entity);
-
+        
+        # Log
+        event(new LogModulos($this->entity, $company, __FUNCTION__ , 'Antes de crear el registro'));
+        
         $data = !isset($attributes['id']) ? $this->entity->getColumnsDefaultsValues() : $this->entity->find($attributes['id']);
         $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 
@@ -140,12 +144,16 @@ class ControllerBase extends Controller
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
-            $primaryKey = $entity->getKeyName();
-            $this->log('store', $entity->{$primaryKey});
+            # Log
+            event(new LogModulos($entity, $company, 'crear' , 'Registro creado'));
+            
+            /*$primaryKey = $entity->getKeyName();
+            $this->log('store', $entity->{$primaryKey});*/
             $redirect = $this->redirect('store');
         } else {
             DB::rollBack();
-            $this->log('error_store');
+            # Log
+            event(new LogModulos($this->entity, $company, 'crear' , 'Error al crear el registro'));
             $redirect = $this->redirect('error_store');
         }
         
@@ -161,14 +169,16 @@ class ControllerBase extends Controller
     {
         # ¿Usuario tiene permiso para ver?
         //$this->authorize('view', $this->entity);
-        # Log
-        $this->log('show', $id);
+        
+        #$this->log('show', $id);
 
         try {
             $data = $this->entity->findOrFail($id);
         } catch (\Exception $e) {
             return \App::abort(404,implode(' ',$e->errorInfo));
         }
+        # Log
+        event(new LogModulos($data, $company, 'ver', null));
 
         header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
         header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
@@ -263,11 +273,15 @@ class ControllerBase extends Controller
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
-            $this->log('update', $id);
+            # Log
+            event(new LogModulos($entity, $company, 'editar', 'Registro actualizado'));
+            #$this->log('update', $id);
             $redirect = $this->redirect('update');
         } else {
             DB::rollBack();
-            $this->log('error_update', $id);
+            # Log
+            event(new LogModulos($entity, $company, 'editar', 'Error al actualizar el registro'));
+            #$this->log('error_update', $id);
             $redirect = $this->redirect('error_update');
         }
         return $compact ? compact('entity','redirect') : $redirect;
@@ -287,11 +301,16 @@ class ControllerBase extends Controller
 
         DB::beginTransaction();
         $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)->update($attributes);
+        
         if ($isSuccess) {
 
             DB::commit();
             # Shorthand
-            foreach ($idOrIds as $id) $this->log('destroy', $id);
+            foreach ($idOrIds as $id) {
+                $entity = $this->entity->findOrFail($id);
+                # Log
+                event(new LogModulos($entity, $company, 'eliminar', 'Eliminacion de registro'));
+            }
 
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
@@ -307,7 +326,11 @@ class ControllerBase extends Controller
 
             DB::rollBack();
             # Shorthand
-            foreach ($idOrIds as $id) $this->log('error_destroy', $id);
+            foreach ($idOrIds as $id) {
+                $entity = $this->entity->findOrFail($id);
+                # Log
+                event(new LogModulos($entity, $company, 'eliminar', 'Erro al eliminar registro'));
+            }
 
             if ($request->ajax()) {
                 # Respuesta Json
@@ -361,8 +384,12 @@ class ControllerBase extends Controller
         if(in_array('eliminar',$colums))
             $query->where('eliminar',0);
 
+        # Log
+        event(new LogModulos($this->entity, $company, 'exportar' , 'Exportacion de registros a: '.$type));
+
         $fields = $this->entity->getFields();
         $data = $query->get();
+        
 
         if($type == 'pdf') {
             $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
@@ -388,40 +415,6 @@ class ControllerBase extends Controller
      * @param  integer $id
      * @return void
      */
-    public function log($type, $id = null)
-    {
-        switch ($type) {
-            case 'index':
-                Logs::createLog($this->entity->getTable(), request()->company, null, 'index', null);
-                break;
-            case 'show':
-                Logs::createLog($this->entity->getTable(), request()->company, $id, 'ver', null);
-                break;
-            case 'store':
-                Logs::createLog($this->entity->getTable(), request()->company, $id, 'crear', 'Registro insertado');
-                break;
-            case 'error_store':
-                Logs::createLog($this->entity->getTable(), request()->company, null, 'crear', 'Error al insertar');
-                break;
-            case 'update':
-                $coment = $this->entity->isDirty($this->entity->getFillable()) ? 'Registro actualizado' : 'Registro sin cambios';
-                
-                
-                Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', $coment);
-                break;
-            case 'error_update':
-                Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', 'Error al editar');
-                break;
-            case 'destroy':
-                Logs::createLog($this->entity->getTable(), request()->company, $id, 'eliminar', 'Registro eliminado');
-                break;
-            case 'error_destroy':
-                Logs::createLog($this->entity->getTable(), request()->company, $id, 'eliminar', 'Error al eliminar');
-                break;
-            default:
-                break;
-        }
-    }
 
     public function redirect($type)
     {

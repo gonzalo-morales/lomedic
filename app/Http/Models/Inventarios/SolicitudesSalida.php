@@ -43,12 +43,6 @@ class SolicitudesSalida extends ModelCompany
     ];
 
     /**
-     * Atributos de carga optimizada
-     * @var array
-     */
-    protected $eagerLoaders = ['cliente', 'proyecto', 'sucursal_entrega'];
-
-    /**
      * The validation rules
      * @var array
      */

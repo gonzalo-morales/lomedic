@@ -46,12 +46,6 @@ class Correos extends ModelBase
 	];
 
 	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['empresa', 'usuario'];
-
-	/**
 	 * Obtenemos usuario relacionado
 	 * @return Usuario
 	 */

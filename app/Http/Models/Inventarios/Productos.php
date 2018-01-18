@@ -35,8 +35,6 @@ class Productos extends ModelCompany
         "fk_id_unidad_medida_compra","necesario","maximo","minimo","punto_reorden","fk_id_metodo_valoracion"
     ];
 
-    protected $eagerLoaders = ['upcs'];
-
     /**
      * Los atributos que seran visibles en index-datable
      * @var array

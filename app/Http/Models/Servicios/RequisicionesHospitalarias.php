@@ -75,13 +75,6 @@ class RequisicionesHospitalarias extends ModelCompany
 //        'id_solicitante' => 'required',
     ];
 
-    protected $eagerLoaders = [
-        'sucursal',
-        'solicitantes',
-        'captura',
-        'estatus'
-    ];
-
     /**
      * Los atributos que seran ]visibles en index-datable
      * @var array

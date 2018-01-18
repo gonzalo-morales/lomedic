@@ -80,10 +80,13 @@
     			{{ Form::cText('Altura', 'altura') }}
     		</div>
     	</div>
-    	<div class="col-sm-6 col-md-6 col-lg-4">
+    	<div class="form-group col-sm-12">
+			{{ Form::cTextArea('* Descripcion', 'descripcion') }}
+		</div>
+    	<div class="form-group col-sm-6 col-md-6 col-lg-4">
     		{{ Form::cCheckbox('Producto Descontinuado', 'descontinuado') }}
     	</div>
-    	<div class="col-sm-6 col-md-6 col-lg-4">
+    	<div class="col-sm-6 col-md-6">
     		<div class="alert alert-warning" role="alert">
                 Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
             </div>

@@ -54,8 +54,6 @@ class Ofertas extends ModelCompany
         'estatus.estatus' => 'Estatus'
     ];
 
-    protected $eagerLoaders = ['proveedor','sucursal'];
-
     /**
      * The validation rules
      * @var array

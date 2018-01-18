@@ -32,14 +32,7 @@ class InventariosDetalle extends ModelCompany
 	 * Los atributos que seran visibles en index-datable
 	 * @var array
 	 */
-	// protected $fields = [
-	// ];
-
-	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	// protected $eagerLoaders = [];
+	protected $fields = [];
 
 	/**
 	 * The validation rules

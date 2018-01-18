@@ -52,12 +52,6 @@ class Jurisdicciones extends ModelBase
 	];
 
 	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['estado'];
-
-	/**
 	 * Obtenemos entidad federativa relacionada
 	 * @return \Illuminate\Database\Eloquent\Relations\belongsTo
 	 */

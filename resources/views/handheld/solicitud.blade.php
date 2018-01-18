@@ -71,8 +71,8 @@
 	$(function(){
 		// Init
         $('#scan').focus();
+        
 		//Con esto evitamos que haga submit
-
 		$(document).on("keypress", "#form", function(event) {
 		    return event.keyCode != 13;
 		});
@@ -87,6 +87,7 @@
 
 		    if (event.keyCode == 13) {
 		    	$('#loading').show();
+		    	//Hacemos una petición para validar el UPC
 				$.get('{{ companyRoute('api.index', ['entity' => 'inventarios.upcs'], false) }}', {
 					'param_js': '{{$codigo_barras_js ?? ''}}',
 					'$upc': event.target.value
@@ -96,8 +97,7 @@
 					if (response.length > 0) {
 						$('#upc').attr('style','color:green');
 						$('#scan').attr('disabled', true);
-						// $('#descripcion').val(response[0].descripcion);
-						// $('.codigo').val(e.target.value)
+						// Si tiene datos...
 						if(valorOriginal <= num){
 							alert('Al parecer ya cuentas con todos los productos escaneados que requerías');
 							event.preventDefault();
@@ -116,8 +116,7 @@
 							$('#scan').val('').attr('disabled', false).focus();
 						}
 					} else {
-						alert('A ver hijo de tu puta madre, más te vale que te pongas las pilas o te me vas a la chingada. Ese pinche UPC no existe .l.');
-						// alert('El UPC que tratas de escanear no es válido, verifica que sea el mismo y tenga existencias');
+						alert('El UPC que tratas de escanear no es válido, verifica que sea el mismo y tenga existencias');
 						$('#loading').hide();
 						$('#scan').val('').attr('disabled', false).focus();
 					}
@@ -138,5 +137,4 @@
 
 	});
 </script>
-{{-- {{ HTML::script(asset('handheld/jquery.pos.js')) }} --}}
 @endsection

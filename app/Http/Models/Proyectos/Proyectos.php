@@ -83,8 +83,6 @@ class Proyectos extends ModelCompany
         'fecha_terminacion' => 'Fecha Terminacion',
         'estatus.estatus' => 'Estatus'
     ];
-    
-    protected $eagerLoaders = ['estatus','cliente'];
 
     function cliente()
     {
