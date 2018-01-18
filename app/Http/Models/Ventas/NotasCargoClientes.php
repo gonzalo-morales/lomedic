@@ -27,7 +27,7 @@ class NotasCargoClientes extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_nota_cargo';
+    protected $primaryKey = 'id_documento';
 
     /**
      * The attributes that are mass assignable.
@@ -122,12 +122,12 @@ class NotasCargoClientes extends ModelCompany
     }
 
     public function detalle(){
-        return $this->hasMany(NotasCreditoClientesDetalle::class,'fk_id_nota_credito','id_nota_credito');
+        return $this->hasMany(NotasCargoClientesDetalle::class,'fk_id_nota_credito','id_documento');
     }
 
     public function relaciones()
     {
-        return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_nota_credito');
+        return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_documento');
     }
 
 }

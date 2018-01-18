@@ -28,7 +28,7 @@ class FacturasClientesDetalle extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_factura_detalle';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.
@@ -57,7 +57,7 @@ class FacturasClientesDetalle extends ModelCompany
     
     public function factura()
     {
-        return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_factura');
+        return $this->hasOne(FacturasClientes::class,'id_documento','fk_id_documento');
     }
     
     public function claveproducto()

@@ -24,7 +24,7 @@ class PedidosDetalle extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_pedido_detalle';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.

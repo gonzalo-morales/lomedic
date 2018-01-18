@@ -27,7 +27,7 @@ class FacturasClientes extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_factura';
+    protected $primaryKey = 'id_documento';
 
     /**
      * The attributes that are mass assignable.
@@ -124,16 +124,16 @@ class FacturasClientes extends ModelCompany
     }
 
     public function detalle(){
-        return $this->hasMany(FacturasClientesDetalle::class,'fk_id_factura','id_factura');
+        return $this->hasMany(FacturasClientesDetalle::class,'fk_id_documento','id_documento');
     }
     
     public function relaciones(){
-        return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_factura')->where('fk_id_tipo_documento',$this->fk_id_tipo_documento);
+        return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_documento')->where('fk_id_tipo_documento',$this->fk_id_tipo_documento);
     }
 
     public function toArrayWithDetails(){
         return [
-            'id' => $this->id_factura
+            'id' => $this->id_documento
         ];
     }
 }

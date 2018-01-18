@@ -37,6 +37,6 @@ class PedidosAnexos extends ModelCompany
     public $rules = [];
 
     public function pedido(){
-        return $this->belongsTo(Pedidos::class,'fk_id_pedido');
+        return $this->belongsTo(Pedidos::class,'fk_id_documento');
     }
 }
