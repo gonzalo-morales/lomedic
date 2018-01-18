@@ -45,8 +45,6 @@ class PedidosDetalle extends ModelCompany
         
     ];
 
-    protected $eagerLoaders = [];
-
     /**
      * The validation rules
      * @var array

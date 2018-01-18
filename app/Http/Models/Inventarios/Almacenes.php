@@ -39,12 +39,6 @@ class Almacenes extends ModelBase
 	];
 
 	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['sucursal'];
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */

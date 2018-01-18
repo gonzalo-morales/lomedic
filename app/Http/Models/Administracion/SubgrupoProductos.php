@@ -42,12 +42,6 @@ class SubgrupoProductos extends ModelBase
 		'activo_span' => 'Estatus',
 	];
 	
-	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['grupo'];
-	
 	public function grupo()
 	{
 	    return $this->belongsTo(GrupoProductos::class,'fk_id_grupo','id_grupo');

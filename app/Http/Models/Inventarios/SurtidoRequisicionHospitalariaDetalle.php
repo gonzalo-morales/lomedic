@@ -59,8 +59,6 @@ class SurtidoRequisicionHospitalariaDetalle extends ModelCompany
 //        'id_solicitante' => 'required',
     ];
 
-    protected $eagerLoaders = ['sucursal','estatus'];
-
     /**
      * Los atributos que seran visibles en index-datable
      * @var array

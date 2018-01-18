@@ -46,12 +46,6 @@ class Estados extends ModelBase
 	];
 
 	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['pais'];
-
-	/**
 	 * Obtenemos empresas activas
 	 * @return Collection
 	 */

@@ -64,8 +64,6 @@ class Pagos extends ModelCompany
         'moneda.moneda'=>'Moneda'
     ];
 
-//    protected $eagerLoaders = ['proveedor','sucursal'];
-
     /**
      * The validation rules
      * @var array

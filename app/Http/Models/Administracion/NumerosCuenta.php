@@ -56,12 +56,6 @@ class NumerosCuenta extends ModelBase
 	];
 
 	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['banco', 'empresa', 'moneda'];
-
-	/**
 	 * Bancos relacionado
 	 * @return
 	 */

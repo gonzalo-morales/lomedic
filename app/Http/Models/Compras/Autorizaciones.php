@@ -44,8 +44,6 @@ class Autorizaciones extends ModelCompany
          'estatus.estatus'=>'Estatus'
      ];
 
-    protected $eagerLoaders = ['estatus'];
-
     function setEstatusAttribute(){
         return $this->estatus->id_estatus;
     }

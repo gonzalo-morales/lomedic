@@ -50,12 +50,6 @@ class MovimientoAlmacen extends ModelCompany
 	];
 
 	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['sucursal', 'usuario','almacen'];
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
