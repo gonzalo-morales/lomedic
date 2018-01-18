@@ -34,13 +34,18 @@ class AutorizacionesController extends ControllerBase
             DB::commit();
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
-            $this->log('update', $id);
+            
+            # Log
+            event(new LogModulos($entity, $company, 'editar', 'Registro actualizado'));
+            
             return \response()->json([
                 'status'=>'1'
             ]);
         } else {
             DB::rollBack();
-            $this->log('error_update', $id);
+            
+            # Log
+            event(new LogModulos($entity, $company, 'editar', 'Error al actualizar el registro'));
             return \response()->json([
                 'status'=>'0'
             ]);
