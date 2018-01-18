@@ -92,12 +92,16 @@ class NotasCreditoClientesDetalle extends ModelCompany
         return $this->hasOne(Monedas::class,'id_moneda','fk_id_moneda');
     }
 
-    public function factura()
+    public function documentobase()
     {
-        return $this->hasOne(FacturasClientes::class,'id_documento','fk_id_documento_base');
-    }
-    public function notacargo()
-    {
-        return $this->hasOne(NotasCargoClientes::class,'id_documento','fk_id_documento_base');
+        switch($this->fk_id_tipo_documento_base)
+        {
+            case 4://Factura
+                return $this->hasOne(FacturasClientes::class,'id_documento','fk_id_documento_base');
+                break;
+            case 6://Nota Cargo
+                return $this->hasOne(NotasCargoClientes::class,'id_documento','fk_id_documento_base');
+                break;
+        }
     }
 }

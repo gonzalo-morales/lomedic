@@ -167,8 +167,8 @@
 								{{$detalle->tiporelacion->tipo_relacion}}
 							</td>
 							<td>
-								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_factura]',$detalle->fk_id_factura) !!} 
-								{{$detalle->factura->uuid}}
+								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_documento]',$detalle->fk_id_documento) !!} 
+								{{$detalle->documento->uuid}}
 							</td>
 							<td>
     							@if(!Route::currentRouteNamed(currentRouteName('view')))

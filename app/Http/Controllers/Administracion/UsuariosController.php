@@ -23,16 +23,13 @@ use DB;
 
 class UsuariosController extends ControllerBase
 {
-
     /**
      * Create a new controller instance.
-     *
      * @return void
      */
     public function __construct(Usuarios $entity)
     {
         $this->entity = $entity;
-//        $this->entity_name = strtolower(class_basename($entity));
     }
 
     /**
