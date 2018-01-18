@@ -33,9 +33,12 @@ Route::prefix('{company}')->group(function () {
         Route::get('ordenes/{id}/solicitudOrden','Compras\OrdenesController@createSolicitudOrden')->name('ordenes');
         Route::resource('ordenes','Compras\OrdenesController');
 
+        Route::resource('facturasProveedores','Compras\FacturasProveedoresController');
+        // Route::post('getFacturaData2','Compras\FacturasProveedoresController@parseXML'); // Por conflicto con los nombres similares
+
+        Route::post('getDetallesOrden','Compras\FacturasProveedoresController@getDetallesOrden');
         Route::resource('seguimientodesviacion','Compras\SeguimientoDesviacionesController');
         Route::post('getDocumentos','Compras\SeguimientoDesviacionesController@getDocumentos');
-
         Route::resource('pagos','Compras\PagosController');
         Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
         Route::resource('solicitudes', 'Compras\SolicitudesController');
