@@ -43,8 +43,6 @@ class CondicionesAutorizacion extends ModelCompany
     // protected $fields = [
     // ];
 
-    // protected $eagerLoaders = ['usuarios'];
-
     /**
      * The validation rules
      * @var array

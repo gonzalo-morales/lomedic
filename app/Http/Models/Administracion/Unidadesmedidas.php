@@ -44,12 +44,6 @@ class UnidadesMedidas extends ModelBase
         'activo_span' => 'Estatus'
     ];
 
-    /**
-     * Atributos de carga optimizada
-     * @var array
-     */
-    protected $eagerLoaders = [];
-
     public function usuario()
     {
         $this->hasOne('app\Http\Models\Administracion\Usuarios');

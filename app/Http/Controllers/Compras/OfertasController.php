@@ -32,6 +32,13 @@ class OfertasController extends ControllerBase
 		$this->entity = $entity;
 	}
 	
+	public function getDataView($entity = null)
+	{
+	    return [
+	        'company'=>request()->company,
+	    ];
+	}
+	
 	public function index($company, $attributes = [])
 	{
 		$attributes = ['dataview'=>[

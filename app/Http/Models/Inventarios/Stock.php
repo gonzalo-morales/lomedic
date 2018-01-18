@@ -3,6 +3,8 @@
 namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Administracion\Sucursales;
+use App\Http\Models\Inventarios\MovimientoAlmacenDetalle;
 
 class Stock extends ModelCompany
 {
@@ -44,12 +46,6 @@ class Stock extends ModelCompany
     // protected $fields = [];
 
     /**
-     * Atributos de carga optimizada
-     * @var array
-     */
-    // protected $eagerLoaders = [];
-
-    /**
      * The validation rules
      * @var array
      */
@@ -80,7 +76,7 @@ class Stock extends ModelCompany
     }
 
     /**
-     * Obtenemos almacen relacionado
+     * Obtenemos ubicacion relacionado
      * @return @belongsTo
      */
     public function ubicacion()
@@ -97,5 +93,12 @@ class Stock extends ModelCompany
         return $this->belongsTo(Almacenes::class, 'fk_id_almacen', 'id_almacen');
     }
 
-
+    /**
+     * Obtenemos stock relacionado
+     * @return @belongsTo
+     */
+    public function movimientos()
+    {
+        return $this->hasMany(MovimientoAlmacenDetalle::class, 'fk_id_sku', 'id_sku');
+    }
 }

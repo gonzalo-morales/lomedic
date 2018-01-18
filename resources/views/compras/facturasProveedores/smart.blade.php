@@ -1,161 +1,160 @@
+@extends(smart())
+@section('content-width', 's12')
 @section('header-bottom')
 	@parent
-	@if (!Route::currentRouteNamed(currentRouteName('index')))
+	@index
 		<script type="text/javascript">
 			var comprador_js = '{{$js_comprador ?? ''}}';
 		</script>
 		{{HTML::script(asset('js/facturas_proveedores.js'))}}
-{{--		<script type="text/javascript" src="{{ asset('js/facturas_proveedores.js') }}"></script>--}}
 	@endif
 @endsection
 
-@section('content-width', 's12')
-
 @section('form-content')
-{{ Form::setModel($data) }}
-@if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
-	<div class="row">
-		<div class="col-md-12 text-center text-success">
-			<h3>Factura No. {{$data->id_factura_proveedor}}</h3>
-		</div>
-	</div>
-@endif
-@if (Route::currentRouteNamed(currentRouteName('create')))
-<div id="confirmar_sobreescritura" class="modal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">¿Deseas agregar una factura?</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<p>Si agregas una nueva factura se eliminarán los datos actuales</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-				<button id="cargar" type="button" data-dismiss="modal" class="btn btn-primary">Cargar</button>
-			</div>
-		</div>
-	</div>
-</div>
-@else
-<div id="confirmar_eliminar_pago" class="modal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">¿Deseas cancelar el pago?</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<p>Si eliminas el pago no se podrá recuperar</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-				<button id="eliminar_pago_button" type="button" data-dismiss="modal" class="btn btn-primary">Eliminar</button>
-			</div>
-		</div>
-	</div>
-</div>
-@endif
-<div class="row">
-	<div class="form-group col-md-3 col-sm-12">
-		{{Form::cSelectWithDisabled('Proveedor','fk_id_socio_negocio',$proveedores ?? [],
-		[!Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : ''])}}
-	</div>
-	<div class="form-group col-md-3 col-sm-6">
-		<div id="loadingcomprador" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-			Cargando datos... <i class="material-icons align-middle loading">cached</i>
-		</div>
-		{{Form::label('comprador','Comprador')}}
-		{{Form::text('comprador',isset($data->fk_id_socio_negocio) ?
-		$data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno :
-		null,
-		['disabled','class'=>'form-control','data-url'=>companyAction('HomeController@index').'/RecursosHumanos.empleados/api'])}}
-{{--		{{Form::cText('Comprador','comprador',['disabled','data-url'=>companyAction('HomeController@index').'/RecursosHumanos.empleados/api'])}}--}}
-	</div>
-	<div class="form-group col-md-3 col-sm-12">
-		{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}
-	</div>
-	<div class="form-group col-md-3 col-sm-6">
-		{{Form::cText('Fecha vencimiento','fecha_vencimiento',['class'=>'datepicker','placeholder'=>'Vence'])}}
-	</div>
-	@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
-		<div class="form-group col-md-2 col-sm-6">
-			{{Form::label('serie_folio_factura','Serie y Folio',['style'=>'display: block;text-align: center;'])}}
-			<div class="input-group">
-				{{Form::Text('serie_factura',null,['disabled','class'=>'form-control'])}}
-				{{Form::Text('folio_factura',null,['disabled','class'=>'form-control'])}}
-			</div>
-		</div>
-		<div class="form-group col-md-2 col-sm-4">
-			{{Form::cText('Fecha Factura','fecha_factura',['disabled'])}}
-		</div>
-		<div class="form-group col-md-2 col-sm-2">
-			{{Form::cText('Versión','version_sat',['disabled'])}}
-		</div>
-		<div class="form-group col-md-2 col-sm-6">
-			{{Form::label('fk_id_estatus_factura','Estatus Factura')}}
-			{{Form::Text('fk_id_estatus_factura',$data->estatus->estatus,['disabled','class'=>'form-control'])}}
-		</div>
-		<div class="form-group col-md-2 col-sm-6">
-			{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
-			{{Form::hidden('fk_id_moneda')}}
-			{{Form::label('moneda','Moneda')}}
-			{{Form::Text('moneda','('.$data->moneda->moneda.') '.$data->moneda->descripcion,['disabled','class'=>'form-control'])}}
-		</div>
-		<div class="form-group col-md-2 col-sm-6">
-			{{Form::label('fk_id_forma_pago','Forma Pago')}}
-			{{Form::Text('fk_id_forma_pago','('.$data->forma_pago->forma_pago.') '.$data->forma_pago->descripcion,['disabled','class'=>'form-control'])}}
-		</div>
-		<div class="form-group col-md-3 col-sm-6">
-			{{Form::cText('Subtotal','subtotal',['disabled'])}}
-		</div>
-		<div class="form-group col-md-3 col-sm-6">
-			{{Form::cText('IVA','iva',['disabled'])}}
-		</div>
-		<div class="form-group col-md-3 col-sm-6">
-			{{Form::cText('Total pagado','total_pagado',['disabled'])}}
-		</div>
-		<div class="form-group col-md-3 col-sm-6">
-			{{Form::cText('Total','total',['disabled'])}}
-		</div>
-		@if($data->fk_id_estatus_factura == 3){{-- Si está cancelado --}}
-		<div class="form-group col-md-12 col-sm-12 text-center">
-			{{Form::cTextArea('Motivo Cancelacion','motivo_cancelacion',['rows'=>2,'style'=>'resize:none'])}}
-		</div>
-		@endif
-	@endif
-	@if(Route::currentRouteNamed(currentRouteName('create')))
-		<div class="form-goup col-md-6 text-center">
-			{{Form::cFile('XML','archivo_xml_input',['data-url'=>companyAction('parseXML'),'accept'=>'.xml'])}}
-			<input id="archivo_xml_hidden" class="custom-file-input" style="display:none" name="archivo_xml_hidden" type="file">
-			{{Form::hidden('uuid','',['id'=>'uuid'])}}
-			{{Form::hidden('version_sat','',['id'=>'version_sat'])}}
-		</div>
-		<div class="form-goup col-md-6 text-center">
-			{{Form::cFile('PDF','archivo_pdf_input',['accept'=>'.pdf'])}}
-			<input id="archivo_pdf_hidden" class="custom-file-input" style="display:none" name="archivo_pdf_hidden" type="file">
-		</div>
-		<div class="form-group col-sm-12 text-center mt-3">
-			<div class="sep">
-				<div class="sepBtn">
-					<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large tooltipped"
-							data-position="bottom" data-delay="50" data-tooltip="Agregar" type="button" id="agregar"
-							data-toggle="modal" data-target="#confirmar_sobreescritura">
-						<i class="material-icons">add</i>
-					</button>
-				</div>
-			</div>
-		</div>
-	@endif
+	{{ Form::setModel($data) }}
+    @inroute(['show','edit'])
+    	<div class="row">
+    		<div class="col-md-12 text-center text-success">
+    			<h3>Factura No. {{$data->id_factura_proveedor}}</h3>
+    		</div>
+    	</div>
+    @endif
+    @crear
+    <div id="confirmar_sobreescritura" class="modal" tabindex="-1" role="dialog">
+    	<div class="modal-dialog" role="document">
+    		<div class="modal-content">
+    			<div class="modal-header">
+    				<h5 class="modal-title">¿Deseas agregar una factura?</h5>
+    				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    					<span aria-hidden="true">&times;</span>
+    				</button>
+    			</div>
+    			<div class="modal-body">
+    				<p>Si agregas una nueva factura se eliminarán los datos actuales</p>
+    			</div>
+    			<div class="modal-footer">
+    				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+    				<button id="cargar" type="button" data-dismiss="modal" class="btn btn-primary">Cargar</button>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    @else
+    <div id="confirmar_eliminar_pago" class="modal" tabindex="-1" role="dialog">
+    	<div class="modal-dialog" role="document">
+    		<div class="modal-content">
+    			<div class="modal-header">
+    				<h5 class="modal-title">¿Deseas cancelar el pago?</h5>
+    				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    					<span aria-hidden="true">&times;</span>
+    				</button>
+    			</div>
+    			<div class="modal-body">
+    				<p>Si eliminas el pago no se podrá recuperar</p>
+    			</div>
+    			<div class="modal-footer">
+    				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+    				<button id="eliminar_pago_button" type="button" data-dismiss="modal" class="btn btn-primary">Eliminar</button>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    @endif
+    <div class="row">
+    	<div class="form-group col-md-3 col-sm-12">
+    		{{Form::cSelectWithDisabled('Proveedor','fk_id_socio_negocio',$proveedores ?? [],
+    		[!Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : ''])}}
+    	</div>
+    	<div class="form-group col-md-3 col-sm-6">
+    		<div id="loadingcomprador" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+    			Cargando datos... <i class="material-icons align-middle loading">cached</i>
+    		</div>
+    		{{Form::label('comprador','Comprador')}}
+    		{{Form::text('comprador',isset($data->fk_id_socio_negocio) ?
+    		$data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno :
+    		null,
+    		['disabled','class'=>'form-control','data-url'=>companyAction('HomeController@index').'/RecursosHumanos.empleados/api'])}}
+    	{{--{{Form::cText('Comprador','comprador',['disabled','data-url'=>companyAction('HomeController@index').'/RecursosHumanos.empleados/api'])}}--}}
+    	</div>
+    	<div class="form-group col-md-3 col-sm-12">
+    		{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}
+    	</div>
+    	<div class="form-group col-md-3 col-sm-6">
+    		{{Form::cText('Fecha vencimiento','fecha_vencimiento',['class'=>'datepicker','placeholder'=>'Vence'])}}
+    	</div>
+    	@inroute(['edit','show'])
+    		<div class="form-group col-md-2 col-sm-6">
+    			{{Form::label('serie_folio_factura','Serie y Folio',['style'=>'display: block;text-align: center;'])}}
+    			<div class="input-group">
+    				{{Form::Text('serie_factura',null,['disabled','class'=>'form-control'])}}
+    				{{Form::Text('folio_factura',null,['disabled','class'=>'form-control'])}}
+    			</div>
+    		</div>
+    		<div class="form-group col-md-2 col-sm-4">
+    			{{Form::cText('Fecha Factura','fecha_factura',['disabled'])}}
+    		</div>
+    		<div class="form-group col-md-2 col-sm-2">
+    			{{Form::cText('Versión','version_sat',['disabled'])}}
+    		</div>
+    		<div class="form-group col-md-2 col-sm-6">
+    			{{Form::label('fk_id_estatus_factura','Estatus Factura')}}
+    			{{Form::Text('fk_id_estatus_factura',$data->estatus->estatus ?? '',['disabled','class'=>'form-control'])}}
+    		</div>
+    		<div class="form-group col-md-2 col-sm-6">
+    			{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
+    			{{Form::hidden('fk_id_moneda')}}
+    			{{Form::label('moneda','Moneda')}}
+    			{{Form::Text('moneda','('.$data->moneda->moneda.') '.$data->moneda->descripcion,['disabled','class'=>'form-control'])}}
+    		</div>
+    		<div class="form-group col-md-2 col-sm-6">
+    			{{Form::label('fk_id_forma_pago','Forma Pago')}}
+    			{{Form::Text('fk_id_forma_pago','('.$data->forma_pago->forma_pago.') '.$data->forma_pago->descripcion,['disabled','class'=>'form-control'])}}
+    		</div>
+    		<div class="form-group col-md-3 col-sm-6">
+    			{{Form::cText('Subtotal','subtotal',['disabled'])}}
+    		</div>
+    		<div class="form-group col-md-3 col-sm-6">
+    			{{Form::cText('IVA','iva',['disabled'])}}
+    		</div>
+    		<div class="form-group col-md-3 col-sm-6">
+    			{{Form::cText('Total pagado','total_pagado',['disabled'])}}
+    		</div>
+    		<div class="form-group col-md-3 col-sm-6">
+    			{{Form::cText('Total','total',['disabled'])}}
+    		</div>
+    		@if($data->fk_id_estatus_factura == 3){{-- Si está cancelado --}}
+    		<div class="form-group col-md-12 col-sm-12 text-center">
+    			{{Form::cTextArea('Motivo Cancelacion','motivo_cancelacion',['rows'=>2,'style'=>'resize:none'])}}
+    		</div>
+    		@endif
+    	@endif
+    	@crear
+    		<div class="form-goup col-md-6 text-center">
+    			{{Form::cFile('XML','archivo_xml_input',['data-url'=>companyAction('parseXML'),'accept'=>'.xml'])}}
+    			<input id="archivo_xml_hidden" class="custom-file-input" style="display:none" name="archivo_xml_hidden" type="file">
+    			{{Form::hidden('uuid','',['id'=>'uuid'])}}
+    			{{Form::hidden('version_sat','',['id'=>'version_sat'])}}
+    		</div>
+    		<div class="form-goup col-md-6 text-center">
+    			{{Form::cFile('PDF','archivo_pdf_input',['accept'=>'.pdf'])}}
+    			<input id="archivo_pdf_hidden" class="custom-file-input" style="display:none" name="archivo_pdf_hidden" type="file">
+    		</div>
+    		<div class="form-group col-sm-12 text-center mt-3">
+    			<div class="sep">
+    				<div class="sepBtn">
+    					<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large tooltipped"
+    							data-position="bottom" data-delay="50" data-tooltip="Agregar" type="button" id="agregar"
+    							data-toggle="modal" data-target="#confirmar_sobreescritura">
+    						<i class="material-icons">add</i>
+    					</button>
+    				</div>
+    			</div>
+    		</div>
+    	@endif
 		<div class="form-group col-md-12 text-center mt-5">
 			{{Form::cTextArea('Observaciones','observaciones',['rows'=>2,'style'=>'resize:none'])}}
 		</div>
-</div>
+    </div>
 
 	<div id="detallefactura" class="container-fluid w-100 mt-2 px-0">
 		<div class="card text-center z-depth-1-half" style="min-height: 555px">
@@ -169,7 +168,7 @@
 					<li class="nav-item">
 						<a class="nav-link" role="tab" data-toggle="tab" href="#tab-pdf" id="pdf-tab" aria-controls="pdf" aria-expanded="true">PDF</a>
 					</li>
-					@if(!Route::currentRouteNamed(currentRouteName('create')))
+					@crear
 					<li class="nav-item">
 						<a class="nav-link" role="tab" data-toggle="tab" href="#tab-pagos" id="pagos-tab" aria-controls="pagos" aria-expanded="true">Pagos</a>
 					</li>
@@ -193,7 +192,7 @@
 							<h1 class="text-success text-center">Productos facturados</h1>
 							<table id="factura" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};">
 								<thead id="encabezado_factura">
-								@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
+								@inroute(['edit','show'])
 									@if($data->version_sat == "3.3")
 										<tr>
 											<th>Clave Producto Servicio</th>
@@ -219,7 +218,7 @@
 								@endif
 								</thead>
 								<tbody id="productos_facturados">
-								@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
+								@inroute(['edit','show'])
 									@if($data->version_sat == "3.3")
 										@foreach($data->detalle_facturas_proveedores as $detalle)
 										<tr>
@@ -261,20 +260,21 @@
 						Cargando pdf... <i class="material-icons align-middle loading">cached</i>
 					</div>
 					<div>
-						<object id="pdf" data="{!! !Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')) ?
-						 'data:application/pdf;base64,'.base64_encode(file_get_contents(Storage::disk('factura_proveedor')->getDriver()->getAdapter()->getPathPrefix().$data->archivo_pdf)) :
-						  ''!!}" style="display: block" type="application/pdf" width="100%" height="1100" >
+						<object id="pdf" data="{!! !Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index'))
+							&& file_exists(Storage::disk('factura_proveedor')->getDriver()->getAdapter()->getPathPrefix().($data->archivo_pdf ??'.pdf')) ?
+							'data:application/pdf;base64,'.base64_encode(file_get_contents(Storage::disk('factura_proveedor')->getDriver()->getAdapter()->getPathPrefix().$data->archivo_pdf)) :
+							'' !!}" style="display: block" type="application/pdf" width="100%" height="1100" >
 						</object>
 					</div>
 				</div>
-				@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
+				@inroute(['edit','show'])
 				<div role="tabpanel" class="tab-pane fade" id="tab-pagos" aria-labelledby="pagos-tab">
 					<div class="card">
 						<div class="card-body mt-3">
 							<h1 class="text-success text-center">Pagos</h1>
 							<table id="pagos" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};">
 								<thead id="encabezado_pagos">
-								@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
+								@inroute(['create','index'])
 									<tr>
 										<th>ID</th>
 										<th>Número Referencia</th>
@@ -290,7 +290,7 @@
 								@endif
 								</thead>
 								<tbody id="detalle_pagos">
-								@if(!Route::currentRouteNamed(currentRouteName('create')) && !Route::currentRouteNamed(currentRouteName('index')))
+								@inroute(['create','index'])
 									@if(!empty($data->detallePagos))
 										@foreach($data->detallePagos->where('eliminar',false) as $detalle)
 											<tr>
@@ -340,7 +340,7 @@
 										<td>{{$detalle->orden->proveedor->nombre_comercial}}</td>
 										<td>{{$detalle->orden->fecha_creacion}}</td>
 										<td>{{$detalle->orden->fecha_estimada_entrega}}</td>
-										<td>{{$detalle->orden->estatus->estatus}}</td>
+										<td>{{$detalle->orden->estatus->estatus ?? ''}}</td>
 										<td><a href="{{companyAction('Compras\OrdenesController@show',['id'=>$detalle->orden->id_orden])}}"><i class="material-icons align-middle">visibility</i></a></td>
 									</tr>
 									@else
@@ -401,153 +401,137 @@
 @endsection
 
 {{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@section('form-title')
-		<h1 class="display-4">Facturas de Proveedores</h1>
-	@endsection
-@section('smart-js')
-	<script type="text/javascript">
-        if ( sessionStorage.reloadAfterPageLoad ) {
-            sessionStorage.clear();
-            $.toaster({
-                priority: 'success', title: 'Exito', message: 'Factura cancelada',
-                settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
-            });
-        }
-	</script>
-	@parent
-	<script type="text/javascript">
-        rivets.binders['hide-delete'] = {
-            bind: function (el) {
-                if(el.dataset.fk_id_estatus_factura != 1)
-                {
-                    $(el).hide();
-                }
+@index
+	@section('form-title','Facturas de Proveedores')
+    @section('smart-js')
+    	<script type="text/javascript">
+            if ( sessionStorage.reloadAfterPageLoad ) {
+                sessionStorage.clear();
+                $.toaster({
+                    priority: 'success', title: 'Exito', message: 'Factura cancelada',
+                    settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
+                });
             }
-        };
-        rivets.binders['hide-update'] = {
-            bind: function (el) {
-                if(el.dataset.fk_id_estatus_factura != 1)
-                {
-                    $(el).hide();
-                }
-            }
-        };
-		@can('update', currentEntity())
-            window['smart-model'].collections.itemsOptions.edit ={a: {
-            'html': '<i class="material-icons">mode_edit</i>',
-            'class': 'btn is-icon',
-            'rv-get-edit-url': '',
-            'rv-hide-update':'',
-            'data-toggle':'tooltip',
-            'title':'Editar'
-        }};
-		@endcan
-		@can('delete', currentEntity())
-            window['smart-model'].collections.itemsOptions.delete = {a: {
-            'html': '<i class="material-icons">delete</i>',
-            'href' : '#',
-            'class': 'btn is-icon',
-            'rv-on-click': 'actions.showModalCancelar',
-            'rv-get-delete-url': '',
-            'data-delete-type': 'single',
-            'rv-hide-delete':'',
-            'data-toggle':'tooltip',
-            'title':'Cancelar'
-        }};
-		@endcan
-        window['smart-model'].actions.itemsCancel = function(e, rv,motivo){
-            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-            let data = {motivo}
-            $.delete(this.dataset.deleteUrl,data,function (response) {
-                if(response.success){
-                    sessionStorage.reloadAfterPageLoad = true;
-                    location.reload();
-                }
-            });
-        };
-        window['smart-model'].actions.showModalCancelar = function(e, rv) {
-            e.preventDefault();
-            let modal = window['smart-modal'];
-            modal.view = rivets.bind(modal, {
-                title: '¿Estas seguro que deseas cancelar la factura?',
-                content: '<form  id="cancel-form">' +
-                '<div class="alert alert-warning text-center"><span class="text-danger">La cancelación de un documento es irreversible.</span><br>'+
-                'Para continuar, especifique el motivo y de click en cancelar.</div>'+
-                '<div class="form-group">' +
-                '<label for="recipient-name" class="form-control-label">Cancelar:</label>' +
-                '<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +
-                '</div>' +
-                '</form>',
-                buttons: [
-                    {button: {
-                        'text': 'Cerrar',
-                        'class': 'btn btn-secondary',
-                        'data-dismiss': 'modal',
-                    }},
-                    {button: {
-                        'html': 'Cancelar',
-                        'class': 'btn btn-danger',
-                        'rv-on-click': 'action',
-                    }}
-                ],
-                action: function(e,rv) {
-                    var formData = new FormData(document.querySelector('#cancel-form')), convertedJSON = {}, it = formData.entries(), n;
-
-                    while(n = it.next()) {
-                        if(!n || n.done) break;
-                        convertedJSON[n.value[0]] = n.value[1];
+    	</script>
+    	@parent
+    	<script type="text/javascript">
+            rivets.binders['hide-delete'] = {
+                bind: function (el) {
+                    if(el.dataset.fk_id_estatus_factura != 1)
+                    {
+                        $(el).hide();
                     }
-                    console.log(convertedJSON);
-                    if(convertedJSON.motivo_cancelacion != ""){
-                    	window['smart-model'].actions.itemsCancel.call(this, e, rv,convertedJSON);
-                    }else{
-                        $.toaster({
-                            priority: 'danger', title: 'Por favor escriba un motivo de la cancelación', message: 'Error al cancelar',
-                            settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
-                        });
-					}
-                }.bind(this),
-                // Opcionales
-                onModalShow: function() {
-
-                    let btn = modal.querySelector('[rv-on-click="action"]');
-
-                    // Copiamos data a boton de modal
-                    for (var i in this.dataset) btn.dataset[i] = this.dataset[i];
-
-                }.bind(this),
-                // onModalHide: function() {}
-            });
-            // Abrimos modal
-            $(modal).modal('show');
-        };
-	</script>
-@endsection
-	@include('layouts.smart.index')
+                }
+            };
+            rivets.binders['hide-update'] = {
+                bind: function (el) {
+                    if(el.dataset.fk_id_estatus_factura != 1)
+                    {
+                        $(el).hide();
+                    }
+                }
+            };
+    		@can('update', currentEntity())
+                window['smart-model'].collections.itemsOptions.edit ={a: {
+                'html': '<i class="material-icons">mode_edit</i>',
+                'class': 'btn is-icon',
+                'rv-get-edit-url': '',
+                'rv-hide-update':'',
+                'data-toggle':'tooltip',
+                'title':'Editar'
+            }};
+    		@endcan
+    		@can('delete', currentEntity())
+                window['smart-model'].collections.itemsOptions.delete = {a: {
+                'html': '<i class="material-icons">delete</i>',
+                'href' : '#',
+                'class': 'btn is-icon',
+                'rv-on-click': 'actions.showModalCancelar',
+                'rv-get-delete-url': '',
+                'data-delete-type': 'single',
+                'rv-hide-delete':'',
+                'data-toggle':'tooltip',
+                'title':'Cancelar'
+            }};
+    		@endcan
+            window['smart-model'].actions.itemsCancel = function(e, rv,motivo){
+                $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+                let data = {motivo}
+                $.delete(this.dataset.deleteUrl,data,function (response) {
+                    if(response.success){
+                        sessionStorage.reloadAfterPageLoad = true;
+                        location.reload();
+                    }
+                });
+            };
+            window['smart-model'].actions.showModalCancelar = function(e, rv) {
+                e.preventDefault();
+                let modal = window['smart-modal'];
+                modal.view = rivets.bind(modal, {
+                    title: '¿Estas seguro que deseas cancelar la factura?',
+                    content: '<form  id="cancel-form">' +
+                    '<div class="alert alert-warning text-center"><span class="text-danger">La cancelación de un documento es irreversible.</span><br>'+
+                    'Para continuar, especifique el motivo y de click en cancelar.</div>'+
+                    '<div class="form-group">' +
+                    '<label for="recipient-name" class="form-control-label">Cancelar:</label>' +
+                    '<input type="text" class="form-control" id="motivo_cancelacion" name="motivo_cancelacion">' +
+                    '</div>' +
+                    '</form>',
+                    buttons: [
+                        {button: {
+                            'text': 'Cerrar',
+                            'class': 'btn btn-secondary',
+                            'data-dismiss': 'modal',
+                        }},
+                        {button: {
+                            'html': 'Cancelar',
+                            'class': 'btn btn-danger',
+                            'rv-on-click': 'action',
+                        }}
+                    ],
+                    action: function(e,rv) {
+                        var formData = new FormData(document.querySelector('#cancel-form')), convertedJSON = {}, it = formData.entries(), n;
+    
+                        while(n = it.next()) {
+                            if(!n || n.done) break;
+                            convertedJSON[n.value[0]] = n.value[1];
+                        }
+                        console.log(convertedJSON);
+                        if(convertedJSON.motivo_cancelacion != ""){
+                        	window['smart-model'].actions.itemsCancel.call(this, e, rv,convertedJSON);
+                        }else{
+                            $.toaster({
+                                priority: 'danger', title: 'Por favor escriba un motivo de la cancelación', message: 'Error al cancelar',
+                                settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
+                            });
+    					}
+                    }.bind(this),
+                    // Opcionales
+                    onModalShow: function() {
+    
+                        let btn = modal.querySelector('[rv-on-click="action"]');
+    
+                        // Copiamos data a boton de modal
+                        for (var i in this.dataset) btn.dataset[i] = this.dataset[i];
+    
+                    }.bind(this),
+                    // onModalHide: function() {}
+                });
+                // Abrimos modal
+                $(modal).modal('show');
+            };
+    	</script>
+    @endsection
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@section('form-title')
-		<h1 class="display-4">Agregar Factura de Proveedor</h1>
-	@endsection
-	@include('layouts.smart.create')
+@crear
+	@section('form-title','Agregar Factura de Proveedor')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@section('form-title')
-		<h1 class="display-4">Editar Factura de Proveedor</h1>
-	@endsection
-	@include('layouts.smart.edit')
+@editar
+	@section('form-title','Editar Factura de Proveedor')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@section('form-title')
-		<h1 class="display-4">Factura de Proveedor</h1>
-	@endsection
-	@include('layouts.smart.show')
+@ver
+	@section('form-title','Factura de Proveedor')
 @endif
-
-{{--@if (currentRouteName('createSolicitudOrden'))--}}
-	{{--@include('layouts.smart.create')--}}
-{{--@endif--}}

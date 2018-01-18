@@ -46,12 +46,6 @@ class Municipios extends ModelBase
 	];
 
 	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['estado'];
-
-	/**
 	 * Obtenemos estado relacionado
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */

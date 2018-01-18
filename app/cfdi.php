@@ -120,10 +120,10 @@ function generarXml($datos = [])
             }
             
             if($descuentos != 0)
-                $datos['cfdi']['Descuento'] = number_format($descuentos,2);
+                $datos['cfdi']['Descuento'] = number_format($descuentos,2,'.','');
             
-            $datos['cfdi']['SubTotal'] = number_format($subtotal,2);
-            $datos['cfdi']['Total'] = number_format($subtotal - $descuentos + $totalImpuestos,2);
+            $datos['cfdi']['SubTotal'] = number_format($subtotal,2,'.','');
+            $datos['cfdi']['Total'] = number_format($subtotal - $descuentos + $totalImpuestos,2,'.','');
             
             $cfdi = new CFDI($datos['cfdi'], $datos['certificado'], $datos['key']);
             

@@ -5,9 +5,12 @@ namespace App\Http\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\Notificaciones;
 
 class ModelBase extends Model
 {
+    use Notifiable;
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array
@@ -28,7 +31,8 @@ class ModelBase extends Model
 	public $timestamps = false;
 
 	public function __construct($attributes = []) {
-		return parent::__construct($attributes);
+		$this->eagerLoaders = $this->getAutoEager();
+		return parent::__construct($attributes);		
 		#$this->rules = array_merge_recursive_simple($this->rules,$this->getRulesDefaults());
 	}
 
@@ -37,6 +41,52 @@ class ModelBase extends Model
 	 * @var array
 	 */
 	public $niceNames = [];
+	
+	public static function boot()
+	{
+	    parent::boot();
+	    /*
+	    //mientras creamos
+	    self::creating(function($table){
+	    });
+	    
+        //una vez creado
+        self::created(function($table){
+        });
+        
+        //mientras actualizamos
+        self::updating(function($table){
+        });
+	    
+        //una vez actualizado
+        self::updated(function($table){
+        });
+	    
+	    //mientras salvamos
+	    self::saving(function($table){
+	    });
+	    
+	    //una vez salvado
+        self::saved(function($table){
+        });
+	    
+	    //mientras eliminamos
+        self::deleting(function($table){
+        });
+	    
+	    //una vez eliminado
+        self::deleted(function($table){
+        });
+	    
+	    //mientras restauramos
+        self::restoring(function($table){
+        });
+	    
+	    //una vez restaurado
+        self::restored(function($table){
+        });
+        */
+	}
 
 	/**
 	 * Obtenemos atributos a incluir en append/appends()
@@ -47,6 +97,23 @@ class ModelBase extends Model
 		return array_where(array_diff(array_keys($this->getFields()), array_keys($this->getColumnsDefaultsValues())), function ($value, $key) {
 			return !str_contains($value, '.');
 		});
+	}
+	public function getAutoEager()
+	{
+	    $keysfields = array_keys($this->fields) ?? [];
+	    $return = [];
+	    
+	    foreach ($keysfields as $key) {
+	        $pos = strpos($key, '.');
+	        if($pos !== false)
+	            array_push($return,substr($key,0,$pos));
+	    }
+        return $return;
+	}
+	
+	public function getFillable()
+	{
+	    return $this->fillable ?? [];
 	}
 
 	/**
@@ -60,7 +127,13 @@ class ModelBase extends Model
 		}
 		return $this->fields;
 	}
-
+	
+	public function sendNotification($email,$options)
+	{
+	    $this->email = $email;
+	    $this->notify(new Notificaciones($options));
+	}
+	
 	/**
 	 * Obtenemos Eager-Loaders
 	 * @return array

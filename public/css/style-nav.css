@@ -45,7 +45,7 @@
 .wrapper {
     display: flex;
     align-items: stretch;
-    height: 10%;
+    height: 100%;
     overflow: hidden;
 }
 

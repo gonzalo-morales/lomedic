@@ -31,10 +31,10 @@ class GastosViaje extends ModelBase
     protected $fillable = [
         'fecha',
         'fk_id_empleado',
-        'viaje_a',
+        'destino',
         'periodo_inicio',
         'periodo_fin',
-        'motivo_gasto',
+        'motivo_viaje',
         'total_dias',
         'total_detalles',
         'subtotal_detalles'
@@ -48,9 +48,9 @@ class GastosViaje extends ModelBase
         'id_gastos' => 'Folio',
         'fecha' => 'Fecha',
         'nombre_empleado' => 'Empleado',
-        'viaje_a' => 'Viaje a',
+        'destino' => 'Destino',
         'total_dias'=>'Total de días',
-        'motivo_gasto' => 'Motivo del viaje'
+        'motivo_viaje' => 'Motivo del viaje'
     ];
 
     /**
@@ -68,10 +68,10 @@ class GastosViaje extends ModelBase
         'fecha' => 'required',
         'fk_id_empleado' => 'required',
         'fecha' => 'required',
-        'viaje_a' => 'required',
+        'destino' => 'required',
         'periodo_inicio' => 'required',
         'periodo_fin' => 'required',
-        'motivo_gasto' => 'required'
+        'motivo_viaje' => 'required'
 
     ];
 

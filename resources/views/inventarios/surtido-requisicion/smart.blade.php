@@ -1,12 +1,12 @@
+@extends(smart())
+@section('content-width', 's12')
+
 @section('header-bottom')
     @parent
-
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
         <script type="text/javascript" src="{{ asset('js/surtidorequisicioneshospitalarias.js') }}"></script>
     @endif
-
 @endsection
-@section('content-width', 's12')
 
 @section('form-content')
     {{ Form::setModel($data) }}
@@ -85,17 +85,14 @@
                                                                     @else
                                                                             <td><input type="number" onchange="calculatotal(this)" name="relations[has][detalles][{{$row}}][cantidad_surtida]" min="0" max="{{$detalle->cantidad_solicitada-$detalle->cantidad_surtida}}" class="form-control cantidad" value="0" disabled></td>
                                                                     @endif
-                                                                        <td>$ {{ number_format($detalle->claveClienteProducto->precio, 2, '.', '')}}</td>
-                                                                        <td class="text-right total">$ {{ number_format(($detalle->claveClienteProducto->precio*$detalle->cantidad_surtida), 2, '.', '')}}</td>
-                                                                        <input type="hidden" name="relations[has][detalles][{{$row}}][id_detalle_requisicion_hospitalaria]"  value="{{$detalle->id_detalle_requisicion_hospitalaria}}"/>
-                                                                        <input type="hidden" name="relations[has][detalles][{{$row}}][fk_id_surtido_requisicion]"  value="{{$detalle->fk_id_surtido_requisicion}}"/>
-                                                                        <input type="hidden" name="relations[has][detalles][{{$row}}][fk_id_clave_cliente_producto]"  value="{{$detalle->fk_id_clave_cliente_producto}}"/>
-                                                                        <input type="hidden" name="relations[has][detalles][{{$row}}][cantidad_solicitada]"  value="{{$detalle->cantidad_solicitada}}"/>
-                                                                        <input type="hidden" name="relations[has][detalles][{{$row}}][precio_unitario]" class="precio" value="{{$detalle->claveClienteProducto->precio}}">
-                                                                        <input type="hidden" name="relations[has][detalles][{{$row}}][importe]" class="importe" value="{{$detalle->claveClienteProducto->precio*$detalle->cantidad_surtida}}">
-
-
-
+                                                                    <td>$ {{ number_format($detalle->claveClienteProducto->precio, 2, '.', '')}}</td>
+                                                                    <td class="text-right total">$ {{ number_format(($detalle->claveClienteProducto->precio*$detalle->cantidad_surtida), 2, '.', '')}}</td>
+                                                                    <input type="hidden" name="relations[has][detalles][{{$row}}][id_detalle_requisicion_hospitalaria]"  value="{{$detalle->id_detalle_requisicion_hospitalaria}}"/>
+                                                                    <input type="hidden" name="relations[has][detalles][{{$row}}][fk_id_surtido_requisicion]"  value="{{$detalle->fk_id_surtido_requisicion}}"/>
+                                                                    <input type="hidden" name="relations[has][detalles][{{$row}}][fk_id_clave_cliente_producto]"  value="{{$detalle->fk_id_clave_cliente_producto}}"/>
+                                                                    <input type="hidden" name="relations[has][detalles][{{$row}}][cantidad_solicitada]"  value="{{$detalle->cantidad_solicitada}}"/>
+                                                                    <input type="hidden" name="relations[has][detalles][{{$row}}][precio_unitario]" class="precio" value="{{$detalle->claveClienteProducto->precio}}">
+                                                                    <input type="hidden" name="relations[has][detalles][{{$row}}][importe]" class="importe" value="{{$detalle->claveClienteProducto->precio*$detalle->cantidad_surtida}}">
                                                                 @endif
                                                                 {{--<td>--}}
                                                                     {{--<a data-delete-type="single"  data-toggle="tooltip" data-placement="top" title="Borrar"  id="{{$row}}" aria-describedby="tooltip687783" onclick="eliminarFila(this)" ><i class="material-icons text-primary">delete</i></a>--}}
@@ -106,55 +103,10 @@
                                                 @endif
                                             </tbody>
                                         </table>
-
                                  </div>
                             </div>
-                        {{--@else--}}
-                            {{--@if($data->fk_id_estatus_receta == 2)--}}
-                                {{--<h1>Esta receta ya fue surtida en su totalidad y no se puede editar.</h1>--}}
-                            {{--@elseif($data->fk_id_estatus_receta == 3)--}}
-                                {{--<h1>Esta receta esta siendo surtida parcialmente y no se puede editar.</h1>--}}
-                            {{--@elseif($data->fk_id_estatus_receta == 4)--}}
-                                {{--<h1>Esta receta esta cancelada y no se puede editar.</h1>--}}
-                            {{--@endif--}}
-                        {{--@endif--}}
-
-
-
-                    </div>
+                    	</div>
                     </div>
                 </div>
             </div>
-
-
 @endsection
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('create')))
-    @include('layouts.smart.create')
-@endif
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    {{--@section('title', 'Requisiciones Hospitalarias')--}}
-@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-    @include('layouts.smart.edit')
-@endif
-@if (Route::currentRouteNamed(currentRouteName('surtir')))
-    @include('layouts.smart.edit')
-    {{--<script>--}}
-        {{--var detalle_requisicion = {!!json_encode($detalle_requisicion)!!};--}}
-    {{--</script>--}}
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', ' Datos de las Requisiciones Hospitalarias')
-@include('layouts.smart.show')
-
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-    @include('layouts.smart.export')
-@endif
-
-

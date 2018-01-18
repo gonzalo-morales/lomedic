@@ -57,13 +57,6 @@ class SurtidoRequisicionHospitalaria extends ModelCompany
 //    protected $dataColumns = [
 //        'fk_id_estatus_orden'
 //    ];
-    /**
-     * Los atributos que seran visibles en index-datable
-     * @var array
-     */
-    protected $eagerLoaders = [
-        'estatus'
-    ];
 
     protected $fields = [
         'id_surtido_requisicion' => '#',

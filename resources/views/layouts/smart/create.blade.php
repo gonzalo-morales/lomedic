@@ -16,8 +16,10 @@
 @section('form-actions')
 	<div class="col-12">
 		<div class="text-right">
+			@yield('left-actions')
 			{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
 			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+			@yield('right-actions')
 		</div>
 	</div>
 @endsection

@@ -61,8 +61,6 @@ class FacturasClientes extends ModelCompany
         'estatus.estatus' => 'Estatus'
     ];
 
-    protected $eagerLoaders = [];
-
     /**
      * The validation rules
      * @var array
@@ -131,5 +129,11 @@ class FacturasClientes extends ModelCompany
     
     public function relaciones(){
         return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_factura')->where('fk_id_tipo_documento',$this->fk_id_tipo_documento);
+    }
+
+    public function toArrayWithDetails(){
+        return [
+            'id' => $this->id_factura
+        ];
     }
 }

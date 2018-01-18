@@ -13,6 +13,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use App\Notifications\MyResetPassword;
+use App\Http\Models\RecursosHumanos\Empleados;
 
 class Usuarios extends ModelBase implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
@@ -100,6 +101,10 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
     public function permisos()
     {
         return $this->belongsToMany(Permisos::class, 'ges_det_permisos_usuarios', 'fk_id_usuario', 'fk_id_permiso');
+    }
+    
+    public function empleado(){
+        return $this->belongsTo(Empleados::class, 'fk_id_empleado', 'id_empleado');
     }
 
     /**

@@ -19,4 +19,10 @@ class EstatusDocumentos extends ModelBase
      * @var string
      */
     protected $primaryKey = 'id_estatus';
+    
+    protected $fillable = ['estatus'];
+    
+    protected $fields = ['estatus'];
+    
+    public $rules = [];
 }

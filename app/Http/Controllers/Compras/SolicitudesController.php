@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
 use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\Administracion\Sucursales;
 
 class SolicitudesController extends ControllerBase
 {
@@ -26,47 +27,20 @@ class SolicitudesController extends ControllerBase
     {
         $this->entity = $entity;
     }
-
-    public function index($company, $attributes = [])
+    
+    public function getDataView($entity = null)
     {
-        $attributes = ['dataview'=>[
-            'company'=>$company
-        ]];
-        return parent::index($company, $attributes);
-    }
-
-    public function create($company,$attributes =[])
-    {
-        $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
-        $attributes = $attributes+['dataview'=>[
-                'sucursalesempleado' => $this->entity->first()
-                    ->empleado()->first()
-                    ->sucursales()->get()
-                    ->pluck('sucursal','id_sucursal'),
-                'detalles' => $this->entity
-                    ->first()
-                    ->detalleSolicitudes()->where('cerrado','0')->get(),
-                'impuestos'=> Impuestos::select('id_impuesto','impuesto')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('impuesto','id_impuesto'),
-                'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('nombre','id_unidad_medida'),
-                'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('nombre','id_empleado'),
-                'skus' => Productos::where('activo','1')
-                    ->get()
-                    ->pluck('sku','id_sku'),
-                'proyectos' => Proyectos::where('fk_id_estatus',1)
-                    ->get()
-                    ->pluck('proyecto','id_proyecto'),
-                'proveedores' => $proveedores,
-            ]];
-        return parent::create($company,$attributes);
+        return [
+            'proyectos' => Proyectos::where('eliminar',0)->where('fk_id_estatus',1)->orderBy('proyecto')->pluck('proyecto','id_proyecto'),
+            'proveedores' => SociosNegocio::where('eliminar',0)->where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
+            'impuestos'=> Impuestos::select('id_impuesto','impuesto')->where('eliminar',0)->where('activo',1)->orderBy('impuesto')->pluck('impuesto','id_impuesto'),
+            'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')->where('eliminar',0)->where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida'),
+            'skus' => Productos::where('eliminar',0)->where('activo',1)->orderBy('sku')->pluck('sku','id_sku'),
+            'empleados' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre, id_empleado")->where('eliminar',0)->where('activo',1)->orderBy('nombre')->pluck('nombre','id_empleado'),
+            'sucursalesempleado' => !empty($entity) ? 
+                $this->entity->sucursales()->where('eliminar',0)->where('activo',1)->orderBy('sucursal')->pluck('sucursal','id_sucursal') : 
+                Auth::user()->empleado->sucursales->where('eliminar',0)->where('activo',1)->pluck('sucursal','id_sucursal'),
+        ];
     }
 
     public function store(Request $request, $company, $compact = false)
@@ -112,71 +86,6 @@ class SolicitudesController extends ControllerBase
             $this->log('error_store');
             return $this->redirect('error_store');
         }
-    }
-
-    public function show($company,$id,$attributes = [])
-    {
-        $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
-        $attributes = $attributes+['dataview'=>[
-                'sucursalesempleado' => $this->entity
-                    ->where('id_solicitud',$id)->first()
-                    ->empleado()->first()
-                    ->sucursales()->get()
-                    ->pluck('nombre_sucursal','id_sucursal'),
-                'detalles' => $this->entity
-                    ->where('id_solicitud',$id)
-                    ->first()
-                    ->detalleSolicitudes()->where('cerrado','0')->get(),
-                'impuestos'=> Impuestos::select('id_impuesto','impuesto')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('impuesto','id_impuesto'),
-                'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('nombre','id_empleado'),
-                'proveedores' => $proveedores,
-                'company' => $company
-            ]];
-        return parent::show($company,$id,$attributes);
-    }
-
-    public function edit($company,$id,$attributes = [])
-    {
-        $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
-
-        $attributes = $attributes+['dataview'=>[
-                'sucursalesempleado' => $this->entity
-                    ->where('id_solicitud',$id)->first()
-                    ->empleado()->first()
-                    ->sucursales()->get()
-                    ->pluck('nombre_sucursal','id_sucursal'),
-                'detalles' => $this->entity
-                    ->where('id_solicitud',$id)
-                    ->first()
-                    ->detalleSolicitudes()->where('cerrado','f')->get(),
-                'impuestos'=> Impuestos::select('id_impuesto','impuesto')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('impuesto','id_impuesto'),
-                'proyectos'=> Proyectos::select('proyecto', 'id_proyecto')
-                    ->where('fk_id_estatus',1)
-                    ->get()
-                    ->pluck('proyecto','id_proyecto'),
-                'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('nombre','id_unidad_medida'),
-                'skus' => Productos::where('activo','1')
-                    ->get()
-                    ->pluck('sku','id_sku'),
-                'empleados' => Empleados::select(DB::raw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre"),'id_empleado')
-                    ->where('activo',1)
-                    ->get()
-                    ->pluck('nombre','id_empleado'),
-                'proveedores' => $proveedores
-            ]];
-        return parent::edit($company, $id, $attributes);
     }
 
     public function update(Request $request, $company, $id, $compact = false)

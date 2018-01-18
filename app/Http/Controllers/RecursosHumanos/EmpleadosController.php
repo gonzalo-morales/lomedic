@@ -18,78 +18,21 @@ class EmpleadosController extends ControllerBase
     public function __construct(Empleados $entity)
     {
         $this->entity = $entity;
-        
-        $this->departments = Departamentos::select('descripcion', 'id_departamento')->where('eliminar', '=', '0')
-            ->where('activo', '=', '1')
-            ->orderBy('descripcion')
-            ->get()
-            ->pluck('descripcion', 'id_departamento');
-        
-        $this->companies = Empresas::select('id_empresa', 'nombre_comercial')->where('activo', '=', '1')
-            ->orderBy('nombre_comercial')
-            ->get()
-            ->pluck('nombre_comercial', 'id_empresa');
-        
-        $this->titles = [];
-        $this->titles = Puestos::select('id_puesto', 'descripcion')->where('eliminar', '=', '0')
-            ->where('activo', '=', '1')
-            ->orderBy('descripcion')
-            ->get()
-            ->pluck('descripcion', 'id_puesto');
-        
-        $this->offices = Sucursales::select('id_sucursal', 'sucursal')->where('eliminar', '=', '0')
-            ->where('activo', '=', '1')
-            ->orderBy('sucursal')
-            ->get()
-            ->pluck('sucursal', 'id_sucursal');
     }
-
-    public function create($company, $attributes = [])
+    
+    public function getDataView($entity = null)
     {
-        $attributes = $attributes + [
-            'dataview' => [
-                'companies' => $this->companies,
-                'departments' => $this->departments,
-                'titles' => $this->titles,
-                'offices' => $this->offices
-            ]
+        return [
+            'companies' => Empresas::select('id_empresa', 'nombre_comercial')->where('activo', '=', '1')->orderBy('nombre_comercial')->pluck('nombre_comercial', 'id_empresa'),
+            'departments' => Departamentos::select('descripcion', 'id_departamento')->where('eliminar', '=', '0')->where('activo', '=', '1')->orderBy('descripcion')->pluck('descripcion', 'id_departamento'),
+            'titles' => Puestos::select('id_puesto', 'descripcion')->where('eliminar', '=', '0')->where('activo', '=', '1')->orderBy('descripcion')->pluck('descripcion', 'id_puesto'),
+            'offices' => Sucursales::select('id_sucursal', 'sucursal')->where('eliminar', '=', '0')->where('activo', '=', '1')->orderBy('sucursal')->pluck('sucursal', 'id_sucursal'),
         ];
-        return parent::create($company, $attributes);
-    }
-
-    public function show($company, $id, $attributes = [])
-    {
-        $attributes = $attributes + [
-            'dataview' => [
-                'companies' => $this->companies,
-                'departments' => $this->departments,
-                'titles' => $this->titles,
-                'offices' => $this->offices
-            ]
-        ];
-        return parent::show($company, $id, $attributes);
-    }
-
-    public function edit($company, $id, $attributes = [])
-    {
-        $attributes = $attributes + [
-            'dataview' => [
-                'companies' => $this->companies,
-                'departments' => $this->departments,
-                'titles' => $this->titles,
-                'offices' => $this->offices
-            ]
-        ];
-        return parent::edit($company, $id, $attributes);
     }
 
     public function obtenerEmpleados($company)
     {
-        return Empleados::where('activo','1')
-            ->where('eliminar','0')
-            ->select("id_empleado as id",DB::Raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"))
-            ->get()
-            ->toJson();
+        return Empleados::where('activo','1')->where('eliminar','0')->select("id_empleado as id",DB::Raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"))->toJson();
     }
 
     public function obtenerEmpleado($company)

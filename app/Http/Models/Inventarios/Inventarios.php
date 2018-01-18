@@ -42,12 +42,6 @@ class Inventarios extends ModelCompany
 	];
 
 	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['tipo', 'sucursal', 'almacen'];
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */

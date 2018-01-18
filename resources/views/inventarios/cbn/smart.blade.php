@@ -1,7 +1,7 @@
-
+@extends(smart())
 @section('content-width', 's12')
 
-@if (Route::currentRouteNamed(currentRouteName('index')))
+@index
 	@section('title', 'Cuadro Basico Nacional')
 @endif
 
@@ -13,7 +13,7 @@
 @endsection
 
 @section('form-content')
-{{ Form::setModel($data) }}
+	{{ Form::setModel($data) }}
     <div class="row">
     	<div class="col-sm-12 col-md-6 col-lg-4">
     		<div class="form-group">
@@ -59,24 +59,3 @@
     	</div>
     </div>
 @endsection
-
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-@include('layouts.smart.export')
-@endif

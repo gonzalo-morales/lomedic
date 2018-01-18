@@ -1,3 +1,4 @@
+@extends(smart())
 @section('content-width', 's12')
 @section('form-title', 'Notas de Crédito de Clientes')
 
@@ -8,7 +9,8 @@
 		var cliente_js    = '{{ $js_cliente ?? '' }}';
 		var clientes_js   = '{{ $js_clientes ?? '' }}';
 		var series_js     = '{{ $js_series ?? '' }}';
-    	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
+        var serie_js      = '{{ $js_serie ?? '' }}';
+        var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
     	var productos_facturas_js  = '{{ $js_productos_facturas ?? '' }}';
         var productos_notascargo_js  = '{{ $js_productos_notascargo ?? '' }}';
@@ -70,7 +72,8 @@
         			{{Form::cSelect('* Serie','fk_id_serie', $series ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.seriesdocumentos')])}}
         		</div>
         		<div class="form-group col-md-3">
-        			{{Form::hidden('serie')}}
+					<i class="material-icons text-danger float-left" data-toggle="tooltip" data-placement="top" title="" data-original-title="El folio puede cambiar si otro usuario genero una nota de crédito antes de que se guardara esta. Verificalo despues de guardarlo.">warning</i>
+        			{{Form::hidden('serie',null,['id'=>'serie'])}}
         			{{Form::cText('* Folio','folio',['readonly'=>true])}}
         		</div>
         		<div class="form-group col-md-5">
@@ -129,13 +132,13 @@
         			{{Form::cSelect('* Tipo Relacion','fk_id_tipo_relacion', $tiposrelacion ?? [])}}
         		</div>
         		<div class="form-group col-md-5">
-        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.facturasclientesdetalle')])}}
+        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.facturasclientes')])}}
         		</div>
 				<div class="form-group col-md-2 d-flex align-items-center justify-content-center">
 					<span>O</span>
 				</div>
 				<div class="form-group col-md-5">
-					{{Form::cSelect('* Nota Cargo','fk_id_nota_cargo_relacion', $notascargorelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.notascargoclientesdetalle')])}}
+					{{Form::cSelect('* Nota Cargo','fk_id_nota_cargo_relacion', $notascargorelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.notascargoclientes')])}}
 				</div>
         		@if(!Route::currentRouteNamed(currentRouteName('view')))
         		<div class="form-group col-md-12 my-2">
@@ -335,24 +338,13 @@
     	</div>
 	</div>
 @endsection
-
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
-@endif
+@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('create')))
+@section('form-actions')
+    <div class="col-md-12 col-xs-12">
+        <div class="text-right">
+            {{ Form::button('Guardar y Timbrar', ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+            {{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-secondary progress-button']) }}
+            {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+        </div>
+    </div>
+@endsection

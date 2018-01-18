@@ -1,3 +1,4 @@
+@extends(smart())
 @section('content-width', 's12 ml2')
 
 @section('form-content')
@@ -72,24 +73,3 @@
         {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
     </div>
 @endsection
-
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
-@endif

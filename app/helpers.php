@@ -53,6 +53,10 @@ function companyAction($action = '', $params = [])
 		return '#';
 	}
 }
+function smart($route = null) {
+    $route = !empty($route) ? $route : Route::currentRouteName();
+    return 'layouts.smart'.substr($route,strrpos($route,'.'),strlen($route));
+}
 
 function ApiAction($action = '')
 {
@@ -175,7 +179,7 @@ function getCacheKey($route = '', $withPage = true)
  * Obtenemos etiqueta para cache
  * @return string
  */
-function getCacheTag($route = '')
+function getCacheTag($route = '') 
 {
 	return getCacheKey($route, false);
 }

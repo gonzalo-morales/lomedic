@@ -1,13 +1,11 @@
-
+@extends(smart())
 @section('content-width', 's12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
 	<div class="form-group col-md-11 col-xs-12">
-		{{ Form::label('nombre', 'Nombre') }}
-		{{ Form::text('nombre', null, ['id'=>'nombre','class'=>'form-control']) }}
-		{{ $errors->has('nombre') ? HTML::tag('span', $errors->first('nombre'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{{ Form::cText('* Nombre','nombre') }}
 	</div>
 	<div  class="col-md-12 text-center mt-4">
 		<div class="alert alert-warning" role="alert">
@@ -17,24 +15,3 @@
 	</div>
 </div>
 @endsection
-
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
-@endif

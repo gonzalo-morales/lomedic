@@ -54,8 +54,6 @@ class Ofertas extends ModelCompany
         'estatus.estatus' => 'Estatus'
     ];
 
-    protected $eagerLoaders = ['proveedor','sucursal'];
-
     /**
      * The validation rules
      * @var array
@@ -94,6 +92,6 @@ class Ofertas extends ModelCompany
 
     public function DetalleOfertas()
     {
-        return $this->hasMany(DetalleOfertas::class,'fk_id_documento','id_oferta');
+        return $this->belongsTo(DetalleOfertas::class,'fk_id_documento');
     }
 }

@@ -33,8 +33,6 @@ class SociosNegocio extends ModelBase
     'razon_social','rfc','nombre_comercial','telefono','sitio_web','monto_credito','dias_credito','monto_minimo_facturacion','fecha_modificacion',
     'ejecutivo_venta','fk_id_ramo','fk_id_pais_origen','fk_id_moneda','activo'];
 
-    protected $eagerLoaders = ['ramo','tiposocioventa','tiposociocompra'];
-
     protected $fields = [
         'razon_social' => 'Razon Social',
         'rfc' => 'RFC',

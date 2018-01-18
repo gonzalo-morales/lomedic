@@ -1,10 +1,11 @@
+@extends(smart())
 @section('form-title', 'Solicitudes de Compra')
+
 @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
 @endsection
 @section('header-bottom')
 	@parent
-	{{--<script type="text/javascript" src="{{ asset('js/jquery.ui.autocomplete2.js') }}"></script>--}}
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if(!Route::currentRouteNamed(currentRouteName('index')))
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
@@ -12,10 +13,9 @@
 @endsection
 
 @section('form-content')
-{{ Form::setModel($data) }}
+	{{ Form::setModel($data) }}
 	<div class="row">
 		<div class="form-group col-md-4 col-sm-6">
-	{{--		{!! Form::text(array_has($data,'fk_id_solicitante')?'solicitante_formated':'solicitante',null, ['id'=>'solicitante','autocomplete'=>'off','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleados'),'data-url2'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado')]) !!}--}}
 			{{ Form::label('fk_id_solicitante', '* Solicitante') }}
 			{!! Form::select('fk_id_solicitante',isset($empleados)?$empleados:[],null,['id'=>'fk_id_solicitante','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado'),'class'=>'form-control','style'=>'width:100%']) !!}
 			{{ $errors->has('fk_id_solicitante') ? HTML::tag('span', $errors->first('fk_id_solicitante'), ['class'=>'help-block deep-orange-text']) : '' }}
@@ -151,8 +151,8 @@
 							</tr>
 						</thead>
 						<tbody>
-						@if( isset( $detalles ) )
-							@foreach( $detalles as $detalle)
+						@if( isset( $data->detalleSolicitudes ) )
+							@foreach( $data->detalleSolicitudes as $detalle)
 								<tr>
 									<td>
 										{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][id_solicitud_detalle]',$detalle->id_solicitud_detalle) !!}
@@ -178,7 +178,7 @@
 											{!! Form::select('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
 													isset($proyectos) ? $proyectos->prepend('...','0') : null,
 													$detalle->fk_id_proyecto,['id'=>'detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',
-													'class'=>'detalle_select','style'=>'width:100%'])
+													'class'=>'form-control detalle_select','style'=>'width:100%'])
 											!!}
 										@endif
 									</td>
@@ -203,7 +203,7 @@
 											{{$detalle->impuesto->impuesto}}
 										@else
 											{!! Form::select('detalles['.$detalle->id_solicitud_detalle.'][fk_id_impuesto]',$impuestos,
-													$detalle->fk_id_impuesto,['class'=>'detalle_select','style'=>'width:100%','id'=>'fk_id_impuesto'.$detalle->id_solicitud_detalle,
+													$detalle->fk_id_impuesto,['class'=>'form-control detalle_select','style'=>'width:100%','id'=>'fk_id_impuesto'.$detalle->id_solicitud_detalle,
 													'onchange'=>'total_producto_row('.$detalle->id_solicitud_detalle.',"old")'])
 											!!}
 										@endif
@@ -249,9 +249,7 @@
 
 {{-- DONT DELETE --}}
 
-
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
+@index
 	@section('smart-js')
 		<script type="text/javascript">
             if ( sessionStorage.reloadAfterPageLoad ) {
@@ -268,6 +266,7 @@
          	bind: function (el) {
          		if(el.dataset.fk_id_estatus_solicitud != 1)
          		{
+             		console.log(el);
          			$(el).hide();
          		}
          	}
@@ -283,7 +282,7 @@
          rivets.binders['hide-oferta'] = {
                  bind: function (el) {
     				 if(el.dataset.fk_id_estatus_solicitud != 1)
-    				 { console.log(el.dataset.fk_id_estatus_solicitud);
+    				 {
     				     $(el).hide();
     				 }
                  }
@@ -304,7 +303,7 @@
 		 };
          rivets.binders['get-offer-url'] = {
              bind: function (el) {
-				 el.href = el.href.replace('#','{{$company}}/compras/solicitudes/'+el.dataset.itemId+'/ofertas/crear');
+				 el.href = el.href.replace('#','{{$menuempresa->conexion}}/compras/solicitudes/'+el.dataset.itemId+'/ofertas/crear');
              }
 		 };
 		 @can('update', currentEntity())
@@ -342,7 +341,7 @@
 		window['smart-model'].collections.itemsOptions.supply = {a: {
 		'html': '<i class="material-icons">shopping_cart</i>',
 {{--		'href' : '{!! companyAction('Compras\OrdenesController@createSolicitudOrden',['id'=>'#ID#']) !!}',--}}
-		'href' : '{!! url($company."/compras/#ID#/1/ordenes/crear") !!}',
+		'href' : '{!! url($menuempresa->conexion."/compras/#ID#/1/ordenes/crear") !!}',
 		'class': 'btn is-icon',
 		'rv-hide-comprar':'',
 		'rv-get-comprar-url':'',
@@ -427,34 +426,24 @@
         };
 	</script>
 	@endsection
-
-	@include('layouts.smart.index')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@section('form-title')
-		<h1 class="display-4">Agregar Solicitud</h1>
-	@endsection
-	@include('layouts.smart.create')
+@crear
+	@section('form-title','Agregar Solicitud')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@section('form-title')
-		<h1 class="display-4">Editar Solicitud</h1>
-	@endsection
-	@include('layouts.smart.edit')
+@editar
+	@section('form-title','Editar Solicitud')
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('show')))
+@ver
 	@section('extraButtons')
 		@parent
 		{!! HTML::decode(link_to(companyAction('Compras\SolicitudesController@impress',['id'=>$data->id_solicitud]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
 		@if($data->fk_id_estatus_solicitud == 1)
-			{!! HTML::decode(link_to(url($company.'/compras/'.$data->id_solicitud.'/1/ordenes/crear'),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
+			{!! HTML::decode(link_to(url($menuempresa->conexion.'/compras/'.$data->id_solicitud.'/1/ordenes/crear'),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
+			{!! HTML::decode(link_to(url($menuempresa->conexion.'/compras/solicitudes/'.$data->id_solicitud.'/ofertas/crear'),'<i class="material-icons align-middle">attach_money</i> Oferta',['class'=>'btn btn-info'])) !!}
 		@endif
 	@endsection
-	@section('form-title')
-		<h1 class="display-4">Datos de la Solicitud</h1>
-	@endsection
-	@include('layouts.smart.show')
+	@section('form-title','Datos de la Solicitud')
 @endif

@@ -46,8 +46,6 @@ class NotasCreditoClientesDetalle extends ModelCompany
         
     ];
 
-    protected $eagerLoaders = [];
-
     /**
      * The validation rules
      * @var array
