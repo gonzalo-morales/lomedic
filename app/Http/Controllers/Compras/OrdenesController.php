@@ -422,7 +422,10 @@ class OrdenesController extends ControllerBase
     }
 
     public function getProveedores($company){
-        $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
+	    $id_empresa = \request()->fk_id_empresa > 0 ? \request()->fk_id_empresa : Empresas::where('conexion',$company)->first()->id_empresa;
+        $proveedores = SociosNegocio::where('activo', 1)->whereHas('empresas',function ($q) use ($id_empresa){
+            $q->where('id_empresa',$id_empresa);
+        })->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
 	    return Response::json($proveedores);
     }
 }

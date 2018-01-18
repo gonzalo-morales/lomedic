@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
 use App\Http\Models\SociosNegocio\SociosNegocio;
-use App\Http\Models\Administracion\Sucursales;
+use Illuminate\Support\Facades\Crypt;
 
 class SolicitudesController extends ControllerBase
 {
@@ -30,9 +30,14 @@ class SolicitudesController extends ControllerBase
     
     public function getDataView($entity = null)
     {
+//        dd(SociosNegocio::where('eliminar',0)->where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')->whereHas('empresas',function ($q){
+//            $q->where('conexion',\request()->company);
+//        })->pluck('nombre_comercial','id_socio_negocio'));
         return [
             'proyectos' => Proyectos::where('eliminar',0)->where('fk_id_estatus',1)->orderBy('proyecto')->pluck('proyecto','id_proyecto'),
-            'proveedores' => SociosNegocio::where('eliminar',0)->where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
+            'proveedores' => SociosNegocio::where('eliminar',0)->where('activo', 1)->whereHas('empresas',function ($q){
+                $q->where('conexion',\request()->company);
+            })->whereNotNull('fk_id_tipo_socio_compra')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
             'impuestos'=> Impuestos::select('id_impuesto','impuesto')->where('eliminar',0)->where('activo',1)->orderBy('impuesto')->pluck('impuesto','id_impuesto'),
             'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')->where('eliminar',0)->where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida'),
             'skus' => Productos::where('eliminar',0)->where('activo',1)->orderBy('sku')->pluck('sku','id_sku'),
@@ -40,6 +45,7 @@ class SolicitudesController extends ControllerBase
             'sucursalesempleado' => !empty($entity) ? 
                 $this->entity->sucursales()->where('eliminar',0)->where('activo',1)->orderBy('sucursal')->pluck('sucursal','id_sucursal') : 
                 Auth::user()->empleado->sucursales->where('eliminar',0)->where('activo',1)->pluck('sucursal','id_sucursal'),
+            'js_proveedores' => Crypt::encryptString('"select":["id_socio_negocio as id","nombre_comercial as text"],"whereHas":[{"productos":{"where":["fk_id_sku",$id_sku]}}]'),
         ];
     }
 

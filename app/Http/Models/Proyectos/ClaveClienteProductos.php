@@ -66,8 +66,13 @@ class ClaveClienteProductos extends ModelCompany
     {
         return $this->hasOne(SociosNegocio::class,'id_socio_negocio','fk_id_cliente');
     }
+
     public function stock($sku,$upc)
     {
         return $this->hasOne(Stock::class,'fk_id_sku','fk_id_sku')->where('fk_id_sku',$sku)->where('fk_id_upc',$upc)->pluck('stock');
+    }
+    public function proyectos()
+    {
+        return $this->belongsToMany(Proyectos::class,'pry_cat_proyectos_productos','fk_id_clave_cliente_producto','fk_id_proyecto','id_clave_cliente_producto','id_proyecto');
     }
 }

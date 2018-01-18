@@ -2,8 +2,8 @@
 <body>
 <div style="">
     <div style="width: 100%">
-        <?php $logo = $oferta->empresa->logotipo_completo?>
-            {!!HTML::image(asset("img/$logo"),'',['height'=>'56'])!!}
+        <?php $logo = $oferta->empresa->logotipo?>
+            {!!HTML::image(asset("img/logotipos/$logo"),'',['height'=>'56'])!!}
             <div style="width: 60.5%; float: left">
                 <h4 align="center">Oferta de compra</h4>
                 <h6 align="center">
@@ -18,7 +18,7 @@
                 <table width="100%" style="">
                     <tr align="center">
                         <td style="font-size: 15px;">
-                            <h4>No. orden  <b>{{$oferta->id_oferta}}</b></h4>
+                            <h4>No. oferta  <b>{{$oferta->id_documento}}</b></h4>
                         </td>
                     </tr>
                     <tr>
@@ -79,12 +79,12 @@
             @foreach($oferta->DetalleOfertas()->where('cerrado','f')->get() as $detalle)
 
             <tr align="center">
-                <td>{{isset($detalle->fk_id_solicitud)?$detalle->fk_id_solicitud:'N/A'}}</td>
+                <td>{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_documento_base:'N/A'}}</td>
                 <td>{{$detalle->sku->sku}}</td>
                 <td>{{isset($detalle->upc) ? $detalle->upc->upc : 'UPC no seleccionado'}}</td>
                 <td>{{$detalle->sku->descripcion_corta}}</td>
                 <td>{{$detalle->sku->descripcion}}</td>
-                <td>{{isset($detalle->cliente) ? $detalle->cliente->nombre_corto : 'Sin cliente'}}</td>
+                <td>{{isset($detalle->cliente) ? $detalle->cliente->nombre_comercial : 'Sin cliente'}}</td>
                 <td>{{isset($detalle->proyecto) ? $detalle->proyecto->proyecto : 'sin proyecto'}}</td>
                 <td>{{$detalle->cantidad}}</td>
                 <td>{{$detalle->impuesto->impuesto}}</td>

@@ -87,11 +87,24 @@ class ProductosController extends ControllerBase
     public function obtenerSkus($company,Request $request)
     {
         $term = $request->term;
-        $skus = Productos::where('activo','1')->where('sku','ILIKE','%'.$term.'%')->orWhere('descripcion_corta','LIKE','%'.$term.'%')->orWhere('descripcion','LIKE','%'.$term.'%')->get();
-
+        $id_proyecto = $request->fk_id_proyecto;
+        $id_socio = $request->fk_id_socio_negocio;
+        $skus = null;
+        if($id_proyecto) {
+            $skus = Productos::where('activo', true)->whereRaw("(sku ILIKE '%$term%' OR descripcion_corta ILIKE '%$term%' OR descripcion ILIKE '%$term%')")->
+            whereHas('clave_cliente_productos', function ($q) use ($id_proyecto) {
+                $q->whereHas('proyectos', function ($q2) use ($id_proyecto) {
+                    $q2->where('id_proyecto', $id_proyecto);
+                });
+            })
+                ->whereIn('id_sku',SociosNegocio::find($id_socio)->productos->pluck('fk_id_sku'))
+                ->get();
+        }else{
+            $skus = Productos::where('activo','1')->whereRaw("(sku ILIKE '%$term%' OR descripcion_corta ILIKE '%$term%' OR descripcion ILIKE '%$term%')")->whereIn('id_sku',SociosNegocio::find($id_socio)->productos->pluck('fk_id_sku'))->get();
+        }
         $skus_set = []; 
         foreach ($skus as $sku)
-        { 
+        {
             $sku_data['id'] = (int)$sku->id_sku;
             $sku_data['text'] = $sku->sku;
             $sku_data['descripcion_corta'] = $sku->descripcion_corta;

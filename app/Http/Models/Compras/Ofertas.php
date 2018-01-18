@@ -23,7 +23,7 @@ class Ofertas extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_oferta';
+    protected $primaryKey = 'id_documento';
 
     /**
      * The attributes that are mass assignable.
@@ -31,7 +31,7 @@ class Ofertas extends ModelCompany
      * @var array
      */
     protected $fillable = ['fk_id_sucursal','fk_id_estatus_oferta','fk_id_proveedor','vigencia','fecha_creacion',
-        'condiciones_oferta','tiempo_entrega','fk_id_moneda','descuento_oferta','fk_id_empresa'];
+        'condiciones_oferta','tiempo_entrega','fk_id_moneda','descuento_oferta','fk_id_empresa','total_oferta','fecha_estimada_entrega'];
 
     public $niceNames =[
         'fk_id_sucursal'=>'sucursal',
@@ -47,7 +47,7 @@ class Ofertas extends ModelCompany
      * @var array
      */
     protected $fields = [
-        'id_oferta' => 'Número oferta',
+        'id_documento' => 'Número oferta',
         'proveedor.nombre_comercial' => 'Proveedor',
         'sucursal.sucursal' => 'Sucursal entrega',
         'vigencia' => 'Vigencia',
@@ -64,7 +64,7 @@ class Ofertas extends ModelCompany
         'fk_id_sucursal'=>'required',
         'fk_id_proveedor'=>'required',
         'fk_id_moneda'=>'required',
-        'descuento_oferta'=>'nullable||regex:/^(\d{0,2}(\.\d{0,4})?\)$/'
+        'descuento_oferta'=>'nullable|regex:/^(\d{0,2}(\.\d{0,4})?\)$/'
     ];
 
     public function sucursal()
@@ -94,6 +94,6 @@ class Ofertas extends ModelCompany
 
     public function DetalleOfertas()
     {
-        return $this->belongsTo(DetalleOfertas::class,'fk_id_documento');
+        return $this->hasMany(DetalleOfertas::class,'fk_id_documento','id_documento');
     }
 }

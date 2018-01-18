@@ -23,7 +23,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-
+use Illuminate\Support\Facades\Crypt;
 
 class OfertasController extends ControllerBase
 {
@@ -35,34 +35,22 @@ class OfertasController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 	    return [
-	        'company'=>request()->company,
-	    ];
-	}
-	
-	public function index($company, $attributes = [])
-	{
-		$attributes = ['dataview'=>[
-		    'company'=>$company
-        ]];
-		return parent::index($company, $attributes);
-	}
-
-	public function create($company, $attributes =[])
-	{
-	    !is_array($attributes) ? $id_solicitud = $attributes : $id_solicitud = 0;//Si tiene un id de solicitud
-	    $clientes = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
-
-        $attributes = ['dataview'=>[
-            'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
-            'actual_company_id'=>Empresas::where('conexion','LIKE',$company)->first()->id_empresa,
+            'companies' => Empresas::where('activo',1)->where('conexion','<>',request()->company)->where('conexion','<>','corporativo')->where('activo',1)->where('eliminar',0)->pluck('nombre_comercial','id_empresa'),
+            'actual_company_id'=>Empresas::where('conexion','LIKE',request()->company)->first()->id_empresa,
             'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-            'clientes' => $clientes,
             'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
-            'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
+            'proyectos' => !empty($entity) ? Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto') : ['0'=>'Sin proyecto'],
             'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
-            'solicitud' => Solicitudes::find($id_solicitud),
-        ]];
-        return parent::create($company,$attributes);
+            "solicitud"=>Solicitudes::find(\request()->id_solicitud),
+            "proveedores"=>SociosNegocio::where('activo', 1)->whereHas('empresas',function ($q){
+                $q->where('conexion',\request()->company);
+            })->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio'),
+            "clientes"=>SociosNegocio::where('activo', 1)->whereHas('empresas',function ($q){
+                $q->where('conexion',\request()->company);
+            })->where('fk_id_tipo_socio_venta',1)->pluck('nombre_comercial','id_socio_negocio'),
+            'js_proyectos' => Crypt::encryptString('"select":["id_proyecto as id","proyecto as text"],"conditions":[{"where":["eliminar",0]},{"where":["fk_id_estatus",1]},{"where":["fk_id_cliente",$fk_id_cliente]}]'),
+            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc) AND eliminar = false"]}]')
+	    ];
 	}
 
 	public function store(Request $request, $company, $compact = false)
@@ -92,7 +80,10 @@ class OfertasController extends ControllerBase
                     if(empty($detalle['fk_id_proyecto'])){
                         $detalle['fk_id_proyecto'] = null;
                     }
-					$isSuccess->detalleOfertas()->save(new DetalleOfertas($detalle));
+//                    dd($detalle);
+                    $detalle_oferta = new DetalleOfertas($detalle);
+//                    dd($detalle_oferta);
+					$isSuccess->DetalleOfertas()->save($detalle_oferta);
 				}
 			}
 			if(isset($request->detalles)){
@@ -106,48 +97,16 @@ class OfertasController extends ControllerBase
                     if(empty($detalle['fk_id_proyecto'])){
                         $detalle['fk_id_proyecto'] = null;
                     }
-                    $isSuccess->detalleOfertas()->save(new DetalleOfertas($detalle));
+                    $detalle_oferta = new DetalleOfertas($detalle);
+                    $isSuccess->DetalleOfertas()->save($detalle_oferta);
                 }
             }
-            $this->log('store', $isSuccess->id_orden);
+            $this->log('store', $isSuccess->id_documento);
             return $this->redirect('store');
 		} else {
 			$this->log('error_store');
 			return $this->redirect('error_store');
 		}
-	}
-
-	public function show($company,$id,$attributes = [])
-	{
-	    $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
-		$attributes = $attributes+['dataview'=>[
-                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
-                'actual_company_id'=>Empresas::where('conexion','LIKE',$company)->first()->id_empresa,
-                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-                'proveedores'=>$proveedores,
-                'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
-                'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
-                'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
-                'company' => $company
-			]];
-		return parent::show($company,$id,$attributes);
-	}
-
-	public function edit($company,$id,$attributes = [])
-	{
-	    $clientes = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
-	    $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
-		$attributes = $attributes+['dataview'=>[
-                'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
-                'actual_company_id'=>Empresas::where('conexion','LIKE',$company)->first()->id_empresa,
-                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-                'clientes' => $clientes,
-                'proveedores' => $proveedores,
-                'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
-                'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
-                'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
-			]];
-		return parent::edit($company, $id, $attributes);
 	}
 
 	public function update(Request $request, $company, $id, $compact = false)
@@ -164,8 +123,8 @@ class OfertasController extends ControllerBase
 				foreach ($request->detalles as $detalle) {
 						$oferta_detalle = $entity
 							->findOrFail($id)
-							->detalleOfertas()
-							->where('id_oferta_detalle', $detalle['id_oferta_detalle'])
+							->DetalleOfertas()
+							->where('id_documento_detalle', $detalle['id_documento_detalle'])
 							->first();
 						$oferta_detalle->fill($detalle);
 						$oferta_detalle->save();
@@ -182,7 +141,7 @@ class OfertasController extends ControllerBase
                     if(empty($detalle['fk_id_proyecto'])){
                         $detalle['fk_id_proyecto'] = null;
                     }
-					$entity->detalleOfertas()->save(new DetalleOfertas($detalle));
+					$entity->DetalleOfertas()->save(new DetalleOfertas($detalle));
 				}
 			}
 
@@ -263,7 +222,7 @@ class OfertasController extends ControllerBase
                 }
             }
         }else{
-            DetalleOfertas::whereIn('id_oferta_detalle', $request->ids)->update(['cerrado' => 't']);
+            DetalleOfertas::whereIn('id_documento_detalle', $request->ids)->update(['cerrado' => 't']);
             return 'Eliminado con éxito';
         }
 	}
@@ -276,20 +235,18 @@ class OfertasController extends ControllerBase
         $iva = 0;
         $total = 0;
 
-        foreach ($oferta->DetalleOfertas()->where('cerrado','f')->get() as $detalle)
+        foreach ($oferta->DetalleOfertas()->where('cerrado',0)->get() as $detalle)
         {
             $subtotal += $detalle->precio_unitario * $detalle->cantidad;
             $iva += (($detalle->precio_unitario*$detalle->cantidad)*$detalle->impuesto->porcentaje)/100;
-            $total += $detalle->total;
+            $total += $detalle->total_producto;
         }
         $total = number_format($total,2,'.',',');
 
-        $barcode = DNS1D::getBarcodePNG($oferta->id_oferta,'EAN8');
-        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$oferta->id_oferta])), "QRCODE");
-
+        $barcode = DNS1D::getBarcodePNG($oferta->id_documento,'EAN8');
+        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$oferta->id_documento])), "QRCODE");
         $pdf = PDF::loadView(currentRouteName('compras.ofertas.imprimir'),[
             'oferta' => $oferta,
-//            'detalles' => $detalles,
             'subtotal' => $subtotal,
             'iva' => $iva,
             'total' => $total,
@@ -306,7 +263,7 @@ class OfertasController extends ControllerBase
 //        $canvas->text(665,580,'PSAI-PN06-F01 Rev. 01',null,8);
 //        $canvas->image('data:image/png;charset=binary;base64,'.$barcode,355,580,100,16);
 
-        return $pdf->stream('orden')->header('Content-Type',"application/pdf");
+        return $pdf->stream('oferta')->header('Content-Type',"application/pdf");
 //        return view(currentRouteName('imprimir'));
     }
 
