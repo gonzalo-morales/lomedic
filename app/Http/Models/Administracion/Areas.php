@@ -11,7 +11,7 @@ class Areas extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_areas';
+	protected $table = 'maestro.gen_cat_areas';
 
 	/**
 	 * The primary key of the table

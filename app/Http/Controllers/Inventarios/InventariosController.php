@@ -16,7 +16,6 @@ class InventariosController extends ControllerBase
 {
 	/**
 	 * Create a new controller instance.
-	 *
 	 * @return void
 	 */
 	public function __construct(Inventarios $entity)
@@ -64,15 +63,12 @@ class InventariosController extends ControllerBase
 
 	/**
 	 * Store a newly created resource in storage.
-	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $company)
+	public function store(Request $request, $company, $compact = false)
 	{
-		$request->request->add([
-			'fecha_creacion' => Carbon::now()
-		]);
-		return parent::store($request, $company);
+		$request->request->add(['fecha_creacion' => Carbon::now()]);
+		return parent::store($request, $company, $compact);
 	}
 }

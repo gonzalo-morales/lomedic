@@ -1,3 +1,4 @@
+@extends(smart())
 @section('content-width', 's12')
 @section('form-title', 'Facturas de Clientes')
 
@@ -10,6 +11,7 @@
 		var series_js     = '{{ $js_series ?? '' }}';
     	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
+    	var contratos_js = '{{ $js_contratos ?? '' }}';
     </script>
 	{{ HTML::script(asset('js/ventas/facturasclientes.js')) }}
 @endsection
@@ -63,15 +65,18 @@
     			<h5 class="col-md-12 text-center">Informacion del CFDI</h5>
         	</div>
         	<div class="card-body row">
-        		<div class="form-group col-md-4">
+        		<div class="form-group col-md-6">
         			{{Form::cSelect('* Serie','fk_id_serie', $series ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.seriesdocumentos')])}}
         		</div>
-        		<div class="form-group col-md-3">
+        		<div class="form-group col-md-6">
         			{{Form::hidden('serie')}}
         			{{Form::cText('* Folio','folio',['readonly'=>true])}}
         		</div>
-        		<div class="form-group col-md-5">
+        		<div class="form-group col-md-6">
         			{{Form::cText('* Fecha','fecha_creacion',['readonly'=>true])}}
+        		</div>
+        		<div class="form-group col-md-6">
+        			{{Form::cText('* Fecha Vencimiento','fecha_vencimiento',['class'=>'datepicker'])}}
         		</div>
         	
         		<div class="form-group col-md-7">
@@ -116,6 +121,9 @@
         		<div class="form-group col-md-6">
         			{{Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [], ['class'=>'select2','data-url'=>ApiAction('administracion.sucursales')])}}
         		</div>
+        		<div class="form-group col-md-6">
+        			{{Form::cSelect('Contrato','fk_id_contrato', $contratos ?? [], ['data-url'=>ApiAction('proyectos.proyectos')])}}
+        		</div>
         	</div>
     	</div>
 	
@@ -146,17 +154,18 @@
 						</tr>
 					</thead>
 					<tbody>
-					@if(isset($data->relaciones)) 
+					@if(isset($data->relaciones))
 						@foreach($data->relaciones->where('eliminar',0) as $row=>$detalle)
 						<tr>
 							<td>
-								{!! Form::hidden('relations[has][relaciones]['.$row.'][id_relacion]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
-								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_tipo_relacion]',$detalle->fk_id_tipo_relacion,['class'=>'fk_id_tipo_relacion']) !!}
-								{{$detalle->tiporelacion->tipo_relacion}}
+								{{ Form::hidden('relations[has][relaciones]['.$row.'][index]',$row,['class'=>'index']) }}
+								{{ Form::hidden('relations[has][relaciones]['.$row.'][id_relacion_cfdi_cliente]',$detalle->id_relacion_cfdi_cliente,['class'=>'id_relacion_cfdi_cliente']) }}
+								{{ Form::hidden('relations[has][relaciones]['.$row.'][fk_id_tipo_relacion]',$detalle->fk_id_tipo_relacion,['class'=>'fk_id_tipo_relacion']) }}
+								{{$detalle->tiporelacion->tipo_relacion.' - '.$detalle->tiporelacion->descripcion}}
 							</td>
 							<td>
-								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_factura]',$detalle->fk_id_factura) !!} 
-								{{$detalle->factura->uuid}}
+								{{ Form::hidden('relations[has][relaciones]['.$row.'][fk_id_factura]',$detalle->fk_id_factura) }} 
+								{{$detalle->documento->serie.' '.$detalle->documento->folio.' - '.$detalle->documento->uuid}}
 							</td>
 							<td>
     							@if(!Route::currentRouteNamed(currentRouteName('view')))
@@ -186,7 +195,7 @@
     			<div  class="tab-pane active" id="concepto" role="tabpanel">
     				<div class="row py-2">
         				<div class="form-group col-md-6">
-                			{{Form::cSelect('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2'])}}
+                			{{Form::cSelect('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2','data-url'=>ApiAction('sociosnegocio.sociosnegocio')])}}
                 		</div>
                 		<div class="form-group col-md-6">
                 			{{Form::cSelect('* Descripcion','descripcion', $descripciones ?? [])}}
@@ -201,7 +210,7 @@
                 			{{Form::cNumber('* Descuento','descuento')}}
                 		</div>
                 		<div class="form-group col-md-3">
-                			{{Form::cSelect('* Impuesto','fk_id_impuesto', $tiposrelaciones ?? [], ['class'=>'select2'])}}
+                			{{Form::cSelect('* Impuesto','fk_id_impuesto', $impuestos ?? [], ['class'=>'select2'])}}
                 		</div>
                 		@if(!Route::currentRouteNamed(currentRouteName('view')))
                 		<div class="form-group col-md-12 my-2">
@@ -310,10 +319,10 @@
     						{{$detalle->impuestos->impuesto}}
     					</td>
     					<td>
-    						{{Form::cText('','cuenta_predial')}}
+    						{{Form::text('pedimento',$detalle->pedimento)}}
     					</td>
     					<td>
-    						{{Form::cText('','cuenta_predial')}}
+    						{{Form::text('cuenta_predial',$detalle->cuenta_predial)}}
     					</td>
     					<td>
     						{{$detalle->importe}}
@@ -374,23 +383,8 @@
 	</div>
 @endsection
 
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
+@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('create')))
+    @section('left-actions')
+		{{ Form::button('Guardar y Timbrar', ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-info progress-button']) }}
+    @endsection
 @endif

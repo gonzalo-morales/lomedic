@@ -3,6 +3,8 @@
 namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
+use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\Ventas\Pedidos;
 
 class SolicitudesSalidaDetalle extends ModelCompany
 {
@@ -77,6 +79,12 @@ class SolicitudesSalidaDetalle extends ModelCompany
     {
         return $this->belongsTo(Almacenes::class, 'fk_id_almacen', 'id_almacen');
     }
-
-
+    public function empleados()
+    {
+        return $this->hasMany(Empleados::class,'id_empleado','fk_id_empleado');
+    }
+    public function pedidos()
+    {
+        return $this->hasOne(Pedidos::class,'id_pedido','fk_id_pedido');
+    }
 }

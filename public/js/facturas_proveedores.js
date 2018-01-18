@@ -4,6 +4,39 @@ $('.datepicker').pickadate({
     format: 'yyyy-mm-dd'
 });
 
+$(document).on('change','.orden-compra',function () {
+        var _url = $('#factura').data('urlorden');
+        var obj = $(this);
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+        if ($(this).val() !== ''){
+            $.ajax({
+                url: _url,
+                type: 'POST',
+                data: {'id_orden':$(this).val()},
+                dataType: 'json',
+                success: function (data) {
+                    $(obj).parent().siblings().find('select').children('option').remove();
+                    var detSelect = $(obj).parent().siblings().find('select').attr('disabled',false);
+                    detSelect.append('<option value="" disabled>Seleccione...</option>');
+
+                    $.each(data,function(id,value){
+                        var option = new Option(value.value, value.id);
+                        detSelect.append(option);
+                    });
+                        detSelect.prop('disabled', (data.length == 0));
+                },
+                error: function (e) {
+                    console.log("error" + e);
+                }
+            });
+        }else {
+            $(obj).parent().siblings().find('select').children('option').remove();
+            var detSelect = $(obj).parent().siblings().find('select').attr('disabled',true);
+            detSelect.append('<option value="" selected>Seleccione...</option>');
+
+        }
+    });
+
 $(document).ready(function () {
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     $('#fk_id_socio_negocio').change(function () {
@@ -79,6 +112,7 @@ $(document).ready(function () {
                                   '<th>Impuesto</th>' +
                                   '<th>Importe</th>' +
                                   '<th>Orden de Compra</th>' +
+                                  '<th>Detalle O.C.</th>' +
                                   '</tr>'
                                 );
                                 $.each(data.resultado,function (index,value) {
@@ -93,7 +127,10 @@ $(document).ready(function () {
                                         '<td>'+value.Descuento+'<input name="productos['+index+'][descuento]" type="hidden" value="'+value.Descuento+'"></td>' +
                                         '<td>'+value.Importe_impuesto+'<input name="productos['+index+'][fk_id_impuesto]" type="hidden" value="'+value.IdImpuesto+'"></td>' +
                                         '<td>'+value.Importe+'<input name="productos['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
-                                        '<td><input name="productos['+index+'][fk_id_orden_compra]" class="form-control integer" value=""></td>' +
+                                        '<td><input name="productos['+index+'][fk_id_orden_compra]" class="form-control integer orden-compra" value=""></td>' +
+                                        '<td><select name="productos['+index+'][fk_id_detalle_orden_compra]" class="form-control custom-select" disabled>'+
+                                            '<option value="0" disabled="" selected="">Seleccione...</option>'+
+                                        '</select></td>' +
                                         '</tr>');
                                 });
                             }else if(data.version == "3.2"){
@@ -105,6 +142,7 @@ $(document).ready(function () {
                                   '<th>Valor Unitario</th>' +
                                   '<th>Importe</th>' +
                                   '<th>Orden de Compra</th>' +
+                                  '<th>Detalle O.C.</th>' +
                                   '</tr>'
                                 );
                                 $.each(data.resultado,function (index,value) {
@@ -115,7 +153,10 @@ $(document).ready(function () {
                                        '<td>'+value.Cantidad+'<input name="productos['+index+'][cantidad]" type="hidden" value="'+value.Cantidad+'"></td>' +
                                        '<td>'+value.ValorUnitario+'<input name="productos['+index+'][precio_unitario]" type="hidden" value="'+value.ValorUnitario+'"></td>' +
                                        '<td>'+value.Importe+'<input name="productos['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
-                                       '<td><input name="productos['+index+'][fk_id_orden_compra]" class="form-control integer" value=""></td>' +
+                                       '<td><input name="productos['+index+'][fk_id_orden_compra]" class="form-control integer orden-compra" value=""></td>' +
+                                       '<td><select name="productos['+index+'][fk_id_detalle_orden_compra]" class="form-control custom-select" disabled>'+
+                                           '<option value="0" disabled="" selected="">Seleccione...</option>'+
+                                       '</select></td>' +
                                        '</tr>');
                                 });
                             }

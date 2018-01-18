@@ -1,5 +1,6 @@
+@extends(smart())
 @section('content-width', 's12')
-@section('form-title', 'Facturas de Clientes')
+@section('form-title', 'Notas de Crédito de Clientes')
 
 @section('header-bottom')
 	@parent
@@ -8,9 +9,11 @@
 		var cliente_js    = '{{ $js_cliente ?? '' }}';
 		var clientes_js   = '{{ $js_clientes ?? '' }}';
 		var series_js     = '{{ $js_series ?? '' }}';
-    	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
+        var serie_js      = '{{ $js_serie ?? '' }}';
+        var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
     	var productos_facturas_js  = '{{ $js_productos_facturas ?? '' }}';
+        var productos_notascargo_js  = '{{ $js_productos_notascargo ?? '' }}';
     	var impuestos_js  = '{{ $js_impuestos ?? '' }}';
     </script>
 	{{ HTML::script(asset('js/ventas/notascreditoclientes.js')) }}
@@ -69,7 +72,8 @@
         			{{Form::cSelect('* Serie','fk_id_serie', $series ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.seriesdocumentos')])}}
         		</div>
         		<div class="form-group col-md-3">
-        			{{Form::hidden('serie')}}
+					<i class="material-icons text-danger float-left" data-toggle="tooltip" data-placement="top" title="" data-original-title="El folio puede cambiar si otro usuario genero una nota de crédito antes de que se guardara esta. Verificalo despues de guardarlo.">warning</i>
+        			{{Form::hidden('serie',null,['id'=>'serie'])}}
         			{{Form::cText('* Folio','folio',['readonly'=>true])}}
         		</div>
         		<div class="form-group col-md-5">
@@ -124,12 +128,18 @@
 		<div class="card col-lg-5">
 			<div class="card-header row">
 				<h5 class="col-md-12 text-center">CFDI Relacionados</h5>
-    			<div class="form-group col-md-6">
+    			<div class="form-group col-md-12">
         			{{Form::cSelect('* Tipo Relacion','fk_id_tipo_relacion', $tiposrelacion ?? [])}}
         		</div>
-        		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2'])}}
+        		<div class="form-group col-md-5">
+        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.facturasclientes')])}}
         		</div>
+				<div class="form-group col-md-2 d-flex align-items-center justify-content-center">
+					<span>O</span>
+				</div>
+				<div class="form-group col-md-5">
+					{{Form::cSelect('* Nota Cargo','fk_id_nota_cargo_relacion', $notascargorelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.notascargoclientes')])}}
+				</div>
         		@if(!Route::currentRouteNamed(currentRouteName('view')))
         		<div class="form-group col-md-12 my-2">
 					<div class="sep sepBtn">
@@ -143,7 +153,7 @@
 					<thead>
 						<tr>
 							<th>Tipo Relacion</th>
-							<th>Factura</th>
+							<th>Documento</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -152,7 +162,7 @@
 						@foreach($data->relaciones->where('eliminar',0) as $row=>$detalle)
 						<tr>
 							<td>
-								{!! Form::hidden('relations[has][relaciones]['.$row.'][id_relacion]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
+								{!! Form::hidden('relations[has][relaciones]['.$row.'][id_relacion_cfdi_cliente]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
 								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_tipo_relacion]',$detalle->fk_id_tipo_relacion,['class'=>'fk_id_tipo_relacion']) !!}
 								{{$detalle->tiporelacion->tipo_relacion}}
 							</td>
@@ -181,7 +191,7 @@
 					<div id="loadingfk_id_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 						Cargando datos... <i class="material-icons align-middle loading">cached</i>
 					</div>
-					{{Form::cSelect('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2','data-url'=>ApiAction('ventas.facturasclientesdetalle')])}}
+					{{Form::cSelect('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2'])}}
 				</div>
 				<div class="form-group col-md-3">
 					{{Form::cNumber('* Cantidad','cantidad')}}
@@ -190,7 +200,7 @@
 					{{Form::cNumber('* Precio Unitario','precio_unitario')}}
 				</div>
 				<div class="form-group col-md-3">
-					{{Form::cNumber('* Descuento','descuento')}}
+					{{Form::cNumber('* Descuento','descuento_producto')}}
 				</div>
 				<div class="form-group col-md-3">
 					{{Form::cSelect('* Impuesto','fk_id_impuesto', $impuestos ?? [], ['class'=>'select2','data-url'=>ApiAction('administracion.impuestos')])}}
@@ -281,7 +291,7 @@
     				
     				<tr>
     					<th>SUBTOTAL</th>
-    					<td>$ 11,000.00</td>
+						<td>{{Form::hidden('subtotal',null,['id'=>'subtotal'])}}<span id="subtotal_span"></span></td>
     					<td>&nbsp;</td>
     				</tr>
     				<tr>
@@ -291,27 +301,36 @@
     				</tr>
     				<tr>
     					<th>TOTAL DESCUENTOS</th>
-    					<td>$ 1,000.00</td>
+    					<td><span id="descuento_span"></span></td>
     					<td>&nbsp;</td>
     				</tr>
-    				<tr>
-    					<th>IMPUESTOS</th>
-    					<td>&nbsp;</td>
-    					<td>&nbsp;</td>
-    				</tr>
-    				<tr>
-    					<th class="pl-4">IVA 16%</th>
-    					<td>$ 1,600.00</td>
+    				<tr id="impuestos_factura" data-toggle="collapse" data-target="#impuestos_accordion" class="clickable">
+    					<th><button type="button" data-tooltip="Ver descripción de impuestos" data-toggle="tooltip" title="Ver descripción de impuestos" class="btn btn-secondary is-icon"><i class="material-icons add">add</i></button> IMPUESTOS</th>
+    					<td>{{Form::hidden('impuestos',null,['id'=>'impuestos'])}}<span id="impuesto_label"></span></td>
     					<td>&nbsp;</td>
     				</tr>
-    				<tr>
-    					<th class="pl-4">IEPS</th>
-    					<td>$ 1,000.00</td>
-    					<td>&nbsp;</td>
-    				</tr>
+					<tr>
+						<td colspan="3">
+							<div id="impuestos_accordion" class="collapse">
+								<table id="impuestos_descripcion" class="w-100 text-right">
+									<tbody></tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+    				{{--<tr>--}}
+    					{{--<th class="pl-4">IVA 16%</th>--}}
+    					{{--<td>$ 1,600.00</td>--}}
+    					{{--<td>&nbsp;</td>--}}
+    				{{--</tr>--}}
+    				{{--<tr>--}}
+    					{{--<th class="pl-4">IEPS</th>--}}
+    					{{--<td>$ 1,000.00</td>--}}
+    					{{--<td>&nbsp;</td>--}}
+    				{{--</tr>--}}
     				<tr>
     					<th>TOTAL</th>
-    					<td>$ 12,600.00</td>
+    					<td>{{Form::hidden('total',null,['id'=>'total'])}}<span id="total_span"></span></td>
     					<td>&nbsp;</td>
     				</tr>
     			</tbody>
@@ -319,24 +338,13 @@
     	</div>
 	</div>
 @endsection
-
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
-@endif
+@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('create')))
+@section('form-actions')
+    <div class="col-md-12 col-xs-12">
+        <div class="text-right">
+            {{ Form::button('Guardar y Timbrar', ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+            {{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-secondary progress-button']) }}
+            {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+        </div>
+    </div>
+@endsection

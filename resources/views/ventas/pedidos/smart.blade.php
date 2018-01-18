@@ -1,3 +1,4 @@
+@extends(smart())
 @section('content-width', 'w-100')
 
 @section('header-bottom')
@@ -47,13 +48,16 @@
         	</div>
         	<div class="card-body row">
         		<div class="form-group col-md-12 col-xs-12">
-        			{{Form::cText('* No. Pedido / Orden del Cliente','no_pedido')}}
+        			{{Form::cText('No. Pedido / Orden del Cliente','no_pedido')}}
         		</div>
         		<div class="form-group col-md-6 col-xs-12">
         			{{Form::cText('* Fecha Pedido','fecha_pedido',['class'=>' datepicker '])}}
         		</div>
         		<div class="form-group col-md-6 col-xs-12">
         			{{Form::cText('* Fecha Limite','fecha_limite',['class'=>' datepicker '])}}
+        		</div>
+        		<div class="form-group col-md-12 col-xs-12">
+        			{{Form::cSelectWithDisabled('* Moneda','fk_id_moneda',$monedas ?? [],['class'=>'select2'])}}
         		</div>
 				<div class="form-group col-md-12 col-xs-12">
         			{{Form::cSelectWithDisabled('* Estatus','fk_id_estatus',$estatus ?? [],['disabled'=>true])}}
@@ -86,7 +90,7 @@
                                             <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                                 Cargando datos... <i class="material-icons align-middle loading">cached</i>
                                             </div>
-    										{{Form::cSelectWithDisabled('* Clave producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','disabled'=>empty($productos),'data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])}}
+    										{{Form::cSelectWithDisabled('* Clave producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])}}
     									</div>
     									<div class="form-group input-field col-md-5 col-sm-6">
                                             <div id="loadingfk_id_upc" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
@@ -172,10 +176,10 @@
     										{{$detalle->upc->descripcion ?? ''}}
     									</td>
     									<td>
-    										{{ $detalle->precio_unitario }}
+    										{{ number_format($detalle->precio_unitario,2) }}
     									</td>
     									<td>
-    										{{ $detalle->total }}
+    										{{ number_format($detalle->importe,2) }}
     									</td>
     									<td>
     									@if(Route::currentRouteNamed(currentRouteName('edit')))
@@ -252,23 +256,3 @@
     	</div>
     </div>
 @endsection
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('index')))
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-	@include('layouts.smart.export')
-@endif

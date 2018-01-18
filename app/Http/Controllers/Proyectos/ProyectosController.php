@@ -63,7 +63,7 @@ class ProyectosController extends ControllerBase
         ];
     }
     
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
         #Guardamos los archivos de los anexos en la ruta especificada
         if(isset($request->relations['has']['anexos'])){
@@ -104,10 +104,29 @@ class ProyectosController extends ControllerBase
         $arreglo = $request->relations;
         unset($arreglo['has']['productos']['$row_id']);
         $request->merge(["relations"=>$arreglo]);
-        return parent::store($request, $company);
+        
+        $return = parent::store($request, $company, true);
+        
+        /*
+        if(!empty($return['entity']))
+        {
+            $email = 'juan.franco@lomedic.com';
+            $options = [
+                'asunto' => 'Nuevo Proyecto',
+                'saludo'=>'Se a creado un nuevo proyecto "'.$return['entity']->proyecto.'"',
+                'toplinea' => 'Se genero un nuevo proyecto para '.$return['entity']->cliente->nombre_comercial,
+                'link' => 'Ver Proyecto',
+                'href' => companyRoute('show', ['id' => $return['entity']->id_proyecto])
+            ];
+            
+            $return['entity']->sendNotification($email,$options);
+        }
+        */
+        
+        return $return['redirect'];
     }
     
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         #Guardamos los archivos de los anexos en la ruta especificada
         if(isset($request->relations['has']['anexos'])){
@@ -149,7 +168,8 @@ class ProyectosController extends ControllerBase
         $arreglo = $request->relations;
         unset($arreglo['has']['productos']['$row_id']);
         $request->merge(["relations"=>$arreglo]);
-        return parent::update($request, $company, $id);
+        
+        return parent::update($request, $company, $id, $compact);
     }
     
     public function obtenerProyectos()

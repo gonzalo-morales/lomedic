@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -82,7 +81,7 @@ class ControllerBase extends Controller
         # ¿Usuario tiene permiso para crear?
         //$this->authorize('create', $this->entity);
 
-        $data = $this->entity->getColumnsDefaultsValues();
+        $data = !isset($attributes['id']) ? $this->entity->getColumnsDefaultsValues() : $this->entity->find($attributes['id']);
         $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 
         return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
@@ -96,7 +95,7 @@ class ControllerBase extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
         # ¿Usuario tiene permiso para crear?
         //$this->authorize('create', $this->entity);
@@ -107,8 +106,8 @@ class ControllerBase extends Controller
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
         DB::beginTransaction();
-        $isSuccess = $this->entity->create($request->all());
-        if ($isSuccess) {
+        $entity = $this->entity->create($request->all());
+        if ($entity) {
 
             # Si tienes relaciones
             if ($request->relations) {
@@ -119,7 +118,7 @@ class ControllerBase extends Controller
                                 if(isset($relations['-1'])) {
                                     unset($relations['-1']);
                                 }
-                                $isSuccess->{$relationName}()->createMany($relations);
+                                $entity->{$relationName}()->createMany($relations);
                             }
                     }
                 }
@@ -130,13 +129,16 @@ class ControllerBase extends Controller
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
-            $this->log('store', $isSuccess->id_banco);
-            return $this->redirect('store');
+            $primaryKey = $entity->getKeyName();
+            $this->log('store', $entity->{$primaryKey});
+            $redirect = $this->redirect('store');
         } else {
             DB::rollBack();
             $this->log('error_store');
-            return $this->redirect('error_store');
+            $redirect = $this->redirect('error_store');
         }
+        
+        return $compact ? compact('entity','redirect') : $redirect;
     }
 
     /**
@@ -203,7 +205,7 @@ class ControllerBase extends Controller
      * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         # ¿Usuario tiene permiso para actualizar?
         //$this->authorize('update', $this->entity);
@@ -251,12 +253,13 @@ class ControllerBase extends Controller
             Cache::tags(getCacheTag('index'))->flush();
 
             $this->log('update', $id);
-            return $this->redirect('update');
+            $redirect = $this->redirect('update');
         } else {
             DB::rollBack();
             $this->log('error_update', $id);
-            return $this->redirect('error_update');
+            $redirect = $this->redirect('error_update');
         }
+        return $compact ? compact('entity','redirect') : $redirect;
     }
 
     /**
@@ -390,7 +393,10 @@ class ControllerBase extends Controller
                 Logs::createLog($this->entity->getTable(), request()->company, null, 'crear', 'Error al insertar');
                 break;
             case 'update':
-                Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', 'Registro actualizado');
+                $coment = $this->entity->isDirty($this->entity->getFillable()) ? 'Registro actualizado' : 'Registro sin cambios';
+                
+                
+                Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', $coment);
                 break;
             case 'error_update':
                 Logs::createLog($this->entity->getTable(), request()->company, $id, 'editar', 'Error al editar');

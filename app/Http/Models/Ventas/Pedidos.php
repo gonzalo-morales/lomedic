@@ -10,6 +10,7 @@ use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Finanzas\CondicionesPago;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\Administracion\Localidades;
+use App\Http\Models\Inventarios\SolicitudesSalidaDetalle;
 
 class Pedidos extends ModelCompany
 {
@@ -30,8 +31,9 @@ class Pedidos extends ModelCompany
      * @var array
      */
     protected $fillable = [
-        'fk_id_socio_negocio', 'fk_id_proyecto', 'fk_id_sucursal', 'fk_id_condicion_pago', 'fecha_necesaria', 'fecha_cancelacion',
-        'motivo_cancelacion', 'fk_id_estatus', 'impuesto', 'subtotal', 'total', 'descuento_general', 'descuento_total', 'fk_id_moneda'
+        'fk_id_socio_negocio', 'fk_id_proyecto', 'fk_id_localidad', 'fk_id_sucursal', 'fk_id_condicion_pago', 'fecha_necesaria', 'fecha_cancelacion',
+        'motivo_cancelacion', 'fk_id_estatus', 'impuesto', 'subtotal', 'total', 'descuento_general', 'descuento_total', 'fk_id_moneda',
+        'fecha_limite','fecha_pedido'
     ];
 
     public $niceNames =[];
@@ -97,11 +99,17 @@ class Pedidos extends ModelCompany
         return $this->hasOne(CondicionesPago::class,'id_condicion_pago','fk_id_condicion_pago');
     }
 
-    public function detalle(){
+    public function detalle()
+    {
         return $this->hasMany(PedidosDetalle::class,'fk_id_documento','id_pedido');
     }
     
-    public function anexos(){
+    public function anexos()
+    {
         return $this->hasMany(PedidosAnexos::class,'fk_id_pedido','id_pedido');
+    }
+    public function solicitudes()
+    {
+        return $this->belongsTo(SolicitudesSalidaDetalle::class,'fk_id_pedido','id_pedido');
     }
 }

@@ -26,15 +26,8 @@ class SeguimientoDesviacion extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_proveedor','fk_id_localidad','serie_factura','folio_factura','fecha_captura','fecha_revision'];
+    protected $fillable = ['fk_id_proveedor','serie_factura','folio_factura','fecha_captura','fk_id_usuario_captura','fecha_revision','fk_id_usuario_revision','estatus','tipo'];
 
-//    public $niceNames =[
-//        'fk_id_socio_negocio'=>'proveedor'
-//    ];
-//
-//    protected $dataColumns = [
-//        'fk_id_estatus_orden'
-//    ];
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
@@ -42,21 +35,22 @@ class SeguimientoDesviacion extends ModelCompany
     protected $fields = [
         'id_seguimiento_desviacion' => 'ID',
         'fk_id_proveedor'           => 'Proveedor',
-        'fk_id_localidad'           => 'Localidad'
+        'serie_factura'             => 'Serie Factura',
+        'folio_factura'             => 'Folio Factura',
     ];
 
     public function socios()
     {
         return $this->hasMany('App\Http\Models\SociosNegocio\SociosNegocio','fk_id_proveedor', 'id_socio_negocio');
     }
-    // public function sucursales()
-    // {
-    //     return $this->hasOne('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
-    // }
-    // public function proveedor()
-    // {
-    //     return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
-    // }
+    public function usuarios()
+    {
+        return $this->hasOne(Usuarios::class,'fk_id_usuario_captura','id_usuario');
+    }
+    public function detallesSeguimientoDesviacion()
+    {
+        return $this->hasMany('App\Http\Models\Compras\DetalleSeguimientoDesviacion','f_id_seguimiento_desviacion','id_seguimiento_desviacion');
+    }
     // public function tipoDocumento()
     // {
     //     return $this->belongsTo('App\Http\Models\Administracion\TiposDocumentos','fk_id_tipo_documento','id_tipo_documento');

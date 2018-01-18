@@ -5,9 +5,12 @@ namespace App\Http\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\Notificaciones;
 
 class ModelBase extends Model
 {
+    use Notifiable;
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array
@@ -37,6 +40,22 @@ class ModelBase extends Model
 	 * @var array
 	 */
 	public $niceNames = [];
+	
+	public static function boot()
+	{
+	    parent::boot();
+	    /*
+	    // al actualizar un post
+	    Post::updating(function($table){
+	        $table->updated_by = Auth::user()->id;
+	    });
+	        
+        // al guardar un post
+        Post::saving(function($table){
+            $table->created_by = Auth::user()->id;
+        });
+        */
+	}
 
 	/**
 	 * Obtenemos atributos a incluir en append/appends()
@@ -47,6 +66,11 @@ class ModelBase extends Model
 		return array_where(array_diff(array_keys($this->getFields()), array_keys($this->getColumnsDefaultsValues())), function ($value, $key) {
 			return !str_contains($value, '.');
 		});
+	}
+	
+	public function getFillable()
+	{
+	    return $this->fillable ?? [];
 	}
 
 	/**
@@ -60,7 +84,13 @@ class ModelBase extends Model
 		}
 		return $this->fields;
 	}
-
+	
+	public function sendNotification($email,$options)
+	{
+	    $this->email = $email;
+	    $this->notify(new Notificaciones($options));
+	}
+	
 	/**
 	 * Obtenemos Eager-Loaders
 	 * @return array
@@ -112,7 +142,7 @@ class ModelBase extends Model
 	{
 		$columns = $this->getConnection()->getDoctrineSchemaManager()->listTableDetails($this->getTable())->getColumns();
 		return array_map(function($column) {
-			return $column->getDefault();
+			return $column->getDefault() == 'now()' ? date("Y-m-d H:i:s") : $column->getDefault();
 		}, $columns );
 	}
 
@@ -150,7 +180,7 @@ class ModelBase extends Model
                 elseif(in_array($type,['Integer','Decimal'])) {
                     array_push($rules[$col],'digits_between:0,'.$prop['length']);
                 }
-                elseif(!in_array($type,['Text'])) {
+                elseif(!in_array($type,['Text','Date','DateTime'])) {
                     array_push($rules[$col],'max:'.$prop['length']);
                 }
 

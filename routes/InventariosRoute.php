@@ -30,7 +30,6 @@ Route::prefix('{company}')->group(function () {
         Route::post('getOrdenes','Inventarios\EntradasController@getOrdenes')->name('entradas.getOrdenes');
         Route::post('getDetalleOrden','Inventarios\EntradasController@getDetalleOrden')->name('entradas.getDetalleOrden');
         Route::resource('inventarios','Inventarios\InventariosController');
-        // Route::get('solicitudes-salida/{solicitud}/salidas', 'Inventarios\SolicitudesSalidaController@index')->name('some');
         Route::resource('solicitudes-salida','Inventarios\SolicitudesSalidaController');
         Route::resource('solicitudes-salida.salidas','Inventarios\SolicitudesSalidaController');
         Route::resource('salidas','Inventarios\SalidasController');
@@ -39,5 +38,11 @@ Route::prefix('{company}')->group(function () {
         Route::post('getDetalleEntrada','Inventarios\EntradasController@getDetalleEntrada')->name('entradas.getDetalleEntrada');
         Route::post('guardarEntrada','Inventarios\EntradasController@guardarEntrada')->name('entradas.guardarEntrada');
         Route::resource('movimiento-almacen','Inventarios\MovimientoAlmacenController');
+        Route::resource('surtido-requisicion','Inventarios\SurtidoRequisicionHospitalariaController');
+        Route::resource('surtido-receta','Inventarios\SurtidoRecetaController');
+        Route::post('surtido-receta/getReceta','Inventarios\SurtidoRecetaController@getReceta')->name('surtido-receta.getReceta');
+        Route::post('surtido-receta/getRecetaDetalle','Inventarios\SurtidoRecetaController@getRecetaDetalle')->name('surtido-receta.getRecetaDetalle');
+        Route::post('surtido-requisicion/getRequisiciones','Inventarios\SurtidoRequisicionHospitalariaController@getRequisiciones')->name('surtido-requisicion.getRequisiciones');
+        Route::post('surtido-requisicion/getRequisicionDetalle','Inventarios\SurtidoRequisicionHospitalariaController@getRequisicionDetalle')->name('surtido-requisicion.getRequisicionDetalle');
     });
 });

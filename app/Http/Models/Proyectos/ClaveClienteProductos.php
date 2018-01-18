@@ -4,6 +4,8 @@ namespace App\Http\Models\Proyectos;
 
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\ModelCompany;
+use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\Inventarios\Stock;
 
 class ClaveClienteProductos extends ModelCompany
 {
@@ -43,6 +45,13 @@ class ClaveClienteProductos extends ModelCompany
 	 * @var null|array
 	 */
 	protected $fields = [
+	    'cliente.nombre_comercial' => 'Cliente',
+	    'clave_producto_cliente' => 'Clave Cliente',
+	    'subclave' => 'Subclave',
+	    'descripcion' => 'Descripcion',
+	    'presentacion' => 'Presentacion',
+	    'marca' => 'Marca',
+	    'fabricante' => 'Fabricante',
 	];
 
 	public $niceNames = [
@@ -51,5 +60,14 @@ class ClaveClienteProductos extends ModelCompany
 	function sku()
     {
         return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
+    }
+    
+    function cliente()
+    {
+        return $this->hasOne(SociosNegocio::class,'id_socio_negocio','fk_id_cliente');
+    }
+    public function stock($sku,$upc)
+    {
+        return $this->hasOne(Stock::class,'fk_id_sku','fk_id_sku')->where('fk_id_sku',$sku)->where('fk_id_upc',$upc)->pluck('stock');
     }
 }

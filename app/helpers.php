@@ -5,6 +5,8 @@ use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\MetodosPago;
 use App\Http\Models\Administracion\RegimenesFiscales;
+#use SoapClient;
+#use SoapFault;
 /**
  * Obtenemos arreglo accion de ruta personalizada
  * @param  string $action - Acción por la que reemplazar
@@ -50,6 +52,10 @@ function companyAction($action = '', $params = [])
 	} catch (Exception $e) {
 		return '#';
 	}
+}
+function smart($route = null) {
+    $route = !empty($route) ? $route : Route::currentRouteName();
+    return 'layouts.smart'.substr($route,strrpos($route,'.'),strlen($route));
 }
 
 function ApiAction($action = '')
@@ -200,6 +206,20 @@ function array_merge_recursive_simple($paArray1, $paArray2)
     return $paArray1;
 }
 
+function wsdlService($function = '',$params = [],$connections = null)
+{    
+    $config = config('wsdl.connections.'.($connections ?? config('wsdl.default')));
+    $call = $function ?? $config['function'];
+    
+    try {
+        $client = new SoapClient($config['url'], $config['options'] ?? []);
+        $response = $client->__soapCall($call, ['parameters' => ($config['parameters']??[])+$params]);
+    }catch(SoapFault $f){
+        return collect(['status'=>$f->faultcode,'mensaje'=>"SOAPFault: ".$f->faultcode." - ".$f->faultstring]);
+    }
+    
+    return $response->return;
+}
 
 function num2letras($num, $fem = false, $dec = true,$moneda = 'pesos',$abreviaturaMoneda = 'M.N.') {
 

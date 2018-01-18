@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
 /*
@@ -34,22 +32,18 @@ $.get('http://localhost:8000/abisa/administracion.paises/api', {
 
 class APIController extends Controller
 {
-	/**
-	 * Display a listing of the resource.
-	 * @return \Illuminate\Http\Response
-	 */
 	public function index($company, $entity)
 	{
 		$str_json = '{'.Crypt::decryptString(request()->param_js).'}';
 		$param_array = request()->all();
 		$json = str_replace(array_keys($param_array),$param_array,$str_json);
 
-		$request = json_decode($json,true);
-
+        $request = json_decode($json,true);
 		# Obtenemos entidad
-		$entity = rescue(function() use ($entity) {
-			return resolve('App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', camel_case($entity)))));
-		});
+        
+        $class = 'App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', camel_case($entity))));
+        $entity = new $class;
+        
         if ($entity) {
 
             # Si hay JOINS
@@ -58,10 +52,12 @@ class APIController extends Controller
                     $entity = call_user_func_array([$entity, $join], $args);
                 }
             }
-//            exit();
+
             # Select especific fields
 		    $entity = call_user_func_array([$entity, 'select'], $request['select'] ?? []);
-
+            if(isset($request['distinct'])) {
+                $entity = call_user_func_array([$entity, 'distinct'], $request['distinct'] ?? []);
+            }
 			# Si hay eagerloaders
 		    $entity = $entity->with($request['with'] ?? []);
 
@@ -113,78 +109,5 @@ class APIController extends Controller
 
 			return $collections;
 		}
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create($company, $attributes =[])
-	{
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request, $company)
-	{
-	}
-
-	/**
-	 * Display the specified resource
-	 * @param  integer $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($company, $id, $attributes =[])
-	{
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 * @param  integer $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($company, $id, $attributes =[])
-	{
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  integer  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $company, $id)
-	{
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 * @param  integer  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy(Request $request, $company, $idOrIds)
-	{
-	}
-
-	/**
-	 * Remove multiple resources from storage.
-	 * @param  Request $request
-	 * @param  string  $company
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroyMultiple(Request $request, $company)
-	{
-	}
-
-	/**
-	 * Obtenemos reporte
-	 * @param  string $company
-	 * @return file
-	 */
-	public function export(Request $request, $company)
-	{
 	}
 }

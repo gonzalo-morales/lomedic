@@ -76,10 +76,10 @@ class MovimientoAlmacenController extends ControllerBase
 
     }
 
-    public function store(Request $request,$company){
+    public function store(Request $request,$company, $compact = false){
         $request->request->set('fk_id_usuario',Auth::id());
         $request->request->set('total_productos',count($request->relations['has']['detalle']));
-        return parent::store($request, $company);
+        return parent::store($request, $company, $compact);
     }
 
 }

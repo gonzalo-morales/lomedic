@@ -38,7 +38,8 @@ Route::prefix('{company}')->group(function () {
         Route::get('ofertas/{id}/impress', 'Compras\OfertasController@impress')->name('ofertas');
 
         Route::resource('facturasProveedores','Compras\FacturasProveedoresController');
-        Route::post('getFacturaData','Compras\FacturasProveedoresController@parseXML');
+        Route::post('getFacturaData2','Compras\FacturasProveedoresController@parseXML');
+        Route::post('getDetallesOrden','Compras\FacturasProveedoresController@getDetallesOrden');
 
         Route::resource('pagos','Compras\PagosController');
         Route::resource('solicitudespagos','Compras\SolicitudesPagosController');
@@ -49,5 +50,6 @@ Route::prefix('{company}')->group(function () {
 
         Route::resource('seguimientodesviacion','Compras\SeguimientoDesviacionesController');
         Route::post('getDocumentos','Compras\SeguimientoDesviacionesController@getDocumentos');
+
     });
 });

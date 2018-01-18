@@ -1,19 +1,15 @@
+@extends(smart())
+@section('content-width', 's12')
+
 @section('header-bottom')
     @parent
-
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
         <script type="text/javascript" src="{{ asset('js/recetas.js') }}"></script>
     @endif
-
 @endsection
-@section('content-width', 's12')
+
 @section('form-content')
     {{ Form::setModel($data) }}
-
-    {{--@if(isset($data->folio))--}}
-    {{--{{Form::label('Folio','Folio: '.$data->folio)}}--}}
-    {{--@endif--}}
-
     @if (Route::currentRouteNamed(currentRouteName('create')) || Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
         @if (Route::currentRouteNamed(currentRouteName('create')) || Route::currentRouteNamed(currentRouteName('show')))
             <div class="row">
@@ -166,7 +162,7 @@
                                                                     </label>
                                                                 </div>
                                                                 {{Form::number('surtido_numero',null,['id'=>'surtido_numero','min'=>1,'placeholder'=>'Ej: 6','class'=>'integer form-control','disabled'])}}
-                                                                {{Form::select('surtido_tiempo',['24'=>'Día(s)','168'=>'Semana(s)','720'=>'Mes(es)'],null,['id'=>'surtido_tiempo','class'=>'form-control','disabled'])}}
+                                                                {{Form::select('surtido_tiempo',['24'=>'DÃ­a(s)','168'=>'Semana(s)','720'=>'Mes(es)'],null,['id'=>'surtido_tiempo','class'=>'form-control','disabled'])}}
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-12 my-2">
@@ -331,7 +327,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" id="candelar" class="btn btn-default" data-dismiss="modal">No</button>
-                                <button type="button" id="aceptar" class="btn btn-danger">Sí</button>
+                                <button type="button" id="aceptar" class="btn btn-danger">SÃ­</button>
                             </div>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
@@ -339,19 +335,6 @@
 
                 @endsection
 
-
-                {{-- DONT DELETE --}}
-                @if (Route::currentRouteNamed(currentRouteName('index')))
-                    {{--@section('header-bottom')--}}
-                    {{--@parent--}}
-                    {{--@if (session('printpdf'))--}}
-                    {{--<script type="text/javascript">--}}
-                    {{--window.open('{{companyRoute('imprimirReceta', ['id'=> session('printpdf') ])}}')--}}
-                    {{--</script>--}}
-                    {{--@endif--}}
-                    {{--@endsection--}}
-                    @include('layouts.smart.index')
-                @endif
 
                 @if (Route::currentRouteNamed(currentRouteName('create')))
                 @section('header-bottom')
@@ -375,55 +358,4 @@
                         </script>
     @endif
 @endsection
-@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-    {{--@section('header-bottom')--}}
-    {{--@parent--}}
-    {{--<script type="text/javascript" src="{{asset('js/recetas.js')}}"></script>--}}
-
-    {{--@if (Route::currentRouteNamed(currentRouteName('show')))--}}
-    {{--<script type="text/javascript">--}}
-    {{--$(document).ready(function () {--}}
-    {{--$('#fk_id_sucursal').select2('destroy');--}}
-    {{--$('#fk_id_medico').select2('destroy');--}}
-    {{--$('#fk_id_programa').select2('destroy');--}}
-    {{--$('#fk_id_dependiente').select2('destroy');--}}
-    {{--$('#fk_id_area').select2('destroy');--}}
-    {{--$('#fk_id_diagnostico').select2('destroy');--}}
-    {{--$('#medicamento').select2('destroy');--}}
-    {{--});--}}
-
-    {{--</script>--}}
-    {{--@endif--}}
-    {{--@endsection--}}
-    @include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-    {{--@section('header-bottom')--}}
-    {{--@parent--}}
-    {{--<script type="text/javascript" src="{{asset('js/recetas.js')}}"></script>--}}
-
-    {{--@if (Route::currentRouteNamed(currentRouteName('show')))--}}
-    {{--<script type="text/javascript">--}}
-    {{--$(document).ready(function () {--}}
-    {{--$('#fk_id_sucursal').select2('destroy');--}}
-    {{--$('#fk_id_medico').select2('destroy');--}}
-    {{--$('#fk_id_programa').select2('destroy');--}}
-    {{--$('#fk_id_dependiente').select2('destroy');--}}
-    {{--$('#fk_id_area').select2('destroy');--}}
-    {{--$('#fk_id_diagnostico').select2('destroy');--}}
-    {{--$('#medicamento').select2('destroy');--}}
-    {{--});--}}
-
-    {{--</script>--}}
-    {{--@endif--}}
-    {{--@endsection--}}
-    @include('layouts.smart.show')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-    @include('layouts.smart.export')
 @endif

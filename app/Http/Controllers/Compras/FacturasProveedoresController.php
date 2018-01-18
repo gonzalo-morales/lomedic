@@ -6,6 +6,7 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Compras\DetalleFacturasProveedores;
+use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Compras\FacturasProveedores;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\Monedas;
@@ -28,13 +29,13 @@ class FacturasProveedoresController extends ControllerBase
 	public function getDataView($entity = null)
     {
         return [
-            'proveedores' => SociosNegocio::where('activo','t')->where('fk_id_tipo_socio_compra',3)->pluck('nombre_comercial','id_socio_negocio'),
-            'sucursales' => Sucursales::where('activo','t')->pluck('sucursal','id_sucursal'),
+            'proveedores' 	=> SociosNegocio::where('activo','t')->where('fk_id_tipo_socio_compra',3)->pluck('nombre_comercial','id_socio_negocio'),
+            'sucursales' 	=> Sucursales::where('activo','t')->pluck('sucursal','id_sucursal'),
             'js_comprador' => Crypt::encryptString('"select": ["nombre","apellido_paterno","apellido_materno"], "conditions": [{"where": ["activo","1"]}], "whereHas": [{"ejecutivocompra":{"where":["id_socio_negocio","$id_socio_negocio"]}}]')
         ];
     }
 
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
         # ¿Usuario tiene permiso para crear?
         //		$this->authorize('create', $this->entity);
@@ -53,7 +54,7 @@ class FacturasProveedoresController extends ControllerBase
 
         $xml = simplexml_load_file($request->archivo_xml_hidden->getRealPath());
         $arrayData = xmlToArray($xml);
-//        dd($arrayData);
+		// dd($arrayData);
         if($request->version_sat == "3.3"){
             $request->request->set('serie_factura',isset($arrayData['Comprobante']['@Serie']) ? $arrayData['Comprobante']['@Serie'] : null);
             $request->request->set('fecha_factura',$arrayData['Comprobante']['@Fecha']);
@@ -99,7 +100,7 @@ class FacturasProveedoresController extends ControllerBase
         }
     }
 
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         # ¿Usuario tiene permiso para actualizar?
         //		$this->authorize('update', $this->entity);
@@ -220,5 +221,17 @@ class FacturasProveedoresController extends ControllerBase
                 'resultado' => "No se pudo leer el XML porque tiene un formato incorrecto",
             ]);
         }
+    }
+    public function getDetallesOrden()
+    {
+		$result = DetalleOrdenes::join('inv_cat_skus','com_det_ordenes.fk_id_sku','=','inv_cat_skus.id_sku')
+					->leftJoin('maestro.inv_cat_upcs',function($join){
+						$join->on('com_det_ordenes.fk_id_upc','=','maestro.inv_cat_upcs.id_upc');
+					})
+		            ->where('fk_id_documento','=',$_POST['id_orden'])
+					->select(db::raw("concat(inv_cat_skus.sku, ' - ' ,maestro.inv_cat_upcs.upc) as value"),'com_det_ordenes.id_orden_detalle as id')
+		            ->get();
+
+        return $result;
     }
 }

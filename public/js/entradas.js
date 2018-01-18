@@ -117,12 +117,12 @@ $('#entrada_escaner').on('change', function() {
                             '                                   <input class="form-control" id="lote_'+tipo_documento+'_'+numero_documento+'" name="lote_'+tipo_documento+'_'+numero_documento+'" type="text">' +
                             '                               </div>' +
                             '                           </div>' +
-                            '                           <div class="col-md-2 col-sm-3 col-lg-2">' +
-                            '                               <div class="form-group">' +
-                            '                                   <label for="precio_unitario_'+tipo_documento+'_'+numero_documento+'">Precio Unitario</label>' +
-                            '                                   <input class="form-control" id="precio_unitario_'+tipo_documento+'_'+numero_documento+'" name="precio_unitario_'+tipo_documento+'_'+numero_documento+'" type="text">' +
-                            '                               </div>' +
-                            '                           </div>' +
+                            // '                           <div class="col-md-2 col-sm-3 col-lg-2">' +
+                            // '                               <div class="form-group">' +
+                            // '                                   <label for="precio_unitario_'+tipo_documento+'_'+numero_documento+'">Precio Unitario</label>' +
+                            // '                                   <input class="form-control" id="precio_unitario_'+tipo_documento+'_'+numero_documento+'" name="precio_unitario_'+tipo_documento+'_'+numero_documento+'" type="text">' +
+                            // '                               </div>' +
+                            // '                           </div>' +
                             '                           <div class="col-md-6 col-sm-6 col-lg-3">' +
                             '                               <div class="form-group">' +
                             '                                   <label for="caducidad_'+tipo_documento+'_'+numero_documento+'">Fecha de caducidad</label>' +
@@ -186,7 +186,7 @@ $(document).on('change','#codigo_barras',function (){
     var detalle_entrada = datos_documento.replace('codigo_barras','detalle_entrada');
     var caducidad = datos_documento.replace('codigo_barras','caducidad');
     var lote = datos_documento.replace('codigo_barras','lote');
-    var precio_unitario = datos_documento.replace('codigo_barras','precio_unitario');
+    // var precio_unitario = datos_documento.replace('codigo_barras','precio_unitario');
 
     $('.'+detalle_entrada).find('tr').each(function(index)
     {
@@ -209,13 +209,13 @@ $(document).on('change','#codigo_barras',function (){
                         $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(5).children('input').val( $('#'+lote).val() );
                         $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(6).children('input').val( $('#'+caducidad).val() );
                         $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(9).children('input').val( escanda + 1 );
-                        if ($('#'+precio_unitario).val() != '') {
-                            $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(10).children('input').val( $('#'+precio_unitario).val() );
-                        }
+                        // if ($('#'+precio_unitario).val() != '') {
+                        //     $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(10).children('input').val( $('#'+precio_unitario).val() );
+                        // }
                         $('#codigo_barras').val('');
                         $('#'+lote).val('');
                         $('#'+caducidad).val('');
-                        $('#'+precio_unitario).val('');
+                        // $('#'+precio_unitario).val('');
                         return false;
                     }
                     else if( $('#'+lote).val() == '' && $('#'+caducidad).val() == '' && numero_lote  != ''  )

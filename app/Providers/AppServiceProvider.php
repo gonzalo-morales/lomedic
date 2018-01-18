@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,7 +38,31 @@ class AppServiceProvider extends ServiceProvider
 		});
 
 		// HTML Components
-		require_once __DIR__ . '/../components.php';
+		require_once app_path().'/components.php';
+		
+		Blade::if('index', function() {
+		    return \Route::currentRouteNamed(currentRouteName('index'));
+		});
+	    Blade::if('crear', function() {
+	        return \Route::currentRouteNamed(currentRouteName('create'));
+	    });
+        Blade::if('editar', function() {
+            return \Route::currentRouteNamed(currentRouteName('edit'));
+        });
+        Blade::if('ver', function() {
+            return \Route::currentRouteNamed(currentRouteName('show'));
+        });
+        Blade::if('exportar', function() {
+            return \Route::currentRouteNamed(currentRouteName('export'));
+        });
+        
+        Blade::if('inroute', function($routes = []) {
+            foreach($routes as $route) {
+                if(\Route::currentRouteNamed(currentRouteName($route)))
+                    return true;
+            }
+            return false;
+        });
 	}
 
 	/**
@@ -48,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
 	public function register()
 	{
 		//
-		require_once __DIR__ . '/../helpers.php';
+	    require_once app_path().'/helpers.php';
+	    require_once app_path().'/cfdi.php';
 	}
 }

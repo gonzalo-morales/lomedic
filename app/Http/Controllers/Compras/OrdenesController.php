@@ -80,7 +80,7 @@ class OrdenesController extends ControllerBase
 		 return parent::create($company,$attributes);
 	}
 
-	public function store(Request $request, $company)
+	public function store(Request $request, $company, $compact = false)
 	{
         # ¿Usuario tiene permiso para crear?
 		$this->authorize('create', $this->entity);
@@ -218,7 +218,7 @@ class OrdenesController extends ControllerBase
 		return parent::edit($company, $id, $attributes);
 	}
 
-	/*public function update(Request $request, $company, $id)
+	/*public function update(Request $request, $company, $id, $compact = false)
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		// $this->authorize('update', $this->entity);
@@ -245,10 +245,10 @@ class OrdenesController extends ControllerBase
 			}
 			$entity->descuento_total = $entity->descuento_general + $descuento_rows;
 		}
-		return parent::update($request, $company, $id);
+		return parent::update($request, $company, $id, $compact);
 	}*/
 
-	public function update(Request $request, $company, $id)
+	public function update(Request $request, $company, $id, $compact = false)
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);

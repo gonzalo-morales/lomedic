@@ -27,26 +27,14 @@ class EntradasController extends ControllerBase
 
     public function getDataView($entity = null)
     {
-
-
-
-        if($entity == null)
+        switch (empty($entity) ? 0 :$entity->fk_id_tipo_documento)
         {
-            $datos_documento = '';
-        }
-        else {
-            switch ($entity->fk_id_tipo_documento)
-            {
-                    case 1:
-                        $datos_documento = '';
-                        break;
-                    case 2:
-                        $datos_documento = '';
-                        break;
-                    case 3:
-                        $datos_documento = Ordenes::where('id_orden',$entity->numero_documento)->first();
-                        break;
-            }
+            case 3:
+                $datos_documento = Ordenes::where('id_orden',$entity->numero_documento)->first();
+                break;
+            default:
+                $datos_documento = '';
+                break;
         }
 
         if($datos_documento != '')
@@ -74,29 +62,20 @@ class EntradasController extends ControllerBase
                 'detalle_documento' => $detalle_documento,
                 'dato_entrada'=>$datos_documento,
                 'detalle_entrada'=>$detalle_productos];
-
         }
         else
         {
-            $data = [];
+            $data = [
+                'sucursales' => Sucursales::where('activo',true)->where('eliminar',false)->pluck('sucursal','id_sucursal'),
+                'tipo_documento' => DB::table('gen_cat_tipo_documento')->pluck('nombre_documento','id_tipo_documento'),
+            ];
         }
 
         return $data ;
     }
 
-    public function create($company, $attributes =[])
+    public function store(Request $request, $company, $compact = false)
     {
-
-        $attributes = $attributes+['dataview'=>[
-                'sucursales' => Sucursales::where('activo',true)->where('eliminar',false)->pluck('sucursal','id_sucursal'),
-                'tipo_documento' => DB::table('gen_cat_tipo_documento')->pluck('nombre_documento','id_tipo_documento'),
-        ]];
-        return parent::create($company,$attributes);
-    }
-
-    public function store(Request $request, $company)
-    {
-
         $nueva_entrada = Entradas::create(['fk_id_tipo_documento'=>$_POST['fk_id_tipo_documento'],
             'numero_documento'=> $_POST['numero_documento'],
             'referencia_documento'=> $_POST['referencia_documento'],
@@ -131,11 +110,8 @@ class EntradasController extends ControllerBase
         return $ordenes_compra;
     }
 
-
-
     public function getDetalleEntrada()
     {
-
         if($_POST['fk_id_tipo_documento'])
         {
             switch ($_POST['fk_id_tipo_documento'])
@@ -155,8 +131,6 @@ class EntradasController extends ControllerBase
 
         if($datos_documento != '')
         {
-
-
             $datos_orden['sucursales'] = $datos_documento->sucursales;
             $datos_orden['proveedor'] = $datos_documento->proveedor;
             $detalle_documento = $datos_documento->detalleOrdenes;
@@ -186,7 +160,6 @@ class EntradasController extends ControllerBase
                     'company_route'=>companyRoute('store'),
                     'dato_entrada'=>$datos_documento,
                     'detalle_entrada'=>$detalle_productos];
-
         }
         else
         {
@@ -195,6 +168,4 @@ class EntradasController extends ControllerBase
 
         return $data ;
     }
-
-
 }

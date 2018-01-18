@@ -32,7 +32,7 @@ class NotasCreditoClientesDetalle extends ModelCompany
     protected $fillable = [
         'fk_id_nota_credito','fk_id_clave_producto_servicio','fk_id_sku','fk_id_upc','fk_id_clave_cliente','descripcion',
         'fk_id_unidad_medida','unidad','cantidad','precio_unitario','importe','eliminar','fk_id_moneda','fk_id_impuesto',
-        'descuento','pedimento','cuenta_predial','impuesto','fk_id_factura',
+        'descuento','pedimento','cuenta_predial','impuesto','fk_id_documento_relacionado','fk_id_tipo_documento_relacionado'
     ];
 
     public $niceNames =[];
@@ -96,6 +96,10 @@ class NotasCreditoClientesDetalle extends ModelCompany
 
     public function factura()
     {
-        return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_factura');
+        return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_documento_relacionado');
+    }
+    public function notacargo()
+    {
+        return $this->hasOne(NotasCargoClientes::class,'id_nota_cargo','fk_id_documento_relacionado');
     }
 }

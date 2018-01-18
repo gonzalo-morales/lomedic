@@ -8,8 +8,10 @@
 
 namespace App\Http\Models\Servicios;
 
+use App\Http\Controllers\Inventarios\SurtidoRequisicionHospitalariaController;
 use App\Http\Models\Administracion\Areas;
 use App\Http\Models\Inventarios\Productos;
+use App\Http\Models\Inventarios\SurtidoRequisicionHospitalaria;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 
@@ -39,6 +41,7 @@ class RequisicionesHospitalariasDetalle extends ModelCompany
      * @var array
      */
     protected $fillable = [
+        'id_detalle_requisicion',
         'fk_id_requisicion',
         'fk_id_area',
         'fk_id_clave_cliente_producto',
@@ -90,11 +93,12 @@ class RequisicionesHospitalariasDetalle extends ModelCompany
         return $this->hasOne(ClaveClienteProductos::class,'id_clave_cliente_producto','fk_id_clave_cliente_producto');
     }
 
+
 //    public function producto()
 //    {
 //        return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
 //    }
-//
+////
 //    public function solicitantes()
 //    {
 //        return $this->hasOne(Usuarios::class,'id_usuario','id_solicitante');

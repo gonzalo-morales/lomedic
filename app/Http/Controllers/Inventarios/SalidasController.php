@@ -96,7 +96,7 @@ class SalidasController extends ControllerBase
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $company)
+	public function store(Request $request, $company, $compact = false)
 	{
 		# PENDIENTE --->
 		# ¿Salida completa?
@@ -111,7 +111,7 @@ class SalidasController extends ControllerBase
 		$request->request->add([
 			'fecha_salida' => Carbon::now()
 		]);
-		return parent::store($request, $company);
+		return parent::store($request, $company, $compact);
 	}
 
 	/**

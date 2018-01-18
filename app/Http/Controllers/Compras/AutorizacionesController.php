@@ -18,7 +18,7 @@ class AutorizacionesController extends ControllerBase
         $this->entity = $entity;
     }
 
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
         $request->request->set('fk_id_usuario_autoriza',Auth::id());
         $request->request->set('fecha_autorizacion',Carbon::now());

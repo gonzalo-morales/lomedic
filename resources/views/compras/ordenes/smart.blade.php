@@ -1,4 +1,7 @@
+@extends(smart())
+@section('content-width', 's12')
 @section('form-title', 'Ordenes de Compra')
+
 @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
 @endsection
@@ -9,8 +12,6 @@
 		<script type="text/javascript" src="{{ asset('js/ordenes_compras.js') }}"></script>
 	@endif
 @endsection
-
-@section('content-width', 's12')
 
 @section('form-actions')
 	{{-- {{ dd($data) }} --}}
@@ -612,21 +613,18 @@
 			};
 		</script>
 	@endsection
-	@include('layouts.smart.index')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
 @section('form-title')
 	<h1 class="display-4">Agregar Orden de Compra</h1>
 @endsection
-	@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
 	@section('form-title')
 		<h1 class="display-4">Editar Orden de Compra</h1>
 	@endsection
-	@include('layouts.smart.edit')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
@@ -637,9 +635,4 @@
 	@section('form-title')
 		<h1 class="display-4">Datos de la Orden de Compra</h1>
 	@endsection
-	@include('layouts.smart.show')
 @endif
-
-{{--@if (currentRouteName('createSolicitudOrden'))--}}
-	{{--@include('layouts.smart.create')--}}
-{{--@endif--}}

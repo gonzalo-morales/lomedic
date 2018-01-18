@@ -26,7 +26,10 @@ class Empresas extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre_comercial', 'rfc', 'empresa', 'razon_social', 'conexion', 'icono', 'activo', 'logotipo', 'fk_id_regimen_fiscal'];
+	protected $fillable = [
+	    'nombre_comercial', 'rfc', 'empresa', 'razon_social', 'conexion', 'icono', 'activo', 'logotipo', 'fk_id_regimen_fiscal','calle',
+	    'no_exterior','no_interior','codigo_postal','colonia','fk_id_municipio','fk_id_estado','fk_id_pais','email'
+	];
 	
 	protected $fields = [
 	    'nombre_comercial' => 'Nombre Comercial',

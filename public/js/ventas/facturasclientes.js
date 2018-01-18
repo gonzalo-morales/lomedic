@@ -1,6 +1,12 @@
 $(document).ready(function () {
 	$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 	
+	$('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 3, // Creates a dropdown of 3 years to control year
+        format: 'yyyy-mm-dd'
+    });
+	
 	$('#fk_id_empresa').on('change', function() {
 		let cliente = $('#fk_id_socio_negocio');
 		let series = $('#fk_id_serie');
@@ -55,8 +61,10 @@ $(document).ready(function () {
     		});
     		
     		$.ajax({
+    			async: true,
 			    url: $(this).data('url'),
 			    data: {'param_js':empresa_js,$id_empresa:$(this).val()},
+			    dataType: 'json',
 	            success: function (data) {
 	            	$("#rfc").val(data[0].rfc);
 	            	$("#fk_id_regimen_fiscal").val(data[0].fk_id_regimen_fiscal);
@@ -75,10 +83,14 @@ $(document).ready(function () {
 		$('#fk_id_socio_negocio').trigger('change');
 	}).trigger('change');
 	
+	$('#timbrar').on('click', function(e) {
+		$("#form-model").append('<input name="timbrar" type="hidden" value="1">');
+	});
+	
 	$('#fk_id_socio_negocio').on('change', function() {
 		let proyecto = $('#fk_id_proyecto');
 		let sucursal = $('#fk_id_sucursal');
-		let val = $('#fk_id_socio_negocio option:selected').val()
+		let val = $('#fk_id_socio_negocio option:selected').val();
 
 		if(!val) {
 			$("#fk_id_proyecto option").remove();
@@ -139,6 +151,33 @@ $(document).ready(function () {
 		}
 	}).trigger('change');
 	
+	$('#fk_id_proyecto').on('change', function() {
+		let val = $('#fk_id_proyecto option:selected').val();
+		let contrato = $('#fk_id_contrato');
+
+		if(!val) {
+			$("#fk_id_contrato option").remove();
+			contrato.prop('disabled',true);
+		}
+		else {
+    		$.ajax({
+    		    async: true,
+    		    url: contrato.data('url'),
+    		    data: {'param_js':contratos_js,$id_proyecto:val},
+    		    dataType: 'json',
+                success: function (data) {
+                	$("#fk_id_contrato option").remove();
+                	contrato.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                    $.each(data[0].contratos, function(){ 
+                    	contrato.append('<option value="'+this.id_contrato+'">'+this.num_contrato+'</option>')
+                    });
+                	contrato.val('');
+                	contrato.prop('disabled', (data.length == 0)); 
+    		    }
+    		});
+		}
+	});
+	
 	$('#fk_id_moneda').on('change', function() {
 		$('#tipo_cambio').attr('readonly',$('#fk_id_moneda').val() == 100);
 		
@@ -150,23 +189,27 @@ $(document).ready(function () {
 	
 	
 	$('#agregarRelacion').on('click', function() {
-		var i = $('#detalleRelaciones tr').length;
-        var row_id = i > 0 ? +$('#detalleRelaciones tr:last').find('.index').val()+1 : 0;
+		var i = $('#detalleRelaciones tbody tr').length;
+        var row_id = i > 0 ? +$('#detalleRelaciones tbody tr:last').find('.index').val()+1 : 0;
 		id_tipo = $('#fk_id_tipo_relacion option:selected').val();
 		tipo_relacion = $('#fk_id_tipo_relacion option:selected').text();
 		id_factura = $('#fk_id_factura_relacion option:selected').val();
 		factura = $('#fk_id_factura_relacion option:selected').text();
 		
 		if(id_tipo == '' | id_factura == '') {
-			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleRelaciones').append('<tr>'+
 				'<td>' +
 					'<input name="relations[has][relaciones]['+row_id+'][index]" class="index" type="hidden" value="'+row_id+'">'+
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_documento]" type="hidden" value="4">'+
 				    '<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_relacion]" type="hidden" value="'+id_tipo+'">'+tipo_relacion+
 				'</td>'+
-				'<td><input name="relations[has][relaciones]['+row_id+'][fk_id_factura]" type="hidden" value="'+id_factura+'">'+factura+'</td>'+
+				'<td>'+
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_documento_relacionado]" type="hidden" value="'+id_factura+'">'+factura+
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_documento_relacionado]" type="hidden" value="4">'+
+				'</td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$.toaster({priority:'success',title:'Â¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
@@ -178,5 +221,5 @@ $(document).ready(function () {
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
