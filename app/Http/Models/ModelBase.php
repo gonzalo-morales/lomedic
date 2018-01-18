@@ -100,7 +100,7 @@ class ModelBase extends Model
 	}
 	public function getAutoEager()
 	{
-	    $keysfields = array_keys($this->fields) ?? [];
+	    $keysfields = array_keys($this->fields ?? []) ?? [];
 	    $return = [];
 	    
 	    foreach ($keysfields as $key) {

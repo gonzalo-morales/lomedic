@@ -39,6 +39,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('laboratorios', 'Administracion\LaboratoriosController');
 		Route::resource('localidades', 'Administracion\LocalidadesController');
 		Route::resource('metodospago', 'Administracion\MetodosPagoController');
+		Route::resource('metodosvaloracion', 'Administracion\MetodosValoracionController');
 		Route::resource('modulos', 'Administracion\ModulosController');
 		Route::resource('motivosajustes', 'Administracion\MotivosAjustesController');
 		Route::resource('motivosdesviaciones', 'Administracion\MotivosDesviacionesController');
@@ -48,6 +49,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('paises', 'Administracion\PaisesController');
 		Route::resource('parentescos', 'Administracion\ParentescosController');
 		Route::resource('perfiles', 'Administracion\PerfilesController');
+		Route::resource('periodos', 'Administracion\PeriodosController');
 		Route::resource('presentacionventa', 'Administracion\PresentacionVentaController');
 		Route::resource('seriesdocumentos', 'Administracion\SeriesDocumentosController');
 		Route::resource('seriesskus', 'Administracion\SeriesSkusController');
