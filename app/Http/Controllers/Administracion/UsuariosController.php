@@ -64,7 +64,7 @@ class UsuariosController extends ControllerBase
 //     * @return \Illuminate\Http\Response
 //     */
 
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
 
         $isSuccess = $this->entity->create($request->all());
@@ -195,7 +195,7 @@ class UsuariosController extends ControllerBase
     }
 
 
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
 //        # ¿Usuario tiene permiso para actualizar?
 //        $this->authorize('update', $this->entity);
