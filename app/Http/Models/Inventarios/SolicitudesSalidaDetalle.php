@@ -26,8 +26,17 @@ class SolicitudesSalidaDetalle extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_solicitud', 'fk_id_sku', 'fk_id_upc', 'cantidad', 'fk_id_almacen', 'eliminar'];
-
+    protected $fillable = [
+        'fk_id_solicitud',
+        'fk_id_sku',
+        'fk_id_upc',
+        'cantidad',
+        'fk_id_almacen',
+        'eliminar',
+        'fk_id_pedido',
+        'fk_id_empleado',
+        'cantidad_solicitada_salida'
+    ];
 
     /*
      * Los atributos que seran visibles en index-datable

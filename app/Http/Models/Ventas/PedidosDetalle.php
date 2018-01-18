@@ -53,7 +53,7 @@ class PedidosDetalle extends ModelCompany
     
     public function pedido()
     {
-        return $this->hasOne(Pedidos::class,'id_pedido','fk_id_documento');
+        return $this->hasOne(Pedidos::class,'id_documento','fk_id_documento');
     }
     
     public function tipodocumento()
