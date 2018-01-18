@@ -6,7 +6,6 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\TiposRelacionesCfdi;
-use App\Http\Models\Compras\DetalleFacturasProveedores;
 use App\Http\Models\Compras\FacturasProveedores;
 use App\Http\Models\Compras\NotasCreditoProveedor;
 use App\Http\Models\SociosNegocio\SociosNegocio;
@@ -46,7 +45,7 @@ class NotasCreditoProveedorController extends ControllerBase
         ];
     }
 
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = true)
     {
         # ¿Usuario tiene permiso para crear?
         //		$this->authorize('create', $this->entity);
@@ -86,7 +85,7 @@ class NotasCreditoProveedorController extends ControllerBase
             $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
         }
         $request->request->set('fk_id_estatus_nota',1);
-        $return = parent::store($request, $company);
+        $return = parent::store($request, $company, $compact);
         return $return['redirect'];
     }
 
