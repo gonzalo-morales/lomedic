@@ -52,7 +52,7 @@ class Pedidos extends ModelCompany
         'fecha_limite' => 'Fecha Limite',
         'total' => 'Total',
         'moneda.descripcion' => 'Moneda',
-        'estatus.estatus' => 'Estatus'
+        'estatus.estatus' => 'Estatus'}
     ];
 
     /**

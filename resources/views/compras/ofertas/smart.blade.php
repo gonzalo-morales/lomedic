@@ -10,6 +10,10 @@
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if (!Route::currentRouteNamed(currentRouteName('index')))
 		<script type="text/javascript" src="{{ asset('js/ofertas_compras.js') }}"></script>
+		<script type="text/javascript">
+			var proyectos_js = '{{$js_proyectos ?? ''}}';
+			var tiempo_entrega_js = '{{$js_tiempo_entrega ?? ''}}';
+        </script>
 	@endif
 @endsection
 
@@ -20,7 +24,7 @@
     @inroute(['show','edit'])
     	<div class="row">
     		<div class="col-md-12 text-center text-success">
-    			<h3>Oferta No. {{$data->id_oferta}}</h3>
+    			<h3>Oferta No. {{$data->id_documento}}</h3>
     		</div>
     	</div>
     @endif
@@ -36,10 +40,10 @@
     		{{ $errors->has('fk_id_empresa') ? HTML::tag('span', $errors->first('fk_id_empresa'), ['class'=>'help-block deep-orange-text']) : '' }}
     	</div>
     	<div class="form-group col-md-3 col-sm-6">
-    		{!! Form::cSelectWithDisabled('* Sucursal','fk_id_sucursal',isset($sucursales)?$sucursales:[]) !!}
+    		{!! Form::cSelectWithDisabled('* Sucursal','fk_id_sucursal',isset($sucursales)?$sucursales:[],['class'=>'select2']) !!}
     	</div>
     	<div class="form-group col-md-3 col-sm-6">
-    		{!! Form::cSelectWithDisabled('*Proveedor','fk_id_proveedor',isset($proveedores)?$proveedores:[],['data-url'=>companyAction('Compras\OrdenesController@getProveedores')])!!}
+    		{!! Form::cSelectWithDisabled('*Proveedor','fk_id_proveedor',$proveedores ?? [],['data-url'=>companyAction('Compras\OrdenesController@getProveedores'),'class'=>'select2'])!!}
     	</div>
     	<div class="form-group text-center col-md-3 col-sm-6">
     		{{ Form::label('', 'Días/Fecha') }}
@@ -55,7 +59,7 @@
     		{!! Form::cTextArea('Condiciones de la oferta','condiciones_oferta',['rows'=>3,'maxlength'=>'255'])!!}
     	</div>
     	<div class="form-group col-md-3 col-sm-6">
-    		{!! Form::cSelectWithDisabled('*Moneda','fk_id_moneda',isset($monedas)?$monedas:[],[])!!}
+    		{!! Form::cSelectWithDisabled('*Moneda','fk_id_moneda',isset($monedas)?$monedas:[],['class'=>'select2'])!!}
     	</div>
     </div>
     <div class="row">
@@ -66,6 +70,12 @@
     			<div class="card-header">
     				<fieldset name="detalle-form" id="detalle-form">
     					<div class="row">
+							<div class="form-group input-field col-md-3 col-sm-6">
+								{!! Form::cSelect('Cliente','fk_id_cliente',isset($clientes) ? $clientes->prepend('Sin cliente','0') : [],["class"=>'select2'])!!}
+							</div>
+							<div class="form-group input-field col-md-3 col-sm-6">
+								{!! Form::cSelect('Proyecto','fk_id_proyecto',isset($proyectos)?$proyectos:[],['data-url'=>companyAction('HomeController@index').'/Proyectos.proyectos/api','class'=>'select2'])!!}
+							</div>
     						<div class="form-group input-field col-md-3 col-sm-6">
     							{!! Form::cSelectWithDisabled('* SKU','fk_id_sku',[],[
     								'data-url'=>companyAction('Inventarios\ProductosController@obtenerSkus'),
@@ -73,21 +83,16 @@
     								'data-target-url' => companyRoute('inventarios.productos.show', ['id' => '#ID#']),
     								'data-target-el' => '#fk_id_upc',
     								'data-target-with' => '["upcs:id_upc,fk_id_sku,upc"]',
-    								'data-target-value' => 'upcs,id_upc,upc'
+    								'data-target-value' => 'upcs,id_upc,upc',
+    								'data-url-tiempo_entrega'=>companyAction('HomeController@index').'/sociosnegocio.productossociosnegocio/api'
     							]) !!}
     						</div>
     						<div class="form-group input-field col-md-3 col-sm-6">
     							{!! Form::cSelectWithDisabled('UPC','fk_id_upc',[],[
-    								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),'style'=>'width:100%',]) !!}
-    						</div>
-    						<div class="form-group input-field col-md-3 col-sm-6">
-    							{!! Form::cSelect('Cliente','fk_id_cliente',isset($clientes)?$clientes:[])!!}
-    						</div>
-    						<div class="form-group input-field col-md-3 col-sm-6">
-    							{!! Form::cSelect('Proyecto','fk_id_proyecto',isset($proyectos)?$proyectos:[])!!}
+    								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),'class'=>'select2']) !!}
     						</div>
     						<div class="form-group input-field col-md-2 col-sm-6">
-    							{!! Form::cSelectWithDisabled('Unidad medida','fk_id_unidad_medida',isset($unidadesmedidas)?$unidadesmedidas:[],[]) !!}
+    							{!! Form::cSelectWithDisabled('Unidad medida','fk_id_unidad_medida',isset($unidadesmedidas)?$unidadesmedidas:[],['class'=>'select2']) !!}
     						</div>
     						<div class="form-group input-field col-md-2 col-sm-4">
     							{!! Form::cText('* Cantidad','cantidad',['autocomplete'=>'off','placeholder'=>'0'])!!}
@@ -103,12 +108,12 @@
     							</div>
     						</div>
     						<div class="form-group input-field col-md-2 col-sm-6">
-    							{!! Form::label('descuento_detalle','Descuento producto') !!}
-    							<div class="input-group">
-    								{!! Form::text('descuento_detalle',null,['placeholder'=>'99.0000','class'=>'form-control']) !!}
-    								<span class="input-group-addon">%</span>
-    							</div>
-    						</div>
+								{!! Form::label('descuento_detalle','Descuento producto') !!}
+								<div class="input-group">
+									{!! Form::text('descuento_detalle',null,['placeholder'=>'99.0000','class'=>'form-control']) !!}
+									<span class="input-group-addon">%</span>
+								</div>
+							</div>
     						<div class="col-sm-12 text-center">
     							<div class="sep">
     								<div class="sepBtn">
@@ -151,15 +156,15 @@
     						@foreach( $solicitud->detalleSolicitudes->where('cerrado',false) as $detalle)
     							<tr class="list-left bg-light">
     								<td>
-    									{{isset($detalle->fk_id_solicitud)?$detalle->fk_id_solicitud:'N/A'}}
-    									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_documento_parent]',$detalle->fk_id_solicitud) !!}
+    									{{isset($detalle->fk_id_documento)?$detalle->fk_id_solicitud:'N/A'}}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_documento_parent]',$detalle->fk_id_solicitud) !!}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
     									{{$detalle->sku->sku}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_upc]',isset($detalle->fk_id_upc)?$detalle->fk_id_upc:'') !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_upc]',isset($detalle->fk_id_upc)?$detalle->fk_id_upc:'') !!}
     									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
     								</td>
     								<td>
@@ -169,45 +174,45 @@
     									{{str_limit($detalle->sku->descripcion,250)}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
     									{{isset($detalle->cliente->nombre_corto)?$detalle->cliente->nombre_corto:'Sin cliente'}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
     									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
     									{{$detalle->unidad_medida->nombre}}
     								</td>
     								<td>
-    									{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][cantidad]',
+    									{!! Form::text('detalles['.$detalle->id_documento_detalle.'][cantidad]',
     									$detalle->cantidad,
-    									['class'=>'form-control cantidad','id'=>'cantidad'.$detalle->id_solicitud_detalle,'style'=>'min-width:100px','placeholder'=>'0','onkeyup'=>'total_row('.$detalle->id_solicitud_detalle.')']) !!}
+    									['class'=>'form-control cantidad','id'=>'cantidad'.$detalle->id_documento_detalle,'style'=>'min-width:100px','placeholder'=>'0','onkeyup'=>'total_row('.$detalle->id_documento_detalle.')']) !!}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_impuesto]',
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_impuesto]',
     									$detalle->fk_id_impuesto,
-    									['data-porcentaje'=>$detalle->impuesto->porcentaje,'id'=>'fk_id_impuesto'.$detalle->id_solicitud_detalle]) !!}
+    									['data-porcentaje'=>$detalle->impuesto->porcentaje,'id'=>'fk_id_impuesto'.$detalle->id_documento_detalle]) !!}
     									{{$detalle->impuesto->impuesto}}
     								</td>
     								<td>
-    									{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][precio_unitario]',
+    									{!! Form::text('detalles['.$detalle->id_documento_detalle.'][precio_unitario]',
     									number_format($detalle->precio_unitario,2,'.',''),
-    									['class'=>'form-control precio','id'=>'precio_unitario'.$detalle->id_solicitud_detalle,'style'=>'min-width:100px','placeholder'=>'999999.00','onkeyup'=>'total_row('.$detalle->id_solicitud_detalle.')']) !!}
+    									['class'=>'form-control precio','id'=>'precio_unitario'.$detalle->id_documento_detalle,'style'=>'min-width:100px','placeholder'=>'999999.00','onkeyup'=>'total_row('.$detalle->id_documento_detalle.')']) !!}
     								</td>
     								<td>
-    									{!! Form::text('detalles['.$detalle->id_solicitud_detalle.'][descuento_detalle]',
+    									{!! Form::text('detalles['.$detalle->id_documento_detalle.'][descuento_detalle]',
     									null,
-    									['class'=>'form-control descuento','id'=>'descuento_detalle'.$detalle->id_solicitud_detalle,'style'=>'min-width:100px','placeholder'=>'99.0000','onkeyup'=>'total_row('.$detalle->id_solicitud_detalle.')']) !!}
+    									['class'=>'form-control descuento','id'=>'descuento_detalle'.$detalle->id_documento_detalle,'style'=>'min-width:100px','placeholder'=>'99.0000','onkeyup'=>'total_row('.$detalle->id_documento_detalle.')']) !!}
     								</td>
     								<td>
-    									<input type="text" class="form-control total" id="total{{$detalle->id_solicitud_detalle}}" style="min-width: 100px" name="{{'detalles['.$detalle->id_solicitud_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+    									<input type="text" class="form-control total" id="total{{$detalle->id_documento_detalle}}" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total_producto]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
     								</td>
     								<td>
     									<button class="btn is-icon text-primary bg-white"
-    											type="button" data-item-id="{{$detalle->id_oferta_detalle}}"
-    											id="{{$detalle->id_oferta_detalle}}" data-delay="50"
+    											type="button" data-item-id="{{$detalle->id_documento_detalle}}"
+    											id="{{$detalle->id_documento_detalle}}" data-delay="50"
     											onclick="borrarFila(this)" data-delete-type="single">
     										<i class="material-icons">delete</i>
     									</button>
@@ -216,17 +221,17 @@
     						@endforeach
     					@elseif( isset( $data->DetalleOfertas ) )
     						@foreach( $data->DetalleOfertas->where('cerrado',false) as $detalle)
-    							<tr class="{{isset($detalle->fk_id_documento)?'list-left bg-light':''}}">
+    							<tr class="{{isset($detalle->fk_id_documento_base)?'list-left bg-light':''}}">
     								<td>
-    									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
+    									{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_documento_documento:'N/A'}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][id_oferta_detalle]',$detalle->id_oferta_detalle) !!}
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
     									{{$detalle->sku->sku}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
     									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
     								</td>
     								<td>
@@ -236,42 +241,42 @@
     									{{$detalle->sku->descripcion}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
     									{{isset($detalle->cliente->nombre_corto)?$detalle->cliente->nombre_corto:'Sin cliente'}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
     									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
     									{{$detalle->unidadMedida->nombre}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][cantidad]',$detalle->cantidad) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad) !!}
     									{{$detalle->cantidad}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
     									{{$detalle->impuesto->impuesto}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][precio_unitario]',$detalle->precio_unitario) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][precio_unitario]',$detalle->precio_unitario) !!}
     									{{number_format($detalle->precio_unitario,2,'.','')}}
     								</td>
     								<td>
-    									{!! Form::hidden('detalles['.$detalle->id_oferta_detalle.'][descuento_detalle]',$detalle->descuento_detalle) !!}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][descuento_detalle]',$detalle->descuento_detalle) !!}
     									{{number_format($detalle->descuento_detalle,4,'.','')}}
     								</td>
     								<td>
-    									<input type="text" class="form-control total" style="min-width: 100px" name="{{'detalles['.$detalle->id_oferta_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+    									<input type="text" class="form-control total" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
     								</td>
     								<td>
     									{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
     									@if(Route::currentRouteNamed(currentRouteName('edit')) && $data->fk_id_estatus_oferta == 1)
     										<button class="btn is-icon text-primary bg-white "
-    										   type="button" data-item-id="{{$detalle->id_oferta_detalle}}"
-    										   id="{{$detalle->id_oferta_detalle}}" data-delay="50"
+    										   type="button" data-item-id="{{$detalle->id_documento_detalle}}"
+    										   id="{{$detalle->id_documento_detalle}}" data-delay="50"
     										   onclick="borrarFila_edit(this)" data-delete-type="single">
     											<i class="material-icons">delete</i></button>
     									@endif
@@ -293,11 +298,11 @@
     								</div>
     							</td>
     							<td colspan="4">
-    								{{ Form::label('total_orden', 'Total de la oferta') }}
+    								{{ Form::label('total_oferta', 'Total de la oferta') }}
     								<div class="form-group col-md-12">
     									<div class="input-group">
     										<span class="input-group-addon">$</span>
-    										{!! Form::text('total_orden', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}
+    										{!! Form::text('total_oferta', null,['class'=>'form-control','disabled','placeholder'=>'0.00','id'=>'total_oferta']) !!}
     									</div>
     								</div>
     							</td>
@@ -379,7 +384,7 @@
     		@endcan
             window['smart-model'].collections.itemsOptions.supply = {a: {
                 'html': '<i class="material-icons">shopping_cart</i>',
-                'href' : '{!! url($company."/compras/#ID#/2/ordenes/crear") !!}',
+                'href' : '{!! url($menuempresa->conexion."/compras/#ID#/2/ordenes/crear") !!}',
     //            'href' : '#',
                 'class': 'btn is-icon',
                 'rv-hide-comprar':'',
@@ -460,8 +465,8 @@
 @ver
 	@section('extraButtons')
 		@parent
-		{!!isset($data->id_oferta) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_oferta]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
-		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($company.'/compras/'.$data->id_oferta.'/2/ordenes/crear'), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
+		{!!isset($data->id_documento) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_documento]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
+		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($menuempresa->conexion.'/compras/'.$data->id_oferta.'/2/ordenes/crear'), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
 	@endsection
 @section('form-title','Datos de la Oferta de Compra')
 @endif

@@ -90,6 +90,8 @@
 				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#cuentas">Cuentas</a></li>
 				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#anexos">Anexos</a></li>
 				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#productos">Productos/Artículos</a></li>
+				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#contabilidad">CONTPAQi</a></li>
+				{{--<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#bancos">CONTPAQi Bancos</a></li>--}}
 			</ul>
 		</div>
 		<div class="card-body tab-content">
@@ -573,6 +575,21 @@
     				</div><!--/Here ends card-->
     			</fieldset>
 			</div><!--/aquí termina el tab content-->
+
+			<div  class="tab-pane active" id="contabilidad" role="tabpanel">
+				<div class="row">
+				</div>
+			</div><!--/aquí termina el contenido de un tab-->
+
+			{{--<div  class="tab-pane active" id="bancos" role="tabpanel">--}}
+				{{--<div class="row">--}}
+					{{--<div class="col-sm-12">--}}
+						{{--@inroute(["edit","create"])--}}
+						{{--{{Form::cFile('Importar pago desde Bancos','archivo_importar_banco')}}--}}
+						{{--@endif--}}
+					{{--</div>--}}
+				{{--</div>--}}
+			{{--</div><!--/aquí termina el contenido de un tab-->--}}
 			
 		</div>
 	</div><!--/aquí termina el card content-->

@@ -32,8 +32,7 @@ class InventariosDetalle extends ModelCompany
 	 * Los atributos que seran visibles en index-datable
 	 * @var array
 	 */
-	// protected $fields = [
-	// ];
+	protected $fields = [];
 
 	/**
 	 * The validation rules

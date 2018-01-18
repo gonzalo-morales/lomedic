@@ -37,24 +37,24 @@ class APIController extends Controller
 		$str_json = '{'.Crypt::decryptString(request()->param_js).'}';
 		$param_array = request()->all();
 		$json = str_replace(array_keys($param_array),$param_array,$str_json);
-
         $request = json_decode($json,true);
 		# Obtenemos entidad
         
         $class = 'App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', camel_case($entity))));
         $entity = new $class;
-        
         if ($entity) {
-
             # Si hay JOINS
             foreach (($request['joins'] ?? []) as $joins){
                 foreach ($joins as $join => $args){
                     $entity = call_user_func_array([$entity, $join], $args);
                 }
             }
-
             # Select especific fields
-		    $entity = call_user_func_array([$entity, 'select'], $request['select'] ?? []);
+            if(isset($request['selectRaw'])){//Revisa primero si hay un selectRaw
+                $entity = call_user_func_array([$entity, 'selectRaw'], $request['selectRaw'] ?? []);
+            }else{//Si no hay selectRaw, busca select normal
+                $entity = call_user_func_array([$entity, 'select'], $request['select'] ?? []);
+            }
             if(isset($request['distinct'])) {
                 $entity = call_user_func_array([$entity, 'distinct'], $request['distinct'] ?? []);
             }

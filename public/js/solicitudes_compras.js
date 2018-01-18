@@ -65,10 +65,35 @@ $(document).ready( function () {
 
     select2Placeholder('fk_id_upc','Selecciona UPC',5);
     $('#fk_id_sku').on('change',function () {
-        if($('#fk_id_sku').select2('data')[0].id){
+        // if($('#fk_id_sku').select2('data')[0].id){
             $('#loadingUPC').show();
+            $('#loadingproveedor').show();
             codigosbarras();//Carga los nuevos datos del producto
-        }
+        // }
+
+        $.ajax({
+            url: $('#fk_id_proveedor').data('url'),
+            data: {
+                'param_js':proveedores_js,
+                $id_sku:$('#fk_id_sku').val()
+            },
+            dataType:'JSON',
+            success: function (data) {
+                $('#fk_id_proveedor').empty();
+                $.each(data, function (key, proveedor) {
+                    let option = $('<option/>');
+                    option.val(proveedor.id);
+                    option.text(proveedor.text);
+                    $('#fk_id_proveedor').append(option);
+                });
+                $('#fk_id_proveedor').prepend('<option value="0">Proveedor no seleccionado</option>');
+                $('#loadingproveedor').hide();
+            },
+            error: function () {
+                $('#loadingproveedor').hide();
+                $('#fk_id_proveedor').prepend('<option value="0">Proveedor no seleccionado</option>');
+            }
+        });
     });
 
     $('.imprimir').on('click',function (e) {
@@ -98,6 +123,7 @@ $(document).ready( function () {
             return false;
         }
     });
+
 });
 
 function getIdempleado()

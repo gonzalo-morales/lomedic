@@ -8,6 +8,9 @@
 	@parent
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if(!Route::currentRouteNamed(currentRouteName('index')))
+    <script type="text/javascript">
+        var proveedores_js = '{{$js_proveedores ?? ''}}';
+    </script>
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
 	@endif
 @endsection
@@ -83,8 +86,10 @@
 								'class'=>'form-control','style'=>'width:100%']) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{{Form::label('fk_id_proveedor','Proveedor')}}
-								{!!Form::select('fk_id_proveedor',isset($proveedores)?$proveedores:[],null,['id'=>'fk_id_proveedor','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%'])!!}
+                                <div id="loadingproveedor" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+                                    Cargando datos... <i class="material-icons align-middle loading">cached</i>
+                                </div>
+                                {{Form::cSelect('Proveedor','fk_id_proveedor',$proveedores ?? [],['data-url'=>companyAction('HomeController@index').'/SociosNegocio.sociosnegocio/api'])}}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								{{Form::label('fk_id_proyecto','Proyecto')}}
