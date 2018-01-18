@@ -31,7 +31,8 @@ class ModelBase extends Model
 	public $timestamps = false;
 
 	public function __construct($attributes = []) {
-		return parent::__construct($attributes);
+		$this->eagerLoaders = $this->getAutoEager();
+		return parent::__construct($attributes);		
 		#$this->rules = array_merge_recursive_simple($this->rules,$this->getRulesDefaults());
 	}
 
@@ -45,14 +46,44 @@ class ModelBase extends Model
 	{
 	    parent::boot();
 	    /*
-	    // al actualizar un post
-	    Post::updating(function($table){
-	        $table->updated_by = Auth::user()->id;
+	    //mientras creamos
+	    self::creating(function($table){
 	    });
-	        
-        // al guardar un post
-        Post::saving(function($table){
-            $table->created_by = Auth::user()->id;
+	    
+        //una vez creado
+        self::created(function($table){
+        });
+        
+        //mientras actualizamos
+        self::updating(function($table){
+        });
+	    
+        //una vez actualizado
+        self::updated(function($table){
+        });
+	    
+	    //mientras salvamos
+	    self::saving(function($table){
+	    });
+	    
+	    //una vez salvado
+        self::saved(function($table){
+        });
+	    
+	    //mientras eliminamos
+        self::deleting(function($table){
+        });
+	    
+	    //una vez eliminado
+        self::deleted(function($table){
+        });
+	    
+	    //mientras restauramos
+        self::restoring(function($table){
+        });
+	    
+	    //una vez restaurado
+        self::restored(function($table){
         });
         */
 	}
@@ -66,6 +97,18 @@ class ModelBase extends Model
 		return array_where(array_diff(array_keys($this->getFields()), array_keys($this->getColumnsDefaultsValues())), function ($value, $key) {
 			return !str_contains($value, '.');
 		});
+	}
+	public function getAutoEager()
+	{
+	    $keysfields = array_keys($this->fields ?? []) ?? [];
+	    $return = [];
+	    
+	    foreach ($keysfields as $key) {
+	        $pos = strpos($key, '.');
+	        if($pos !== false)
+	            array_push($return,substr($key,0,$pos));
+	    }
+        return $return;
 	}
 	
 	public function getFillable()

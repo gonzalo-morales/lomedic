@@ -46,18 +46,4 @@ class SatMunicipios extends ModelBase
 		'sat_estado' => 'Abreviatura Estado',
 		'activo_span' => 'Estatus'
 	];
-
-	// /**
-	//  * Atributos de carga optimizada
-	//  * @var array
-	//  */
-	// protected $eagerLoaders = ['estado'];
-
-	// *
-	//  * Obtenemos estado relacionado
-	//  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-	 
-	// public function estado(){
-	// 	return $this->belongsTo(Estados::class, 'fk_id_estado', 'id_estado')->select(['id_estado', 'estado']);
-	// }
 }

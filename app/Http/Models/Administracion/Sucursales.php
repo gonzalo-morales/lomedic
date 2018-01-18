@@ -56,12 +56,6 @@ class Sucursales extends ModelBase
 		'activo_span' => 'Estatus',
 	];
 
-	/**
-	 * Atributos de carga optimizada
-	 * @var array
-	 */
-	protected $eagerLoaders = ['localidad','tiposucursal','cliente'];
-
 	public function tiposucursal() {
 		return $this->hasOne(TipoSucursal::class, 'id_tipo', 'fk_id_tipo');
 	}

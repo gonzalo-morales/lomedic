@@ -111,7 +111,7 @@
     								<td>{{ str_limit(object_get($row, $field),90) }}</td>
     								@endforeach
     								<td class="width-auto not-wrap">
-    									<a rv-each-dynamics="collections.itemsOptions" data-item-id="{{$row->getKey()}}" {!!currentEntity()->getDataAttributes($row)!!}></a>
+    									<a rv-each-dynamics="collections.itemsOptions" data-item-id="{{$row->getKey()}}" {!! isset($row['data-atributes']) ? $row['data-atributes'] : '' !!} ></a>
     								</td>
     							</tr>
     							@endforeach

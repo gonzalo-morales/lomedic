@@ -42,19 +42,20 @@ class MovimientoAlmacenController extends ControllerBase
 
             //     })->toArray();
             // })->pluck('sku','id_sku');
-
             $almacenes = Almacenes::where('fk_id_sucursal',$entity->fk_id_sucursal)->where('activo',1)->where('eliminar',0)->pluck('almacen','id_almacen');
             $ubicaciones_det = Ubicaciones::where('fk_id_almacen',$entity->fk_id_almacen)->where('activo',1)->where('eliminar',0)->pluck('ubicacion','id_ubicacion');
             $skus = Productos::whereHas('stock',function ($q) use ($entity){
                 $q->where('fk_id_almacen',$entity->fk_id_almacen)->where('activo',1)->where('eliminar',0);
             })->pluck('sku','id_sku');
         }
+        $fechaActual = Carbon::now();
 
         return [
             // #Variable(s) para el select2
             'sucursales'  => Sucursales::whereHas('empleados',function ($q){$q->where('id_empleado',Auth::user()->fk_id_empleado);})->pluck('sucursal','id_sucursal')->prepend('Seleccione la sucursal',''),
             'almacenes'  => $almacenes,
             'ubicaciones_det' => $ubicaciones_det,
+            'fechaActual' => $fechaActual,
             // 'skus_data' => $skus_data,
 
             // #Variables para las API 

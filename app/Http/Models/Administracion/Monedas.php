@@ -3,7 +3,6 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
-use Illuminate\Support\HtmlString;
 
 
 class Monedas extends ModelBase
@@ -48,16 +47,9 @@ class Monedas extends ModelBase
         'total_decimales' => 'Cantidad Decimales',
         'activo_span' => 'Estatus'
     ];
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    // public $timestamps = false;
-
-    // public function numeroscuenta()
-    // {
-    //     return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
-    // }
-
+    /*
+    SAGY600321EU8
+    ADMINISTRADOR
+    4NT4R4SY
+    */
 }

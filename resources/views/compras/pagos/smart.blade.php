@@ -136,7 +136,7 @@
 @endif
 
 @crear
-	@section('form-title','Agregar Pago)
+	@section('form-title','Agregar Pago')
 @endif
 
 @editar

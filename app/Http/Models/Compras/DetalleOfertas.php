@@ -19,7 +19,7 @@ class DetalleOfertas extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_oferta_detalle';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.
@@ -27,8 +27,8 @@ class DetalleOfertas extends ModelCompany
      * @var array
      */
     protected $fillable = ['fk_id_sku','fk_id_upc','fk_id_cliente','cantidad','fk_id_unidad_medida',
-        'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','descuento_detalle','fk_id_documento',
-        'fk_id_documento_parent','fk_id_tipo_documento_parent'];
+        'fk_id_impuesto','precio_unitario','total_producto','fk_id_proyecto','descuento_detalle','fk_id_documento',
+        'fk_id_tipo_documento_base','fk_id_documento_base'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -42,13 +42,6 @@ class DetalleOfertas extends ModelCompany
      * @var array
      */
     public $rules = [
-//        'fk_id_sku' => 'required',
-//        'fk_id_upc' => 'required',
-//        'cantidad' => 'required|digits_between:1,9999',
-//        'fk_id_unidad_medida' => 'required',
-//        'fk_id_impuesto' => 'required',
-//        'precio_unitario' => 'required|regex:/^\d{0,6}(\.\d{0,2})?$/',
-//        'descuento_detalle' => 'regex:/^\d{0,3}(\.\d{0,4})?$/'
     ];
 
     public $niceNames = [
@@ -81,7 +74,7 @@ class DetalleOfertas extends ModelCompany
 
     public function oferta()
     {
-        return $this->belongsTo('App\Http\Models\Compras\Ofertas','fk_id_oferta','id_oferta');
+        return $this->belongsTo('App\Http\Models\Compras\Ofertas','fk_id_documento','id_documento');
     }
 
     public function cliente()
@@ -91,7 +84,7 @@ class DetalleOfertas extends ModelCompany
 
     public function solicitud()
     {
-        return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_solicitud','fk_id_documento');
+        return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_solicitud','fk_id_documento_base');
     }
 
     public function unidadMedida()

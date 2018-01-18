@@ -44,8 +44,6 @@ class NotasCargoClientesDetalle extends ModelCompany
      */
     protected $fields = [];
 
-    protected $eagerLoaders = [];
-
     /**
      * The validation rules
      * @var array

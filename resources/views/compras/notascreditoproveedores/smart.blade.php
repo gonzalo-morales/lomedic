@@ -55,7 +55,7 @@
     			<div class="form-group col-md-6 col-sm-12">
     				{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}
     			</div>
-    			@inroute(['create','index'])
+    			@inroute(['edit','show'])
     				<div class="form-group col-md-2 col-sm-6">
     					{{Form::label('serie_folio_factura','Serie y Folio',['style'=>'display: block;text-align: center;'])}}
     					<div class="input-group">
@@ -71,7 +71,7 @@
     				</div>
     				<div class="form-group col-md-2 col-sm-6">
     					{{Form::label('fk_id_estatus_nota','Estatus Nota')}}
-    					{{Form::Text('fk_id_estatus_nota',$data->estatus->estatus,['disabled','class'=>'form-control'])}}
+    					{{Form::Text('fk_id_estatus_nota',isset($data->estatus->estatus) ? $data->estatus->estatus : '',['disabled','class'=>'form-control'])}}
     				</div>
     				<div class="form-group col-md-2 col-sm-6">
     					{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
@@ -210,7 +210,7 @@
     						<h1 class="text-success text-center">Productos facturados</h1>
     						<table id="factura" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};">
     							<thead id="encabezado_factura">
-    							@inroute(['create','index'])
+    							@inroute(['edit','show'])
     								@if($data->version_sat == "3.3")
     									<tr>
     										<th>Clave Producto Servicio</th>
@@ -235,7 +235,7 @@
     							@endif
     							</thead>
     							<tbody id="productos_facturados">
-    							@inroute(['create','index'])
+    							@inroute(['edit','show'])
     								@if($data->version_sat == "3.3")
     									@foreach($data->detalle as $detalle)
     									<tr>

@@ -28,7 +28,7 @@ class Upcs extends ModelCompany
      * @var array
      */
     protected $fillable = [
-        'upc','registro_sanitario','nombre_comercial','marca','fk_id_presentacion_venta','fk_id_laboratorio','peso','longitud','ancho','altura','descontinuado','fk_id_pais_origen','activo'
+        'upc','registro_sanitario','nombre_comercial','marca','fk_id_presentacion_venta','fk_id_laboratorio','peso','longitud','ancho','altura','descontinuado','fk_id_pais_origen','activo','descripcion'
     ];
 
     /**
@@ -37,6 +37,7 @@ class Upcs extends ModelCompany
      */
     protected $fields = [
         'upc' => 'UPC',
+        'descripcion' => 'Descripcion',
         'nombre_comercial' => 'Nombre Comercial',
         'registro_sanitario' => 'Registro Sanitario',
         'marca' => 'Marca',

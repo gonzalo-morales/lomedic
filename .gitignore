@@ -24,3 +24,4 @@ Homestead.json
 /.project
 /package.json
 /.buildpath
+*.json

@@ -179,7 +179,7 @@ function getCacheKey($route = '', $withPage = true)
  * Obtenemos etiqueta para cache
  * @return string
  */
-function getCacheTag($route = '')
+function getCacheTag($route = '') 
 {
 	return getCacheKey($route, false);
 }

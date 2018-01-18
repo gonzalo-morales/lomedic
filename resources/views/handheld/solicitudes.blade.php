@@ -3,10 +3,11 @@
 @section('title', 'Handheld - Solicitudes')
 {{ session('message') ? HTML::tag('p', session('message'), ['class'=>'success-message']) : '' }}
 @section('content')
+{{--  {{dd($solicitudes)}}  --}}
 	<p style="text-align: center;margin-bottom:0;">Selecciona el pedido disponible <b>asignado:</b></p>
 	<div id="navigation">
 		@foreach ($solicitudes as $solicitud)
-		{{-- {{dump($solicitud)}} --}}
+		{{--  {{dd($solicitud)}}  --}}
 			{{ link_to(companyRoute('handheld.solicitudes-solicitud', ['id' => $solicitud->id_detalle]), $solicitud->pedidos->no_pedido, ['class'=>'list-item']) }}
 		@endforeach
 	</div><br>

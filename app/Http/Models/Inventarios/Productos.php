@@ -7,6 +7,7 @@ use App\Http\Models\Administracion\SubgrupoProductos;
 use App\Http\Models\Administracion\SeriesSkus;
 use App\Http\Models\Administracion\UnidadesMedidas;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Productos extends ModelCompany
 {
@@ -33,8 +34,6 @@ class Productos extends ModelCompany
         "fk_id_serie_sku","fk_id_impuesto","fk_id_familia","activo_desde","activo_hasta","fk_id_unidad_medida_venta","fk_id_presentacion_venta","fk_id_proveedor_predeterminado",
         "fk_id_unidad_medida_compra","necesario","maximo","minimo","punto_reorden","fk_id_metodo_valoracion"
     ];
-
-    protected $eagerLoaders = ['upcs'];
 
     /**
      * Los atributos que seran visibles en index-datable
@@ -102,5 +101,9 @@ class Productos extends ModelCompany
     public function stock()
     {
         return $this->belongsTo(Stock::class, 'id_sku', 'fk_id_sku');
+    }
+    public function proveedores()
+    {
+        return $this->belongsToMany(SociosNegocio::class,'maestro.sng_det_productos','fk_id_sku','fk_id_socio_negocio','id_sku','id_socio_negocio')->withPivot('tiempo_entrega');
     }
 }

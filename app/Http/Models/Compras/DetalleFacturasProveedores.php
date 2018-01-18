@@ -64,8 +64,6 @@ class DetalleFacturasProveedores extends ModelCompany
     protected $fields = [
     ];
 
-//    protected $eagerLoaders = ['proveedor','sucursal'];
-
     /**
      * The validation rules
      * @var array

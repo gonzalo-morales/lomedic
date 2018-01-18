@@ -45,12 +45,6 @@ class VehiculosModelos extends ModelBase
         'activo_span' => 'Estatus'
     ];
 
-    /**
-     * Atributos de carga optimizada
-     * @var array
-     */
-    protected $eagerLoaders = ['marca'];
-
     public function marca()
     {
         return $this->belongsTo(VehiculosMarcas::class, 'fk_id_marca', 'id_marca');

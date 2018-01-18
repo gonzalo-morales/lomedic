@@ -56,8 +56,6 @@ class Ordenes extends ModelCompany
         'empresa.nombre_comercial' => 'Empresa'
     ];
 
-    protected $eagerLoaders = ['proveedor','sucursales','estatus','empresa'];
-
     function getNombreCompletoAttribute() {
         return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
     }

@@ -49,8 +49,6 @@ class FacturasClientesDetalle extends ModelCompany
         
     ];
 
-    protected $eagerLoaders = [];
-
     /**
      * The validation rules
      * @var array

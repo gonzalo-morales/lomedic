@@ -26,20 +26,23 @@ class SolicitudesSalidaDetalle extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_solicitud', 'fk_id_sku', 'fk_id_upc', 'cantidad', 'fk_id_almacen', 'eliminar'];
-
+    protected $fillable = [
+        'fk_id_solicitud',
+        'fk_id_sku',
+        'fk_id_upc',
+        'cantidad',
+        'fk_id_almacen',
+        'eliminar',
+        'fk_id_pedido',
+        'fk_id_empleado',
+        'cantidad_solicitada_salida'
+    ];
 
     /*
      * Los atributos que seran visibles en index-datable
      * @var array
      */
     // protected $fields = [];
-
-    /**
-     * Atributos de carga optimizada
-     * @var array
-     */
-    // protected $eagerLoaders = [];
 
     /**
      * The validation rules
@@ -85,6 +88,6 @@ class SolicitudesSalidaDetalle extends ModelCompany
     }
     public function pedidos()
     {
-        return $this->hasOne(Pedidos::class,'id_pedido','fk_id_pedido');
+        return $this->hasOne(Pedidos::class,'id_documento','fk_id_pedido');
     }
 }

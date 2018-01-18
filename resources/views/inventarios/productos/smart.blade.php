@@ -204,7 +204,7 @@
                 			{{ Form::cSelect('Unidad Medida Venta', 'fk_id_unidad_medida_venta', $unidadmedida ?? [],['class'=>'select2']) }}
                 		</div>
         	  			<div class="form-group col-sm-12 col-md-6 col-lg-3">
-                			{{ Form::cSelect('Presentacion de Venta', 'fk_id_presentacion_venta', $unidadmedida ?? [],['class'=>'select2']) }}
+                			{{ Form::cSelect('Presentacion de Venta', 'fk_id_presentacion_venta', $presentacionventa ?? [],['class'=>'select2']) }}
                 		</div>
         	  		</div>
                 </div>
@@ -230,7 +230,7 @@
                     		{{ Form::cNumber('Maximo', 'maximo',['placeholder'=>'Ejm: 90']) }}
                     	</div>
                     	<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-2">
-                			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $metodovaloracion ?? ['Costos estimados','Costo estandar','Costos promedio','PEPS','UEPS','Lotes especificos'],['class'=>'select2']) }}
+                			{{ Form::cSelect('Metodo Valoracion', 'fk_id_metodo_valoracion', $metodovaloracion ?? [],['class'=>'select2']) }}
                 		</div>
         	  		</div>
                 </div>
@@ -240,7 +240,7 @@
                 			{{ Form::cNumber('Punto Reorden', 'punto_reorden',['placeholder'=>'Ejm: 15']) }}
                 		</div>
                 		<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                			{{ Form::cSelect('Intervalo del periodo', 'fk_id_intervalo', $intervaloperiodo?? ['Diario','Semanal','Quincenal','Menual','Trimestral','Semestral'],['class'=>'select2']) }}
+                			{{ Form::cSelect('Intervalo del periodo', 'fk_id_intervalo', $periodos ?? [],['class'=>'select2']) }}
                 		</div>
                 		<div class="form-group col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 			{{ Form::cNumber('Cantidad minima por periodo', 'minima_periodo',['placeholder'=>'Ejm: 5']) }}

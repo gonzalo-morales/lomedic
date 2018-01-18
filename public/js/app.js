@@ -226,7 +226,7 @@ $(document).ready(function(){
       })
     });
 
-    $('#form-model .select2').select2();
+    $('#form-model .select2').select2({minimumResultsForSearch:20});
 
     $('.custom-file-input').on('change', function (ev) {
         file_name(this);
