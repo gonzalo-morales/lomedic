@@ -17,6 +17,9 @@ Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'compras', 'as' => 'compras.', 'middleware' => ['auth','share','csrf','password_expired']], function(){
+        Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
+            Route::resource('solicitudes','Compras\SolicitudesController',['only'=>['create']]);
+        });
         Route::get("/", function(){ return View::make("compras.index"); });
         Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
         Route::resource('solicitudes', 'Compras\SolicitudesController');

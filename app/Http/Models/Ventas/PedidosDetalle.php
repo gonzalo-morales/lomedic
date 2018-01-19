@@ -24,14 +24,14 @@ class PedidosDetalle extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_pedido_detalle';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.
      * @var array
      */
     protected $fillable = [
-        'fk_id_sku', 'fk_id_upc', 'fk_id_proyecto', 'precio_unitario', 'cantidad', 'fk_id_impuesto', 'cerrado', 'fk_id_documento', 'descuento', 'fk_id_tipo_documento', 'fk_id_clave_cliente_producto'
+        'fk_id_sku', 'fk_id_upc', 'fk_id_proyecto', 'precio_unitario', 'cantidad', 'fk_id_impuesto', 'cerrado', 'fk_id_documento', 'descuento', 'fk_id_tipo_documento', 'fk_id_clave_cliente_producto','fk_id_documento_base','fk_id_tipo_documento_base'
     ];
 
     public $niceNames =[];
@@ -53,7 +53,7 @@ class PedidosDetalle extends ModelCompany
     
     public function pedido()
     {
-        return $this->hasOne(Pedidos::class,'id_pedido','fk_id_documento');
+        return $this->hasOne(Pedidos::class,'id_documento','fk_id_documento');
     }
     
     public function tipodocumento()
