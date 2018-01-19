@@ -31,7 +31,9 @@ class PedidosDetalle extends ModelCompany
      * @var array
      */
     protected $fillable = [
-        'fk_id_sku', 'fk_id_upc', 'fk_id_proyecto', 'precio_unitario', 'cantidad', 'fk_id_impuesto', 'cerrado', 'fk_id_documento', 'descuento', 'fk_id_tipo_documento', 'fk_id_clave_cliente_producto','fk_id_documento_base','fk_id_tipo_documento_base'
+        'fk_id_sku', 'fk_id_upc', 'fk_id_proyecto', 'precio_unitario', 'cantidad', 'fk_id_impuesto', 'cerrado',
+        'fk_id_documento', 'descuento', 'fk_id_tipo_documento', 'fk_id_clave_cliente_producto','fk_id_documento_base',
+        'fk_id_tipo_documento_base','fk_id_linea'
     ];
 
     public $niceNames =[];
