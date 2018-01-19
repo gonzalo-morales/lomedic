@@ -76,7 +76,7 @@ class Sucursales extends ModelBase
 
 	public function empleados()
     {
-        return $this->belongsToMany(Empleados::class,'maestro.ges_det_empleado_sucursal','fk_id_sucursal','fk_id_empleado','id_sucursal');
+        return $this->belongsToMany(Empleados::class,'maestro.ges_det_empleado_sucursal','fk_id_sucursal','fk_id_empleado','id_sucursal','id_empleado');
     }
 
     public function cliente()

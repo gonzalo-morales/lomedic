@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Compras;
 
+use App\Events\LogModulos;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\Unidadesmedidas;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Compras\DetalleSolicitudes;
@@ -12,9 +14,12 @@ use App\Http\Models\Administracion\Impuestos;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\Ventas\FacturasClientes;
+use App\Http\Models\Ventas\Pedidos;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Milon\Barcode\DNS1D;
 use Milon\Barcode\DNS2D;
@@ -30,6 +35,18 @@ class SolicitudesController extends ControllerBase
     
     public function getDataView($entity = null)
     {
+        switch (\request()->tipo_documento){
+            case 4:
+                $detalles_documento = FacturasClientes::find(\request('id'))->detalle->where('eliminar',0);
+                break;
+            case 8://id para pruebas: 22
+                $detalles_documento = Pedidos::find(\request('id'))->detalle->where('cerrado',0)->where('eliminar',0);
+                break;
+            default:
+                $detalles_documento = null;
+                break;
+        }
+//        dd($entity->fk_id_sucursal);
 //        dd(SociosNegocio::where('eliminar',0)->where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')->whereHas('empresas',function ($q){
 //            $q->where('conexion',\request()->company);
 //        })->pluck('nombre_comercial','id_socio_negocio'));
@@ -42,19 +59,20 @@ class SolicitudesController extends ControllerBase
             'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')->where('eliminar',0)->where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida'),
             'skus' => Productos::where('eliminar',0)->where('activo',1)->orderBy('sku')->pluck('sku','id_sku'),
             'empleados' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre, id_empleado")->where('eliminar',0)->where('activo',1)->orderBy('nombre')->pluck('nombre','id_empleado'),
-            'sucursalesempleado' => !empty($entity) ? 
-                $this->entity->sucursales()->where('eliminar',0)->where('activo',1)->orderBy('sucursal')->pluck('sucursal','id_sucursal') : 
+            'sucursalesempleado' => !empty($entity) ?
+                Empleados::find($entity->fk_id_solicitante)->sucursales->where('eliminar',0)->where('activo',1)->pluck('sucursal','id_sucursal') :
                 Auth::user()->empleado->sucursales->where('eliminar',0)->where('activo',1)->pluck('sucursal','id_sucursal'),
             'js_proveedores' => Crypt::encryptString('"select":["id_socio_negocio as id","nombre_comercial as text"],"whereHas":[{"productos":{"where":["fk_id_sku",$id_sku]}}]'),
+            'detalles_documento'=>$detalles_documento
         ];
     }
 
     public function store(Request $request, $company, $compact = false)
     {
-        $id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
         # ¿Usuario tiene permiso para crear?
         $this->authorize('create', $this->entity);
         if(!isset($request->fk_id_solicitante)){
+            $id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
             $request->request->set('fk_id_solicitante',$id_empleado);
         }
 
@@ -74,22 +92,24 @@ class SolicitudesController extends ControllerBase
         if ($isSuccess) {
             if(isset($request->_detalles)) {
                 foreach ($request->_detalles as $detalle) {
-                    if(empty($detalle->fk_id_upc)){
+                    if(empty($detalle['fk_id_upc'])){
                         $detalle['fk_id_upc'] = null;
                     }
-                    if(empty($detalle->fk_id_proyecto)){
+                    if(empty($detalle['fk_id_proyecto'])){
                         $detalle['fk_id_proyecto'] = null;
                     }
-                    if(empty($detalle->fk_id_proveedor)){
+                    if(empty($detalle['fk_id_proveedor'])){
                         $detalle['fk_id_proveedor'] = null;
                     }
                     $isSuccess->detalleSolicitudes()->save(new DetalleSolicitudes($detalle));
                 }
-                $this->log('store', $isSuccess->id_solicitud);
             }
+
+            Cache::tags(getCacheTag('index'))->flush();
+            event(new LogModulos($isSuccess, $company, 'crear' , 'Registro creado'));
             return $this->redirect('store');
         } else {
-            $this->log('error_store');
+            event(new LogModulos($isSuccess, $company, 'crear' , 'Error al crear registro'));
             return $this->redirect('error_store');
         }
     }
@@ -110,9 +130,9 @@ class SolicitudesController extends ControllerBase
                     $solicitud_detalle = $entity
                         ->findOrFail($id)
                         ->detalleSolicitudes()
-                        ->where('id_solicitud_detalle', $detalle['id_solicitud_detalle'])
+                        ->where('id_documento_detalle', $detalle['id_documento_detalle'])
                         ->first();
-                    if(empty($detalle->fk_id_proyecto)){
+                    if(empty($detalle['fk_id_proyecto'])){
                         $detalle['fk_id_proyecto'] = null;
                     }
                     $solicitud_detalle->fill($detalle);
@@ -121,7 +141,7 @@ class SolicitudesController extends ControllerBase
             }
             if(isset($request->_detalles)){
                 foreach ($request->_detalles as $detalle){
-                    if(empty($detalle->fk_id_upc)){
+                    if(empty($detalle['fk_id_upc'])){
                         $detalle['fk_id_upc'] = null;
                     }
                     if(empty($detalle->fk_id_proyecto)){
@@ -134,10 +154,11 @@ class SolicitudesController extends ControllerBase
                 }
             }
 
-            $this->log('update', $id);
+            Cache::tags(getCacheTag('index'))->flush();
+            event(new LogModulos($entity, $company, 'editar', 'Registro actualizado'));
             return $this->redirect('update');
         } else {
-            $this->log('error_update', $id);
+            event(new LogModulos($entity, $company, 'editar', 'Error al editar el registro'));
             return $this->redirect('error_update');
         }
     }
@@ -216,35 +237,36 @@ class SolicitudesController extends ControllerBase
 
     public function impress($company,$id)
     {
-        $solicitud = Solicitudes::where('id_solicitud',$id)->first();
-        $detalles = DetalleSolicitudes::where('fk_id_solicitud',$id)
-            ->where('cerrado','f')->get();
+        $solicitud = Solicitudes::where('id_documento',$id)->first();
+//        $detalles = DetalleSolicitudes::where('fk_id_documento',$id)
+//            ->where('cerrado','f')->get();
         $subtotal = 0;
         $iva = 0;
         $total = 0;
-        foreach ($detalles as $detalle)
+        foreach ($solicitud->detalleSolicitudes as $detalle)
         {
             $subtotal += $detalle->precio_unitario * $detalle->cantidad;
             $iva += (($detalle->precio_unitario*$detalle->cantidad)*$detalle->impuesto->porcentaje)/100;
-            $total += $detalle->total;
+            $total += $detalle->importe;
         }
         $total = number_format($total,2,'.',',');
 
-        $barcode = DNS1D::getBarcodePNG($solicitud->id_solicitud,'EAN8');
-        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$solicitud->id_solicitud])), "QRCODE");
+        $barcode = DNS1D::getBarcodePNG($solicitud->id_documento,'EAN8');
+        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$solicitud->id_documento])), "QRCODE");
 
         $empresa = Empresas::where('conexion','LIKE',$company)->first();
 
         $pdf = PDF::loadView(currentRouteName('compras.solicitudes.imprimir'),[
             'solicitud' => $solicitud,
-            'detalles' => $detalles,
+//            'detalles' => $detalles,
             'subtotal' => $subtotal,
             'iva' => $iva,
-            'total' => $total,
+            'importe' => $total,
             'total_letra' => num2letras($total),
             'barcode' => $barcode,
             'qr' => $qr,
-            'empresa' => $empresa
+            'empresa' => $empresa,
+            'total' => $total
         ]);
 
         $pdf->setPaper('letter','landscape');

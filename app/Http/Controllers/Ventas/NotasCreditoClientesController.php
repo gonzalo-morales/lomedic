@@ -70,9 +70,9 @@ class NotasCreditoClientesController extends ControllerBase
             'condicionespago' => CondicionesPago::select('condicion_pago','id_condicion_pago')->where('activo','1')->where('eliminar','0')->orderBy('condicion_pago')->pluck('condicion_pago','id_condicion_pago')->prepend('Selecciona una opcion...',''),
             'usoscfdi' => UsosCfdis::selectRaw("CONCAT(uso_cfdi,' - ',descripcion) as uso_cfdi, id_uso_cfdi")->where('activo','1')->where('eliminar','0')->orderBy('uso_cfdi')->pluck('uso_cfdi','id_uso_cfdi')->prepend('Selecciona una opcion...',''),
             'tiposrelacion' => TiposRelacionesCfdi::selectRaw("CONCAT(tipo_relacion,' - ',descripcion) as tipo_relacion, id_sat_tipo_relacion")->where('activo',1)->where('eliminar',0)->where('nota_credito',1)->orderBy('tipo_relacion')->pluck('tipo_relacion','id_sat_tipo_relacion')->prepend('Selecciona una opcion...',''),
-            'facturasrelacionadas' =>FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_factura")->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_factura')->prepend('Selecciona una opcion...','0'),
-            'notascargorelacionadas'=>NotasCargoClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as notacargo, id_nota_cargo")->whereNotNull('uuid')->orderBy('notacargo')->pluck('notacargo','id_nota_cargo')->prepend('Selecciona una opcion...','0'),
-            'js_productos_facturas'=>Crypt::encryptString('"relations":[{"id_factura":[{"toArrayWithDetails":$fk_id_factura}]}]'),
+            'facturasrelacionadas' =>FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_documento")->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_documento')->prepend('Selecciona una opcion...','0'),
+            'notascargorelacionadas'=>NotasCargoClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as notacargo, id_documento")->whereNotNull('uuid')->orderBy('notacargo')->pluck('notacargo','id_documento')->prepend('Selecciona una opcion...','0'),
+            'js_productos_facturas'=>Crypt::encryptString('"relations":[{"id_documento":[{"toArrayWithDetails":$fk_id_documento}]}]'),
 //            'js_productos_facturas'=>Crypt::encryptString('
 //                "select": ["serie", "folio"],
 //                "conditions": [{

@@ -4,9 +4,33 @@ $('.datepicker').pickadate({
     selectMonths: true, // Creates a dropdown to control month
     selectYears: 3, // Creates a dropdown of 3 years to control year
     min: true,
-    format: 'yyyy/mm/dd'
+    format: 'yyyy-mm-dd'
 });
 $(document).ready( function () {
+
+    $(document).on('submit',function (e) {
+        $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
+        $.validator.addClassRules('requerido',{
+           cRequerido: true
+        });
+        if(!$('#form-model').valid()){
+            $.toaster({
+                priority : 'danger',
+                title : '¡Error!',
+                message : 'Hay campos que requieren tu atención',
+                settings:{
+                    'timeout':10000,
+                    'toaster':{
+                        'css':{
+                            'top':'5em'
+                        }
+                    }
+                }
+            });
+            e.preventDefault();
+        }
+    });
+
     $.ajax({
         async: false,
         url: $('#fk_id_impuesto').data('url'),
@@ -18,7 +42,6 @@ $(document).ready( function () {
             });
         }
     });
-    select2Placeholder('fk_id_sku','Selecciona un SKU');
     select2Placeholder('fk_id_proveedor','Proveedor no seleccionado',50,true,false);
 
     $('#_id_solicitante').val(getIdempleado());
@@ -54,7 +77,6 @@ $(document).ready( function () {
     //Inicializar tabla
     window.dataTable = new DataTable('#productos', {
         footer : false,
-        fixedHeight: true,
         fixedColumns: true,
         searchable: false,
         perPageSelect: false,
@@ -65,35 +87,35 @@ $(document).ready( function () {
 
     select2Placeholder('fk_id_upc','Selecciona UPC',5);
     $('#fk_id_sku').on('change',function () {
-        // if($('#fk_id_sku').select2('data')[0].id){
-            $('#loadingUPC').show();
-            $('#loadingproveedor').show();
-            codigosbarras();//Carga los nuevos datos del producto
-        // }
+         if($('#fk_id_sku').val() ) {
+             $('#loadingUPC').show();
+             $('#loadingproveedor').show();
+             codigosbarras();//Carga los nuevos datos del producto
 
-        $.ajax({
-            url: $('#fk_id_proveedor').data('url'),
-            data: {
-                'param_js':proveedores_js,
-                $id_sku:$('#fk_id_sku').val()
-            },
-            dataType:'JSON',
-            success: function (data) {
-                $('#fk_id_proveedor').empty();
-                $.each(data, function (key, proveedor) {
-                    let option = $('<option/>');
-                    option.val(proveedor.id);
-                    option.text(proveedor.text);
-                    $('#fk_id_proveedor').append(option);
-                });
-                $('#fk_id_proveedor').prepend('<option value="0">Proveedor no seleccionado</option>');
-                $('#loadingproveedor').hide();
-            },
-            error: function () {
-                $('#loadingproveedor').hide();
-                $('#fk_id_proveedor').prepend('<option value="0">Proveedor no seleccionado</option>');
-            }
-        });
+             $.ajax({
+                 url: $('#fk_id_proveedor').data('url'),
+                 data: {
+                     'param_js': proveedores_js,
+                     $id_sku: $('#fk_id_sku').val()
+                 },
+                 dataType: 'JSON',
+                 success: function (data) {
+                     $('#fk_id_proveedor').empty();
+                     $.each(data, function (key, proveedor) {
+                         let option = $('<option/>');
+                         option.val(proveedor.id);
+                         option.text(proveedor.text);
+                         $('#fk_id_proveedor').append(option);
+                     });
+                     $('#fk_id_proveedor').prepend('<option value="0">Proveedor no seleccionado</option>');
+                     $('#loadingproveedor').hide();
+                 },
+                 error: function () {
+                     $('#loadingproveedor').hide();
+                     $('#fk_id_proveedor').prepend('<option value="0">Proveedor no seleccionado</option>');
+                 }
+             });
+         }
     });
 
     $('.imprimir').on('click',function (e) {
@@ -154,8 +176,8 @@ function sucursal()
 
     if(!$('#_id_solicitante').val())
     {
-            var _url = data_empleado.replace('?id', $('#fk_id_solicitante').select2('data')[0].id);
-            $('#_id_solicitante').val($('#fk_id_solicitante').select2('data')[0].id);
+            var _url = data_empleado.replace('?id', $('#fk_id_solicitante').val());
+            $('#_id_solicitante').val($('#fk_id_solicitante').val());
     }
     else
         {var _url = data_empleado.replace('?id', $('#_id_solicitante').val());}
@@ -199,12 +221,13 @@ function sucursal()
 
 function codigosbarras()
 {
-    if($('#fk_id_sku').select2('data')[0].id != null) {
+    console.log($('#fk_id_sku').val());
+    if($('#fk_id_sku').val() != 0) {
         let data_codigo = $('#fk_id_upc').data('url');
         $('#fk_id_upc').prop('disabled', true);//Deshabilitar
 
-        var _url = data_codigo.replace('?id', $('#fk_id_sku').select2('data')[0].id);
-
+        var _url = data_codigo.replace('?id', $('#fk_id_sku').val());
+        console.log(_url);
         $.ajax({
             url: _url,
             dataType: 'json',
@@ -239,6 +262,9 @@ function codigosbarras()
 
                 $('#fk_id_upc').select2();
             },
+            error: function () {
+                $('#loadingUPC').hide();
+            }
         });
     }
 }
@@ -300,7 +326,7 @@ function agregarProducto() {
         let proyectos = '';
                 $.each($('#fk_id_proyecto option').clone(), function (key, proyecto) {
                     //Este if es para verificar la opción seleccionada por defecto
-                    if(proyecto.value == $('#fk_id_proyecto').select2('data')[0].id)
+                    if(proyecto.value == $('#fk_id_proyecto').val())
                         {proyectos += '<option value="'+proyecto.value+'" selected>'+proyecto.innerText+'</option>';}
                     else
                         {proyectos += proyecto.outerHTML;}
@@ -309,7 +335,7 @@ function agregarProducto() {
         let impuestos = '';
         $.each($('#fk_id_impuesto option').clone(), function (key, impuesto) {
                     //Este if es para verificar la opción seleccionada por defecto
-                    if(impuesto.value == $('#fk_id_impuesto').select2('data')[0].id && impuesto.value != -1)
+                    if(impuesto.value == $('#fk_id_impuesto').val() && impuesto.value != -1)
                         {
                             impuestos += '<option value="'+impuesto.value+'" selected>'+impuesto.innerText+'</option>';
                         }
@@ -321,23 +347,24 @@ function agregarProducto() {
         let id_upc = 0;
         let text_upc = 'UPC no seleccionado';
         if ($('#fk_id_upc').val()) {
-            id_upc = $('#fk_id_upc').select2('data')[0].id;
+            id_upc = $('#fk_id_upc').val();
             text_upc = $('#fk_id_upc').select2('data')[0].text;
         }
-
+        let proveedor =  $('#fk_id_proveedor').select2('data')[0].text.replace(/,/g ,"");
         dataTable.import({
             type: "csv",
             data:
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text + ","+
+            $('<input type="hidden" name="_detalles[+row_id+][fk_id_documento_padre]">')[0].outerHTML+'N/A'+','+
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').val() + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text + ","+
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc + ","+
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" value="'+$('#fk_id_proveedor').val()+'"/>')[0].outerHTML+$('#fk_id_proveedor').select2('data')[0].text+ "," +
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" value="'+$('#fk_id_proveedor').val()+'"/>')[0].outerHTML + proveedor + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val()+'"/>')[0].outerHTML +  $('#fecha_necesario').val() + "," +
             $('<select name="_detalles['+row_id+'][fk_id_proyecto]" id="fk_id_proyecto'+row_id+'" style="width: 100%" class="select">'+proyectos+'</select>')[0].outerHTML + ","+
             $('<input type="text" name="_detalles['+row_id+'][cantidad]" onchange="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad form-control" />')[0].outerHTML + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />')[0].outerHTML + $('#fk_id_unidad_medida option:selected').html() + ","+
             $('<select name="_detalles['+row_id+'][fk_id_impuesto]" onchange="total_producto_row('+row_id+')" id="_fk_id_impuesto'+row_id+'" style="width: 100%" class="select">'+impuestos+'</select>')[0].outerHTML + ","+
             $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
-            $('<input type="text" name="_detalles['+row_id+'][total]" id="_total'+row_id+'" class="form-control" style="min-width: 100px" readonly value="'+ total+'" />')[0].outerHTML +"," +
+            $('<input type="text" name="_detalles['+row_id+'][importe]" id="_total'+row_id+'" class="form-control" style="min-width: 100px" readonly value="'+ total+'" />')[0].outerHTML +"," +
             '<button class="btn is-icon text-primary bg-white" ' +
             'type="button" data-delay="50" onclick="borrarFila(this)">' +
             '<i class="material-icons">delete</i></button>'
@@ -378,11 +405,11 @@ function agregarProducto() {
 
 function limpiarFormulario() {
     // $('#fk_id_proveedor').val('');
-    $('#fk_id_proveedor').val(null).trigger('change');
-    $('#fk_id_sku').val(null).trigger('change');
-    $('#fk_id_upc').val(null).trigger('change');
-    $('#fk_id_proyecto').val(null).trigger('change');
-    $('#fk_id_unidad_medida').val(null).trigger('change');
+    $('#fk_id_proveedor').empty();
+    $('#fk_id_sku').val(0).trigger('change');
+    $('#fk_id_upc').empty();
+    $('#fk_id_proyecto').val(0).trigger('change');
+    $('#fk_id_unidad_medida').val(0).trigger('change');
     $('#fk_id_impuesto').val('-1').trigger('change');
     $('#fecha_necesario').val('');
     $('#cantidad').val('1');
