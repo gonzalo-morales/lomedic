@@ -11,7 +11,6 @@ class Pagos extends ModelCompany
 {
     /**
      * The table associated with the model.
-     *
      * @var string
      */
     protected $table = 'fac_opr_pagos';
@@ -24,7 +23,6 @@ class Pagos extends ModelCompany
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -49,19 +47,18 @@ class Pagos extends ModelCompany
         'tipo_cambio'=>'tipo cambio'
     ];
 
-//    protected $dataColumns = [
-//        'fk_id_estatus_factura'
-//    ];
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
     protected $fields = [
-        'id_pago' => 'Número de pago',
+        'id_pago' => '#',
+        'banco.banco' => 'Banco',
+        'numero_referencia' => 'Referencia',
         'fecha_pago' => 'Fecha de pago',
+        'formapago_codigo' => 'Forma pago',
+        'moneda_codigo'=>'Moneda',
         'monto_formated' => 'Monto',
-        'forma_pago.forma_pago' => 'Forma pago',
-        'moneda.moneda'=>'Moneda'
     ];
 
     /**
@@ -76,6 +73,16 @@ class Pagos extends ModelCompany
         'tipo_cambio'=>'required|regex:/^(\d{0,4}(\.\d{0,6})?)$/'
     ];
 
+    public function getFormapagoCodigoAttribute()
+    {
+        return $this->forma_pago->forma_pago.' - '.$this->forma_pago->descripcion;
+    }
+   
+    public function getMonedaCodigoAttribute()
+    {
+        return $this->moneda->descripcion.' ('.$this->moneda->moneda.')';
+    }
+    
     public function getMontoFormatedAttribute()
     {
         return number_format($this->monto,2);

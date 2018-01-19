@@ -23,16 +23,13 @@ use DB;
 
 class UsuariosController extends ControllerBase
 {
-
     /**
      * Create a new controller instance.
-     *
      * @return void
      */
     public function __construct(Usuarios $entity)
     {
         $this->entity = $entity;
-//        $this->entity_name = strtolower(class_basename($entity));
     }
 
     /**
@@ -64,7 +61,7 @@ class UsuariosController extends ControllerBase
 //     * @return \Illuminate\Http\Response
 //     */
 
-    public function store(Request $request, $company)
+    public function store(Request $request, $company, $compact = false)
     {
 
         $isSuccess = $this->entity->create($request->all());
@@ -195,7 +192,7 @@ class UsuariosController extends ControllerBase
     }
 
 
-    public function update(Request $request, $company, $id)
+    public function update(Request $request, $company, $id, $compact = false)
     {
 //        # ¿Usuario tiene permiso para actualizar?
 //        $this->authorize('update', $this->entity);

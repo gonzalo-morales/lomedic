@@ -40,7 +40,11 @@ class Autorizaciones extends ModelCompany
      * @var array
      */
      protected $fields = [
-         'id_autorizacion'=>'Autorizacion',
+         'id_autorizacion'=>'No. Autorizacion',
+         'condicion.nombre' => 'Condicion',
+         'tipodocumento.nombre_documento' => 'Tipo Documento',
+         'fk_id_documento' => 'No. Documento',
+         'fecha_creacion' => 'Fecha',
          'estatus.estatus'=>'Estatus'
      ];
 
