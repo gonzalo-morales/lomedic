@@ -147,8 +147,6 @@ class ControllerBase extends Controller
             # Log
             event(new LogModulos($entity, $company, 'crear' , 'Registro creado'));
             
-            /*$primaryKey = $entity->getKeyName();
-            $this->log('store', $entity->{$primaryKey});*/
             $redirect = $this->redirect('store');
         } else {
             DB::rollBack();
@@ -170,8 +168,6 @@ class ControllerBase extends Controller
         # ¿Usuario tiene permiso para ver?
         //$this->authorize('view', $this->entity);
         
-        #$this->log('show', $id);
-
         try {
             $data = $this->entity->findOrFail($id);
         } catch (\Exception $e) {
@@ -275,13 +271,13 @@ class ControllerBase extends Controller
 
             # Log
             event(new LogModulos($entity, $company, 'editar', 'Registro actualizado'));
-            #$this->log('update', $id);
+            
             $redirect = $this->redirect('update');
         } else {
             DB::rollBack();
             # Log
             event(new LogModulos($entity, $company, 'editar', 'Error al actualizar el registro'));
-            #$this->log('error_update', $id);
+            
             $redirect = $this->redirect('error_update');
         }
         return $compact ? compact('entity','redirect') : $redirect;
@@ -303,7 +299,6 @@ class ControllerBase extends Controller
         $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)->update($attributes);
         
         if ($isSuccess) {
-
             DB::commit();
             # Shorthand
             foreach ($idOrIds as $id) {
@@ -321,9 +316,8 @@ class ControllerBase extends Controller
             } else {
                 return $this->redirect('destroy');
             }
-
-        } else {
-
+        }
+        else {
             DB::rollBack();
             # Shorthand
             foreach ($idOrIds as $id) {
@@ -353,7 +347,8 @@ class ControllerBase extends Controller
         //$this->authorize('delete', $this->entity);
 
         # Shorthand
-        if ($request->ids) return $this->destroy($request, $company, $request->ids);
+        if ($request->ids)
+            return $this->destroy($request, $company, $request->ids);
 
         return ['success' => false];
     }
@@ -390,7 +385,6 @@ class ControllerBase extends Controller
         $fields = $this->entity->getFields();
         $data = $query->get();
         
-
         if($type == 'pdf') {
             $pdf= PDF::loadView(currentRouteName('smart'), ['fields' => $fields, 'data' => $data]);
             $pdf->setPaper('letter','landscape');
@@ -408,13 +402,6 @@ class ControllerBase extends Controller
             })->download($type);
         }
     }
-
-    /**
-     * Insertamos log
-     * @param  string $type
-     * @param  integer $id
-     * @return void
-     */
 
     public function redirect($type)
     {

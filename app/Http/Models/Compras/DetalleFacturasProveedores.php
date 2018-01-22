@@ -38,6 +38,7 @@ class DetalleFacturasProveedores extends ModelCompany
         'fk_id_impuesto',
         'descuento',
         'fk_id_orden_compra',
+        'fk_id_detalle_orden_compra',
         'fk_id_nota_credito',
         'fk_id_factura_proveedor',
         'unidad'

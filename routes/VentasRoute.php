@@ -17,6 +17,7 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'ventas', 'as' => 'ventas.', 'middleware' => ['auth','share','csrf','password_expired']], function() {
         Route::view("/","ventas.index");
+        
         Route::resource('facturasclientes','Ventas\FacturasClientesController');
         Route::resource('notascreditoclientes','Ventas\NotasCreditoClientesController');
         Route::resource('notascargoclientes','Ventas\NotasCargoClientesController');

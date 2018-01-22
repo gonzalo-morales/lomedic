@@ -24,7 +24,7 @@ class EntradasController extends ControllerBase
     {
         $this->entity = $entity;
     }
-    
+
     public function getDataView($entity = null)
     {
         switch (empty($entity) ? 0 :$entity->fk_id_tipo_documento)
@@ -36,7 +36,7 @@ class EntradasController extends ControllerBase
                 $datos_documento = '';
                 break;
         }
-        
+
         if($datos_documento != '')
         {
             $datos_orden['sucursales'] = $datos_documento->sucursales;
@@ -54,6 +54,7 @@ class EntradasController extends ControllerBase
                 $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($entity->fk_id_tipo_documento,$entity->numero_documento,$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_orden_detalle);
                 $detalle_productos[$id_row]['lote'] = $detalle->entradaDetalle['lote'];
                 $detalle_productos[$id_row]['fecha_caducidad'] = $detalle->entradaDetalle['fecha_caducidad'];
+                $detalle_productos[$id_row]['precio_unitario'] = $detalle['precio_unitario'];
             }
 
             $data = [
@@ -150,6 +151,7 @@ class EntradasController extends ControllerBase
                 $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($_POST['fk_id_tipo_documento'],$_POST['numero_documento'],$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_orden_detalle);
                 $detalle_productos[$id_row]['lote'] = $detalle->entradaDetalle['lote'];
                 $detalle_productos[$id_row]['fecha_caducidad'] = $detalle->entradaDetalle['fecha_caducidad'];
+                $detalle_productos[$id_row]['precio_unitario'] = $detalle['precio_unitario'];
             }
 
             $data = [

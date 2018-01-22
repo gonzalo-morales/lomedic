@@ -19,14 +19,14 @@ class Solicitudes extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_solicitud';
+    protected $primaryKey = 'id_documento';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['fk_id_documento','fk_id_sucursal','fk_id_departamento','fecha_creacion','fecha_necesidad',
+    protected $fillable = ['fk_id_sucursal','fk_id_departamento','fecha_creacion','fecha_necesidad',
         'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_solicitud','fk_id_solicitante'];
 
     /**
@@ -34,7 +34,7 @@ class Solicitudes extends ModelCompany
      * @var array
      */
     protected $fields = [
-        'id_solicitud' => 'Número Solicitud',
+        'id_documento' => 'Número Solicitud',
         'nombre_completo'  => 'Solicitante',
         'nombre_sucursal' => 'Sucursal',
         'fecha_creacion' => 'Fecha de solicitud',
@@ -116,7 +116,7 @@ class Solicitudes extends ModelCompany
 
     public function detalleSolicitudes()
     {
-        return $this->hasMany('App\Http\Models\Compras\DetalleSolicitudes','fk_id_documento', 'id_solicitud');
+        return $this->hasMany('App\Http\Models\Compras\DetalleSolicitudes','fk_id_documento', 'id_documento');
     }
 
     public function getSolicitanteFormatedAttribute() {

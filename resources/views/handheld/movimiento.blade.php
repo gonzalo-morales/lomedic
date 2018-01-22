@@ -10,6 +10,7 @@
     <input type="hidden" name="fk_id_sucursal" value="{{ $fk_id_sucursal }}">
     <input type="hidden" name="fk_id_almacen" value="{{ $fk_id_almacen }}">
     <input type="hidden" name="fk_id_usuario" value="{{ $fk_id_usuario }}">
+    <input type="hidden" name="fecha_operacion" value="{{ $fecha_operacion }}">
     <input type="hidden" name="total_productos" value="1">
     <div>
         <table class="table-columns">

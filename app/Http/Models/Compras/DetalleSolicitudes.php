@@ -18,7 +18,7 @@ class DetalleSolicitudes extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_solicitud_detalle';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +26,8 @@ class DetalleSolicitudes extends ModelCompany
      * @var array
      */
     protected $fillable = ['fk_id_sku','fk_id_upc','fk_id_proveedor','cantidad',
-        'fk_id_unidad_medida','fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario'];
+        'fk_id_unidad_medida','fk_id_impuesto','precio_unitario','importe','fk_id_proyecto','fecha_necesario',
+        'fk_id_documento','fk_id_documento_base','fk_id_tipo_documento_base'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -40,15 +41,15 @@ class DetalleSolicitudes extends ModelCompany
      * @var array
      */
     public $rules = [
-        'fk_id_solicitud' => 'required',
-        'fk_id_sku' => 'required',
-        'fk_id_upc' => 'required',
-        'fk_id_proveedor' => 'required',
-        'cantidad' => 'required',
-        'fk_id_unidad_medida' => 'required',
-        'fk_id_impuesto' => 'required',
-        'precio_unitario' => 'required',
-        'total' => 'required'
+//        'fk_id_solicitud' => 'required',
+//        'fk_id_sku' => 'required',
+//        'fk_id_upc' => 'required',
+//        'fk_id_proveedor' => 'required',
+//        'cantidad' => 'required',
+//        'fk_id_unidad_medida' => 'required',
+//        'fk_id_impuesto' => 'required',
+//        'precio_unitario' => 'required',
+//        'importe' => 'required'
     ];
 
     public function getFields()

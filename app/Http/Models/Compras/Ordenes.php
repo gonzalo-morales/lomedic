@@ -92,6 +92,7 @@ class Ordenes extends ModelCompany
     public function detalleOrdenes()
     {
         return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_documento', 'id_orden');
+        // ->whereNotNull('fk_id_documento');
     }
 
     public function empresa()

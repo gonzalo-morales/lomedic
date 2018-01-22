@@ -34,13 +34,9 @@ class EntradaDetalle extends ModelCompany
      */
     protected $fillable = ['fk_id_entrada_almacen','fk_id_lote','fk_id_sku','fk_id_upc','cantidad_surtida','fecha_caducidad','lote','fk_id_detalle_documento'];
 
-//    public $niceNames =[
-//        'fk_id_socio_negocio'=>'proveedor'
-//    ];
+//    public $niceNames =[];
 //
-//    protected $dataColumns = [
-//        'fk_id_estatus_orden'
-//    ];
+//    protected $dataColumns = [];
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
@@ -54,59 +50,62 @@ class EntradaDetalle extends ModelCompany
         'cantidad_surtida' => 'Cantidad surtida'
     ];
 
-    function getNombreCompletoAttribute() {
-        return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
-    }
-
-    function getNombreSucursalAttribute(){
-        return $this->sucursales->nombre_sucursal;
-    }
-
-    function getEstatusSolicitudAttribute(){
-        return $this->estatus->estatus;
-    }
+    // function getNombreCompletoAttribute() {
+    //     return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
+    // }
+    //
+    // function getNombreSucursalAttribute(){
+    //     return $this->sucursales->nombre_sucursal;
+    // }
+    //
+    // function getEstatusSolicitudAttribute(){
+    //     return $this->estatus->estatus;
+    // }
 
     /**
      * The validation rules
      * @var array
      */
-//    public $rules = [
-//        'fk_id_socio_negocio' => 'required',
-//        'fk_id_sucursal' => 'required',
-//        'fk_id_condicion_pago' => 'required',
-//        'fk_id_tipo_entrega' => 'required'
-//    ];
+//    public $rules = [];
 
-    public function sucursales()
+    // public function sucursales()
+    // {
+    //     return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucurñsal','id_sucursal');
+    // }
+
+    // public function estatus()
+    // {
+    //     return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_orden');
+    // }
+
+    // public function empresa()
+    // {
+    //     return $this->belongsTo('App\Http\Models\Administracion\Empresas','fk_id_empresa','id_empresa');
+    // }
+
+    // public function tipoEntrega()
+    // {
+    //     return $this->hasOne('App\Http\Models\SociosNegocio\TiposEntrega','id_tipo_entrega','fk_id_tipo_entrega');
+    // }
+
+    // public function proveedor()
+    // {
+    //     return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
+    // }
+
+    // public function detalleOrdenes()
+    // {
+    //     return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_orden', 'id_orden');
+    // }
+
+    public function sku()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucurñsal','id_sucursal');
+        return $this->hasOne('App\Http\Models\Inventarios\Productos','id_sku','fk_id_sku');
     }
 
-    public function estatus()
+    public function upc()
     {
-        return $this->hasOne('App\Http\Models\Compras\EstatusSolicitudes','id_estatus','fk_id_estatus_orden');
-    }
-
-
-
-    public function empresa()
-    {
-        return $this->belongsTo('App\Http\Models\Administracion\Empresas','fk_id_empresa','id_empresa');
-    }
-
-    public function tipoEntrega()
-    {
-        return $this->hasOne('App\Http\Models\SociosNegocio\TiposEntrega','id_tipo_entrega','fk_id_tipo_entrega');
-    }
-
-    public function proveedor()
-    {
-        return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
-    }
-
-    public function detalleOrdenes()
-    {
-        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_orden', 'id_orden');
+        return $this->hasOne('App\Http\Models\Inventarios\Upcs','id_upc','fk_id_upc');
     }
 
 

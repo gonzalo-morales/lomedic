@@ -17,34 +17,42 @@ Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'compras', 'as' => 'compras.', 'middleware' => ['auth','share','csrf','password_expired']], function(){
-        Route::get("/", function(){ return View::make("compras.index"); });
-        Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
-        Route::resource('solicitudes', 'Compras\SolicitudesController');
-        Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
-    
         Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
-            Route::resource('ordenes','Compras\OrdenesController',['only'=>['create']]);
+            Route::resource('solicitudes','Compras\SolicitudesController',['only'=>['create']]);
         });
+        Route::get("/", function(){ return View::make("compras.index"); });
+
+
+        Route::resource('autorizaciones','Compras\AutorizacionesController');
+        Route::resource('facturasproveedores','Compras\FacturasProveedoresController');
+        Route::post('getFacturaData','Compras\FacturasProveedoresController@parseXML');
+        Route::resource('notascreditoproveedores','Compras\NotasCreditoProveedorController');
+        Route::post('getFacturaData','Compras\NotasCreditoProveedorController@parseXML');
+        Route::resource('ofertas','Compras\OfertasController');
+        Route::get('ofertas/{id}/impress', 'Compras\OfertasController@impress')->name('ofertas');
         Route::get('ordenes/getProveedores', 'Compras\OrdenesController@getProveedores')->name('ordenes');
         Route::post('ordenes/destroyDetail', 'Compras\OrdenesController@destroyDetail')->name('ordenes');
         Route::get('ordenes/{id}/impress', 'Compras\OrdenesController@impress')->name('ordenes');
         Route::get('ordenes/{id}/solicitudOrden','Compras\OrdenesController@createSolicitudOrden')->name('ordenes');
         Route::resource('ordenes','Compras\OrdenesController');
-    
+
+        Route::resource('facturasProveedores','Compras\FacturasProveedoresController');
+        // Route::post('getFacturaData2','Compras\FacturasProveedoresController@parseXML'); // Por conflicto con los nombres similares
+
+        Route::post('getDetallesOrden','Compras\FacturasProveedoresController@getDetallesOrden');
+        Route::resource('seguimientodesviacion','Compras\SeguimientoDesviacionesController');
+        Route::post('getDocumentos','Compras\SeguimientoDesviacionesController@getDocumentos');
+        Route::resource('pagos','Compras\PagosController');
+        Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
+        Route::resource('solicitudes', 'Compras\SolicitudesController');
+        Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
+        Route::resource('solicitudespagos','Compras\SolicitudesPagosController');
+
         Route::group(['prefix' => 'solicitudes/{id_solicitud}'], function(){
             Route::resource('ofertas','Compras\OfertasController');
         });
-        Route::resource('ofertas','Compras\OfertasController');
-        Route::get('ofertas/{id}/impress', 'Compras\OfertasController@impress')->name('ofertas');
-    
-        Route::resource('facturasProveedores','Compras\FacturasProveedoresController');
-        Route::post('getFacturaData','Compras\FacturasProveedoresController@parseXML');
-    
-        Route::resource('pagos','Compras\PagosController');
-        Route::resource('solicitudespagos','Compras\SolicitudesPagosController');
-        Route::resource('notasCreditoProveedor','Compras\NotasCreditoProveedorController');
-        Route::post('getFacturaData','Compras\NotasCreditoProveedorController@parseXML');
-
-        Route::resource('autorizaciones','Compras\AutorizacionesController');
+        Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
+            Route::resource('ordenes','Compras\OrdenesController',['only'=>['create']]);
+        });
     });
 });

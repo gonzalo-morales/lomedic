@@ -30,147 +30,215 @@
                 {{ Form::cText('Fecha de entrega', 'fecha_entrega') }}
             </div>
         </div>
+        <div class="col-sm-12">
+            <ul class="nav nav-tabs btn-group justify-content-center border-0 mb-3" id="pills-tab" role="tablist" data-tabs="tabs">
+                <li>
+                    <a class="btn m-0 btn-info active" data-toggle="tab" href="#scanner" role="tab" aria-controls="scanner" aria-selected="true">
+                        <i class="material-icons align-middle">archive</i> Solicitud de salida por producto
+                    </a>
+                </li>
+                <li>
+                    <a class="btn m-0 btn-info" data-toggle="tab" href="#manual" role="tab" aria-controls="manual" aria-selected="false">
+                        <i class="material-icons align-middle">keyboard</i> Solicitud de salida mediante pedido
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-12 col-sm-12 mb-3">
-            <div id="app" class="card z-depth-1-half" data-api-endpoint="{{ companyRoute('api.index', ['entity' => '#ENTITY#'], false) }}">
-                @if (!Route::currentRouteNamed(currentRouteName('show')))
-                <div class="card-header">
-                    <h4>Productos</h4>
-                    <p>Agrega los productos que requieras.</p>
-                    <div class="row">
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="form-group" v-cloak>
-                                {{ Form::cSelectWithDisabled('SKU', '', $skus ?? [], [
-                                    'v-select2' => 'nuffer.id_sku',
-                                    'v-model.number' => 'nuffer.id_sku',
-                                    'v-on:change' => 'onChangeSKU',
-                                    'v-validate' => '"required|not_in:0"',
-                                    'v-bind:class' => '{"is-invalid": errors.has("header.id_sku")}',
-                                    'data-vv-as' => 'SKU',
-                                    'data-vv-name' => 'id_sku',
-                                    'data-vv-scope' => 'header',
-                                ]) }}
-                                <span v-show="errors.has('header.id_sku')" class="help-block help-block-error small">@{{ errors.first('header.id_sku') }}</span>
+        <div class="tab-content">
+            <div class="tab-pane active" id="scanner" role="tabpanel">
+                <div id="app" class="card z-depth-1-half" data-api-endpoint="{{ companyRoute('api.index', ['entity' => '#ENTITY#'], false) }}">
+                    @if (!Route::currentRouteNamed(currentRouteName('show')))
+                    <div class="card-header">
+                        <h4>Productos</h4>
+                        <p>Agrega los productos que requieras.</p>
+                        <div class="row">
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="form-group" v-cloak>
+                                    {{ Form::cSelectWithDisabled('SKU', '', $skus ?? [], [
+                                        'v-select2' => 'nuffer.id_sku',
+                                        'v-model.number' => 'nuffer.id_sku',
+                                        'v-on:change' => 'onChangeSKU',
+                                        'v-validate' => '"required|not_in:0"',
+                                        'v-bind:class' => '{"is-invalid": errors.has("header.id_sku")}',
+                                        'data-vv-as' => 'SKU',
+                                        'data-vv-name' => 'id_sku',
+                                        'data-vv-scope' => 'header',
+                                    ]) }}
+                                    <span v-show="errors.has('header.id_sku')" class="help-block help-block-error small">@{{ errors.first('header.id_sku') }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="form-group" v-cloak>
-                                {{ Form::cSelectWithDisabled('UPC', '', [], [
-                                    'ref' => 'id_upc',
-                                    'v-select2' => 'nuffer.id_upc',
-                                    'v-model.number' => 'nuffer.id_upc',
-                                    'v-on:change' => 'onChangeUPC',
-                                    'v-validate' => '"required|not_in:0"',
-                                    'v-bind:class' => '{"is-invalid": errors.has("header.id_upc")}',
-                                    'data-vv-as' => 'UPC',
-                                    'data-vv-name' => 'id_upc',
-                                    'data-vv-scope' => 'header',
-                                ]) }}
-                                <span v-show="errors.has('header.id_upc')" class="help-block help-block-error small">@{{ errors.first('header.id_upc') }}</span>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="form-group" v-cloak>
+                                    {{ Form::cSelectWithDisabled('UPC', '', [], [
+                                        'ref' => 'id_upc',
+                                        'v-select2' => 'nuffer.id_upc',
+                                        'v-model.number' => 'nuffer.id_upc',
+                                        'v-on:change' => 'onChangeUPC',
+                                        'v-validate' => '"required|not_in:0"',
+                                        'v-bind:class' => '{"is-invalid": errors.has("header.id_upc")}',
+                                        'data-vv-as' => 'UPC',
+                                        'data-vv-name' => 'id_upc',
+                                        'data-vv-scope' => 'header',
+                                    ]) }}
+                                    <span v-show="errors.has('header.id_upc')" class="help-block help-block-error small">@{{ errors.first('header.id_upc') }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="form-group" v-cloak>
-                                {{ Form::cNumber('Cantidad', '', [
-                                    'min' => 0,
-                                    'v-model.number' => 'nuffer.cantidad',
-                                    'v-bind:class' => '{"is-invalid": errors.has("header.cantidad")}',
-                                    'v-validate' => '"required|min_value:1"',
-                                    'data-vv-as' => 'Cantidad',
-                                    'data-vv-name' => 'cantidad',
-                                    'data-vv-scope' => 'header',
-                                ]) }}
-                                <span v-show="errors.has('header.cantidad')" class="help-block help-block-error small">@{{ errors.first('header.cantidad') }}</span>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="form-group" v-cloak>
+                                    {{ Form::cNumber('Cantidad', '', [
+                                        'min' => 0,
+                                        'v-model.number' => 'nuffer.cantidad',
+                                        'v-bind:class' => '{"is-invalid": errors.has("header.cantidad")}',
+                                        'v-validate' => '"required|min_value:1"',
+                                        'data-vv-as' => 'Cantidad',
+                                        'data-vv-name' => 'cantidad',
+                                        'data-vv-scope' => 'header',
+                                    ]) }}
+                                    <span v-show="errors.has('header.cantidad')" class="help-block help-block-error small">@{{ errors.first('header.cantidad') }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="form-group" v-cloak>
-                                {{ Form::cSelectWithDisabled('Almacén de salida', '', $almacenes ?? [], [
-                                    'v-select2' => 'nuffer.id_almacen',
-                                    'v-model.number' => 'nuffer.id_almacen',
-                                    'v-on:change' => 'onChangeAlmacen',
-                                    'v-validate' => '"required|not_in:0"',
-                                    'v-bind:class' => '{"is-invalid": errors.has("header.id_almacen")}',
-                                    'data-vv-as' => 'Almacén de salida',
-                                    'data-vv-name' => 'id_almacen',
-                                    'data-vv-scope' => 'header',
-                                ]) }}
-                                <span v-show="errors.has('header.id_almacen')" class="help-block help-block-error small">@{{ errors.first('header.id_almacen') }}</span>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="form-group" v-cloak>
+                                    {{ Form::cSelectWithDisabled('Almacén de salida', '', $almacenes ?? [], [
+                                        'v-select2' => 'nuffer.id_almacen',
+                                        'v-model.number' => 'nuffer.id_almacen',
+                                        'v-on:change' => 'onChangeAlmacen',
+                                        'v-validate' => '"required|not_in:0"',
+                                        'v-bind:class' => '{"is-invalid": errors.has("header.id_almacen")}',
+                                        'data-vv-as' => 'Almacén de salida',
+                                        'data-vv-name' => 'id_almacen',
+                                        'data-vv-scope' => 'header',
+                                    ]) }}
+                                    <span v-show="errors.has('header.id_almacen')" class="help-block help-block-error small">@{{ errors.first('header.id_almacen') }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-12 text-center my-3">
-                    <div class="sep">
-                        <div class="sepBtn">
-                            <button v-on:click="append" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                    <div class="col-sm-12 text-center my-3">
+                        <div class="sep">
+                            <div class="sepBtn">
+                                <button v-on:click="append" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                @endif
-                <div class="card-body">
-                    <table class="table table-hover table-responsive-sm table-striped" style="table-layout: fixed">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>SKU</th>
-                                <th>UPC</th>
-                                <th>Marca</th>
-                                <th>Descripción</th>
-                                <th>Cantidad</th>
-                                <th>Almacén de salida</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="upcs.length" v-cloak>
-                            <tr v-for="upc,index in upcs" v-bind:class="{'table-dark':upc.eliminar}" v-bind:data-index.prop.camel="index">
-                                <th scope="row">
-                                    <span v-text="index + 1"></span>
-                                    <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_sku]'" v-bind:value="upc.id_sku">
-                                    <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_upc]'" v-bind:value="upc.id_upc">
-                                    <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][cantidad]'" v-bind:value="upc.cantidad">
-                                    <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_almacen]'" v-bind:value="upc.id_almacen">
-                                    <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][eliminar]'" v-bind:value="upc.eliminar">
-                                </th>
-                                <td>
-                                    <span v-text="upc.sku"></span>
-                                </td>
-                                <td>
-                                    <span v-text="upc.upc"></span>
-                                </td>
-                                <td>
-                                    <span v-text="upc.marca"></span>
-                                </td>
-                                <td>
-                                    <span v-text="upc.descripcion"></span>
-                                </td>
-                                <td>
-                                    <span v-text="upc.cantidad"></span>
-                                </td>
-                                <td>
-                                    <span v-text="upc.almacen"></span> <br>
-                                    <small><span v-text="upc.sucursal"></span></small>
-                                </td>
-    
-                                <td style="width: 1px !important;position: relative;">
-                                    @if (!Route::currentRouteNamed(currentRouteName('show')))
-                                    <a href="#" v-on:click.prevent="removeOrUndo(index)">
-                                        <i class="material-icons" v-text="upc.eliminar ? 'undo' : 'delete'"></i>
-                                        <span v-text="upc.eliminar ? 'Deshacer' : 'Eliminar'"></span>
-                                    </a>
-                                    @endif
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else>
-                            <tr class="text-center">
-                                <td colspan="8">Agrega unao o más Productos.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    @endif
+                    <div class="card-body">
+                        <table class="table table-hover table-responsive-sm table-striped" style="table-layout: fixed">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th>Marca</th>
+                                    <th>Descripción</th>
+                                    <th>Cantidad</th>
+                                    <th>Almacén de salida</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody v-if="upcs.length" v-cloak>
+                                <tr v-for="upc,index in upcs" v-bind:class="{'table-dark':upc.eliminar}" v-bind:data-index.prop.camel="index">
+                                    <th scope="row">
+                                        <span v-text="index + 1"></span>
+                                        <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_sku]'" v-bind:value="upc.id_sku">
+                                        <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_upc]'" v-bind:value="upc.id_upc">
+                                        <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][cantidad]'" v-bind:value="upc.cantidad">
+                                        <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_almacen]'" v-bind:value="upc.id_almacen">
+                                        <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][eliminar]'" v-bind:value="upc.eliminar">
+                                    </th>
+                                    <td>
+                                        <span v-text="upc.sku"></span>
+                                    </td>
+                                    <td>
+                                        <span v-text="upc.upc"></span>
+                                    </td>
+                                    <td>
+                                        <span v-text="upc.marca"></span>
+                                    </td>
+                                    <td>
+                                        <span v-text="upc.descripcion"></span>
+                                    </td>
+                                    <td>
+                                        <span v-text="upc.cantidad"></span>
+                                    </td>
+                                    <td>
+                                        <span v-text="upc.almacen"></span> <br>
+                                        <small><span v-text="upc.sucursal"></span></small>
+                                    </td>
+        
+                                    <td style="width: 1px !important;position: relative;">
+                                        @if (!Route::currentRouteNamed(currentRouteName('show')))
+                                        <a href="#" v-on:click.prevent="removeOrUndo(index)">
+                                            <i class="material-icons align-middle" v-text="upc.eliminar ? 'undo' : 'delete'"></i>
+                                            <span v-text="upc.eliminar ? 'Deshacer' : 'Eliminar'"></span>
+                                        </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else>
+                                <tr class="text-center">
+                                    <td colspan="8">Agrega uno o más Productos.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>{{-- /App --}}
             </div>
+            {{-- Tap para solicitud de salida mediante surtido --}}
+            <div class="tab-pane" id="manual" role="tabpanel">
+                <div class="card z-depth-1-half">
+                    @if (!Route::currentRouteNamed(currentRouteName('show')))
+                    <div class="card-header">
+                        <h4>Pedido</h4>
+                        <p>Selecciona el pedido para después seleccionar el almacenista que realizará dicho surtido</p>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-8 col-12">
+                                <div class="form-group">
+                                    {{ Form::cSelect('* Pedidos','fk_id_pedido', $pedidos ?? [],[
+                                        'data-url' => companyAction('HomeController@index').'/ventas.pedidos/api',
+                                        'style' => 'width:100%;',
+                                        'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+                                        Route::currentRouteNamed(currentRouteName('edit')) && $data['id_documento'] > 0 ? 'disabled' : ''
+                                      ]) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 text-center my-3">
+                        <div class="sep">
+                            <div class="sepBtn">
+                                <button id="addDetalle" v-on:click="append" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    <div class="card-body">
+                        <table id="tableSolicitudes" class="table table-hover table-responsive-sm table-striped" style="table-layout: fixed">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th>Marca</th>
+                                    <th>Descripción</th>
+                                    <th>Cantidad total</th>
+                                    <th>Almacén de salida y almacenista</th>
+                                    <th>Cantidad solicitada a surtir</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBodySolicitudes">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>{{-- /App2 --}}
+            </div><!--/tabs-->
+        </div>
         </div>
     </div>
 @endsection
@@ -178,7 +246,9 @@
 @section('header-bottom')
     @parent
     <script src="{{ asset('vendor/vue/vue.js') }}"></script>
+    <script src="{{ asset('js/solicitud_salida_con_pedido.js') }}"></script>
     <script type="text/javascript">
+        var api_pedido = '{{$api_pedidos_detalle}}'
         $(function(){
         if ($('#app').length) {
         
@@ -356,7 +426,7 @@
                         }
                     });
                 },
-            });
+            }); // aquí termina la App
         }
         });
     </script>

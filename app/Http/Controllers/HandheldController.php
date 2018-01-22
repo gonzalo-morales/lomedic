@@ -20,6 +20,7 @@ use App\Http\Models\Inventarios\Upcs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class HandheldController extends Controller
 {
@@ -125,6 +126,7 @@ class HandheldController extends Controller
 			'fk_id_sucursal' => $request->id_sucursal,
 			'fk_id_almacen' => $request->id_almacen,
 			'fk_id_usuario' => Auth::user()->id_usuario,
+			'fecha_operacion' => Carbon::now(),
 			'previous' => $movimiento->fk_id_almacen,
 			// 'padre' => $movimiento->fk_id_
 			'movimiento' => $movimiento,

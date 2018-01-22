@@ -23,14 +23,14 @@ class NotasCargoClientesDetalle extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_nota_cargo_detalle';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.
      * @var array
      */
     protected $fillable = [
-        'fk_id_nota_cargoo','fk_id_clave_producto_servicio','fk_id_sku','fk_id_upc','fk_id_clave_cliente','descripcion',
+        'fk_id_documento','fk_id_clave_producto_servicio','fk_id_sku','fk_id_upc','fk_id_clave_cliente','descripcion',
         'fk_id_unidad_medida','unidad','cantidad','precio_unitario','importe','eliminar','fk_id_moneda','fk_id_impuesto',
         'descuento','pedimento','cuenta_predial','impuesto','fk_id_documento_relacionado','fk_id_tipo_documento_relacionado'
     ];
@@ -52,7 +52,7 @@ class NotasCargoClientesDetalle extends ModelCompany
     
     public function nota()
     {
-        return $this->hasOne(NotasCreditoClientes::class,'id_nota_cargo','fk_id_nota_cargo');
+        return $this->hasOne(NotasCreditoClientes::class,'id_documento','fk_id_documento');
     }
     
     public function claveproducto()
@@ -92,11 +92,11 @@ class NotasCargoClientesDetalle extends ModelCompany
 
     public function factura()
     {
-        return $this->hasOne(FacturasClientes::class,'id_factura','fk_id_documento_relacionado');
+        return $this->hasOne(FacturasClientes::class,'id_documento','fk_id_documento_base');
     }
 
     public function notacredito()
     {
-        return $this->hasOne(FacturasClientes::class,'id_nota_credito','fk_id_documento_relacionado');
+        return $this->hasOne(FacturasClientes::class,'id_documento','fk_id_documento_base');
     }
 }

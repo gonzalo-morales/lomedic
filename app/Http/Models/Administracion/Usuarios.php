@@ -52,16 +52,14 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         'id_usuario' => '#',
         'usuario' => 'Usuario',
         'nombre_corto' => 'Nombre',
-        'nacional' => 'Nacional'
+        'fecha_creacion' => 'Fecha Creacion'
     ];
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-    protected $hidden = [
-//        'password', 'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     public $rules = [
         'nombre_corto' => 'required',

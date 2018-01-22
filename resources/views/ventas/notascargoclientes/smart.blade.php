@@ -1,6 +1,6 @@
 @extends(smart())
 @section('content-width', 's12')
-@section('form-title', 'Notas de Crédito de Clientes')
+@section('form-title', 'Notas de Cargo de Clientes')
 
 @section('header-bottom')
 	@parent
@@ -167,8 +167,8 @@
 								{{$detalle->tiporelacion->tipo_relacion}}
 							</td>
 							<td>
-								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_documento]',$detalle->fk_id_documento) !!} 
-								{{$detalle->documento->uuid}}
+								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_factura]',$detalle->fk_id_factura) !!} 
+								{{$detalle->factura->uuid}}
 							</td>
 							<td>
     							@if(!Route::currentRouteNamed(currentRouteName('view')))

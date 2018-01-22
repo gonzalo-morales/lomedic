@@ -24,7 +24,7 @@ return [
 	                    'verify_peer'       => false,
 	                    'verify_peer_name'  => false,
 	                    'allow_self_signed' => true,
-	                    'cache_wsdl'        => WSDL_CACHE_NONE,
+	                    'cache_wsdl'        => 'WSDL_CACHE_NONE',
 	                ]
 	            ])
             ],
@@ -34,7 +34,7 @@ return [
 	            'zip'=>false,
 	        ],
 	    ],
-	    
+
 	    'solucionfactible_cancelacion' => [
 	        'url' => 'https://testing.solucionfactible.com/ws/services/Cancelacion?wsdl',
 	        'options'  => [
@@ -44,7 +44,7 @@ return [
 	                    'verify_peer'       => false,
 	                    'verify_peer_name'  => false,
 	                    'allow_self_signed' => true,
-	                    'cache_wsdl'        => WSDL_CACHE_NONE,
+	                    'cache_wsdl'        => 'WSDL_CACHE_NONE',
 	                ]
 	            ])
 	        ],

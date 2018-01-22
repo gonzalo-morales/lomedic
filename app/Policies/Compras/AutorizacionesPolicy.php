@@ -4,7 +4,7 @@ namespace App\Policies\Compras;
 
 use App\Policies\PolicyBase;
 
-class EstatusSolicitudesPolicy extends PolicyBase
+class AutorizacionesPolicy extends PolicyBase
 {
 
 }

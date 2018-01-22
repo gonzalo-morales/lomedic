@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="form-group col-md-12 col-xs-12">
-            {{ Form::select('Estado','fk_id_estado',$states ?? []) }}
+            {{ Form::cSelect('Estado','fk_id_estado',$states ?? []) }}
         </div>
     </div>
     <div  class="col-md-12 text-center mt-2">

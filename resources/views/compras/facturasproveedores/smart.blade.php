@@ -1,12 +1,29 @@
 @extends(smart())
+@section('header-top')
+	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/pickadate/default.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/pickadate/default.date.css') }}">
+@endsection
 @section('content-width', 's12')
 @section('header-bottom')
 	@parent
-	@index
+	<script type="text/javascript" src="{{ asset('js/pickadate/picker.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/pickadate/picker.date.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/pickadate/translations/es_Es.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/toaster.js') }}"></script>
+	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
+	{{-- @index
 		<script type="text/javascript">
 			var comprador_js = '{{$js_comprador ?? ''}}';
 		</script>
 		{{HTML::script(asset('js/facturas_proveedores.js'))}}
+	@endif --}}
+	@if (!Route::currentRouteNamed(currentRouteName('index'))) )
+		<script type="text/javascript">
+			var comprador_js = '{{$js_comprador ?? ''}}';
+		</script>
+		<script type="text/javascript" src="{{ asset('js/facturas_proveedores.js') }}"></script>
+		{{--@endif--}}
 	@endif
 @endsection
 
@@ -190,7 +207,7 @@
 								Cargando datos... <i class="material-icons align-middle loading">cached</i>
 							</div>
 							<h1 class="text-success text-center">Productos facturados</h1>
-							<table id="factura" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};">
+							<table id="factura" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};" data-urlorden="{{ companyAction('getDetallesOrden') }}">
 								<thead id="encabezado_factura">
 								@inroute(['edit','show'])
 									@if($data->version_sat == "3.3")
@@ -204,6 +221,7 @@
 											<th>Impuesto</th>
 											<th>Importe</th>
 											<th>Orden de Compra</th>
+											<th>Detalle O.C.</th>
 										</tr>
 									@elseif($data->version_sat == "3.2")
 										<tr>
@@ -213,6 +231,7 @@
 											<th>Valor Unitario</th>
 											<th>Importe</th>
 											<th>Orden de Compra</th>
+											<th>Detalle O.C.</th>
 										</tr>
 									@endif
 								@endif
@@ -220,6 +239,7 @@
 								<tbody id="productos_facturados">
 								@inroute(['edit','show'])
 									@if($data->version_sat == "3.3")
+										{{-- {{ dd($data->detalle_facturas_proveedores) }} --}}
 										@foreach($data->detalle_facturas_proveedores as $detalle)
 										<tr>
 											<td>{{$detalle->clave_producto_servicio->clave_producto_servicio}}</td>
@@ -228,11 +248,42 @@
 											<td>{{$detalle->cantidad}}</td>
 											<td>${{number_format($detalle->precio_unitario,2)}}</td>
 											<td>${{number_format($detalle->descuento,2)}}</td>
-											<td>{{$detalle->impuesto->impuesto}}</td>
+											<td>
+												{{$detalle->impuesto->impuesto ?? 'NA' }}
+											</td>
 											<td>${{number_format($detalle->importe,2)}}</td>
 											<td>{{$data->fk_id_estatus_factura == 1 ?
-											 Form::Text('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_orden_compra]',$detalle->fk_id_orden_compra,['class'=>'form-control integer']) :
-											  $detalle->fk_id_orden_compra}}</td>
+											 Form::Text('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_orden_compra]',$detalle->fk_id_orden_compra,['class'=>'form-control integer orden-compra']) :
+											  $detalle->fk_id_orden_compra}}
+											  {{-- {{ $detalle->impuesto ?? 'null' }} --}}
+										  	</td>
+											<td>
+												{{-- {{ dd($detalle) }} --}}
+
+												@php
+												$det = [];
+												// $det[-1] = 'Seleccione una opcion...';
+												@endphp
+													@if ($detalle->orden <> null)
+														<select class="form-control custom-select" name="{{ 'producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]' }}">
+															<option value="" disabled>Seleccione una opcion...</option>
+														@foreach ($detalle->orden->detalleOrdenes as $detalleOrden)
+																@php
+																	 $upc = isset($detalleOrden->upc->upc) ? ' - '.$detalleOrden->upc->upc :'';
+																	$det[$detalleOrden->id_orden_detalle] = $detalleOrden->sku->sku.$upc ;
+																@endphp
+																<option value="{{ $detalleOrden->id_orden_detalle }}">{{ $detalleOrden->sku->sku.$upc }}</option>
+												  		@endforeach
+														</select>
+														{{-- {{ Form::select('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]', $det ?? [], $detalle->fk_id_detalle_orden_compra, ['class'=>'form-control custom-select']) }} --}}
+													@else
+														<select class="form-control custom-select" name="{{ 'producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]' }}">
+															<option value="" disabled>Seleccione una opcion...</option>
+														</select>
+														{{-- {{ Form::select('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]', $det ?? [], $detalle->fk_id_detalle_orden_compra, ['class'=>'form-control custom-select']) }} --}}
+													@endif
+
+										  	</td>
 										</tr>
 										@endforeach
 									@elseif($data->version_sat == "3.2")
@@ -491,7 +542,7 @@
                     ],
                     action: function(e,rv) {
                         var formData = new FormData(document.querySelector('#cancel-form')), convertedJSON = {}, it = formData.entries(), n;
-    
+
                         while(n = it.next()) {
                             if(!n || n.done) break;
                             convertedJSON[n.value[0]] = n.value[1];
@@ -508,12 +559,12 @@
                     }.bind(this),
                     // Opcionales
                     onModalShow: function() {
-    
+
                         let btn = modal.querySelector('[rv-on-click="action"]');
-    
+
                         // Copiamos data a boton de modal
                         for (var i in this.dataset) btn.dataset[i] = this.dataset[i];
-    
+
                     }.bind(this),
                     // onModalHide: function() {}
                 });

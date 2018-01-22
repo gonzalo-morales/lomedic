@@ -2,7 +2,7 @@
 <body>
 <div style="">
     <div style="width: 100%">
-            {{HTML::image(asset("img/$empresa->logotipo_completo"),'',['height'=>'56'])}}
+            {{HTML::image(asset("img/logotipos/$empresa->logotipo"),'',['height'=>'56'])}}
             <div style="width: 60.5%; float: left">
                 <h4 align="center">Solicitud de compra</h4>
                 <h6 align="center">
@@ -17,7 +17,7 @@
                 <table width="100%" style="">
                     <tr align="center">
                         <td style="font-size: 15px;">
-                            <h4>No. Solicitud  <b>{{$solicitud->id_solicitud}}</b></h4>
+                            <h4>No. Solicitud  <b>{{$solicitud->id_documento}}</b></h4>
                         </td>
                     </tr>
                     <tr>
@@ -75,7 +75,7 @@
                 <th><h5>Total</h5></th>
             </tr>
             {{--For each detalle--}}
-            @foreach($detalles as $detalle)
+            @foreach($solicitud->detalleSolicitudes->where('cerrado',0) as $detalle)
             <tr>
                 <td>{{$detalle->sku->sku}}</td>
                 <td>{{$detalle->upc->upc ?? ''}}</td>

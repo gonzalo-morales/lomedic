@@ -50,19 +50,19 @@
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
-                                                        {{ Form::cSelect('AfiliaciÃ³n/Paciente', 'fk_id_dependiente', $afiliados ?? [],['class'=>'select2','data-url'=>companyRoute('getAfiliados')]) }}
+                                                        {{ Form::cSelect('Afiliación/Paciente', 'fk_id_dependiente', $afiliados ?? [],['class'=>'select2','data-url'=>companyRoute('getAfiliados')]) }}
                                                         {{Form::hidden('fk_id_afiliacion',null,['id'=>'fk_id_afiliacion'])}}
                                                         {{Form::text('nombre_paciente_no_afiliado',null,['id'=>'nombre_paciente_no_afiliado','class'=>'form-control','style'=>'display:none'])}}
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
-                                                        {{ Form::cSelect('Ã�rea de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
+                                                        {{ Form::cSelect('Área de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
-                                                        {{ Form::cSelect('DiagnÃ³stico', 'fk_id_diagnostico', $diagnosticos ?? [],['class'=>'select2','data-url'=>companyRoute('getDiagnosticos')]) }}
+                                                        {{ Form::cSelect('Diagnóstico', 'fk_id_diagnostico', $diagnosticos ?? [],['class'=>'select2','data-url'=>companyRoute('getDiagnosticos')]) }}
 
                                                     </div>
                                                 </div>
@@ -83,7 +83,7 @@
                                                 </div>
                                                 <div class="col-sm-4 col-xs-6">
                                                     <div class="form-group">
-                                                        <label for="presion">PresiÃ³n:</label>
+                                                        <label for="presion">Presión:</label>
                                                         <div class="input-group">
                                                             {{ Form::cNumber(' ', 'presion_sistolica',['class'=>'form-control integer','placeholder'=>'Ej: 120'])}}
                                                             <span class="input-group-addon" id="presion-addon">/</span>
@@ -136,14 +136,14 @@
                                                             <h4>*Cada:</h4>
                                                             <div class="input-group my-group">
                                                                 {{Form::number('cada',null,['id'=>'cada','min'=>1,'class'=>'form-control integer','placeholder'=>'Ej. 6','min'=>'1'])}}
-                                                                {{Form::select('_cada',['1'=>'Hora(s)','24'=>'DÃ­a(s)','168'=>'Semana(s)','720'=>'Mes(es)'],null,['id'=>'_cada','class' => '_cada form-control'])}}
+                                                                {{Form::select('_cada',['1'=>'Hora(s)','24'=>'Día(s)','168'=>'Semana(s)','720'=>'Mes(es)'],null,['id'=>'_cada','class' => '_cada form-control'])}}
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <h4>*Por:</h4>
                                                             <div class="input-group my-group">
                                                                 {{Form::number('por',null,['id'=>'por','min'=>1,'class'=>'number-only form-control integer','placeholder'=>'Ej. 6','min'=>'1'])}}
-                                                                {{Form::select('_por',['24'=>'DÃ­a(s)','168'=>'Semana(s)','720'=>'Mes(es)'],null,['id'=>'_por','class' => '_por form-control'])}}
+                                                                {{Form::select('_por',['24'=>'Día(s)','168'=>'Semana(s)','720'=>'Mes(es)'],null,['id'=>'_por','class' => '_por form-control'])}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -154,7 +154,7 @@
                                                             {{Form::textarea('nota_medicamento',null,['class' => 'form-control','style'=>'resize:vertical','rows'=>'1','id'=>'nota_medicamento'])}}
                                                         </div>
                                                         <div class="col-sm-6 border-right">
-                                                            <h4>Â¿Surtido recurrente?</h4>
+                                                            <h4>¿Surtido recurrente?</h4>
                                                             <div class="input-group my-group">
                                                                 <div class="input-group-btn" role="group" aria-label="surtido" data-toggle="buttons">
                                                                     <label class="btn btn-check btn-default">

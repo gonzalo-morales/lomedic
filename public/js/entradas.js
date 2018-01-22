@@ -34,12 +34,14 @@ $('#entrada_escaner').on('change', function() {
                             var sku_descripcion = data.detalle_entrada[index].sku_descripcion;
                             var upc = data.detalle_entrada[index].upc;
                             var id_upc = data.detalle_entrada[index].id_upc;
-                            var nombre_cliente = data.detalle_entrada[index].fk_id_cliente;
+                            var nombre_cliente = data.detalle_entrada[index].nombre_cliente;
+                            // var nombre_cliente = data.detalle_entrada[index].fk_id_cliente;
                             var nombre_proyecto = data.detalle_entrada[index].nombre_proyecto;
                             var cantidad_surtida = data.detalle_entrada[index].cantidad_surtida;
                             var cantidad = data.detalle_entrada[index].cantidad;
                             var lote = data.detalle_entrada[index].lote;
                             var fecha_caducidad = data.detalle_entrada[index].fecha_caducidad;
+                            var precio_unitario = data.detalle_entrada[index].precio_unitario;
                             var id_detalle_documento = data.detalle_entrada[index].id_detalle;
 
                             if(sku === undefined || sku === null ){sku='-';}
@@ -66,6 +68,7 @@ $('#entrada_escaner').on('change', function() {
                                     '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_entrada" value="'+cantidad+'" style="max-width:6em;" disabled></td>' +
                                     '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_surtida" name="datos_entradas['+index+'][surtida]"  value="'+cantidad_surtida+'" style="max-width:6em;" disabled></td>' +
                                     '<td>'+estado_producto+'</td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_precioUnitario" name="datos_orden['+index+'][precio_unitario]"  value="'+precio_unitario+'" disabled style="max-width:6em;"></td>' +
                                     '<input type="hidden" name="datos_entradas['+index+'][id_sku]" value="'+id_sku+'" >' +
                                     '<input type="hidden" name="datos_entradas['+index+'][id_upc]" value="'+id_upc+'" >' +
                                     '<input type="hidden" name="datos_entradas['+index+'][id_detalle_documento]" value="'+id_detalle_documento+'" >' +
@@ -114,6 +117,12 @@ $('#entrada_escaner').on('change', function() {
                             '                                   <input class="form-control" id="lote_'+tipo_documento+'_'+numero_documento+'" name="lote_'+tipo_documento+'_'+numero_documento+'" type="text">' +
                             '                               </div>' +
                             '                           </div>' +
+                            // '                           <div class="col-md-2 col-sm-3 col-lg-2">' +
+                            // '                               <div class="form-group">' +
+                            // '                                   <label for="precio_unitario_'+tipo_documento+'_'+numero_documento+'">Precio Unitario</label>' +
+                            // '                                   <input class="form-control" id="precio_unitario_'+tipo_documento+'_'+numero_documento+'" name="precio_unitario_'+tipo_documento+'_'+numero_documento+'" type="text">' +
+                            // '                               </div>' +
+                            // '                           </div>' +
                             '                           <div class="col-md-6 col-sm-6 col-lg-3">' +
                             '                               <div class="form-group">' +
                             '                                   <label for="caducidad_'+tipo_documento+'_'+numero_documento+'">Fecha de caducidad</label>' +
@@ -140,6 +149,7 @@ $('#entrada_escaner').on('change', function() {
                             '                                   <th>C. Entrada</th>' +
                             '                                   <th>C. Surtida</th>' +
                             '                                   <th>C. ingresar</th>' +
+                            '                                   <th>Precio</th>' +
                             '                                   <th></th>' +
                             '                               </tr> ' +
                             '                           </thead> ' +
@@ -176,6 +186,7 @@ $(document).on('change','#codigo_barras',function (){
     var detalle_entrada = datos_documento.replace('codigo_barras','detalle_entrada');
     var caducidad = datos_documento.replace('codigo_barras','caducidad');
     var lote = datos_documento.replace('codigo_barras','lote');
+    // var precio_unitario = datos_documento.replace('codigo_barras','precio_unitario');
 
     $('.'+detalle_entrada).find('tr').each(function(index)
     {
@@ -189,6 +200,7 @@ $(document).on('change','#codigo_barras',function (){
                 var entrada = parseInt($('.'+detalle_entrada).find('tr').eq(index).children('td').eq(7).children('input').val());
                 var surtida = parseInt($('.'+detalle_entrada).find('tr').eq(index).children('td').eq(8).children('input').val());
                 var escanda = parseInt($('.'+detalle_entrada).find('tr').eq(index).children('td').eq(9).children('input').val());
+                var precio_oc = parseFloat($('.'+detalle_entrada).find('tr').eq(index).children('td').eq(10).children('input').val()).toFixed(2);
 
                 if(entrada >= ((escanda + 1)  + surtida ))
                 {
@@ -197,9 +209,13 @@ $(document).on('change','#codigo_barras',function (){
                         $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(5).children('input').val( $('#'+lote).val() );
                         $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(6).children('input').val( $('#'+caducidad).val() );
                         $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(9).children('input').val( escanda + 1 );
+                        // if ($('#'+precio_unitario).val() != '') {
+                        //     $('.'+detalle_entrada).find('tr').eq(index).children('td').eq(10).children('input').val( $('#'+precio_unitario).val() );
+                        // }
                         $('#codigo_barras').val('');
                         $('#'+lote).val('');
                         $('#'+caducidad).val('');
+                        // $('#'+precio_unitario).val('');
                         return false;
                     }
                     else if( $('#'+lote).val() == '' && $('#'+caducidad).val() == '' && numero_lote  != ''  )
