@@ -61,14 +61,14 @@
         <div class="row">
           <div class="col-md-12 col-sm-12">
             <div class="form-group">
-              {{ Form::cTextArea('* Motivo del viaje:','motivo_gasto', ['rows'=>3]) }}
+              {{ Form::cTextArea('* Motivo del viaje:','motivo_viaje', ['rows'=>3]) }}
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12 col-sm-12">
             <div class="form-group">
-              {{ Form::cText('* Destino:','viaje_a') }}
+              {{ Form::cText('* Destino:','destino') }}
             </div>
           </div>
           <div class="col-12">
