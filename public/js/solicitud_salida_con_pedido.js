@@ -96,7 +96,6 @@ $(document).ready(function () {
                             '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
                         );
                     };
-                    
                 },
                 error: function(){
                     $('#fk_id_pedido').val('');
