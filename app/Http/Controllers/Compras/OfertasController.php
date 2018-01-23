@@ -101,10 +101,10 @@ class OfertasController extends ControllerBase
                     $isSuccess->DetalleOfertas()->save($detalle_oferta);
                 }
             }
-            $this->log('store', $isSuccess->id_documento);
+            #$this->log('store', $isSuccess->id_documento);
             return $this->redirect('store');
 		} else {
-			$this->log('error_store');
+			#$this->log('error_store');
 			return $this->redirect('error_store');
 		}
 	}
@@ -145,10 +145,10 @@ class OfertasController extends ControllerBase
 				}
 			}
 
-			$this->log('update', $id);
+			#$this->log('update', $id);
 			return $this->redirect('update');
 		} else {
-			$this->log('error_update', $id);
+			#$this->log('error_update', $id);
 			return $this->redirect('error_update');
 		}
 	}
@@ -162,7 +162,7 @@ class OfertasController extends ControllerBase
                     ->update(['fk_id_estatus_oferta' => 3]);
                 if ($isSuccess) {
 
-                    $this->log('destroy', $idOrIds);
+                    #$this->log('destroy', $idOrIds);
 
                     if ($request->ajax()) {
                         # Respuesta Json
@@ -175,7 +175,7 @@ class OfertasController extends ControllerBase
 
                 } else {
 
-                    $this->log('error_destroy', $idOrIds);
+                    #$this->log('error_destroy', $idOrIds);
 
                     if ($request->ajax()) {
                         # Respuesta Json
@@ -195,7 +195,7 @@ class OfertasController extends ControllerBase
                 if ($isSuccess) {
 
                     # Shorthand
-                    foreach ($idOrIds as $id) $this->log('destroy', $id);
+                    #foreach ($idOrIds as $id) $this->log('destroy', $id);
 
                     if ($request->ajax()) {
                         # Respuesta Json
@@ -209,7 +209,7 @@ class OfertasController extends ControllerBase
                 } else {
 
                     # Shorthand
-                    foreach ($idOrIds as $id) $this->log('error_destroy', $id);
+                    #foreach ($idOrIds as $id) $this->log('error_destroy', $id);
 
                     if ($request->ajax()) {
                         # Respuesta Json

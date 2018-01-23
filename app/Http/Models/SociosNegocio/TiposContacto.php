@@ -29,6 +29,11 @@ class TiposContacto extends ModelBase
      * @var bool
      */
     public $timestamps = false;
+    
+    protected $fields = [
+        'tipo_contacto' => 'Tipo Contacto',
+        'activo_text' => 'Estatus'
+    ];
 
     /**
      * The validation rules

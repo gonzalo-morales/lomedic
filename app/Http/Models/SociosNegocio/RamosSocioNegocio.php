@@ -30,10 +30,11 @@ class RamosSocioNegocio extends ModelBase
      */
     public $timestamps = false;
 
-    /**
-     * The validation rules
-     * @var array
-     */
+    protected $fields = [
+        'ramo' => 'Ramo',
+        'activo_text' => 'Estatus'
+    ];
+    
     public $rules = [];
 
     public function socionegocio(){

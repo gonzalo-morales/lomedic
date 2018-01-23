@@ -159,14 +159,14 @@ class OrdenesController extends ControllerBase
             }
             $isSuccess->descuento_total = $descuento_rows + $isSuccess->descuento_general;
 			$isSuccess->save();
-            $this->log('store', $isSuccess->id_orden);
+            #$this->log('store', $isSuccess->id_orden);
 
 			// dd($isSuccess->id_orden);
 			// $this->evaluarCondiciones($request, $isSuccess->id_orden);
 
             return $this->redirect('store');
 		} else {
-			$this->log('error_store');
+			#$this->log('error_store');
 			return $this->redirect('error_store');
 		}
 	}
@@ -290,10 +290,10 @@ class OrdenesController extends ControllerBase
 			}
             $entity->descuento_total = $entity->descuento_general + $descuento_rows;
 			$entity->save();
-			$this->log('update', $id);
+			#$this->log('update', $id);
 			return $this->redirect('update');
 		} else {
-			$this->log('error_update', $id);
+			#$this->log('error_update', $id);
 			return $this->redirect('error_update');
 		}
 	}
@@ -309,7 +309,7 @@ class OrdenesController extends ControllerBase
                         'fecha_cancelacion'=>DB::raw('now()')]);
                 if ($isSuccess) {
 
-                    $this->log('destroy', $idOrIds);
+                    #$this->log('destroy', $idOrIds);
 
                     if ($request->ajax()) {
                         # Respuesta Json
@@ -322,7 +322,7 @@ class OrdenesController extends ControllerBase
 
                 } else {
 
-                    $this->log('error_destroy', $idOrIds);
+                    #$this->log('error_destroy', $idOrIds);
 
                     if ($request->ajax()) {
                         # Respuesta Json
@@ -344,7 +344,7 @@ class OrdenesController extends ControllerBase
                 if ($isSuccess) {
 
                     # Shorthand
-                    foreach ($idOrIds as $id) $this->log('destroy', $id);
+                    #foreach ($idOrIds as $id) $this->log('destroy', $id);
 
                     if ($request->ajax()) {
                         # Respuesta Json
@@ -359,7 +359,7 @@ class OrdenesController extends ControllerBase
                 } else {
 
                     # Shorthand
-                    foreach ($idOrIds as $id) $this->log('error_destroy', $id);
+                    #foreach ($idOrIds as $id) $this->log('error_destroy', $id);
 
                     if ($request->ajax()) {
                         # Respuesta Json

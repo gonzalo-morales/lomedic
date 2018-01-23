@@ -22,7 +22,7 @@ class DetalleSolicitudesController extends ControllerBase
         if ($isSuccess) {
 
             # Shorthand
-            foreach ($idOrIds as $id) $this->log('destroy', $id);
+            #foreach ($idOrIds as $id) $this->log('destroy', $id);
 
             if ($request->ajax()) {
                 # Respuesta Json
@@ -36,7 +36,7 @@ class DetalleSolicitudesController extends ControllerBase
         } else {
 
             # Shorthand
-            foreach ($idOrIds as $id) $this->log('error_destroy', $id);
+            #foreach ($idOrIds as $id) $this->log('error_destroy', $id);
 
             if ($request->ajax()) {
                 # Respuesta Json

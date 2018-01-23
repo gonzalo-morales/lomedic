@@ -53,11 +53,11 @@ class ProductosController extends ControllerBase
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
             
-            $this->log('update', $id);
+            #$this->log('update', $id);
             return $this->redirect('update');
         } else {
             DB::rollBack();
-            $this->log('error_update', $id);
+            #$this->log('error_update', $id);
             return $this->redirect('error_update');
         }
     }

@@ -52,7 +52,7 @@ class PagosController extends ControllerBase
         if ($isSuccess) {
 
             DB::commit();
-            $this->log('destroy', $idOrIds);
+            #$this->log('destroy', $idOrIds);
 
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
@@ -67,7 +67,7 @@ class PagosController extends ControllerBase
         } else {
 
             DB::rollBack();
-            $this->log('error_destroy', $idOrIds);
+            #$this->log('error_destroy', $idOrIds);
 
             if ($request->ajax()) {
                 # Respuesta Json
