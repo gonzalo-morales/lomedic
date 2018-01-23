@@ -167,7 +167,7 @@
 								{{$detalle->tiporelacion->tipo_relacion}}
 							</td>
 							<td>
-								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_factura]',$detalle->fk_id_factura) !!} 
+								{!! Form::hidden('relations[has][relaciones]['.$row.'][fk_id_documento]',$detalle->fk_id_documento) !!} 
 								{{$detalle->factura->uuid}}
 							</td>
 							<td>
@@ -238,7 +238,7 @@
     				@foreach($data->detalle->where('eliminar',0) as $key=>$detalle)
     				<tr>
     					<td>
-    						{!! Form::hidden('contactos['.$key.'][id_factura_detalle]',$detalle->id_factura_detalle,['class'=>'id_factura_detalle']) !!}
+    						{!! Form::hidden('contactos['.$key.'][id_documento_detalle]',$detalle->id_documento_detalle,['class'=>'id_documento_detalle']) !!}
     						{{$detalle->claveproducto->clave_producto_servicio}}
     						{!! Form::hidden('contactos['.$key.'][fk_id_clave_producto_servicio]',$detalle->fk_id_clave_producto_servicio,['class'=>'fk_id_clave_producto_servicio']) !!}
     					</td>

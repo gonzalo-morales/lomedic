@@ -6,7 +6,7 @@ use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\ModelCompany;
 use DB;
 
-class DetallleSeguimientoDesviacion extends ModelCompany
+class DetalleSeguimientoDesviacion extends ModelCompany
 {
     /**
      * The table associated with the model.

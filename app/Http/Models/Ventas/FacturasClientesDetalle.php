@@ -15,6 +15,8 @@ use App\Http\Models\Inventarios\Upcs;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\Administracion\ClavesUnidades;
 use App\Http\Models\Administracion\Impuestos;
+use App\Http\Models\Compras\Solicitudes;
+use App\Http\Models\Compras\DetalleSolicitudes;
 
 class FacturasClientesDetalle extends ModelCompany
 {
@@ -23,7 +25,7 @@ class FacturasClientesDetalle extends ModelCompany
      * @var string
      */
     protected $table = 'fac_det_facturas_clientes';
-
+    
     /**
      * The primary key of the table
      * @var string
@@ -64,6 +66,12 @@ class FacturasClientesDetalle extends ModelCompany
     {
         return $this->hasOne(ClavesProductosServicios::class,'id_clave_producto_servicio','fk_id_clave_producto_servicio');
     }
+    
+    /*
+    public function documentodestino()
+    {
+        return $this->morphMany(DetalleSolicitudes::class,null,'fk_id_tipo_documento_base','fk_id_linea');
+    }*/
     
     public function sku()
     {
