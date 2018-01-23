@@ -3,6 +3,44 @@
 
 @section('form-content')
     {{ Form::setModel($data) }}
+    {{-- Campos --}}
+    @if(!Route::currentRouteNamed(currentRouteName('show')))
+    {{--  Modal para cambiar de tab 1 --}}
+    <div id="modalTabs" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cambio de opción</h5>
+                </div>
+                <div class="modal-body">
+                    Al parecer cuentas con datos en tu tabla. Recuerda que al cambiar la <b>opción</b> perderás toda la información y avances que tengas en este momento
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelarTab" type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                    <button id="confirmarTab" type="button" class="btn btn-danger">Borrar y cambiar de opción</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--  Modal para cambiar pedido  --}}
+    <div id="confirmacionpedido" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cambio de pedido</h5>
+                </div>
+                <div class="modal-body">
+                    Recuerda que al cambiar la <b>pedido</b> perderás toda la información y avances que tengas en este momento
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelarcambiopedido" type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                    <button id="confirmarpedido" type="button" class="btn btn-danger">Borrar y cambiar pedido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif <!--Aquí dejamos de mostrar los modales al ver-->
+
     <div class="row">
         <div class="col-sm-6 col-lg-3">
             <div class="form-group">
@@ -30,24 +68,29 @@
                 {{ Form::cText('Fecha de entrega', 'fecha_entrega') }}
             </div>
         </div>
+        @if (!Route::currentRouteNamed(currentRouteName('show')))
         <div class="col-sm-12">
             <ul class="nav nav-tabs btn-group justify-content-center border-0 mb-3" id="pills-tab" role="tablist" data-tabs="tabs">
                 <li>
-                    <a class="btn m-0 btn-info active" data-toggle="tab" href="#scanner" role="tab" aria-controls="scanner" aria-selected="true">
+                    <a id="producto" class="btn m-0 tabs-bs btn-info active" data-toggle="tab" href="#scanner" role="tab" aria-controls="scanner" aria-selected="true">
                         <i class="material-icons align-middle">archive</i> Solicitud de salida por producto
                     </a>
                 </li>
                 <li>
-                    <a class="btn m-0 btn-info" data-toggle="tab" href="#manual" role="tab" aria-controls="manual" aria-selected="false">
+                    <a id="pedido" class="btn m-0 tabs-bs btn-info" data-toggle="tab" href="#manual" role="tab" aria-controls="manual" aria-selected="false">
                         <i class="material-icons align-middle">keyboard</i> Solicitud de salida mediante pedido
                     </a>
                 </li>
             </ul>
         </div>
+        @endif <!--Aquí dejamos de mostrar los tabs al ver-->
     </div>
+
     <div class="row">
         <div class="col-md-12 col-sm-12 mb-3">
         <div class="tab-content">
+
+            @if (!Route::currentRouteNamed(currentRouteName('show')))
             <div class="tab-pane active" id="scanner" role="tabpanel">
                 <div id="app" class="card z-depth-1-half" data-api-endpoint="{{ companyRoute('api.index', ['entity' => '#ENTITY#'], false) }}">
                     @if (!Route::currentRouteNamed(currentRouteName('show')))
@@ -139,7 +182,7 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody v-if="upcs.length" v-cloak>
+                            <tbody id="tableBodyProductos" v-if="upcs.length" v-cloak>
                                 <tr v-for="upc,index in upcs" v-bind:class="{'table-dark':upc.eliminar}" v-bind:data-index.prop.camel="index">
                                     <th scope="row">
                                         <span v-text="index + 1"></span>
@@ -188,7 +231,9 @@
                     </div>
                 </div>{{-- /App --}}
             </div>
+            @endif
             {{-- Tap para solicitud de salida mediante surtido --}}
+
             <div class="tab-pane" id="manual" role="tabpanel">
                 <div class="card z-depth-1-half">
                     @if (!Route::currentRouteNamed(currentRouteName('show')))
@@ -196,22 +241,29 @@
                         <h4>Pedido</h4>
                         <p>Selecciona el pedido para después seleccionar el almacenista que realizará dicho surtido</p>
                         <div class="row justify-content-center">
-                            <div class="col-sm-8 col-12">
+                            <div class="col-sm-7 col-12">
                                 <div class="form-group">
                                     {{ Form::cSelect('* Pedidos','fk_id_pedido', $pedidos ?? [],[
                                         'data-url' => companyAction('HomeController@index').'/ventas.pedidos/api',
                                         'style' => 'width:100%;',
-                                        'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+                                        'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2 fk_id_pedido' : 'fk_id_pedido',
                                         Route::currentRouteNamed(currentRouteName('edit')) && $data['id_documento'] > 0 ? 'disabled' : ''
                                       ]) }}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 text-center my-3">
-                        <div class="sep">
-                            <div class="sepBtn">
-                                <button id="addDetalle" v-on:click="append" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                            <div class="col-sm-5 col-12">
+                                    <div class="form-group">
+                                        {{ Form::cSelect('* Almacén','fk_id_almacen', $almacenes ?? [],[
+                                            'style' => 'width:100%;',
+                                            'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2 fk_id_almacen' : 'fk_id_almacen',
+                                            Route::currentRouteNamed(currentRouteName('edit')) && $data['id_documento'] > 0 ? 'disabled' : ''
+                                          ]) }}
+                                    </div>
+                                </div>
+                            <div style="display:none;" id="almacenistas">
+                                {{ Form::cSelectWithDisabled(null,'relations[has][detalle][$row_id][fk_id_empleado]', $empleados ?? [],[
+                                  'class'=>'almacenistas',
+                                ]) }}
                             </div>
                         </div>
                     </div>
@@ -226,21 +278,181 @@
                                     <th>Marca</th>
                                     <th>Descripción</th>
                                     <th>Cantidad total</th>
-                                    <th>Almacén de salida y almacenista</th>
+                                    <th>Almacenista</th>
                                     <th>Cantidad solicitada a surtir</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBodySolicitudes">
-
+                                @if(Route::currentRouteNamed(currentRouteName('edit')))
+                                    @foreach($data->detalle->where('eliminar',0) as $row => $detalle)
+                                        <tr>
+                                            <th>
+                                                {{ $detalle->sku->sku }}
+                                            </th>
+                                            <td>
+                                                {{$detalle->upc->upc}}
+                                            </td>
+                                            <td>
+                                                {{$detalle->upc->marca}}
+                                            </td>
+                                            <td>
+                                                {{$detalle->upc->descripcion}}
+                                            </td>
+                                            <td>
+                                                {{$detalle->cantidad}}
+                                            </td>
+                                            <td>
+                                                {{$detalle->almacen->almacen}}
+                                            </td>
+                                            <td>
+                                                {{$detalle->pedidos->no_pedido}}
+                                            </td>
+                                            <td>
+                                                {{--  {{dump($detalle->empleados)}}  --}}
+                                                {{$detalle->empleados->nombre.' '.$detalle->empleados->apellido_paterno.' '.$detalle->empleados->apellido_materno}}
+                                            </td>
+                                            <td>
+                                                {{$detalle->cantidad_solicitada_salida}}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
-                </div>{{-- /App2 --}}
+                </div>{{-- /tab surtido--}}
             </div><!--/tabs-->
         </div>
         </div>
     </div>
+
+    <!--Vistas para "View"-->
+    @if (Route::currentRouteNamed(currentRouteName('show')) && !isset($data->detalle[0]['fk_id_empleado']))
+    <div id="app" class="card z-depth-1-half" data-api-endpoint="{{ companyRoute('api.index', ['entity' => '#ENTITY#'], false) }}">
+        <div class="card-body">
+            <table class="table table-hover table-responsive-sm table-striped" style="table-layout: fixed">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>SKU</th>
+                        <th>UPC</th>
+                        <th>Marca</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Almacén de salida</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodyProductos" v-if="upcs.length" v-cloak>
+                    <tr v-for="upc,index in upcs" v-bind:class="{'table-dark':upc.eliminar}" v-bind:data-index.prop.camel="index">
+                        <th scope="row">
+                            <span v-text="index + 1"></span>
+                            <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_sku]'" v-bind:value="upc.id_sku">
+                            <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_upc]'" v-bind:value="upc.id_upc">
+                            <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][cantidad]'" v-bind:value="upc.cantidad">
+                            <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][fk_id_almacen]'" v-bind:value="upc.id_almacen">
+                            <input type="hidden" v-bind:name="'relations[has][detalle]['+index+'][eliminar]'" v-bind:value="upc.eliminar">
+                        </th>
+                        <td>
+                            <span v-text="upc.sku"></span>
+                        </td>
+                        <td>
+                            <span v-text="upc.upc"></span>
+                        </td>
+                        <td>
+                            <span v-text="upc.marca"></span>
+                        </td>
+                        <td>
+                            <span v-text="upc.descripcion"></span>
+                        </td>
+                        <td>
+                            <span v-text="upc.cantidad"></span>
+                        </td>
+                        <td>
+                            <span v-text="upc.almacen"></span> <br>
+                            <small><span v-text="upc.sucursal"></span></small>
+                        </td>
+
+                        <td style="width: 1px !important;position: relative;">
+                            @if (!Route::currentRouteNamed(currentRouteName('show')))
+                            <a href="#" v-on:click.prevent="removeOrUndo(index)">
+                                <i class="material-icons align-middle" v-text="upc.eliminar ? 'undo' : 'delete'"></i>
+                                <span v-text="upc.eliminar ? 'Deshacer' : 'Eliminar'"></span>
+                            </a>
+                            @endif
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody v-else>
+                    <tr class="text-center">
+                        <td colspan="8">Agrega uno o más Productos.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div><!--Aquí dejamos de el tab del módulo de Octavio en view-->
+    @endif
+    @if (Route::currentRouteNamed(currentRouteName('show')) && isset($data->detalle[0]['fk_id_empleado']))
+    <div class="card z-depth-1-half">
+        <div class="card-body">
+            <table id="tableSolicitudes" class="table table-hover table-responsive-sm table-striped" style="table-layout: fixed">
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>UPC</th>
+                        <th>Marca</th>
+                        <th>Descripción</th>
+                        <th>Cantidad total</th>
+                        <th>Almacen</th>
+                        <th>Pedido</th>
+                        <th>Almacenista</th>
+                        <th>Cantidad solicitada a surtir</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodySolicitudes">
+
+                    @if(Route::currentRouteNamed(currentRouteName('show')))
+                        @foreach($data->detalle->where('eliminar',0) as $row => $detalle)
+                            <tr>
+                                <th>
+                                    {{ $detalle->sku->sku }}
+                                </th>
+                                <td>
+                                    {{$detalle->upc->upc}}
+                                </td>
+                                <td>
+                                    {{$detalle->upc->marca}}
+                                </td>
+                                <td>
+                                    {{$detalle->upc->descripcion}}
+                                </td>
+                                <td>
+                                    {{$detalle->cantidad}}
+                                </td>
+                                <td>
+                                    {{$detalle->almacen->almacen}}
+                                </td>
+                                <td>
+                                    {{$detalle->pedidos->no_pedido}}
+                                </td>
+                                <td>
+                                    {{--  {{dump($detalle->empleados)}}  --}}
+                                    {{$detalle->empleados->nombre.' '.$detalle->empleados->apellido_paterno.' '.$detalle->empleados->apellido_materno}}
+                                </td>
+                                <td>
+                                    {{$detalle->cantidad_solicitada_salida}}
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+
+                </tbody>
+            </table>
+        </div>
+    </div>{{-- /tab surtido--}}
+
+    @endif
+
 @endsection
 
 @section('header-bottom')
@@ -248,7 +460,21 @@
     <script src="{{ asset('vendor/vue/vue.js') }}"></script>
     <script src="{{ asset('js/solicitud_salida_con_pedido.js') }}"></script>
     <script type="text/javascript">
-        var api_pedido = '{{$api_pedidos_detalle}}'
+        var api_pedido = '{{$api_pedidos_detalle ?? ''}}'
+        /*$(document).ready(function(){
+            if({{Route::currentRouteNamed(currentRouteName('show'))}}){
+                $(".nav-tabs li").click(function (e) {
+                    $(this).each(function () {
+                        $('.nav-tabs li').children().removeClass('active');
+                    });
+                    $('.tab-pane').removeClass('active');
+                    $(e.currentTarget).children().addClass('active');
+                    var tab = $(this).children().prop('href');
+                    tab = tab.split('#');
+                    $('#' + tab[1]).addClass('active');
+                });
+            }
+        })*/
         $(function(){
         if ($('#app').length) {
         
@@ -417,13 +643,57 @@
                     $('#form-model').on('submit', function(e) {
                         e.preventDefault();
                         var form = this;
-        
-                        /* Si detalle y formulario estan validados */
-                        if ($(form).validate().form()) {
-                            form.submit()
+
+                        if($('#producto').hasClass('active')){
+                            /* Si detalle y formulario estan validados */
+                            if ($(form).validate().form()) {
+                                form.submit()
+                            } else {
+                                console.log('nada aun ...')
+                            }
                         } else {
-                            console.log('nada aun ...')
+                            //Validamos la otra sección
+                            $.validator.addMethod('minStrict', function (value, element, param) {
+                                return value > param;
+                            },'El numero debe ser mayor a {0}');
+                            $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
+                            $.validator.addMethod('cDigits',$.validator.methods.digits,'El campo debe ser entero');
+                            $.validator.addClassRules('fk_id_pedido',{
+                                cRequerido:true,
+                            });
+                            $.validator.addClassRules('fk_id_almacen',{
+                                cRequerido:true,
+                            });
+                            $.validator.addClassRules('cantidad_total',{
+                                cRequerido:true,
+                                cDigits:true,
+                                minStrict:0
+                            });
+                            $.validator.addClassRules('cantidad_solicitada',{
+                                cRequerido:true,
+                                cDigits:true,
+                                minStrict:0
+                            });
+                            $.validator.addClassRules('almacenistas',{
+                                cRequerido:true,
+                            });
+                        
+                            if(!$('#form-model').valid()){
+                                e.preventDefault();
+                                $('.fk_id_pedido').rules('remove');
+                                $('.fk_id_almacen').rules('remove');
+                                $('.cantidad_solicitada').rules('remove');
+                                $('.cantidad_total').rules('remove');
+                                $('.almacenistas').rules('remove');
+                                $.toaster({
+                                    priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atencion',settings: {'timeout': 3000, 'toaster': {'css': {'top': '5em'}}}
+                                });
+                            }else {
+                                form.submit();
+                            }
+
                         }
+                        
                     });
                 },
             }); // aquí termina la App

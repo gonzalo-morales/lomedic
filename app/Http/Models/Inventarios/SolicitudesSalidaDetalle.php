@@ -84,10 +84,11 @@ class SolicitudesSalidaDetalle extends ModelCompany
     }
     public function empleados()
     {
-        return $this->hasMany(Empleados::class,'id_empleado','fk_id_empleado');
+        return $this->hasOne(Empleados::class,'id_empleado','fk_id_empleado');
     }
     public function pedidos()
     {
         return $this->hasOne(Pedidos::class,'id_documento','fk_id_pedido');
     }
+
 }

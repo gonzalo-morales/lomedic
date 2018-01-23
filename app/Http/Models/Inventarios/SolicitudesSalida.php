@@ -125,5 +125,4 @@ class SolicitudesSalida extends ModelCompany
         return $this->hasMany(SolicitudesSalidaDetalle::class, 'fk_id_solicitud', 'id_solicitud');
     }
 
-
 }
