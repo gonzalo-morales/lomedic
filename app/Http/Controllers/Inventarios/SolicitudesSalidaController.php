@@ -60,7 +60,7 @@ class SolicitudesSalidaController extends ControllerBase
 			'empleados' => Empleados::whereIn('fk_id_puesto',[9,15])->where('activo',1)->where('eliminar',0)->selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->pluck('empleado','id_empleado'),
 			'pedidos' => Pedidos::whereHas('detalle',function($q){
 				$q->where('cantidad', '!=' , 0)->orWhereNull('cantidad');
-			})->selectRaw("Concat(no_pedido,' / ',observaciones,' / ',fecha_limite) no_pedido, id_documento")->pluck('no_pedido','id_documento')->prepend('Selecciona un pedido...',''),
+			})->selectRaw("Concat(no_pedido,' - ',observaciones,' - ',fecha_limite) no_pedido, id_documento")->pluck('no_pedido','id_documento')->prepend('Selecciona un pedido...',''),
 			'upcs' => $upcs,
 			'api_sku' => Crypt::encryptString('"select": ["id_sku","sku","descripcion"], "conditions": [{"where": ["id_sku", "$id_sku"]}], "with": ["upcs:id_upc,descripcion,marca,upc"]'),
 			'api_proyectos' => Crypt::encryptString('"conditions": [{"where":["fk_id_cliente", "$fk_id_cliente"]}], "only": ["id_proyecto", "proyecto"]'),
