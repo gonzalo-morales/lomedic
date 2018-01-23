@@ -22,10 +22,12 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('areas', 'Administracion\AreasController');
 		Route::resource('bancos', 'Administracion\BancosController');
 		Route::resource('cadenaspagos', 'Administracion\CadenasPagosController');
+        Route::resource('caractereventos','Administracion\CaracterEventosController');
 		Route::resource('clavesproductosservicios', 'Administracion\ClavesProductosServiciosController');
 		Route::resource('clavesunidades', 'Administracion\ClavesUnidadesController');
 		Route::resource('conceptosviaje', 'Administracion\ConceptosViajeController');
 		Route::resource('correos', 'Administracion\CorreosController');
+		Route::resource('dependencias','Administracion\DependenciasController');
 		Route::resource('devolucionesmotivos', 'Administracion\DevolucionesMotivosController');
 		Route::resource('diagnosticos', 'Administracion\DiagnosticosController');
 		Route::resource('empresas', 'Administracion\EmpresasController');
@@ -34,6 +36,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('estados', 'Administracion\EstadosController');
 		Route::resource('familiasproductos', 'Administracion\FamiliasProductosController');
 		Route::resource('formafarmaceutica', 'Administracion\FormaFarmaceuticaController');
+        Route::resource('formasadjudicacion','Administracion\FormasAdjudicacionController');
 		Route::resource('formaspago', 'Administracion\FormasPagoController');
 		Route::resource('grupoproductos', 'Administracion\GrupoProductosController');
 		Route::resource('impuestos', 'Administracion\ImpuestosController');
@@ -45,6 +48,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('localidades', 'Administracion\LocalidadesController');
 		Route::resource('metodospago', 'Administracion\MetodosPagoController');
 		Route::resource('metodosvaloracion', 'Administracion\MetodosValoracionController');
+        Route::resource('modalidadesentrega','Administracion\ModalidadesentregaController');
 		Route::resource('modulos', 'Administracion\ModulosController');
 		Route::resource('monedas', 'Administracion\MonedasController');
 		Route::resource('motivosajustes', 'Administracion\MotivosAjustesController');
@@ -64,6 +68,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('seriesdocumentos', 'Administracion\SeriesDocumentosController');
 		Route::resource('seriesskus', 'Administracion\SeriesSkusController');
 		Route::get('getSerie/{id}','Administracion\SeriesSkusController@getSerie');
+        Route::resource('subdependencias','Administracion\SubdependenciasController');
 		Route::resource('subgrupoproductos', 'Administracion\SubgrupoProductosController');
 		Route::resource('sucursales', 'Administracion\SucursalesController');
 		Route::get('sucursalesautocomplete','Administracion\SucursalesController@obtenerSucursales');
@@ -73,7 +78,8 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('tipocombustible', 'Administracion\TipoCombustibleController');
 		Route::resource('tipodocumento', 'Administracion\TipoDocumentosController');
 		Route::resource('tipoentrega', 'Administracion\TipoEntregaController');
-		Route::resource('tipoinventario', 'Administracion\TipoInventarioController');
+        Route::resource('tiposeventos','Administracion\TiposEventosController');
+        Route::resource('tipoinventario', 'Administracion\TipoInventarioController');
 		Route::resource('tipoproductos', 'Administracion\TipoProductosController');
 		Route::resource('tiposucursal', 'Administracion\TipoSucursalController');
 		Route::resource('tiposcomprobantes', 'Administracion\TiposComprobantesController');

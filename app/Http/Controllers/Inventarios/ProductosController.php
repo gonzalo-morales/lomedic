@@ -122,4 +122,5 @@ class ProductosController extends ControllerBase
     {
         return $this->entity->find($id)->upcs()->select('id_upc as id','upc as text','descripcion')->get();
     }
+
 }

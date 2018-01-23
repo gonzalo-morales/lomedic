@@ -333,7 +333,7 @@ $(document).ready(function () {
         $('#confirmacion').modal('show');
     });
 
-    $('#confirmar').click(function () {
+    $('#confirmar').click(function () {//Confirmar cambio de cliente
         $('#confirmacion').modal('hide');
         $('#detalleProductos tbody tr').remove();
 		$('#detalleContratos tbody tr').remove();
@@ -349,6 +349,7 @@ $(document).ready(function () {
         $('#importar_liciplus').attr('disabled','disabled');
         $('#importar_contratos').attr('disabled','disabled');
         $('#importar_productos').attr('disabled','disabled');
+        $('#fk_id_localidad').val(0).trigger('change');
 
         //En productos carga las claves relacionadas con el cliente actual
         var _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
@@ -374,31 +375,16 @@ $(document).ready(function () {
                 $('#loadingfk_id_clave_cliente_producto').hide();
             }
         });
-        $('#loadingsucursales').show();
-        $.ajax({
-            url: $('#fk_id_cliente').data('url'),
-            data: {
-                'param_js':sucursales_js,
-                $fk_id_cliente:$('#fk_id_cliente').val()
-            },
-            dataType:'JSON',
-            success: function (data) {
-                var option = $('<option/>');
-                option.val(0);
-                option.text('...');
-                option.attr('disabled','disabled');
-                option.attr('selected','selected');
-                $('#fk_id_sucursal').empty().prepend(option).select2({
-                    data:data
-                });
-                $('#loadingsucursales').hide();
-            }
-        });
+        cargar_sucursales();
     });
 
     $('#cancelarcambiocliente').click(function () {
     	var val = $('#fk_id_cliente').data('old');
 		$('#fk_id_cliente').val(val).trigger('change');
+    });
+
+    $('#fk_id_localidad').on('change',function () {
+        cargar_sucursales();
     });
 
     $(document).on('submit',function (e) {
@@ -471,4 +457,30 @@ $(document).ready(function () {
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
     $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+}
+
+function cargar_sucursales() {
+    if($('#fk_id_localidad').val() && $('#fk_id_cliente').val()){
+        $('#loadingsucursales').show();
+        $.ajax({
+            url: $('#fk_id_cliente').data('url'),
+            data: {
+                'param_js':sucursales_js,
+                $fk_id_cliente:$('#fk_id_cliente').val(),
+                $fk_id_localidad:$('#fk_id_localidad').val()
+            },
+            dataType:'JSON',
+            success: function (data) {
+                var option = $('<option/>');
+                option.val(0);
+                option.text('...');
+                option.attr('disabled','disabled');
+                option.attr('selected','selected');
+                $('#fk_id_sucursal').empty().removeAttr('disabled').prepend(option).select2({
+                    data:data
+                });
+                $('#loadingsucursales').hide();
+            }
+        });
+    }
 }

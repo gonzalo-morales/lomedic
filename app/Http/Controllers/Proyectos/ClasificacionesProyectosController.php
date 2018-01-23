@@ -12,11 +12,4 @@ class ClasificacionesProyectosController extends ControllerBase
     {
         $this->entity = $entity;
     }
-    
-    public function getDataView($entity = null)
-    {
-        return [
-            'tiposProyectos' => TiposProyectos::where('activo', '1')->pluck('tipo_proyecto','id_tipo_proyecto'),
-        ];
-    }
 }

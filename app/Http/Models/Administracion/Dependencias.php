@@ -1,35 +1,35 @@
 <?php
 
-namespace App\Http\Models\Proyectos;
+namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 
-class Subdependencias extends ModelBase
+class Dependencias extends ModelBase
 {
 	/**
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_subdependencias';
+	protected $table = 'maestro.gen_cat_dependencias';
 
 	/**
 	 * The primary key of the table
 	 * @var string
 	 */
-	protected $primaryKey = 'id_subdependencia';
+	protected $primaryKey = 'id_dependencia';
 
 	/**
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
-	protected $fillable = ['subdependencia','activo'];
+	protected $fillable = ['dependencia','activo'];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-        'subdependencia' => 'required',
+        'dependencia' => 'required',
 	];
 
 	/**
@@ -37,16 +37,16 @@ class Subdependencias extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-        'subdependencia' => 'Subdependencia',
+        'dependencia' => 'Dependencia',
         'activo_span' => 'Estatus'
 	];
 
 	public $niceNames = [
-	    'subdependencia' => 'Subdependencia'
+	    'dependencia' => 'Dependencia'
     ];
 
 	function proyecto()
     {
-        return $this->belongsTo(Proyectos::class,'fk_id_subdependencia');
+        return $this->belongsTo(Proyectos::class,'fk_id_dependencia');
     }
 }

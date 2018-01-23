@@ -4,14 +4,11 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
-	<div class="form-group col-md-4">
+	<div class="form-group col-md-6">
 		{{Form::cText('Clasificación','clasificacion',['id'=>'clasificacion'])}}
 	</div>
-	<div class="form-group col-md-4">
+	<div class="form-group col-md-6">
 		{{Form::cText('Nomenclatura','nomenclatura',['id'=>'nomenclatura'])}}
-	</div>
-	<div class="form-group col-md-4">
-		{{Form::cSelectWithDisabled('Tipo de clasificación','fk_id_tipo_proyecto',isset($tiposProyectos)?$tiposProyectos:[])}}
 	</div>
 	<div  class="col-md-12 text-center mt-4">
 		<div class="alert alert-warning" role="alert">

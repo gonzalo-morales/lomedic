@@ -25,7 +25,7 @@
 			{{Form::cText('* Nombre Proyecto','proyecto',['maxlength'=>'100'])}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
-			{{Form::cSelectWithDisabled('* Tipo Proyecto','fk_id_clasificacion_proyecto',$clasificaciones ?? [],['class'=>'select2'])}}
+			{{Form::cSelectWithDisabled('* Clase Proyecto','fk_id_clasificacion_proyecto',$clasificaciones ?? [],['class'=>'select2'])}}
 		</div>
 		<div class="form-group col-md-8 col-xs-12">
 			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',$clientes ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/Administracion.sucursales/api'])}}
@@ -40,7 +40,7 @@
 			<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 				Cargando sucursales... <i class="material-icons align-middle loading">cached</i>
 			</div>
-			{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal',$sucursales ?? [],['class'=>'select2'])}}
+			{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal',$sucursales ?? [],['class'=>'select2','disabled'])}}
 		</div>
 		<div class="form-group col-md-2 col-xs-12">
 			{{Form::cText('* Fecha Inicio','fecha_inicio',['class'=>' datepicker'])}}

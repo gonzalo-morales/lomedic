@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Models\Proyectos;
+namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 

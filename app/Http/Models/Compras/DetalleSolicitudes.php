@@ -3,6 +3,7 @@
 namespace App\Http\Models\Compras;
 
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Ventas\Pedidos;
 use DB;
 
 class DetalleSolicitudes extends ModelCompany
@@ -27,7 +28,7 @@ class DetalleSolicitudes extends ModelCompany
      */
     protected $fillable = ['fk_id_sku','fk_id_upc','fk_id_proveedor','cantidad',
         'fk_id_unidad_medida','fk_id_impuesto','precio_unitario','importe','fk_id_proyecto','fecha_necesario',
-        'fk_id_documento','fk_id_documento_base','fk_id_tipo_documento_base'];
+        'fk_id_documento','fk_id_documento_base','fk_id_tipo_documento_base','fk_id_linea'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -90,5 +91,17 @@ class DetalleSolicitudes extends ModelCompany
     public function proveedor()
     {
         return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_proveedor');
+    }
+
+    public function documento()
+    {
+        switch ($this->fk_id_tipo_documento_base){
+            case 4:
+                return $this->belongsTo(FacturasClientes::class,'fk_id_documento_base','');
+                break;
+            case 8://Pedido de cliente
+                   return $this->belongsTo(Pedidos::class,'fk_id_documento_base','id_documento');
+                break;
+        }
     }
 }
