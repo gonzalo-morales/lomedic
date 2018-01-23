@@ -82,7 +82,7 @@
                 			{{Form::cSelectWithDisabled('Dependencia','fk_id_dependencia', $dependencias ?? [],['class'=>'select2'])}}
                 		</div>
                 		<div class="form-group col-md-3">
-                			{{Form::cSelectWithDisabled('Subdependencia','fk_id_subdependencia', $subdependencias ?? [],['class'=>'select2'])}}
+                			{{Form::cSelectWithDisabled('Subdependencia','fk_id_subdependencia', $subdependencias ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/administracion.subdependencias/api'])}}
                 		</div>
     					<div class="form-group col-md-3">
     						{{Form::cSelectWithDisabled('Modalidad entrega','fk_id_modalidad_entrega', $modalidadesentrega ?? [],['class'=>'select2'])}}
@@ -435,7 +435,8 @@
 		var licitacion_js = '{{$js_licitacion ?? ''}}';
 		var sucursales_js = '{{$js_sucursales ?? ''}}';
         var contratos_js = '{{$js_contratos ?? ''}}';
-        var partidas_js = '{{$js_partidas ?? ''}}'
+        var partidas_js = '{{$js_partidas ?? ''}}';
+        var subdependencias_js = '{{$js_subdependencias}}'
 	</script>
     <!-- Resources -->
     <style>

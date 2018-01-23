@@ -22,7 +22,7 @@ class Subdependencias extends ModelBase
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
-	protected $fillable = ['subdependencia','activo'];
+	protected $fillable = ['subdependencia','activo','fk_id_dependencia'];
 
 	/**
 	 * The validation rules
@@ -30,6 +30,7 @@ class Subdependencias extends ModelBase
 	 */
 	public $rules = [
         'subdependencia' => 'required',
+        'fk_id_dependencia' => 'required'
 	];
 
 	/**
@@ -38,15 +39,22 @@ class Subdependencias extends ModelBase
 	 */
 	protected $fields = [
         'subdependencia' => 'Subdependencia',
+        'dependencia.dependencia' => 'Depende de',
         'activo_span' => 'Estatus'
 	];
 
 	public $niceNames = [
-	    'subdependencia' => 'Subdependencia'
+	    'subdependencia' => 'subdependencia',
+        'fk_id_dependencia' => 'dependencia'
     ];
 
 	function proyecto()
     {
         return $this->belongsTo(Proyectos::class,'fk_id_subdependencia');
+    }
+
+    function dependencia()
+    {
+        return $this->belongsTo(Dependencias::class,'fk_id_dependencia','id_dependencia');
     }
 }

@@ -60,6 +60,7 @@ class ProyectosController extends ControllerBase
             'js_sucursales' => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"conditions":[{"where":["fk_id_cliente",$fk_id_cliente]},{"where":["fk_id_localidad",$fk_id_localidad]},{"where":["activo","1"]}]'),
             'js_contratos' => Crypt::encryptString('"select":["representante_legal_cliente","no_contrato","vigencia_fecha_inicio","vigencia_fecha_fin"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
             'js_partidas' => Crypt::encryptString('"select":["clave","descripcion","cantidad_maxima","cantidad_minima","codigo_barras","costo"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
+            'js_subdependencias'=>Crypt::encryptString('"select":["id_subdependencia as id","subdependencia as text"],"conditions":[{"where":["fk_id_dependencia",$fk_id_dependencia]},{"where":["activo",1]},{"where":["eliminar",0]}]')
         ];
     }
     

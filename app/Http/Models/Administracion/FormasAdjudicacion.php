@@ -24,6 +24,15 @@ class FormasAdjudicacion extends ModelBase
 	 */
 	protected $fillable = ['forma_adjudicacion','activo'];
 
+	public $rules = [
+	    "forma_adjudicacion" => "required"
+    ];
+
+	protected $fields = [
+	    'forma_adjudicacion' => 'Forma Adjudicación',
+        'activo_span' => 'Estatus'
+    ];
+
 	public $niceNames = [
 	    'forma_adjudicacion' => 'forma adjudicacion'
     ];

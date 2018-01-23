@@ -18,15 +18,25 @@ class ModalidadesEntrega extends ModelBase
 	 */
 	protected $primaryKey = 'id_modalidad_entrega';
 
+	protected $fields = [
+	    'modalidad_entrega'=>'Modalidad Entrega',
+        'activo_span' => 'estatus'
+    ];
+
 	/**
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
 	protected $fillable = ['modalidad_entrega','activo','eliminar'];
 
+    public $rules = [
+        'modalidad_entrega' => 'required'
+    ];
+
 	public $niceNames = [
 	    'modalidad_entrega' => 'modalidad entrega'
     ];
+
 
 	function proyecto()
     {

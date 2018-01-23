@@ -4,8 +4,11 @@
 @section('form-content')
 	{{ Form::setModel($data) }}
     <div class="row">
-        <div class="form-group col-md-12 col-xs-12">
+        <div class="form-group col-md-6 col-xs-12">
             {{ Form::cText('* Subdependencia','subdependencia') }}
+        </div>
+        <div class="form-group col-md-6 col-xs-12">
+            {{ Form::cSelectWithDisabled('* Dependencia','fk_id_dependencia',$dependencias ?? []) }}
         </div>
         <div  class="col-md-12 text-center mt-4">
             <div class="alert alert-warning" role="alert">

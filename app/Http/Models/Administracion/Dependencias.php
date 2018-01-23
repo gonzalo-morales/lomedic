@@ -49,4 +49,9 @@ class Dependencias extends ModelBase
     {
         return $this->belongsTo(Proyectos::class,'fk_id_dependencia');
     }
+
+    function subdependencias()
+    {
+        return $this->hasMany(Subdependencias::class,'fk_id_dependencia','id_dependencia');
+    }
 }

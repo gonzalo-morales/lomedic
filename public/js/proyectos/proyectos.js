@@ -122,28 +122,36 @@ $(document).ready(function () {
 			dataType:'JSON',
 			success: function (data) {
 				if(data.length > 0){
-					var tipo_evento = data[0].tipo_evento.split('||');
-					$('#fk_id_tipo_evento').val(tipo_evento[0]).trigger('change');
-					var dependencia = data[0].dependencia.split('||');
-					dependencia = dependencia.length == 1 ? [0,dependencia] : dependencia;
-					$('#fk_id_dependencia').val(dependencia[0]).trigger('change');
-                    var subdependencia = data[0].subdependencia.split('||');
-                    subdependencia = subdependencia.length == 1 ? [0,subdependencia] : subdependencia;
-                    $('#fk_id_subdependencia').val(subdependencia[0]).trigger('change');
-                    var modalidad_entrega = data[0].modalidad_entrega.split('||');
-                    modalidad_entrega = modalidad_entrega.length == 1 ? [0,modalidad_entrega] : modalidad_entrega;
-                    $('#fk_id_modalidad_entrega').val(modalidad_entrega[0]).trigger('change');
-                    var caracter_evento = data[0].caracter_evento.split('||');
-                    caracter_evento = caracter_evento.length == 1 ? [0,caracter_evento] : caracter_evento;
-                    $('#fk_id_caracter_evento').val(caracter_evento[0]).trigger('change');
-                    var forma_adjudicacion = data[0].forma_adjudicacion.split('||');
-                    forma_adjudicacion =  forma_adjudicacion.length == 1 ? [0,forma_adjudicacion] : forma_adjudicacion;
-                    $('#fk_id_forma_adjudicacion').val(forma_adjudicacion[0]).trigger('change');
-                    $('#pena_convencional').val(data[0].pena_convencional);
-                    $('#tope_pena_convencional').val(data[0].tope_pena_convencional);
-                    $.toaster({priority:'success',title:'LICIPLUS',message:'Licitación encontrada.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-                    $('#importar_contratos').removeAttr('disabled');
-                    $('#importar_productos').removeAttr('disabled');
+                    var dependencia = data[0].dependencia.split('||');
+                    dependencia = dependencia.length == 1 ? [0,dependencia] : dependencia;
+				    $.ajax({
+                        url: $('#fk_id_subdependencia').data('url'),
+                        data:{'param_js':subdependencias_js,$fk_id_dependencia:dependencia[0]},
+                        dataType:'JSON',
+                        success: function (dependencias_ajax) {
+                            var tipo_evento = data[0].tipo_evento.split('||');
+                            $('#fk_id_tipo_evento').val(tipo_evento[0]).trigger('change');
+                            $('#fk_id_dependencia').val(dependencia[0]).trigger('change');
+                            var subdependencia = data[0].subdependencia.split('||');
+                            subdependencia = subdependencia.length == 1 ? [0,subdependencia] : subdependencia;
+                            console.log(subdependencia);
+                            $('#fk_id_subdependencia').empty().select2({data:dependencias_ajax}).val(subdependencia[0]).trigger('change');
+                            var modalidad_entrega = data[0].modalidad_entrega.split('||');
+                            modalidad_entrega = modalidad_entrega.length == 1 ? [0,modalidad_entrega] : modalidad_entrega;
+                            $('#fk_id_modalidad_entrega').val(modalidad_entrega[0]).trigger('change');
+                            var caracter_evento = data[0].caracter_evento.split('||');
+                            caracter_evento = caracter_evento.length == 1 ? [0,caracter_evento] : caracter_evento;
+                            $('#fk_id_caracter_evento').val(caracter_evento[0]).trigger('change');
+                            var forma_adjudicacion = data[0].forma_adjudicacion.split('||');
+                            forma_adjudicacion =  forma_adjudicacion.length == 1 ? [0,forma_adjudicacion] : forma_adjudicacion;
+                            $('#fk_id_forma_adjudicacion').val(forma_adjudicacion[0]).trigger('change');
+                            $('#pena_convencional').val(data[0].pena_convencional);
+                            $('#tope_pena_convencional').val(data[0].tope_pena_convencional);
+                            $.toaster({priority:'success',title:'LICIPLUS',message:'Licitación encontrada.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                            $('#importar_contratos').removeAttr('disabled');
+                            $('#importar_productos').removeAttr('disabled');
+                        }
+                    });
 				}else{
                     $.toaster({priority:'info',title:'LICIPLUS',message:'No se encontró ninguna licitación.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                     $('#importar_contratos').attr('disabled','disabled');
