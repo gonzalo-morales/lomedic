@@ -49,7 +49,7 @@ class SeguimientoDesviacion extends ModelCompany
     }
     public function detallesSeguimientoDesviacion()
     {
-        return $this->hasMany('App\Http\Models\Compras\DetalleSeguimientoDesviacion','f_id_seguimiento_desviacion','id_seguimiento_desviacion');
+        return $this->hasMany('App\Http\Models\Compras\DetalleSeguimientoDesviacion','fk_id_seguimiento_desviacion','id_seguimiento_desviacion');
     }
     // public function tipoDocumento()
     // {

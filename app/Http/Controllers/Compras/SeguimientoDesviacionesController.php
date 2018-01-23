@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Compras;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\SeguimientoDesviacion;
+use App\Http\Models\Compras\DetalleSeguimientoDesviacion;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Compras\FacturasProveedores;
 use Illuminate\Http\Response;
@@ -34,34 +36,56 @@ class SeguimientoDesviacionesController extends ControllerBase
 
     }
 
-    // public function getDocumentos($company, Request $request, $tipoDocumento)
+    // public function getDocumentos($company, Request $request, $id_tipo_documento)
     public function getDocumentos($company, Request $request)
     {
         $json = [];
         $documentosProveedor = null;
-        if ($request->tipoDocumento == "7") { // Factura
-            $documentosProveedor = FacturasProveedores::where('fk_id_socio_negocio',$request->fk_id_proveedor)->where('serie_factura','<>','null')->where('folio_factura','<>','null')->get(['id_factura_proveedor','serie_factura','folio_factura']);
+        if ($request->id_tipo_documento == "7") { // Factura
+            $documentosProveedor = FacturasProveedores::where('fk_id_socio_negocio',$request->fk_id_proveedor)
+                                                        // ->where('id_factura_proveedor', 'LIKE', '%' . (string)$request->term . '%')
+                                                        ->where(DB::raw("CONCAT(serie_factura,'',folio_factura)"), 'LIKE', '%' . $request->term . '%')
+                                                        ->where('serie_factura','<>','null')->where('folio_factura','<>','null')->get(['id_factura_proveedor','serie_factura','folio_factura']);
             foreach ($documentosProveedor as $document) {
                 $json[] = [
-                    'id'            => $document->id_factura_proveedor,
-                    'identificador' => $document->serie_factura . "-" . $document->folio_factura,
+                    'id'    => $document->id_factura_proveedor,
+                    'text'  => $document->serie_factura . "-" . $document->folio_factura,
                 ];
             }
-            // return json_encode($documentosProveedor);
             return json_encode($json);
-            // return json_encode(array('data'=>$json));
+        }else if ($request->id_tipo_documento == "3"){ // Orden de compra
+            $documentosProveedor = Ordenes::where('fk_id_socio_negocio',$request->fk_id_proveedor)
+                                            // ->where('id_orden', 'LIKE', '%' . $_POST['term']."" . '%')
+                                            ->where('id_orden', '=', $_POST['term'])
+                                            ->get(['id_orden','id_orden']);
+            foreach ($documentosProveedor as $document) {
+                $json[] = [
+                    'id'    => $document->id_orden,
+                    'text'  => $document->id_orden,
+                ];
+            }
+            return json_encode($json);
         }else {
             return json_encode($json);
         }
-        // $json = [];
-        // $afiliados = Afiliaciones::where('id_afiliacion', 'LIKE', $term . '%')->orWhere(DB::raw("CONCAT(paterno,' ',materno, ' ',nombre)"), 'LIKE', '%' . $term . '%')->get();
-        // foreach ($documentosProveedor as $document) {
-        //     $json[] = [
-        //             'id'            => $document->id_factura_proveedor,
-        //             'identificador' => $document->serie_factura . "-" . $document->folio_factura,
-        //         ];
-        // }
-        // return json_encode($json);
+    }
+
+    public function getDesviaciones($company, Request $request){
+        $json = [];
+        $detalleDesviacion = null;
+        if ($request->id_tipo_documento == "7") { // Factura
+            $detalleDesviacion = SeguimientoDesviacion::where('fk_id_proveedor',$request->fk_id_proveedor)->where('tipo',2)->get();
+            print_r($detalleDesviacion);
+            foreach ($detalleDesviacion as $detalle) {
+                $det = $detalle->detallesSeguimientoDesviacion;
+                // $json[] = [];
+                print_r($det);
+            }
+            // echo SeguimientoDesviacion::count();
+        }
+
+
+        return json_encode($json);
     }
 
 }

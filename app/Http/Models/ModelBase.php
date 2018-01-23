@@ -32,7 +32,7 @@ class ModelBase extends Model
 
 	public function __construct($attributes = []) {
 		$this->eagerLoaders = $this->getAutoEager();
-		return parent::__construct($attributes);		
+		return parent::__construct($attributes);
 		#$this->rules = array_merge_recursive_simple($this->rules,$this->getRulesDefaults());
 	}
 
@@ -41,7 +41,7 @@ class ModelBase extends Model
 	 * @var array
 	 */
 	public $niceNames = [];
-	
+
 	public static function boot()
 	{
 	    parent::boot();
@@ -49,39 +49,39 @@ class ModelBase extends Model
 	    //mientras creamos
 	    self::creating(function($table){
 	    });
-	    
+
         //una vez creado
         self::created(function($table){
         });
-        
+
         //mientras actualizamos
         self::updating(function($table){
         });
-	    
+
         //una vez actualizado
         self::updated(function($table){
         });
-	    
+
 	    //mientras salvamos
 	    self::saving(function($table){
 	    });
-	    
+
 	    //una vez salvado
         self::saved(function($table){
         });
-	    
+
 	    //mientras eliminamos
         self::deleting(function($table){
         });
-	    
+
 	    //una vez eliminado
         self::deleted(function($table){
         });
-	    
+
 	    //mientras restauramos
         self::restoring(function($table){
         });
-	    
+
 	    //una vez restaurado
         self::restored(function($table){
         });
@@ -102,7 +102,7 @@ class ModelBase extends Model
 	{
 	    $keysfields = array_keys($this->fields ?? []) ?? [];
 	    $return = [];
-	    
+
 	    foreach ($keysfields as $key) {
 	        $pos = strpos($key, '.');
 	        if($pos !== false)
@@ -110,7 +110,7 @@ class ModelBase extends Model
 	    }
         return $return;
 	}
-	
+
 	public function getFillable()
 	{
 	    return $this->fillable ?? [];
@@ -127,13 +127,13 @@ class ModelBase extends Model
 		}
 		return $this->fields;
 	}
-	
+
 	public function sendNotification($email,$options)
 	{
 	    $this->email = $email;
 	    $this->notify(new Notificaciones($options));
 	}
-	
+
 	/**
 	 * Obtenemos Eager-Loaders
 	 * @return array
@@ -172,7 +172,7 @@ class ModelBase extends Model
 		}
 		return $format;
 	}
-	
+
 	public function getlistColumns() {
 	    return $this->getConnection()->getSchemaBuilder()->getColumnListing(str_replace('maestro.','',$this->getTable()));
 	}
@@ -207,7 +207,7 @@ class ModelBase extends Model
 	            'comment'  => $column->getComment(),
 	        ];
 	    }, $columns );
-	        
+
         $rules = [];
         foreach($propertys as $col=>$prop) {
             if(in_array($col, $this->fillable))

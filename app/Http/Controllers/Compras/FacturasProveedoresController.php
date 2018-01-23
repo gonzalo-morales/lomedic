@@ -91,7 +91,7 @@ class FacturasProveedoresController extends ControllerBase
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
-            $this->log('store', $isSuccess->id_factura_proveedor);
+            // $this->log('store', $isSuccess->id_factura_proveedor);
             return $this->redirect('store');
         } else {
             DB::rollBack();

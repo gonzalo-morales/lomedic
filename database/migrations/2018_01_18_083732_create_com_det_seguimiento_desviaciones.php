@@ -13,7 +13,7 @@ class CreateComDetSeguimientoDesviaciones extends Migration
      */
     public function up()
     {
-        Schema::connection('abisa')->create('comp_det_seguimiento_desviacion', function (Blueprint $table) {
+        Schema::connection('abisa')->create('com_det_seguimiento_desviacion', function (Blueprint $table) {
             $table->increments('id_detalle_seguimiento_desviacion');
             $table->integer('fk_id_seguimiento_desviacion');
             $table->integer('fk_id_orden_compra')->nullable();
@@ -38,6 +38,6 @@ class CreateComDetSeguimientoDesviaciones extends Migration
      */
     public function down()
     {
-        Schema::connection('abisa')->dropIfExists('comp_det_seguimiento_desviacion');
+        Schema::connection('abisa')->dropIfExists('com_det_seguimiento_desviacion');
     }
 }

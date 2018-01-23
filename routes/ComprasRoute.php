@@ -25,7 +25,7 @@ Route::prefix('{company}')->group(function () {
 
         Route::resource('autorizaciones','Compras\AutorizacionesController');
         Route::resource('facturasproveedores','Compras\FacturasProveedoresController');
-        Route::post('getFacturaData','Compras\FacturasProveedoresController@parseXML');
+        // Route::post('getFacturaData','Compras\FacturasProveedoresController@parseXML');
         Route::resource('notascreditoproveedores','Compras\NotasCreditoProveedorController');
         Route::post('getFacturaData','Compras\NotasCreditoProveedorController@parseXML');
         Route::resource('ofertas','Compras\OfertasController');
@@ -36,12 +36,13 @@ Route::prefix('{company}')->group(function () {
         Route::get('ordenes/{id}/solicitudOrden','Compras\OrdenesController@createSolicitudOrden')->name('ordenes');
         Route::resource('ordenes','Compras\OrdenesController');
 
-        Route::resource('facturasProveedores','Compras\FacturasProveedoresController');
-        // Route::post('getFacturaData2','Compras\FacturasProveedoresController@parseXML'); // Por conflicto con los nombres similares
+        // Route::resource('facturasProveedores','Compras\FacturasProveedoresController');
+        Route::post('getFacturaData2','Compras\FacturasProveedoresController@parseXML'); // Por conflicto con los nombres similares
 
         Route::post('getDetallesOrden','Compras\FacturasProveedoresController@getDetallesOrden');
         Route::resource('seguimientodesviacion','Compras\SeguimientoDesviacionesController');
         Route::post('getDocumentos','Compras\SeguimientoDesviacionesController@getDocumentos');
+        Route::post('getDesviaciones','Compras\SeguimientoDesviacionesController@getDesviaciones');
         Route::resource('pagos','Compras\PagosController');
         Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
         Route::resource('solicitudes', 'Compras\SolicitudesController');
@@ -51,8 +52,8 @@ Route::prefix('{company}')->group(function () {
         Route::group(['prefix' => 'solicitudes/{id_solicitud}'], function(){
             Route::resource('ofertas','Compras\OfertasController');
         });
-        Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
-            Route::resource('ordenes','Compras\OrdenesController',['only'=>['create']]);
-        });
+        // Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
+        //     Route::resource('ordenes','Compras\OrdenesController',['only'=>['create']]);
+        // });
     });
 });

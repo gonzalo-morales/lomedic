@@ -61,7 +61,7 @@ class Entradas extends ModelCompany
         parent::boot();
         self::created(function($entrada){
             // $entrada->$entrada->getKey();
-            $detallesEntrada = $entrada::where('id_entrada_almacen',$entrada->getKey())->productos()->get();
+            $detallesEntrada = Entradas::where('id_entrada_almacen',$entrada->getKey())->get();
             print_r($detallesEntrada);
             // $entrada->id_entrada_almacen;
             // $entrada->referencia_documento;
@@ -117,8 +117,6 @@ class Entradas extends ModelCompany
                 }
             }
 
-            // $detalleOrdenes = Ordenes::join('com_det_ordenes','com_opr_ordenes.id_orden','=','com_det_ordenes.fk_id_documento')
-            //                             ->where('id_orden','=','')
         });
     }*/
 

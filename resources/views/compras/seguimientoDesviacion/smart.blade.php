@@ -13,22 +13,27 @@
 @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
 	<div class="row">
 		<div class="col-md-12 text-center text-success">
-			{{-- <h3>Autorización de la {{$data->fk_id_tipo_documento == 10 ? 'solicitud de pago' : 'orden de compra'}} No. {{$data->fk_id_documento}}</h3> --}}
+			{{-- <h3>Autorización de la {{$data->fk_id_tipo_documento == 10 ? 'solicitud de pago' : 'orden de compra'}} No. {{$data->id_documento}}</h3> --}}
 		</div>
 	</div>
 @endif
 @if (!Route::currentRouteNamed(currentRouteName('index')))
 	<div class="row">
 		<div class="form-group col-md-4 col-sm-6">
-			{{ Form::cSelect('Proveedor','fk_id_proveedor',$proveedores,['data-url'=>companyAction('Compras\SeguimientoDesviacionesController@getDocumentos'),'class'=>'form-control','']) }}
-			{{ Form::cRadio('Autorizar?','fk_id_estatus',[4=>'Autorizado',3=>'No Autorizado']) }}
+			{{ Form::cSelect('Proveedor','fk_id_proveedor',$proveedores) }}
+			{{-- {{ Form::cRadio('Autorizar?','fk_id_estatus',[4=>'Autorizado',3=>'No Autorizado']) }} --}}
 		</div>
 		<div class="form-group col-md-4 col-sm-6">
-			{{ Form::cSelect('Tipo de Documento','tipo_documento',['-1'=>'Selecciona una opcion...','3'=>'Orden de Compra','7'=>'Factura']) }}
+			{{ Form::cSelect('Tipo de Documento','id_tipo_documento',['-1'=>'Selecciona una opcion...','3'=>'Orden de Compra','7'=>'Factura']) }}
 		</div>
-		<div class="form-group col-md-4 col-sm-6">
+		<div class="form-group input-field col-md-3 col-sm-6">
+			{{Form::label('id_documento','* No. Documento')}}
+			{!!Form::select('id_documento',[],null,['id'=>'id_documento','class'=>'form-control','style'=>'width:100%','data-url'=>companyAction('Compras\SeguimientoDesviacionesController@getDocumentos'),
+									'data-url-desviaciones'=>companyAction('Compras\SeguimientoDesviacionesController@getDesviaciones')])!!}
+		</div>
+		{{-- <div class="form-group col-md-4 col-sm-6">
 			{{ Form::cSelect('No. Documento','documentos') }}
-		</div>
+		</div> --}}
 	</div>
 @endif
 {{-- {{ Form::cText('Proveedor','fk_id_proveedor') }} --}}
@@ -51,7 +56,7 @@
 		@if(isset($data->detalles))
 			@foreach($data->detalles->where('eliminar',false ) as $row => $detalle)
 
-				<tr id="{{$detalle->producto['id_sku']}}">
+				{{-- <tr id="{{$detalle->producto['id_sku']}}">
 					<th scope="row">{{$detalle->producto['id_sku']}}</th>
 					<td>
 						<input name="relations[has][detalles][{{$row}}][id_receta_detalle]" type="hidden" value="{{$detalle->id_receta_detalle}}">
@@ -62,7 +67,7 @@
 					<td>
 						<a data-delete-type="single"  data-toggle="tooltip" data-placement="top" title="Borrar"  id="{{$row}}" aria-describedby="tooltip687783" onclick="eliminarFila(this)" ><i class="material-icons text-primary">delete</i></a>
 					</td>
-				</tr>
+				</tr> --}}
 			@endforeach
 		@endif
 		</tbody>
