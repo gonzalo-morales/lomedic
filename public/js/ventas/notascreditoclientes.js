@@ -180,9 +180,9 @@ $(document).ready(function () {
         });
 		
 		if(!id_tipo || !id_documento) {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el tipo de relacion y el documento a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe introducir el tipo de relacion y el documento a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}else if(existe){
-            $.toaster({priority:'danger',title:'¡Error!',message:'Documento ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            $.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Documento ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleRelaciones').append('<tr>'+
@@ -196,7 +196,7 @@ $(document).ready(function () {
 				'</td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this,\'cfdi\')" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-			$.toaster({priority:'success',title:'¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 			cargar_productos();
         }
         $('#loadingfk_id_producto').hide();
@@ -229,7 +229,7 @@ $(document).ready(function () {
 
                 $('#tConceptos tbody').append(
                     '<tr>' +
-                    '<td><input type="hidden" class="index" value="'+row_id+'"><input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_relacionado]" class="factura" value="'+producto.fk_id_factura+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_relacionado]" class="tipo_documento" value="'+producto.fk_id_tipo_documento+'">'+producto.serie+'-'+producto.folio+'</td>' +
+                    '<td><input type="hidden" class="index" value="'+row_id+'"><input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_relacionado]" class="factura" value="'+producto.fk_id_documento+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_relacionado]" class="tipo_documento" value="'+producto.fk_id_tipo_documento+'">'+producto.serie+'-'+producto.folio+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_producto_servicio]" value="'+producto.fk_id_clave_producto_servicio+'">'+producto.clave_producto_servicio+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_cliente]" value="'+producto.id_clave_cliente_producto+'">'+producto.clave_producto_cliente+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descripcion]" value="'+producto.descripcion+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+producto.id_upc+'">'+producto.descripcion+'</td>' +
@@ -247,7 +247,7 @@ $(document).ready(function () {
                 total_factura();
                 limpiarCampos();
 			}else{
-                $.toaster({priority:'danger',title:'¡Error!',message:'Producto ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                $.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Producto ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 limpiarCampos();
 			}
         }
@@ -266,7 +266,7 @@ $(document).ready(function () {
     $(document).on('submit',function (e) {
 		$.validator.addMethod('cuenta_predial',function (value,element) {
 			return this.optional(element) || /^\d{1,150}$/g.test(value);
-        },'Verifica el formato de la cuenta predial (dígitos entre 1 y 150 caracteres)');
+        },'Verifica el formato de la cuenta predial (dÃƒÂ­gitos entre 1 y 150 caracteres)');
 		$.validator.addMethod('pedimento',function (value,element) {
 			return this.optional(element) || /^(\d{2}  \d{2}  \d{4}  \d{7})$/g.test(value);
         },'Verifica el formato del pedimento (XX  XX  XXXX  XXXXXXX). Recuerda que son dos espacios');
@@ -282,14 +282,14 @@ $(document).ready(function () {
 			$('.pedimento').rules('remove');
 			$('.cuenta_predial').rules('remove');
             $.toaster({
-                priority: 'danger', title: 'Â¡Error!', message: 'Hay campos que requieren de tu atencion',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: 'Ãƒâ€šÃ‚Â¡Error!', message: 'Hay campos que requieren de tu atencion',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
 		}
 
 		if(+$('#descuento').val() > +$('#subtotal').val()){
 			e.preventDefault();
             $.toaster({
-                priority: 'danger', title: 'Â¡Error!', message: 'El descuento general no puede ser mayor al subtotal',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: 'Ãƒâ€šÃ‚Â¡Error!', message: 'El descuento general no puede ser mayor al subtotal',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
 		}
     });
@@ -341,7 +341,7 @@ function borrarFila(el,tipo = null) {
 		default:
 			break;
 	}
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function total_factura() {
@@ -432,11 +432,11 @@ function cargar_productos() {
     $.ajax({
         async: true,
         url: $('#fk_id_factura_relacion').data('url'),
-        data: {'param_js':productos_facturas_js,$fk_id_factura:JSON.stringify(facturas)},
+        data: {'param_js':productos_facturas_js,$fk_id_documento:JSON.stringify(facturas)},
         dataType: 'json',
         success: function (datos) {
             $.each(datos,function (index,row) {
-                $('#fk_id_producto').append('<option data-producto=\''+JSON.stringify(row)+'\' value="'+row.id_factura_detalle+'">'+row.clave_producto_cliente+'</option>');
+                $('#fk_id_producto').append('<option data-producto=\''+JSON.stringify(row)+'\' value="'+row.id_documento_detalle+'">'+row.clave_producto_cliente+'</option>');
             });
             $('#fk_id_producto').select2({
                 escapeMarkup: function (markup) {
@@ -460,7 +460,7 @@ function cargar_productos() {
         dataType: 'json',
         success: function (datos) {
             $.each(datos,function (index,row) {
-                $('#fk_id_producto').append('<option data-producto=\''+JSON.stringify(row)+'\' value="'+row.id_nota_cargo_detalle+'">'+row.clave_producto_cliente+'</option>');
+                $('#fk_id_producto').append('<option data-producto=\''+JSON.stringify(row)+'\' value="'+row.id_documento_detalle+'">'+row.clave_producto_cliente+'</option>');
             });
             $('#fk_id_producto').select2({
                 escapeMarkup: function (markup) {
@@ -522,13 +522,13 @@ function validateDetail() {
         range: [1,9999],
         messages:{
             required: 'Ingresa una cantidad',
-            number: 'El campo debe ser un número',
-            range: 'El número debe ser entre 1 y 9999'
+            number: 'El campo debe ser un nÃƒÂºmero',
+            range: 'El nÃƒÂºmero debe ser entre 1 y 9999'
         }
     });
     $.validator.addMethod('precio',function (value,element) {
         return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-    },'El precio no debe tener más de dos decimales');
+    },'El precio no debe tener mÃƒÂ¡s de dos decimales');
     $.validator.addMethod( "greaterThan", function( value, element, param ) {
         return value > param;
     }, "Please enter a greater value." );
@@ -539,9 +539,9 @@ function validateDetail() {
         greaterThan:0,
         messages:{
             required: 'Ingresa un precio unitario',
-            number: 'El campo debe ser un número',
-            greaterThan: 'El número debe ser mayor a 0',
-            precio: 'El precio no debe tener más de dos decimales'
+            number: 'El campo debe ser un nÃƒÂºmero',
+            greaterThan: 'El nÃƒÂºmero debe ser mayor a 0',
+            precio: 'El precio no debe tener mÃƒÂ¡s de dos decimales'
         }
     });
     $.validator.addMethod( "lessThan", function( value, element, param ) {
@@ -553,9 +553,9 @@ function validateDetail() {
 		precio: true,
         lessThan: menorque,
         messages:{
-            greaterThan: 'El número no debe ser menor a 0',
+            greaterThan: 'El nÃƒÂºmero no debe ser menor a 0',
             lessThan: 'El descuento debe ser menor al precio por la cantidad',
-            precio: 'El precio no debe tener más de dos decimales y diez enteros'
+            precio: 'El precio no debe tener mÃƒÂ¡s de dos decimales y diez enteros'
         }
     });
 
@@ -563,7 +563,7 @@ function validateDetail() {
         precio: true,
         greaterThan: -1,
         messages: {
-            precio: 'El formato es inválido',
+            precio: 'El formato es invÃƒÂ¡lido',
 			greaterThan: 'El valor no puede ser negativo'
         }
     });

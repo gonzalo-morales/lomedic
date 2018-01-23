@@ -9,7 +9,6 @@ class MetodosValoracionController extends ControllerBase
 {
 	/**
 	 * Create a new controller instance.
-	 *
 	 * @return void
 	 */
 	public function __construct(MetodosValoracion $entity)

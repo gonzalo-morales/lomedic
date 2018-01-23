@@ -32,10 +32,6 @@ class ControllerBase extends Controller
         
         $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
 
-        if(in_array('eliminar',$this->entity->getlistColumns())) {
-            $query->where('eliminar',0);
-        }
-
         if(isset($attributes['where'])) {
             foreach ($attributes['where'] as $key=>$condition) {
                 $query->where(DB::raw($condition));

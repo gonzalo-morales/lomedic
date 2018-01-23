@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Providers;
 
 use Illuminate\Support\Collection;
@@ -10,7 +9,6 @@ class AppServiceProvider extends ServiceProvider
 {
 	/**
 	 * Bootstrap any application services.
-	 *
 	 * @return void
 	 */
 	public function boot()
@@ -30,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
 			'edit' => 'editar',
 			// 'impress'=>'imprimir',
 		]);
-
+		
 		Collection::macro('reduceWithKeys', function (callable $callback, $initial = null) {
 		    $acc = $initial;
 		    foreach($this->items as $k => $v) $acc = $callback($acc, $v, $k);
@@ -67,12 +65,10 @@ class AppServiceProvider extends ServiceProvider
 
 	/**
 	 * Register any application services.
-	 *
 	 * @return void
 	 */
 	public function register()
 	{
-		//
 	    require_once app_path().'/helpers.php';
 	    require_once app_path().'/cfdi.php';
 	}
