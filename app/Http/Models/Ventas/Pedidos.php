@@ -105,8 +105,14 @@ class Pedidos extends ModelCompany
     {
         return $this->hasMany(PedidosAnexos::class,'fk_id_documento','id_documento');
     }
+    
     public function solicitudes()
     {
         return $this->belongsTo(SolicitudesSalidaDetalle::class,'fk_id_documento','id_documento');
+    }
+    
+    public function Pedidos()
+    {
+        return $this->morphedByMany(FacturasClientes::class);
     }
 }

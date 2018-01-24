@@ -6,14 +6,10 @@ use App\Http\Models\Proyectos\ClasificacionesProyectos;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
-use App\Http\Models\Proyectos\AnexosProyectos;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Localidades;
 use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Proyectos\ContratosProyectos;
-use App\Http\Models\Proyectos\TiposEventos;
-use App\Http\Models\Proyectos\Dependencias;
-use App\Http\Models\Proyectos\Subdependencias;
 use App\Http\Models\Logs;
 use App;
 use DB;
@@ -28,10 +24,12 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Models\Ventas\Pedidos;
 use App\Http\Models\Administracion\Sucursales;
-use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\Ventas\PedidosAnexos;
+use App\Http\Models\Administracion\TiposEventos;
+use App\Http\Models\Administracion\Dependencias;
+use App\Http\Models\Administracion\Subdependencias;
 
 class PedidosController extends ControllerBase
 {

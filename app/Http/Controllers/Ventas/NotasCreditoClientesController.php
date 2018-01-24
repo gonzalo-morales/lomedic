@@ -20,17 +20,13 @@ use App\Http\Models\Administracion\Municipios;
 use App\Http\Models\Administracion\Estados;
 use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Ventas\NotasCargoClientes;
+use App\Http\Models\Ventas\NotasCargoClientesDetalle;
 use App\Http\Models\Ventas\NotasCreditoClientes;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
 use XmlParser;
 use DB;
-use Charles\CFDI\CFDI;
-use Charles\CFDI\Node\Relacionado;
-use Charles\CFDI\Node\Emisor;
-use Charles\CFDI\Node\Receptor;
-use Charles\CFDI\Node\Concepto;
-use Charles\CFDI\Node\Impuesto\Retencion;
+use App\Http\Models\Ventas\FacturasClientesDetalle;
 
 class NotasCreditoClientesController extends ControllerBase
 {
@@ -42,14 +38,12 @@ class NotasCreditoClientesController extends ControllerBase
 	public function getDataView($entity = null)
     {
 
-//        dd(FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_factura")->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_factura'));
-
         return [
             'empresas' => Empresas::where('activo',1)->where('eliminar',0)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('Selecciona una opcion...',''),
             'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa",$id_empresa]}, {"where": ["eliminar",0]}], "limit": "1"'),
             'regimens' => RegimenesFiscales::select('regimen_fiscal','id_regimen_fiscal')->where('activo',1)->where('eliminar',0)->orderBy('regimen_fiscal')->pluck('regimen_fiscal','id_regimen_fiscal')->prepend('...',''),
             'series' => SeriesDocumentos::select('prefijo','id_serie')->where('activo',1)->where('fk_id_tipo_documento',5)->pluck('prefijo','id_serie'),
-            'js_series' => Crypt::encryptString('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["activo",1]},{"where":["fk_id_tipo_documento",5]}]'),
+            'js_series' => Crypt::encryptString('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["activo",1]},{"where":["fk_id_tipo_documento",5]},{"whereRaw":["(siguiente_numero <= coalesce(ultimo_numero,0) OR ultimo_numero IS NULL)"]}]'),
             'js_serie'=> Crypt::encryptString('"select":["prefijo","sufijo","siguiente_numero"],"conditions":[{"where":["id_serie",$id_serie]},{"whereRaw":["(siguiente_numero <= coalesce(ultimo_numero,0) OR ultimo_numero IS NULL)"]}]'),
             'municipios' => Municipios::select('municipio','id_municipio')->where('activo',1)->where('eliminar',0)->pluck('municipio','id_municipio')->prepend('...',''),
             'estados' => Estados::select('estado','id_estado')->where('activo',1)->where('eliminar',0)->pluck('estado','id_estado')->prepend('...',''),
@@ -72,59 +66,6 @@ class NotasCreditoClientesController extends ControllerBase
             'tiposrelacion' => TiposRelacionesCfdi::selectRaw("CONCAT(tipo_relacion,' - ',descripcion) as tipo_relacion, id_sat_tipo_relacion")->where('activo',1)->where('eliminar',0)->where('nota_credito',1)->orderBy('tipo_relacion')->pluck('tipo_relacion','id_sat_tipo_relacion')->prepend('Selecciona una opcion...',''),
             'facturasrelacionadas' =>FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_documento")->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_documento')->prepend('Selecciona una opcion...','0'),
             'notascargorelacionadas'=>NotasCargoClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as notacargo, id_documento")->whereNotNull('uuid')->orderBy('notacargo')->pluck('notacargo','id_documento')->prepend('Selecciona una opcion...','0'),
-            'js_productos_facturas'=>Crypt::encryptString('"relations":[{"id_documento":[{"toArrayWithDetails":$fk_id_documento}]}]'),
-//            'js_productos_facturas'=>Crypt::encryptString('
-//                "select": ["serie", "folio"],
-//                "conditions": [{
-//                    "whereIn": [
-//                        "id_factura", $fk_id_factura
-//                    ]
-//                }],
-//                "relations": [{
-//                    "detalle": [{
-//                        "relations": [{
-//                            "claveproducto": [],
-//                            "clavecliente": [],
-//                            "unidadmedida": []
-//                        }]
-//                    }]
-//                }]'),
-//            'js_productos_facturas' => Crypt::encryptString('
-//                "select": ["sku.id_sku","cc.id_clave_cliente_producto","fac_det_facturas_clientes.fk_id_unidad_medida","fk_id_factura","cc.fk_id_clave_producto_servicio",
-//                            "id_factura_detalle","fc.serie","fc.folio","cc.clave_producto_cliente","sku.sku","upc.id_upc","upc.descripcion",
-//                            "cps.clave_producto_servicio","unidad as unidad_medida ","fac_det_facturas_clientes.fk_id_tipo_documento"
-//                ],
-//                "conditions":[
-//                    {"whereIn":["fk_id_factura",$fk_id_factura]},
-//                    {"where":["fac_det_facturas_clientes.eliminar",0]},
-//                    {"whereNotNull":["fc.uuid"]}
-//                ],
-//                "joins":[
-//                    {"join":["fac_opr_facturas_clientes as fc","fc.id_factura","=","fac_det_facturas_clientes.fk_id_factura"]},
-//                    {"join":["pry_cat_clave_cliente_productos as cc","cc.id_clave_cliente_producto","=","fac_det_facturas_clientes.fk_id_clave_cliente"]},
-//                    {"join":["inv_cat_skus as sku","sku.id_sku","=","cc.fk_id_sku"]},
-//                    {"join":["maestro.inv_cat_upcs as upc","upc.id_upc","=","cc.fk_id_upc"]},
-//                    {"join":["maestro.sat_cat_claves_productos_servicios as cps","cps.id_clave_producto_servicio","=","cc.fk_id_clave_producto_servicio"]},
-//                    {"join":["maestro.sat_cat_claves_unidades as um","um.id_clave_unidad","=","cc.fk_id_unidad_medida"]}
-//                ]'),
-            'js_productos_notascargo' => Crypt::encryptString('
-                "select": ["sku.id_sku","cc.id_clave_cliente_producto","sku.fk_id_unidad_medida","fk_id_nota_cargo","cc.fk_id_clave_producto_servicio",
-                            "id_nota_cargo_detalle","fc.serie","fc.folio","cc.clave_producto_cliente","sku.sku","upc.id_upc","upc.descripcion",
-                            "cps.clave_producto_servicio","um.nombre as unidad_medida","fac_det_notas_cargo_clientes.fk_id_tipo_documento"
-                ],
-                "distinct":[],
-                "conditions":[
-                    {"whereIn":["fk_id_nota_cargo",$fk_id_nota_cargo]},
-                    {"where":["fac_det_notas_cargo_clientes.eliminar",0]}],
-                    {"whereNotNull":["fc.uuid"]}
-                "joins":[
-                    {"join":["fac_opr_notas_cargo_clientes as fc","fc.id_nota_cargo","=","fac_det_notas_cargo_clientes.fk_id_nota_cargo"]},
-                    {"join":["pry_cat_clave_cliente_productos as cc","cc.id_clave_cliente_producto","=","fac_det_notas_cargo_clientes.fk_id_clave_cliente"]},
-                    {"join":["inv_cat_skus as sku","sku.id_sku","=","cc.fk_id_sku"]},
-                    {"join":["maestro.inv_cat_upcs as upc","upc.id_upc","=","cc.fk_id_upc"]},
-                    {"join":["maestro.sat_cat_claves_productos_servicios as cps","cps.id_clave_producto_servicio","=","cc.fk_id_clave_producto_servicio"]},
-                    {"join":["maestro.gen_cat_unidades_medidas as um","um.id_unidad_medida","=","cc.fk_id_unidad_medida"]}
-                ]'),
             'js_impuestos' => Crypt::encryptString('
             "select":["id_impuesto","impuesto","tasa_o_cuota","porcentaje","descripcion"],
             "conditions":[{"where":["activo",1]},
@@ -309,5 +250,72 @@ class NotasCreditoClientesController extends ControllerBase
             }
         }
         return $return;
+    }
+    function getProductosRelacionados($company)
+    {
+        $detalles = [];
+        $facturas = FacturasClientesDetalle::whereIn('fk_id_documento',json_decode(\request()->detallesfacturas))->where('eliminar',0)->get();
+        foreach ($facturas as $index=>$factura){
+            $detalles[]=[
+                "id" => $factura->id_documento_detalle,
+                "fk_id_documento" => $factura->fk_id_documento,
+                "fk_id_tipo_documento" => $factura->fk_id_tipo_documento,
+                "fk_id_clave_producto_servicio" => $factura->fk_id_clave_producto_servicio,
+                "clave_producto_servicio"=>$factura->claveproducto->clave_producto_servicio,
+                "fk_id_sku" => $factura->fk_id_sku,
+                "sku"=>$factura->sku->sku,
+                "fk_id_upc" => $factura->fk_id_upc,
+                "descripcion"=>$factura->upc->upc,
+                "fk_id_clave_cliente" => $factura->fk_id_clave_cliente,
+                "clave_producto_cliente"=>$factura->clavecliente->clave_producto_cliente,
+                "text" => $factura->descripcion,
+                "fk_id_unidad_medida" => $factura->fk_id_unidad_medida,
+                "unidad_medida" => $factura->unidad,
+                "cantidad" => $factura->cantidad,
+                "precio_unitario" => $factura->precio_unitario,
+                "importe" => $factura->importe,
+                "fk_id_moneda" => $factura->fk_id_moneda,
+                "moneda"=>$factura->moneda->moneda,
+                "fk_id_impuesto" => $factura->fk_id_impuesto,
+                "impuesto"=>$factura->impuesto,
+                "descuento" => $factura->descuento,
+                "pedimento" => $factura->pedimento,
+                "cuenta_predial" => $factura->cuenta_predial,
+                "serie" => $factura->factura->serie,
+                "folio" => $factura->factura->folio,
+            ];
+        }
+        $notas = NotasCargoClientesDetalle::whereIn('fk_id_documento',json_decode(\request()->detallesnotas))->where('eliminar',0)->get();
+        foreach ($notas as $index=>$nota){
+            $detalles[]=[
+                "id" => $nota->id_documento_detalle,
+                "fk_id_documento" => $nota->fk_id_documento,
+                "fk_id_tipo_documento" => $nota->fk_id_tipo_documento,
+                "fk_id_clave_producto_servicio" => $nota->fk_id_clave_producto_servicio,
+                "clave_producto_servicio"=>$nota->claveproducto->clave_producto_servicio,
+                "fk_id_sku" => $nota->fk_id_sku,
+                "sku"=>$nota->sku->sku,
+                "fk_id_upc" => $nota->fk_id_upc,
+                "descripcion"=>$nota->upc->upc,
+                "fk_id_clave_cliente" => $nota->fk_id_clave_cliente,
+                "clave_producto_cliente"=>$nota->clavecliente->clave_producto_cliente,
+                "text" => $nota->descripcion,
+                "fk_id_unidad_medida" => $nota->fk_id_unidad_medida,
+                "unidad_medida" => $nota->unidad,
+                "cantidad" => $nota->cantidad,
+                "precio_unitario" => $nota->precio_unitario,
+                "importe" => $nota->importe,
+                "fk_id_moneda" => $nota->fk_id_moneda,
+                "moneda"=>$nota->moneda->moneda,
+                "fk_id_impuesto" => $nota->fk_id_impuesto,
+                "impuesto"=>$nota->impuesto,
+                "descuento" => $nota->descuento,
+                "pedimento" => $nota->pedimento,
+                "cuenta_predial" => $nota->cuenta_predial,
+                "serie" => $nota->factura->serie,
+                "folio" => $nota->factura->folio,
+            ];
+        }
+        return $detalles;
     }
 }

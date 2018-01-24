@@ -18,6 +18,7 @@ use App\Http\Models\Administracion\SeriesDocumentos;
 use App\Http\Models\Administracion\Municipios;
 use App\Http\Models\Administracion\Estados;
 use App\Http\Models\Administracion\Paises;
+use App\Http\Models\Ventas\FacturasClientesDetalle;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -281,4 +282,5 @@ class FacturasClientesController extends ControllerBase
         }
         return $return;
     }
+
 }

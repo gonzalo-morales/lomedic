@@ -29,6 +29,11 @@ class TiposAnexos extends ModelBase
      * @var bool
      */
     public $timestamps = false;
+    
+    protected $fields = [
+        'tipo_anexo' => 'Tipo Anexo',
+        'activo_text' => 'Estatus'
+    ];
 
     /**
      * The validation rules

@@ -11,9 +11,9 @@ use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Localidades;
 use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Proyectos\ContratosProyectos;
-use App\Http\Models\Proyectos\TiposEventos;
-use App\Http\Models\Proyectos\Dependencias;
-use App\Http\Models\Proyectos\Subdependencias;
+use App\Http\Models\Administracion\TiposEventos;
+use App\Http\Models\Administracion\Dependencias;
+use App\Http\Models\Administracion\Subdependencias;
 use App\Http\Models\Logs;
 use App;
 use DB;
@@ -25,9 +25,9 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Models\Administracion\Sucursales;
-use App\Http\Models\Proyectos\CaracterEventos;
-use App\Http\Models\Proyectos\FormasAdjudicacion;
-use App\Http\Models\Proyectos\ModalidadesEntrega;
+use App\Http\Models\Administracion\CaracterEventos;
+use App\Http\Models\Administracion\FormasAdjudicacion;
+use App\Http\Models\Administracion\ModalidadesEntrega;
 
 class ProyectosController extends ControllerBase
 {
@@ -57,9 +57,10 @@ class ProyectosController extends ControllerBase
             'modalidadesentrega' => ModalidadesEntrega::where('activo',1)->where('eliminar',0)->orderBy('modalidad_entrega')->pluck('modalidad_entrega','id_modalidad_entrega'),
             'sucursales' => $sucursales,
             'js_licitacion' => Crypt::encryptString('"select":["tipo_evento","dependencia","subdependencia","unidad","modalidad_entrega","caracter_evento","forma_adjudicacion","pena_convencional","tope_pena_convencional"],"conditions":[{"where":["no_oficial","$num_evento"]}]'),
-            'js_sucursales' => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"conditions":[{"where":["fk_id_cliente",$fk_id_cliente]},{"where":["activo","1"]}]'),
+            'js_sucursales' => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"conditions":[{"where":["fk_id_cliente",$fk_id_cliente]},{"where":["fk_id_localidad",$fk_id_localidad]},{"where":["activo","1"]}]'),
             'js_contratos' => Crypt::encryptString('"select":["representante_legal_cliente","no_contrato","vigencia_fecha_inicio","vigencia_fecha_fin"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
             'js_partidas' => Crypt::encryptString('"select":["clave","descripcion","cantidad_maxima","cantidad_minima","codigo_barras","costo"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
+            'js_subdependencias'=>Crypt::encryptString('"select":["id_subdependencia as id","subdependencia as text"],"conditions":[{"where":["fk_id_dependencia",$fk_id_dependencia]},{"where":["activo",1]},{"where":["eliminar",0]}]')
         ];
     }
     

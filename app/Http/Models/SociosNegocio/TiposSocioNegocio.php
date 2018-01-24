@@ -22,13 +22,18 @@ class TiposSocioNegocio extends ModelBase
      * The attributes that are mass assignable.
      * @var array
      */
-    protected $fillable = ['tipo_socio', 'activo'];
+    protected $fillable = ['tipo_socio','para_venta','activo'];
 
     /**
      * Indicates if the model should be timestamped.
      * @var bool
      */
     public $timestamps = false;
+    
+    protected $fields = [
+        'tipo_socio' => 'Tipo Socio Negocio',
+        'activo_text' => 'Estatus'
+    ];
 
     /**
      * The validation rules

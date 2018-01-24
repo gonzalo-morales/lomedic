@@ -24,7 +24,7 @@ class ProyectosProductosController extends ControllerBase
         if ($isSuccess) {
 
             # Shorthand
-            foreach ($request->ids as $id) $this->log('destroy', $id);
+            #foreach ($request->ids as $id) $this->log('destroy', $id);
 
             if ($request->ajax()) {
                 # Respuesta Json
@@ -38,7 +38,7 @@ class ProyectosProductosController extends ControllerBase
         } else {
 
             # Shorthand
-            foreach ($request->ids as $id) $this->log('error_destroy', $id);
+            #foreach ($request->ids as $id) $this->log('error_destroy', $id);
 
             if ($request->ajax()) {
                 # Respuesta Json

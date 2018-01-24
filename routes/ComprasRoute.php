@@ -22,6 +22,12 @@ Route::prefix('{company}')->group(function () {
         });
         Route::get("/", function(){ return View::make("compras.index"); });
 
+        Route::group(['prefix' => 'solicitudes/{id_solicitud}'], function(){
+            Route::resource('ofertas','Compras\OfertasController');
+        });
+        Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
+            Route::resource('ordenes','Compras\OrdenesController',['only'=>['create']]);
+        });
 
         Route::resource('autorizaciones','Compras\AutorizacionesController');
         Route::resource('facturasproveedores','Compras\FacturasProveedoresController');
@@ -48,11 +54,5 @@ Route::prefix('{company}')->group(function () {
         Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
         Route::resource('solicitudespagos','Compras\SolicitudesPagosController');
 
-        Route::group(['prefix' => 'solicitudes/{id_solicitud}'], function(){
-            Route::resource('ofertas','Compras\OfertasController');
-        });
-        Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
-            Route::resource('ordenes','Compras\OrdenesController',['only'=>['create']]);
-        });
     });
 });

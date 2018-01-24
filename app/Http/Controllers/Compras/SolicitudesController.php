@@ -172,7 +172,7 @@ class SolicitudesController extends ControllerBase
                     'fecha_cancelacion'=>DB::raw('now()')]);
             if ($isSuccess) {
 
-                $this->log('destroy', $idOrIds);
+                #$this->log('destroy', $idOrIds);
 
                 if ($request->ajax()) {
                     # Respuesta Json
@@ -185,7 +185,7 @@ class SolicitudesController extends ControllerBase
 
             } else {
 
-                $this->log('error_destroy', $idOrIds);
+                #$this->log('error_destroy', $idOrIds);
 
                 if ($request->ajax()) {
                     # Respuesta Json
@@ -207,7 +207,7 @@ class SolicitudesController extends ControllerBase
             if ($isSuccess) {
 
                 # Shorthand
-                foreach ($idOrIds as $id) $this->log('destroy', $id);
+                #foreach ($idOrIds as $id) $this->log('destroy', $id);
 
                 if ($request->ajax()) {
                     # Respuesta Json
@@ -221,7 +221,7 @@ class SolicitudesController extends ControllerBase
             } else {
 
                 # Shorthand
-                foreach ($idOrIds as $id) $this->log('error_destroy', $id);
+                #foreach ($idOrIds as $id) $this->log('error_destroy', $id);
 
                 if ($request->ajax()) {
                     # Respuesta Json

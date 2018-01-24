@@ -178,11 +178,11 @@ class SociosNegocioController extends ControllerBase
 	        Cache::tags(getCacheTag('index'))->flush();
 	        
 	        
-	        $this->log('store', $id);
+	        #$this->log('store', $id);
 	        return $this->redirect('store');
 	    } else {
 	        DB::rollBack();
-	        $this->log('error_store');
+	        #$this->log('error_store');
 	        return $this->redirect('error_store');
 	    }
 	}
@@ -331,11 +331,11 @@ class SociosNegocioController extends ControllerBase
 	        # Eliminamos cache
 	        Cache::tags(getCacheTag('index'))->flush();
 	        
-	        $this->log('update', $id);
+	        #$this->log('update', $id);
 	        return $this->redirect('update');
 	    } else {
 	        #DB::rollBack();
-	        $this->log('error_update', $id);
+	        #$this->log('error_update', $id);
 	        return $this->redirect('error_update');
 	    }
 	}

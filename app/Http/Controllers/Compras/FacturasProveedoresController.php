@@ -91,11 +91,11 @@ class FacturasProveedoresController extends ControllerBase
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
-            $this->log('store', $isSuccess->id_factura_proveedor);
+            #$this->log('store', $isSuccess->id_factura_proveedor);
             return $this->redirect('store');
         } else {
             DB::rollBack();
-            $this->log('error_store');
+            #$this->log('error_store');
             return $this->redirect('error_store');
         }
     }
@@ -128,11 +128,11 @@ class FacturasProveedoresController extends ControllerBase
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
-            $this->log('update', $id);
+            #$this->log('update', $id);
             return $this->redirect('update');
         } else {
             DB::rollBack();
-            $this->log('error_update', $id);
+            #$this->log('error_update', $id);
             return $this->redirect('error_update');
         }
     }
@@ -146,7 +146,7 @@ class FacturasProveedoresController extends ControllerBase
                     'fecha_cancelacion'=>DB::raw('now()')]);
             if ($isSuccess) {
 
-                $this->log('destroy', $idOrIds);
+                #$this->log('destroy', $idOrIds);
 
                 if ($request->ajax()) {
                     # Respuesta Json
@@ -159,7 +159,7 @@ class FacturasProveedoresController extends ControllerBase
 
             } else {
 
-                $this->log('error_destroy', $idOrIds);
+                #$this->log('error_destroy', $idOrIds);
 
                 if ($request->ajax()) {
                     # Respuesta Json
@@ -181,7 +181,7 @@ class FacturasProveedoresController extends ControllerBase
             if ($isSuccess) {
 
                 # Shorthand
-                foreach ($idOrIds as $id) $this->log('destroy', $id);
+                #foreach ($idOrIds as $id) $this->log('destroy', $id);
 
                 if ($request->ajax()) {
                     # Respuesta Json
@@ -195,7 +195,7 @@ class FacturasProveedoresController extends ControllerBase
             } else {
 
                 # Shorthand
-                foreach ($idOrIds as $id) $this->log('error_destroy', $id);
+                #foreach ($idOrIds as $id) $this->log('error_destroy', $id);
 
                 if ($request->ajax()) {
                     # Respuesta Json

@@ -48,7 +48,7 @@ class SolicitudesPagosController extends ControllerBase
                 'fecha_cancelacion'=>DB::raw('now()')]);
         if ($isSuccess) {
 
-            $this->log('destroy', $idOrIds);
+            #$this->log('destroy', $idOrIds);
 
             if ($request->ajax()) {
                 # Respuesta Json
@@ -61,7 +61,7 @@ class SolicitudesPagosController extends ControllerBase
 
         } else {
 
-            $this->log('error_destroy', $idOrIds);
+            #$this->log('error_destroy', $idOrIds);
 
             if ($request->ajax()) {
                 # Respuesta Json

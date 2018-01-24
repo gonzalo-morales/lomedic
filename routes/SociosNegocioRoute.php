@@ -23,5 +23,12 @@ Route::prefix('{company}')->group(function () {
         Route::post('sociosnegocio/{id}/getEstados', 'SociosNegocio\SociosNegocioController@getEstados');
         Route::post('sociosnegocio/{id}/getMunicipios', 'SociosNegocio\SociosNegocioController@getMunicipios');
         Route::get('sociosnegocio/getData', 'SociosNegocio\SociosNegocioController@getData');
+        
+        Route::resource('ramossocionegocio', 'SociosNegocio\RamosSocioNegocioController');
+        Route::resource('tiposanexos', 'SociosNegocio\TiposAnexosController');
+        Route::resource('tiposcontacto', 'SociosNegocio\TiposContactoController');
+        Route::resource('tiposdireccion', 'SociosNegocio\TiposDireccionController');
+        Route::resource('tiposproveedores', 'SociosNegocio\TiposProveedoresController');
+        Route::resource('tipossocionegocio', 'SociosNegocio\TiposSocioNegocioController');
 	});
 });

@@ -29,6 +29,11 @@ class TiposDireccion extends ModelBase
      * @var bool
      */
     public $timestamps = false;
+    
+    protected $fields = [
+        'tipo_direccion' => 'Tipo Direccion',
+        'activo_text' => 'Estatus'
+    ];
 
     /**
      * The validation rules

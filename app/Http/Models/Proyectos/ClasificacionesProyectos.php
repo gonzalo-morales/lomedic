@@ -24,7 +24,7 @@ class ClasificacionesProyectos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['clasificacion', 'nomenclatura','activo','fk_id_tipo_proyecto'];
+	protected $fillable = ['clasificacion', 'nomenclatura','activo'];
 
 	/**
 	 * The validation rules
@@ -43,16 +43,10 @@ class ClasificacionesProyectos extends ModelBase
 	protected $fields = [
         'clasificacion' => 'Aplicación',
         'nomenclatura' => 'Nomenclatura',
-        'tipoProyecto.tipo_proyecto' => 'Tipo de proyecto',
         'activo_span' => 'Estatus'
 	];
 
 	public $niceNames = [
         'fk_id_tipo_proyecto' => 'tipo proyecto'
     ];
-
-	function tipoProyecto()
-    {
-        return $this->hasOne(TiposProyectos::class,'id_tipo_proyecto','fk_id_tipo_proyecto');
-    }
 }
