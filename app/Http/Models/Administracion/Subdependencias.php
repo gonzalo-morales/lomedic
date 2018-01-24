@@ -39,7 +39,7 @@ class Subdependencias extends ModelBase
 	 */
 	protected $fields = [
         'subdependencia' => 'Subdependencia',
-        'dependencia.dependencia' => 'Depende de',
+        'dependencia.dependencia' => 'Dependencia',
         'activo_span' => 'Estatus'
 	];
 

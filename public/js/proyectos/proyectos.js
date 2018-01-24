@@ -111,6 +111,23 @@ $(document).ready(function () {
         }
     });
 
+    $('#fk_id_dependencia').on('change',function () {
+        if($(this).val()){
+            $.ajax({
+                url: $('#fk_id_subdependencia').data('url'),
+                data:{'param_js':subdependencias_js,$fk_id_dependencia:$(this).val()},
+                dataType:'JSON',
+                success: function (data) {
+                    if(data){
+                        $('#fk_id_subdependencia').empty().select2({data:data});
+                    }else{
+                        $.toaster({priority:'danger',title:'Subdependencia',message:'No se encontraron subdependencias.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                    }
+                },
+            });
+        }
+    });
+
     $('#importar_liciplus').click(function () {
     	$('#loadinglicitacion').show();
         $.ajax({
@@ -134,7 +151,6 @@ $(document).ready(function () {
                             $('#fk_id_dependencia').val(dependencia[0]).trigger('change');
                             var subdependencia = data[0].subdependencia.split('||');
                             subdependencia = subdependencia.length == 1 ? [0,subdependencia] : subdependencia;
-                            console.log(subdependencia);
                             $('#fk_id_subdependencia').empty().select2({data:dependencias_ajax}).val(subdependencia[0]).trigger('change');
                             var modalidad_entrega = data[0].modalidad_entrega.split('||');
                             modalidad_entrega = modalidad_entrega.length == 1 ? [0,modalidad_entrega] : modalidad_entrega;
@@ -150,14 +166,18 @@ $(document).ready(function () {
                             $.toaster({priority:'success',title:'LICIPLUS',message:'Licitación encontrada.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                             $('#importar_contratos').removeAttr('disabled');
                             $('#importar_productos').removeAttr('disabled');
+                            $('#loadinglicitacion').hide();
+                        },
+                        error: function(){
+                            $('#loadinglicitacion').hide();
                         }
                     });
 				}else{
                     $.toaster({priority:'info',title:'LICIPLUS',message:'No se encontró ninguna licitación.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                     $('#importar_contratos').attr('disabled','disabled');
                     $('#importar_productos').attr('disabled','disabled');
+                    $('#loadinglicitacion').hide();
                 }
-                $('#loadinglicitacion').hide();
             }
 		});
     });
