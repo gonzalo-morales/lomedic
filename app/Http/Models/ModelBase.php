@@ -100,7 +100,7 @@ class ModelBase extends Model
 	
 	private function activos()
 	{
-        if(in_array('activo',self::$allColumns)) {
+        if(in_array('activo',self::getlistColumns())) {
             return static::where('activo',1);
 	    }
 	    return self::query();
