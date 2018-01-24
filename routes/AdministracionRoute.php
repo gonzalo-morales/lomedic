@@ -85,5 +85,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('vehiculosmodelos', 'Administracion\VehiculosModelosController');
 		Route::resource('viaadministracion', 'Administracion\ViaAdministracionController');
 		Route::resource('zonas', 'Administracion\ZonasController');
+        Route::resource('pacientes', 'Administracion\AfiliacionesController');
+        Route::post('pacientes/getDependientes','Administracion\AfiliacionesController@getDependientes')->name('pacientes.getDependientes');
 	});
 });
