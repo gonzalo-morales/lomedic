@@ -22,7 +22,7 @@ class EstatusDocumentos extends ModelBase
     
     protected $fillable = ['estatus'];
     
-    protected $fields = ['estatus'];
+    protected $fields = ['id_estatus'=>'#','estatus'=>'Estatus'];
     
-    public $rules = [];
+    public $rules = ['estatus'=>'required'];
 }

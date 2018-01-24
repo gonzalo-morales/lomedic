@@ -34,6 +34,7 @@ Route::prefix('{company}')->group(function () {
 		Route::get('empresas/{id}/descargar/{archivo}', 'Administracion\EmpresasController@descargar');
 		Route::post('getDatoscer', 'Administracion\EmpresasController@getDatoscer');
 		Route::resource('estados', 'Administracion\EstadosController');
+        Route::resource('estatusdocumentos', 'Administracion\EstatusDocumentosController');
 		Route::resource('familiasproductos', 'Administracion\FamiliasProductosController');
 		Route::resource('formafarmaceutica', 'Administracion\FormaFarmaceuticaController');
         Route::resource('formasadjudicacion','Administracion\FormasAdjudicacionController');
