@@ -11,7 +11,7 @@ class GeneralesController extends ControllerBase
     public function index($company, $attributes = ['where'=>[]])
 	{
 	    return view('estadisticas.generales.index',[
-	        'localidades' => Sucursales::where('activo',1)->where('eliminar',0)->get()->pluck('sucursal','id_sucursal')->prepend('TODAS LAS SUCURSALES','-999'),
+	        'localidades' => Sucursales::activos()->pluck('sucursal','id_sucursal')->prepend('TODAS LAS SUCURSALES','-999'),
 	        'padecimientos'=>[],
 	        'pacientes' => [],
 	        'medicos' => [],
@@ -40,7 +40,7 @@ class GeneralesController extends ControllerBase
             ->groupBy(['m.nombre','m.paterno','m.materno', 'm.cedula'])->orderByRaw('total desc')->limit(10)->get();
         
 	    return view('estadisticas.generales.index',[
-	        'localidades' => Sucursales::where('activo',1)->get()->pluck('sucursal','id_sucursal')->prepend('TODAS LAS SUCURSALES','-999'),
+	        'localidades' => Sucursales::activos()->pluck('sucursal','id_sucursal')->prepend('TODAS LAS SUCURSALES','-999'),
 	        'padecimientos' => $padecimientos,
 	        'pacientes' => $pacientes,
 	        'medicos' => $medicos,

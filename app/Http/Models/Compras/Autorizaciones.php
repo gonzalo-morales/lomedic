@@ -28,7 +28,7 @@ class Autorizaciones extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_documento','fk_id_tipo_documento','fk_id_condicion','fk_id_usuario_autoriza','fk_id_estatus','fecha_creacion','fecha_autorizacion','observaciones','activo','eliminar'];
+    protected $fillable = ['fk_id_documento','fk_id_tipo_documento','fk_id_condicion','fk_id_usuario_autoriza','fk_id_estatus','fecha_creacion','fecha_autorizacion','observaciones','activo'];
 
     public $niceNames =[
         'fk_id_estatus'=>'estatus autorización'

@@ -23,9 +23,9 @@ class AlmacenesController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 		return [
-			'ubicaciones' => $entity ? $entity->ubicaciones()->where('eliminar', 0)->orderby('id_ubicacion', 'DESC')->get() : [],
-			'sucursales' => Sucursales::select(['sucursal','id_sucursal'])->where('activo', 1)->pluck('sucursal','id_sucursal'),
-			'tipos' => TipoAlmacen::select(['tipo','id_tipo'])->where('activo', 1)->pluck('tipo','id_tipo'),
+			'ubicaciones' => $entity ? $entity->ubicaciones()->orderby('id_ubicacion', 'DESC')->get() : [],
+		    'sucursales' => Sucursales::select(['sucursal','id_sucursal'])->activos()->pluck('sucursal','id_sucursal'),
+		    'tipos' => TipoAlmacen::select(['tipo','id_tipo'])->activos()->pluck('tipo','id_tipo'),
 		];
 	}
 

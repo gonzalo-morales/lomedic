@@ -22,7 +22,7 @@ class ImpuestosController extends ControllerBase
     {
         $impuestosSet = [];
         $impuestosSet[] = ['id'=>'0', 'text'=>'Selecciona un tipo de impuesto','disabled'=>'true','selected'=>'selected'];
-        $impuestos = Impuestos::select('id_impuesto','impuesto','porcentaje')->where('activo',1)->get();
+        $impuestos = Impuestos::select('id_impuesto','impuesto','porcentaje')->activos()->get();
         foreach ($impuestos as $impuesto){
             $impuestosSet[] = ['id'=>$impuesto->id_impuesto,
                 'text' => $impuesto->impuesto,

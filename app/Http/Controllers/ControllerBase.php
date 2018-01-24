@@ -372,9 +372,6 @@ class ControllerBase extends Controller
             $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
         }
 
-        if(in_array('eliminar',$colums))
-            $query->where('eliminar',0);
-
         # Log
         event(new LogModulos($this->entity, $company, 'exportar' , 'Exportacion de registros a: '.$type));
 

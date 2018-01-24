@@ -20,6 +20,6 @@ class SubdependenciasController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
-        return ['dependencias'=>Dependencias::where('activo',1)->where('eliminar',0)->pluck('dependencia','id_dependencia')];
+        return ['dependencias'=>Dependencias::activos()->pluck('dependencia','id_dependencia')];
     }
 }

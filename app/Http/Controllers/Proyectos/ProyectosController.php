@@ -44,23 +44,23 @@ class ProyectosController extends ControllerBase
         }
 
         return [
-            'clientes' => SociosNegocio::where('activo', 1)->where('eliminar', 0)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
-            'localidades' => Localidades::where('activo',1)->where('eliminar',0)->pluck('localidad','id_localidad'),
+            'clientes' => SociosNegocio::activos()->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
+            'localidades' => Localidades::activos()->pluck('localidad','id_localidad'),
             'estatus' => EstatusDocumentos::select('estatus','id_estatus')->pluck('estatus','id_estatus'),
-            'clasificaciones' => ClasificacionesProyectos::where('activo',1)->pluck('clasificacion','id_clasificacion_proyecto'),
-            'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo','1')->where('eliminar','0')->orderBy('moneda')->pluck('moneda','id_moneda'),
-            'tiposeventos' => TiposEventos::where('activo', 1)->where('eliminar', 0)->orderBy('tipo_evento')->pluck('tipo_evento','id_tipo_evento'),
-            'dependencias' => Dependencias::where('activo', 1)->where('eliminar', 0)->orderBy('dependencia')->pluck('dependencia','id_dependencia'),
-            'subdependencias' => Subdependencias::where('activo', 1)->where('eliminar', 0)->orderBy('subdependencia')->pluck('subdependencia','id_subdependencia'),
-            'caracterevento' => CaracterEventos::where('activo',1)->where('eliminar',0)->orderBy('caracter_evento')->pluck('caracter_evento','id_caracter_evento'),
-            'formaadjudicacion' => FormasAdjudicacion::where('activo',1)->where('eliminar',0)->orderBy('forma_adjudicacion')->pluck('forma_adjudicacion','id_forma_adjudicacion'),
-            'modalidadesentrega' => ModalidadesEntrega::where('activo',1)->where('eliminar',0)->orderBy('modalidad_entrega')->pluck('modalidad_entrega','id_modalidad_entrega'),
+            'clasificaciones' => ClasificacionesProyectos::activos()->pluck('clasificacion','id_clasificacion_proyecto'),
+            'monedas' => Monedas::activos()->selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->orderBy('moneda')->pluck('moneda','id_moneda'),
+            'tiposeventos' => TiposEventos::activos()->orderBy('tipo_evento')->pluck('tipo_evento','id_tipo_evento'),
+            'dependencias' => Dependencias::activos()->orderBy('dependencia')->pluck('dependencia','id_dependencia'),
+            'subdependencias' => Subdependencias::activos()->orderBy('subdependencia')->pluck('subdependencia','id_subdependencia'),
+            'caracterevento' => CaracterEventos::activos()->orderBy('caracter_evento')->pluck('caracter_evento','id_caracter_evento'),
+            'formaadjudicacion' => FormasAdjudicacion::activos()->orderBy('forma_adjudicacion')->pluck('forma_adjudicacion','id_forma_adjudicacion'),
+            'modalidadesentrega' => ModalidadesEntrega::activos()->orderBy('modalidad_entrega')->pluck('modalidad_entrega','id_modalidad_entrega'),
             'sucursales' => $sucursales,
             'js_licitacion' => Crypt::encryptString('"select":["tipo_evento","dependencia","subdependencia","unidad","modalidad_entrega","caracter_evento","forma_adjudicacion","pena_convencional","tope_pena_convencional"],"conditions":[{"where":["no_oficial","$num_evento"]}]'),
             'js_sucursales' => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"conditions":[{"where":["fk_id_cliente",$fk_id_cliente]},{"where":["fk_id_localidad",$fk_id_localidad]},{"where":["activo","1"]}]'),
             'js_contratos' => Crypt::encryptString('"select":["representante_legal_cliente","no_contrato","vigencia_fecha_inicio","vigencia_fecha_fin"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
             'js_partidas' => Crypt::encryptString('"select":["clave","descripcion","cantidad_maxima","cantidad_minima","codigo_barras","costo"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
-            'js_subdependencias'=>Crypt::encryptString('"select":["id_subdependencia as id","subdependencia as text"],"conditions":[{"where":["fk_id_dependencia",$fk_id_dependencia]},{"where":["activo",1]},{"where":["eliminar",0]}]')
+            'js_subdependencias'=>Crypt::encryptString('"select":["id_subdependencia as id","subdependencia as text"],"conditions":[{"where":["fk_id_dependencia",$fk_id_dependencia]},{"where":["activo",1]}]')
         ];
     }
     
@@ -175,7 +175,7 @@ class ProyectosController extends ControllerBase
     
     public function obtenerProyectos()
     {
-        $proyectos = Proyectos::select('id_proyecto as id','proyecto as text')->where('eliminar',0)->get();
+        $proyectos = Proyectos::select('id_proyecto as id','proyecto as text')->where('fk_id_estatus',1)->get();
         return $proyectos->toJson();
     }
     

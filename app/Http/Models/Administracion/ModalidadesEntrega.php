@@ -27,7 +27,7 @@ class ModalidadesEntrega extends ModelBase
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
-	protected $fillable = ['modalidad_entrega','activo','eliminar'];
+	protected $fillable = ['modalidad_entrega','activo'];
 
     public $rules = [
         'modalidad_entrega' => 'required'

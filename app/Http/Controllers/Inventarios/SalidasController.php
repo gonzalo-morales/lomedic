@@ -75,7 +75,7 @@ class SalidasController extends ControllerBase
 
 		return [
 			'tipos_salida' => TipoSalida::all()->pluck('salida', 'id_tipo'),
-			'clientes' => SociosNegocio::on(request()->company)->has('proyectos')->where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->with('proyectos')->pluck('nombre_comercial','id_socio_negocio'),
+		    'clientes' => SociosNegocio::on(request()->company)->has('proyectos')->activos()->whereNotNull('fk_id_tipo_socio_venta')->with('proyectos')->pluck('nombre_comercial','id_socio_negocio'),
 			'proyectos' => $proyectos,
 			'sucursales_entrega' => $sucursales_entrega,
 			'tipos_entrega' => TiposEntrega::all()->pluck('tipo_entrega', 'id_tipo_entrega'),

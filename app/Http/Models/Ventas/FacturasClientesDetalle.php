@@ -73,7 +73,7 @@ class FacturasClientesDetalle extends ModelCompany
         return $this->morphMany(DetalleSolicitudes::class,null,'fk_id_tipo_documento_base','fk_id_linea');
     }*/
     
-    public function sku()
+    public function productos()
     {
         return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
     }

@@ -23,7 +23,7 @@ class NumerosCuentaController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 		return [
-			'companies' => Empresas::active()->select(['razon_social','id_empresa'])->orderBy('razon_social')->pluck('razon_social','id_empresa'),
+		    'companies' => Empresas::activos()->select(['razon_social','id_empresa'])->orderBy('razon_social')->pluck('razon_social','id_empresa'),
 		    'bancos' => Bancos::select(['razon_social','id_banco'])->orderBy('razon_social')->pluck('razon_social','id_banco'),
 		    'monedas' => Monedas::select(['descripcion','id_moneda'])->orderBy('descripcion')->pluck('descripcion','id_moneda'),
 		];

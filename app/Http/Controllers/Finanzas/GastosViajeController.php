@@ -29,9 +29,9 @@ class GastosViajeController extends ControllerBase
         return [
             'fechaActual' => Carbon::now(),
             #Variable(s) para el select2
-            'empleados' => Empleados::selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->where('activo',1)->where('eliminar',0)->pluck('empleado','id_empleado'),
-            'conceptos' => ConceptosViaje::selectRaw("tipo_concepto as concepto, id_concepto")->where('activo',1)->where('eliminar',0)->pluck('concepto','id_concepto')->prepend('seleccione...',''),
-            'impuestos' => Impuestos::selectRaw("impuesto as impuesto, id_impuesto")->where('activo',1)->where('eliminar',0)->pluck('impuesto','id_impuesto')->prepend('seleccione...',''),
+            'empleados' => Empleados::selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->activos()->pluck('empleado','id_empleado'),
+            'conceptos' => ConceptosViaje::selectRaw("tipo_concepto as concepto, id_concepto")->activos()->pluck('concepto','id_concepto')->prepend('seleccione...',''),
+            'impuestos' => Impuestos::selectRaw("impuesto as impuesto, id_impuesto")->activos()->pluck('impuesto','id_impuesto')->prepend('seleccione...',''),
 
             #Variables para las API donde tomará los valores requeridos al seleccionar un empleado 
             'departamento_js'  => Crypt::encryptString('"select": ["fk_id_departamento"], "conditions": [{"where":["id_empleado", "$id_empleado"]}], "with": ["departamento:id_departamento,descripcion"], "limit": "1"'),

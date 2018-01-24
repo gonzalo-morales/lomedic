@@ -33,9 +33,9 @@ class SurtidoRequisicionHospitalariaController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'sucursales' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo', 1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
-            'requisiciones' => RequisicionesHospitalarias::where('eliminar',false)->pluck('folio','id_requisicion')->prepend('Selecciona una opcion...', ''),
-//            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->where('activo',1)->pluck('nombre_corto','id_usuario')->prepend('Selecciona una opcion...', ''),
+            'sucursales' => Sucursales::select(['sucursal', 'id_sucursal'])->activos()->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
+            'requisiciones' => RequisicionesHospitalarias::pluck('folio','id_requisicion')->prepend('Selecciona una opcion...', ''),
+//            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->activos()->pluck('nombre_corto','id_usuario')->prepend('Selecciona una opcion...', ''),
 //            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('Selecciona una opcion...', ''),
 //            'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'fk_id_usuario_captura' =>  Auth::id(),
@@ -56,9 +56,8 @@ class SurtidoRequisicionHospitalariaController extends ControllerBase
     public function getRequisicionDetalle($company,Request $request)
     {
 
-        $detalle_requision = RequisicionesHospitalariasDetalle::where('fk_id_requisicion',$request->fk_id_requiscion)
-            ->where('eliminar',false)
-            ->get();
+        $detalle_requision = RequisicionesHospitalariasDetalle::where('fk_id_requisicion',$request->fk_id_requiscion)->get();
+        /*
         $json = [];
         foreach ($detalle_requision as $row => $detalle)
         {
@@ -77,7 +76,8 @@ class SurtidoRequisicionHospitalariaController extends ControllerBase
 
             ];
         }
-        return $json;
+        */
+        return $detalle_requision->toJson();
     }
 
 }

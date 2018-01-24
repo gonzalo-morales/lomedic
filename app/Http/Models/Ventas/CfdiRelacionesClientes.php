@@ -26,14 +26,7 @@ class CfdiRelacionesClientes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = [
-        'fk_id_documento',
-        'fk_id_tipo_documento',
-        'fk_id_tipo_relacion',
-        'fk_id_documento_relacionado',
-        'fk_id_tipo_documento_relacionado',
-        'eliminar'
-    ];
+    protected $fillable = ['fk_id_documento','fk_id_tipo_documento','fk_id_tipo_relacion','fk_id_documento_relacionado','fk_id_tipo_documento_relacionado'];
 
     function documento()
     {

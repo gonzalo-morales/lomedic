@@ -18,9 +18,9 @@ class UpcsController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'presentaciones' => PresentacionVenta::select('presentacion_venta','id_presentacion_venta')->where('eliminar',0)->where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('Selecciona una Presentacion',''),
-            'laboratorios' => Laboratorios::select('laboratorio','id_laboratorio')->where('eliminar',0)->where('activo',1)->pluck('laboratorio','id_laboratorio')->sortBy('laboratorio')->prepend('Selecciona un Laboratorio',''),
-            'paises' => Paises::select('pais','id_pais')->where('eliminar',0)->where('activo',1)->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona un Pais',''),
+            'presentaciones' => PresentacionVenta::select('presentacion_venta','id_presentacion_venta')->activos()->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('Selecciona una Presentacion',''),
+            'laboratorios' => Laboratorios::select('laboratorio','id_laboratorio')->activos()->pluck('laboratorio','id_laboratorio')->sortBy('laboratorio')->prepend('Selecciona un Laboratorio',''),
+            'paises' => Paises::select('pais','id_pais')->activos()->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona un Pais',''),
         ];
     }
     

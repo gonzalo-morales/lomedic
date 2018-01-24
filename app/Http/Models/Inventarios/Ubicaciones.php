@@ -19,7 +19,7 @@ class Ubicaciones extends ModelBase
      *
      * @var array
      */
-    protected $fillable = ['fk_id_almacen','rack', 'ubicacion', 'posicion', 'nivel', 'activo','eliminar'];
+    protected $fillable = ['fk_id_almacen','rack', 'ubicacion', 'posicion', 'nivel', 'activo'];
 
     /**
      * The accessors to append to the model's array form.

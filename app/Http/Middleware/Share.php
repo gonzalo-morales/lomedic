@@ -11,7 +11,7 @@ class Share
 {
     public function handle($request, Closure $next)
     {
-        $menuempresas = Empresas::where('activo',1)->get();
+        $menuempresas = Empresas::activos()->get();
         View::share('menuempresa', $menuempresas->where('conexion', '=', request()->company)->first());
         View::share('menuempresas', $menuempresas->where('conexion','!=', null)->where('conexion', '!=', request()->company));
 

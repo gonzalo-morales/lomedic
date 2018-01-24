@@ -27,16 +27,16 @@ class SolicitudesPagosController extends ControllerBase
     {
 
         return [
-            'solicitantes'=>Empleados::select(DB::raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"),'id_empleado')->where('activo','t')->pluck('text','id_empleado'),
-            'formas_pago'=>FormasPago::select('descripcion','id_forma_pago')->where('activo','t')->pluck('descripcion','id_forma_pago'),
-            'monedas'=>Monedas::select(DB::raw("concat('(',moneda,') ',descripcion) as text"),'id_moneda')->where('activo','t')->pluck('text','id_moneda'),
+            'solicitantes'=>Empleados::select(DB::raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"),'id_empleado')->activos()->pluck('text','id_empleado'),
+            'formas_pago'=>FormasPago::select('descripcion','id_forma_pago')->activos()->pluck('descripcion','id_forma_pago'),
+            'monedas'=>Monedas::select(DB::raw("concat('(',moneda,') ',descripcion) as text"),'id_moneda')->activos()->pluck('text','id_moneda'),
             'ordenes'=>Ordenes::select('id_orden')->where('fk_id_estatus_orden',1)->where('total_orden','>',0)->whereHas('detalleOrdenes')->pluck('id_orden','id_orden'),
             'js_sucursales'=>Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"], "conditions":[{"where":["activo",1]}],"whereHas":[{"empleados":{"where":["id_empleado","$fk_id_empleado"]}}]'),
             'js_orden'=>Crypt::encryptString('"conditions":[{"where":["id_orden",$fk_id_orden]}]'),
-            'sucursales' => empty($entity) ? [] : Sucursales::where('activo',1)->where('eliminar',0)->whereHas('empleados', function ($query) use ($entity) {
+            'sucursales' => empty($entity) ? [] : Sucursales::activos()->whereHas('empleados', function ($query) use ($entity) {
                 $query->where('id_empleado', $entity->fk_id_solicitante);
             })->pluck('sucursal','id_sucursal'),
-            'condiciones'=>Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',10)->where('activo',1)->where('eliminar',0)
+            'condiciones'=>Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',10)->activos(),
         ];
     }
 

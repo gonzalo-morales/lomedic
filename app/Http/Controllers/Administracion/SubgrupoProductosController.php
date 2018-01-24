@@ -21,7 +21,7 @@ class SubgrupoProductosController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 	    return [
-	        'groups' => GrupoProductos::where('eliminar',0)->where('activo',1)->pluck('grupo','id_grupo')
+	        'groups' => GrupoProductos::activos()->pluck('grupo','id_grupo')
 	    ];
 	}
 }

@@ -21,7 +21,7 @@ class JurisdiccionesController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 		return [
-		    'states' => Estados::where('activo',1)->pluck('estado','id_estado')
+		    'states' => Estados::activos()->pluck('estado','id_estado')
 		];
 	}
 }

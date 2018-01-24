@@ -29,8 +29,8 @@ class FacturasProveedoresController extends ControllerBase
 	public function getDataView($entity = null)
     {
         return [
-            'proveedores' 	=> SociosNegocio::where('activo','t')->where('fk_id_tipo_socio_compra',3)->pluck('nombre_comercial','id_socio_negocio'),
-            'sucursales' 	=> Sucursales::where('activo','t')->pluck('sucursal','id_sucursal'),
+            'proveedores' 	=> SociosNegocio::activos()->where('fk_id_tipo_socio_compra',3)->pluck('nombre_comercial','id_socio_negocio'),
+            'sucursales' 	=> Sucursales::activos()->pluck('sucursal','id_sucursal'),
             'js_comprador' => Crypt::encryptString('"select": ["nombre","apellido_paterno","apellido_materno"], "conditions": [{"where": ["activo","1"]}], "whereHas": [{"ejecutivocompra":{"where":["id_socio_negocio","$id_socio_negocio"]}}]')
         ];
     }

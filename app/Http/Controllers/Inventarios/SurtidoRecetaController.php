@@ -35,9 +35,9 @@ class SurtidoRecetaController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'sucursales' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo', 1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
-            'recetas' => empty($entity) ? [] : Recetas::where('eliminar',false)->pluck('folio','id_receta')->prepend('Selecciona una opcion...', ''),
-//            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->where('activo',1)->pluck('nombre_corto','id_usuario')->prepend('Selecciona una opcion...', ''),
+            'sucursales' => Sucursales::select(['sucursal', 'id_sucursal'])->activos()->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
+            'recetas' => empty($entity) ? [] : Recetas::select('folio','id_receta')->pluck('folio','id_receta')->prepend('Selecciona una opcion...', ''),
+//            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->activos()->pluck('nombre_corto','id_usuario')->prepend('Selecciona una opcion...', ''),
 //            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('Selecciona una opcion...', ''),
 //            'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'fk_id_usuario_captura' =>  Auth::id(),
@@ -59,9 +59,8 @@ class SurtidoRecetaController extends ControllerBase
     public function getRecetaDetalle($company,Request $request)
     {
 
-        $detalle_receta = RecetasDetalle::where('fk_id_receta',$request->fk_id_receta)
-            ->where('eliminar',false)
-            ->get();
+        $detalle_receta = RecetasDetalle::where('fk_id_receta',$request->fk_id_receta)->get();
+        /*
         $json = [];
         foreach ($detalle_receta as $row => $detalle)
         {
@@ -79,8 +78,8 @@ class SurtidoRecetaController extends ControllerBase
                 'descripcion' => $detalle->claveClienteProducto->sku['descripcion'],
 
             ];
-        }
-        return $json;
+        }*/
+        return $detalle_receta->toJson();
     }
 
 }

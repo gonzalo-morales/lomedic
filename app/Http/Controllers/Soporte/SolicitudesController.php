@@ -37,8 +37,8 @@ class SolicitudesController extends ControllerBase
 
     public function getDataView($entity = null)
     {
-        $categories_tickets = Categorias::where('activo','t')->pluck('categoria','id_categoria');
-        $priorities_tickets = Prioridades::where('activo','t')->pluck('prioridad','id_prioridad');
+        $categories_tickets = Categorias::activos()->pluck('categoria','id_categoria');
+        $priorities_tickets = Prioridades::activos()->pluck('prioridad','id_prioridad');
 
         return [
             'categories_tickets' => $categories_tickets,
@@ -50,9 +50,7 @@ class SolicitudesController extends ControllerBase
         return view(currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
-            'data' => $this->entity->all()
-                ->where('eliminar', '0')
-                ->where('fk_id_empleado_tecnico', null)
+            'data' => $this->entity->where('fk_id_empleado_tecnico', null)->get()
         ]);
     }
 
@@ -63,9 +61,7 @@ class SolicitudesController extends ControllerBase
         return view(currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $company,
-            'data' => $this->entity->all()
-                ->where('eliminar', '0')
-                ->where('fk_id_empleado_tecnico', $id_empleado)
+            'data' => $this->entity->where('fk_id_empleado_tecnico', $id_empleado)->get()
         ]);
     }
 
@@ -112,16 +108,15 @@ class SolicitudesController extends ControllerBase
         $attributes['dataview'] = [
             'datall' => $this->entity->all(),
             'data' => $this->entity->findOrFail($id),
-            'conversations' => SeguimientoSolicitudes::where('fk_id_solicitud',$id)->where('eliminar',false)->where('activo',true)->orderBy('fecha_hora')->get(),
-            'attachments' => ArchivosAdjuntos::where('fk_id_solicitud',$id)->where('eliminar',false)->where('activo',true)->where(DB::RAW('fk_id_mensaje'))->get(),
-            'employees' => Empleados::select('id_empleado',DB::raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) AS empleado"))
-                ->where('eliminar',false)->where('activo',true)->where('fk_id_departamento',18)->get()->pluck('empleado','id_empleado'),
-            'status' => EstatusTickets::where('eliminar',false)->where('activo',true)->get(),
-            'impacts' => Impactos::select('id_impacto','impacto')->where('eliminar',false)->where('activo',true)->get()->pluck('impacto','id_impacto'),
-            'urgencies' => Urgencias::select('id_urgencia','urgencia')->where('eliminar',false)->where('activo',true)->get()->pluck('urgencia','id_urgencia'),
-            'categorys' => Categorias::select('id_categoria', 'categoria')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('categoria', 'id_categoria'),
-            'subcategorys' => Subcategorias::select('id_subcategoria', 'subcategoria')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('subcategoria', 'id_subcategoria'),
-            'acctions' => Acciones::select('id_accion', 'accion')->where('eliminar', '=', 0)->where('activo', '=', 1)->get()->pluck('accion', 'id_accion'),
+            'conversations' => SeguimientoSolicitudes::where('fk_id_solicitud',$id)->activos()->orderBy('fecha_hora')->get(),
+            'attachments' => ArchivosAdjuntos::where('fk_id_solicitud',$id)->activos()->where(DB::RAW('fk_id_mensaje'))->get(),
+            'employees' => Empleados::selectRaw("id_empleado, concat(nombre,' ',apellido_paterno,' ',apellido_materno) AS empleado")->activos()->where('fk_id_departamento',18)->pluck('empleado','id_empleado'),
+            'status' => EstatusTickets::activos()->get(),
+            'impacts' => Impactos::select('id_impacto','impacto')->activos()->pluck('impacto','id_impacto'),
+            'urgencies' => Urgencias::select('id_urgencia','urgencia')->activos()->pluck('urgencia','id_urgencia'),
+            'categorys' => Categorias::select('id_categoria', 'categoria')->activos()->pluck('categoria', 'id_categoria'),
+            'subcategorys' => Subcategorias::select('id_subcategoria', 'subcategoria')->activos()->pluck('subcategoria', 'id_subcategoria'),
+            'acctions' => Acciones::select('id_accion', 'accion')-activos()->pluck('accion', 'id_accion'),
             #'employee_department' => Empleados::findOrFail(Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado)->fk_id_departamento
         ];
         
@@ -145,12 +140,12 @@ class SolicitudesController extends ControllerBase
 
     public function obtenerSubcategorias($company, $id)
     {
-        return Categorias::all()->find($id)->subcategorias->where('activo', '1')->toJson();
+        return Categorias::all()->find($id)->subcategorias->activos()->toJson();
     }
 
     public function obtenerAcciones($company, $id)
     {
-        return Subcategorias::all()->find($id)->acciones->where('activo', '1')->toJson();
+        return Subcategorias::all()->find($id)->acciones->activos()->toJson();
     }
 
     public function descargarArchivosAdjuntos($company, $id)
@@ -168,11 +163,11 @@ class SolicitudesController extends ControllerBase
     
     public function getCategorias($company)
     {
-        return Categorias::where('activo',1)->where('eliminar',0)->select('id_categoria as id','categoria as text')->get()->toJson();
+        return Categorias::activos()->select('id_categoria as id','categoria as text')->get()->toJson();
     }
     
     public function getPrioridades($company)
     {
-        return Prioridades::where('activo',1)->where('eliminar',0)->select('id_prioridad as id','prioridad as text')->get()->toJson();
+        return Prioridades::activos()->select('id_prioridad as id','prioridad as text')->get()->toJson();
     }
 }

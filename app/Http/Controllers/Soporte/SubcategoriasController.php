@@ -16,7 +16,7 @@ class SubcategoriasController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'categories' => Categorias::select('id_categoria', 'categoria')->where('eliminar', '=', '0')->where('activo', '=', '1')->orderBy('categoria')->pluck('categoria', 'id_categoria'),
+            'categories' => Categorias::activos()->select('id_categoria', 'categoria')->orderBy('categoria')->pluck('categoria', 'id_categoria'),
         ];
     }
 }

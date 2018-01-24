@@ -34,7 +34,7 @@ class ModulosController extends Controller
 		return view(Route::currentRouteName(), [
 			'entity' => $this->entity_name,
 			'company' => $company,
-			'data' => $this->entity->all()->where('eliminar',0),
+			'data' => $this->entity->all(),
 		]);
 	}
 

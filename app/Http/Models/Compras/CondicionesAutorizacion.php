@@ -28,7 +28,7 @@ class CondicionesAutorizacion extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['nombre','campo','rango_de','rango_hasta','consulta_sql','fk_id_tipo_documento','activo','eliminar'];
+    protected $fillable = ['nombre','campo','rango_de','rango_hasta','consulta_sql','fk_id_tipo_documento','activo'];
 
     public $niceNames =[
     ];

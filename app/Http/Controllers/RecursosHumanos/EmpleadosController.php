@@ -23,16 +23,16 @@ class EmpleadosController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'companies' => Empresas::select('id_empresa', 'nombre_comercial')->where('activo', '=', '1')->orderBy('nombre_comercial')->pluck('nombre_comercial', 'id_empresa'),
-            'departments' => Departamentos::select('descripcion', 'id_departamento')->where('eliminar', '=', '0')->where('activo', '=', '1')->orderBy('descripcion')->pluck('descripcion', 'id_departamento'),
-            'titles' => Puestos::select('id_puesto', 'descripcion')->where('eliminar', '=', '0')->where('activo', '=', '1')->orderBy('descripcion')->pluck('descripcion', 'id_puesto'),
-            'offices' => Sucursales::select('id_sucursal', 'sucursal')->where('eliminar', '=', '0')->where('activo', '=', '1')->orderBy('sucursal')->pluck('sucursal', 'id_sucursal'),
+            'companies' => Empresas::select('id_empresa', 'nombre_comercial')->activos()->orderBy('nombre_comercial')->pluck('nombre_comercial', 'id_empresa'),
+            'departments' => Departamentos::select('descripcion', 'id_departamento')->activos()->orderBy('descripcion')->pluck('descripcion', 'id_departamento'),
+            'titles' => Puestos::select('id_puesto', 'descripcion')->activos()->orderBy('descripcion')->pluck('descripcion', 'id_puesto'),
+            'offices' => Sucursales::select('id_sucursal', 'sucursal')->activos()->orderBy('sucursal')->pluck('sucursal', 'id_sucursal'),
         ];
     }
 
     public function obtenerEmpleados($company)
     {
-        return Empleados::where('activo','1')->where('eliminar','0')->select("id_empleado as id",DB::Raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"))->toJson();
+        return Empleados::activos()->select("id_empleado as id",DB::Raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"))->toJson();
     }
 
     public function obtenerEmpleado($company)

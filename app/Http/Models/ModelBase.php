@@ -17,7 +17,9 @@ class ModelBase extends Model
 	 */
 	protected $fields = null;
 	
-	public $tipo_documento = 0;
+	protected $localMacros = [];
+	
+	public static $allColumns = [];
 
 	/**
 	 * Atributos de carga optimizada
@@ -34,24 +36,7 @@ class ModelBase extends Model
 
 	public function __construct($attributes = []) {
 		$this->eagerLoaders = $this->getAutoEager();
-		
-		if(in_array('eliminar',$this->getlistColumns())) {
-		    $this->where('eliminar',0);
-		}
-
-		/*
-		if($this->getTable() == 'fac_det_facturas_clientes') {
-		    $this->setConnection(request()->company);
-		    dd(request()->company,$this->getConnectionName());
-		}*/
-		
-		//$defaults = $this->getColumnsDefaultsValues();
-		
-		
-		//$this->tipo_documento = isset($defaults['fk_id_tipo_documento']) ? $defaults['fk_id_tipo_documento'] : $this->getTable();
-		
-		#$this->rules = array_merge_recursive_simple($this->rules,$this->getRulesDefaults());
-		return parent::__construct($attributes);		
+		$this->allColumns = $this->getlistColumns();
 	}
 
 	/**
@@ -62,7 +47,7 @@ class ModelBase extends Model
 	
 	public static function boot()
 	{
-	    parent::boot();
+	    return parent::boot();
 	    /*
 	    //mientras creamos
 	    self::creating(function($table){
@@ -105,7 +90,61 @@ class ModelBase extends Model
         });
         */
 	}
-
+	
+	public function newQuery() {
+	    if(in_array('eliminar',$this->allColumns)) {
+	       return parent::newQuery()->whereEliminar(0);
+	    }
+	    return parent::newQuery();
+	}
+	
+	private function activos()
+	{
+        if(in_array('activo',self::$allColumns)) {
+            return static::where('activo',1);
+	    }
+	    return self::query();
+	}
+	
+	public static function __callStatic($method, $parameters)
+	{
+	    if ($method == 'activos') {
+	        return (new static)->activos();
+	    }
+	    return parent::__callStatic($method, $parameters);
+	}
+	
+	/*
+	public function activos()
+	{
+	    if(in_array('activo',$this->allColumns())) {
+	        return $this->where('activo',1);
+	    }
+	    return $this->query();
+	}
+	*/
+	
+	
+	public function __call($method, $parameters)
+	{
+	    
+	    if ($method === 'activos') {
+    	    return call_user_func_array($macro, $parameters);
+	        #return $this->{$method}();
+        }
+        
+        return $this->newQuery()->$method(...$parameters);
+        //return parent::__call($method, $parameters);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Obtenemos atributos a incluir en append/appends()
 	 * @return array
@@ -295,4 +334,9 @@ class ModelBase extends Model
 	            break;
 	    }
 	}
+	/*
+	public static function __callStatic($method, $parameters)
+	{
+	    return (new static)->$method(...$parameters);
+	}*/
 }
