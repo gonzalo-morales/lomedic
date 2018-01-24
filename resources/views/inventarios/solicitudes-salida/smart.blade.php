@@ -678,7 +678,7 @@
                                 cRequerido:true,
                             });
                         
-                            if(!$('#form-model').valid()){
+                            if(!$('#form-model').valid() || !validateCantidad()){
                                 e.preventDefault();
                                 $('.fk_id_pedido').rules('remove');
                                 $('.fk_id_almacen').rules('remove');

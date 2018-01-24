@@ -171,6 +171,24 @@ function validateCantidadTotal(el){
     }
 }
 
+//FUNCIÓN PARA VALIDAR ON SUBMIT LA CANTIDAD
+function validateCantidad(){
+    var verificar = false;
+    $('#tableSolicitudes').each(function (index, row) {
+        var newCantidad =  +$(row).find('.cantidad_solicitada').val();
+        var totalCantidad =  +$(row).find('.cantidad_total').val();
+         if(newCantidad > totalCantidad){
+            verificar = true;
+            return false;
+        }
+    });
+    if(verificar == true){
+        return false;
+    } else {
+        return true;
+    }
+}
+
 //FUNCIÓN PARA LIMPIAR LA FILA
 function borrarFila(el) {
     var tr = $(el).closest('tr');
