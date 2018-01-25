@@ -47,21 +47,21 @@ class SolicitudesController extends ControllerBase
                 break;
         }
 //        dd($entity->fk_id_sucursal);
-//        dd(SociosNegocio::activos()->whereNotNull('fk_id_tipo_socio_compra')->whereHas('empresas',function ($q){
+//        dd(SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')->whereHas('empresas',function ($q){
 //            $q->where('conexion',\request()->company);
 //        })->pluck('nombre_comercial','id_socio_negocio'));
         return [
             'proyectos' => Proyectos::where('fk_id_estatus',1)->orderBy('proyecto')->pluck('proyecto','id_proyecto'),
-            'proveedores' => SociosNegocio::activos()->whereHas('empresas',function ($q){
+            'proveedores' => SociosNegocio::where('activo',1)->whereHas('empresas',function ($q){
                 $q->where('conexion',\request()->company);
             })->whereNotNull('fk_id_tipo_socio_compra')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
-            'impuestos'=> Impuestos::select('id_impuesto','impuesto')->activos()->orderBy('impuesto')->pluck('impuesto','id_impuesto'),
-            'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')->activos()->orderBy('nombre')->pluck('nombre','id_unidad_medida'),
-            'skus' => Productos::activos()->orderBy('sku')->pluck('sku','id_sku'),
-            'empleados' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre, id_empleado")->activos()->orderBy('nombre')->pluck('nombre','id_empleado'),
+            'impuestos'=> Impuestos::select('id_impuesto','impuesto')->where('activo',1)->orderBy('impuesto')->pluck('impuesto','id_impuesto'),
+            'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')->where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida'),
+            'skus' => Productos::where('activo',1)->orderBy('sku')->pluck('sku','id_sku'),
+            'empleados' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre, id_empleado")->where('activo',1)->orderBy('nombre')->pluck('nombre','id_empleado'),
             'sucursalesempleado' => !empty($entity) ?
-            Empleados::find($entity->fk_id_solicitante)->sucursales->activos()->pluck('sucursal','id_sucursal') :
-                Auth::user()->empleado->sucursales->activos()->pluck('sucursal','id_sucursal'),
+            Empleados::find($entity->fk_id_solicitante)->sucursales->where('activo',1)->pluck('sucursal','id_sucursal') :
+                Auth::user()->empleado->sucursales->where('activo',1)->pluck('sucursal','id_sucursal'),
             'js_proveedores' => Crypt::encryptString('"select":["id_socio_negocio as id","nombre_comercial as text"],"whereHas":[{"productos":{"where":["fk_id_sku",$id_sku]}}]'),
             'detalles_documento'=>$detalles_documento
         ];

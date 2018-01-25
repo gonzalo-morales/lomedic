@@ -29,8 +29,8 @@ class EmpresasController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 	    return [
-	        'regimens'         => RegimenFiscal::activos()->pluck('regimen_fiscal','id_regimen_fiscal')->sortBy('regimen_fiscal')->prepend('Selecciona una opcion...',''),
-	        'paises'           => Paises::activos()->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
+	        'regimens'         => RegimenFiscal::where('activo',1)->pluck('regimen_fiscal','id_regimen_fiscal')->sortBy('regimen_fiscal')->prepend('Selecciona una opcion...',''),
+	        'paises'           => Paises::where('activo',1)->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
 	        'js_estados'       => Crypt::encryptString('"select": ["estado", "id_estado"], "conditions": [{"where": ["fk_id_pais","$fk_id_pais"]}], "orderBy": [["estado", "ASC"]]'),
 	        'js_municipios'    => Crypt::encryptString('"select": ["municipio", "id_municipio"], "conditions": [{"where": ["fk_id_estado","$fk_id_estado"]}], "orderBy": [["municipio", "ASC"]]'),
 	    ];

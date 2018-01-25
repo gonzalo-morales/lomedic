@@ -32,13 +32,13 @@ class RecetasController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->activos()->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
+            'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
             'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('Selecciona una opcion...', ''),
             'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'areas' => Areas::all()->pluck('area', 'id_area')->prepend('Selecciona una opcion...', ''),
             'tipo_servicio' => [0 => 'afiliado', 1 => 'externo'],
             'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
-            'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->activos()->pluck('diagnostico', 'id_diagnostico'),
+            'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo',1)->pluck('diagnostico', 'id_diagnostico'),
             'proyectos' => empty($entity) ? [] : Proyectos::where('id_proyecto', $entity->fk_id_proyecto)->where('fk_id_estatus',1)->pluck('proyecto', 'id_proyecto'),
         ];
 
@@ -63,7 +63,7 @@ class RecetasController extends ControllerBase
     {
         $json = [];
         $term = strtoupper($request->diagnostico);
-        $diagnosticos = Diagnosticos::where('diagnostico', 'LIKE', '%' . $term . '%')->orWhere('clave_diagnostico', 'LIKE', $term . '%')->activos()->get();
+        $diagnosticos = Diagnosticos::where('diagnostico', 'LIKE', '%' . $term . '%')->orWhere('clave_diagnostico', 'LIKE', $term . '%')->where('activo',1)->get();
         foreach ($diagnosticos as $diagnostico) {
             $json[] = ['id' => $diagnostico->id_diagnostico,
                 'text' => '(' . $diagnostico->clave_diagnostico . ') ' . $diagnostico->diagnostico];
@@ -77,7 +77,7 @@ class RecetasController extends ControllerBase
         $json = [];
 
         $term = $request->medicamento;
-        $skus = Productos::activos()->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'LIKE', '%' . $term . '%')->orWhere('descripcion', 'LIKE', '%' . $term . '%')->get();
+        $skus = Productos::where('activo',1)->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'LIKE', '%' . $term . '%')->orWhere('descripcion', 'LIKE', '%' . $term . '%')->get();
 
         foreach ($skus as $sku) {
             $json[] = [

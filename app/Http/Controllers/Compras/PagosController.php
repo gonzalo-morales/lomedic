@@ -26,9 +26,9 @@ class PagosController extends ControllerBase
 	public function getDataView($entity = null)
     {
         return [
-            'bancos'=>Bancos::activos()->orderBy('banco')->pluck('banco','id_banco'),
-            'formas_pago' => FormasPago::selectRaw("CONCAT(forma_pago,' - ',descripcion) as forma_pago, id_forma_pago")->activos()->orderBy('forma_pago')->pluck('forma_pago','id_forma_pago'),
-            'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->activos()->orderBy('moneda')->pluck('moneda','id_moneda'),
+            'bancos'=>Bancos::where('activo',1)->orderBy('banco')->pluck('banco','id_banco'),
+            'formas_pago' => FormasPago::selectRaw("CONCAT(forma_pago,' - ',descripcion) as forma_pago, id_forma_pago")->where('activo',1)->orderBy('forma_pago')->pluck('forma_pago','id_forma_pago'),
+            'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo',1)->orderBy('moneda')->pluck('moneda','id_moneda'),
             'facturas'=>FacturasProveedores::select('id_factura_proveedor')->where('fk_id_estatus_factura',1)->where('total','>',0)->pluck('id_factura_proveedor','id_factura_proveedor')->prepend('...',0),
             'solicitudes'=>SolicitudesPagos::where('fk_id_estatus_solicitud_pago',1)->where('total','>',0)->whereHas('detalle')->pluck('id_solicitud_pago','id_solicitud_pago')->prepend('...',0),
             'js_factura'=>Crypt::encryptString('"select":["total","total_pagado"],"conditions":[{"where":["id_factura_proveedor",$fk_id_documento]}]'),

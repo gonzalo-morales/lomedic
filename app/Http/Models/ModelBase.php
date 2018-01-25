@@ -15,12 +15,8 @@ class ModelBase extends Model
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array
 	 */
-	protected $fields = null;
+	protected $fields = [];
 	
-	protected $localMacros = [];
-	
-	public static $allColumns = [];
-
 	/**
 	 * Atributos de carga optimizada
 	 * @var array
@@ -36,7 +32,6 @@ class ModelBase extends Model
 
 	public function __construct($attributes = []) {
 		$this->eagerLoaders = $this->getAutoEager();
-		$this->allColumns = $this->getlistColumns();
 	}
 
 	/**
@@ -90,60 +85,13 @@ class ModelBase extends Model
         });
         */
 	}
-	
+	/*
 	public function newQuery() {
-	    if(in_array('eliminar',$this->allColumns)) {
+	    if(in_array('eliminar',$this->getlistColumns())) {
 	       return parent::newQuery()->whereEliminar(0);
 	    }
 	    return parent::newQuery();
-	}
-	
-	private function activos()
-	{
-        if(in_array('activo',self::getlistColumns())) {
-            return static::where('activo',1);
-	    }
-	    return self::query();
-	}
-	
-	public static function __callStatic($method, $parameters)
-	{
-	    if ($method == 'activos') {
-	        return (new static)->activos();
-	    }
-	    return parent::__callStatic($method, $parameters);
-	}
-	
-	/*
-	public function activos()
-	{
-	    if(in_array('activo',$this->allColumns())) {
-	        return $this->where('activo',1);
-	    }
-	    return $this->query();
-	}
-	*/
-	
-	
-	public function __call($method, $parameters)
-	{
-	    
-	    if ($method === 'activos') {
-    	    return call_user_func_array($macro, $parameters);
-	        #return $this->{$method}();
-        }
-        
-        return $this->newQuery()->$method(...$parameters);
-        //return parent::__call($method, $parameters);
-	}
-	
-	
-	
-	
-	
-	
-	
-	
+	}*/
 	
 	/**
 	 * Obtenemos atributos a incluir en append/appends()

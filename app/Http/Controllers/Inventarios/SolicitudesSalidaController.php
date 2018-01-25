@@ -52,12 +52,12 @@ class SolicitudesSalidaController extends ControllerBase
 			});
 		}
 		return [
-		    'clientes' => SociosNegocio::activos()->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
+		    'clientes' => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio'),
 			'proyectos' => $proyectos,
 			'sucursales_entrega' => $sucursales_entrega,
 			'skus' => Productos::all()->pluck('sku_descripcion','id_sku'),
 			'almacenes' => Almacenes::with('sucursal')->get()->pluck('almacen_sucursal_concat','id_almacen'),
-		    'empleados' => Empleados::activos()->whereIn('fk_id_puesto',[9,15])->selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->pluck('empleado','id_empleado'),
+		    'empleados' => Empleados::where('activo',1)->whereIn('fk_id_puesto',[9,15])->selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->pluck('empleado','id_empleado'),
 			'pedidos' => Pedidos::whereHas('detalle',function($q){
 				$q->where('cantidad', '!=' , 0)->orWhereNull('cantidad');
 			})->selectRaw("Concat(no_pedido,' - ',observaciones,' - ',fecha_limite) no_pedido, id_documento")->pluck('no_pedido','id_documento')->prepend('Selecciona un pedido...',''),

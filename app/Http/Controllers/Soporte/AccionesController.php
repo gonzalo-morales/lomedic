@@ -16,7 +16,7 @@ class AccionesController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'subcategorys' => Subcategorias::activos()->select('subcategoria','id_subcategoria')->orderBy('subcategoria')->pluck('subcategoria', 'id_subcategoria'),
+            'subcategorys' => Subcategorias::where('activo',1)->select('subcategoria','id_subcategoria')->orderBy('subcategoria')->pluck('subcategoria', 'id_subcategoria'),
         ];
     }
 }

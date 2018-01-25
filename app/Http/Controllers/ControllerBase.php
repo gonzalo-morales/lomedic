@@ -116,7 +116,7 @@ class ControllerBase extends Controller
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
-        DB::beginTransaction();
+        #DB::beginTransaction();
         $entity = $this->entity->create($request->all());
         if ($entity) {
 
@@ -135,7 +135,7 @@ class ControllerBase extends Controller
                 }
             }
 
-            DB::commit();
+            #DB::commit();
 
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
@@ -145,7 +145,7 @@ class ControllerBase extends Controller
             
             $redirect = $this->redirect('store');
         } else {
-            DB::rollBack();
+            #DB::rollBack();
             # Log
             event(new LogModulos($this->entity, $company, 'crear' , 'Error al crear el registro'));
             $redirect = $this->redirect('error_store');
