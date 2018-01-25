@@ -31,11 +31,11 @@ class RequisicionesHospitalariasController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
-            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->where('activo',1)->pluck('nombre_corto','id_usuario')->prepend('Selecciona una opcion...', ''),
-            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('Selecciona una opcion...', ''),
+            'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
+            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->where('activo',1)->pluck('nombre_corto','id_usuario')->prepend('...', ''),
+            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('...', ''),
             'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
-            'proyectos' => empty($entity) ? [] : Proyectos::select(['id_proyecto','proyecto'])->pluck('proyecto','id_proyecto')->prepend('Selecciona una opcion...', ''),
+            'proyectos' => empty($entity) ? [] : Proyectos::select(['id_proyecto','proyecto'])->pluck('proyecto','id_proyecto')->prepend('...', ''),
             'fk_id_usuario_captura' =>  Auth::id(),
         ];
 

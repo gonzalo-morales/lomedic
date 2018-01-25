@@ -35,10 +35,10 @@ class SurtidoRecetaController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'sucursales' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
-            'recetas' => empty($entity) ? [] : Recetas::select('folio','id_receta')->pluck('folio','id_receta')->prepend('Selecciona una opcion...', ''),
-//            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->where('activo',1)->pluck('nombre_corto','id_usuario')->prepend('Selecciona una opcion...', ''),
-//            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('Selecciona una opcion...', ''),
+            'sucursales' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
+            'recetas' => empty($entity) ? [] : Recetas::select('folio','id_receta')->pluck('folio','id_receta')->prepend('...', ''),
+//            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->where('activo',1)->pluck('nombre_corto','id_usuario')->prepend('...', ''),
+//            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('...', ''),
 //            'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'fk_id_usuario_captura' =>  Auth::id(),
         ];
@@ -51,7 +51,7 @@ class SurtidoRecetaController extends ControllerBase
             ->where('fk_id_sucursal',$request->fk_id_sucursal)
             ->orderBy('folio', 'desc')
             ->pluck('folio','id_receta')
-            ->prepend('Selecciona una opcion...','')
+            ->prepend('...','')
             ->toJson();
         return $recetas;
     }

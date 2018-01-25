@@ -23,8 +23,8 @@ class SeguimientoDesviacionesController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'proveedores'       => SociosNegocio::where('activo',1)->pluck('nombre_comercial','id_socio_negocio')->prepend('Selecciona una opcion...', '')
-            // 'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
+            'proveedores'       => SociosNegocio::where('activo',1)->pluck('nombre_comercial','id_socio_negocio')->prepend('...', '')
+            // 'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
             // 'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             // 'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
             // 'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo',1)->pluck('diagnostico', 'id_diagnostico'),

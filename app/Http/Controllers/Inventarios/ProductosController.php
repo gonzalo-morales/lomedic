@@ -73,17 +73,17 @@ class ProductosController extends ControllerBase
         }
 
         return [
-            'seriesku' => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('Selecciona una opcion...',''),
-            'unidadmedida' => UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida')->sortBy('nombre')->prepend('Selecciona una unidad de medida',''),
-            'subgrupo' => collect($subgrupos ?? [])->prepend('Selecciona un subgrupo','')->toArray(),
-            'impuesto' => Impuestos::where('activo',1)->pluck('impuesto','id_impuesto')->sortBy('impuesto')->prepend('Selecciona una opcion...',''),
-            'familia' => FamiliasProductos::where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('Selecciona una familia...',''),
-            'presentacionventa' => PresentacionVenta::where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('Selecciona una Presentacion de venta...',''),
-            'metodovaloracion' => MetodosValoracion::where('activo',1)->pluck('metodo_valoracion','id_metodo_valoracion')->sortBy('metodo_valoracion')->prepend('Selecciona una opcion...',''),
-            'periodos' => Periodos::where('activo',1)->pluck('periodo','id_periodo')->sortBy('periodo')->prepend('Selecciona una opcion...',''),
+            'seriesku' => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('...',''),
+            'unidadmedida' => UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida')->sortBy('nombre')->prepend('...',''),
+            'subgrupo' => collect($subgrupos ?? [])->prepend('...','')->toArray(),
+            'impuesto' => Impuestos::where('activo',1)->pluck('impuesto','id_impuesto')->sortBy('impuesto')->prepend('...',''),
+            'familia' => FamiliasProductos::where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('...',''),
+            'presentacionventa' => PresentacionVenta::where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('...',''),
+            'metodovaloracion' => MetodosValoracion::where('activo',1)->pluck('metodo_valoracion','id_metodo_valoracion')->sortBy('metodo_valoracion')->prepend('...',''),
+            'periodos' => Periodos::where('activo',1)->pluck('periodo','id_periodo')->sortBy('periodo')->prepend('...',''),
             'sociosnegocio' => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')
-                ->pluck('nombre_comercial','id_socio_negocio')->sortBy('nombre_comercial')->prepend('Selecciona un Proveedor...',''),
-            'upcs' => Upcs::where('activo',1)->select('id_upc','upc')->pluck('upc','id_upc')->sortBy('upc')->prepend('Selecciona un upc',''),
+                ->pluck('nombre_comercial','id_socio_negocio')->sortBy('nombre_comercial')->prepend('...',''),
+            'upcs' => Upcs::where('activo',1)->select('id_upc','upc')->pluck('upc','id_upc')->sortBy('upc')->prepend('...',''),
             'api_js'=>Crypt::encryptString('"select": ["nombre_comercial", "descripcion","fk_id_laboratorio"], "conditions": [{"where": ["id_upc","$id_upc"]}], "with": ["laboratorio"]')
         ];
     }

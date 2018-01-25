@@ -32,10 +32,10 @@ class RecetasController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
-            'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('Selecciona una opcion...', ''),
+            'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
+            'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
             'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
-            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('Selecciona una opcion...', ''),
+            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('...', ''),
             'tipo_servicio' => [0 => 'afiliado', 1 => 'externo'],
             'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
             'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo',1)->pluck('diagnostico', 'id_diagnostico'),
