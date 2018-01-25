@@ -11,6 +11,9 @@ use App\Notifications\Notificaciones;
 class ModelBase extends Model
 {
     use Notifiable;
+    
+    protected $fillable = [];
+        
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array
@@ -32,6 +35,7 @@ class ModelBase extends Model
 
 	public function __construct($attributes = []) {
 		$this->eagerLoaders = $this->getAutoEager();
+		return parent::__construct($attributes);
 	}
 
 	/**
@@ -42,7 +46,7 @@ class ModelBase extends Model
 	
 	public static function boot()
 	{
-	    return parent::boot();
+	    parent::boot();
 	    /*
 	    //mientras creamos
 	    self::creating(function($table){
@@ -85,13 +89,13 @@ class ModelBase extends Model
         });
         */
 	}
-	/*
+	
 	public function newQuery() {
 	    if(in_array('eliminar',$this->getlistColumns())) {
 	       return parent::newQuery()->whereEliminar(0);
 	    }
 	    return parent::newQuery();
-	}*/
+	}
 	
 	/**
 	 * Obtenemos atributos a incluir en append/appends()
@@ -253,7 +257,7 @@ class ModelBase extends Model
         }
         return $rules;
 	}
-	
+	/*
 	public function documento_destino($tipo = '0')
 	{
 	    
@@ -281,10 +285,5 @@ class ModelBase extends Model
 	            return null;
 	            break;
 	    }
-	}
-	/*
-	public static function __callStatic($method, $parameters)
-	{
-	    return (new static)->$method(...$parameters);
 	}*/
 }
