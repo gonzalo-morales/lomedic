@@ -32,5 +32,7 @@ Route::prefix('{company}')->group(function () {
         Route::post('verifyStock','Servicios\RecetasController@verifyStock')->name('recetas.verifyStock');
         Route::post('vales/getReceta','Servicios\ValesController@getReceta')->name('vales.getReceta');
         Route::post('vales/getRecetaDetalle','Servicios\ValesController@getRecetaDetalle')->name('vales.getRecetaDetalle');
+        Route::post('requisicioneshospitalarias/getDiagnosticos','Servicios\RecetasController@getDiagnosticos')->name('requisicioneshospitalarias.getDiagnosticos');
+        Route::post('requisicioneshospitalarias/getMedicamentos','Servicios\RecetasController@getMedicamentos')->name('requisicioneshospitalarias.getMedicamentos');
     });
 });
