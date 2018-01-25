@@ -49,7 +49,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('localidades', 'Administracion\LocalidadesController');
 		Route::resource('metodospago', 'Administracion\MetodosPagoController');
 		Route::resource('metodosvaloracion', 'Administracion\MetodosValoracionController');
-        Route::resource('modalidadesentrega','Administracion\ModalidadesentregaController');
+        Route::resource('modalidadesentrega','Administracion\ModalidadesEntregaController');
 		Route::resource('modulos', 'Administracion\ModulosController');
 		Route::resource('monedas', 'Administracion\MonedasController');
 		Route::resource('motivosajustes', 'Administracion\MotivosAjustesController');

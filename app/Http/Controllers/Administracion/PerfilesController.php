@@ -43,7 +43,7 @@ class PerfilesController extends Controller
         return view(Route::currentRouteName(), [
             'entity' => $this->entity_name,
             'company' => $this->company,
-            'data' => $this->entity->all()->where('eliminar', '=',false),
+            'data' => $this->entity->all(),
         ]);
     }
 

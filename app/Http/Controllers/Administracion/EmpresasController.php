@@ -28,11 +28,9 @@ class EmpresasController extends ControllerBase
 	
 	public function getDataView($entity = null)
 	{
-	    $cer = 'C:\Users\jfranco\Desktop\CSD_AIS091015H50_20160801150531\CSD_Abisa_2016_AIS091015H50_20160801_150445s.cer';
-	    //print_r($this->readCer($cer));
 	    return [
-	        'regimens'         => RegimenFiscal::where('activo','1')->where('eliminar','0')->pluck('regimen_fiscal','id_regimen_fiscal')->sortBy('regimen_fiscal')->prepend('Selecciona una opcion...',''),
-	        'paises'           => Paises::where('activo','1')->where('eliminar','0')->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
+	        'regimens'         => RegimenFiscal::where('activo',1)->pluck('regimen_fiscal','id_regimen_fiscal')->sortBy('regimen_fiscal')->prepend('...',''),
+	        'paises'           => Paises::where('activo',1)->pluck('pais','id_pais')->sortBy('pais')->prepend('...',''),
 	        'js_estados'       => Crypt::encryptString('"select": ["estado", "id_estado"], "conditions": [{"where": ["fk_id_pais","$fk_id_pais"]}], "orderBy": [["estado", "ASC"]]'),
 	        'js_municipios'    => Crypt::encryptString('"select": ["municipio", "id_municipio"], "conditions": [{"where": ["fk_id_estado","$fk_id_estado"]}], "orderBy": [["municipio", "ASC"]]'),
 	    ];

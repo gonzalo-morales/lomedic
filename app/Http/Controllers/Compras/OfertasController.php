@@ -35,21 +35,21 @@ class OfertasController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 	    return [
-            'companies' => Empresas::where('activo',1)->where('conexion','<>',request()->company)->where('conexion','<>','corporativo')->where('activo',1)->where('eliminar',0)->pluck('nombre_comercial','id_empresa'),
+	        'companies' => Empresas::where('activo',1)->where('conexion','<>',request()->company)->where('conexion','<>','corporativo')->where('activo',1)->pluck('nombre_comercial','id_empresa'),
             'actual_company_id'=>Empresas::where('conexion','LIKE',request()->company)->first()->id_empresa,
-            'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-            'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
+	        'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
+	        'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
             'proyectos' => !empty($entity) ? Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto') : ['0'=>'Sin proyecto'],
-            'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
+	        'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
             "solicitud"=>Solicitudes::find(\request()->id_solicitud),
-            "proveedores"=>SociosNegocio::where('activo', 1)->whereHas('empresas',function ($q){
+	        "proveedores"=>SociosNegocio::where('activo',1)->whereHas('empresas',function ($q){
                 $q->where('conexion',\request()->company);
             })->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio'),
-            "clientes"=>SociosNegocio::where('activo', 1)->whereHas('empresas',function ($q){
+            "clientes"=>SociosNegocio::where('activo',1)->whereHas('empresas',function ($q){
                 $q->where('conexion',\request()->company);
             })->where('fk_id_tipo_socio_venta',1)->pluck('nombre_comercial','id_socio_negocio'),
-            'js_proyectos' => Crypt::encryptString('"select":["id_proyecto as id","proyecto as text"],"conditions":[{"where":["eliminar",0]},{"where":["fk_id_estatus",1]},{"where":["fk_id_cliente",$fk_id_cliente]}]'),
-            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc) AND eliminar = false"]}]')
+            'js_proyectos' => Crypt::encryptString('"select":["id_proyecto as id","proyecto as text"],"conditions":[{"where":["fk_id_estatus",1]},{"where":["fk_id_cliente",$fk_id_cliente]}]'),
+            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]')
 	    ];
 	}
 
@@ -268,7 +268,7 @@ class OfertasController extends ControllerBase
     }
 
     public function getProveedores($company){
-        $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
+        $proveedores = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
 	    return Response::json($proveedores);
     }
 }

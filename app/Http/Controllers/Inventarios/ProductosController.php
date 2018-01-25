@@ -64,26 +64,26 @@ class ProductosController extends ControllerBase
     
     public function getDataView($entity = null)
     {
-        $grupos = GrupoProductos::where('eliminar',0)->where('activo',1)->pluck('grupo','id_grupo')->sortBy('grupo');
+        $grupos = GrupoProductos::where('activo',1)->pluck('grupo','id_grupo')->sortBy('grupo');
 
         foreach ($grupos as $id => $grupo) {
-            $subgrupo = SubgrupoProductos::where('fk_id_grupo',$id)->where('eliminar',0)->where('activo',1)->pluck('subgrupo','id_subgrupo')->sortBy('subgrupo')->toArray();
+            $subgrupo = SubgrupoProductos::where('fk_id_grupo',$id)->where('activo',1)->pluck('subgrupo','id_subgrupo')->sortBy('subgrupo')->toArray();
             if(!empty($subgrupo))
             { $subgrupos[$grupo] = $subgrupo; }
         }
 
         return [
-            'seriesku' => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('Selecciona una opcion...',''),
-            'unidadmedida' => UnidadesMedidas::where('eliminar',0)->where('activo',1)->pluck('nombre','id_unidad_medida')->sortBy('nombre')->prepend('Selecciona una unidad de medida',''),
-            'subgrupo' => collect($subgrupos ?? [])->prepend('Selecciona un subgrupo','')->toArray(),
-            'impuesto' => Impuestos::where('eliminar',0)->where('activo',1)->pluck('impuesto','id_impuesto')->sortBy('impuesto')->prepend('Selecciona una opcion...',''),
-            'familia' => FamiliasProductos::where('eliminar',0)->where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('Selecciona una familia...',''),
-            'presentacionventa' => PresentacionVenta::where('eliminar',0)->where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('Selecciona una Presentacion de venta...',''),
-            'metodovaloracion' => MetodosValoracion::where('eliminar',0)->where('activo',1)->pluck('metodo_valoracion','id_metodo_valoracion')->sortBy('metodo_valoracion')->prepend('Selecciona una opcion...',''),
-            'periodos' => Periodos::where('eliminar',0)->where('activo',1)->pluck('periodo','id_periodo')->sortBy('periodo')->prepend('Selecciona una opcion...',''),
-            'sociosnegocio' => SociosNegocio::where('activo',1)->where('eliminar',0)->whereNotNull('fk_id_tipo_socio_compra')
-                ->pluck('nombre_comercial','id_socio_negocio')->sortBy('nombre_comercial')->prepend('Selecciona un Proveedor...',''),
-            'upcs' => Upcs::where('activo',1)->where('eliminar',0)->select('id_upc','upc')->pluck('upc','id_upc')->sortBy('upc')->prepend('Selecciona un upc',''),
+            'seriesku' => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('...',''),
+            'unidadmedida' => UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida')->sortBy('nombre')->prepend('...',''),
+            'subgrupo' => collect($subgrupos ?? [])->prepend('...','')->toArray(),
+            'impuesto' => Impuestos::where('activo',1)->pluck('impuesto','id_impuesto')->sortBy('impuesto')->prepend('...',''),
+            'familia' => FamiliasProductos::where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('...',''),
+            'presentacionventa' => PresentacionVenta::where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('...',''),
+            'metodovaloracion' => MetodosValoracion::where('activo',1)->pluck('metodo_valoracion','id_metodo_valoracion')->sortBy('metodo_valoracion')->prepend('...',''),
+            'periodos' => Periodos::where('activo',1)->pluck('periodo','id_periodo')->sortBy('periodo')->prepend('...',''),
+            'sociosnegocio' => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')
+                ->pluck('nombre_comercial','id_socio_negocio')->sortBy('nombre_comercial')->prepend('...',''),
+            'upcs' => Upcs::where('activo',1)->select('id_upc','upc')->pluck('upc','id_upc')->sortBy('upc')->prepend('...',''),
             'api_js'=>Crypt::encryptString('"select": ["nombre_comercial", "descripcion","fk_id_laboratorio"], "conditions": [{"where": ["id_upc","$id_upc"]}], "with": ["laboratorio"]')
         ];
     }
@@ -95,7 +95,7 @@ class ProductosController extends ControllerBase
         $id_socio = $request->fk_id_socio_negocio;
         $skus = null;
         if($id_proyecto) {
-            $skus = Productos::where('activo', true)->whereRaw("(sku ILIKE '%$term%' OR descripcion_corta ILIKE '%$term%' OR descripcion ILIKE '%$term%')")->
+            $skus = Productos::where('activo',1)->whereRaw("(sku ILIKE '%$term%' OR descripcion_corta ILIKE '%$term%' OR descripcion ILIKE '%$term%')")->
             whereHas('clave_cliente_productos', function ($q) use ($id_proyecto) {
                 $q->whereHas('proyectos', function ($q2) use ($id_proyecto) {
                     $q2->where('id_proyecto', $id_proyecto);
@@ -104,7 +104,7 @@ class ProductosController extends ControllerBase
                 ->whereIn('id_sku',SociosNegocio::find($id_socio)->productos->pluck('fk_id_sku'))
                 ->get();
         }else{
-            $skus = Productos::where('activo','1')->whereRaw("(sku ILIKE '%$term%' OR descripcion_corta ILIKE '%$term%' OR descripcion ILIKE '%$term%')")->whereIn('id_sku',SociosNegocio::find($id_socio)->productos->pluck('fk_id_sku'))->get();
+            $skus = Productos::where('activo',1)->whereRaw("(sku ILIKE '%$term%' OR descripcion_corta ILIKE '%$term%' OR descripcion ILIKE '%$term%')")->whereIn('id_sku',SociosNegocio::find($id_socio)->productos->pluck('fk_id_sku'))->get();
         }
         $skus_set = []; 
         foreach ($skus as $sku)

@@ -12,8 +12,8 @@ class RecetasController extends ControllerBase
 	public function index($company, $attributes = ['where'=>[]])
 	{
 	    return view('estadisticas.recetas.index',[
-	        'jurisdicciones'=>Jurisdicciones::whereHas('sucursales', function($q){ $q->where('activo',1); })->get()->pluck('jurisdiccion','id_jurisdiccion')->prepend('TODAS LAS JURISDICCIONES','-999'),
-	        'localidades' => Sucursales::where('tipo',0)->where('activo',1)->get()->pluck('sucursal','id_sucursal')->prepend('TODOS LOS CENTROS DE SALUD','-999'),
+	        'jurisdicciones'=>Jurisdicciones::whereHas('sucursales', function($q){ $q->where('activo',1); })->pluck('jurisdiccion','id_jurisdiccion')->prepend('TODAS LAS JURISDICCIONES','-999'),
+	        'localidades' => Sucursales::where('activo',1)->where('tipo',0)->pluck('sucursal','id_sucursal')->prepend('TODOS LOS CENTROS DE SALUD','-999'),
 	    ]);
 	}
 	

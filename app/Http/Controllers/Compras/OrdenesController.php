@@ -63,7 +63,7 @@ class OrdenesController extends ControllerBase
                 break;
         }
 
-        $clientes = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
+        $clientes = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
 
         $attributes = ['dataview'=>[
             'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
@@ -173,7 +173,7 @@ class OrdenesController extends ControllerBase
 
 	public function show($company,$id,$attributes = [])
 	{
-	    $proveedores = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
+	    $proveedores = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
 		$estatus = Ordenes::where('id_orden',$id)->pluck('fk_id_estatus_autorizacion','id_orden')->first();
 		if ($estatus == 1 || $estatus == 3) {
 			$estatus = 1;
@@ -181,22 +181,22 @@ class OrdenesController extends ControllerBase
 			$estatus = 2;
 		}
 		$attributes = $attributes+['dataview'=>[
-				'detalles' => $this->entity->find($id)->detalleOrdenes->where('cerrado',false),
-                'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
-                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-                'proveedores' => $proveedores,
-                'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
-                'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
-                'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
-				'condiciones'=>Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1)->where('eliminar',0),
-				'estatus' => $estatus,
+			'detalles' => $this->entity->find($id)->detalleOrdenes->where('cerrado',false),
+		    'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+		    'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
+            'proveedores' => $proveedores,
+            'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
+		    'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
+		    'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
+		    'condiciones'=>Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1),
+			'estatus' => $estatus,
 			]];
 		return parent::show($company,$id,$attributes);
 	}
 
 	public function edit($company,$id,$attributes = [])
 	{
-	    $clientes = SociosNegocio::where('activo', 1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
+	    $clientes = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
 		$estatus = Ordenes::where('id_orden',$id)->pluck('fk_id_estatus_autorizacion','id_orden')->first();
 		if ($estatus == 1 || $estatus == 3) {
 			$estatus = 1;
@@ -205,15 +205,15 @@ class OrdenesController extends ControllerBase
 		}
 
 		$attributes = $attributes+['dataview'=>[
-				'detalles' => $this->entity->find($id)->detalleOrdenes->where('cerrado',false),
-                'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
-                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-                'clientes' => $clientes,
-                'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
-                'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
-                'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
-				'condiciones'=> Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1)->where('eliminar',0),
-				'estatus' => $estatus,
+			'detalles' => $this->entity->find($id)->detalleOrdenes->where('cerrado',false),
+		    'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+		    'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
+            'clientes' => $clientes,
+            'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
+		    'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
+		    'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
+		    'condiciones'=> Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1),
+			'estatus' => $estatus,
 			]];
 		return parent::edit($company, $id, $attributes);
 	}
@@ -423,7 +423,7 @@ class OrdenesController extends ControllerBase
 
     public function getProveedores($company){
 	    $id_empresa = \request()->fk_id_empresa > 0 ? \request()->fk_id_empresa : Empresas::where('conexion',$company)->first()->id_empresa;
-        $proveedores = SociosNegocio::where('activo', 1)->whereHas('empresas',function ($q) use ($id_empresa){
+	    $proveedores = SociosNegocio::where('activo',1)->whereHas('empresas',function ($q) use ($id_empresa){
             $q->where('id_empresa',$id_empresa);
         })->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
 	    return Response::json($proveedores);

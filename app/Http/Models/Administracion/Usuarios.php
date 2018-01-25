@@ -71,15 +71,6 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         $this->notify(new MyResetPassword($token));
     }
 
-    /**
-     * Obtenemos usuarios activos
-     * @return Collection
-     */
-    public static function active()
-    {
-        return self::where('activo','=','1');
-    }
-
     public function mails(){
         return $this->hasMany('app\Http\Models\Correos');
     }
@@ -170,7 +161,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         $empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
         $id_empresa = isset($empresa->id_empresa) ? $empresa->id_empresa : 0;
 
-        $modulos = Modulos::where('eliminar','=',0)->where('activo','=',1)->where('accion_menu','=',1)
+        $modulos = Modulos::where('activo',1)->where('accion_menu','=',1)
         ->wherein('id_modulo',$this->getpermisos()->pluck('id_permiso'))
         ->leftJoin('ges_det_modulos','fk_id_modulo','id_modulo')
         ->where('fk_id_empresa', '=', $id_empresa)

@@ -12,7 +12,7 @@ class ModelCompany extends ModelBase
      */
     function __construct(array $attributes = [])
     {
-        parent::__construct($attributes);
         $this->setConnection( request()->company );
+        parent::__construct($attributes);
     }
 }

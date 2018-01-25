@@ -116,7 +116,7 @@ class ControllerBase extends Controller
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
-        DB::beginTransaction();
+        #DB::beginTransaction();
         $entity = $this->entity->create($request->all());
         if ($entity) {
 
@@ -135,7 +135,7 @@ class ControllerBase extends Controller
                 }
             }
 
-            DB::commit();
+            #DB::commit();
 
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
@@ -145,7 +145,7 @@ class ControllerBase extends Controller
             
             $redirect = $this->redirect('store');
         } else {
-            DB::rollBack();
+            #DB::rollBack();
             # Log
             event(new LogModulos($this->entity, $company, 'crear' , 'Error al crear el registro'));
             $redirect = $this->redirect('error_store');
@@ -371,9 +371,6 @@ class ControllerBase extends Controller
         else {
             $query = $this->entity->with($this->entity->getEagerLoaders())->orderby($this->entity->getKeyName(),'DESC');
         }
-
-        if(in_array('eliminar',$colums))
-            $query->where('eliminar',0);
 
         # Log
         event(new LogModulos($this->entity, $company, 'exportar' , 'Exportacion de registros a: '.$type));

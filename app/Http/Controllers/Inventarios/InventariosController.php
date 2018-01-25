@@ -49,8 +49,8 @@ class InventariosController extends ControllerBase
 		}
 
 		return [
-			'tipos' => TipoInventario::select(['tipo','id_tipo'])->where('activo', 1)->pluck('tipo','id_tipo'),
-			'sucursales' => Sucursales::select(['sucursal','id_sucursal'])->where('activo', 1)->pluck('sucursal','id_sucursal'),
+		    'tipos' => TipoInventario::select(['tipo','id_tipo'])->where('activo',1)->pluck('tipo','id_tipo'),
+		    'sucursales' => Sucursales::select(['sucursal','id_sucursal'])->where('activo',1)->pluck('sucursal','id_sucursal'),
 			'almacenes' => $almacenes,
 			'upcs' => $entity ? $entity->detalle()->with('upc:nombre_comercial,descripcion,upc')->orderby('id_detalle', 'DESC')->get() : [],
 			'vue_almacenes' => $vue_almacenes,

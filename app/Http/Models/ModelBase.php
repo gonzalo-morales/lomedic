@@ -11,14 +11,15 @@ use App\Notifications\Notificaciones;
 class ModelBase extends Model
 {
     use Notifiable;
+    
+    protected $fillable = [];
+        
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array
 	 */
-	protected $fields = null;
+	protected $fields = [];
 	
-	public $tipo_documento = 0;
-
 	/**
 	 * Atributos de carga optimizada
 	 * @var array
@@ -34,24 +35,7 @@ class ModelBase extends Model
 
 	public function __construct($attributes = []) {
 		$this->eagerLoaders = $this->getAutoEager();
-		
-		if(in_array('eliminar',$this->getlistColumns())) {
-		    $this->where('eliminar',0);
-		}
-
-		/*
-		if($this->getTable() == 'fac_det_facturas_clientes') {
-		    $this->setConnection(request()->company);
-		    dd(request()->company,$this->getConnectionName());
-		}*/
-		
-		//$defaults = $this->getColumnsDefaultsValues();
-		
-		
-		//$this->tipo_documento = isset($defaults['fk_id_tipo_documento']) ? $defaults['fk_id_tipo_documento'] : $this->getTable();
-		
-		#$this->rules = array_merge_recursive_simple($this->rules,$this->getRulesDefaults());
-		return parent::__construct($attributes);		
+		return parent::__construct($attributes);
 	}
 
 	/**
@@ -105,7 +89,14 @@ class ModelBase extends Model
         });
         */
 	}
-
+	
+	public function newQuery() {
+	    if(in_array('eliminar',$this->getlistColumns())) {
+	       return parent::newQuery()->whereEliminar(0);
+	    }
+	    return parent::newQuery();
+	}
+	
 	/**
 	 * Obtenemos atributos a incluir en append/appends()
 	 * @return array
@@ -266,7 +257,7 @@ class ModelBase extends Model
         }
         return $rules;
 	}
-	
+	/*
 	public function documento_destino($tipo = '0')
 	{
 	    
@@ -294,5 +285,5 @@ class ModelBase extends Model
 	            return null;
 	            break;
 	    }
-	}
+	}*/
 }

@@ -14,7 +14,7 @@ class Share
         $menuempresas = Empresas::where('activo',1)->get();
         View::share('menuempresa', $menuempresas->where('conexion', '=', request()->company)->first());
         View::share('menuempresas', $menuempresas->where('conexion','!=', null)->where('conexion', '!=', request()->company));
-
+        
         # Compartimos modulos de usuario para generar menu
         View::share('menu', Auth::user()->modulos_anidados($menuempresas->where('conexion', '=', request()->company)->first()));
         

@@ -22,8 +22,8 @@ class CorreosController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 		return [
-			'companies' => Empresas::active()->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
-			'users' => Usuarios::active()->select(['nombre_corto','id_usuario'])->pluck('nombre_corto','id_usuario')
+		    'companies' => Empresas::where('activo',1)->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
+		    'users' => Usuarios::where('activo',1)->select(['nombre_corto','id_usuario'])->pluck('nombre_corto','id_usuario')
 		];
 	}
 }

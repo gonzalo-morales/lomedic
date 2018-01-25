@@ -35,8 +35,8 @@ class NotasCreditoProveedorController extends ControllerBase
             $facturas = FacturasProveedores::select('id_factura_proveedor as id',db::raw("concat(serie_factura,folio_factura) as text"))->where('version_sat','3.2')->where('fk_id_socio_negocio',$entity->fk_id_socio_negocio)->pluck('text','id')->prepend('...',0);
         }
         return [
-            'proveedores' => SociosNegocio::where('activo','t')->where('fk_id_tipo_socio_compra',3)->pluck('nombre_comercial','id_socio_negocio'),
-            'sucursales' => Sucursales::where('activo','t')->pluck('sucursal','id_sucursal'),
+            'proveedores' => SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->pluck('nombre_comercial','id_socio_negocio'),
+            'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
             'relaciones' => TiposRelacionesCfdi::select(db::raw("concat('(',tipo_relacion,') ',descripcion) as text"),'id_sat_tipo_relacion')->where('activo',1)->where('nota_credito',1)->pluck('text','id_sat_tipo_relacion')->prepend('...',0),
             'js_facturas' => Crypt::encryptString('"select":["id_factura_proveedor","serie_factura","folio_factura"], "conditions":[{"where":["version_sat","3.2"]},{"where":["fk_id_socio_negocio",$fk_id_socio_negocio]}]'),
             'facturas' => $facturas,
