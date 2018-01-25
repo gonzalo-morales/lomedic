@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
@@ -9,7 +8,6 @@ class Programas extends ModelBase
 {
     /**
      * The table associated with the model.
-     *
      * @var string
      */
     protected $table = 'gen_cat_programa';
@@ -22,24 +20,21 @@ class Programas extends ModelBase
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['nombre_programa','activo'];
 
     /**
      * The validation rules
      * @var array
      */
-    public $rules = [
-    ];
+    public $rules = [];
 
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
-    protected $fields = [
-    ];
+    protected $fields = ['nombre_programa'=> 'Nombre Programa', 'activo_span' => 'Estatus'];
 
     public function recetas()
     {

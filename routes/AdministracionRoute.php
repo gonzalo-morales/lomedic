@@ -20,6 +20,7 @@ Route::prefix('{company}')->group(function () {
         
 		Route::resource('aplicacionesmedicamentos', 'Administracion\AplicacionesMedicamentosController');
 		Route::resource('areas', 'Administracion\AreasController');
+		Route::resource('areasconsulta', 'Administracion\AreasConsultasController');
 		Route::resource('bancos', 'Administracion\BancosController');
 		Route::resource('cadenaspagos', 'Administracion\CadenasPagosController');
         Route::resource('caractereventos','Administracion\CaracterEventosController');
@@ -47,6 +48,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('jurisdicciones', 'Administracion\JurisdiccionesController');
 		Route::resource('laboratorios', 'Administracion\LaboratoriosController');
 		Route::resource('localidades', 'Administracion\LocalidadesController');
+		Route::resource('medicos', 'Administracion\MedicosController');
 		Route::resource('metodospago', 'Administracion\MetodosPagoController');
 		Route::resource('metodosvaloracion', 'Administracion\MetodosValoracionController');
         Route::resource('modalidadesentrega','Administracion\ModalidadesEntregaController');
@@ -64,6 +66,7 @@ Route::prefix('{company}')->group(function () {
 		Route::resource('perfiles', 'Administracion\PerfilesController');
 		Route::resource('periodos', 'Administracion\PeriodosController');
 		Route::resource('presentacionventa', 'Administracion\PresentacionVentaController');
+		Route::resource('programas', 'Administracion\ProgramasController');
 		Route::resource('regimenesfiscales', 'Administracion\RegimenesFiscalesController');
 		Route::resource('satmunicipios', 'Administracion\SatMunicipiosController');
 		Route::resource('seriesdocumentos', 'Administracion\SeriesDocumentosController');
