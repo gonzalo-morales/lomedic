@@ -19,6 +19,8 @@ class PedidosDetalle extends ModelCompany
      * @var string
      */
     protected $table = 'ven_det_pedidos';
+    
+    protected $morphClass = 'PedidoCliente';
 
     /**
      * The primary key of the table
@@ -43,9 +45,7 @@ class PedidosDetalle extends ModelCompany
      * Los atributos que seran visibles en index-datable
      * @var array
      */
-    protected $fields = [
-        
-    ];
+    protected $fields = [];
 
     /**
      * The validation rules

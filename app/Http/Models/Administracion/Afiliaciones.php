@@ -18,14 +18,26 @@ class Afiliaciones extends ModelBase
      * The primary key of the table
      * @var string
      */
-//    protected $primaryKey = 'id_afiliacion';
+    protected $primaryKey = 'id_afiliacion';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['id_afiliacion','id_dependiente', 'paterno','materno','nombre','sexo','edad','genero','edad_tiempo'];
+    protected $fillable = [
+        'id_afiliacion',
+        'id_dependiente',
+        'paterno',
+        'materno',
+        'nombre',
+        'sexo',
+        'edad',
+        'genero',
+        'edad_tiempo',
+        'fecha_nacimiento',
+        'fk_id_parentesco',
+    ];
 
     /**
      * The validation rules
@@ -38,7 +50,10 @@ class Afiliaciones extends ModelBase
      * @var array
      */
     protected $fields = [
-        'nombre' => 'Nombre'
+        'id_afiliacion' => 'Numero de paciente',
+        'FullName' => 'Nombre',
+        'genero'=> 'Genero',
+        'parentesco.nombre' => 'Parentesco'
     ];
 
     public function getFullNameAttribute()
@@ -50,4 +65,9 @@ class Afiliaciones extends ModelBase
     {
         return $this->hasMany(Recetas::class,'fk_id_afiliacion','id_afiliacion');
     }
+    public function parentesco()
+    {
+        return $this->hasOne(Parentescos::class,'id_parentesco','fk_id_parentesco');
+    }
+
 }

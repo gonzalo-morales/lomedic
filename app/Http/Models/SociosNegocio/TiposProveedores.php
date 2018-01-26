@@ -29,6 +29,11 @@ class TiposProveedores extends ModelBase
      * @var bool
      */
     public $timestamps = false;
+    
+    protected $fields = [
+        'tipo_proveedor' => 'Tipo Proveedor',
+        'activo_text' => 'Estatus'
+    ];
 
     /**
      * The validation rules

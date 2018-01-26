@@ -12,8 +12,6 @@
         var serie_js      = '{{ $js_serie ?? '' }}';
         var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
-    	var productos_facturas_js  = '{{ $js_productos_facturas ?? '' }}';
-        var productos_notascargo_js  = '{{ $js_productos_notascargo ?? '' }}';
     	var impuestos_js  = '{{ $js_impuestos ?? '' }}';
     </script>
 	{{ HTML::script(asset('js/ventas/notascreditoclientes.js')) }}
@@ -129,16 +127,16 @@
 			<div class="card-header row">
 				<h5 class="col-md-12 text-center">CFDI Relacionados</h5>
     			<div class="form-group col-md-12">
-        			{{Form::cSelect('* Tipo Relacion','fk_id_tipo_relacion', $tiposrelacion ?? [])}}
+        			{{Form::cSelect('* Tipo Relacion','fk_id_tipo_relacion', $tiposrelacion ?? [],['data-url'=>companyAction('Ventas\NotasCreditoClientesController@getProductosRelacionados')])}}
         		</div>
         		<div class="form-group col-md-5">
-        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.facturasclientes')])}}
+        			{!!Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2'])!!}
         		</div>
 				<div class="form-group col-md-2 d-flex align-items-center justify-content-center">
 					<span>O</span>
 				</div>
 				<div class="form-group col-md-5">
-					{{Form::cSelect('* Nota Cargo','fk_id_nota_cargo_relacion', $notascargorelacionadas ?? [],['class'=>'select2','data-url'=>ApiAction('ventas.notascargoclientes')])}}
+					{{Form::cSelect('* Nota Cargo','fk_id_nota_cargo_relacion', $notascargorelacionadas ?? [],['class'=>'select2'])}}
 				</div>
         		@if(!Route::currentRouteNamed(currentRouteName('view')))
         		<div class="form-group col-md-12 my-2">
@@ -238,7 +236,7 @@
     				@foreach($data->detalle->where('eliminar',0) as $key=>$detalle)
     				<tr>
     					<td>
-    						{!! Form::hidden('contactos['.$key.'][id_factura_detalle]',$detalle->id_factura_detalle,['class'=>'id_factura_detalle']) !!}
+    						{!! Form::hidden('contactos['.$key.'][id_documento_detalle]',$detalle->id_documento_detalle,['class'=>'id_documento_detalle']) !!}
     						{{$detalle->claveproducto->clave_producto_servicio}}
     						{!! Form::hidden('contactos['.$key.'][fk_id_clave_producto_servicio]',$detalle->fk_id_clave_producto_servicio,['class'=>'fk_id_clave_producto_servicio']) !!}
     					</td>

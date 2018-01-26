@@ -97,7 +97,7 @@ class UsuariosController extends ControllerBase
 
             return $this->redirect('store');
         } else {
-            $this->log('error_store');
+            #$this->log('error_store');
             return $this->redirect('error_store');
         }
     }
@@ -132,7 +132,7 @@ class UsuariosController extends ControllerBase
             ->where('fk_id_usuario','=',$id)
             ->get();
         # Log
-        $this->log('show', $id);
+        #$this->log('show', $id);
         $data = $this->entity->findOrFail($id);
         $attributes['dataview'] =['companies'=>$companies];
         $dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
@@ -176,7 +176,7 @@ class UsuariosController extends ControllerBase
             ->get();
 
         # Log
-        $this->log('show', $id);
+        #$this->log('show', $id);
 
         # ¿Usuario tiene permiso para actualizar?
         #$this->authorize('update', $this->entity);
@@ -320,10 +320,10 @@ class UsuariosController extends ControllerBase
             # Eliminamos cache
 //            Cache::tags(getCacheTag('index'))->flush();
 
-            $this->log('update', $id);
+            #$this->log('update', $id);
             return $this->redirect('update');
         } else {
-            $this->log('error_update', $id);
+            #$this->log('error_update', $id);
             return $this->redirect('error_update');
         }
     }

@@ -6,14 +6,10 @@ use App\Http\Models\Proyectos\ClasificacionesProyectos;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
-use App\Http\Models\Proyectos\AnexosProyectos;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Localidades;
 use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Proyectos\ContratosProyectos;
-use App\Http\Models\Proyectos\TiposEventos;
-use App\Http\Models\Proyectos\Dependencias;
-use App\Http\Models\Proyectos\Subdependencias;
 use App\Http\Models\Logs;
 use App;
 use DB;
@@ -28,10 +24,12 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Models\Ventas\Pedidos;
 use App\Http\Models\Administracion\Sucursales;
-use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\Ventas\PedidosAnexos;
+use App\Http\Models\Administracion\TiposEventos;
+use App\Http\Models\Administracion\Dependencias;
+use App\Http\Models\Administracion\Subdependencias;
 
 class PedidosController extends ControllerBase
 {
@@ -42,28 +40,28 @@ class PedidosController extends ControllerBase
     
     public function getDataView($entity = null)
     {
-        $empresa_actual = Empresas::where('activo',1)->where('eliminar',0)->where('conexion',request()->company)->first();
+        $empresa_actual = Empresas::where('activo',1)->where('conexion',request()->company)->first();
         return [
-            'localidades' => Localidades::where('activo',1)->where('eliminar',0)->pluck('localidad','id_localidad'),
-            'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('eliminar',0)->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')
+            'localidades' => Localidades::where('activo',1)->pluck('localidad','id_localidad'),
+            'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->activo()->whereNotNull('fk_id_tipo_socio_venta')
                 ->whereHas('empresas', function($q) use($empresa_actual) {
                     $q->where('id_empresa','=',$empresa_actual->id_empresa);
                 })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
-            'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto','id_proyecto')->where('eliminar',0)->where('fk_id_estatus',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('proyecto','id_proyecto'),
-            'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "sortBy":["proyecto"]'),
-            'sucursales' => empty($entity) ? [] : Sucursales::select('sucursal','id_sucursal')->where('eliminar',0)->where('activo',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('sucursal','id_sucursal'),
-            'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["eliminar",0]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}, {"where": ["fk_id_localidad","$fk_id_localidad"]}], "orderBy": [["sucursal", "ASC"]]'),
-            'contratos' => empty($entity) ? [] : ContratosProyectos::select('num_contrato','id_contrato')->where('eliminar',0)->where('fk_id_proyecto', $entity->fk_id_proyecto)->pluck('num_contrato','id_contrato'),
+            'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto','id_proyecto')->where('fk_id_estatus',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('proyecto','id_proyecto'),
+            'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "sortBy":["proyecto"]'),
+            'sucursales' => empty($entity) ? [] : Sucursales::select('sucursal','id_sucursal')->where('activo',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('sucursal','id_sucursal'),
+            'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}, {"where": ["fk_id_localidad","$fk_id_localidad"]}], "orderBy": [["sucursal", "ASC"]]'),
+            'contratos' => empty($entity) ? [] : ContratosProyectos::select('num_contrato','id_contrato')->where('fk_id_proyecto', $entity->fk_id_proyecto)->pluck('num_contrato','id_contrato'),
             'js_contratos' => Crypt::encryptString('"select":["id_proyecto"], "conditions":[{"where":["id_proyecto","$id_proyecto"]}], "with":["contratos:id_contrato,num_contrato,fk_id_proyecto"]'),
-            'ejecutivos' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno)nombre_empleado, id_empleado")->where('activo',1)->where('eliminar',0)->where('fk_id_departamento',19)->orderBy('nombre_empleado')->pluck('nombre_empleado','id_empleado'),
+            'ejecutivos' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno)nombre_empleado, id_empleado")->where('activo',1)->where('fk_id_departamento',19)->orderBy('nombre_empleado')->pluck('nombre_empleado','id_empleado'),
             'estatus' => empty($entity) ? EstatusDocumentos::select('estatus','id_estatus')->where('id_estatus',1)->pluck('estatus','id_estatus') : EstatusDocumentos::select('estatus','id_estatus')->where('id_estatus',$entity->fk_id_estatus)->pluck('estatus','id_estatus'),
             'productos' => empty($entity) ? [] : ClaveClienteProductos::select('id_clave_cliente_producto as id','clave_producto_cliente as text','descripcion as descripcionClave','fk_id_sku')->where('fk_id_cliente',$entity->fk_id_socio_negocio)->pluck('descripcion','id_clave_cliente_producto'),
-            'monedas' => Monedas::where('activo',1)->where('eliminar',0)->pluck('descripcion','id_moneda'),
+            'monedas' => Monedas::where('activo',1)->pluck('descripcion','id_moneda'),
             'clasificaciones' => ClasificacionesProyectos::where('activo',1)->pluck('clasificacion','id_clasificacion_proyecto'),
-            'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo','1')->where('eliminar','0')->orderBy('moneda')->pluck('moneda','id_moneda'),
-            'tiposeventos' => TiposEventos::where('activo', 1)->where('eliminar', 0)->orderBy('tipo_evento')->pluck('tipo_evento','id_tipo_evento'),
-            'dependencias' => Dependencias::where('activo', 1)->where('eliminar', 0)->orderBy('dependencia')->pluck('dependencia','id_dependencia'),
-            'subdependencias' => Subdependencias::where('activo', 1)->where('eliminar', 0)->orderBy('subdependencia')->pluck('subdependencia','id_subdependencia'),
+            'monedas' => Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->where('activo',1)->orderBy('moneda')->pluck('moneda','id_moneda'),
+            'tiposeventos' => TiposEventos::where('activo',1)->orderBy('tipo_evento')->pluck('tipo_evento','id_tipo_evento'),
+            'dependencias' => Dependencias::where('activo',1)->orderBy('dependencia')->pluck('dependencia','id_dependencia'),
+            'subdependencias' => Subdependencias::where('activo',1)->orderBy('subdependencia')->pluck('subdependencia','id_subdependencia'),
         ];
     }
     

@@ -20,9 +20,9 @@ class EstatusDocumentos extends ModelBase
      */
     protected $primaryKey = 'id_estatus';
     
-    protected $fillable = ['estatus'];
+    protected $fillable = ['estatus','activo'];
     
-    protected $fields = ['estatus'];
+    protected $fields = ['id_estatus'=>'#','estatus'=>'Nombre de Estatus','activo_span' => 'Estatus'];
     
-    public $rules = [];
+    public $rules = ['estatus'=>'required'];
 }

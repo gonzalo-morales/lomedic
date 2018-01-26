@@ -51,10 +51,6 @@ class Empresas extends ModelBase
 	 * Obtenemos empresas activas
 	 * @return Collection
 	 */
-	public static function active()
-	{
-		return self::where('activo','=','1');
-	}
 	
 	public function regimenfiscal()
 	{

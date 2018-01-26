@@ -66,7 +66,7 @@ class EntradasController extends ControllerBase
         else
         {
             $data = [
-                'sucursales' => Sucursales::where('activo',true)->where('eliminar',false)->pluck('sucursal','id_sucursal'),
+                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
                 'tipo_documento' => DB::table('gen_cat_tipo_documento')->pluck('nombre_documento','id_tipo_documento'),
             ];
         }

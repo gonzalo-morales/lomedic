@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Models\Proyectos;
+namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 
@@ -48,5 +48,10 @@ class Dependencias extends ModelBase
 	function proyecto()
     {
         return $this->belongsTo(Proyectos::class,'fk_id_dependencia');
+    }
+
+    function subdependencias()
+    {
+        return $this->hasMany(Subdependencias::class,'fk_id_dependencia','id_dependencia');
     }
 }

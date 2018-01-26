@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Models\Proyectos;
+namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 
@@ -18,11 +18,15 @@ class CaracterEventos extends ModelBase
 	 */
 	protected $primaryKey = 'id_caracter_evento';
 
+	protected $fields = ['id_caracter_evento'=>'#','caracter_evento'=>'Caracter Evento','activo_span'=>'Estatus'];
+
 	/**
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
 	protected $fillable = ['caracter_evento','activo'];
+
+	public $rules = ['caracter_evento'=>'required'];
 
 	public $niceNames = [
 	    'caracter_evento' => 'caracter evento'

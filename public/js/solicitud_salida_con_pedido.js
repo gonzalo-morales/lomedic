@@ -96,7 +96,6 @@ $(document).ready(function () {
                             '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
                         );
                     };
-                    
                 },
                 error: function(){
                     $('#fk_id_pedido').val('');
@@ -169,6 +168,24 @@ function validateCantidadTotal(el){
         $(el).removeClass('border-success').addClass('border-danger');
     } else{
         $(el).removeClass('border-danger').addClass('border-success');
+    }
+}
+
+//FUNCIÓN PARA VALIDAR ON SUBMIT LA CANTIDAD
+function validateCantidad(){
+    var verificar = false;
+    $('#tableSolicitudes').each(function (index, row) {
+        var newCantidad =  +$(row).find('.cantidad_solicitada').val();
+        var totalCantidad =  +$(row).find('.cantidad_total').val();
+         if(newCantidad > totalCantidad){
+            verificar = true;
+            return false;
+        }
+    });
+    if(verificar == true){
+        return false;
+    } else {
+        return true;
     }
 }
 

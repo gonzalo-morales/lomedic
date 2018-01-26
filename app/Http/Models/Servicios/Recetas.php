@@ -32,7 +32,7 @@ class Recetas extends ModelCompany
      */
     protected $fillable = ['folio','fk_id_sucursal', 'fecha','fk_id_afiliacion','fk_id_dependiente','fk_id_medico','fk_id_diagnostico',
         'fk_id_programa','fk_id_estatus_receta','fk_id_area','nombre_paciente_no_afiliado','observaciones',
-        'fecha_modificacion','peso','altura','presion_sistolica','presion_diastolica','fk_id_proyecto','eliminar'];
+        'fecha_modificacion','peso','altura','presion_sistolica','presion_diastolica','fk_id_proyecto'];
 
     /**
      * The validation rules

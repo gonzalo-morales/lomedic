@@ -11,11 +11,14 @@ use App\Notifications\Notificaciones;
 class ModelBase extends Model
 {
     use Notifiable;
+
+    protected $fillable = [];
+
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array
 	 */
-	protected $fields = null;
+	protected $fields = [];
 
 	/**
 	 * Atributos de carga optimizada
@@ -33,7 +36,6 @@ class ModelBase extends Model
 	public function __construct($attributes = []) {
 		$this->eagerLoaders = $this->getAutoEager();
 		return parent::__construct($attributes);
-		#$this->rules = array_merge_recursive_simple($this->rules,$this->getRulesDefaults());
 	}
 
 	/**
@@ -86,6 +88,13 @@ class ModelBase extends Model
         self::restored(function($table){
         });
         */
+	}
+
+	public function newQuery() {
+	    if(in_array('eliminar',$this->getlistColumns())) {
+	       return parent::newQuery()->whereEliminar(0);
+	    }
+	    return parent::newQuery();
 	}
 
 	/**
@@ -184,6 +193,7 @@ class ModelBase extends Model
 	public function getColumnsDefaultsValues()
 	{
 		$columns = $this->getConnection()->getDoctrineSchemaManager()->listTableDetails($this->getTable())->getColumns();
+
 		return array_map(function($column) {
 			return $column->getDefault() == 'now()' ? date("Y-m-d H:i:s") : $column->getDefault();
 		}, $columns );
@@ -247,4 +257,37 @@ class ModelBase extends Model
         }
         return $rules;
 	}
+<<<<<<< HEAD
 }
+=======
+	/*
+	public function documento_destino($tipo = '0')
+	{
+
+	    if($tipo !== '0')
+	        return $this->morphMany('PedidosDetalle',null,'fk_id_tipo_documento_base','fk_id_linea');
+	    else
+	        return null;
+	}
+
+	public function documento_base()
+	{
+	    $tipo_documento = isset($this->fk_id_tipo_documento_base) ? $this->fk_id_tipo_documento_base : 0;
+	    switch($tipo_documento)
+	    {
+	        case 4://Factura
+	            return $this->belongsTo(FacturasClientesDetalle::class,'id_documento_detalle','fk_id_linea')->where('fk_id_tipo_documento',$tipo_documento);
+	            break;
+	        case 5://Crédito
+	            return $this->belongsTo(NotasCreditoClientesDetalle::class,'id_documento_detalle','fk_id_linea')->where('fk_id_tipo_documento',$tipo_documento);
+	            break;
+	        case 6://Cargo
+	            return $this->belongsTo(NotasCargoClientesDetalle::class,'id_documento_detalle','fk_id_linea')->where('fk_id_tipo_documento',$tipo_documento);
+	            break;
+	        default:
+	            return null;
+	            break;
+	    }
+	}*/
+}
+>>>>>>> 3694004fb412a884f86c05cd59c538dd7ad01db7

@@ -41,23 +41,23 @@ class SociosNegocioController extends ControllerBase
 
 	public function getDataView($entity = null)
 	{
-	    $tipo = TiposSocios::where('activo','1')->where('eliminar','0')->select('para_venta','tipo_socio','id_tipo_socio')->get();
+	    $tipo = TiposSocios::where('activo',1)->select('para_venta','tipo_socio','id_tipo_socio')->get();
 	    return [
-	        'ramos'                => Ramos::where('activo','1')->where('eliminar','0')->pluck('ramo','id_ramo')->sortBy('ramo')->prepend('Selecciona una opcion...',''),
-	        'ejecutivos'           => Usuarios::where('activo','1')->where('eliminar','0')->pluck('nombre_corto','id_usuario')->sortBy('nombre_corto')->prepend('Selecciona una opcion...',''),
-	        'paises'               => Paises::where('activo','1')->where('eliminar','0')->pluck('pais','id_pais')->sortBy('pais')->prepend('Selecciona una opcion...',''),
-	        'tiposproveedores'     => TiposProveedores::where('activo','1')->where('eliminar','0')->pluck('tipo_proveedor','id_tipo_proveedor')->sortBy('tipo_proveedor')->prepend('Selecciona una opcion...',''),
-	        'tipossociosventa'     => $tipo->where('para_venta','1')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',''),
-	        'tipossocioscompra'    => $tipo->where('para_venta','0')->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Proveedor',''),
-	        'tiposanexos'          => TiposAnexos::where('activo','1')->where('eliminar','0')->pluck('tipo_anexo','id_tipo_anexo')->sortBy('tipo_anexo')->prepend('Selecciona una opcion...',''),
+	        'ramos'                => Ramos::where('activo',1)->pluck('ramo','id_ramo')->sortBy('ramo')->prepend('...',''),
+	        'ejecutivos'           => Usuarios::where('activo',1)->pluck('nombre_corto','id_usuario')->sortBy('nombre_corto')->prepend('...',''),
+	        'paises'               => Paises::where('activo',1)->pluck('pais','id_pais')->sortBy('pais')->prepend('...',''),
+	        'tiposproveedores'     => TiposProveedores::where('activo',1)->pluck('tipo_proveedor','id_tipo_proveedor')->sortBy('tipo_proveedor')->prepend('...',''),
+	        'tipossociosventa'     => $tipo->where('para_venta','1')->where('activo',1)->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',''),
+	        'tipossocioscompra'    => $tipo->where('para_venta','0')->where('activo',1)->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Proveedor',''),
+	        'tiposanexos'          => TiposAnexos::where('activo',1)->pluck('tipo_anexo','id_tipo_anexo')->sortBy('tipo_anexo')->prepend('...',''),
 	        'empresas'		       => Empresas::select('id_empresa','nombre_comercial')->where('activo',1)->where('empresa',1)->get()->sortBy('nombre_comercial'),
-	        'condicionpago'        => CondicionesPago::where('activo','1')->where('eliminar','0')->pluck('condicion_pago','id_condicion_pago')->sortBy('condicion_pago')->prepend('Selecciona una opcion...',''),
-	        'formaspago'           => FormasPago::where('activo','1')->where('eliminar','0')->selectRaw("concat(forma_pago,' - ',descripcion) as forma_pago, id_forma_pago")->pluck('forma_pago','id_forma_pago')->sortBy('forma_pago'),
-	        'bancos'               => Bancos::where('eliminar','0')->pluck('banco','id_banco')->sortBy('banco')->prepend('Selecciona una opcion...',''),
-	        'sucursales' 	       => Sucursales::where('activo','1')->where('eliminar','0')->pluck('sucursal','id_sucursal')->sortBy('sucursal')->prepend('Selecciona una opcion...',''),
-	        'tiposcontactos'       => TiposContacto::where('activo','1')->where('eliminar','0')->pluck('tipo_contacto','id_tipo_contacto')->sortBy('tipo_contacto')->prepend('Selecciona una opcion...',''),
-	        'tiposdireccion'       => TiposDireccion::where('activo','1')->where('eliminar','0')->pluck('tipo_direccion','id_tipo_direccion')->sortBy('tipo_direccion'),
-	        'skus'                 => Productos::where('activo','1')->where('eliminar','0')->pluck('sku','id_sku')->sortBy('sku')->prepend('Selecciona una opcion...',''),
+	        'condicionpago'        => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago')->sortBy('condicion_pago')->prepend('...',''),
+	        'formaspago'           => FormasPago::where('activo',1)->selectRaw("concat(forma_pago,' - ',descripcion) as forma_pago, id_forma_pago")->pluck('forma_pago','id_forma_pago')->sortBy('forma_pago'),
+	        'bancos'               => Bancos::where('activo',1)->pluck('banco','id_banco')->sortBy('banco')->prepend('...',''),
+	        'sucursales' 	       => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal')->sortBy('sucursal')->prepend('...',''),
+	        'tiposcontactos'       => TiposContacto::where('activo',1)->pluck('tipo_contacto','id_tipo_contacto')->sortBy('tipo_contacto')->prepend('...',''),
+	        'tiposdireccion'       => TiposDireccion::where('activo',1)->pluck('tipo_direccion','id_tipo_direccion')->sortBy('tipo_direccion'),
+	        'skus'                 => Productos::where('activo',1)->pluck('sku','id_sku')->sortBy('sku')->prepend('...',''),
 	        'js_estados'           => Crypt::encryptString('"select": ["estado", "id_estado"], "conditions": [{"where": ["fk_id_pais","$fk_id_pais"]}], "orderBy": [["estado", "ASC"]]'),
 	        'js_municipios'        => Crypt::encryptString('"select": ["municipio", "id_municipio"], "conditions": [{"where": ["fk_id_estado","$fk_id_estado"]}], "orderBy": [["municipio", "ASC"]]'),
 	        'js_upcs'              => Crypt::encryptString('"select": ["upc", "id_upc"], "conditions": [{"where": ["activo","1"]}], "whereHas": [{"skus":{"where":["fk_id_sku", "$fk_id_sku"]}}], "orderBy": [["upc", "ASC"]]'),
@@ -176,13 +176,11 @@ class SociosNegocioController extends ControllerBase
 
 	        # Eliminamos cache
 	        Cache::tags(getCacheTag('index'))->flush();
-
-
-	        $this->log('store', $id);
+	        #$this->log('store', $id);
 	        return $this->redirect('store');
 	    } else {
 	        DB::rollBack();
-	        $this->log('error_store');
+	        #$this->log('error_store');
 	        return $this->redirect('error_store');
 	    }
 	}
@@ -330,12 +328,11 @@ class SociosNegocioController extends ControllerBase
 
 	        # Eliminamos cache
 	        Cache::tags(getCacheTag('index'))->flush();
-
-	        // $this->log('update', $id);
+	        #$this->log('update', $id);
 	        return $this->redirect('update');
 	    } else {
 	        #DB::rollBack();
-	        $this->log('error_update', $id);
+	        #$this->log('error_update', $id);
 	        return $this->redirect('error_update');
 	    }
 	}

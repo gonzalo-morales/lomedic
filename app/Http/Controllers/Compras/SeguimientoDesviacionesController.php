@@ -32,10 +32,9 @@ class SeguimientoDesviacionesController extends ControllerBase
             'proveedores'       => SociosNegocio::where('activo',1)->where('eliminar',0)->pluck('nombre_comercial','id_socio_negocio')->prepend('Selecciona una opcion...', ''),
             'detalleDesviacion' => DetalleSeguimientoDesviacion::all(),
             // 'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo', 1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
-            // 'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
-            // 'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
-            // 'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo', '1')->pluck('diagnostico', 'id_diagnostico'),
-            // 'proyectos' => empty($entity) ? [] : Proyectos::where('id_proyecto', $entity->fk_id_proyecto)->where('eliminar', 'false')->pluck('proyecto', 'id_proyecto'),
+
+            // 'proveedores'       => SociosNegocio::where('activo',1)->pluck('nombre_comercial','id_socio_negocio')->prepend('...', '')
+            // 'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
         ];
 
 

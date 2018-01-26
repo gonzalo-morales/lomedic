@@ -107,6 +107,7 @@
               <div style="display:none;" id="campo_ubicacion">
                 {{ Form::cSelectWithDisabled(null,'relations[has][detalle][$row_id][fk_id_ubicacion]', $ubicaciones ?? [],[
                   'class'=>'fk_id_ubicacion',
+                  'onchange' => 'validateUbicacion(this)',
                 ]) }}
               </div>
                 {{ Form::hidden('fecha_operacion',$fechaActual ?? '') }}

@@ -4,7 +4,7 @@ namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
 
-class Stock extends ModelCompany
+class SurtidoPedidos extends ModelCompany
 {
     /**
      * The table associated with the model.

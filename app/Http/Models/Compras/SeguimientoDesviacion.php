@@ -56,10 +56,6 @@ class SeguimientoDesviacion extends ModelCompany
     {
         return $this->hasMany('App\Http\Models\Compras\DetalleSeguimientoDesviacion','fk_id_seguimiento_desviacion','id_seguimiento_desviacion');
     }
-    // public function estatus()
-    // {
-    //     return $this->belongsTo(EstatusAutorizaciones::class,'estatus','id_estatus');
-    // }
     // public function tipoDocumento()
     // {
     //     return $this->belongsTo('App\Http\Models\Administracion\TiposDocumentos','fk_id_tipo_documento','id_tipo_documento');

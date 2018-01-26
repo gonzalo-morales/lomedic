@@ -104,7 +104,7 @@ class HandheldController extends Controller
 		return view('handheld.almacenes', [
 			# almacenes con tipo de captura handheld
 			'sucursal' => $request,
-			'almacenes'  => Almacenes::where('fk_id_sucursal',$request->id)->where('activo',1)->where('eliminar',0)->get(),
+		    'almacenes'  => Almacenes::where('activo',1)->where('fk_id_sucursal',$request->id)->get(),
 		]);
 		// dd($almacenes);
 	}
@@ -115,7 +115,7 @@ class HandheldController extends Controller
 			#movimientos con tipo captura handheld
 			'sucursal' => $request->id_sucursal,
 			'almacen' => $request->id,
-			'stock'  => Stock::where('fk_id_almacen',$request->id)->where('activo',1)->where('eliminar',0)->with('upc:id_upc,upc,nombre_comercial,descripcion','almacen:id_almacen')->select('id_stock','fk_id_sku','fk_id_upc','lote','fecha_caducidad','stock','fk_id_ubicacion')->get(),
+		    'stock'  => Stock::where('activo',1)->where('fk_id_almacen',$request->id)->with('upc:id_upc,upc,nombre_comercial,descripcion','almacen:id_almacen')->select('id_stock','fk_id_sku','fk_id_upc','lote','fecha_caducidad','stock','fk_id_ubicacion')->get(),
 		]);
 	}
 

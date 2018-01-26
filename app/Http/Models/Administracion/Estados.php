@@ -46,15 +46,6 @@ class Estados extends ModelBase
 	];
 
 	/**
-	 * Obtenemos empresas activas
-	 * @return Collection
-	 */
-	public static function active()
-	{
-		return self::where('activo','=','1')->get();
-	}
-
-	/**
 	 * Obtenemos municipios relacionados
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany

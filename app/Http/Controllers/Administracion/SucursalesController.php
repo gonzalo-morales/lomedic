@@ -30,34 +30,35 @@ class SucursalesController extends ControllerBase
 	{
 		if ($entity) {
 			return [
-				'localidades' => Localidades::select(['localidad','id_localidad'])->where('activo', 1)->pluck('localidad','id_localidad'),
-				'zonas' => Zonas::select(['zona','id_zona'])->where('activo', 1)->pluck('zona','id_zona'),
-				'paises' => Paises::select(['pais','id_pais'])->where('activo', 1)->pluck('pais','id_pais'),
-				'estados' => Estados::select(['estado','id_estado'])->where('activo', 1)->where('fk_id_pais', $entity->fk_id_pais)->pluck('estado','id_estado'),
-				'municipios' => Municipios::select(['municipio','id_municipio'])->where('activo', 1)->whereHas('estado', function($q) use ($entity) {
-									$q->where('id_estado', $entity->fk_id_estado);
-									$q->whereHas('pais', function($q) use ($entity) {
-										$q->where('id_pais', $entity->fk_id_pais);
-									});
-								})->pluck('municipio','id_municipio'),
-				'sucursales' => $this->entity->select(['sucursal','id_sucursal'])->where('activo', 1)->pluck('sucursal','id_sucursal'),
-				'tipos' => TipoSucursal::select(['tipo','id_tipo'])->where('activo', 1)->pluck('tipo','id_tipo'),
-				'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('eliminar',0)->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
+			    'localidades' => Localidades::select(['localidad','id_localidad'])->where('activo',1)->pluck('localidad','id_localidad'),
+			    'zonas' => Zonas::select(['zona','id_zona'])->where('activo',1)->pluck('zona','id_zona'),
+			    'paises' => Paises::select(['pais','id_pais'])->where('activo',1)->pluck('pais','id_pais'),
+			    'estados' => Estados::select(['estado','id_estado'])->where('activo',1)->where('fk_id_pais', $entity->fk_id_pais)->pluck('estado','id_estado'),
+			    'municipios' => Municipios::select(['municipio','id_municipio'])->where('activo',1)
+			        ->whereHas('estado', function($q) use ($entity) {
+    					$q->where('id_estado', $entity->fk_id_estado);
+    					$q->whereHas('pais', function($q) use ($entity) {
+    						$q->where('id_pais', $entity->fk_id_pais);
+    					});
+    				})->pluck('municipio','id_municipio'),
+				'sucursales' => $this->entity->select(['sucursal','id_sucursal'])->where('activo',1)->pluck('sucursal','id_sucursal'),
+				'tipos' => TipoSucursal::select(['tipo','id_tipo'])->where('activo',1)->pluck('tipo','id_tipo'),
+				'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
 			];
 		}
 		return [
-			'localidades' => Localidades::select(['localidad','id_localidad'])->where('activo', 1)->pluck('localidad','id_localidad'),
-			'zonas' => Zonas::select(['zona','id_zona'])->where('activo', 1)->pluck('zona','id_zona'),
-			'paises' => Paises::select(['pais','id_pais'])->where('activo', 1)->pluck('pais','id_pais'),
-			'sucursales' => $this->entity->select(['sucursal','id_sucursal'])->where('activo', 1)->pluck('sucursal','id_sucursal'),
-			'tipos' => TipoSucursal::select(['tipo','id_tipo'])->where('activo', 1)->pluck('tipo','id_tipo'),
-		    'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('eliminar',0)->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
+		    'localidades' => Localidades::select(['localidad','id_localidad'])->where('activo',1)->pluck('localidad','id_localidad'),
+		    'zonas' => Zonas::select(['zona','id_zona'])->where('activo',1)->pluck('zona','id_zona'),
+		    'paises' => Paises::select(['pais','id_pais'])->where('activo',1)->pluck('pais','id_pais'),
+		    'sucursales' => $this->entity->select(['sucursal','id_sucursal'])->where('activo',1)->pluck('sucursal','id_sucursal'),
+		    'tipos' => TipoSucursal::select(['tipo','id_tipo'])->where('activo',1)->pluck('tipo','id_tipo'),
+		    'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
 		];
 	}
 
 	public function obtenerSucursales($company)
 	{
-		$sucursales = Sucursales::all()->where('activo','1');
+	    $sucursales = Sucursales::where('activo',1)->get();
 
 		foreach($sucursales as $sucursal){
 			$sucursal_data['id'] = (int)$sucursal->id_sucursal;

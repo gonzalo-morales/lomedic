@@ -1,16 +1,60 @@
-@section('header-bottom')
+{{-- @section('header-bottom')
 	@parent
 	@if (!Route::currentRouteNamed(currentRouteName('index')))
 		{{HTML::script(asset('js/seguimientoDesviacion.js'))}}
 	@endif
 @endsection
 
+@section('content-width', 's12') --}}
+
+{{-- @extends(smart()) --}}
 @section('content-width', 's12')
+@section('form-title', 'Seguimiento Desviación')
+
+{{-- @section('header-top')
+	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
+@endsection --}}
+@section('header-bottom')
+	@parent
+	{{-- <script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script> --}}
+	@if (!Route::currentRouteNamed(currentRouteName('index')))
+		<script type="text/javascript" src="{{ asset('js/seguimientoDesviacion.js') }}"></script>
+	@endif
+@endsection
+
+@section('form-actions')
+   <div class="col-md-12 col-xs-12">
+       <div class="text-right">
+		   {{-- @if(!Route::currentRouteNamed(currentRouteName('create')))
+	           @can('create', currentEntity())
+	               {{ link_to(companyRoute('create'), 'Nuevo', ['class'=>'btn btn-primary progress-button']) }}
+	           @endcan
+		   @else
+			   {{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+		   @endif
+		   @if(Route::currentRouteNamed(currentRouteName('show')))
+	           @can('update', currentEntity())
+	                   {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info progress-button']) }}
+			   @endcan
+		   @endif
+		   @if(Route::currentRouteNamed(currentRouteName('update')))
+		   		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+		   @endif --}}
+           {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+       </div>
+   </div>
+@endsection
 
 @section('form-content')
 {{ Form::setModel($data) }}
 {{--{{dd($data)}}--}}
 @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
+<div class="row">
+	<div class="col-sm-12">
+		{{-- <div class="card z-depth-1-half"> --}}
+		{{-- <div class="text-right">
+			<a href="#" class="btn p-2 btn-dark" id="reload"><i class="material-icons align-middle">cached</i>Recargar</a>
+		</div> --}}
 	<div class="card-body row table-responsive table-hover">
 		<table class="table highlight mt-3" id="tDetalleDesviacion">
 			<thead>
@@ -85,6 +129,9 @@
 			</tbody>
 		</table>
 	</div>
+	{{-- </div> --}}
+	</div>
+	</div>
 @endif
 {{-- @if (!Route::currentRouteNamed(currentRouteName('index')))
 	<div class="row">
@@ -140,53 +187,6 @@
 		</div>
 	</div>
 </div>
-
-{{--<div class="col-md-10 col-sm-12">
-<div id="showDetalleDesviacion" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Detalle Desviación</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-
-			<div class="modal-body">
-				<div class="card-body row table-responsive table-hover">
-					<table class="table highlight mt-3" id="tDetalleDesviacion">
-						<thead>
-						<tr>
-							<th>ID Detalle</th>
-							<th>OC</th>
-							<th>Factura</th>
-							<th>Precio OC</th>
-							<th>Precio Factura</th>
-							<th>Precio Factura</th>
-							<th>Precio Desviación</th>
-							<th>Cantidad Factura</th>
-							<th>Cantidad Factura</th>
-							<th>Cantidad Desviación</th>
-							<th></th>
-						</tr>
-						</thead>
-						<tbody class="desviacion_detail">
-
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="modal-footer">
-				@if(Route::currentRouteNamed(currentRouteName('create')))
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-				<button id="guardar_autorizacion" type="button" class="btn btn-primary">Guardar</button>
-				@endif
-			</div>
-		</div>
-	</div>
-</div>
-</div>
---}}
 
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
@@ -244,14 +244,14 @@
 
 @if (Route::currentRouteNamed(currentRouteName('create')))
 	@section('form-title')
-		<h1 class="display-4">Desviación</h1>
+		<h1 class="display-4">Seguimiento Desviación</h1>
 	@endsection
 	@include('layouts.smart.create')
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('edit')))
 	@section('form-title')
-		<h1 class="display-4">Desviación</h1>
+		<h1 class="display-4">Seguimiento Desviación</h1>
 	@endsection
 	@include('layouts.smart.edit')
 @endif

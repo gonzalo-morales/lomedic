@@ -22,7 +22,7 @@ class FamiliasProductosController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 		return [
-			'companies' => Empresas::active()->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
+		    'companies' => Empresas::where('activo',1)->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
 		    'product_types'=>TiposProductos::where('activo',1)->pluck('tipo_producto','id_tipo'),
 		];
 	}

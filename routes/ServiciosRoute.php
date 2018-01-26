@@ -21,7 +21,6 @@ Route::prefix('{company}')->group(function () {
         Route::post('getProyectos','Servicios\RecetasController@getProyectos')->name('recetas.getProyectos');
 	    Route::post('getDiagnosticos','Servicios\RecetasController@getDiagnosticos')->name('recetas.getDiagnosticos');
         Route::post('getMedicamentos','Servicios\RecetasController@getMedicamentos')->name('recetas.getMedicamentos');
-//	    Route::post('getMedicamentos','Servicios\SurtidoRequisicionHospitalariaController@getMedicamentos')->name('requisicioneshospitalarias.getMedicamentos');
 	    Route::post('verifyStock','Servicios\RecetasController@verifyStock')->name('recetas.verifyStock');
 	    Route::post('verifyStockSurtir','Servicios\RecetasController@verifyStockSurtir')->name('recetas.verifyStockSurtir');
 	    Route::get('recetas/{id}/surtirReceta','Servicios\RecetasController@surtirReceta')->name('recetas.surtirReceta');
@@ -29,5 +28,11 @@ Route::prefix('{company}')->group(function () {
 	    Route::get('recetas/{id}/imprimirReceta','Servicios\RecetasController@imprimirReceta')->name('recetas.imprimirReceta');
         Route::resource('recetas', 'Servicios\RecetasController');
         Route::resource('requisicioneshospitalarias', 'Servicios\RequisicionesHospitalariasController');
+        Route::resource('vales', 'Servicios\ValesController');
+        Route::post('verifyStock','Servicios\RecetasController@verifyStock')->name('recetas.verifyStock');
+        Route::post('vales/getReceta','Servicios\ValesController@getReceta')->name('vales.getReceta');
+        Route::post('vales/getRecetaDetalle','Servicios\ValesController@getRecetaDetalle')->name('vales.getRecetaDetalle');
+        Route::post('requisicioneshospitalarias/getDiagnosticos','Servicios\RecetasController@getDiagnosticos')->name('requisicioneshospitalarias.getDiagnosticos');
+        Route::post('requisicioneshospitalarias/getMedicamentos','Servicios\RecetasController@getMedicamentos')->name('requisicioneshospitalarias.getMedicamentos');
     });
 });

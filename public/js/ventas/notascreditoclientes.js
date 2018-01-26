@@ -207,14 +207,14 @@ $(document).ready(function () {
 		if($('#form-model').valid()){
 			var existe = false;
 			$('#tConceptos tbody tr').each(function (index,row) {
-                if($(row).find('.detalle').val() == $('#fk_id_producto').val() && $(row).find('.tipo_documento').val() == $('#fk_id_producto').select2().find(":selected").data("producto").fk_id_tipo_documento){
+                if($(row).find('.detalle').val() == $('#fk_id_producto').val() && $(row).find('.tipo_documento').val() == $('#fk_id_producto').select2('data')[0].fk_id_tipo_documento){
                 	existe = true;
 				}
             });
 			if(!existe){
                 var i = $('#tConceptos tbody tr').length;
                 var row_id = i > 0 ? +$('#tConceptos tr:last').find('.index').val()+1 : 0;
-                var producto = $('#fk_id_producto').select2().find(":selected").data("producto");
+                var producto = $('#fk_id_producto').select2('data')[0];
 
                 var cantidad = +$('#cantidad').val();
                 var precio_unitario = +$('#precio_unitario').val();
@@ -229,9 +229,9 @@ $(document).ready(function () {
 
                 $('#tConceptos tbody').append(
                     '<tr>' +
-                    '<td><input type="hidden" class="index" value="'+row_id+'"><input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_relacionado]" class="factura" value="'+producto.fk_id_factura+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_relacionado]" class="tipo_documento" value="'+producto.fk_id_tipo_documento+'">'+producto.serie+'-'+producto.folio+'</td>' +
+                    '<td><input type="hidden" class="index" value="'+row_id+'"><input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_base]" class="factura" value="'+producto.fk_id_documento+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_base]" class="tipo_documento" value="'+producto.fk_id_tipo_documento+'">'+producto.serie+'-'+producto.folio+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_producto_servicio]" value="'+producto.fk_id_clave_producto_servicio+'">'+producto.clave_producto_servicio+'</td>' +
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_cliente]" value="'+producto.id_clave_cliente_producto+'">'+producto.clave_producto_cliente+'</td>' +
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_cliente]" value="'+producto.fk_id_clave_cliente+'">'+producto.clave_producto_cliente+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descripcion]" value="'+producto.descripcion+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+producto.id_upc+'">'+producto.descripcion+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_unidad_medida]" value="'+producto.fk_id_unidad_medida+'">'+producto.unidad_medida+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][cantidad]" class="cantidad" value="'+cantidad+'">'+cantidad+'</td>' +
@@ -431,14 +431,12 @@ function cargar_productos() {
     });
     $.ajax({
         async: true,
-        url: $('#fk_id_factura_relacion').data('url'),
-        data: {'param_js':productos_facturas_js,$fk_id_factura:JSON.stringify(facturas)},
+        url: $('#fk_id_tipo_relacion').data('url'),
+        data: {detallesfacturas:JSON.stringify(facturas),detallesnotas:JSON.stringify(notascargo)},
         dataType: 'json',
         success: function (datos) {
-            $.each(datos,function (index,row) {
-                $('#fk_id_producto').append('<option data-producto=\''+JSON.stringify(row)+'\' value="'+row.id_factura_detalle+'">'+row.clave_producto_cliente+'</option>');
-            });
             $('#fk_id_producto').select2({
+				data:datos,
                 escapeMarkup: function (markup) {
                     return markup;
                 },
@@ -453,35 +451,12 @@ function cargar_productos() {
         }
     });
     $('#loadingfk_id_producto').show();
-    $.ajax({
-        async: true,
-        url: $('#fk_id_nota_cargo_relacion').data('url'),
-        data: {'param_js':productos_notascargo_js,$fk_id_nota_cargo:JSON.stringify(notascargo)},
-        dataType: 'json',
-        success: function (datos) {
-            $.each(datos,function (index,row) {
-                $('#fk_id_producto').append('<option data-producto=\''+JSON.stringify(row)+'\' value="'+row.id_nota_cargo_detalle+'">'+row.clave_producto_cliente+'</option>');
-            });
-            $('#fk_id_producto').select2({
-                escapeMarkup: function (markup) {
-                    return markup;
-                },
-                placeholder: 'Seleccione un producto',
-                templateResult: formatProducto,
-                templateSelection: formatProductoSelection,
-            });
-            $('#loadingfk_id_producto').hide();
-        },
-        error: function () {
-            $('#loadingfk_id_producto').hide();
-        }
-    });
 }
 
 function formatProducto (producto) {
-    if (producto.element && producto.element.dataset.producto) {
+    if (producto.element) {
         // theme here ...
-        var data = JSON.parse(producto.element.dataset.producto);
+        // var data = JSON.parse(producto.element.dataset.producto);
         //Generamos nuestro template
         var markup = "<div class='select2-result-pers clearfix'>" +
             "<div class='select2-result-pers__avatar'><img src='img/sku.png'/></div>" +
@@ -489,15 +464,15 @@ function formatProducto (producto) {
             "<div class='select2-result-pers__text'>" + producto.text + "</div>";
 
         var tipo_documento = '';
-        if(data.fk_id_tipo_documento == 4){
+        if(producto.fk_id_tipo_documento == 4){
         	tipo_documento = "factura";
-		}else if(data.fk_id_tipo_documento == 6){
+		}else if(producto.fk_id_tipo_documento == 6){
         	tipo_documento = "nota de cargo";
 		}
 
-        markup += "<div class='select2-result-pers__factura'>Factura: " + data.serie+'-'+data.folio + "</div>";
-        markup += "<div class='select2-result-pers__sku'>SKU: " + data.sku+ "</div>";
-        markup += "<div class='select2-result-pers__upc'>Descripcion: " + data.descripcion+ "</div>";
+        markup += "<div class='select2-result-pers__factura'>Factura: " + producto.serie+'-'+producto.folio + "</div>";
+        markup += "<div class='select2-result-pers__sku'>SKU: " + producto.sku+ "</div>";
+        markup += "<div class='select2-result-pers__upc'>Clave Cliente: " + producto.clave_producto_cliente+ "</div>";
         markup += "<div class='select2-result-pers__tipodocumento'>Tipo documento: " + tipo_documento+ "</div>";
         markup += "</div></div>";
         return markup;
@@ -575,12 +550,4 @@ function limpiarCampos() {
     $('#fk_id_impuesto').rules('remove');
     $('#precio_unitario').val('').rules('remove');
     $('#descuento_producto').val('').rules('remove');
-    $('#fk_id_producto').select2({
-        escapeMarkup: function (markup) {
-            return markup;
-        },
-        placeholder: 'Seleccione un producto',
-        templateResult: formatProducto,
-        templateSelection: formatProductoSelection,
-    });
 }
