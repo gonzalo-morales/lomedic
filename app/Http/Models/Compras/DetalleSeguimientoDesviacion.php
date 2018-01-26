@@ -55,9 +55,17 @@ class DetalleSeguimientoDesviacion extends ModelCompany
     // {
     //     return $this->belongsTo('App\Http\Models\Administracion\TiposDocumentos','fk_id_tipo_documento','id_tipo_documento');
     // }
-    // public function productos()
-    // {
-    //     return $this->hasMany('App\Http\Models\Inventarios\EntradaDetalle','fk_id_entrada_almacen', 'id_entreda_almacen');
-    // }
+    public function detalleOrden()
+    {
+        return $this->belongsTo('App\Http\Models\Compras\DetalleOrdenes','fk_id_detalle_orden_compra', 'id_orden_detalle');
+    }
+    public function facturaProveedor()
+    {
+        return $this->belongsTo('App\Http\Models\Compras\FacturasProveedores','fk_id_factura_proveedor','id_factura_proveedor');
+    }
+    public function estatus()
+    {
+        return $this->hasOne(EstatusAutorizaciones::class,'id_estatus','fk_id_estatus');
+    }
 
 }

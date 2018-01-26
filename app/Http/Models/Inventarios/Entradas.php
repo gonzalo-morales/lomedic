@@ -157,5 +157,9 @@ class Entradas extends ModelCompany
     {
         return $this->hasMany('App\Http\Models\Inventarios\EntradaDetalle','fk_id_entrada_almacen', 'id_entrada_almacen');
     }
+    public function facturaProveedor()
+    {
+        return $this->belongsTo('App\Http\Models\Compras\FacturasProveedores','referencia_documento', 'id_factura_proveedor');
+    }
 
 }

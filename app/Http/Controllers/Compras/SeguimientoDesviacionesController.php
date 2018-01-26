@@ -8,7 +8,8 @@ use App\Http\Models\Compras\SeguimientoDesviacion;
 use App\Http\Models\Compras\DetalleSeguimientoDesviacion;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Compras\FacturasProveedores;
-use Illuminate\Http\Response;
+// use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,10 +23,14 @@ class SeguimientoDesviacionesController extends ControllerBase
         $this->entity = $entity;
     }
 
+    // public function edit($company, Request $request){
+    //     dd($request);
+    // }
     public function getDataView($entity = null)
     {
         return [
-            'proveedores'       => SociosNegocio::where('activo',1)->where('eliminar',0)->pluck('nombre_comercial','id_socio_negocio')->prepend('Selecciona una opcion...', '')
+            'proveedores'       => SociosNegocio::where('activo',1)->where('eliminar',0)->pluck('nombre_comercial','id_socio_negocio')->prepend('Selecciona una opcion...', ''),
+            'detalleDesviacion' => DetalleSeguimientoDesviacion::all(),
             // 'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo', 1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
             // 'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             // 'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
@@ -72,20 +77,37 @@ class SeguimientoDesviacionesController extends ControllerBase
 
     public function getDesviaciones($company, Request $request){
         $json = [];
-        $detalleDesviacion = null;
-        if ($request->id_tipo_documento == "7") { // Factura
-            $detalleDesviacion = SeguimientoDesviacion::where('fk_id_proveedor',$request->fk_id_proveedor)->where('tipo',2)->get();
-            print_r($detalleDesviacion);
-            foreach ($detalleDesviacion as $detalle) {
-                $det = $detalle->detallesSeguimientoDesviacion;
-                // $json[] = [];
-                print_r($det);
-            }
+        $desviaciones = null;
+        // return Response::json($request);
+        $tipoDesviacion = $request->id_tipo_documento == "7" ? 2 : 1 ;
+        /*if ($request->id_tipo_documento == "7") { // Factura
+            $desviaciones = SeguimientoDesviacion::where('fk_id_proveedor',$request->fk_id_proveedor)->where('tipo',2)->get();
+            // print_r($desviaciones);
+            $detDesviaciones = [];
+            // foreach ($desviaciones as $detalle) {
+            //     $detDesviaciones[] = $detalle->detallesSeguimientoDesviacion;
+            // }
+            // return Response::json($detDesviaciones);
+            return Response::json($desviaciones);
             // echo SeguimientoDesviacion::count();
-        }
+        }else if($request->id_tipo_documento == "3"){
+
+        }*/
+        // $detDesviaciones = [];
+        $desviaciones = SeguimientoDesviacion::where('fk_id_proveedor',$request->fk_id_proveedor)->where('tipo',$tipoDesviacion)->get();
+        return Response::json($desviaciones);
 
 
-        return json_encode($json);
+        // return json_encode($json);
+    }
+    public function getDetalleDesviacion($company, Request $request){
+        $detalleDesviacion = DetalleSeguimientoDesviacion::where('fk_id_seguimiento_desviacion',$request->fk_id_seguimiento_desviacion)->get();
+        return Response::json($detalleDesviacion);
+    }
+
+    public function verdetalledesviacion(){
+
+        return view('compras.seguimientodesviacion.verdetalledesviacion');
     }
 
 }

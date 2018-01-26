@@ -11,17 +11,85 @@
 {{ Form::setModel($data) }}
 {{--{{dd($data)}}--}}
 @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
-	<div class="row">
-		<div class="col-md-12 text-center text-success">
-			{{-- <h3>Autorización de la {{$data->fk_id_tipo_documento == 10 ? 'solicitud de pago' : 'orden de compra'}} No. {{$data->id_documento}}</h3> --}}
-		</div>
+	<div class="card-body row table-responsive table-hover">
+		<table class="table highlight mt-3" id="tDetalleDesviacion">
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>OC</th>
+				<th>Factura</th>
+				<th>SKU</th>
+				<th>UPC</th>
+				<th>Descripción</th>
+				<th>Precio OC</th>
+				<th>Precio Factura</th>
+				<th>Precio Desviación</th>
+				<th>Cantidad OC</th>
+				<th>Cantidad Entrada</th>
+				<th>Cantidad Desviación</th>
+				<th>Estatus</th>
+				<th></th>
+			</tr>
+			</thead>
+			<tbody class="desviacion_detail">
+				@foreach ($detalleDesviacion as $detDesviacion)
+					@if ($data->id_seguimiento_desviacion === $detDesviacion->fk_id_seguimiento_desviacion)
+
+
+					<tr>
+						<td>{{ $detDesviacion->id_detalle_seguimiento_desviacion }}</td>
+						<td>{{ $detDesviacion->fk_id_orden_compra }}</td>
+						@isset($detDesviacion->facturaProveedor->serie_factura)
+							<td>
+								({{ $detDesviacion->fk_id_factura_proveedor }})
+								{{ $detDesviacion->facturaProveedor->serie_factura . $detDesviacion->facturaProveedor->folio_factura }}</td>
+						@else
+							<td> - </td>
+						@endisset
+						<td>{{ $detDesviacion->detalleOrden->sku->sku}}</td>
+						<td>{{ $detDesviacion->detalleOrden->upc->upc}}</td>
+						<td>{{ $detDesviacion->detalleOrden->sku->descripcion_corta}}</td>
+						<td>{{ $detDesviacion->precio_orden_compra }}</td>
+						<td>{{ $detDesviacion->precio_factura }}</td>
+						<td>{{ $detDesviacion->precio_desviacion }}</td>
+						<td>{{ $detDesviacion->cantidad_orden_compra }}</td>
+						<td>{{ $detDesviacion->cantidad_entrada }}</td>
+						<td>{{ $detDesviacion->cantidad_desviacion }}</td>
+							{{-- {{ $detDesviacion->fk_id_estatus }} --}}
+						@if($detDesviacion->fk_id_estatus == 2)
+							<td class="text-info">{{$detDesviacion->estatus->estatus}}
+								{{ Form::hidden('',$detDesviacion->fk_id_estatus) }}
+								{{ Form::hidden('',$detDesviacion->observaciones) }}
+							</td>
+						@elseif($detDesviacion->fk_id_estatus == 3 OR $detDesviacion->fk_id_estatus == 5)
+							<td class="text-danger">{{$detDesviacion->estatus->estatus}}
+								{{ Form::hidden('',$detDesviacion->fk_id_estatus) }}
+								{{ Form::hidden('',$detDesviacion->observaciones) }}
+							</td>
+						@elseif($detDesviacion->fk_id_estatus == 4)
+							<td class="text-success">{{$detDesviacion->estatus->estatus}}
+								{{ Form::hidden('',$detDesviacion->fk_id_estatus) }}
+								{{ Form::hidden('',$detDesviacion->observaciones) }}
+							</td>
+						@endif
+						<td></td>
+						<td>
+							<button class="desviacion btn is-icon text-primary bg-white " type="button" data-item-id="{{$detDesviacion->getKey()}}" id="{{$detDesviacion->getKey()}}" data-delay="50" onclick="autorizar(this)" data-delete-type="single">
+								<i class="material-icons">new_releases</i>
+							</button>
+						</td>
+					</tr>
+					@endif
+				@endforeach
+
+			</tbody>
+		</table>
 	</div>
 @endif
-@if (!Route::currentRouteNamed(currentRouteName('index')))
+{{-- @if (!Route::currentRouteNamed(currentRouteName('index')))
 	<div class="row">
 		<div class="form-group col-md-4 col-sm-6">
 			{{ Form::cSelect('Proveedor','fk_id_proveedor',$proveedores) }}
-			{{-- {{ Form::cRadio('Autorizar?','fk_id_estatus',[4=>'Autorizado',3=>'No Autorizado']) }} --}}
 		</div>
 		<div class="form-group col-md-4 col-sm-6">
 			{{ Form::cSelect('Tipo de Documento','id_tipo_documento',['-1'=>'Selecciona una opcion...','3'=>'Orden de Compra','7'=>'Factura']) }}
@@ -31,52 +99,143 @@
 			{!!Form::select('id_documento',[],null,['id'=>'id_documento','class'=>'form-control','style'=>'width:100%','data-url'=>companyAction('Compras\SeguimientoDesviacionesController@getDocumentos'),
 									'data-url-desviaciones'=>companyAction('Compras\SeguimientoDesviacionesController@getDesviaciones')])!!}
 		</div>
-		{{-- <div class="form-group col-md-4 col-sm-6">
-			{{ Form::cSelect('No. Documento','documentos') }}
-		</div> --}}
 	</div>
-@endif
+@endif --}}
 {{-- {{ Form::cText('Proveedor','fk_id_proveedor') }} --}}
 
-<div class="card-body row table-responsive">
-	<table class="table highlight mt-3" id="tContactos">
-		<thead>
-		<tr>
-			<th>ID Detalle Documento</th>
-			<th>SKU</th>
-			<th>UPC</th>
-			<th>Cantidad Documento</th>
-			<th>Cantidad Diferencia</th>
-			<th>Precio Documento</th>
-			<th>Precio Diferencia</th>
-			<th></th>
-		</tr>
-		</thead>
-		<tbody class="desviacion_detail">
-		@if(isset($data->detalles))
-			@foreach($data->detalles->where('eliminar',false ) as $row => $detalle)
 
-				{{-- <tr id="{{$detalle->producto['id_sku']}}">
-					<th scope="row">{{$detalle->producto['id_sku']}}</th>
-					<td>
-						<input name="relations[has][detalles][{{$row}}][id_receta_detalle]" type="hidden" value="{{$detalle->id_receta_detalle}}">
-						<p><input id="clave_cliente" name="relations[has][detalles][{{$row}}][fk_id_clave_cliente_producto]" type="hidden" value="{{$detalle->producto['id_sku']}}">{{$detalle->producto['descripcion']}}</p>
-						<p><input id="tbdosis" name="relations[has][detalles][{{$row}}][dosis]" type="hidden" value="{{$detalle->dosis}}">{{$detalle->dosis}}</p>
-						<input id="tbveces_surtir" name="relations[has][detalles][{{$row}}][veces_surtir]" type="hidden" value="{{$detalle->veces_surtidas}}">
-					</td>
-					<td>
-						<a data-delete-type="single"  data-toggle="tooltip" data-placement="top" title="Borrar"  id="{{$row}}" aria-describedby="tooltip687783" onclick="eliminarFila(this)" ><i class="material-icons text-primary">delete</i></a>
-					</td>
-				</tr> --}}
-			@endforeach
-		@endif
-		</tbody>
-	</table>
-</div>
 @endsection
+
+
+<div id="autorizacion" class="modal fade " tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">¿Autorizar la desviación?</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					{{Form::hidden('',null,['id'=>'id_detalle_seguimiento_desviacion','data-url'=>companyAction('Compras\DetalleSeguimientoDesviacionController@actualizarEstatus')])}}
+					{{-- <div class="form-group col-md-12 col-sm-6">
+						{{Form::label('','Tipo de autorizacion')}}
+						{{Form::text('',null,['class'=>'form-control','readonly','id'=>'motivo_autorizacion'])}}
+					</div> --}}
+					<div class="form-group text-center col-md-12 col-sm-6">
+						{{Form::cRadio('Estatus','fk_id_estatus',[4=>'Autorizar',3=>'Rechazar'])}}
+					</div>
+					<div class="form-group col-md-12 col-sm-12">
+						{{Form::cTextArea('Motivo','observaciones',['readonly','style'=>'resize:none;'])}}
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				@if(Route::currentRouteNamed(currentRouteName('edit')))
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				<button id="guardar_autorizacion" type="button" class="btn btn-primary">Guardar</button>
+				@endif
+			</div>
+		</div>
+	</div>
+</div>
+
+{{--<div class="col-md-10 col-sm-12">
+<div id="showDetalleDesviacion" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Detalle Desviación</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="modal-body">
+				<div class="card-body row table-responsive table-hover">
+					<table class="table highlight mt-3" id="tDetalleDesviacion">
+						<thead>
+						<tr>
+							<th>ID Detalle</th>
+							<th>OC</th>
+							<th>Factura</th>
+							<th>Precio OC</th>
+							<th>Precio Factura</th>
+							<th>Precio Factura</th>
+							<th>Precio Desviación</th>
+							<th>Cantidad Factura</th>
+							<th>Cantidad Factura</th>
+							<th>Cantidad Desviación</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody class="desviacion_detail">
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				@if(Route::currentRouteNamed(currentRouteName('create')))
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				<button id="guardar_autorizacion" type="button" class="btn btn-primary">Guardar</button>
+				@endif
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+--}}
 
 {{-- DONT DELETE --}}
 @if (Route::currentRouteNamed(currentRouteName('index')))
+	@section('smart-js')
+		@parent
+		<script type="text/javascript">
+			rivets.binders['hide-delete'] = {
+				bind: function (el) {
+					if(el.dataset.fk_id_estatus_orden != 1)
+					{
+						$(el).hide();
+					}
+				}
+			};
+			// rivets.binders['hide-update'] = {
+			// 	bind: function (el) {
+			// 		if(el.dataset.fk_id_estatus_orden != 1)
+			// 		{
+			// 			$(el).hide();
+			// 		}
+			// 	}
+			// };
+			@can('update', currentEntity())
+				window['smart-model'].collections.itemsOptions.edit = {a: {
+				'html': '<i class="material-icons">mode_edit</i>',
+				'class': 'btn is-icon',
+				'rv-get-edit-url': '',
+				'rv-hide-update':'',
+				'data-toggle':'tooltip',
+				'title':'Editar'
+			}};
+			@endcan
+			@can('delete', currentEntity())
+				window['smart-model'].collections.itemsOptions.delete = {a: {
+				'html': '<i class="material-icons">not_interested</i>',
+				'href' : '#',
+				'class': 'btn is-icon',
+				'rv-on-click': 'actions.showModalCancelar',
+				'rv-get-delete-url': '',
+				'data-delete-type': 'single',
+				'rv-hide-delete':'',
+				'data-toggle':'tooltip',
+				'title':'Cancelar'
+			}};
+			@endcan
+		</script>
+	@endsection
+
+
 	@section('form-title')
 		<h1 class="display-4">Seguimiento Desviación</h1>
 	@endsection

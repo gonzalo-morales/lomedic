@@ -159,7 +159,7 @@ class OrdenesController extends ControllerBase
             }
             $isSuccess->descuento_total = $descuento_rows + $isSuccess->descuento_general;
 			$isSuccess->save();
-            $this->log('store', $isSuccess->id_orden);
+            // $this->log('store', $isSuccess->id_orden);
 
 			// dd($isSuccess->id_orden);
 			// $this->evaluarCondiciones($request, $isSuccess->id_orden);
@@ -290,7 +290,7 @@ class OrdenesController extends ControllerBase
 			}
             $entity->descuento_total = $entity->descuento_general + $descuento_rows;
 			$entity->save();
-			$this->log('update', $id);
+			// $this->log('update', $id);
 			return $this->redirect('update');
 		} else {
 			$this->log('error_update', $id);

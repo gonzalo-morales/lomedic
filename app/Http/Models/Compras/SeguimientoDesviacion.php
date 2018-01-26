@@ -3,6 +3,7 @@
 namespace App\Http\Models\Compras;
 
 use App\Http\Models\Compras\Ordenes;
+use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\ModelCompany;
 use DB;
 
@@ -33,24 +34,32 @@ class SeguimientoDesviacion extends ModelCompany
      * @var array
      */
     protected $fields = [
-        'id_seguimiento_desviacion' => 'ID',
-        'fk_id_proveedor'           => 'Proveedor',
-        'serie_factura'             => 'Serie Factura',
-        'folio_factura'             => 'Folio Factura',
+        'id_seguimiento_desviacion'         => 'ID',
+        'socios.nombre_comercial'           => 'Proveedor',
+        'fecha_captura'                     => 'Fecha Captura',
+        'usuarios.nombre_corto'             => 'Usuario Captura',
+        'serie_factura'                     => 'Serie Factura',
+        'folio_factura'                     => 'Folio Factura',
+        'estatus'                           => 'Estatus',
+        'tipo'                              => 'Tipo',
     ];
 
     public function socios()
     {
-        return $this->hasMany('App\Http\Models\SociosNegocio\SociosNegocio','fk_id_proveedor', 'id_socio_negocio');
+        return $this->belongsTo('App\Http\Models\SociosNegocio\SociosNegocio', 'fk_id_proveedor','id_socio_negocio');
     }
     public function usuarios()
     {
-        return $this->hasOne(Usuarios::class,'fk_id_usuario_captura','id_usuario');
+        return $this->belongsTo(Usuarios::class,'fk_id_usuario_captura','id_usuario');
     }
     public function detallesSeguimientoDesviacion()
     {
         return $this->hasMany('App\Http\Models\Compras\DetalleSeguimientoDesviacion','fk_id_seguimiento_desviacion','id_seguimiento_desviacion');
     }
+    // public function estatus()
+    // {
+    //     return $this->belongsTo(EstatusAutorizaciones::class,'estatus','id_estatus');
+    // }
     // public function tipoDocumento()
     // {
     //     return $this->belongsTo('App\Http\Models\Administracion\TiposDocumentos','fk_id_tipo_documento','id_tipo_documento');

@@ -90,8 +90,8 @@ class DetalleFacturasProveedores extends ModelCompany
         parent::boot();
         self::created(function($detalleFactura){
 
-            self::$counter++;
-            dump(self::$counter);
+            // self::$counter++;
+            // dump(self::$counter);
 
             // dd($detalleFactura::count());
             // $detallesFactura = FacturasProveedores::join('fac_det_facturas_proveedores','fac_opr_facturas_proveedores.id_factura_proveedor','=','fac_det_facturas_proveedores.fk_id_factura_proveedor')
@@ -110,9 +110,9 @@ class DetalleFacturasProveedores extends ModelCompany
                 if ($detOrden->precio_unitario != $detalleFactura->precio_unitario ) {
                     if (self::$onlyOne) {
                         $segDesv  = new SeguimientoDesviacion();
-                        $segDesv->fk_id_proveedor = $detalleFactura->orden->proveedor->fk_id_socio_negocio;
-                        // $segDesv->serie_factura = 'A';
-                        // $segDesv->folio_factura = 19;
+                        $segDesv->fk_id_proveedor = $detalleFactura->facturaProveedor->fk_id_socio_negocio;
+                        $segDesv->serie_factura = $detalleFactura->facturaProveedor->serie_factura;
+                        $segDesv->folio_factura = $detalleFactura->facturaProveedor->folio_factura;
                         $segDesv->fecha_captura = Carbon::now();
                         $segDesv->fk_id_usuario_captura = Auth::id();
                         $segDesv->estatus = 1;
@@ -121,13 +121,13 @@ class DetalleFacturasProveedores extends ModelCompany
 
                         self::$idSeguimientoDesv = $segDesv->getKey();
                         self::$onlyOne = false;
-                        echo self::$onlyOne;
+                        // echo self::$onlyOne;
                     }
                     $detSegDesv = new DetalleSeguimientoDesviacion();
 
-                    dump(array('detOrden'=> $detOrden,'detlFactura'=> $detalleFactura));
+                    // dump(array('detOrden'=> $detOrden,'detlFactura'=> $detalleFactura));
 
-                    $detSegDesv->precio_desviacion                  = $detOrden->precio_unitario - $detalleFactura->precio_unitario;
+                    $detSegDesv->precio_desviacion                  = $detalleFactura->precio_unitario - $detOrden->precio_unitario;
                     $detSegDesv->precio_factura                     = $detalleFactura->precio_unitario;
                     $detSegDesv->precio_orden_compra                = $detOrden->precio_unitario;
                     $detSegDesv->fk_id_orden_compra                 = $detOrden->orden->id_orden;
@@ -138,9 +138,9 @@ class DetalleFacturasProveedores extends ModelCompany
                     $detSegDesv->save();
                 }
             }
-            if (self::$counter == 2) {
-                dd($detSegDesv);
-            }
+            // if (self::$counter == 2) {
+            //     dd($detSegDesv);
+            // }
             // $detallesOrden = Ordenes::join('com_det_ordenes','com_opr_ordenes.id_orden','=','com_det_ordenes.fk_id_documento')
                                         // ->where('com_det_ordenes.fk_id_documento',$detalleFactura->fk_id_orden_compra)
                                         // ->where('id_orden',$detalleFactura->orden->proveedor->fk_id_socio_negocio)
@@ -168,5 +168,9 @@ class DetalleFacturasProveedores extends ModelCompany
     public function orden()
     {
         return $this->hasOne(Ordenes::class,'id_orden','fk_id_orden_compra');
+    }
+    public function facturaProveedor()
+    {
+        return $this->belongsTo(FacturasProveedores::class,'fk_id_factura_proveedor','id_factura_proveedor');
     }
 }

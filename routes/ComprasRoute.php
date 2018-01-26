@@ -20,6 +20,13 @@ Route::prefix('{company}')->group(function () {
         Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
             Route::resource('solicitudes','Compras\SolicitudesController',['only'=>['create']]);
         });
+        Route::group(['prefix' => 'solicitudes/{id_solicitud}'], function(){
+            Route::resource('ofertas','Compras\OfertasController');
+        });
+        Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
+            Route::resource('ordenes','Compras\OrdenesController',['only'=>['create']]);
+        });
+
         Route::get("/", function(){ return View::make("compras.index"); });
 
 
@@ -43,17 +50,14 @@ Route::prefix('{company}')->group(function () {
         Route::resource('seguimientodesviacion','Compras\SeguimientoDesviacionesController');
         Route::post('getDocumentos','Compras\SeguimientoDesviacionesController@getDocumentos');
         Route::post('getDesviaciones','Compras\SeguimientoDesviacionesController@getDesviaciones');
+        Route::post('getDetalleDesviacion','Compras\SeguimientoDesviacionesController@getDetalleDesviacion');
+        Route::post('actualizarEstatus','Compras\DetalleSeguimientoDesviacionController@actualizarEstatus');
+
         Route::resource('pagos','Compras\PagosController');
         Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
         Route::resource('solicitudes', 'Compras\SolicitudesController');
         Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
         Route::resource('solicitudespagos','Compras\SolicitudesPagosController');
 
-        Route::group(['prefix' => 'solicitudes/{id_solicitud}'], function(){
-            Route::resource('ofertas','Compras\OfertasController');
-        });
-        // Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
-        //     Route::resource('ordenes','Compras\OrdenesController',['only'=>['create']]);
-        // });
     });
 });

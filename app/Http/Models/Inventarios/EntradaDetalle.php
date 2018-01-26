@@ -11,6 +11,7 @@ namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Compras\Ordenes;
+use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Compras\SeguimientoDesviacion;
 use App\Http\Models\Compras\DetalleSeguimientoDesviacion;
 use App\Http\Models\Compras\FacturasProveedores;
@@ -64,14 +65,14 @@ class EntradaDetalle extends ModelCompany
         parent::boot();
         self::created(function($detalleEntrada){
             // $detalleFacturas = FacturasProveedores::where('id_factura_proveedor',$entrada->referencia_documento)->get();
-            $detallesFactura = FacturasProveedores::join('fac_det_facturas_proveedores','fac_opr_facturas_proveedores.id_factura_proveedor','=','fac_det_facturas_proveedores.fk_id_factura_proveedor')
-                                                    ->where('id_factura_proveedor','=',$detalleEntrada->entrada->referencia_documento)
-                                                    ->where('fac_det_facturas_proveedores.fk_id_orden_compra','=',$detalleEntrada->entrada->numero_documento)
-                                                    ->groupBY('id_factura_proveedor','id_detalle_factura_proveedor')
-                                                    ->select('id_factura_proveedor','serie_factura','folio_factura','fk_id_socio_negocio','id_detalle_factura_proveedor','importe','cantidad','precio_unitario',
-                                                            'fk_id_factura_proveedor','fk_id_orden_compra','fk_id_detalle_orden_compra')
-                                                    ->get();
-
+            // $detallesFactura = FacturasProveedores::join('fac_det_facturas_proveedores','fac_opr_facturas_proveedores.id_factura_proveedor','=','fac_det_facturas_proveedores.fk_id_factura_proveedor')
+            //                                         ->where('id_factura_proveedor','=',$detalleEntrada->entrada->referencia_documento)
+            //                                         ->where('fac_det_facturas_proveedores.fk_id_orden_compra','=',$detalleEntrada->entrada->numero_documento)
+            //                                         ->groupBY('id_factura_proveedor','id_detalle_factura_proveedor')
+            //                                         ->select('id_factura_proveedor','serie_factura','folio_factura','fk_id_socio_negocio','id_detalle_factura_proveedor','importe','cantidad','precio_unitario',
+            //                                                 'fk_id_factura_proveedor','fk_id_orden_compra','fk_id_detalle_orden_compra')
+            //                                         ->get();
+            //
             // print_r($detallesFactura);
 
             $detallesOrden = Ordenes::join('com_det_ordenes','com_opr_ordenes.id_orden','=','com_det_ordenes.fk_id_documento')
@@ -80,17 +81,14 @@ class EntradaDetalle extends ModelCompany
                                         ->get();
 
                 foreach ($detallesOrden as $detOrden) {
-                    // echo $detalleEntrada->fk_id_sku ."==". $detOrden->fk_id_sku ."&&". $detalleEntrada->fk_id_upc. "==". $detOrden->fk_id_upc."\n";
                     if ($detalleEntrada->fk_id_sku == $detOrden->fk_id_sku && $detalleEntrada->fk_id_upc == $detOrden->fk_id_upc) {
-                        // print_r($detOrden);
-                        // echo $detOrden->id_orden_detalle."\n";
-                        // echo $detalleEntrada->cantidad_surtida ." != ". $detOrden->cantidad."\n";
                         if ($detalleEntrada->cantidad_surtida != $detOrden->cantidad) {
                             if (self::$onlyOne) {
                                 $segDesv  = new SeguimientoDesviacion();
-                                $segDesv->fk_id_proveedor = $detOrden->orden->proveedor->fk_id_socio_negocio;
-                                // $segDesv->serie_factura = 'A';
-                                // $segDesv->folio_factura = 19;
+                                $segDesv->fk_id_proveedor = $detalleEntrada->entrada->facturaProveedor->fk_id_socio_negocio;
+                                // print_r($detOrden->orden);
+                                $segDesv->serie_factura = $detalleEntrada->entrada->facturaProveedor->serie_factura;
+                                $segDesv->folio_factura = $detalleEntrada->entrada->facturaProveedor->folio_factura;
                                 $segDesv->fecha_captura = Carbon::now();
                                 $segDesv->fk_id_usuario_captura = Auth::id();
                                 $segDesv->estatus = 1;
@@ -100,20 +98,19 @@ class EntradaDetalle extends ModelCompany
                                 self::$idSeguimientoDesv = $segDesv->getKey();
                                 self::$onlyOne = false;
                             }
+                            // $searchDesviacion = SeguimientoDesviacion::where('fk_id_proveedor', $detalleEntrada->entrada->facturaProveedor->fk_id_socio_negocio);
 
-                            // echo "id_seguimiento_desviacion::".$segDesv->getKey();
                             $detSegDesv = new DetalleSeguimientoDesviacion();
-
 
                             $detSegDesv->cantidad_desviacion            = abs($detalleEntrada->cantidad_surtida - $detOrden->cantidad);
                             $detSegDesv->cantidad_entrada               = $detalleEntrada->cantidad_surtida;
                             $detSegDesv->cantidad_orden_compra          = $detOrden->cantidad;
                             $detSegDesv->fk_id_seguimiento_desviacion   = self::$idSeguimientoDesv;
-                            // // $segDesv->id;
                             $detSegDesv->fk_id_orden_compra             = $detOrden->fk_id_documento;
                             $detSegDesv->fk_id_detalle_orden_compra     = $detOrden->id_orden_detalle;
                             $detSegDesv->fk_id_entrada                  = $detalleEntrada->entrada->id_entrada_almacen;
                             $detSegDesv->fk_id_detalle_entrada          = $detalleEntrada->id_detalle_entrada;
+
                             $detSegDesv->save();
                         }
                         // print_r($detSegDesv);
@@ -122,26 +119,6 @@ class EntradaDetalle extends ModelCompany
 
         });
     }
-
-    // public function setIdSeguimientoDesv($idSeguimientoDesv){
-    //     $this->idSeguimientoDesv = $idSeguimientoDesv;
-    // }
-    // public function getIdSeguimientoDesv(){
-    //     return $this->idSeguimientoDesv;
-    // }
-
-
-    // function getNombreCompletoAttribute() {
-    //     return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
-    // }
-    //
-    // function getNombreSucursalAttribute(){
-    //     return $this->sucursales->nombre_sucursal;
-    // }
-    //
-    // function getEstatusSolicitudAttribute(){
-    //     return $this->estatus->estatus;
-    // }
 
     /**
      * The validation rules

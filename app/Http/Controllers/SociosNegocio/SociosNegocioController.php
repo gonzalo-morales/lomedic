@@ -38,7 +38,7 @@ class SociosNegocioController extends ControllerBase
 	{
 		$this->entity = $entity;
 	}
-	
+
 	public function getDataView($entity = null)
 	{
 	    $tipo = TiposSocios::where('activo','1')->where('eliminar','0')->select('para_venta','tipo_socio','id_tipo_socio')->get();
@@ -65,22 +65,22 @@ class SociosNegocioController extends ControllerBase
 	        'js_upc'               => Crypt::encryptString('"select": ["descripcion", "id_upc"], "conditions": [{"where": ["id_upc","$id_upc"]}], "limit": 1'),
 	    ];
 	}
-	
+
 	public function store(Request $request, $company, $compact = false)
 	{
 	    # ¿Usuario tiene permiso para crear?
 	    #$this->authorize('create', $this->entity);
-	    
+
 	    # Validamos request, si falla regresamos pagina
 	    $this->validate($request, $this->entity->rules);
-	    
+
 	    DB::beginTransaction();
 	    $entity = $this->entity->create($request->all());
-	    
+
 	    if ($entity)
 	    {
 	        $id = $entity->id_socio_negocio;
-	        
+
 	        # Guardamos el detalle de empresas en la que estara disponible
 	        if(isset($request->empresas)) {
 	            $sync = [];
@@ -91,7 +91,7 @@ class SociosNegocioController extends ControllerBase
 	            }
      	            $entity->empresas()->sync($sync);
 	        }
-	        
+
 	        # Guardamos el detalle de formas de pago para el socio de negocio
 	        if(isset($request->formaspago)) {
 	            $sync = [];
@@ -102,11 +102,11 @@ class SociosNegocioController extends ControllerBase
 	            }
 	            $entity->formaspago()->sync($sync);
 	        }
-	        
+
 	        # Guardamos los contactos de los socios de negocio
 	        if(isset($request->contactos)){
 	            $contactos = collect($request->contactos);
-	            
+
 	            #Insertar o Actualizar la informacion de los contactos
 	            foreach ($contactos as $contacto)
 	            {
@@ -114,7 +114,7 @@ class SociosNegocioController extends ControllerBase
 	                $entity->contactos()->updateOrCreate(['id_contacto' => ($contacto['id_contacto'] ?? null)], $contacto);
 	            }
 	        }
-	        
+
 	        # Guardamos el detalle de las direcciones de los socios de negocio
 	        if(isset($request->direcciones)){
 	            $direcciones = collect($request->direcciones);
@@ -126,11 +126,11 @@ class SociosNegocioController extends ControllerBase
 	                $entity->direcciones()->updateOrCreate(['id_direccion' => ($direccion['id_direccion'] ?? null)], $direccion);
 	            }
 	        }
-	        
+
 	        # Guardamos el detalle de las cuentas bancarias de los socios de negocio
 	        if(isset($request->cuentas)){
 	            $cuentas = collect($request->cuentas);
-	            
+
 	            #Inserta o Actualiza la informacion del cuentas
 	            foreach ($cuentas as $cuenta)
 	            {
@@ -138,11 +138,11 @@ class SociosNegocioController extends ControllerBase
 	                $entity->cuentas()->updateOrCreate(['id_cuenta' => ($cuenta['id_cuenta'] ?? null)], $cuenta);
 	            }
 	        }
-	        
+
 	        # Guardamos el detalle de los anexos de los socios de negocio
 	        if(isset($request->anexos)){
 	            $anexos = $request->anexos;
-	            
+
 	            #Inserta o Actualiza la informacion del anexo
 	            foreach ($anexos as $anexo)
 	            {
@@ -150,7 +150,7 @@ class SociosNegocioController extends ControllerBase
 	                    $myfile = $anexo['archivo'];
 	                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
 	                    $file_save = Storage::disk('socios_anexos')->put($id.'/'.$filename, file_get_contents($myfile->getRealPath()));
-	                
+
 	                    if($file_save) {
 	                        array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
 	                        $anexo['archivo'] = $filename;
@@ -159,11 +159,11 @@ class SociosNegocioController extends ControllerBase
 	                }
 	            }
 	        }
-	        
+
 	        # Guardamos el detalle de los productos de los socios de negocio
 	        if(isset($request->productos)){
 	            $productos = collect($request->productos);
-	            
+
 	            #Inserta o Actualiza la informacion del productos
 	            foreach ($productos as $producto)
 	            {
@@ -171,13 +171,13 @@ class SociosNegocioController extends ControllerBase
 	                $entity->productos()->updateOrCreate(['id_producto' => ($producto['id_producto'] ?? null)], $producto);
 	            }
 	        }
-	        
+
 	        DB::commit();
-	        
+
 	        # Eliminamos cache
 	        Cache::tags(getCacheTag('index'))->flush();
-	        
-	        
+
+
 	        $this->log('store', $id);
 	        return $this->redirect('store');
 	    } else {
@@ -186,19 +186,19 @@ class SociosNegocioController extends ControllerBase
 	        return $this->redirect('error_store');
 	    }
 	}
-	
+
 	public function update(Request $request, $company, $id, $compact = false)
 	{
 	    # ¿Usuario tiene permiso para actualizar?
 	    #$this->authorize('update', $this->entity);
-	    
+
 	    # Validamos request, si falla regresamos atras
 	    $this->validate($request, $this->entity->rules);
-	    
+
 	    #DB::beginTransaction();
 	    $entity = $this->entity->findOrFail($id);
 	    $entity->fill($request->all());
-	    
+
 	    if ($entity->save())
 	    {
 	        # Guardamos el detalle de empresas en la que estara disponible
@@ -211,7 +211,7 @@ class SociosNegocioController extends ControllerBase
 	            }
      	            $entity->empresas()->sync($sync);
 	        }
-	        
+
 	        # Guardamos el detalle de formas de pago para el socio de negocio
 	        if(isset($request->formaspago)) {
 	            $sync = [];
@@ -222,15 +222,15 @@ class SociosNegocioController extends ControllerBase
 	            }
 	            $entity->formaspago()->sync($sync);
 	        }
-	        
+
 	        # Guardamos los contactos de los socios de negocio
 	        if(isset($request->contactos)){
 	            $contactos = collect($request->contactos);
-	            
+
 	            #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
 	            $ids_contactos = $contactos->pluck('id_contacto');
 	            $entity->contactos()->whereNotIn('id_contacto', $ids_contactos)->update(['eliminar' => 1]);
-	            
+
 	            #Insertar o Actualizar la informacion de los contactos
 	            foreach ($contactos as $contacto)
 	            {
@@ -241,15 +241,15 @@ class SociosNegocioController extends ControllerBase
 	        else {
 	            $entity->contactos()->where('fk_id_socio_negocio', $id)->update(['eliminar' => 1]);
 	        }
-	        
+
 	        # Guardamos el detalle de las direcciones de los socios de negocio
 	        if(isset($request->direcciones)){
 	            $direcciones = collect($request->direcciones);
-	            
+
 	            #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
 	            $ids_direcciones = $direcciones->pluck('id_direccion');
 	            $entity->direcciones()->whereNotIn('id_direccion', $ids_direcciones)->update(['eliminar' => 1]);
-	            
+
 	            #Inserta o Actualiza la informacion del contacto
 	            foreach ($direcciones as $direccion)
 	            {
@@ -260,15 +260,15 @@ class SociosNegocioController extends ControllerBase
 	        else {
 	            $entity->direcciones()->where('fk_id_socio_negocio', $id)->update(['eliminar' => 1]);
 	        }
-	        
+
 	        # Guardamos el detalle de las cuentas bancarias de los socios de negocio
 	        if(isset($request->cuentas)){
 	            $cuentas = collect($request->cuentas);
-	            
+
 	            #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
 	            $ids_cuentas = $cuentas->pluck('id_cuenta');
 	            $entity->cuentas()->whereNotIn('id_cuenta', $ids_cuentas)->update(['eliminar' => 1]);
-	            
+
 	            #Inserta o Actualiza la informacion del contacto
 	            foreach ($cuentas as $cuenta)
 	            {
@@ -279,15 +279,15 @@ class SociosNegocioController extends ControllerBase
 	        else {
 	            $entity->cuentas()->where('fk_id_socio_negocio', $id)->update(['eliminar' => 1]);
 	        }
-	        
+
 	        # Guardamos el detalle de los anexos de los socios de negocio
 	        if(isset($request->anexos)){
 	            $anexos = $request->anexos;
-	            
+
 	            #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
 	            $ids_anexos = collect($anexos)->pluck('id_anexo');
 	            $entity->anexos()->whereNotIn('id_anexo', $ids_anexos)->update(['eliminar' => 1]);
-	            
+
 	            #Inserta o Actualiza la informacion del contacto
 	            foreach ($anexos as $anexo)
 	            {
@@ -295,7 +295,7 @@ class SociosNegocioController extends ControllerBase
 	                    $myfile = $anexo['archivo'];
 	                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
 	                    $file_save = Storage::disk('socios_anexos')->put($id.'/'.$filename, file_get_contents($myfile->getRealPath()));
-	                    
+
     	                if($file_save) {
         	                array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
         	                $anexo['archivo'] = $filename;
@@ -310,11 +310,11 @@ class SociosNegocioController extends ControllerBase
 	        # Guardamos el detalle de los productos de los socios de negocio
 	        if(isset($request->productos)){
 	            $productos = collect($request->productos);
-	            
+
 	            #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
 	            $ids_productos = $productos->pluck('id_producto');
 	            $entity->productos()->update(['eliminar' => 1]);
-	            
+
 	            #Inserta o Actualiza la informacion del contacto
 	            foreach ($productos as $producto)
 	            {
@@ -325,13 +325,13 @@ class SociosNegocioController extends ControllerBase
 	        else {
 	            $entity->productos()->where('fk_id_socio_negocio', $id)->update(['eliminar' => 1]);
 	        }
-	        
+
 	        #DB::commit();
-	        
+
 	        # Eliminamos cache
 	        Cache::tags(getCacheTag('index'))->flush();
-	        
-	        $this->log('update', $id);
+
+	        // $this->log('update', $id);
 	        return $this->redirect('update');
 	    } else {
 	        #DB::rollBack();
@@ -339,7 +339,7 @@ class SociosNegocioController extends ControllerBase
 	        return $this->redirect('error_update');
 	    }
 	}
-	
+
 	public function descargar($company, $id)
 	{
 	    $archivo = AnexosSociosNegocio::where('id_anexo',$id)->first();

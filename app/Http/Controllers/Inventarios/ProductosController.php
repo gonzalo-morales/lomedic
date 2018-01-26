@@ -33,14 +33,14 @@ class ProductosController extends ControllerBase
     {
         # ¿Usuario tiene permiso para actualizar?
         #$this->authorize('update', $this->entity);
-        
+
         # Validamos request, si falla regresamos atras
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-        
+
         DB::beginTransaction();
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
-        
+
         if ($entity->save()) {
             if(isset($request->detalles)) {
                 foreach ($request->detalles as $detalle) {
@@ -49,10 +49,10 @@ class ProductosController extends ControllerBase
                 $entity->findOrFail($id)->upcs()->sync($sync);
             }
             DB::commit();
-            
+
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
-            
+
             $this->log('update', $id);
             return $this->redirect('update');
         } else {
@@ -61,7 +61,7 @@ class ProductosController extends ControllerBase
             return $this->redirect('error_update');
         }
     }
-    
+
     public function getDataView($entity = null)
     {
         $grupos = GrupoProductos::where('eliminar',0)->where('activo',1)->pluck('grupo','id_grupo')->sortBy('grupo');
@@ -106,7 +106,7 @@ class ProductosController extends ControllerBase
         }else{
             $skus = Productos::where('activo','1')->whereRaw("(sku ILIKE '%$term%' OR descripcion_corta ILIKE '%$term%' OR descripcion ILIKE '%$term%')")->whereIn('id_sku',SociosNegocio::find($id_socio)->productos->pluck('fk_id_sku'))->get();
         }
-        $skus_set = []; 
+        $skus_set = [];
         foreach ($skus as $sku)
         {
             $sku_data['id'] = (int)$sku->id_sku;
