@@ -23,7 +23,7 @@ $(document).ready(function () {
                                 '<input type="hidden" id="index" value="'+row_id+'">'+
                                 '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+ data[0].detalle[index].fk_id_sku +'"/>'+
                                 '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+ data[0].detalle[index].fk_id_upc +'"/>'+
-                                '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_almacen]" value="'+ data[0].detalle[index].fk_id_almacen +'"/>'+
+                                '<input class="falta_surtir" type="hidden" name="relations[has][detalle]['+row_id+'][falta_surtir]" value="0"/>'+
                                 '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_pedido]" value="'+ data[0].detalle[index].id_documento_detalle +'"/>'+
                                 '<input class="almacen_val" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_almacen]" value="'+ $('#fk_id_almacen').val() +'"/>'+
                                 '</th>' +
@@ -31,17 +31,15 @@ $(document).ready(function () {
                             '<td>'+ data[0].detalle[index].fk_id_upc + '</td>' +
                             '<td>'+ data[0].detalle[index].fk_id_upc + '</td>' +
                             '<td>'+ data[0].detalle[index].fk_id_upc + '</td>' +
-                            '<td>'+ '<input style="min-width:60px" type="number" class="form-control cantidad_total" onkeyup="validateCantidadTotal(this)" name="relations[has][detalle]['+row_id+'][cantidad]" value="0"/>' + '</td>' +
+                            '<td>'+ '<input style="min-width:60px" type="number" class="form-control cantidad_total" onkeyup="validateCantidadTotal(this),insertarValorAFalta(this)" onclick="validateCantidadTotal(this),insertarValorAFalta(this)" name="relations[has][detalle]['+row_id+'][cantidad]" value="0"/>' + '</td>' +
                             '<td>'+ $('#almacenistas').html().replace('$row_id',row_id).replace('$row_id',row_id) +'</td>'+
-                            '<td>'+ '<input style="min-width:60px" type="number" class="form-control cantidad_solicitada" onkeyup="validateCantidadSolicitada(this)" name="relations[has][detalle]['+row_id+'][cantidad_solicitada_salida]" value="0"/>' + '</td>' +
+                            '<td>'+ '<input style="min-width:60px" type="number" class="form-control cantidad_solicitada" onkeyup="validateCantidadSolicitada(this)" onclick="validateCantidadSolicitada(this)" name="relations[has][detalle]['+row_id+'][cantidad_solicitada_salida]" value="0"/>' + '</td>' +
                             '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
                         );
                     };
                     
                 },
                 error: function(){
-                    $('#fk_id_pedido').val('');
-                    $('#fk_id_pedido').trigger('change');
                     $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona un <b>pedido diferente</b>, ya que el seleccionado no cuenta con producto activo.',
                     settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 },
@@ -82,7 +80,7 @@ $(document).ready(function () {
                                 '<input type="hidden" id="index" value="'+row_id+'">'+
                                 '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+ data[0].detalle[index].fk_id_sku +'"/>'+
                                 '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+ data[0].detalle[index].fk_id_upc +'"/>'+
-                                '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_almacen]" value="'+ data[0].detalle[index].fk_id_almacen +'"/>'+
+                                '<input class="falta_surtir" type="hidden" name="relations[has][detalle]['+row_id+'][falta_surtir]" value="0"/>'+
                                 '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_pedido]" value="'+ data[0].detalle[index].id_documento_detalle +'"/>'+
                                 '<input class="almacen_val" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_almacen]" value="'+ $('#fk_id_almacen').val() +'"/>'+
                                 '</th>' +
@@ -90,16 +88,14 @@ $(document).ready(function () {
                             '<td>'+ data[0].detalle[index].fk_id_upc + '</td>' +
                             '<td>'+ data[0].detalle[index].fk_id_upc + '</td>' +
                             '<td>'+ data[0].detalle[index].fk_id_upc + '</td>' +
-                            '<td>'+ '<input style="min-width:60px" type="number" class="form-control cantidad_total" onkeyup="validateCantidadTotal(this)" name="relations[has][detalle]['+row_id+'][cantidad]" value="0"/>' + '</td>' +
+                            '<td>'+ '<input style="min-width:60px" type="number" class="form-control cantidad_total" onkeyup="validateCantidadTotal(this),insertarValorAFalta(this)" onclick="validateCantidadTotal(this),insertarValorAFalta(this)"  name="relations[has][detalle]['+row_id+'][cantidad]" value="0"/>' + '</td>' +
                             '<td>'+ $('#almacenistas').html().replace('$row_id',row_id).replace('$row_id',row_id) +'</td>'+
-                            '<td>'+ '<input style="min-width:60px" type="number" class="form-control cantidad_solicitada" onkeyup="validateCantidadSolicitada(this)" name="relations[has][detalle]['+row_id+'][cantidad_solicitada_salida]" value="0"/>' + '</td>' +
+                            '<td>'+ '<input style="min-width:60px" type="number" class="form-control cantidad_solicitada" onkeyup="validateCantidadSolicitada(this)" onclick="validateCantidadSolicitada(this)" name="relations[has][detalle]['+row_id+'][cantidad_solicitada_salida]" value="0"/>' + '</td>' +
                             '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
                         );
                     };
                 },
                 error: function(){
-                    $('#fk_id_pedido').val('');
-                    $('#fk_id_pedido').trigger('change');
                     $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona un <b>pedido diferente</b>, ya que el seleccionado no cuenta con producto activo.',
                     settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 },
@@ -148,6 +144,12 @@ $(document).ready(function () {
     });
     
 }); //document
+
+function insertarValorAFalta(el){
+    var thisVal = +$(el).val();
+    var $faltaSurtir = $(el).parent().parent().find('.falta_surtir');
+    $faltaSurtir.val(thisVal);
+}
 
 //FUNCIÓN PARA VALIDAR CANTIDAD SOLICITADA
 function validateCantidadSolicitada(el){

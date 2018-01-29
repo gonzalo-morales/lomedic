@@ -68,7 +68,7 @@ class HandheldController extends Controller
 			# solicitudes con tipo de captura handheld
 			'solicitudes' => SolicitudesSalidaDetalle::whereHas('empleados',function ($q){
 				$q->where('fk_id_empleado',Auth::user()->fk_id_empleado)->with('pedidos');
-			})->get(),
+			})->where('falta_surtir', '>' , 0)->get(),
 		]);
 		// dd($solicitudes);
 	}
@@ -84,8 +84,12 @@ class HandheldController extends Controller
 
 	public function solicitud_detalle_store(Request $request, $company)
 	{
-		// dd($request->all());
-		SolicitudesDetalleSurtido::create( $request->all() );
+		// dd($request->request);
+		$id = $request->id_detalle;
+		$detalle = SolicitudesSalidaDetalle::where('id_detalle',$id)->update([
+			'cantidad_escaneada' => $request->cantidad_escaneada,
+			'falta_surtir' => $request->falta_surtir,
+		]);
 		return redirect(companyRoute('handheld.solicitudes', ['id' => $request->fk_id_solicitud]))->with('message', 'Registro almacenado.');
 	}
 

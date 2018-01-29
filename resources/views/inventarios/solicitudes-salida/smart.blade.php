@@ -407,6 +407,7 @@
                         <th>Pedido</th>
                         <th>Almacenista</th>
                         <th>Cantidad solicitada a surtir</th>
+                        <th>Falta surtir</th>
                     </tr>
                 </thead>
                 <tbody id="tableBodySolicitudes">
@@ -441,6 +442,9 @@
                                 </td>
                                 <td>
                                     {{$detalle->cantidad_solicitada_salida}}
+                                </td>
+                                <td>
+                                    {{$detalle->falta_surtir}}
                                 </td>
                             </tr>
                         @endforeach

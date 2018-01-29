@@ -9,6 +9,7 @@
 		@foreach ($solicitudes as $solicitud)
 		{{--  {{dd($solicitud)}}  --}}
 			{{ link_to(companyRoute('handheld.solicitudes-solicitud', ['id' => $solicitud->id_detalle]), $solicitud->pedidos->no_pedido, ['class'=>'list-item']) }}
+			<p class="text-center" style="margin-top:0;margin-bottom:10px;">Falta surtir: <strong>{{$solicitud->falta_surtir}}</strong></p>
 		@endforeach
 	</div><br>
 	{{ link_to(route('home'), 'Regresar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}

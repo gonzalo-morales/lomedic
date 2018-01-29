@@ -6,8 +6,13 @@
 
 <form id="form" action="{{ companyRoute('handheld.solicitudes-solicitud-detalle-store') }}" method="post">
 	{{ csrf_field() }}
+	{{--  {{dd($solicitud)}}  --}}
 	<input type="hidden" name="fk_id_pedido" value="{{ $solicitud->fk_id_pedido }}">
-	<input type="hidden" name="fk_id_detalle_solicitud" value="{{ $solicitud->id_detalle }}">
+	<input type="hidden" name="id_detalle" value="{{ $solicitud->id_detalle }}">
+	<input type="hidden" name="fk_id_solicitud" value="{{ $solicitud->fk_id_solicitud }}">
+	<input type="hidden" name="fk_id_almacen" value="{{ $solicitud->fk_id_almacen }}">
+	<input type="hidden" name="fk_id_empleado" value="{{ $solicitud->fk_id_empleado }}">
+	<input type="hidden" name="cantidad" value="{{ $solicitud->cantidad }}">
 	<div>
 		<table class="table-columns">
 			<tr>
@@ -44,7 +49,7 @@
 					<label for="cantidad_escaneada">Cantidad escaneada</label>
 				</td>
 				<td class="column left">
-					<input class="form-control readonly" style="font-weight: 600;" id="cantidad_escaneada" name="cantidad_escaneada" type="text" value="0" readonly>
+					<input class="form-control readonly" style="font-weight: 600;" id="cantidad_escaneada" name="cantidad_escaneada" type="text" value="{{ $solicitud->cantidad_escaneada }}" readonly>
 				</td>
 			</tr>
 			<tr>
@@ -52,7 +57,7 @@
 					<label>Cantidad Restante</label>
 				</td>
 				<td id="cantidadRestante" class="column left">
-					<input id="cantidad_restante" class="form-control readonly cantidad_res" name="falta_surtir" type="text" value="0" readonly>
+					<input id="cantidad_restante" class="form-control readonly cantidad_res" name="falta_surtir" type="text" value="{{ $solicitud->falta_surtir }}" readonly>
 					<span id="validator" class="text-red display-none">Has sobrepasado la cantidad</span>
 				</td>
 			</tr>
@@ -76,8 +81,9 @@
 		$(document).on("keypress", "#form", function(event) {
 		    return event.keyCode != 13;
 		});
-
-		$('#cantidad_restante').val($('.total_db').val());
+		if($('#cantidad_restante').val() == 0){
+			$('#cantidad_restante').val($('.total_db').val());
+		}
 		// Damos de alta las variables
 		var valorOriginal = $('.total_db').val();
 		var valorRestante = parseInt($('#cantidad_restante').val());
@@ -126,10 +132,7 @@
 		});
 
         $('#form').on('submit', function(e){
-			if (num != 0) {
-            // Enviamos formulario
-            $(this).submit();
-			} else {
+			if (num == 0) {
 				e.preventDefault();
 				alert('Para guardar es necesario que mínimo agregues un UPC');
 			}
