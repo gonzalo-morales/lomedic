@@ -37,14 +37,14 @@ Route::group(['prefix' => '{company}/{entity}', 'middleware' => ['auth','share',
 Route::group(['prefix' => '{company}/wsdl/{service}', 'middleware' => ['auth','share','password_expired']], function($co) {
     $uri = request()->path();
     $service = substr($uri,strripos($uri,'/')+1);
-    
+
     if(class_exists('App\Http\Controllers\Wsdl\\'.$service))
     {
         $servicio = 'App\Http\Controllers\Wsdl\\'.$service;
-    
+
         #dd(companyAction('HomeController@index').'/'.$uri);
         $server = new SoapServer(companyAction('HomeController@index').'/'.$uri.'/?wsdl', ["soap_version"=>SOAP_1_2, 'exceptions'=>1, 'trace'=>1, 'cache_wsdl'=>0]);
-        
+
         $server->setClass($servicio);
         $server->addFunction(SOAP_FUNCTIONS_ALL);
         

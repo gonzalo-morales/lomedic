@@ -19,4 +19,9 @@ class Areas
 	{
 	    return 'sdf';
 	}
+
+	public function show()
+    {
+        return 'AAAA';
+    }
 }
