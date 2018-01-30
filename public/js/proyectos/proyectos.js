@@ -49,7 +49,7 @@ $(document).ready(function () {
         fechafin = $('#fecha_fin_contrato').val();
 		archivo = $("#contrato").prop('files');
 		
-		if(representante == '' | contrato == '' | fechainicio == '' | fechafin == '' | $("#contrato").length == 0) {
+		if(representante == '' || contrato == '' || fechainicio == '' || fechafin == '' || !$("#contrato").val()) {
 			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
@@ -85,7 +85,7 @@ $(document).ready(function () {
 		if(nombre == '') {
 			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
-		else if($("#archivo").length == 0) {
+		else if(!$("#archivo").val()) {
 			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
