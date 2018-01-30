@@ -181,8 +181,8 @@ return [
 	    Proengsoft\JsValidation\JsValidationServiceProvider::class,
 	    Orchestra\Parser\XmlServiceProvider::class,
 	    Barryvdh\Debugbar\ServiceProvider::class,
-	    RenatoMarinho\LaravelPageSpeed\ServiceProvider::class,
-        Artisaninweb\SoapWrapper\ServiceProvider::class
+	    RenatoMarinho\LaravelPageSpeed\ServiceProvider::class
+//        Artisaninweb\SoapWrapper\ServiceProvider::class
 	],
 
 	/*
@@ -239,6 +239,6 @@ return [
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
 	    'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
 	    'XmlParser' => Orchestra\Parser\Xml\Facade::class,
-        'SoapWrapper' => Artisaninweb\SoapWrapper\Facade::class
+//        'SoapWrapper' => Artisaninweb\SoapWrapper\Facade::class
 	],
 ];
