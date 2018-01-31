@@ -132,7 +132,7 @@
 @endsection
 
 @index
-	@section('form-title','Pagos')
+	@section('form-title','PagosController')
 @endif
 
 @crear

@@ -38,7 +38,7 @@ class SurtidoRecetaController extends ControllerBase
             'sucursales' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
             'recetas' => empty($entity) ? [] : Recetas::select('folio','id_receta')->pluck('folio','id_receta')->prepend('...', ''),
 //            'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->where('activo',1)->pluck('nombre_corto','id_usuario')->prepend('...', ''),
-//            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('...', ''),
+//            'areas' => PagosController::all()->pluck('area', 'id_area')->prepend('...', ''),
 //            'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'fk_id_usuario_captura' =>  Auth::id(),
         ];

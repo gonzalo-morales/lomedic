@@ -29,9 +29,9 @@ class AuthServiceProvider extends ServiceProvider
 	    parent::registerPolicies($gate);
 	    
 	    Passport::routes();
-	    
+
 	    Passport::tokensExpireIn(now()->addDays(15));
-	    
+
 	    Passport::refreshTokensExpireIn(now()->addDays(30));
 	    
 		# Agregamos politicas dinamicamente
