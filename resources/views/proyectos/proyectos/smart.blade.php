@@ -40,7 +40,7 @@
 			<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 				Cargando sucursales... <i class="material-icons align-middle loading">cached</i>
 			</div>
-			{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal',$sucursales ?? [],['class'=>'select2','disabled'])}}
+			{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal',$sucursales ?? [],['class'=>'select2',!Route::currentRouteNamed(currentRouteName('edit')) ?? 'disabled'])}}
 		</div>
 		<div class="form-group col-md-2 col-xs-12">
 			{{Form::cText('* Fecha Inicio','fecha_inicio',['class'=>' datepicker'])}}

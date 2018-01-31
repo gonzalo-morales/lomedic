@@ -24,7 +24,8 @@
 		"proengsoft/laravel-jsvalidation" : "~2.1",
 		"renatomarinho/laravel-page-speed" : "~1.8",
 		"laravel/envoy" : "~1.3",
-		"orlandocharles/cfdi" : "dev-master"
+		"orlandocharles/cfdi" : "dev-master",
+		"artisaninweb/laravel-soap": "0.3.*"
 	},
 	"require-dev" : {
 		"filp/whoops" : "~2.1",

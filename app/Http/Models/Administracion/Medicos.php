@@ -25,7 +25,7 @@ class Medicos extends ModelBase
      *
      * @var array
      */
-    protected $fillable = ['cedula','paterno', 'matenro','nombre','rfc','consultorio'];
+    protected $fillable = ['cedula','paterno', 'matenro','nombre','rfc','activo'];
 
     /**
      * The validation rules
@@ -39,11 +39,12 @@ class Medicos extends ModelBase
      * @var array
      */
     protected $fields = [
-        'cedula' => 'Fecha Receta',
+        'cedula' => 'Cedula',
         'paterno' => 'Apellido Paterno',
         'materno' => 'Apellido Matenro',
         'nombre' => 'Nombre',
-        'rfc' => 'RFC'
+        'rfc' => 'Rfc',
+        'activo_span' => 'Estatus'
     ];
 
     public function getNombreCompletoAttribute(){

@@ -49,7 +49,7 @@
             <tr>
                 <td class="column right">
                     <label for="no_lote">*Nueva ubicación</label>
-                    <br><span id="ubicacion_actual" class="text-description">Ubi. Actual: <b>{{ $movimiento->ubicacion->ubicacion }}</b></span>
+                    <br><span class="text-description">Ubi. Actual: {{ $movimiento->ubicacion->ubicacion }}<input id="ubicacion_actual" name="fk_id_ubicacion_anterior"  type="hidden" class="readonly" style="width: 35px;" value="{{ $movimiento->ubicacion->id_ubicacion }}"></span>
                 </td>
                 <td class="column left">
                       {{ Form::cSelect('','fk_id_ubicacion', $ubicacion ?? []) }}
@@ -70,7 +70,7 @@
             {{ link_to(companyRoute('handheld.movimientos', [
                 'id' => $previous,
             ]), 'Regresar', ['class'=>'square actionBtn green']) }}
-            <button type="submit" class="square blue actionBtn">Finalizar</button>
+            <button id="finalizar" type="submit" class="square blue actionBtn" disabled="true">Finalizar</button>
             {{ link_to(route('home'), 'Cancelar', ['class'=>'square red actionBtn']) }}
         </div>
     </div>
@@ -133,6 +133,7 @@
                         $('#ubicacion_nueva').attr('disabled', false).removeClass('readonly');
                         $('#stock_nuevo').attr('disabled', false).removeClass('readonly');
                         $('#fk_id_ubicacion').attr('disabled',false)
+                        $('#finalizar').attr('disabled',false);
                     } else {
                         alert('El UPC que tratas de escanear no es válido, verifica que sea el mismo y tenga existencias');
                         $('#loadingupc').hide();
@@ -147,23 +148,25 @@
 
         $('#form').on('submit', function(e){
                 // Enviamos formulario
-
-            if ($('#upc').val() == 0) {
-                e.preventDefault();
-                alert('Para finalizar es necesario que mínimo agregues un UPC y este sea verificado');
-            } else if($('#fk_id_ubicacion').val() == ''){
-                e.preventDefault();
+            if($('#fk_id_ubicacion').val() == ''){
                 alert('Para finalizar es necesario indicar la nueva ubicación');
-            } else if($('#lote_nuevo').val() == ''){
-                e.preventDefault();
+                return false;
+            }
+            if($('#fk_id_ubicacion').val() == $('#ubicacion_actual').val()){
+                alert('Recuerda que la nueva ubicación tiene que ser diferente a la actual');
+                return false;
+            }
+            if($('#lote_nuevo').val() == ''){
                 alert('Para finalizar es necesario indicar el nuevo Lote');
-            }else if($('#stock_nuevo').val() == '' || ($('#stock_actual').val() < $('#stock_nuevo').val())){
-                e.preventDefault();
-                alert('Verifica la cantidad del Stock antes de finalizar, recuerda que no puede pasar del stock actual');
-            }else {
-
-                $(this).submit();
-
+                return false;
+            }
+            if($('#stock_nuevo').val() == ''){
+                alert('Verifica la cantidad del Stock antes de finalizar');
+                return false;
+            }
+            if(+$('#stock_actual').val() < +$('#stock_nuevo').val()){
+                alert('Recuerda que no puede pasar del stock actual');
+                return false;
             }
 
         });
