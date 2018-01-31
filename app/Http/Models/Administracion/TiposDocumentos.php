@@ -17,7 +17,7 @@ class TiposDocumentos extends ModelBase
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
-	protected $fillable = ['nombre_documento','activo'];
+	protected $fillable = ['nombre_documento','activo','tabla'];
 
 	/**
 	 * The validation rules

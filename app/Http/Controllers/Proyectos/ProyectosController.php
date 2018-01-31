@@ -40,7 +40,7 @@ class ProyectosController extends ControllerBase
     {
         $sucursales = null;
         if(!empty($entity)){
-            $sucursales = Sucursales::where('fk_id_cliente',$entity->fk_id_cliente)->pluck('sucursal','id_sucursal');
+            $sucursales = Sucursales::where('fk_id_cliente',$entity->fk_id_cliente)->where('fk_id_localidad',$entity->fk_id_localidad)->pluck('sucursal','id_sucursal');
         }
 
         return [

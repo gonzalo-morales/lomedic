@@ -147,7 +147,7 @@ $(document).ready(function(){
         }else {
             validateDetail();
             if ($('#form-model').valid()) {
-            	var i = $('#detalleProductos tr').length;
+            	var i = $('#detalleProductos tbody tr').length;
                 var row_id = i > 0 ? +$('#detalleProductos tr:last').find('.index').val()+1 : 0;
             	
                 let id_upc = 0;

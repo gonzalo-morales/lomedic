@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\Notificaciones;
+use File;
+use App\Http\Models\Administracion\TiposDocumentos;
 
 class ModelBase extends Model
 {
     use Notifiable;
+
+    protected $tipo_documento = 0;
 
     protected $fillable = [];
 
@@ -26,6 +30,8 @@ class ModelBase extends Model
 	 */
 	protected $eagerLoaders = [];
 
+	protected $documentos = [];
+
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -33,8 +39,10 @@ class ModelBase extends Model
 	 */
 	public $timestamps = false;
 
-	public function __construct($attributes = []) {
+	public function __construct($attributes = [])
+	{
 		$this->eagerLoaders = $this->getAutoEager();
+	    #$this->documentos = $this->getDocumentos();
 		return parent::__construct($attributes);
 	}
 
@@ -90,9 +98,14 @@ class ModelBase extends Model
         */
 	}
 
+	public function getTipodocumento()
+	{
+	    return $this->tipo_documento;
+	}
+
 	public function newQuery() {
 	    if(in_array('eliminar',$this->getlistColumns())) {
-	       return parent::newQuery()->whereEliminar(0);
+	       return parent::newQuery()->where($this->getTable().'.eliminar',0);
 	    }
 	    return parent::newQuery();
 	}
@@ -107,6 +120,7 @@ class ModelBase extends Model
 			return !str_contains($value, '.');
 		});
 	}
+
 	public function getAutoEager()
 	{
 	    $keysfields = array_keys($this->fields ?? []) ?? [];
@@ -118,6 +132,29 @@ class ModelBase extends Model
 	            array_push($return,substr($key,0,$pos));
 	    }
         return $return;
+	}
+
+	public function getDocumentos()
+	{
+    	$models = [];
+    	/*
+    	foreach(File::allFiles(app_path().'/Http/Models') as $route) {
+    	    if(preg_match("/^.*.php$/", $route->getPathname())){
+    	        $smodel = substr(str_replace([base_path().'\a','/'],['A','\\'],$route->getPathname()),0,-4);
+
+    	        $models[(new $smodel)->getTable()] = $smodel;
+
+    	        /*$tipo = TiposDocumentos::where('tabla',(new $smodel)->getTable())->get();
+
+    	        $model = (new $smodel);
+    	        $tipo_documento = isset($model->tipo_documento) ? $model->tipo_documento : 0;
+    	        if(!empty($tipo_documento))
+    	            $models[$tipo_documento] = $smodel;
+
+    	    }
+    	}*/
+
+    	return $models;
 	}
 
 	public function getFillable()

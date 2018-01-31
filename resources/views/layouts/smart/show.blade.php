@@ -18,6 +18,7 @@
 @section('form-actions')
     <div class="col-md-12 col-xs-12">
         <div class="text-right">
+            @yield('left-actions')
             @can('create', currentEntity())
                 {{ link_to(companyRoute('create'), 'Nuevo', ['class'=>'btn btn-primary progress-button']) }}
             @endcan
@@ -26,6 +27,7 @@
             @endcan
             @yield('extraButtons')
             {{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default progress-button']) }}
+            @yield('right-actions')
         </div>
     </div>
 @endsection
