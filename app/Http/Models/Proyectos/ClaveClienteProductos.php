@@ -31,14 +31,25 @@ class ClaveClienteProductos extends ModelCompany
         'cantidad_presentacion','fk_id_unidad_medida','fk_id_clave_producto_servicio','fk_id_clave_unidad',
         'marca','fabricante','precio','precio_referencia','descuento','descuento_porcentaje','fk_id_impuesto',
         'dispensacion','dispensacion_porcentaje','fk_id_proyecto_tipo_producto','fk_id_propietario',
-        'fk_id_tipo_almacen','pertenece_cuadro','minimo','maximo','fk_id_sku','activo'];
+        'fk_id_tipo_almacen','pertenece_cuadro','minimo','maximo','fk_id_sku','activo','tope_receta','disponibilidad',
+        'fk_id_upc'];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-	];
+        'cantidad_presentacion' => 'required|numeric',
+        'precio' => ['required','numeric','regex:/^([1-9][0-9]{1,10})(\.[0-9]{2})?$/'],
+        'precio_referencia' => ['required','numeric','regex:/^([1-9][0-9]{1,10})(\.[0-9]{2})?$/'],
+        'descuento' => ['required','numeric','regex:/^([1-9][0-9]{1,10})(\.[0-9]{2})?$/'],
+        'descuento_porcentaje' => ['required','numeric','between:0,100'],
+        'dispensacion' => ['required','numeric','regex:/^([1-9][0-9]{1,10})(\.[0-9]{2})?$/'],
+        'dispensacion_porcentaje' => ['required','numeric','between:0,100'],
+        'minimo' => ['required','numeric','min:1'],
+        'maximo' => ['required','numeric','min:1'],
+        'tope_receta' => ['required','numeric','min:1'],
+    ];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

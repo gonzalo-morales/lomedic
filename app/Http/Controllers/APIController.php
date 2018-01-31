@@ -92,7 +92,9 @@ class APIController extends Controller
 			# Limite
 			$entity->limit($request['limit'] ?? null);
 
+
 			$collections = $entity->get();
+
 
 			# Pluck collection
 			if (isset($request['pluck'])) {
@@ -106,6 +108,16 @@ class APIController extends Controller
 			if (isset($request['only'])) {
 				$collections = $collections->map->only($request['only']);
 			}
+
+			if(isset($request['pivot'])){
+			    foreach ($collections as $collection){
+                    foreach ($request['pivot'] as $model){
+                        $collections = $collection->{$model}->map(function ($item){
+                           return $item->pivot;
+                        });
+                    }
+                }
+            }
 
 			return $collections;
 		}

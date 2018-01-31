@@ -76,6 +76,6 @@ class Upcs extends ModelCompany
 
     public function skus()
     {
-        return $this->belongsToMany('App\Http\Models\Inventarios\Productos','inv_det_sku_upc','fk_id_upc','fk_id_sku');
+        return $this->belongsToMany('App\Http\Models\Inventarios\Productos','inv_det_sku_upc','fk_id_upc','fk_id_sku','id_upc','id_sku')->withPivot('fk_id_upc','fk_id_sku','cantidad');
     }
 }

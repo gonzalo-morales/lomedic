@@ -2,22 +2,13 @@
 @section('content-width', 's12')
 @section('header-bottom')
 	@parent
+	{{ HTML::script(asset('js/clave_cliente_producto.js')) }}
 	<script type="text/javascript">
-        $("#fk_id_clave_producto_servicio").select2({
-            minimumInputLength:3,
-            ajax:{
-                url: $(this).data('url'),
-                dataType: 'json',
-                data: function (params) {
-                    return {term: params.term};
-                },
-                processResults: function (data) {
-                    return {results: data}
-                }
-            }
-        });
-    </script>
-	{{ HTML::script(asset('js/ventas/facturasclientes.js')) }}
+        var upcs_js = '{{$js_upcs ?? ''}}';
+        var cantidad_upc_js = '{{$js_cantidad_upc ?? ''}}';
+        var clave_producto_servicio_js = '{{$js_clave_producto_servicio ?? ''}}';
+        var clave_unidad_js = '{{$js_clave_unidad ?? ''}}';
+	</script>
 @endsection
 @section('form-content')
 	{{ Form::setModel($data) }}
@@ -44,10 +35,10 @@
     		{{ Form::cCheckboxBtn('Dentro de Cuadro','Si','pertenece_cuadro', $data['activo'] ?? null, 'No') }}
     	</div>
 		<div class="form-group col-md-6">
-    		{{Form::cSelectWithDisabled('* Sku','fk_id_sku',$skus ?? [],['class'=>'select2'])}}
+    		{{Form::cSelectWithDisabled('* Sku','fk_id_sku',$skus ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api'])}}
     	</div>
 		<div class="form-group col-md-6">
-    		{{Form::cSelectWithDisabled('Upc','fk_id_upc',$upcs ?? [],['class'=>'select2'])}}
+    		{{Form::cSelectWithDisabled('Upc','fk_id_upc',$upcs ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api'])}}
     	</div>
 		<div class="form-group col-md-4">
 			{{Form::cText('* Marca','marca')}}
@@ -56,13 +47,13 @@
 			{{Form::cText('* Fabricante','fabricante')}}
 		</div>
 		<div class="form-group col-md-4">
-    		{{Form::cSelectWithDisabled('* Unidad Medida','fk_id_unidad_medida',$unidadesmedidas ?? [],['class'=>'select2'])}}
+    		{{Form::cSelectWithDisabled('* Unidad Medida','fk_id_unidad_medida',$unidadesmedidas ?? [],['class'=>''])}}
     	</div>
 		<div class="form-group col-md-4">
-    		{{Form::cSelectWithDisabled('* Clave Producto SAT','fk_id_clave_producto_servicio',$clavesproductos ?? [],['class'=>'select2'])}}
+    		{{Form::cSelect('* Clave Producto SAT','fk_id_clave_producto_servicio',$clavesproductosservicios ?? [],['class'=>'select2','data-url'=>ApiAction('administracion.clavesproductosservicios')])}}
     	</div>
 		<div class="form-group col-md-3">
-    		{{Form::cSelectWithDisabled('* Clave Unidad Medida','fk_id_clave_unidad',$clavesunidades ?? [],['class'=>'select2'])}}
+    		{{Form::cSelectWithDisabled('* Clave Unidad Medida','fk_id_clave_unidad',$clavesunidades ?? [],['class'=>'select2','data-url'=>ApiAction('administracion.clavesunidades')])}}
     	</div>
 		<div class="form-group col-md-3">
 			{{Form::cNumber('* Precio','precio')}}
