@@ -77,7 +77,7 @@ class SurtidoRequisicionHospitalariaDetalle extends ModelCompany
 //
 //    public function area()
 //    {
-//        return $this->hasOne(Areas::class,'id_area','fk_id_area');
+//        return $this->hasOne(PagosController::class,'id_area','fk_id_area');
 //    }
     public function claveClienteProducto()
     {

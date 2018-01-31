@@ -271,7 +271,7 @@ class NotasCargoClientesController extends ControllerBase
                 "fk_id_clave_producto_servicio" => $factura->fk_id_clave_producto_servicio,
                 "clave_producto_servicio"=>$factura->claveproducto->clave_producto_servicio,
                 "fk_id_sku" => $factura->fk_id_sku,
-                "sku"=>$factura->sku->sku,
+                "sku"=>$factura->productos->sku,
                 "fk_id_upc" => $factura->fk_id_upc,
                 "descripcion"=>$factura->upc->upc,
                 "fk_id_clave_cliente" => $factura->fk_id_clave_cliente,

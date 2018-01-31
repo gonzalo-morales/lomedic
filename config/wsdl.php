@@ -2,7 +2,7 @@
 return [
 	/*
 	|--------------------------------------------------------------------------
-	| Default Wsdl Connection Name
+	| Default RestApi Connection Name
 	|--------------------------------------------------------------------------
 	*/
 
@@ -10,7 +10,7 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Wsdl Connections
+	| RestApi Connections
 	|--------------------------------------------------------------------------
 	*/
 
@@ -56,7 +56,7 @@ return [
 	    
 	    
 	    'localhost_areas' => [
-	        'url' => 'http://localhost:81/abisa/Wsdl/Areas/?wsdl',
+	        'url' => 'http://localhost:81/abisa/RestApi/PagosController/?wsdl',
 	        'options'  => [
 	            'encoding' => 'UTF-8',
 	            'stream_context' => stream_context_create([
