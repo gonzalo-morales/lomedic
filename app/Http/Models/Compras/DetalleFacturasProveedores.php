@@ -115,7 +115,7 @@ class DetalleFacturasProveedores extends ModelCompany
                         $segDesv->folio_factura = $detalleFactura->facturaProveedor->folio_factura;
                         $segDesv->fecha_captura = Carbon::now();
                         $segDesv->fk_id_usuario_captura = Auth::id();
-                        $segDesv->estatus = 1;
+                        $segDesv->estatus = 2;
                         $segDesv->tipo = 2;
                         $segDesv->save();
 

@@ -27,7 +27,7 @@ class SeguimientoDesviacion extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_proveedor','serie_factura','folio_factura','fecha_captura','fk_id_usuario_captura','fecha_revision','fk_id_usuario_revision','estatus','tipo'];
+    protected $fillable = ['fk_id_proveedor','serie_factura','folio_factura','fecha_captura','fk_id_usuario_captura','fecha_revision','fk_id_usuario_revision','fk_id_estatus','tipo'];
 
     /**
      * Los atributos que seran visibles en index-datable
@@ -40,7 +40,7 @@ class SeguimientoDesviacion extends ModelCompany
         'usuarios.nombre_corto'             => 'Usuario Captura',
         'serie_factura'                     => 'Serie Factura',
         'folio_factura'                     => 'Folio Factura',
-        'estatus'                           => 'Estatus',
+        'estatus.estatus'                   => 'Estatus',
         'tipo'                              => 'Tipo',
     ];
 
@@ -55,6 +55,10 @@ class SeguimientoDesviacion extends ModelCompany
     public function detallesSeguimientoDesviacion()
     {
         return $this->hasMany('App\Http\Models\Compras\DetalleSeguimientoDesviacion','fk_id_seguimiento_desviacion','id_seguimiento_desviacion');
+    }
+    public function estatus()
+    {
+        return $this->belongsTo('App\Http\Models\Compras\EstatusAutorizaciones','fk_id_estatus','id_estatus');
     }
     // public function tipoDocumento()
     // {

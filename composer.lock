@@ -1318,16 +1318,16 @@
         },
         {
             "name": "laravelnews/laravel-twbs4",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravelnews/laravel-twbs4.git",
-                "reference": "f956f33081012c917dfd552603fbb5a9dd088a03"
+                "reference": "bc77e48bce692055c71200d7d3791d66a0697191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravelnews/laravel-twbs4/zipball/f956f33081012c917dfd552603fbb5a9dd088a03",
-                "reference": "f956f33081012c917dfd552603fbb5a9dd088a03",
+                "url": "https://api.github.com/repos/laravelnews/laravel-twbs4/zipball/bc77e48bce692055c71200d7d3791d66a0697191",
+                "reference": "bc77e48bce692055c71200d7d3791d66a0697191",
                 "shasum": ""
             },
             "require": {
@@ -1360,7 +1360,7 @@
                 }
             ],
             "description": "Laravel 5 frontend preset for Twitter Bootstrap 4",
-            "time": "2018-01-19T06:24:03+00:00"
+            "time": "2018-01-25T00:23:11+00:00"
         },
         {
             "name": "laravie/parser",
@@ -1911,16 +1911,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v3.1.3",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "579f4ce846734a1cf55d6a531d00ca07a43e3cda"
+                "reference": "e57b3a09784f846411aa7ed664eedb73e3399078"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/579f4ce846734a1cf55d6a531d00ca07a43e3cda",
-                "reference": "579f4ce846734a1cf55d6a531d00ca07a43e3cda",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/e57b3a09784f846411aa7ed664eedb73e3399078",
+                "reference": "e57b3a09784f846411aa7ed664eedb73e3399078",
                 "shasum": ""
             },
             "require": {
@@ -1958,7 +1958,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2017-12-26T14:43:21+00:00"
+            "time": "2018-01-25T21:31:33+00:00"
         },
         {
             "name": "orchestra/parser",

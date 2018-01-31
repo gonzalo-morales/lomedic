@@ -257,9 +257,7 @@ class ModelBase extends Model
         }
         return $rules;
 	}
-<<<<<<< HEAD
 }
-=======
 	/*
 	public function documento_destino($tipo = '0')
 	{
@@ -289,5 +287,3 @@ class ModelBase extends Model
 	            break;
 	    }
 	}*/
-}
->>>>>>> 3694004fb412a884f86c05cd59c538dd7ad01db7
