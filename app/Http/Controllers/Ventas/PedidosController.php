@@ -43,7 +43,7 @@ class PedidosController extends ControllerBase
         $empresa_actual = Empresas::where('activo',1)->where('conexion',request()->company)->first();
         return [
             'localidades' => Localidades::where('activo',1)->pluck('localidad','id_localidad'),
-            'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->activo()->whereNotNull('fk_id_tipo_socio_venta')
+            'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')
                 ->whereHas('empresas', function($q) use($empresa_actual) {
                     $q->where('id_empresa','=',$empresa_actual->id_empresa);
                 })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),

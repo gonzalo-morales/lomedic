@@ -4,7 +4,6 @@ namespace App\Http\Models\Ventas;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\FormasPago;
-use DB;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\EstatusDocumentos;

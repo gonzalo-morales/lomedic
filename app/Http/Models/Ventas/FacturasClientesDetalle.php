@@ -26,6 +26,8 @@ class FacturasClientesDetalle extends ModelCompany
      */
     protected $table = 'fac_det_facturas_clientes';
     
+    public $tipo_documento = 4;
+    
     /**
      * The primary key of the table
      * @var string
@@ -67,11 +69,11 @@ class FacturasClientesDetalle extends ModelCompany
         return $this->hasOne(ClavesProductosServicios::class,'id_clave_producto_servicio','fk_id_clave_producto_servicio');
     }
     
-    /*
+    
     public function documentodestino()
     {
         return $this->morphMany(DetalleSolicitudes::class,null,'fk_id_tipo_documento_base','fk_id_linea');
-    }*/
+    }
     
     public function productos()
     {

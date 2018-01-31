@@ -15,6 +15,8 @@
 		"fideloper/proxy" : "~3.3",
 		"laravel/framework" : "~5.5",
 		"laravel/tinker" : "~1.0",
+		"laravel/installer" : "~1.5",
+		"laravel/passport" : "~4.0",
 		"laravelcollective/html" : "~5.5",
 		"laravelnews/laravel-twbs4" : "~1.1",
 		"maatwebsite/excel" : "~2.1",
