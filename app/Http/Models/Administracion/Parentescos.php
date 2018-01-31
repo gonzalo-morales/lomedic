@@ -11,7 +11,7 @@ class Parentescos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_parentescos';
+	protected $table = 'maestro.gen_cat_parentescos';
 
 	/**
 	 * The primary key of the table

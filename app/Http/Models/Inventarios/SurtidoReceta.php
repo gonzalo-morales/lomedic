@@ -28,7 +28,7 @@ class SurtidoReceta extends ModelCompany
         'fk_id_usuario_modificacion',
         'fecha_modificacion',
         'fk_id_surtido_receta',
-        'fk_id_requisicion_hospitalaria',
+        'fk_id_receta',
         'fecha_surtido',
         'cancelado',
         'fecha_cancelado',
@@ -48,6 +48,7 @@ class SurtidoReceta extends ModelCompany
 
     protected $fields = [
         'id_surtido_receta' => '#',
+        'fk_id_receta' => 'Receta',
         'observaciones' => 'observaciones',
         'fecha_surtido' => 'Fecha surtido',
         'estatus.estatus_surtido' => 'Estatus'

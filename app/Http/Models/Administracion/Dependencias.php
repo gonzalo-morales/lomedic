@@ -52,6 +52,6 @@ class Dependencias extends ModelBase
 
     function subdependencias()
     {
-        return $this->hasMany(Subdependencias::class,'fk_id_dependencia','id_dependencia');
+        return $this->hasMany(Parentescos::class,'fk_id_dependencia','id_parentesco');
     }
 }
