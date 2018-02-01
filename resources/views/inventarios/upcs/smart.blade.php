@@ -27,37 +27,37 @@
     <div class="row">
     	<div class="col-sm-12 col-md-6 col-lg-4">
     		<div class="form-group">
-    			{{ Form::cText('Upc', 'upc') }}
+    			{{ Form::cText('* Upc', 'upc') }}
     		</div>
     	</div>
     	<div class="col-sm-12 col-md-6 col-lg-4">
     		<div class="form-group">
-    			{{ Form::cText('Registro Sanitario', 'registro_sanitario') }}
+    			{{ Form::cText('* Registro Sanitario', 'registro_sanitario') }}
     		</div>
     	</div>
     	<div class="col-sm-12 col-md-6 col-lg-4">
     		<div class="form-group">
-    			{{ Form::cText('Nombre Comercial', 'nombre_comercial') }}
+    			{{ Form::cText('* Nombre Comercial', 'nombre_comercial') }}
     		</div>
     	</div>
     	<div class="col-sm-12 col-md-6 col-lg-4">
     		<div class="form-group">
-    			{{ Form::cText('Marca', 'marca') }}
+    			{{ Form::cText('* Marca', 'marca') }}
     		</div>
     	</div>
     	<div class="col-sm-12 col-md-6 col-lg-4">
     		<div class="form-group">
-    			{{ Form::cSelect('Presentacion Venta', 'fk_id_presentacion_venta', $presentaciones ?? []) }}
+    			{{ Form::cSelect('* Presentacion Venta', 'fk_id_presentacion_venta', $presentaciones ?? []) }}
     		</div>
     	</div>
     	<div class="col-sm-12 col-md-6 col-lg-4">
     		<div class="form-group">
-    			{{ Form::cSelect('Laboratorio', 'fk_id_laboratorio', $laboratorios ?? []) }}
+    			{{ Form::cSelect('* Laboratorio', 'fk_id_laboratorio', $laboratorios ?? []) }}
     		</div>
     	</div>
     	<div class="col-sm-12 col-md-8 col-lg-4">
     		<div class="form-group">
-    			{{ Form::cSelect('Pais Origen', 'fk_id_pais_origen', $paises ?? []) }}
+    			{{ Form::cSelect('* Pais Origen', 'fk_id_pais_origen', $paises ?? []) }}
     		</div>
     	</div>
     	<div class="col-sm-6 col-md-4 col-lg-2">

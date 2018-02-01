@@ -137,8 +137,7 @@ $(document).ready(function () {
       end = new Date(end).getTime()
 
       var fTotal = end - start;
-      var days = fTotal / (1000 * 60 * 60 * 24);
-      console.log(days);
+      var days = Math.floor(fTotal / (1000 * 60 * 60 * 24));
 
       //Función para indicar que la segunda fecha tome el valor de la primera
       fecha1.on('set', function(event) {

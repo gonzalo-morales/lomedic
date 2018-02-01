@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-12 mb-3">
             {{--@if(Route::currentRouteNamed(currentRouteName('create')))--}}
-            <div class="card z-depth-1-half">
+            <div>
                 <div class="card-body row table-responsive">
                     <div class="tab-content">
                         <div class="tab-pane active" role="tabpanel">
@@ -88,7 +88,7 @@
             </div><!--/row-->
             {{--@endif--}}
             <div class="card z-depth-1-half">
-                <div class="card-body row table-responsive">
+                <div class="card-body table-responsive">
                     <table class="table highlight mt-3" id="tContactos">
                         <thead>
                             <tr>
