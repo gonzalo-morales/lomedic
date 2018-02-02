@@ -16,7 +16,7 @@
     </div>
     <div class="row">
     	<div class="form-group col-md-4 col-xs-12">
-    		{{ Form::cText('* Fecha Nacimiento','fecha_nacimiento') }}
+    		{{ Form::cText('* Fecha Nacimiento','fecha_nacimiento',['class'=>'datepicker']) }}
     	</div>
     	<div class="form-group col-md-4 col-xs-12">
     		{{ Form::cText('* Curp','curp') }}
@@ -71,5 +71,9 @@
             Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
         </div>
         {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
-    </div>
-@endsection
+	</div>
+	@endsection
+	@section('header-bottom')
+		@parent
+		<script src="{{ asset('js/empleados.js') }}"></script>
+	@endsection

@@ -66,7 +66,7 @@ class Proyectos extends ModelCompany
      * @var array
      */
     public $rules = [
-        'proyecto' => 'required',
+        'proyecto' => 'required|max:50',
         'fk_id_cliente' => 'required',
         'fecha_inicio' => 'required',
         'fecha_terminacion' => 'required',

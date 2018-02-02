@@ -51,7 +51,7 @@ class CausasBajas extends ModelBase
      * @var array
      */
     public $rules = [
-        'causa_baja' => 'required',
+        'causa_baja' => 'required|max:100',
 
     ];
 
