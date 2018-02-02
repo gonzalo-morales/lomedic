@@ -8,7 +8,7 @@
     		{{ Form::cText('* Motivo de devolución','devolucion_motivo') }}
     	</div>
     	<div  class="col-md-4 text-center">
-    		{{ Form::cRadio('Solicitante Devolucion','solicitante_devolucion',[0=>'Sucursal',1=>'Proveedor']) }}
+    		{{ Form::cRadio('* Solicitante Devolucion','solicitante_devolucion',[0=>'Sucursal',1=>'Proveedor']) }}
     	</div>
     	<div  class="col-md-8 text-center mt-2">
     		<div class="alert alert-warning" role="alert">

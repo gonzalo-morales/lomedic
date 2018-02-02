@@ -20,7 +20,7 @@ $('#entrada_escaner').on('change', function() {
                     if(data != '')
                     {
                         $('#lista_entradas').append('<li class="nav-item">' +
-                            '<a class="nav-link" href="#'+tipo_documento+'_'+numero_documento+'" role="tab" data-toggle="tab">'+numero_documento+'</a> ' +
+                            '<a class="nav-link tabs-entrada" href="#'+tipo_documento+'_'+numero_documento+'" role="tab" data-toggle="tab">'+numero_documento+'</a> ' +
                             '</li>');
 
                         var detalle_entrada = '';
@@ -55,7 +55,7 @@ $('#entrada_escaner').on('change', function() {
 
                             if( cantidad_surtida < cantidad)
                             {
-                                estado_producto = '<input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_ingresar"  name="datos_entradas['+index+'][ingresar]" value="0" style="max-width:6em;" disabled>';
+                                estado_producto = '<input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_ingresar"  name="datos_entradas['+index+'][ingresar]"class="form-control" value="0" style="max-width:6em;" disabled>';
 
                                 detalle_entrada = detalle_entrada + '<tr>' +
                                     '<td>'+sku+'</td>' +
@@ -63,12 +63,12 @@ $('#entrada_escaner').on('change', function() {
                                     '<td>'+sku_descripcion .substr(0, 150)+'</td>' +
                                     '<td>'+nombre_cliente +'</td>' +
                                     '<td>'+nombre_proyecto+'</td>' +
-                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_lote" name="datos_entradas['+index+'][lote]" value="'+lote+'" style="max-width:6em;" disabled></td>' +
-                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_caducidad" name="datos_entradas['+index+'][caducidad]" value="'+fecha_caducidad+'" style="max-width:6em;"disabled></td>' +
-                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_entrada" value="'+cantidad+'" style="max-width:6em;" disabled></td>' +
-                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_surtida" name="datos_entradas['+index+'][surtida]"  value="'+cantidad_surtida+'" style="max-width:6em;" disabled></td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_lote" name="datos_entradas['+index+'][lote]" class="form-control" value="'+lote+'" style="min-width:6em;" disabled></td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_caducidad" name="datos_entradas['+index+'][caducidad]" class="form-control" value="'+fecha_caducidad+'" style="min-width:6em;"disabled></td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_entrada" value="'+cantidad+'" style="max-width:3.5em;" class="form-control" disabled></td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_surtida" name="datos_entradas['+index+'][surtida]"  value="'+cantidad_surtida+'" style="max-width:3.5em;" class="form-control" disabled></td>' +
                                     '<td>'+estado_producto+'</td>' +
-                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_precioUnitario" name="datos_orden['+index+'][precio_unitario]"  value="'+precio_unitario+'" disabled style="max-width:6em;"></td>' +
+                                    '<td><input type="text" id="'+tipo_documento+'_'+numero_documento+'_'+id_detalle_documento+'_precioUnitario" name="datos_orden['+index+'][precio_unitario]" class="form-control" value="'+precio_unitario+'" disabled style="min-width:6em;"></td>' +
                                     '<input type="hidden" name="datos_entradas['+index+'][id_sku]" value="'+id_sku+'" >' +
                                     '<input type="hidden" name="datos_entradas['+index+'][id_upc]" value="'+id_upc+'" >' +
                                     '<input type="hidden" name="datos_entradas['+index+'][id_detalle_documento]" value="'+id_detalle_documento+'" >' +
@@ -80,87 +80,87 @@ $('#entrada_escaner').on('change', function() {
                             }
                         });
 
-                        $('#detalle_entrada').append('<div role="tabpanel" class="tab-pane fade in" id="'+tipo_documento+'_'+numero_documento+'">' +
-                            '<div class="row"> ' +
-                            '   <div class="col-sm-12"> ' +
-                            '       <h3>Entrada: '+ numero_documento +'</h3> <input type="hidden" name="'+numero_documento+'">' +
-                            '       <div class="card z-depth-1-half"> ' +
-                            '           <div class="card-body"> ' +
-                            '               <div class="row">' +
-                            '                   <div class="col-md-6 col-sm-6 col-lg-3">' +
-                            '                       <div class="form-group">' +
-                            '                           <label for="sucursal_'+numero_documento+'">Sucursal</label>' +
-                            '                           <input class="form-control" id="sucursal_'+tipo_documento+'_'+numero_documento+'" name="sucursal_'+tipo_documento+'_'+numero_documento+'" type="text" value="'+data.datos_documento.sucursales.sucursal+'" disabled>' +
-                            '                       </div>' +
-                            '                   </div> ' +
-                            '                   <div class="col-md-6 col-sm-6 col-lg-3">' +
-                            '                       <div class="form-group">' +
-                            '                           <label for="negocios_'+tipo_documento+'_'+numero_documento+'">Proveedor</label>' +
-                            '                           <input class="form-control" id="negocios_'+tipo_documento+'_'+numero_documento+'" name="negocios_'+tipo_documento+'_'+numero_documento+'" type="text" value="'+data.datos_documento.proveedor.nombre_comercial+'" disabled>' +
-                            '                       </div>' +
-                            '                   </div> ' +
-                            '                   <div class="col-md-6 col-sm-6 col-lg-3">' +
-                            '                       <div class="form-group">' +
-                            '                           <label for="documento_'+tipo_documento+'_'+numero_documento+'">Documento</label>' +
-                            '                           <input class="form-control" id="documento_'+tipo_documento+'_'+numero_documento+'" name="documento_'+tipo_documento+'_'+numero_documento+'" type="text">' +
-                            '                       </div>' +
-                            '                   </div>' +
-                            '                   <div class="text-right d-flex ">' +
-                            '                       <button type="button" class="btn btn-primary" id="guardar_entrada" onclick="guardarEntrada('+tipo_documento+','+numero_documento+')" data-url='+data.company_route+'>Guardar</button> ' +
-                            '                   </div>' +
-                            '                   <div class="col-12"> ' +
-                            '                       <h3>Detalle de la entrada</h3> ' +
-                            '                       <div class="row justify-content-center">' +
-                            '                           <div class="col-md-6 col-sm-6 col-lg-3">' +
-                            '                               <div class="form-group">' +
-                            '                                   <label for="lote_'+tipo_documento+'_'+numero_documento+'">Lote</label>' +
-                            '                                   <input class="form-control" id="lote_'+tipo_documento+'_'+numero_documento+'" name="lote_'+tipo_documento+'_'+numero_documento+'" type="text">' +
-                            '                               </div>' +
-                            '                           </div>' +
-                            // '                           <div class="col-md-2 col-sm-3 col-lg-2">' +
-                            // '                               <div class="form-group">' +
-                            // '                                   <label for="precio_unitario_'+tipo_documento+'_'+numero_documento+'">Precio Unitario</label>' +
-                            // '                                   <input class="form-control" id="precio_unitario_'+tipo_documento+'_'+numero_documento+'" name="precio_unitario_'+tipo_documento+'_'+numero_documento+'" type="text">' +
-                            // '                               </div>' +
-                            // '                           </div>' +
-                            '                           <div class="col-md-6 col-sm-6 col-lg-3">' +
-                            '                               <div class="form-group">' +
-                            '                                   <label for="caducidad_'+tipo_documento+'_'+numero_documento+'">Fecha de caducidad</label>' +
-                            '                                   <input class="datepicker form-control" id="caducidad_'+tipo_documento+'_'+numero_documento+'" name="caducidad_'+tipo_documento+'_'+numero_documento+'" type="text" placeholder="Selecciona una fecha">' +
-                            '                               </div>' +
-                            '                           </div>' +
-                            '                           <div class="col-12 col-md-6 col-lg-4">' +
-                            '                               <div class="form-group">' +
-                            '                                   <label for="codigo_barras">Código del producto</label>' +
-                            '                                   <input class="form-control" id="codigo_barras" name="codigo_barras_'+tipo_documento+'_'+numero_documento+'" type="text">' +
-                            '                               </div>' +
-                            '                           </div>' +
-                            '                       </div>' +
-                            '                       <form id="form_'+tipo_documento+'_'+numero_documento+'"><table class="table table-hover table-responsive" name="table2">' +
-                            '                           <thead>' +
-                            '                               <tr>' +
-                            '                                   <th>Sku</th> ' +
-                            '                                   <th>Upc</th> ' +
-                            '                                   <th>Descripción</th> ' +
-                            '                                   <th>Cliente</th>' +
-                            '                                   <th>Proyecto</th>' +
-                            '                                   <th>Lote</th>' +
-                            '                                   <th>F. de caducidad</th>' +
-                            '                                   <th>C. Entrada</th>' +
-                            '                                   <th>C. Surtida</th>' +
-                            '                                   <th>C. ingresar</th>' +
-                            '                                   <th>Precio</th>' +
-                            '                                   <th></th>' +
-                            '                               </tr> ' +
-                            '                           </thead> ' +
-                            '                           <tbody class="detalle_entrada_'+tipo_documento+'_'+numero_documento+'">'+ detalle_entrada +'</tbody> ' +
-                            '                       </table></form> ' +
-                            '                   </div> ' +
-                            '               </div> ' +
-                            '           </div>' +
-                            '       </div>' +
+                        $('#detalle_entrada').append('<div role="tabpanel" class="tab-pane fade" id="'+tipo_documento+'_'+numero_documento+'">' +
+                        '       <div class="card z-depth-1-half"> ' +
+                        '           <div class="card-header"> ' +
+                        '               <h3 class="text-center">Entrada: '+ numero_documento +'</h3> <input type="hidden" name="'+numero_documento+'">' +
+                        '               <div class="row justify-content-center">' +
+                        '                   <div class="col-md-6 col-sm-6 col-lg-3">' +
+                        '                       <div class="form-group">' +
+                        '                           <label for="sucursal_'+numero_documento+'">Sucursal</label>' +
+                        '                           <input class="form-control" id="sucursal_'+tipo_documento+'_'+numero_documento+'" name="sucursal_'+tipo_documento+'_'+numero_documento+'" type="text" value="'+data.datos_documento.sucursales.sucursal+'" disabled>' +
+                        '                       </div>' +
+                        '                   </div> ' +
+                        '                   <div class="col-md-6 col-sm-6 col-lg-3">' +
+                        '                       <div class="form-group">' +
+                        '                           <label for="negocios_'+tipo_documento+'_'+numero_documento+'">Proveedor</label>' +
+                        '                           <input class="form-control" id="negocios_'+tipo_documento+'_'+numero_documento+'" name="negocios_'+tipo_documento+'_'+numero_documento+'" type="text" value="'+data.datos_documento.proveedor.nombre_comercial+'" disabled>' +
+                        '                       </div>' +
+                        '                   </div> ' +
+                        '                   <div class="col-md-6 col-sm-6 col-lg-3">' +
+                        '                       <div class="form-group">' +
+                        '                           <label for="documento_'+tipo_documento+'_'+numero_documento+'">* Documento</label>' +
+                        '                           <input class="form-control" id="documento_'+tipo_documento+'_'+numero_documento+'" name="documento_'+tipo_documento+'_'+numero_documento+'" type="text">' +
+                        '                       </div>' +
+                        '                   </div>' +
+                        '                   <div class="text-right d-flex ">' +
+                        '                       <button type="button" class="btn btn-primary" id="guardar_entrada" onclick="guardarEntrada('+tipo_documento+','+numero_documento+')" data-url='+data.company_route+'>Guardar cambios del detalle</button> ' +
+                        '                   </div>' +
+                        '               </div> ' +
+                        '               <hr>' +
+                        '                       <h4 class="text-center">Detalle de la entrada <small class="text-muted">Suma nuevos registros a la entrada ingresando:</small></h4> ' +
+                        '                   <div class="row justify-content-center">' +
+                    '                           <div class="col-md-6 col-sm-6 col-lg-3">' +
+                    '                               <div class="form-group">' +
+                    '                                   <label for="lote_'+tipo_documento+'_'+numero_documento+'">Lote</label>' +
+                    '                                   <input class="form-control" id="lote_'+tipo_documento+'_'+numero_documento+'" name="lote_'+tipo_documento+'_'+numero_documento+'" type="text">' +
+                    '                               </div>' +
+                    '                           </div>' +
+                    // '                           <div class="col-md-2 col-sm-3 col-lg-2">' +
+                    // '                               <div class="form-group">' +
+                    // '                                   <label for="precio_unitario_'+tipo_documento+'_'+numero_documento+'">Precio Unitario</label>' +
+                    // '                                   <input class="form-control" id="precio_unitario_'+tipo_documento+'_'+numero_documento+'" name="precio_unitario_'+tipo_documento+'_'+numero_documento+'" type="text">' +
+                    // '                               </div>' +
+                    // '                           </div>' +
+                    '                           <div class="col-md-6 col-sm-6 col-lg-3">' +
+                    '                               <div class="form-group">' +
+                    '                                   <label for="caducidad_'+tipo_documento+'_'+numero_documento+'">Fecha de caducidad</label>' +
+                    '                                   <input class="datepicker form-control" id="caducidad_'+tipo_documento+'_'+numero_documento+'" name="caducidad_'+tipo_documento+'_'+numero_documento+'" type="text" placeholder="Selecciona una fecha">' +
+                    '                               </div>' +
+                    '                           </div>' +
+                    '                           <div class="col-12 col-md-6 col-lg-4">' +
+                    '                               <div class="form-group">' +
+                    '                                   <label for="codigo_barras">Código del producto</label>' +
+                    '                                   <input class="form-control" id="codigo_barras" name="codigo_barras_'+tipo_documento+'_'+numero_documento+'" type="text">' +
+                    '                               </div>' +
+                    '                           </div>' +
+                    '                       </div>' +
+                    '                   </div> ' +
+                    '                   <div class="card-body"> ' +
+                    '                       <form id="form_'+tipo_documento+'_'+numero_documento+'"><table class="table table-hover table-responsive" name="table2">' +
+                    '                           <thead>' +
+                    '                               <tr>' +
+                    '                                   <th>Sku</th> ' +
+                    '                                   <th>Upc</th> ' +
+                    '                                   <th>Descripción</th> ' +
+                    '                                   <th>Cliente</th>' +
+                    '                                   <th>Proyecto</th>' +
+                    '                                   <th>Lote</th>' +
+                    '                                   <th>F. de caducidad</th>' +
+                    '                                   <th>C. Entrada</th>' +
+                    '                                   <th>C. Surtida</th>' +
+                    '                                   <th>C. ingresar</th>' +
+                    '                                   <th>Precio</th>' +
+                    '                                   <th></th>' +
+                    '                               </tr> ' +
+                    '                           </thead> ' +
+                    '                           <tbody class="detalle_entrada_'+tipo_documento+'_'+numero_documento+'">'+ detalle_entrada +'</tbody> ' +
+                    '                       </table></form> ' +
+                    '                   </div> ' +
                             '   </div>' +
                             '</div></div>');
+                        $.toaster({priority : 'success',title : '¡Éxito!',message : 'Tipo de documento agregado con éxito',
+                        settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
 
                         $('#caducidad_'+tipo_documento+'_'+numero_documento).pickadate({ selectMonths: true, // Creates a dropdown to control month
                             selectYears: 3, // Creates a dropdown of 3 years to control year
@@ -168,7 +168,11 @@ $('#entrada_escaner').on('change', function() {
                             format: 'yyyy-mm-dd'
                         });
                     }
-                }
+                },
+                error:function(){
+                    $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'El código de entrada no se encuentra registrado a éste tipo de documento',
+                    settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
+                },
             });
         }
     });

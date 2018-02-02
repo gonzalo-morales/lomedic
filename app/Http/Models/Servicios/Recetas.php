@@ -2,6 +2,8 @@
 
 namespace App\Http\Models\Servicios;
 
+use App\Http\Models\Administracion\Dependencias;
+use App\Http\Models\Administracion\Parentescos;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Administracion\Afiliaciones;
 use App\Http\Models\Administracion\Diagnosticos;
@@ -32,7 +34,7 @@ class Recetas extends ModelCompany
      */
     protected $fillable = ['folio','fk_id_sucursal', 'fecha','fk_id_afiliacion','fk_id_dependiente','fk_id_medico','fk_id_diagnostico',
         'fk_id_programa','fk_id_estatus_receta','fk_id_area','nombre_paciente_no_afiliado','observaciones',
-        'fecha_modificacion','peso','altura','presion_sistolica','presion_diastolica','fk_id_proyecto'];
+        'fecha_modificacion','peso','altura','presion_sistolica','presion_diastolica','fk_id_proyecto','fk_id_parentesco'];
 
     /**
      * The validation rules
@@ -53,6 +55,7 @@ class Recetas extends ModelCompany
      * @var array
      */
     protected $fields = [
+        'id_receta'=>'#',
         'folio' => 'Folio',
         'unidad_medica'=>'Unidad medica',
         'tipo_servicio' => 'Tipo de servicio',
@@ -130,8 +133,12 @@ class Recetas extends ModelCompany
     {
         return $this->hasMany(Proyectos::class,'fk_id_proyecto','id_proyecto');
     }
-    public function detalles()
+    public function dependiente()
     {
-        return $this->hasMany(RecetasDetalle::class,'fk_id_receta','id_receta');
+        return $this->hasOne(Dependencias::class,'id_dependencia','fk_id_dependiente');
+    }
+    public function parentesco()
+    {
+        return $this->hasOne(Parentescos::class,'id_parentesco','fk_id_parentesco');
     }
 }

@@ -116,7 +116,7 @@ class SolicitudesController extends ControllerBase
             'urgencies' => Urgencias::select('id_urgencia','urgencia')->where('activo',1)->pluck('urgencia','id_urgencia'),
             'categorys' => Categorias::select('id_categoria', 'categoria')->where('activo',1)->pluck('categoria', 'id_categoria'),
             'subcategorys' => Subcategorias::select('id_subcategoria', 'subcategoria')->where('activo',1)->pluck('subcategoria', 'id_subcategoria'),
-            'acctions' => Acciones::select('id_accion', 'accion')-where('activo',1)->pluck('accion', 'id_accion'),
+            'acctions' => Acciones::select('id_accion', 'accion')->where('activo',1)->pluck('accion', 'id_accion'),
             #'employee_department' => Empleados::findOrFail(Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado)->fk_id_departamento
         ];
         

@@ -130,9 +130,14 @@ $(document).ready(function () {
       var datoFinal = $('#total_dias');
       var fTotal = "";
 
-      var start= fecha1.get('select','d');
-      var end= fecha2.get('select','d');
-      var fTotal = (end - start);
+      var start= fecha1.get('select', 'yyyy/mm/dd');
+      var end= fecha2.get('select', 'yyyy/mm/dd');
+
+      start = new Date(start).getTime()
+      end = new Date(end).getTime()
+
+      var fTotal = end - start;
+      var days = Math.floor(fTotal / (1000 * 60 * 60 * 24));
 
       //Función para indicar que la segunda fecha tome el valor de la primera
       fecha1.on('set', function(event) {
@@ -145,8 +150,8 @@ $(document).ready(function () {
         }
       });
       //Condición para ingresar el total
-      if(fTotal >= 0)
-        datoFinal.val(fTotal);
+      if(days >= 0)
+        datoFinal.val(days);
       else
         datoFinal.val("N/A");
     };

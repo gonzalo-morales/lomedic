@@ -32,28 +32,40 @@ $(document).ready(function () {
                 data: {'fk_id_receta':$(this).val(),'_token':token},
                 dataType: "json",
                 success:function(data) {
-                    // console.info(data);
-                    $.each(data, function(key,values) {
-                        $('#detalle').append(
-                            '<tr>' +
-                            '<td>'+values.clave_cliente_producto+'</td>'+
-                            '<td>'+values.descripcion+'</td>'+
-                            '<td>'+values.cantidad_solicitada+'</td>'+
-                            '<td class="cantidad_surtida">'+values.cantidad_surtida+'</td>'+
-                            '<td class="cantidad_disponible">'+values.cantidad_disponible+'</td>'+
-                            '<td><input type="number" onchange="calculatotal(this)" name="relations[has][detalles][' + key + '][cantidad_surtida]" min="0" max="'+(values.cantidad_solicitada - values.cantidad_surtida)+'" class="form-control cantidad" value="0"></td>'+
-                            '<td>$ '+parseFloat(values.precio_unitario, 10).toFixed(2)+'</td>'+
-                            '<td class="text-right total">$ '+parseFloat(0, 10).toFixed(2)+'</td>' +
-                            '<input type="hidden" class="cantidad_inicial_disponible" value="'+values.cantidad_disponible+'"/> ' +
-                            '<input type="hidden" name="relations[has][detalles][' + key + '][id_surtido_vale]"  value=""/> ' +
-                            '<input type="hidden" name="relations[has][detalles][' + key + '][fk_id_surtido_vale]"  value=""/> ' +
-                            '<input type="hidden" name="relations[has][detalles][' + key + '][fk_id_clave_cliente_producto]"  value="'+ values.fk_id_clave_cliente_producto +'"/> ' +
-                            '<input type="hidden" name="relations[has][detalles][' + key + '][cantidad_solicitada]"  value="'+ values.cantidad_solicitada +'"/> ' +
-                            '<input type="hidden" name="relations[has][detalles]['+ key +'][precio_unitario]" class="precio" value="'+ values.precio_unitario +'">'+
-                            '<input type="hidden" name="relations[has][detalles]['+ key +'][importe]" class="importe" value="'+ values.precio_unitario +'">'+
-                            '</tr>'
-                        );
-                    })
+
+                    $('#paciente').val(data.receta.paciente);
+                    $('#titular').val(data.receta.titular);
+                    $('#medico').val(data.receta.medico);
+                    $('#diagnostico').val(data.receta.diagnostico);
+                    $('#edad').val(data.receta.edad);
+                    $('#patente').val(data.receta.patente);
+                    $('#genero').val(data.receta.genero);
+                    $('#parentesco').val(data.receta.parentesco);
+
+                    $.each(data.detalle, function(key,values) {
+                        if(values.cantidad_solicitada != values.cantidad_surtida && values.cantidad_disponible == 0)
+                        {
+                            $('#detalle').append(
+                                '<tr>' +
+                                '<td>'+values.clave_cliente_producto+'</td>'+
+                                '<td>'+values.descripcion+'</td>'+
+                                '<td>'+values.cantidad_solicitada+'</td>'+
+                                '<td class="cantidad_surtida">'+values.cantidad_surtida+'</td>'+
+                                '<td class="cantidad_disponible">'+values.cantidad_disponible+'</td>'+
+                                '<td><input type="number" onchange="calculatotal(this)" name="relations[has][detalles][' + key + '][cantidad_surtida]" min="0" max="'+(values.cantidad_solicitada - values.cantidad_surtida)+'" class="form-control cantidad" value="0"></td>'+
+                                '<td>$ '+parseFloat(values.precio_unitario, 10).toFixed(2)+'</td>'+
+                                '<td class="text-right total">$ '+parseFloat(0, 10).toFixed(2)+'</td>' +
+                                '<input type="hidden" class="cantidad_inicial_disponible" value="'+values.cantidad_disponible+'"/> ' +
+                                '<input type="hidden" name="relations[has][detalles][' + key + '][id_surtido_vale]"  value=""/> ' +
+                                '<input type="hidden" name="relations[has][detalles][' + key + '][fk_id_surtido_vale]"  value=""/> ' +
+                                '<input type="hidden" name="relations[has][detalles][' + key + '][fk_id_clave_cliente_producto]"  value="'+ values.fk_id_clave_cliente_producto +'"/> ' +
+                                '<input type="hidden" name="relations[has][detalles][' + key + '][cantidad_solicitada]"  value="'+ values.cantidad_solicitada +'"/> ' +
+                                '<input type="hidden" name="relations[has][detalles]['+ key +'][precio_unitario]" class="precio" value="'+ values.precio_unitario +'">'+
+                                '<input type="hidden" name="relations[has][detalles]['+ key +'][importe]" class="importe" value="'+ values.precio_unitario +'">'+
+                                '</tr>'
+                            );
+                        }
+                    });
                 }
             });
         }
@@ -71,12 +83,12 @@ function calculatotal(el) {
     {
         var nueva_cantidad_diponible = cantidad_disponible - cantidad;
     }
-    else if( (cantidad_disponible - cantidad) < 0 )
-    {
-        var nueva_cantidad_diponible = 0;
-        cantidad_total = cantidad_total - 1;
-        $(el).val(cantidad-1);
-    }
+    // else if( (cantidad_disponible - cantidad) < 0 )
+    // {
+    //     var nueva_cantidad_diponible = 0;
+    //     cantidad_total = cantidad_total - 1;
+    //     $(el).val(cantidad-1);
+    // }
 
     $(el).parent().parent().find('.cantidad_disponible').html(nueva_cantidad_diponible);
     $(el).parent().parent().find('.importe').val(cantidad_total*precio);

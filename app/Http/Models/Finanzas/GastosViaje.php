@@ -68,10 +68,10 @@ class GastosViaje extends ModelBase
         'fecha' => 'required',
         'fk_id_empleado' => 'required',
         'fecha' => 'required',
-        'destino' => 'required',
+        'destino' => 'required|max:50',
         'periodo_inicio' => 'required',
         'periodo_fin' => 'required',
-        'motivo_viaje' => 'required'
+        'motivo_viaje' => 'required|max:255'
 
     ];
 

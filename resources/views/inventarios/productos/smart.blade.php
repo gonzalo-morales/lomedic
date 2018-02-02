@@ -18,12 +18,12 @@
 
 @section('form-content')
     {{ Form::setModel($data) }}
-    <div class="card container-fluid z-depth-1-half p-3 my-2">
+    <div class="p-3 my-2">
         <div class="row">
         	<div class="col-sm-6 col-md-8 col-lg-9 row">
             	<div class="col-sm-12 col-md-6 col-lg-2">
             		<div class="form-group">
-            			{{ Form::cSelect('Serie Sku', 'fk_id_serie_sku', $seriesku ?? [], !Route::currentRouteNamed(currentRouteName('create')) ? ['disabled'=>true] : ['data-url'=>companyAction('Administracion\SeriesSkusController@getSerie',['id'=>'?id'])]) }}
+            			{{ Form::cSelect('* Serie Sku', 'fk_id_serie_sku', $seriesku ?? [], !Route::currentRouteNamed(currentRouteName('create')) ? ['disabled'=>true] : ['data-url'=>companyAction('Administracion\SeriesSkusController@getSerie',['id'=>'?id'])]) }}
             		</div>
             	</div>
             	<div class="col-sm-12 col-md-6 col-lg-3">
@@ -31,20 +31,20 @@
             			@if (Route::currentRouteNamed(currentRouteName('create')))
             			<i class="material-icons text-danger float-left" data-toggle="tooltip" data-placement="top" title="El numero de serie puede cambiar si otro usuario genero un sku antes de que se guardara este. Verificalo despues de guardarlo.">warning</i>
             			@endif
-            			{{ Form::cText('Sku', 'sku', ['placeholder'=>'Ejemplo: SO-01922-09','disabled'=>true]) }}
+            			{{ Form::cText('* Sku', 'sku', ['placeholder'=>'Ejemplo: SO-01922-09','disabled'=>true]) }}
             		</div>
             	</div>
             	<div class="col-sm-12 col-md-12 col-lg-7">
             		<div class="form-group">
-            			{{ Form::cText('Descripcion Corta', 'descripcion_corta') }}
+            			{{ Form::cText('* Descripcion Corta', 'descripcion_corta') }}
             		</div>
             	</div>
             	<div class="col-sm-12 col-md-6 col-lg-2">
-            		{{ Form::cText('Presentacion', 'presentacion') }}
+            		{{ Form::cText('* Presentacion', 'presentacion') }}
             	</div>
             	<div class="col-sm-12 col-md-6 col-lg-3">
             		<div class="form-group">
-            			{{ Form::cSelect('Unidad Medida', 'fk_id_unidad_medida', $unidadmedida ?? [],['class'=>'select2']) }}
+            			{{ Form::cSelect('* Unidad Medida', 'fk_id_unidad_medida', $unidadmedida ?? [],['class'=>'select2']) }}
             		</div>
             	</div>
         	</div>
@@ -112,12 +112,12 @@
                 	<div class="row">
             	  		<div class="col-sm-12 col-md-6 col-lg-4">
                     		<div class="form-group">
-                    			{{ Form::cSelect('Impuesto', 'fk_id_impuesto', $impuesto ?? [],['class'=>'select2']) }}
+                    			{{ Form::cSelect('* Impuesto', 'fk_id_impuesto', $impuesto ?? [],['class'=>'select2']) }}
                     		</div>
                     	</div>
             	  		<div class="col-sm-12 col-md-6 col-lg-4">
                     		<div class="form-group">
-                    			{{ Form::cSelect('Subgrupo', 'fk_id_subgrupo', $subgrupo ?? [],['class'=>'select2']) }}
+                    			{{ Form::cSelect('* Subgrupo', 'fk_id_subgrupo', $subgrupo ?? [],['class'=>'select2']) }}
                     		</div>
                     	</div>
                     	<div class="col-sm-12 col-md-6 col-lg-4">
