@@ -26,8 +26,6 @@ class FacturasClientesDetalle extends ModelCompany
      */
     protected $table = 'fac_det_facturas_clientes';
     
-    public $tipo_documento = 4;
-    
     /**
      * The primary key of the table
      * @var string

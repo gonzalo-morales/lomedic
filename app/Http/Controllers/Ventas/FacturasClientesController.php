@@ -34,6 +34,9 @@ class FacturasClientesController extends ControllerBase
 
 	public function getDataView($entity = null)
 	{
+	    
+	    dd($this->entity->documentos_destino());
+	    
         return [
             'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('...',''),
             'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa","$id_empresa"]}]'),

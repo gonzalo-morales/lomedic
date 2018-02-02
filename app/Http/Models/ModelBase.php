@@ -260,13 +260,14 @@ class ModelBase extends Model
         return $rules;
 	}
 
-	public function documento_destino($tipo = 0)
+	public function documentos_destino()
 	{
-
-	    if($tipo !== 0)
-	        return $this->hasMany((New $map_tipos_documentos[$tipo]),$this->getKeyName(),'fk_id_linea')->where('fk_id_tipo_documento_base',$this->fk_id_tipo_documento);
-	    else
-	        return null;
+	    $doc = [];
+	    foreach (map_tipos_documentos() as $tipo => $model) {
+	        $doc[$tipo] = $this->hasMany((New $model),$this->getKeyName(),'fk_id_linea')->where('fk_id_tipo_documento_base',$this->fk_id_tipo_documento);
+	    }
+	        
+	    return $doc;
 	}
 
 	
@@ -276,23 +277,5 @@ class ModelBase extends Model
 	        return $this->belongsTo((New $map_tipos_documentos[$tipo]),$this->getKeyName(),'fk_id_linea')->where('fk_id_tipo_documento_base',$this->fk_id_tipo_documento);
 	        else
 	            return null;
-	    
-	            /*
-	    switch($tipo_documento)
-	    {
-	        case 4://Factura
-	            return $this->belongsTo(FacturasClientesDetalle::class,'id_documento_detalle','fk_id_linea')->where('fk_id_tipo_documento',$tipo_documento);
-	            break;
-	        case 5://Crédito
-	            return $this->belongsTo(NotasCreditoClientesDetalle::class,'id_documento_detalle','fk_id_linea')->where('fk_id_tipo_documento',$tipo_documento);
-	            break;
-	        case 6://Cargo
-	            return $this->belongsTo(NotasCargoClientesDetalle::class,'id_documento_detalle','fk_id_linea')->where('fk_id_tipo_documento',$tipo_documento);
-	            break;
-	        default:
-	            return null;
-	            break;
-	    }
-	    */
 	}
 }

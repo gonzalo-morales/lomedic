@@ -1,12 +1,11 @@
 <?php
-use App\Http\Models\SociosNegocio\SociosNegocio;
-use App\Http\Models\Administracion\Empresas;
+#use File;
 use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\MetodosPago;
 use App\Http\Models\Administracion\RegimenesFiscales;
-#use SoapClient;
-#use SoapFault;
+use App\Http\Models\Administracion\TiposDocumentos;
+
 /**
  * Obtenemos arreglo accion de ruta personalizada
  * @param  string $action - Acción por la que reemplazar
@@ -184,6 +183,27 @@ function getCacheTag($route = '')
 	return getCacheKey($route, false);
 }
 
+function map_tipos_documentos()
+{
+    $tipos_documentos = [];
+    
+    foreach(File::allFiles(app_path().'/Http/Models') as $route) {
+        if(preg_match("/^.*.php$/", $route->getPathname())){
+            $smodel = substr(str_replace([base_path().'\a','/'],['A','\\'],$route->getPathname()),0,-4);
+            
+            $tipo = TiposDocumentos::where('tabla',(new $smodel)->getTable())->first();
+            
+            
+            
+            if(!empty($tipo)) {
+                $tipos_documentos[$tipo->id_tipo_documento] = $smodel;
+            }
+            
+            
+        }
+    }
+    return $tipos_documentos;
+}
 
 function array_merge_recursive_simple($paArray1, $paArray2)
 {
