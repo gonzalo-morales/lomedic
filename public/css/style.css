@@ -35,7 +35,7 @@
   font-feature-settings: 'liga';
 }
 .bg-login {
-	background: #FFF url('../img/pills2.jpg') no-repeat center top fixed;
+	background: #FFF url('../img/pills2.jpg') no-repeat center center fixed;
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/pills2.jpg',sizingMethod='scale');
 	-ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/pills2.jpg', sizingMethod='scale')";
 	-webkit-background-size: cover;
