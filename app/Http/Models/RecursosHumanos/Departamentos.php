@@ -52,8 +52,8 @@ class Departamentos extends ModelBase
      * @var array
      */
     public $rules = [
-        'descripcion' => 'required',
-        'nomenclatura' => 'required',
+        'descripcion' => 'required|max:255',
+        'nomenclatura' => 'required|max:50',
     ];
 
     public function usuario()

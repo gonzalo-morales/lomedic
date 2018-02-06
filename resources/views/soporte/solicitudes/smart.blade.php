@@ -39,7 +39,7 @@
 	{{ Form::setModel($data) }}
 	
     <div class="row">
-        <div class="col-md-12 text-center">
+        <div class="col-sm-12 text-center">
             <h5><strong>{{ (isset($data->empleado) ? $data->empleado->nombre.' '.$data->empleado->apellido_paterno.' '.$data->empleado->apellido_materno : '') }}</strong></h5>
             <small class="text-muted">
                 <i class="material-icons align-middle">today</i> {{isset($data->fecha_hora_creacion) ? $data->fecha_hora_creacion : ''}}
@@ -91,16 +91,15 @@
             	</div>
             
                 @if( $data->fk_id_empleado_tecnico == Auth::id() || $data->fk_id_empleado_tecnico == null)
-                <div class="col-sm-12 col-md-6 col-lg-6">
-                	<h5>Informacion de la solicitud.</h5>
-                	<div class="card-body">
+				<div class="card-body">
+						<h5>Informacion de la solicitud.</h5>
                     	<div class="row">
-                            <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
                         			{{ Form::cSelect('* Tecnico Asignado','fk_id_empleado_tecnico',$employees ?? [],['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
                         		</div>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
                         			{{ Form::cSelect('* Urgencia','fk_id_urgencia',$urgencies ?? [],['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
                         		</div>
@@ -108,12 +107,12 @@
                     	</div>
                     	
                     	<div class="row">
-                            <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
                         			{{ Form::cSelect('* Impacto','fk_id_impacto',$impacts ?? [], ['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
                         		</div>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
                         			{{ Form::cSelect('* Categoria','fk_id_categoria',$categorys ?? [], ['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4]),'data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])]) }}
                         		</div>
@@ -121,50 +120,49 @@
                     	</div>
                     	
                     	<div class="row">
-                            <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
                         			{{ Form::cSelect('* Subcategoria','fk_id_subcategoria',$subcategorys ?? [], ['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4]),'data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) }}
                         		</div>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
                         			{{ Form::cSelect('* Accion','fk_id_accion', $acctions ?? [], ['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
                         		</div>
                             </div>
                     	</div>
                     </div>
-                </div>
                 @else
-                 <div class="col-sm-12 col-md-6 col-lg-6">
+                 <div class="col-sm-12 col-md-6 col-lg-4">
             		{{ HTML::tag('h5', 'Datos adicionales:') }}
             		<div class="row py-1">
-                		<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                		<div class="col-12 col-sm-6 col-md-6 col-lg-4">
                     		{{ Form::label('fk_id_impacto', '* Impacto') }}
                     		{{ HTML::tag('h6', $data->impacto->impacto) }}
                 		</div>
-                		<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                		<div class="col-12 col-sm-6 col-md-6 col-lg-4">
                     		{{ Form::label('fk_id_urgencia', '* Urgencia') }}
                 			{{ HTML::tag('h6', $data->urgencia->urgencia) }}
                 		</div>
                 	</div>
             	
             		<div class="row py-1">
-                		<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                		<div class="col-12 col-sm-6 col-md-6 col-lg-4">
                     		{{ Form::label('fk_id_empleado_tecnico', '* Tecnico Asignado') }}
                     		{{ HTML::tag('h6', $data->a_tecnico) }}
                 		</div>
-                		<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                		<div class="col-12 col-sm-6 col-md-6 col-lg-4">
                     		{{ Form::label('fk_id_categoria', '* Categoria') }}
                     		{{ HTML::tag('h6', $data->a_categoria) }}
                 		</div>
                 	</div>
                 	
                 	<div class="row py-1">
-                		<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                		<div class="col-12 col-sm-6 col-md-6 col-lg-4">
                     		{{ Form::label('fk_id_subcategoria', '* Subcategoria') }}
                     		{{ HTML::tag('h6', $data->subcategoria->subcategoria) }}
                 		</div>
-                		<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                		<div class="col-12 col-sm-6 col-md-6 col-lg-4">
                     		{{ Form::label('fk_id_accion', '* Accion') }}
                     		{{ HTML::tag('h6', $data->accion->accion) }}
                 		</div>
@@ -196,20 +194,20 @@
 					</div>
 				</div>
 				<div class="form-group row">
-					<div class="col-md-12 col-lg-6">
+					<div class="col-md-12 col-lg-4">
 						{!! Form::cSelect('Categoría','fk_id_categoria',$categories_tickets ?? [],['data-url'=>companyAction('Soporte\SolicitudesController@getCategorias')])!!}
 					</div>
-					<div class="col-md-12 col-lg-6">
+					<div class="col-md-12 col-lg-4">
 						{{Form::label('fk_id_subcategoria','Subategoría')}}
 						{!! Form::select('fk_id_subcategoria',[],null,['id'=>'fk_id_subcategoria','class'=>'form-control fk_id_subcategoria','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])]) !!}
 					</div>
 				</div>
 				<div class="form-group row">
-					<div class="col-md-12 col-lg-6">
+					<div class="col-md-12 col-lg-4">
 						{{Form::label('fk_id_accion','Acción')}}
 						{!! Form::select('fk_id_accion',[],null,['id'=>'fk_id_accion','class'=>'form-control fk_id_accion','disabled'=>'disabled','data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) !!}
 					</div>
-					<div class="col-md-12 col-lg-6">
+					<div class="col-md-12 col-lg-4">
 						{{Form::label('fk_id_prioridad','Prioridad')}}
 						{!! Form::select('fk_id_prioridad',$priorities_tickets ?? [],null,['id'=>'fk_id_prioridad','class'=>'form-control','data-url'=>companyAction('Soporte\SolicitudesController@getPrioridades')]) !!}
 					</div>

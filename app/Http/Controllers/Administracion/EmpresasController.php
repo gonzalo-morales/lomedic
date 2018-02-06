@@ -84,7 +84,6 @@ class EmpresasController extends ControllerBase
 	        # Eliminamos cache
 	        Cache::tags(getCacheTag('index'))->flush();
 	        
-	        
 	        #$this->log('store', $id);
 	        return $this->redirect('store');
 	    }

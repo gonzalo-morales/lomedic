@@ -3,9 +3,9 @@ namespace App\Http\Middleware;
 
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Soporte\Solicitudes;
-use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Closure;
 
 class Share
 {
@@ -20,6 +20,7 @@ class Share
         
         # Compartimos ultimos tickets
         View::share('ultimos_tickets',Solicitudes::where('fk_id_empleado_solicitud',Auth::id())->where('fecha_hora_resolucion',null)->take(5)->get());
+        
         return $next($request);
     }
 }

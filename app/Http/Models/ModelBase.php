@@ -7,14 +7,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\Notificaciones;
-use File;
-use App\Http\Models\Administracion\TiposDocumentos;
 
 class ModelBase extends Model
 {
     use Notifiable;
-
-    protected $tipo_documento = 0;
 
     protected $fillable = [];
 
@@ -30,8 +26,6 @@ class ModelBase extends Model
 	 */
 	protected $eagerLoaders = [];
 
-	protected $documentos = [];
-
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -42,7 +36,6 @@ class ModelBase extends Model
 	public function __construct($attributes = [])
 	{
 		$this->eagerLoaders = $this->getAutoEager();
-	    #$this->documentos = $this->getDocumentos();
 		return parent::__construct($attributes);
 	}
 
@@ -98,11 +91,6 @@ class ModelBase extends Model
         */
 	}
 
-	public function getTipodocumento()
-	{
-	    return $this->tipo_documento;
-	}
-
 	public function newQuery() {
 	    if(in_array('eliminar',$this->getlistColumns())) {
 	       return parent::newQuery()->where($this->getTable().'.eliminar',0);
@@ -132,29 +120,6 @@ class ModelBase extends Model
 	            array_push($return,substr($key,0,$pos));
 	    }
         return $return;
-	}
-
-	public function getDocumentos()
-	{
-    	$models = [];
-    	/*
-    	foreach(File::allFiles(app_path().'/Http/Models') as $route) {
-    	    if(preg_match("/^.*.php$/", $route->getPathname())){
-    	        $smodel = substr(str_replace([base_path().'\a','/'],['A','\\'],$route->getPathname()),0,-4);
-
-    	        $models[(new $smodel)->getTable()] = $smodel;
-
-    	        /*$tipo = TiposDocumentos::where('tabla',(new $smodel)->getTable())->get();
-
-    	        $model = (new $smodel);
-    	        $tipo_documento = isset($model->tipo_documento) ? $model->tipo_documento : 0;
-    	        if(!empty($tipo_documento))
-    	            $models[$tipo_documento] = $smodel;
-
-    	    }
-    	}*/
-
-    	return $models;
 	}
 
 	public function getFillable()
@@ -294,33 +259,23 @@ class ModelBase extends Model
         }
         return $rules;
 	}
-}
-	/*
-	public function documento_destino($tipo = '0')
-	{
 
-	    if($tipo !== '0')
-	        return $this->morphMany('PedidosDetalle',null,'fk_id_tipo_documento_base','fk_id_linea');
-	    else
-	        return null;
+	public function documentos_destino()
+	{
+	    $doc = [];
+	    foreach (map_tipos_documentos() as $tipo => $model) {
+	        $doc[$tipo] = $this->hasMany((New $model),$this->getKeyName(),'fk_id_linea')->where('fk_id_tipo_documento_base',$this->fk_id_tipo_documento);
+	    }
+	        
+	    return $doc;
 	}
 
-	public function documento_base()
+	
+	public function documento_base($tipo = 0)
 	{
-	    $tipo_documento = isset($this->fk_id_tipo_documento_base) ? $this->fk_id_tipo_documento_base : 0;
-	    switch($tipo_documento)
-	    {
-	        case 4://Factura
-	            return $this->belongsTo(FacturasClientesDetalle::class,'id_documento_detalle','fk_id_linea')->where('fk_id_tipo_documento',$tipo_documento);
-	            break;
-	        case 5://Crédito
-	            return $this->belongsTo(NotasCreditoClientesDetalle::class,'id_documento_detalle','fk_id_linea')->where('fk_id_tipo_documento',$tipo_documento);
-	            break;
-	        case 6://Cargo
-	            return $this->belongsTo(NotasCargoClientesDetalle::class,'id_documento_detalle','fk_id_linea')->where('fk_id_tipo_documento',$tipo_documento);
-	            break;
-	        default:
+	    if($tipo !== 0)
+	        return $this->belongsTo((New $map_tipos_documentos[$tipo]),$this->getKeyName(),'fk_id_linea')->where('fk_id_tipo_documento_base',$this->fk_id_tipo_documento);
+	        else
 	            return null;
-	            break;
-	    }
-	}*/
+	}
+}

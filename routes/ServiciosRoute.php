@@ -34,5 +34,8 @@ Route::prefix('{company}')->group(function () {
         Route::post('vales/getRecetaDetalle','Servicios\ValesController@getRecetaDetalle')->name('vales.getRecetaDetalle');
         Route::post('requisicioneshospitalarias/getDiagnosticos','Servicios\RecetasController@getDiagnosticos')->name('requisicioneshospitalarias.getDiagnosticos');
         Route::post('requisicioneshospitalarias/getMedicamentos','Servicios\RecetasController@getMedicamentos')->name('requisicioneshospitalarias.getMedicamentos');
+//        Route::post('vales/impress','Servicios\ValesController@impress')->name('vales.impress');
+        Route::get('vales/{id}/impress', 'Servicios\ValesController@impress')->name('vales');
+
     });
 });

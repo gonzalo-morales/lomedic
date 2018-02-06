@@ -26,7 +26,7 @@ class DevolucionesMotivos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'devolucion_motivo' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
+		'devolucion_motivo' => 'required|max:75',
         'solicitante_devolucion' => 'required|numeric'
 	];
 

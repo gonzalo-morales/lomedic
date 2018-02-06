@@ -64,8 +64,7 @@ class FacturasClientes extends ModelCompany
      * The validation rules
      * @var array
      */
-    public $rules = [
-    ];
+    public $rules = [];
     
     public function empresa()
     {

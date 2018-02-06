@@ -51,7 +51,7 @@ class Puestos extends ModelBase
      * @var array
      */
     public $rules = [
-        'descripcion' => 'required',
+        'descripcion' => 'required|max:100',
     ];
 
     public function usuario()

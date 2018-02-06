@@ -28,7 +28,7 @@ class Empleados extends ModelBase
      */
     protected $fillable = ['nombre', 'apellido_paterno', 'apellido_materno', 'curp',
         'rfc','fecha_nacimiento','correo_personal','telefono','celular','fk_id_empresa_alta_imss',
-        'numero_imss','fk_id_empresa_laboral','numero_infonavit','factor_documento'];
+        'numero_imss','fk_id_empresa_laboral','numero_infonavit','factor_documento','fk_id_departamento','fk_id_puesto'];
     
     /**
      * Los atributos que seran visibles en index-datable
@@ -40,7 +40,6 @@ class Empleados extends ModelBase
         'apellido_materno' => 'Apellido Materno',
         'departamento.descripcion' => 'Departamento',
         'puesto.descripcion' => 'Puesto',
-        'numero_imss' => 'No. Seguro',
         'fecha_nacimiento' => 'Fecha Nacimiento',
         'correo_personal' => 'Correo Personal',
         'telefono' => 'Telefono'
@@ -67,6 +66,8 @@ class Empleados extends ModelBase
         'fecha_nacimiento' => 'required',
         'correo_personal' => 'email',
         'numero_imss' => 'numeric',
+        'fk_id_departamento' => 'required',
+        'fk_id_puesto' => 'required',
     ];
 
     public function usuario()
