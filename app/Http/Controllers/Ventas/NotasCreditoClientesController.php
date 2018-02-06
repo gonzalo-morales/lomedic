@@ -37,7 +37,6 @@ class NotasCreditoClientesController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
-
         return [
             'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('...',''),
             'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa",$id_empresa]}], "limit": "1"'),
@@ -87,7 +86,7 @@ class NotasCreditoClientesController extends ControllerBase
 
         if($datos) {
 
-            $xml = generarXml($this->datos_cfdi($datos->id_nota_credito));
+            $xml = generarXml($this->datos_cfdi($datos->id_documento));
 
             if(!empty($xml)) {
                 $request->request->add(['xml_original'=>$xml]);
@@ -107,11 +106,12 @@ class NotasCreditoClientesController extends ControllerBase
                         'uuid'=>$timbrado->resultados->uuid,
                         'version_tfd'=>$timbrado->resultados->versionTFD,
                         'codigo_qr'=>base64_encode($timbrado->resultados->qrCode),
+                        'fk_id_estatus_cfdi' => 1
                     ]);
                 }
             }
             $request->request->set('save',true);
-            $id = $datos->id_nota_credito;
+            $id = $datos->id_documento;
             $return = parent::update($request, $company, $id, true);
         }
         return $return["redirect"];
@@ -125,7 +125,7 @@ class NotasCreditoClientesController extends ControllerBase
 
         if($datos && $request->save !== true)
         {
-            $xml = generarXml($this->datos_cfdi($datos->id_nota_credito));
+            $xml = generarXml($this->datos_cfdi($datos->id_documento));
 
             if(!empty($xml)) {
                 $request->request->add(['xml_original'=>$xml]);
@@ -147,6 +147,7 @@ class NotasCreditoClientesController extends ControllerBase
                         'uuid'=>$timbrado->resultados->uuid,
                         'version_tfd'=>$timbrado->resultados->versionTFD,
                         'codigo_qr'=>base64_encode($timbrado->resultados->qrCode),
+                        'fk_id_estatus_cfdi' => 1
                     ]);
                 }
                 else
