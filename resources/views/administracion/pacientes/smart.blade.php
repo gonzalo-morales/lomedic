@@ -1,6 +1,19 @@
 @extends(smart())
 @section('content-width', 's12')
 
+
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Pacientes')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo paciente')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar paciente')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Paciente')
+@endif
+
+
+
 @section('header-bottom')
     @parent
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
