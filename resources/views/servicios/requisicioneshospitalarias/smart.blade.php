@@ -1,6 +1,17 @@
 @extends(smart())
 @section('content-width', 's12')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Requisiciónes hospitalarias')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nueva requisición hospitalaria')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar requisición hospitalaria')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Requisición hospitalaria')
+@endif
+
+
 @section('header-bottom')
     @parent
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
@@ -59,7 +70,7 @@
 
                                                             <div class="col-sm-4">
                                                                 <div class="form-group">
-                                                                    {{ Form::cSelect('Ã�rea de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
+                                                                    {{ Form::cSelect('&Aacute;rea de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-4">
@@ -92,7 +103,7 @@
                                         <table class="table highlight mt-3" id="tContactos">
                                             <thead>
                                             <tr>
-                                                <th>Ã�rea de la consulta</th>
+                                                <th>&Aacute;rea de la consulta</th>
                                                 <th>Codigo</th>
                                                 <th>Medicamento</th>
                                                 <th>Cantidad</th>
@@ -100,8 +111,6 @@
                                             </tr>
                                             </thead>
                                             <tbody class="medicine_detail">
-
-
                                             @if(!Route::currentRouteNamed(currentRouteName('create')))
                                                  @if(isset($data->detalles))
                                                     @foreach($data->detalles->where('eliminar',0) as $row => $detalle)
@@ -116,20 +125,9 @@
                                                         </tr>
                                                     @endforeach
                                                 @endif
-
                                             @endif
                                             </tbody>
                                         </table>
-
-                                        {{--@if (!Route::currentRouteNamed(currentRouteName('edit')))--}}
-                                            {{--<div class="row">--}}
-                                                {{--<div class="col-sm-12">--}}
-                                                    {{--<div class="form-group">--}}
-                                                        {{--{{ Form::cTextArea('Observaciones adicionales:', 'observaciones', isset($data->observaciones)?$data->observaciones:null) }}--}}
-                                                    {{--</div>--}}
-                                                {{--</div>--}}
-                                            {{--</div>--}}
-                                        {{--@endif--}}
                                     </div>
                                 </div>
                             </div>
