@@ -7,24 +7,13 @@ use App\Http\Models\Servicios\Recetas;
 
 class Afiliaciones extends ModelBase
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
+
     protected $table = 'maestro.gen_cat_afiliados';
 
-    /**
-     * The primary key of the table
-     * @var string
-     */
     protected $primaryKey = 'id_afiliacion';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    public $incrementing = false;
+
     protected $fillable = [
         'id_afiliacion',
         'id_dependiente',
@@ -68,6 +57,11 @@ class Afiliaciones extends ModelBase
     public function parentesco()
     {
         return $this->hasOne(Parentescos::class,'id_parentesco','fk_id_parentesco');
+    }
+    public function getCodigoPacieteAttribute()
+    {
+//        return dump($this);
+        return $this->selectRAW("id_afiliacion as codigo")->first();
     }
 
 }
