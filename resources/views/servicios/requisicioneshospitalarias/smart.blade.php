@@ -11,7 +11,6 @@
     @section('form-title', 'Requisición hospitalaria')
 @endif
 
-
 @section('header-bottom')
     @parent
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
@@ -69,9 +68,7 @@
                     <div class="col-12 mb-3">
                         <div class="tab-content">
                             <div class="tab-pane active" role="tabpanel">
-
                                 <div class="row">
-
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             {{ Form::cSelect('&Aacute;rea de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
@@ -92,10 +89,7 @@
                                             <button id="agregar" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
                                         </div>
                                     </div>
-
                                 </div>
-
-
                             </div>
                         </div>
                     </div><!--/row-->
@@ -103,38 +97,35 @@
             </div>
         @endif
 
-            <div class="card-body row table-responsive">
-                <table class="table highlight mt-3" id="tContactos">
-                    <thead>
-                    <tr>
-                        <th>&Aacute;rea de la consulta</th>
-                        <th>Codigo</th>
-                        <th>Medicamento</th>
-                        <th>Cantidad</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody class="medicine_detail">
-                    @if(!Route::currentRouteNamed(currentRouteName('create')))
-                         @if(isset($data->detalles))
-                            @foreach($data->detalles->where('eliminar',0) as $row => $detalle)
-                                <tr>
-                                    <td>{{$detalle->area['area']}}</td>
-                                    <td>{{$detalle->claveClienteProducto['clave_producto_cliente'] }}</td>
-                                    <td>{{$detalle->claveClienteProducto->sku['descripcion']}}</td>
-                                    <td>{{$detalle->cantidad_solicitada}}</td>
-                                    <td>
-                                        <a data-delete-type="single"  data-toggle="tooltip" data-placement="top" title="Borrar"  id="{{$row}}" aria-describedby="tooltip687783" onclick="eliminarFila(this)" ><i class="material-icons text-primary">delete</i></a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endif
+        <div class="card-body row table-responsive">
+            <table class="table highlight mt-3" id="tContactos">
+                <thead>
+                <tr>
+                    <th>&Aacute;rea de la consulta</th>
+                    <th>Codigo</th>
+                    <th>Medicamento</th>
+                    <th>Cantidad</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody class="medicine_detail">
+                @if(!Route::currentRouteNamed(currentRouteName('create')))
+                     @if(isset($data->detalles))
+                        @foreach($data->detalles->where('eliminar',0) as $row => $detalle)
+                            <tr>
+                                <td>{{$detalle->area['area']}}</td>
+                                <td>{{$detalle->claveClienteProducto['clave_producto_cliente'] }}</td>
+                                <td>{{$detalle->claveClienteProducto->sku['descripcion']}}</td>
+                                <td>{{$detalle->cantidad_solicitada}}</td>
+                                <td>
+                                    <a data-delete-type="single"  data-toggle="tooltip" data-placement="top" title="Borrar"  id="{{$row}}" aria-describedby="tooltip687783" onclick="eliminarFila(this)" ><i class="material-icons text-primary">delete</i></a>
+                                </td>
+                            </tr>
+                        @endforeach
                     @endif
-                    </tbody>
-                </table>
-            </div>
+                @endif
+                </tbody>
+            </table>
         </div>
     </div>
-
-
 @endsection
