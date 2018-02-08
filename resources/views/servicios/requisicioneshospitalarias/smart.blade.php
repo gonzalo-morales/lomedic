@@ -21,12 +21,12 @@
 
 @section('form-content')
     {{ Form::setModel($data) }}
-
+    @if(Route::currentRouteNamed(currentRouteName('create')))
     <div class="card z-depth-1-half">
         <div class="row">
             <div class="card-body row table-responsive">
                 <div class="col-12 mb-3">
-                    @if(Route::currentRouteNamed(currentRouteName('create')))
+
                         <div class="tab-content">
                             <div class="tab-pane active" role="tabpanel">
                                 <div class="row">
@@ -56,11 +56,12 @@
                                 </div><!--/row forms-->
                             </div>
                         </div><!--/row-->
-                    @endif
+
                 </div>
             </div>
         </div>
     </div>
+    @endif
     <div class="card z-depth-1-half">
         @if(Route::currentRouteNamed(currentRouteName('create')) ||  Route::currentRouteNamed(currentRouteName('edit')))
             <div class="card-header">
