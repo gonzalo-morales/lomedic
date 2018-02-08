@@ -80,17 +80,22 @@ class RecetasController extends ControllerBase
         $skus = Productos::where('activo',1)->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'LIKE', '%' . $term . '%')->orWhere('descripcion', 'LIKE', '%' . $term . '%')->get();
 
         foreach ($skus as $sku) {
-            $json[] = [
-                'id' => (int)$sku->id_sku,
-                'fk_id_clave_cliente_producto' => $sku->clave_cliente_productos['id_clave_cliente_producto'],
-                'clave_cliente_producto' => $sku->clave_cliente_productos['clave_producto_cliente'],
-                'text' => $sku->descripcion,
-                'cantidad_presentacion' => $sku->clave_cliente_productos['cantidad_presentacion'],
-                'familia' => $sku->fk_id_familia,
-                'tope_receta' => $sku->clave_cliente_productos['tope_receta'],
-                'disponible' => $sku->clave_cliente_productos['disponibilidad'],
-                'id_cuadro' => $sku->fk_id_proyecto
-            ];
+
+            if($sku->clave_cliente_productos['cantidad_presentacion'] != null && $sku->clave_cliente_productos['tope_receta'] != null && $sku->clave_cliente_productos['disponibilidad'] != null ){
+                $json[] = [
+                    'id' => (int)$sku->id_sku,
+                    'fk_id_clave_cliente_producto' => $sku->clave_cliente_productos['id_clave_cliente_producto'],
+                    'clave_cliente_producto' => $sku->clave_cliente_productos['clave_producto_cliente'],
+                    'text' => $sku->descripcion,
+                    'cantidad_presentacion' => $sku->clave_cliente_productos['cantidad_presentacion'],
+                    'familia' => $sku->fk_id_familia,
+                    'tope_receta' => $sku->clave_cliente_productos['tope_receta'],
+                    'disponible' => $sku->clave_cliente_productos['disponibilidad'],
+                    'id_cuadro' => $sku->fk_id_proyecto
+                ];
+            }
+
+
         }
         return json_encode($json);
 
