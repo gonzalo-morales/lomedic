@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'share' => \App\Http\Middleware\Share::class,
         'csrf' => \App\Http\Middleware\VerifyCsrfToken::class,
         'password_expired' => \App\Http\Middleware\PasswordExpired::class,
+        'auth.api' => \App\Http\Middleware\api::class
     ];
 }

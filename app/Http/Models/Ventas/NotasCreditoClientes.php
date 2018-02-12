@@ -39,7 +39,7 @@ class NotasCreditoClientes extends ModelCompany
         'fk_id_forma_pago', 'fk_id_metodo_pago', 'fk_id_uso_cfdi', 'fk_id_moneda', 'tipo_cambio', 'descuento', 'fk_id_serie',
         'subtotal', 'impuestos', 'total', 'serie', 'folio', 'fecha_creacion', 'fecha_timbrado', 'fk_id_estatus',
         'version_cdfi', 'certificado_sat', 'sello_sat', 'sello_cdfi', 'uuid', 'observaciones', 'fk_id_condicion_pago', 'total_pagado',
-        'xml_original','xml_timbrado','cadena_original','version_tfd','codigo_qr','fk_id_estatus_cfdi'
+        'xml_original','xml_timbrado','cadena_original','version_tfd','codigo_qr','fk_id_estatus_cfdi','no_poliza'
     ];
 
     public $niceNames =[];
