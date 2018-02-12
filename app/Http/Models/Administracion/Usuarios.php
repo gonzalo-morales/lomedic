@@ -165,7 +165,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         ->wherein('id_modulo',$this->getpermisos()->pluck('id_permiso'))
         ->leftJoin('ges_det_modulos','fk_id_modulo','id_modulo')
         ->where('fk_id_empresa', '=', $id_empresa)
-        ->orderBy('id_modulo');
+        ->orderBy('orden')->orderBy('nombre');
 
         return $modulos->get();
     }
