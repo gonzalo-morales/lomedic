@@ -11,7 +11,7 @@
 
 @section('content')
 <form action="{{ companyRoute('update') }}" method="post" class="col-12">
-	{{ csrf_field() }}
+	@csrf
 	{{ method_field('PUT') }}
 	<div class="row">
 		<div class="col-12">

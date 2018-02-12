@@ -4,9 +4,7 @@
 
 @section('content')
 {{ session('message') ? HTML::tag('p', session('message'), ['class'=>'success-message']) : '' }}
-
-<form id="form" action="{{ companyRoute('handheld.inventarios-inventario-detalle', ['inventario' => $inventario->getKey()]) }}" method="post">
-	{{ csrf_field() }}
+{!! Form::open(['url' => companyRoute('handheld.inventarios-inventario-detalle', ['inventario' => $inventario->getKey()]),'method'=>'post','enctype' => 'multipart/form-data','id'=>'form']) !!}
 	<input type="hidden" name="fk_id_inventario" value="{{ $inventario->getKey() }}">
 	<input type="hidden" name="fk_id_almacen" value="{{ $inventario->fk_id_almacen }}">
 	<input type="hidden" id="fk_id_ubicacion" name="fk_id_ubicacion" value="{{ $ubicacion->id_ubicacion ?? '' }}">
@@ -53,15 +51,13 @@
 				</td>
 			</tr>
 		</table>
-
         <div class="margin-top wrapper">
             {{ link_to(companyRoute('handheld.inventarios'), 'Regresar', ['class'=>'square actionBtn green']) }}
             <button type="submit" class="square actionBtn blue">Siguiente</button>
-            {{ link_to(route('home'), 'Cancelar', ['class'=>'square actionBtn red']) }}
+            {{ link_to(companyAction('HomeController@index'), 'Cancelar', ['class'=>'square actionBtn red']) }}
         </div>
-
 	</div>
-</form>
+{!! Form::close() !!}
 
 <script type="text/javascript">
 

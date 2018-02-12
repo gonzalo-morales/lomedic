@@ -10,5 +10,5 @@
 			{{ link_to(companyRoute('handheld.orden-compra', ['id' => $orden->id_orden]), $orden->id_orden, ['class'=>'list-item']) }}
 		@endforeach
 	</div><br>
-	{{ link_to(route('home'), 'Regresar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
+	{{ link_to(companyRoute('.'), 'Regresar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
 @endsection
