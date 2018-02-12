@@ -60,7 +60,7 @@ class EntradaDetalle extends ModelCompany
     public static $idSeguimientoDesv ;
     public static $onlyOne = true;
 
-    public static function boot()
+/*    public static function boot()
     {
         parent::boot();
         self::created(function($detalleEntrada){
@@ -118,7 +118,7 @@ class EntradaDetalle extends ModelCompany
                 }
 
         });
-    }
+    }*/
 
     /**
      * The validation rules

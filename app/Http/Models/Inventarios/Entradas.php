@@ -33,8 +33,15 @@ class Entradas extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_tipo_documento','numero_documento','referencia_documento',
-        'fecha_entrada','fk_id_estatus_entrada'];
+    protected $fillable = [
+    'fk_id_tipo_documento',
+    'numero_documento',
+    'referencia_documento',
+    'fecha_entrada',
+    'fk_id_estatus_entrada',
+    'fk_id_almacen',
+    'fk_id_ubicacion'
+];
 
 //    public $niceNames =[
 //        'fk_id_socio_negocio'=>'proveedor'

@@ -17,6 +17,10 @@ use App\Http\Models\Inventarios\SolicitudesDetalleSurtido;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Inventarios\Stock;
 use App\Http\Models\Inventarios\Upcs;
+use App\Http\Models\Compras\Ordenes;
+use App\Http\Models\Compras\DetalleOrdenes;
+use App\Http\Models\Inventarios\Entradas;
+use App\Http\Models\Inventarios\EntradaDetalle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
@@ -93,6 +97,7 @@ class HandheldController extends Controller
 		return redirect(companyRoute('handheld.solicitudes', ['id' => $request->fk_id_solicitud]))->with('message', 'Registro almacenado.');
 	}
 
+	//NANDO'S stuff
 	/*Movimiento_almacen*/
 	public function sucursales($company)
 	{
@@ -152,4 +157,47 @@ class HandheldController extends Controller
 		return redirect(companyRoute('handheld.movimientos', ['id' => $request->fk_id_almacen]))->with('message', 'Registro almacenado.');
 	}
 
+	//NANDO'S stuff
+	/*Ordenes Compra*/
+	public function ordenes($company)
+	{
+		return view('handheld.ordenes', [
+			'ordenes' => Ordenes::with('detalleOrdenes')->where('fk_id_estatus_orden', 1)->get(),
+		]);
+	}
+	public function orden(Request $request, $company, ordenes $orden)
+	{
+		$detalles = DetalleOrdenes::where('fk_id_documento',$orden->id_orden)->with('sku:id_sku,sku')->get();
+		$skus = $detalles->map(function ($detalle){
+			return $detalle->sku;
+		});
+		return view('handheld.orden-compra', [
+			'orden' => $orden,
+			'almacenes' => Almacenes::where('activo',1)->where('fk_id_sucursal',$orden->fk_id_sucursal)->pluck('almacen','id_almacen')->prepend('Seleccione el almacén','0'),
+			'ubicaciones_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$almacen"]}], "select": ["id_ubicacion","ubicacion"]'),
+			'fecha_entrada' => Carbon::now(),
+			'skus' => $skus->pluck('sku','id_sku'),
+			'codigo_barras_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_documento", "$orden"]},{"where": ["fk_id_sku","$id_sku"]}],"whereHas": [{"upc":{"where":["upc","ILIKE", "$upc"]}}], "select": ["fk_id_sku","fk_id_upc","cantidad","id_orden_detalle","fk_id_proyecto"]'),
+		]);
+	}
+	public function entrada_detalle_store(Request $request, $company, $compact = false)
+	{
+		$isSuccess = Entradas::create($request->all());
+		if($isSuccess){
+			// EntradaDetalle::create( $request->all() );
+			parse_str($request, $datos_detalle);
+			foreach ($datos_detalle["datos_entradas"] as $detalle)
+			{
+				EntradaDetalle::create(['fk_id_entrada_almacen' => $isSuccess->id_entrada_almacen,
+					'fk_id_sku' => $detalle["fk_id_sku"],
+					'fk_id_upc' => $detalle["fk_id_upc"],
+					'cantidad_surtida' => $detalle["cantidad_surtida"],
+					'lote' => $detalle["lote"],
+					'fecha_caducidad' => $detalle["fecha_caducidad"],
+					'fk_id_detalle_documento' => $detalle["fk_id_orden_detalle"],
+				]);
+			}
+		}
+		return redirect(companyRoute('handheld.ordenes'))->with('message', 'Registro almacenado.');
+	}
 }
