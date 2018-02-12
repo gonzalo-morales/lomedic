@@ -18,5 +18,5 @@
 			</div><br>
 		@endif
 	{{ link_to(companyRoute('handheld.sucursales'), 'Seleccionar otra sucursal', ['class'=>'square actionBtn green','style'=>'width:100%;']) }}
-	{{ link_to(route('home'), 'Cancelar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
+	{{ link_to(companyAction('HomeController@index'), 'Cancelar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
 @endsection

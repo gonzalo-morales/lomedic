@@ -23,4 +23,4 @@
             {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
     	</div>
     </div>
-@endsection>
+@endsection

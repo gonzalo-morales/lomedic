@@ -12,5 +12,5 @@
 			<p class="text-center" style="margin-top:0;margin-bottom:10px;">Falta surtir: <strong>{{$solicitud->falta_surtir}}</strong></p>
 		@endforeach
 	</div><br>
-	{{ link_to(route('home'), 'Regresar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
+	{{ link_to(companyAction('HomeController@index'), 'Regresar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
 @endsection

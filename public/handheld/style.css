@@ -1,9 +1,12 @@
 body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;margin:5px;}
 /**{margin: 0; padding: 0;}*/
-.blue{background-color: #007bff;}
-.green{background-color: #17A2B8;}
-.red{background-color: #dc3545;}
-.yellow{background-color: #ffc107; color:#111 !important;}
+.blue{background-color: #0099CC; color:#fff !important;}
+.green{background-color: #00C851; color:#fff !important;}
+.teal{background-color: #2BBBAD; color:#fff !important;}
+.red{background-color: #ff4444; color:#fff !important;}
+.yellow{background-color: #ffbb33; color:#fff !important;}
+.silver{background-color: #4B515D; color:#fff !important;}
+.grey{background-color: #37474F; color:#fff !important;}
 .wrapper{display: block; width:100%;bottom:0;left: 0;background-color: #fff;}
 .conent{overflow: auto;padding:0;}
 .square{float: left;width: 45.5%;align-self:center;margin: 0.2%;height: 63px;text-align: center;color: #fff;text-decoration: none;padding:5px;overflow: hidden;z-index: 0;white-space:normal;word-wrap: break-word;border:none;}
@@ -85,5 +88,8 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;margin:5px;}
     padding: 5px;
     background: #a7d2ff;
 }
-
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
 /*button.square:active{background-color:#ccc;}*/

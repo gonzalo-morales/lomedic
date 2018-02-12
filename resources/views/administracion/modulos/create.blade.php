@@ -11,7 +11,7 @@
 
 @section('content')
 <form action="{{ companyRoute('index') }}" method="post" class="col-12">
-	{{ csrf_field() }}
+	@csrf
 	{{ method_field('POST') }}
 	<div class="row">
 		<div class="col-12">

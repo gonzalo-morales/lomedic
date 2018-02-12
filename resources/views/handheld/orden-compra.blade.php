@@ -2,9 +2,7 @@
 
 @section('title', 'Handheld - Orden-Compra')
 @section('content')
-	<form id="form" action="{{ companyRoute('handheld.entrada-detalle-store') }}" method="post">
-		{{ csrf_field() }}
-		{{--  {{ dd($orden) }}  --}}
+	{!! Form::open(['url' => companyRoute('handheld.entrada-detalle-store'),'method'=>'post','enctype' => 'multipart/form-data','id'=>'form']) !!}
 		<input type="hidden" name="fk_id_tipo_documento" value="{{ $orden->fk_id_tipo_documento }}">
 		<input type="hidden" name="numero_documento" value="{{ $orden->id_orden }}">
 		<input type="hidden" name="fk_id_estatus_entrada" value="{{ $orden->fk_id_estatus_autorizacion }}">
@@ -87,11 +85,11 @@
 
 			<div class="margin-top wrapper">
 				<button id="submit" type="submit" class="square actionBtn blue" style="width:45.5%">Guardar</button>
-				{{ link_to(route('home'), 'Cancelar', ['class'=>'square actionBtn red','style'=>'width:45.5%','id'=>'cancelar']) }}
+				{{ link_to(companyAction('HomeController@index'), 'Cancelar', ['class'=>'square actionBtn red','style'=>'width:45.5%','id'=>'cancelar']) }}
 			</div>
 	
 		</div>
-	</form>
+	{!! Form::close() !!}
 	
 	<script type="text/javascript">
 		$(function(){
