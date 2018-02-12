@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
@@ -284,30 +283,29 @@ class ControllerBase extends Controller
      * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $company, $idOrIds, $attributes = ['eliminar' => 't'])
+    public function destroy(Request $request, $company, $idOrIds, $attributes = ['eliminar'=>1])
     {
         # ¿Usuario tiene permiso para eliminar?
         //$this->authorize('delete', $this->entity);
 
-        $idOrIds = !is_array($idOrIds) ? [$idOrIds] : $idOrIds;
+        $ids = !is_array($idOrIds) ? [$idOrIds] : $idOrIds;
 
         DB::beginTransaction();
-        $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)->update($attributes);
+        foreach ($idOrIds as $id) {
+            $entity = $this->entity->find($id);
+            # Log
+            event(new LogModulos($entity, $company, 'eliminar', 'Eliminacion de registro'));
+        }
+        
+        $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $ids)->update($attributes);
         
         if ($isSuccess) {
             DB::commit();
-            # Shorthand
-            foreach ($idOrIds as $id) {
-                $entity = $this->entity->findOrFail($id);
-                # Log
-                event(new LogModulos($entity, $company, 'eliminar', 'Eliminacion de registro'));
-            }
-
+            
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
 
             if ($request->ajax()) {
-                # Respuesta Json
                 return ['success' => true];
             } else {
                 return $this->redirect('destroy');
@@ -323,7 +321,6 @@ class ControllerBase extends Controller
             }
 
             if ($request->ajax()) {
-                # Respuesta Json
                 return ['success' => false];
             } else {
                 return $this->redirect('error_destroy');
