@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Models\Ventas;
 
+use App\Http\Models\Administracion\EstatusCfdi;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\FormasPago;
@@ -38,7 +39,7 @@ class NotasCreditoClientes extends ModelCompany
         'fk_id_forma_pago', 'fk_id_metodo_pago', 'fk_id_uso_cfdi', 'fk_id_moneda', 'tipo_cambio', 'descuento', 'fk_id_serie',
         'subtotal', 'impuestos', 'total', 'serie', 'folio', 'fecha_creacion', 'fecha_timbrado', 'fk_id_estatus',
         'version_cdfi', 'certificado_sat', 'sello_sat', 'sello_cdfi', 'uuid', 'observaciones', 'fk_id_condicion_pago', 'total_pagado',
-        'xml_original','xml_timbrado','cadena_original','version_tfd','codigo_qr'
+        'xml_original','xml_timbrado','cadena_original','version_tfd','codigo_qr','fk_id_estatus_cfdi'
     ];
 
     public $niceNames =[];
@@ -54,7 +55,6 @@ class NotasCreditoClientes extends ModelCompany
         'cliente.nombre_comercial' => 'Cliente',
         'sucursal.sucursal' => 'Sucursal',
         'fecha_creacion'=>'Fecha creación',
-        'fecha_vencimiento' => 'Vigencia',
         'moneda.descripcion' => 'Moneda',
         'total' => 'Total',
         'total_pagado' => 'Total Pagado',
@@ -127,6 +127,10 @@ class NotasCreditoClientes extends ModelCompany
     }
 
     public function relaciones(){
-        return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_documento');
+        return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_documento')->where('fk_id_tipo_documento',$this->fk_id_tipo_documento);
+    }
+
+    public function estatuscfdi(){
+        return $this->hasOne(EstatusCfdi::class,'id_estatus','fk_id_estatus_cfdi');
     }
 }

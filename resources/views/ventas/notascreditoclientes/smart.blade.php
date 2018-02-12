@@ -316,16 +316,6 @@
 							</div>
 						</td>
 					</tr>
-    				{{--<tr>--}}
-    					{{--<th class="pl-4">IVA 16%</th>--}}
-    					{{--<td>$ 1,600.00</td>--}}
-    					{{--<td>&nbsp;</td>--}}
-    				{{--</tr>--}}
-    				{{--<tr>--}}
-    					{{--<th class="pl-4">IEPS</th>--}}
-    					{{--<td>$ 1,000.00</td>--}}
-    					{{--<td>&nbsp;</td>--}}
-    				{{--</tr>--}}
     				<tr>
     					<th>TOTAL</th>
     					<td>{{Form::hidden('total',null,['id'=>'total'])}}<span id="total_span"></span></td>
