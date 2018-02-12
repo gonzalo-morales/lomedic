@@ -61,6 +61,14 @@ class AppServiceProvider extends ServiceProvider
             }
             return false;
         });
+        
+        Blade::if('notroute', function($routes = []) {
+            foreach($routes as $route) {
+                if(\Route::currentRouteNamed(currentRouteName($route)))
+                    return false;
+            }
+            return true;
+        });
 	}
 
 	/**
