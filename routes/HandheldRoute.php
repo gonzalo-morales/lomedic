@@ -24,12 +24,15 @@ Route::prefix('{company}')->group(function () {
 		Route::get('solicitudes', 'HandheldController@solicitudes')->name('solicitudes');
 		Route::get('solicitudes/{solicitud}', 'HandheldController@solicitud')->name('solicitudes-solicitud');
 		Route::post('solicitudes', 'HandheldController@solicitud_detalle_store')->name('solicitudes-solicitud-detalle-store');
-		/*Nando's ssucursales*/
+		/*Nando's sucursales*/
 		Route::get('sucursales', 'HandheldController@sucursales')->name('sucursales');
 		Route::get('almacenes', 'HandheldController@almacenes')->name('almacenes');
 		Route::get('movimientos', 'HandheldController@movimientos')->name('movimientos');
 		Route::get('movimientos/{movimiento}', 'HandheldController@movimiento')->name('movimiento');
 		Route::post('stock-movimiento-detalle', 'HandheldController@stock_movimiento_detalle_store')->name('stock-movimiento-detalle-store');
-		// Route::post('solicitudes', 'HandheldController@solicitud_detalle_store')->name('solicitudes-solicitud-detalle-store');
+		/*Nando's ordenes compra*/
+		Route::get('ordenes', 'HandheldController@ordenes')->name('ordenes');
+		Route::get('ordenes/{orden}', 'HandheldController@orden')->name('orden-compra');
+		Route::post('entrada-detalle-store', 'HandheldController@entrada_detalle_store')->name('entrada-detalle-store');
 	});
 });

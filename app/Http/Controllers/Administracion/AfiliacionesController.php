@@ -29,11 +29,15 @@ class AfiliacionesController extends ControllerBase
     public function getDependientes($company, Request $request)
     {
         $json = [];
-        $afiliaciones = Afiliaciones::where('id_afiliacion',$request->fk_id_afiliacion)->get();
+
+        $afiliaciones = Afiliaciones::where('id_afiliacion',$request->fk_id_afiliacion)
+            ->selectRAW("CONCAT(nombre,' ',paterno,' ',materno) as nombre, id_afiliacion as numero_afiliacion,*")
+            ->where('eliminar',0)
+            ->get();
         foreach ($afiliaciones as $afiliado) {
             $json[] = [
-                'id' => $afiliado->id_afiliacion,
-                'nombre' => $afiliado->nombre.' '.$afiliado->paterno.' '.$afiliado->materno,
+                'id_afiliacion' => $afiliado->numero_afiliacion,
+                'nombre' => $afiliado->nombre,
                 'genero' => $afiliado->genero,
                 'parentesco' => $afiliado->parentesco['nombre'],
                 'fecha_nacimiento' => $afiliado->fecha_nacimiento,

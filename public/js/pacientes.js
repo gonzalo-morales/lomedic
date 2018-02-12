@@ -1,6 +1,9 @@
 /**
  * Created by ihernandezt on 22/1/2018.
  */
+
+var from_contrato = $('#fecha_nacimiento').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
+
 $('#fk_id_afiliacion').on('change', function() {
 
    if($('#fk_id_afiliacion').val() != '' )
@@ -17,17 +20,14 @@ $('#fk_id_afiliacion').on('change', function() {
                success:function(data) {
                    $('.dependientes').empty();
                    $.each(data, function(key, value) {
-
-                       $('.dependientes').append('<tr>' +
-                           '<td>'+data[key].id+'</td>' +
-                           '<td>'+data[key].nombre+'</td>' +
-                           '<td>'+data[key].genero+'</td>' +
-                           '<td>'+data[key].parentesco+'</td>' +
-                           '<td>'+data[key].fecha_nacimiento+'</td>' +
+                        $('.dependientes').append('<tr>' +
+                           '<td>'+value.id_afiliacion+'</td>' +
+                           '<td>'+value.nombre+'</td>' +
+                           '<td>'+value.genero+'</td>' +
+                           '<td>'+value.parentesco+'</td>' +
+                           '<td>'+value.fecha_nacimiento+'</td>' +
                            '</tr>');
-                       // $('#fk_id_proyecto').append('<option value="'+ key +'">'+ value +'</option>');
                    });
-                   // $('#fk_id_proyecto').val('');
                }
            });
 

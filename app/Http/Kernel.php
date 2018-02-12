@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -10,7 +9,6 @@ class Kernel extends HttpKernel
      * The application's global HTTP middleware stack.
      *
      * These middleware are run during every request to your application.
-     *
      * @var array
      */
     protected $middleware = [
@@ -18,14 +16,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-
-        \RenatoMarinho\LaravelPageSpeed\Middleware\InlineCss::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\ElideAttributes::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\InsertDNSPrefetch::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\RemoveComments::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\TrimUrls::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\RemoveQuotes::class,
-        \RenatoMarinho\LaravelPageSpeed\Middleware\CollapseWhitespace::class,
     ];
 
     /**
@@ -38,14 +28,13 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
-            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            #\Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            //\App\Http\Middleware\VerifyCsrfToken::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
-
         'api' => [
-            'throttle:60,1',
+            'throttle:10,1',
             'bindings',
         ],
     ];
@@ -54,7 +43,6 @@ class Kernel extends HttpKernel
      * The application's route middleware.
      *
      * These middleware may be assigned to groups or used individually.
-     *
      * @var array
      */
     protected $routeMiddleware = [

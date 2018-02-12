@@ -8,6 +8,7 @@ use App\Http\Models\Administracion\SeriesSkus;
 use App\Http\Models\Administracion\UnidadesMedidas;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\Compras\DetalleOrdenes;
 
 class Productos extends ModelCompany
 {
@@ -105,4 +106,5 @@ class Productos extends ModelCompany
     {
         return $this->belongsToMany(SociosNegocio::class,'maestro.sng_det_productos','fk_id_sku','fk_id_socio_negocio','id_sku','id_socio_negocio')->withPivot('tiempo_entrega');
     }
+
 }

@@ -6,7 +6,7 @@
     <div class="wrapper">
         {{ link_to(companyRoute('handheld.inventarios'), 'Inventario', ['class'=>'square blue','style'=>'line-height:63px;']) }}
     	{{ link_to(companyRoute('handheld.solicitudes'), 'Surtido de pedidos', ['class'=>'square green','style'=>'line-height:63px;']) }}
-    	{{ link_to(companyRoute(''), 'Recibo OC', ['class'=>'square yellow','style'=>'line-height:63px;']) }}
+    	{{ link_to(companyRoute('handheld.ordenes'), 'Recibo OC', ['class'=>'square yellow','style'=>'line-height:63px;']) }}
     	{{ link_to(companyRoute('handheld.sucursales'), 'Cambio de Ubicación', ['class'=>'square green','style'=>'line-height:63px;']) }}
 
         {!! Form::open(['route' => 'logout', 'before' => 'csrf', 'id' => 'logout-form', 'class' => 'hidden']) !!}

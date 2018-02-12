@@ -69,7 +69,7 @@ $(document).ready(function () {
                     '<td>' +
                         '<a onclick="eliminarFila(this)" data-delete-type="single"  data-toggle="tooltip" data-placement="top" title="Borrar"  id="' + filas + '" aria-describedby="tooltip687783"><i class="material-icons text-primary">delete</i></a> ' +
                     '</td> ' +
-                    '<input type="hidden" name="relations[has][detalles][' + filas + '][id_detalle_requisicion]"  value=""/> ' +
+                    // '<input type="hidden" name="relations[has][detalles][' + filas + '][id_detalle_requisicion]"  value=""/> ' +
                     '<input type="hidden" name="relations[has][detalles]['+filas+'][fk_id_area]" value="'+area[0]['id']+'"> ' +
                     '<input type="hidden" name="relations[has][detalles]['+filas+'][fk_id_clave_cliente_producto]" value="'+medicamento[0].fk_id_clave_cliente_producto+'"> ' +
                     '<input type="hidden" name="relations[has][detalles]['+filas+'][cantidad_solicitada]" value="'+cantidad.val()+'"> ' +

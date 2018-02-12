@@ -47,7 +47,7 @@
 					</div>
 				</div><!--/row-->
 				@if(Route::currentRouteNamed(currentRouteName('create')))
-					<ul class="nav nav-pills" role="tablist" id="lista_entradas"></ul>
+					<ul class="nav nav-pills justify-content-center" role="tablist" id="lista_entradas"></ul>
 					<div class="tab-content mt-2" id="detalle_entrada"></div>
 				@endif
 				@if(Route::currentRouteNamed(currentRouteName('show')))

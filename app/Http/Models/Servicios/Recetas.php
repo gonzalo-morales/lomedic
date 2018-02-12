@@ -11,6 +11,7 @@ use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\Medicos;
 use App\Http\Models\Administracion\Programas;
 use App\Http\Models\Proyectos\Proyectos;
+use DB;
 
 class Recetas extends ModelCompany
 {
@@ -133,12 +134,17 @@ class Recetas extends ModelCompany
     {
         return $this->hasMany(Proyectos::class,'fk_id_proyecto','id_proyecto');
     }
-    public function dependiente()
+    public function dependiente($fk_id_afiliacion,$id_dependiente)
     {
-        return $this->hasOne(Dependencias::class,'id_dependencia','fk_id_dependiente');
+        return Afiliaciones::select(DB::raw("CONCAT(nombre,' ',paterno,' ',materno) AS nombre,genero,fecha_nacimiento"))->where('id_afiliacion',$fk_id_afiliacion)->where('id_dependiente',$id_dependiente)->first();
     }
     public function parentesco()
     {
         return $this->hasOne(Parentescos::class,'id_parentesco','fk_id_parentesco');
     }
+    public function detalles()
+    {
+        return $this->hasMany(RecetasDetalle::class,'fk_id_receta','id_receta');
+    }
+
 }

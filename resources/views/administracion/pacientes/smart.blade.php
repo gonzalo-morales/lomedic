@@ -1,6 +1,19 @@
 @extends(smart())
 @section('content-width', 's12')
 
+
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Pacientes')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo paciente')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar paciente')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Paciente')
+@endif
+
+
+
 @section('header-bottom')
     @parent
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
@@ -43,7 +56,7 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    {{Form::cDate('Fecha de solicitud','fecha_nacimiento')}}
+                                    {{Form::cDate('Fecha de nacimiento','fecha_nacimiento',['class'=>' datepicker'])}}
                                 </div>
                             </div>
                         </div>
@@ -93,16 +106,6 @@
                             <td>{{$afiliado['genero']}}</td>
                             <td>{{$afiliado->parentesco->nombre}}</td>
                             <td>{{$afiliado->fecha_nacimiento}}</td>
-
-                            {{--<td>--}}
-                            {{--<input name="relations[has][detalles][{{$row}}][id_receta_detalle]" type="hidden" value="{{$detalle->id_receta_detalle}}">--}}
-                            {{--<p><input id="clave_cliente" name="relations[has][detalles][{{$row}}][fk_id_clave_cliente_producto]" type="hidden" value="{{$detalle->producto['id_sku']}}">{{$detalle->producto['descripcion']}}</p>--}}
-                            {{--<p><input id="tbdosis" name="relations[has][detalles][{{$row}}][dosis]" type="hidden" value="{{$detalle->dosis}}">{{$detalle->dosis}}</p>--}}
-                            {{--<input id="tbveces_surtir" name="relations[has][detalles][{{$row}}][veces_surtir]" type="hidden" value="{{$detalle->veces_surtidas}}">--}}
-                            {{--</td>--}}
-                            {{--<td>--}}
-                            {{--<a data-delete-type="single"  data-toggle="tooltip" data-placement="top" title="Borrar"  id="{{$row}}" aria-describedby="tooltip687783" onclick="eliminarFila(this)" ><i class="material-icons text-primary">delete</i></a>--}}
-                            {{--</td>--}}
                         </tr>
                      @endforeach
                 @endif
