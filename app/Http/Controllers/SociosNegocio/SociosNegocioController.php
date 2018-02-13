@@ -42,13 +42,14 @@ class SociosNegocioController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 	    $tipo = TiposSocios::where('activo',1)->select('para_venta','tipo_socio','id_tipo_socio')->get();
+	    //dd($tipo->toarray());
 	    return [
 	        'ramos'                => Ramos::where('activo',1)->pluck('ramo','id_ramo')->sortBy('ramo')->prepend('...',''),
 	        'ejecutivos'           => Usuarios::where('activo',1)->pluck('nombre_corto','id_usuario')->sortBy('nombre_corto')->prepend('...',''),
 	        'paises'               => Paises::where('activo',1)->pluck('pais','id_pais')->sortBy('pais')->prepend('...',''),
 	        'tiposproveedores'     => TiposProveedores::where('activo',1)->pluck('tipo_proveedor','id_tipo_proveedor')->sortBy('tipo_proveedor')->prepend('...',''),
-	        'tipossociosventa'     => $tipo->where('para_venta','1')->where('activo',1)->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',''),
-	        'tipossocioscompra'    => $tipo->where('para_venta','0')->where('activo',1)->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Proveedor',''),
+	        'tipossociosventa'     => $tipo->where('para_venta',1)->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',''),
+	        'tipossocioscompra'    => $tipo->where('para_venta',0)->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Proveedor',''),
 	        'tiposanexos'          => TiposAnexos::where('activo',1)->pluck('tipo_anexo','id_tipo_anexo')->sortBy('tipo_anexo')->prepend('...',''),
 	        'empresas'		       => Empresas::select('id_empresa','nombre_comercial')->where('activo',1)->where('empresa',1)->get()->sortBy('nombre_comercial'),
 	        'condicionpago'        => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago')->sortBy('condicion_pago')->prepend('...',''),

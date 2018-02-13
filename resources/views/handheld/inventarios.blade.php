@@ -9,5 +9,5 @@
 			{{ link_to(companyRoute('handheld.inventarios-inventario', ['id' => $inventario->id_inventario]), $inventario->almacen->almacen, ['class'=>'list-item']) }}
 		@endforeach
 	</div><br>
-	{{ link_to(route('home'), 'Regresar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
+	{{ link_to(companyAction('HomeController@index'), 'Regresar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
 @endsection

@@ -10,9 +10,9 @@ class Afiliaciones extends ModelBase
 
     protected $table = 'maestro.gen_cat_afiliados';
 
-    protected $primaryKey = 'id_afiliacion';
+    protected $primaryKey = 'id_afiliado';
 
-    public $incrementing = false;
+//    public $incrementing = false;
 
     protected $fillable = [
         'id_afiliacion',
@@ -28,17 +28,10 @@ class Afiliaciones extends ModelBase
         'fk_id_parentesco',
     ];
 
-    /**
-     * The validation rules
-     * @var array
-     */
     public $rules = [];
 
-    /**
-     * Los atributos que seran visibles en index-datable
-     * @var array
-     */
     protected $fields = [
+        'id_afiliado' => '#',
         'id_afiliacion' => 'Numero de paciente',
         'FullName' => 'Nombre',
         'genero'=> 'Genero',
@@ -58,10 +51,9 @@ class Afiliaciones extends ModelBase
     {
         return $this->hasOne(Parentescos::class,'id_parentesco','fk_id_parentesco');
     }
-    public function getCodigoPacieteAttribute()
-    {
-//        return dump($this);
-        return $this->selectRAW("id_afiliacion as codigo")->first();
-    }
+//    public function getCodigoPacieteAttribute()
+//    {
+//        return $this->selectRAW("id_afiliacion as codigo")->first();
+//    }
 
 }

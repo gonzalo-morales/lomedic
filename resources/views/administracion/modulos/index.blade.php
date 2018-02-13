@@ -46,7 +46,7 @@
 				<a href="{{ companyRoute('edit', ['id' => $modulo->id_modulo]) }}" class="btn is-icon" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">mode_edit</i></a>
 				<a href="#" class="btn is-icon" onclick="event.preventDefault(); document.getElementById('delete-form-{{$modulo->id_modulo}}').submit();" data-toggle="tooltip" data-placement="top" title="Borrar"><i class="material-icons">delete</i></a>
 				<form id="delete-form-{{$modulo->id_modulo}}" action="{{ companyRoute('destroy', ['id' => $modulo->id_modulo]) }}" method="POST" style="display: none;">
-					{{ csrf_field() }}
+					@csrf
 					{{ method_field('DELETE') }}
 				</form>
 			</td>

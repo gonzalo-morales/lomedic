@@ -20,7 +20,11 @@ class AfiliacionesController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'afiliados' => empty($entity) ? Afiliaciones::where('id_dependiente',1)->selectRAW("CONCAT(id_afiliacion,' ','-',' ',paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->orderBy('id_afiliacion')->pluck('nombre_afiliado', 'id_afiliacion')->prepend('Nuevo paciente', '') : Afiliaciones::all()->where('id_afiliacion', $entity->id_afiliacion),
+            'afiliados' => Afiliaciones::where('id_dependiente',1)
+                ->selectRAW("CONCAT(id_afiliacion,' ','-',' ',paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")
+                ->orderBy('id_afiliacion')
+                ->pluck('nombre_afiliado', 'id_afiliacion')
+                ->prepend('Nuevo paciente', '0'),
             'parentescos' => Parentescos::where('activo',1)->where('eliminar',0)->pluck('nombre','id_parentesco'),
         ];
 

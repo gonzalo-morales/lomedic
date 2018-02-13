@@ -2,9 +2,7 @@
 
 @section('title', 'Handheld - Orden-Compra')
 @section('content')
-	<form id="form" action="{{ companyRoute('handheld.entrada-detalle-store') }}" method="post">
-		{{ csrf_field() }}
-		{{--  {{ dd($orden) }}  --}}
+	{!! Form::open(['url' => companyRoute('handheld.entrada-detalle-store'),'method'=>'post','enctype' => 'multipart/form-data','id'=>'form']) !!}
 		<input type="hidden" name="fk_id_tipo_documento" value="{{ $orden->fk_id_tipo_documento }}">
 		<input type="hidden" name="numero_documento" value="{{ $orden->id_orden }}">
 		<input type="hidden" name="fk_id_estatus_entrada" value="{{ $orden->fk_id_estatus_autorizacion }}">
@@ -36,7 +34,7 @@
 						<label for="referencia_documento">* Documento</label>
 					</td>
 					<td class="column left">
-						<input id="referencia_documento" name="referencia_documento" class="form-control" type="number" value="">
+						<input id="referencia_documento" name="referencia_documento" class="form-control" type="text" value="">
 					</td>
 				</tr>
 			</table>
@@ -87,11 +85,11 @@
 
 			<div class="margin-top wrapper">
 				<button id="submit" type="submit" class="square actionBtn blue" style="width:45.5%">Guardar</button>
-				{{ link_to(route('home'), 'Cancelar', ['class'=>'square actionBtn red','style'=>'width:45.5%','id'=>'cancelar']) }}
+				{{ link_to(companyAction('HomeController@index'), 'Cancelar', ['class'=>'square actionBtn red','style'=>'width:45.5%','id'=>'cancelar']) }}
 			</div>
 	
 		</div>
-	</form>
+	{!! Form::close() !!}
 	
 	<script type="text/javascript">
 		$(function(){
@@ -266,7 +264,7 @@
 			if( rowFounded ){
 				var cantidadSurtida = +$(rowFounded).find('.cantidad_surtida').val();
 				var nuevaCantidadSurtir = cantidadSurtida + 1;
-				if(nuevaCantidadSurtir > response[0].cantidad){
+				if(nuevaCantidadSurtir > (response[0].cantidad - response[0].cantidad_recibida)){
 					$(rowFounded).find('.cantidad_surtida').addClass('border-done');
 					$(rowFounded).find('div.thead').addClass('text-done');
 					$(rowFounded).find('div.stopUser').removeClass('display-none');
@@ -294,14 +292,15 @@
 					'<div> UPC: ' + '<span class="upcRow">' + $('#scan').val() + '</span>' + '</div>' +
 					'<input type="hidden" id="index" value="'+row_id+'"></input>'+
 					'<input type="hidden" class="skuRow" name="datos_entradas['+row_id+'][fk_id_sku]" value="'+ response[0].fk_id_sku +'"/>'+
+					'<input type="hidden" name="datos_entradas['+row_id+'][precio_unitario]" value="'+ response[0].precio_unitario +'"/>'+
 					'<input type="hidden" name="datos_entradas['+row_id+'][fk_id_upc]" value="'+ response[0].fk_id_upc +'"/>'+
-					'<input type="hidden" class="id_orden_detalle" name="datos_entradas['+row_id+'][fk_id_orden_detalle]" value="'+ response[0].id_orden_detalle +'"/>'+
+					'<input type="hidden" class="id_orden_detalle" name="datos_entradas['+row_id+'][fk_id_linea]" value="'+ response[0].id_orden_detalle +'"/>'+
 					'<input type="hidden" name="datos_entradas['+row_id+'][fk_id_proyecto]" value="'+ response[0].fk_id_proyecto +'"/>'+
 					'<input type="hidden" class="fechaCaducidadRow" name="datos_entradas['+row_id+'][fecha_caducidad]" value="'+ fecha_caducidadVal +'"/>'+
 					'<input type="hidden" class="loteRow" name="datos_entradas['+row_id+'][lote]" value="'+ loteVal +'"/>'+
 					'</th>'
 				+ '<td class="thead">'+ fecha_caducidadVal + ' / '+ loteVal +'</td>'
-				+ '<td style="text-align:left;">'+ '<div class="thead">Total solicitadas: ' + '<b>' + response[0].cantidad + '</b>' + '</div>' + '<span class="thead">Escaneadas: </span>' + '<input readonly class="cantidad_surtida" name="datos_entradas['+row_id+'][cantidad_surtida]" value="1" type="number" style="width:30px">' + '<div class="thead text-done display-none stopUser">Ya agregaste la cantidad máxima solicitadas</div>' + '</td>'
+				+ '<td style="text-align:left;">'+ '<div class="thead">Total solicitadas: ' + '<b>' + (response[0].cantidad - response[0].cantidad_recibida) + '</b>' + '</div>' + '<span class="thead">Escaneadas: </span>' + '<input readonly class="cantidad_surtida" name="datos_entradas['+row_id+'][cantidad_surtida]" value="1" type="number" style="width:30px">' + '<div class="thead text-done display-none stopUser">Ya agregaste la cantidad máxima solicitadas</div>' + '</td>'
 				+ '<td>'+ '<button title="Eliminar" type="button" class="red is-icon text-white" data-delay="50" onclick="borrarFila(this)">X</button>'
 				+'</td></tr>'		
 			);

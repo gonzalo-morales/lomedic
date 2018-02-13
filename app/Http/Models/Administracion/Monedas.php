@@ -47,9 +47,4 @@ class Monedas extends ModelBase
         'total_decimales' => 'Cantidad Decimales',
         'activo_span' => 'Estatus'
     ];
-    /*
-    SAGY600321EU8
-    ADMINISTRADOR
-    4NT4R4SY
-    */
 }

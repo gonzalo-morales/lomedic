@@ -16,6 +16,8 @@ Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'handheld', 'as' => 'handheld.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
+        Route::view("/","handheld.home");
+        
 		Route::post('inventarios/{inventario}/detalle', 'HandheldController@inventario_detalle')->name('inventarios-inventario-detalle');
 		Route::get('inventarios/{inventario}', 'HandheldController@inventario')->name('inventarios-inventario');
 		Route::get('inventarios', 'HandheldController@inventarios')->name('inventarios');

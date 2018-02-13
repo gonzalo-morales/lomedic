@@ -3,9 +3,7 @@
 @section('title', 'Handheld - Inventario')
 
 @section('content')
-
-<form id="form" action="{{ companyRoute('handheld.inventarios-inventario-detalle-store') }}" method="post">
-    {{ csrf_field() }}
+{!! Form::open(['url' => companyRoute('handheld.inventarios-inventario-detalle-store'),'method'=>'post','enctype' => 'multipart/form-data','id'=>'form']) !!}
     <input type="hidden" name="fk_id_inventario" value="{{ $previous->fk_id_inventario }}">
     <input type="hidden" name="fk_id_almacen" value="{{ $previous->fk_id_almacen }}">
     <input type="hidden" name="fk_id_ubicacion" value="{{ $previous->fk_id_ubicacion }}">
@@ -27,7 +25,6 @@
                     <input class="form-control readonly" type="text" name="codigo_barras" value="{{ $previous->codigo_barras }}" readonly>
                 </td>
             </tr>
-
             <tr>
                 <td class="column right">
                     <label for="no_lote">No. Lote</label>
@@ -63,7 +60,7 @@
             {{ link_to(companyRoute('handheld.inventarios'), 'Cancelar', ['class'=>'square red actionBtn']) }}
         </div>
     </div>
-</form>
+{!! Form::close() !!}
 
 <script type="text/javascript">
 

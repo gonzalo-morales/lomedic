@@ -33,14 +33,14 @@ class EntradaDetalle extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_detalle_entrada';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['fk_id_entrada_almacen','fk_id_lote','fk_id_sku','fk_id_upc','cantidad_surtida','fecha_caducidad','lote','fk_id_detalle_documento'];
+    protected $fillable = ['fk_id_documento','fk_id_tipo_documento','fk_id_sku','fk_id_upc','cantidad_surtida','fecha_caducidad','lote','fk_id_linea','precio_unitario'];
 
 //    public $niceNames =[];
 //
@@ -50,8 +50,8 @@ class EntradaDetalle extends ModelCompany
      * @var array
      */
     protected $fields = [
-        'id_detalle_entrada' => '#',
-        'fk_id_entrada_almacen' => 'Numero entrada',
+        'id_documento_detalle' => '#',
+        'fk_id_documento' => 'Numero entrada',
         'lote' => 'Numero de lote',
         'fk_id_sku' => 'Sku',
         'fk_id_upc' => 'Upc',

@@ -3,8 +3,7 @@
 @section('title', 'Handheld - Stock')
 
 @section('content')
-<form id="form" action="{{ companyRoute('handheld.stock-movimiento-detalle-store',['movimiento' => $movimiento->getKey()]) }}" method="post">
-    {{ csrf_field() }}
+{!! Form::open(['url' => companyRoute('handheld.stock-movimiento-detalle-store',['movimiento' => $movimiento->getKey()]),'method'=>'post','enctype' => 'multipart/form-data','id'=>'form']) !!}
     <input type="hidden" name="fk_id_stock" value="{{ $movimiento->id_stock }}">
     <input type="hidden" name="fk_id_sku" value="{{ $movimiento->fk_id_sku }}">
     <input type="hidden" name="fk_id_sucursal" value="{{ $fk_id_sucursal }}">
@@ -45,7 +44,6 @@
                     <input id="lote_nuevo" class="form-control readonly" name="lote" type="text" value="{{ $movimiento->lote }}" disabled="true">
                 </td>
             </tr>
-
             <tr>
                 <td class="column right">
                     <label for="no_lote">*Nueva ubicación</label>
@@ -71,10 +69,10 @@
                 'id' => $previous,
             ]), 'Regresar', ['class'=>'square actionBtn green']) }}
             <button id="finalizar" type="submit" class="square blue actionBtn" disabled="true">Finalizar</button>
-            {{ link_to(route('home'), 'Cancelar', ['class'=>'square red actionBtn']) }}
+            {{ link_to(companyAction('HomeController@index'), 'Cancelar', ['class'=>'square red actionBtn']) }}
         </div>
     </div>
-</form>
+{!! Form::close() !!}
 
 <script type="text/javascript">
 

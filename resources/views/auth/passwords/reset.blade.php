@@ -14,9 +14,7 @@
 						</div>
 					@endif
 
-					<form class="form-horizontal" method="POST" action="{{ route('password.request') }}">
-						{{ csrf_field() }}
-
+					{!! Form::open(['url' => route('password.request'),'method'=>'post','class' => 'form-horizontal','enctype' => 'multipart/form-data']) !!}
 						<input type="hidden" name="token" value="{{ $token }}">
 
 						<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -67,7 +65,7 @@
 								</button>
 							</div>
 						</div>
-					</form>
+					{!! Form::close() !!}
 				</div>
 			</div>
 		</div>
