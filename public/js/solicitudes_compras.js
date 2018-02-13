@@ -354,7 +354,7 @@ function agregarProducto() {
         dataTable.import({
             type: "csv",
             data:
-            $('<input type="hidden" name="_detalles[+row_id+][fk_id_documento_padre]">')[0].outerHTML+'N/A'+','+
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_documento_base]">')[0].outerHTML+'N/A'+','+
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').val() + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text + ","+
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc + ","+
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" value="'+$('#fk_id_proveedor').val()+'"/>')[0].outerHTML + proveedor + "," +
