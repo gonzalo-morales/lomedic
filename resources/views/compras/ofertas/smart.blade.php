@@ -84,7 +84,7 @@
     								'data-target-el' => '#fk_id_upc',
     								'data-target-with' => '["upcs:id_upc,fk_id_sku,upc"]',
     								'data-target-value' => 'upcs,id_upc,upc',
-    								'data-url-tiempo_entrega'=>companyAction('HomeController@index').'/sociosnegocio.ProductosSociosNegocio/api'
+    								'data-url-tiempo_entrega'=>companyAction('HomeController@index').'/SociosNegocio.ProductosSociosNegocio/api'
     							]) !!}
     						</div>
     						<div class="form-group input-field col-md-3 col-sm-6">
