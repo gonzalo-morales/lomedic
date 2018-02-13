@@ -112,7 +112,9 @@ window['smart-model'] = {
 	lastChecked: null,
 	// Colecciones de datos
 	collections: {
+		
 		headerOptions: [
+			/*
 			// Button
 			{a: {
 				href: '#',
@@ -120,8 +122,9 @@ window['smart-model'] = {
 				role: 'buttons',
 				'rv-get-create-url': '',
 				html: '<i class="material-icons left align-middle">add</i>Crear',
-			}},
+			}}, 
 			// Dropdown
+			
 			{div: {
 				class: 'dropdown d-inline',
 				childs: [
@@ -145,9 +148,9 @@ window['smart-model'] = {
 						]
 					}}
 				]},
-			}
+			}*/
 		],
-		headerOptionsOnChecks: [
+		headerOptionsOnChecks: [ /*
 			// Button
 			{button: {
 				html: '<i class="material-icons left align-middle">select_all</i>Deseleccionar (<span rv-text="collections.items | length"></span>)',
@@ -178,7 +181,7 @@ window['smart-model'] = {
 						]
 					}}
 				]}
-			}
+			}*/
 		],
 		// {itemId : datatable row }
 		items: [],
@@ -231,8 +234,8 @@ window['smart-model'] = {
 
 			let modal = window['smart-modal'];
 			modal.view = rivets.bind(modal, {
-				title: 'Ã‚Â¿Estas seguro?',
-				content: 'Una vez eliminado(s) no podrÃƒÂ¡s recuperarlo(s).',
+				title: 'Ãƒâ€šÃ‚Â¿Estas seguro?',
+				content: 'Una vez eliminado(s) no podrÃƒÆ’Ã‚Â¡s recuperarlo(s).',
 				buttons: [
 					{button: {
 						'text': 'Cancelar',

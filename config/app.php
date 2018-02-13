@@ -76,7 +76,9 @@ return [
 	|
 	*/
 
-	'locale' => 'es',
+    'locales' => 'es|en',
+    
+    'locale' => env('APP_LANG','es'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -183,6 +185,8 @@ return [
 	    Barryvdh\Debugbar\ServiceProvider::class,
 	    #RenatoMarinho\LaravelPageSpeed\ServiceProvider::class
         #Artisaninweb\SoapWrapper\ServiceProvider::class
+	    Way\Generators\GeneratorsServiceProvider::class,
+	    Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
 	],
 
 	/*

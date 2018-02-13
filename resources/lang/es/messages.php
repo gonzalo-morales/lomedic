@@ -13,4 +13,5 @@ return [
 	'estados' => 'estados|estado',
 	'paises' => 'países|país',
 	'parentescos' => 'parentescos|parentesco',
+    'welcome' => utf8_encode('!Bienvenido!'),
 ];
