@@ -129,7 +129,7 @@
     			@endif
     			<div class="card-body">
     				<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\OfertasController@store')}}"
-    					   @if(isset($data->id_oferta))
+    					   @if(isset($data->id_documento))
     					   data-delete="{{companyAction('Compras\OfertasController@destroy')}}"
     					   @endif
     					   data-impuestos="{{companyAction('Administracion\ImpuestosController@obtenerImpuestos')}}">
@@ -156,8 +156,9 @@
     						@foreach( $solicitud->detalleSolicitudes->where('cerrado',false) as $detalle)
     							<tr class="list-left bg-light">
     								<td>
-    									{{isset($detalle->fk_id_documento)?$detalle->fk_id_solicitud:'N/A'}}
-    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_documento_parent]',$detalle->fk_id_solicitud) !!}
+    									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
+    									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
+										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_linea]',$detalle->fk_id_documento_detalle) !!}
     								</td>
     								<td>
     									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
@@ -207,7 +208,7 @@
     									['class'=>'form-control descuento','id'=>'descuento_detalle'.$detalle->id_documento_detalle,'style'=>'min-width:100px','placeholder'=>'99.0000','onkeyup'=>'total_row('.$detalle->id_documento_detalle.')']) !!}
     								</td>
     								<td>
-    									<input type="text" class="form-control total" id="total{{$detalle->id_documento_detalle}}" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total_producto]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+    									<input type="text" class="form-control total" id="total{{$detalle->id_documento_detalle}}" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total_producto]'}}" readonly value="{{number_format($detalle->total_producto,2,'.','')}}">
     								</td>
     								<td>
     									<button class="btn is-icon text-primary bg-white"
@@ -269,7 +270,7 @@
     									{{number_format($detalle->descuento_detalle,4,'.','')}}
     								</td>
     								<td>
-    									<input type="text" class="form-control total" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+    									<input type="text" class="form-control total" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total_producto]'}}" readonly value="{{number_format($detalle->total_producto,2,'.','')}}">
     								</td>
     								<td>
     									{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
@@ -466,7 +467,7 @@
 	@section('extraButtons')
 		@parent
 		{!!isset($data->id_documento) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_documento]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
-		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($menuempresa->conexion.'/compras/'.$data->id_oferta.'/2/ordenes/crear'), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
+		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($menuempresa->conexion.'/compras/'.$data->id_documento.'/2/ordenes/crear'), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
 	@endsection
 @section('form-title','Datos de la Oferta de Compra')
 @endif

@@ -62,7 +62,7 @@ class Ofertas extends ModelCompany
         'fk_id_sucursal'=>'required',
         'fk_id_proveedor'=>'required',
         'fk_id_moneda'=>'required',
-        'descuento_oferta'=>'nullable|regex:/^(\d{0,2}(\.\d{0,4})?\)$/'
+        'descuento_oferta'=>['nullable','regex:/^\d{0,2}(\.\d{0,4})?\)?$/']
     ];
 
     public function sucursal()

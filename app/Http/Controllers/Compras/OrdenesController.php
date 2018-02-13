@@ -51,11 +51,11 @@ class OrdenesController extends ControllerBase
         switch (\request('tipo_documento')){
             case 1:
                 $documento = Solicitudes::find(\request('id'));
-                $detalles_documento = $documento->detalleSolicitudes()->select('*','fk_id_solicitud as fk_id_documento')->get();
+                $detalles_documento = $documento->detalleSolicitudes()->where('cerrado',0)->select('*','fk_id_documento','importe as total_producto')->get();
                 break;
             case 2:
                 $documento = Ofertas::find(\request('id'));
-                $detalles_documento = $documento->DetalleOfertas()->select('*','fk_id_oferta as fk_id_documento')->get();
+                $detalles_documento = $documento->DetalleOfertas()->where('cerrado',0)->select('*','fk_id_documento')->get();
                 break;
             default:
                 $documento = null;
@@ -128,8 +128,8 @@ class OrdenesController extends ControllerBase
 			    $tipo_documento = 0;
 			    foreach ($request->detalles as $detalle){
                     $descuento_rows += $detalle['descuento_detalle'];
-                    $id_documento = $detalle['fk_id_documento_parent'];
-                    $tipo_documento = $detalle['fk_id_tipo_documento_parent'];
+                    $id_documento = $detalle['fk_id_documento_base'];
+                    $tipo_documento = $detalle['fk_id_tipo_documento_base'];
                     if(empty($detalle['fk_id_upc'])){
                         $detalle['fk_id_upc'] = null;
                     }

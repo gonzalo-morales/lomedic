@@ -29,7 +29,7 @@ class DetalleOrdenes extends ModelCompany
      */
     protected $fillable = ['fk_id_orden','fk_id_sku','fk_id_upc','fk_id_cliente','cantidad',
         'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario','fk_id_solicitud',
-        'descuento_detalle','cerrado','fk_id_tipo_documento','fk_id_documento'];
+        'descuento_detalle','cerrado','fk_id_tipo_documento','fk_id_documento','fk_id_linea'];
 
     /**
      * Indicates if the model should be timestamped.

@@ -117,7 +117,15 @@ class OfertasController extends ControllerBase
 		# Validamos request, si falla regresamos atras
 		$this->validate($request, $this->entity->rules);
 		$entity = $this->entity->findOrFail($id);
-		$entity->fill($request->all());
+
+		if($request->fk_id_empresa == 0){
+		    $request->request->set('fk_id_empresa',$entity->fk_id_empresa);
+        }
+        if($request->fk_id_cliente == 0){
+            $request->request->set('fk_id_cliente',$entity->fk_id_cliente);
+        }
+
+        $entity->fill($request->all());
 		if ($entity->save()) {
 			if(isset($request->detalles)) {
 				foreach ($request->detalles as $detalle) {

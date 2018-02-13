@@ -174,8 +174,8 @@
 			</div>
 			@endif
 			<div class="card-body">
-				<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\ordenesController@store')}}"
-					   @if(isset($data->id_orden))
+				<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\OrdenesController@store')}}"
+					   @if(isset($data->id_documento))
 					   data-delete="{{companyAction('Compras\OrdenesController@destroyDetail')}}"
 					   @endif
 					   data-impuestos="{{companyAction('Administracion\ImpuestosController@obtenerImpuestos')}}"
@@ -203,8 +203,9 @@
 						@foreach($detalles_documento as $detalle)
 							<tr>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_tipo_documento_parent]',$tipo_documento) !!}
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_documento_parent]',$detalle->fk_id_documento) !!}
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_tipo_documento_base]',$tipo_documento) !!}
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
+									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_linea]',$detalle->id_documento_detalle) !!}
 									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
 								</td>
 								<td>
@@ -251,7 +252,7 @@
 									{{number_format($detalle->precio_unitario,2,'.','')}}
 								</td>
 								<td>
-									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'detalles['.$detalle->getKey().'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'detalles['.$detalle->getKey().'][total]'}}" readonly value="{{number_format($detalle->total_producto,2,'.','')}}">
 								</td>
 								<td>
 										<button class="btn is-icon text-primary bg-white "
@@ -266,7 +267,7 @@
 						@foreach( $detalles as $detalle)
 							<tr>
 								<td>
-									{{isset($detalle->fk_id_documento_parent)?$detalle->fk_id_tipo_documento_parent.' - '.$detalle->fk_id_documento_parent:'N/A'}}
+									{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_tipo_documento_base.' - '.$detalle->fk_id_documento_base:'N/A'}}
 								</td>
 								<td>
 									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][id_orden_detalle]',$detalle->id_orden_detalle) !!}

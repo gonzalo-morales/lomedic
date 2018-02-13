@@ -28,7 +28,7 @@ class DetalleOfertas extends ModelCompany
      */
     protected $fillable = ['fk_id_sku','fk_id_upc','fk_id_cliente','cantidad','fk_id_unidad_medida',
         'fk_id_impuesto','precio_unitario','total_producto','fk_id_proyecto','descuento_detalle','fk_id_documento',
-        'fk_id_tipo_documento_base','fk_id_documento_base'];
+        'fk_id_tipo_documento_base','fk_id_documento_base','fk_id_linea'];
 
     /**
      * Indicates if the model should be timestamped.
