@@ -204,7 +204,7 @@
 									$('#fecha_caducidad').val("AAAA-MM-DD");
 								}
 							} else {
-								alert('El UPC que tratas de escanear no es válido, verifica que sea el mismo UPC registrado en el Orden de Compra');
+								alert('El UPC que tratas de escanear no es válido debido a lo siguiente: \n-Verifica que sea el mismo UPC registrado en el Orden de Compra.\n-Se registró la cantidad máxima para la orden de compra en este UPC.');
 								$('#loadingupc').hide();
 								$('#scan').val('');
 								$('#upc_verificado').hide();
@@ -298,6 +298,8 @@
 					'<input type="hidden" name="datos_entradas['+row_id+'][fk_id_proyecto]" value="'+ response[0].fk_id_proyecto +'"/>'+
 					'<input type="hidden" class="fechaCaducidadRow" name="datos_entradas['+row_id+'][fecha_caducidad]" value="'+ fecha_caducidadVal +'"/>'+
 					'<input type="hidden" class="loteRow" name="datos_entradas['+row_id+'][lote]" value="'+ loteVal +'"/>'+
+					'<input type="hidden" name="datos_entradas['+row_id+'][fk_id_tipo_documento_base]" value="'+ response[0].fk_id_tipo_documento +'"/>'+
+					'<input type="hidden" name="datos_entradas['+row_id+'][fk_id_proyecto]" value="'+ response[0].fk_id_proyecto +'"/>'+
 					'</th>'
 				+ '<td class="thead">'+ fecha_caducidadVal + ' / '+ loteVal +'</td>'
 				+ '<td style="text-align:left;">'+ '<div class="thead">Total solicitadas: ' + '<b>' + (response[0].cantidad - response[0].cantidad_recibida) + '</b>' + '</div>' + '<span class="thead">Escaneadas: </span>' + '<input readonly class="cantidad_surtida" name="datos_entradas['+row_id+'][cantidad_surtida]" value="1" type="number" style="width:30px">' + '<div class="thead text-done display-none stopUser">Ya agregaste la cantidad máxima solicitadas</div>' + '</td>'

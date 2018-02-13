@@ -40,7 +40,19 @@ class EntradaDetalle extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_documento','fk_id_tipo_documento','fk_id_sku','fk_id_upc','cantidad_surtida','fecha_caducidad','lote','fk_id_linea','precio_unitario'];
+    protected $fillable = [
+        'fk_id_documento',
+        'fk_id_tipo_documento',
+        'fk_id_sku',
+        'fk_id_upc',
+        'cantidad_surtida',
+        'fecha_caducidad',
+        'lote',
+        'fk_id_linea',
+        'precio_unitario',
+        'fk_id_proyecto',
+        'fk_id_tipo_documento_base'
+    ];
 
 //    public $niceNames =[];
 //
