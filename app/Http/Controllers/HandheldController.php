@@ -162,7 +162,7 @@ class HandheldController extends Controller
 	public function ordenes($company)
 	{
 		return view('handheld.ordenes', [
-			'ordenes' => Ordenes::with('detalleOrdenes')->where('fk_id_estatus_orden', 1)->get(),
+			'ordenes' => Ordenes::with('detalleOrdenes')->where('fk_id_estatus_orden', 1)->where('cantidad', '!=' ,'cantidad_recibida')->get(),
 		]);
 	}
 	public function orden(Request $request, $company, ordenes $orden)
@@ -177,7 +177,7 @@ class HandheldController extends Controller
 			'ubicaciones_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$almacen"]}], "select": ["id_ubicacion","ubicacion"]'),
 			'fecha_entrada' => Carbon::now(),
 			'skus' => $skus->pluck('sku','id_sku'),
-			'codigo_barras_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_documento", "$orden"]},{"where": ["fk_id_sku","$id_sku"]}],"whereHas": [{"upc":{"where":["upc","ILIKE", "$upc"]}}], "select": ["fk_id_sku","fk_id_upc","cantidad","id_orden_detalle","fk_id_proyecto"]'),
+			'codigo_barras_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_documento", "$orden"]},{"where": ["fk_id_sku","$id_sku"]}],"whereHas": [{"upc":{"where":["upc","ILIKE", "$upc"]}}], "select": ["fk_id_sku","fk_id_upc","cantidad","cantidad_recibida","id_orden_detalle","fk_id_proyecto","precio_unitario"]'),
 		]);
 	}
 	public function entrada_detalle_store(Request $request, $company, $compact = false)
@@ -188,13 +188,13 @@ class HandheldController extends Controller
 			parse_str($request, $datos_detalle);
 			foreach ($datos_detalle["datos_entradas"] as $detalle)
 			{
-				EntradaDetalle::create(['fk_id_entrada_almacen' => $isSuccess->id_entrada_almacen,
+				EntradaDetalle::create(['fk_id_documento' => $isSuccess->id_documento,
 					'fk_id_sku' => $detalle["fk_id_sku"],
 					'fk_id_upc' => $detalle["fk_id_upc"],
 					'cantidad_surtida' => $detalle["cantidad_surtida"],
 					'lote' => $detalle["lote"],
 					'fecha_caducidad' => $detalle["fecha_caducidad"],
-					'fk_id_detalle_documento' => $detalle["fk_id_orden_detalle"],
+					'fk_id_linea' => $detalle["fk_id_linea"],
 				]);
 			}
 		}

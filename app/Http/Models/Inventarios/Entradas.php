@@ -26,7 +26,7 @@ class Entradas extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_entrada_almacen';
+    protected $primaryKey = 'id_documento';
 
     /**
      * The attributes that are mass assignable.
