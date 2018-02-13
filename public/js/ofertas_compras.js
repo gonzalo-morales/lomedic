@@ -45,13 +45,13 @@ $(document).ready(function(){
             success: function (data) {
                 $('#fk_id_proyecto').empty();
                 $.each(data, function (key, proyecto) {
-                    let option = $('<option/>');
+                    var option = $('<option/>');
                     option.val(proyecto.id);
                     option.text(proyecto.text);
                     $('#fk_id_proyecto').append(option);
                 });
                 if(!data.length){
-                    let option = $('<option/>');
+                    var option = $('<option/>');
                     option.val(0);
                     option.text('Sin proyecto');
                     $('#fk_id_proyecto').append(option);
@@ -110,8 +110,8 @@ $(document).ready(function(){
             if($('#form-model').valid()){
                 if(dataTable.activeRows.length>0){
                     if(a.length>0) {
-                        let url = $('#productos').data('delete');
-                        $.delete(url, {ids: a});
+                        var url = $('#productos').data('devare');
+                        $.devare(url, {ids: a});
                     }
                 }else{
                     e.preventDefault();
@@ -191,11 +191,11 @@ function agregarProducto() {
             },
             dataType:'JSON',
             success: function (tiempo_entrega) {
-                let row_id = dataTable.activeRows.length;
-                let total = totalProducto();
+                var row_id = dataTable.activeRows.length;
+                var total = totalProducto();
 
-                let text_upc = 'UPC no seleccionado';
-                let id_upc = 0;
+                var text_upc = 'UPC no seleccionado';
+                var id_upc = 0;
                 if($('#fk_id_upc').val()){
                     text_upc = $('#fk_id_upc').select2('data')[0].text;
                     id_upc = $('#fk_id_upc').val();
@@ -216,7 +216,7 @@ function agregarProducto() {
                     $('<input type="hidden" name="_detalles['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />')[0].outerHTML + $('#precio_unitario').val(),
                     $('<input type="hidden" name="_detalles['+row_id+'][descuento_detalle]" value="' + $('#descuento_detalle').val() + '" />')[0].outerHTML + $('#descuento_detalle').val(),
                     $('<input type="text" value="'+ total +'" style="min-width: 100px" name="_detalles['+row_id+'][total_producto]" class="form-control total" readonly>')[0].outerHTML+$('<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega">')[0].outerHTML,
-                    '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
+                    '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">devare</i></button>'
                 ]);
                 dataTable.insert( {
                     data:data
@@ -239,31 +239,31 @@ function agregarProducto() {
 }
 
 function totalProducto() {
-    let cantidad = $('#cantidad').val();
-    let precio = $('#precio_unitario').val();
-    let descuento_porcentaje = $('#descuento_detalle').val()/100;
+    var cantidad = $('#cantidad').val();
+    var precio = $('#precio_unitario').val();
+    var descuento_porcentaje = $('#descuento_detalle').val()/100;
 
-    let descuento = precio*descuento_porcentaje;
+    var descuento = precio*descuento_porcentaje;
 
     precio = precio-descuento;
 
-    let subtotal = cantidad * precio;
-    let impuesto = ($('#fk_id_impuesto').select2('data')[0].porcentaje * subtotal)/100;
+    var subtotal = cantidad * precio;
+    var impuesto = ($('#fk_id_impuesto').select2('data')[0].porcentaje * subtotal)/100;
 
     return (subtotal + impuesto).toFixed(2);
 }
 
 function totalOrden() {
 
-    let total = 0;
+    var total = 0;
     // $(".total").each(function () {
     //     total +=  parseFloat($(this).val());
     // });
     $.each(window.dataTable.data,function () {
         total += parseFloat($(this).find('td .total').val());
     });
-    let descuento_porcentaje = $('#descuento_oferta').val()/100;
-    let descuento = descuento_porcentaje * total;
+    var descuento_porcentaje = $('#descuento_oferta').val()/100;
+    var descuento = descuento_porcentaje * total;
     total = total-descuento;
     $('#total_oferta').val(total.toFixed(2));
 }
@@ -387,16 +387,16 @@ function borrarFila_edit(el) {
 }
 
 function total_row(id) {
-    let cantidad = $('#cantidad'+id).val();
-    let precio = $('#precio_unitario'+id).val();
-    let descuento_porcentaje = $('#descuento_detalle'+id).val()/100;
+    var cantidad = $('#cantidad'+id).val();
+    var precio = $('#precio_unitario'+id).val();
+    var descuento_porcentaje = $('#descuento_detalle'+id).val()/100;
 
-    let descuento = precio*descuento_porcentaje;
+    var descuento = precio*descuento_porcentaje;
 
     precio = precio-descuento;
 
-    let subtotal = cantidad * precio;
-    let impuesto = ($('#fk_id_impuesto'+id).data('porcentaje') * subtotal)/100;
+    var subtotal = cantidad * precio;
+    var impuesto = ($('#fk_id_impuesto'+id).data('porcentaje') * subtotal)/100;
 
     $('#total'+id).val((subtotal + impuesto).toFixed(2));
     totalOrden();

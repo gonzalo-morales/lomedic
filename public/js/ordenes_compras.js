@@ -90,9 +90,9 @@ $(document).ready(function(){
             $('#tiempo_entrega').val($('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
             var fecha = new Date();
             fecha.setDate(fecha.getDate()+$('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
-            let dia = fecha.getDate()+1;
-            let mes = fecha.getMonth()+1;
-            let anio = fecha.getFullYear();
+            var dia = fecha.getDate()+1;
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
             $('#fecha_estimada_entrega').val(anio+'/'+mes+'/'+dia);
         });
         $(document).on('submit',function (e) {
@@ -100,8 +100,8 @@ $(document).ready(function(){
             if(dataTable.activeRows.length > 0){
                 if(a.length>0) {
                     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-                    let url = $('#productos').data('delete');
-                    $.delete(url, {ids: a});
+                    var url = $('#productos').data('devare');
+                    $.devare(url, {ids: a});
                     a = [];
                 }
             }else{
@@ -196,7 +196,7 @@ $(document).ready(function(){
 });
 
 function select2Placeholder(id_select,text,searchable = 1,selected = true, disabled = true,value = 0,select2=true) {
-    let option = $('<option/>');
+    var option = $('<option/>');
     option.val(value);
     option.attr('disabled',disabled);
     option.attr('selected',selected);
@@ -275,8 +275,8 @@ function initSelects() {
 function agregarProducto() {
     validateDetail();
     if($('#form-model').valid()){
-        let row_id = dataTable.activeRows.length;
-        let total = totalProducto();
+        var row_id = dataTable.activeRows.length;
+        var total = totalProducto();
 
         var data = [];
         data.push([
@@ -294,7 +294,7 @@ function agregarProducto() {
             $('<input type="hidden" class="porcentaje" value="' + $('#fk_id_impuesto').select2('data')[0].porcentaje + '" />')[0].outerHTML,
             $('<input type="hidden" class="precio_unitario_row" name="_detalles['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />')[0].outerHTML + $('#precio_unitario').val(),
             $('<input type="text" value="'+ total +'" name="_detalles['+row_id+'][total]" class="form-control total_row" readonly>')[0].outerHTML,
-            '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
+            '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">devare</i></button>'
         ]);
 
         dataTable.insert( {
@@ -312,11 +312,11 @@ function agregarProducto() {
 }
 
 function totalProducto() {
-    let cantidad = $('#cantidad').val();
-    let precio = $('#precio_unitario').val();
-    let subtotal =cantidad*precio;
+    var cantidad = $('#cantidad').val();
+    var precio = $('#precio_unitario').val();
+    var subtotal =cantidad*precio;
     subtotal = subtotal - (subtotal * ($('#descuento').val()/100));
-    let impuesto = ($('#fk_id_impuesto').select2('data')[0].porcentaje * subtotal)/100;
+    var impuesto = ($('#fk_id_impuesto').select2('data')[0].porcentaje * subtotal)/100;
     subtotal_original = parseFloat(subtotal_original)+subtotal;
     subtotal_original = subtotal_original.toFixed(2);
     // console.log('Subtotal original: '+subtotal_original);
@@ -326,19 +326,19 @@ function totalProducto() {
 
 function totalOrden() {
 
-    let subtotal = 0;
-    let impuesto = 0;
-    let descuento_total = 0;
+    var subtotal = 0;
+    var impuesto = 0;
+    var descuento_total = 0;
     $.each(window.dataTable.data,function () {
         //Del producto
-        let cantidad_row = $(this).find('td .cantidad_row').val();
-        let precio_row = $(this).find('td .precio_unitario_row').val();
-        let porcentaje_row = $(this).find('td .porcentaje').val()/100;//Decimal
-        let descuento_row = $(this).find('td .descuento_row').val();//Decimal
+        var cantidad_row = $(this).find('td .cantidad_row').val();
+        var precio_row = $(this).find('td .precio_unitario_row').val();
+        var porcentaje_row = $(this).find('td .porcentaje').val()/100;//Decimal
+        var descuento_row = $(this).find('td .descuento_row').val();//Decimal
         descuento_row = (descuento_row * precio_row)/100;
         descuento_total += descuento_row;
-        let subtotal_row = (precio_row - descuento_row) * cantidad_row;
-        // let total_row = (subtotal_row * porcentaje_row) + subtotal_row;
+        var subtotal_row = (precio_row - descuento_row) * cantidad_row;
+        // var total_row = (subtotal_row * porcentaje_row) + subtotal_row;
         //Del total
         subtotal += subtotal_row;
         impuesto += subtotal_row * porcentaje_row;
@@ -350,7 +350,7 @@ function totalOrden() {
     // console.log('subtotal: '+subtotal);
     // console.log('impuesto: '+impuesto);
     // console.log('total: '+total);
-    let total = (subtotal)+impuesto;
+    var total = (subtotal)+impuesto;
     $('#subtotal_lbl').text(subtotal.toFixed(2));
     $('#subtotal').val(subtotal.toFixed(2));
     $('#impuesto_lbl').text(impuesto.toFixed(2));
@@ -360,12 +360,12 @@ function totalOrden() {
 }
 
 function borrarFila(el) {
-    let fila = dataTable.data[$(el).parents('tr').index()];
-    let cantidad = $(fila).find('td .cantidad_row').val();
-    let precio = $(fila).find('td .precio_unitario_row').val();
-    let descuento = $(fila).find('td .descuento_row').val();
+    var fila = dataTable.data[$(el).parents('tr').index()];
+    var cantidad = $(fila).find('td .cantidad_row').val();
+    var precio = $(fila).find('td .precio_unitario_row').val();
+    var descuento = $(fila).find('td .descuento_row').val();
     descuento = (descuento * precio)/100;
-    let subtotal = (precio-descuento)*cantidad;
+    var subtotal = (precio-descuento)*cantidad;
     subtotal_original -= subtotal;
     subtotal_original = subtotal_original.toFixed(2);
     dataTable.rows().remove([$(el).parents('tr').index()]);
@@ -466,10 +466,10 @@ function validateDetail() {
 }
 
 function borrarFila_edit(el) {
-    let fila = dataTable.data[$(el).parents('tr').index()];
-    let cantidad = $(fila).find('td .cantidad_row').val();
-    let precio = $(fila).find('td .precio_unitario_row').val();
-    let subtotal = cantidad * precio;
+    var fila = dataTable.data[$(el).parents('tr').index()];
+    var cantidad = $(fila).find('td .cantidad_row').val();
+    var precio = $(fila).find('td .precio_unitario_row').val();
+    var subtotal = cantidad * precio;
     subtotal = subtotal - (subtotal * ($('#descuento').val()/100));
     subtotal_original = parseFloat(subtotal_original) - parseFloat(subtotal);
     a.push(el.id);
