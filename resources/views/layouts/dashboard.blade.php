@@ -99,7 +99,7 @@
         <!-- Page Content Holder -->
         <div id="content" class="pt-3 bg-light">
             <div id="onload"></div>
-            <div>
+            <div class="pl-2">
             	<!-- <ol class="col-sm-12 breadcrumb bg-light p-1 m-0">
             		<li class="breadcrumb-item" id="bread-home">{{ HTML::link(companyAction('HomeController@index', ['company' => $menuempresa->conexion]), 'inicio') }}</li>
             		foreach(routeNameReplace() as $key=>$item)
