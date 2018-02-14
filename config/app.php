@@ -76,7 +76,7 @@ return [
 	|
 	*/
 
-    'locales' => 'es|en',
+    'locales' => ['es'=>utf8_encode('Español'),'en'=>'English'],
     
     'locale' => env('APP_LANG','es'),
 

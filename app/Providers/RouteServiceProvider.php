@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Providers;
 
 use File;
@@ -24,8 +23,6 @@ class RouteServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		//
-
 		parent::boot();
 	}
 

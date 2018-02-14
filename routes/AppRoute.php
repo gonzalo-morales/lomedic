@@ -14,17 +14,32 @@
 Auth::routes();
 
 $Conecctions = implode('|',array_keys(config('database.connections')));
+$Locales = implode('|',array_keys(config('app.locales')));
 
-Route::get('/', 'HomeController@index')->name('home');
-
+Route::pattern('company', "($Conecctions)");
+Route::pattern('locale', "($Locales)");
 
 Route::get('/phpinfo', function () { phpinfo(); });
 
-Route::pattern('company', "($Conecctions)");
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::get('lang/{locale}', function ($locale) {
+    Session::put('locale', $locale);
+    return redirect()->back();
+});
+
+Route::get('setlang/{locale}', function ($locale) {
+    Session::put('locale', $locale);
+    return redirect()->back();
+});
 
 Route::prefix('{company}')->group(function () {
-    Route::resource('/', 'HomeController', ['middleware' => ['share','csrf','password_expired']]);
     Route::get('/phpinfo', function () { phpinfo(); });
+    Route::resource('/', 'HomeController', ['middleware' => ['share','csrf','password_expired']]);
+    Route::get('lang/{locale}', function ($locale) {
+        Session::put('locale', $locale);
+        return redirect()->back();
+    });
     Route::get('/password/expired', 'Auth\ExpiredPasswordController@expired')->name('password.expired')->middleware(['share','csrf']);
     Route::post('password/reset', 'Auth\ExpiredPasswordController@reset')->name('password.reset')->middleware(['share','csrf']);
 });

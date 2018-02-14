@@ -3,12 +3,11 @@
     <div class="sidebar-header">
         <img class="background" src="{{asset('img/helpBG2.png')}}">
     	<div class="h-content">
-        <span><i class="material-icons medium white-text">live_help</i></span>
-        <a class="white-text" href="#"><span class="name">Sección de ayuda</span></a>
-        <a href="{{companyAction("Soporte\SolicitudesController@create")}}" class="white-text dismiss"><span class='window'>Crear ticket/solicitud</span></a>
+            <span><i class="material-icons medium white-text">live_help</i></span>
+            <a class="white-text" href="#"><span class="name">@lang('messages.help_section')</span></a>
+            <a href="{{companyAction("Soporte\SolicitudesController@create")}}" class="white-text dismiss"><span class='window'>Crear ticket/solicitud</span></a>
         </div>
     </div>
-
     <ul class="list-unstyled components bg-white">
     	
     	<li>
@@ -36,6 +35,11 @@
         <li><a href="#!">Gestion de Recursos (GR)</a></li>
         <li><a href="#!">Proveeduria y Suministro (PS)</a></li>
     </ul>
+    <div class="w-100 text-center text-primary mt-2 mb-1" style="position:absolute; bottom:0; border-top:1px solid #ddd;">@lang('messages.lang'): 
+		@foreach(config('app.locales') as $s=>$lang)
+			{{ HTML::link(url('/lang/'.$s), $s, ['class' => 'text-danger', 'title' => $lang]) }}
+		@endforeach
+	</div>
 </nav>
 
 <div class="overlay"></div>

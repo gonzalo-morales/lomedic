@@ -112,77 +112,8 @@ window['smart-model'] = {
 	lastChecked: null,
 	// Colecciones de datos
 	collections: {
-		
-		headerOptions: [
-			/*
-			// Button
-			{a: {
-				href: '#',
-				class: 'btn btn-primary progress-button',
-				role: 'buttons',
-				'rv-get-create-url': '',
-				html: '<i class="material-icons left align-middle">add</i>Crear',
-			}}, 
-			// Dropdown
-			
-			{div: {
-				class: 'dropdown d-inline',
-				childs: [
-					{button: {
-						class: 'btn btn-info dropdown-toggle',
-						type: 'button',
-						'data-toggle': 'dropdown',
-						'aria-haspopup': 'true',
-						'aria-expanded': 'false',
-						html: '<i class="material-icons left align-middle">file_download</i>Exportar'
-					}},
-					{div: {
-						class: 'dropdown-menu dropdown-menu-right',
-						childs: [
-							{a: {text: 'Libro Excel', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLSX'}},
-							{a: {text: 'Archivo Pdf', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'PDF'}},
-							{div: {class: 'dropdown-divider'}},
-							{a: {text: 'Excel 97-2003', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLS'}},
-							{a: {text: 'CSV', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'CSV'}},
-							{a: {text: 'TXT', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'TXT'}},
-						]
-					}}
-				]},
-			}*/
-		],
-		headerOptionsOnChecks: [ /*
-			// Button
-			{button: {
-				html: '<i class="material-icons left align-middle">select_all</i>Deseleccionar (<span rv-text="collections.items | length"></span>)',
-				class: 'btn btn-default text-primary',
-				'rv-on-click': 'actions.uncheckAll'
-			}},
-			// Dropdown
-			{div: {
-				class: 'dropdown d-inline',
-				childs: [
-					{button: {
-						class: 'btn btn-info dropdown-toggle',
-						type: 'button',
-						'data-toggle': 'dropdown',
-						'aria-haspopup': 'true',
-						'aria-expanded': 'false',
-						html: '<i class="material-icons left align-middle">file_download</i>Exportar (<span rv-text="collections.items | length"></span>)'
-					}},
-					{div: {
-						class: 'dropdown-menu dropdown-menu-right',
-						childs: [
-							{a: {text: 'Libro Excel', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLSX'}},
-							{a: {text: 'Archivo Pdf', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'PDF'}},
-							{div: {class: 'dropdown-divider'}},
-							{a: {text: 'Excel 97-2003', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLS'}},
-							{a: {text: 'CSV', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'CSV'}},
-							{a: {text: 'TXT', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'TXT'}},
-						]
-					}}
-				]}
-			}*/
-		],
+		headerOptions: [],
+		headerOptionsOnChecks: [],
 		// {itemId : datatable row }
 		items: [],
 		// Opciones en item

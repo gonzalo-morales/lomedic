@@ -1,7 +1,6 @@
 <?php
 
 return [
-
 	'previous' => '&laquo; Previous',
 	'next' => 'Next &raquo;',
 	'solicitudes' => 'solicitudes|banco',
@@ -14,4 +13,11 @@ return [
 	'paises' => 'países|país',
 	'parentescos' => 'parentescos|parentesco',
     'welcome' =>'Welcome!',
+    'home' => 'Home',
+    'help' => 'Help',
+    'company' => 'Company',
+    'help_section' => 'Help Section',
+    'lang' => 'Languaje',
+    'reset_password' => 'Reset Password',
+    'change_password' => 'You must change your password'
 ];
