@@ -4,6 +4,11 @@
 <div class="container">
 	<div class="row justify-content-center">
 	<div class="col-sm-10 col-md-8 col-lg-5 mt-5">
+		<div class="text-right text-info mr-2">
+    		@foreach(config('app.locales') as $s=>$lang)
+    			<small>{{ HTML::link(url('/lang/'.$s), $s, ['class' => 'text-secondary', 'title' => $lang]) }}</small>
+    		@endforeach
+    	</div>
 		<div class="card card-block text-center" style="background: rgba(0,0,0,0.3);"> <!-- class="card-panel hoverable row"> -->
         	<h4 class="mt-3 text-white">@lang('messages.reset_password')</h4>
 		
