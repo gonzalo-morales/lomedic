@@ -17,14 +17,14 @@ class locale
      */
     public function handle($request, Closure $next)
     {
-        $raw_locale = Session::get('locale');
-
-        if (in_array($raw_locale, array_keys(config('app.locales'))))
-            $locale = $raw_locale;
-        else
-            $locale = config('app.locale');
+        $locales = config('app.locales');
+        $session = Session::get('locale');
+        $browse = substr($request->server('HTTP_ACCEPT_LANGUAGE'),0,2);
+        $default = config('app.locale');
         
-        App::setLocale($locale);
+        $lang = isset($locales[$session]) ? $session : (isset($locales[$browse]) ? $browse : $default);
+
+        App::setLocale($lang);
         return $next($request);
     }
 }
