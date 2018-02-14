@@ -36,6 +36,7 @@
     			@yield('form-actions')
 				<div class="col-12">
 					<fieldset @yield('fieldset')>
+						{{ Form::hidden(array_keys(is_array($data) ? $data : $data->toarray())[0]) }}
 						@yield('form-content')
 					</fieldset>
 				</div>

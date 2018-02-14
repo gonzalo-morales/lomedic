@@ -37,6 +37,8 @@ class Empresas extends ModelBase
 	    'rfc' => 'Rfc',
 	    'activo_text' => 'Estatus',
 	];
+	
+	protected $unique = ['rfc','razon_social','nombre_comercial'];
 
 	/**
 	 * Indicates if the model should be timestamped.

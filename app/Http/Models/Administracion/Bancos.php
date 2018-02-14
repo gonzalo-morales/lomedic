@@ -36,6 +36,8 @@ class Bancos extends ModelBase
 	  'razon_social' => 'Razón Social',
 	  'nacional_text' => 'Nacional'
 	];
+	
+	protected $unique = ['rfc','banco'];
 
 	/**
 	 * The validation rules

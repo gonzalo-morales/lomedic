@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +24,8 @@ class ModelBase extends Model
 	 * @var array
 	 */
 	protected $eagerLoaders = [];
+	
+	protected $unique = [];
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -32,10 +33,13 @@ class ModelBase extends Model
 	 * @var bool
 	 */
 	public $timestamps = false;
+	
+	public $rules = [];
 
 	public function __construct($attributes = [])
 	{
 		$this->eagerLoaders = $this->getAutoEager();
+		$this->addUniqueRules();
 		return parent::__construct($attributes);
 	}
 
@@ -120,6 +124,22 @@ class ModelBase extends Model
 	            array_push($return,substr($key,0,$pos));
 	    }
         return $return;
+	}
+	
+	public function addUniqueRules()
+	{
+	    $table = !strpos($this->getTable(), '.') ? $this->getTable() : substr($this->getTable(),strpos($this->getTable(), '.')+1,strlen($this->getTable()));
+	    $key = $this->getKeyName();
+	    $id = !empty(request()->{$key}) ? request()->{$key} : 'null';
+	    
+	    foreach ($this->unique as $col) {
+	        if(in_array('eliminar',$this->getlistColumns())) {
+	            $this->rules[$col] = (isset($this->rules[$col]) ? $this->rules[$col].'|' : ''). "unique:$table,$col,$id,$key,eliminar,0";
+	        }
+	        else {
+	            $this->rules[$col] = (isset($this->rules[$col]) ? $this->rules[$col].'|' : '')."unique:$table,$col,$id,$key";
+	        }
+	    }
 	}
 
 	public function getFillable()
@@ -260,22 +280,18 @@ class ModelBase extends Model
         return $rules;
 	}
 
-	public function documentos_destino()
+	public function documentos_destino($tipo_doc)
 	{
-	    $doc = [];
-	    foreach (map_tipos_documentos() as $tipo => $model) {
-	        $doc[$tipo] = $this->hasMany((New $model),$this->getKeyName(),'fk_id_linea')->where('fk_id_tipo_documento_base',$this->fk_id_tipo_documento);
+	    $map_tipos = map_tipos_documentos();
+	    if(!empty($tipo_doc) && isset($map_tipos[$tipo_doc])) {
+	        return $this->hasMany($map_tipos[$tipo_doc],$this->getKeyName(),'fk_id_linea')->where('fk_id_tipo_documento_base',$this->fk_id_tipo_documento);
 	    }
-	        
-	    return $doc;
+	    
+	    return null;
 	}
 
-	
-	public function documento_base($tipo = 0)
+	public function documento_base()
 	{
-	    if($tipo !== 0)
-	        return $this->belongsTo((New $map_tipos_documentos[$tipo]),$this->getKeyName(),'fk_id_linea')->where('fk_id_tipo_documento_base',$this->fk_id_tipo_documento);
-	        else
-	            return null;
+        return $this->belongsTo((New $map_tipos_documentos[$tipo]),$this->getKeyName(),'fk_id_linea')->where('fk_id_tipo_documento_base',$this->fk_id_tipo_documento);
 	}
 }
