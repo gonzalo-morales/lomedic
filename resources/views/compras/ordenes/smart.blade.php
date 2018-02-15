@@ -52,7 +52,7 @@
 @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
 	<div class="row">
 		<div class="col-md-12 text-center text-success">
-			<h3>Orden No. {{$data->id_orden}}</h3>
+			<h3>Orden No. {{$data->id_documento}}</h3>
 		</div>
 	</div>
 @endif
@@ -270,12 +270,12 @@
 									{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_tipo_documento_base.' - '.$detalle->fk_id_documento_base:'N/A'}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][id_orden_detalle]',$detalle->id_orden_detalle) !!}
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 									{{$detalle->sku->sku}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
 									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>
@@ -285,19 +285,19 @@
 									{{$detalle->sku->descripcion}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
 									{{isset($detalle->cliente->nombre_comercial)?$detalle->cliente->nombre_comercial:'Sin cliente'}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
 									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
 									{{$detalle->fecha_necesario}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
 									{{$detalle->cantidad}}
 								</td>
 								<td>
@@ -305,23 +305,23 @@
 									{{$detalle->descuento_detalle??0}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][fk_id_impuesto]',$detalle->impuesto->porcentaje,['class'=>'porcentaje']) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->impuesto->porcentaje,['class'=>'porcentaje']) !!}
 									{{$detalle->impuesto->impuesto}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_orden_detalle.'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
+									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
 									{{number_format($detalle->precio_unitario,2,'.','')}}
 								</td>
 								<td>
-									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'detalles['.$detalle->id_orden_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
 								</td>
 								<td>
 									{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
 									@if(Route::currentRouteNamed(currentRouteName('edit')) && $data->fk_id_estatus_orden == 1)
 										<button class="btn is-icon text-primary bg-white "
-										   type="button" data-item-id="{{$detalle->id_orden_detalle}}"
-										   id="{{$detalle->id_orden_detalle}}" data-delay="50"
+										   type="button" data-item-id="{{$detalle->id_documento_detalle}}"
+										   id="{{$detalle->id_documento_detalle}}" data-delay="50"
 										   onclick="borrarFila_edit(this)" data-delete-type="single">
 											<i class="material-icons">delete</i></button>
 									@endif
@@ -631,7 +631,7 @@
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('extraButtons')
 		@parent
-		{!!isset($data->id_orden) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_orden]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
+		{!!isset($data->id_documento) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_documento]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
 	@endsection
 	@section('form-title')
 		<h1 class="display-4">Datos de la Orden de Compra</h1>

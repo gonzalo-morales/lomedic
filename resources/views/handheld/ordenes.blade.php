@@ -10,7 +10,7 @@
 		<div id="navigation">
 			@foreach ($ordenes as $orden)
 			{{-- {{dump($orden)}} --}}
-				{{ link_to(companyRoute('handheld.orden-compra', ['id' => $orden->id_orden]), $orden->id_orden, ['class'=>'list-item']) }}
+				{{ link_to(companyRoute('handheld.orden-compra', ['id' => $orden->id_documento]), $orden->id_documento, ['class'=>'list-item']) }}
 			@endforeach
 		</div><br>
 	@endif

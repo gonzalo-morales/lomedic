@@ -229,7 +229,7 @@ class FacturasProveedoresController extends ControllerBase
 						$join->on('com_det_ordenes.fk_id_upc','=','maestro.inv_cat_upcs.id_upc');
 					})
 		            ->where('fk_id_documento','=',$_POST['id_orden'])
-					->select(db::raw("concat(inv_cat_skus.sku, ' - ' ,maestro.inv_cat_upcs.upc) as value"),'com_det_ordenes.id_orden_detalle as id')
+					->select(db::raw("concat(inv_cat_skus.sku, ' - ' ,maestro.inv_cat_upcs.upc) as value"),'com_det_ordenes.id_documento_detalle as id')
 		            ->get();
 
         return $result;

@@ -61,7 +61,7 @@ class Autorizaciones extends ModelCompany
 
     public function documento()
     {
-        return $this->hasOne('App\Http\Models\Compras\Ordenes','id_orden','fk_id_documento');
+        return $this->hasOne('App\Http\Models\Compras\Ordenes','id_documento','fk_id_documento');
     }
 
     public function solicitudpago()

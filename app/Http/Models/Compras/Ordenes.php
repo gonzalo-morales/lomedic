@@ -19,7 +19,7 @@ class Ordenes extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_orden';
+    protected $primaryKey = 'id_documento';
 
     /**
      * The attributes that are mass assignable.
@@ -46,7 +46,7 @@ class Ordenes extends ModelCompany
      * @var array
      */
     protected $fields = [
-        'id_orden' => 'Número Solicitud',
+        'id_documento' => 'Número Solicitud',
         'proveedor.nombre_comercial' => 'Proveedor',
         'sucursales.sucursal' => 'Sucursal entrega',
         'fecha_creacion' => 'Fecha del pedido',
@@ -89,10 +89,9 @@ class Ordenes extends ModelCompany
         return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_orden');
     }
 
-    public function detalleOrdenes()
+    public function detalle()
     {
-        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_documento', 'id_orden');
-        // ->whereNotNull('fk_id_documento');
+        return $this->hasMany(DetalleOrdenes::class,'fk_id_documento', 'id_documento');
     }
 
     public function empresa()
@@ -131,7 +130,7 @@ class Ordenes extends ModelCompany
 
     public function autorizaciones()
     {
-        return $this->hasMany(Autorizaciones::class,'fk_id_documento','id_orden');
+        return $this->hasMany(Autorizaciones::class,'fk_id_documento','id_documento');
     }
 
     public function estatusautorizacion()

@@ -149,7 +149,7 @@
 									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_solicitud]',$detalle->fk_id_solicitud) !!}
 								</td>
 								<td>
-									{{--{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][id_orden_detalle]',$detalle->id_solicitud_detalle) !!}--}}
+									{{--{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][id_documento_detalle]',$detalle->id_solicitud_detalle) !!}--}}
 									{!! Form::hidden('detalles['.$detalle->id_solicitud_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 									{{$detalle->sku->sku}}
 								</td>

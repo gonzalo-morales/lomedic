@@ -30,9 +30,9 @@ class SolicitudesPagosController extends ControllerBase
             'solicitantes'=>Empleados::select(DB::raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"),'id_empleado')->where('activo',1)->pluck('text','id_empleado'),
             'formas_pago'=>FormasPago::select('descripcion','id_forma_pago')->where('activo',1)->pluck('descripcion','id_forma_pago'),
             'monedas'=>Monedas::select(DB::raw("concat('(',moneda,') ',descripcion) as text"),'id_moneda')->where('activo',1)->pluck('text','id_moneda'),
-            'ordenes'=>Ordenes::select('id_orden')->where('fk_id_estatus_orden',1)->where('total_orden','>',0)->whereHas('detalleOrdenes')->pluck('id_orden','id_orden'),
+            'ordenes'=>Ordenes::select('id_documento')->where('fk_id_estatus_orden',1)->where('total_orden','>',0)->whereHas('detalleOrdenes')->pluck('id_documento','id_documento'),
             'js_sucursales'=>Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"], "conditions":[{"where":["activo",1]}],"whereHas":[{"empleados":{"where":["id_empleado","$fk_id_empleado"]}}]'),
-            'js_orden'=>Crypt::encryptString('"conditions":[{"where":["id_orden",$fk_id_orden]}]'),
+            'js_orden'=>Crypt::encryptString('"conditions":[{"where":["id_documento",$fk_id_orden]}]'),
             'sucursales' => empty($entity) ? [] : Sucursales::where('activo',1)->whereHas('empleados', function ($query) use ($entity) {
                 $query->where('id_empleado', $entity->fk_id_solicitante);
             })->pluck('sucursal','id_sucursal'),

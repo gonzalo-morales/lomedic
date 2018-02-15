@@ -267,12 +267,12 @@
 													@if ($detalle->orden <> null)
 														<select class="form-control custom-select" name="{{ 'producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]' }}">
 															<option value="" disabled>Seleccione una opcion...</option>
-														@foreach ($detalle->orden->detalleOrdenes as $detalleOrden)
+														@foreach ($detalle->orden->detalle as $detalleOrden)
 																@php
 																	 $upc = isset($detalleOrden->upc->upc) ? ' - '.$detalleOrden->upc->upc :'';
-																	$det[$detalleOrden->id_orden_detalle] = $detalleOrden->sku->sku.$upc ;
+																	$det[$detalleOrden->id_documento_detalle] = $detalleOrden->sku->sku.$upc ;
 																@endphp
-																<option value="{{ $detalleOrden->id_orden_detalle }}">{{ $detalleOrden->sku->sku.$upc }}</option>
+																<option value="{{ $detalleOrden->id_documento_detalle }}">{{ $detalleOrden->sku->sku.$upc }}</option>
 												  		@endforeach
 														</select>
 														{{-- {{ Form::select('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]', $det ?? [], $detalle->fk_id_detalle_orden_compra, ['class'=>'form-control custom-select']) }} --}}
@@ -387,12 +387,12 @@
 								@foreach($data->detalle_facturas_proveedores()->select('fk_id_orden_compra')->distinct()->orderBy('fk_id_orden_compra')->get() as $detalle)
 									@if(!empty($detalle->fk_id_orden_compra))
 									<tr>
-										<td>{{$detalle->orden->id_orden}}</td>
+										<td>{{$detalle->orden->id_documento}}</td>
 										<td>{{$detalle->orden->proveedor->nombre_comercial}}</td>
 										<td>{{$detalle->orden->fecha_creacion}}</td>
 										<td>{{$detalle->orden->fecha_estimada_entrega}}</td>
 										<td>{{$detalle->orden->estatus->estatus ?? ''}}</td>
-										<td><a href="{{companyAction('Compras\OrdenesController@show',['id'=>$detalle->orden->id_orden])}}"><i class="material-icons align-middle">visibility</i></a></td>
+										<td><a href="{{companyAction('Compras\OrdenesController@show',['id'=>$detalle->orden->id_documento])}}"><i class="material-icons align-middle">visibility</i></a></td>
 									</tr>
 									@else
 									<tr>

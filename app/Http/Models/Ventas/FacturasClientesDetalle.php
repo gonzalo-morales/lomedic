@@ -68,9 +68,9 @@ class FacturasClientesDetalle extends ModelCompany
     }
     
     
-    public function documentodestino()
+    public function documento()
     {
-        return $this->morphMany(DetalleSolicitudes::class,null,'fk_id_tipo_documento_base','fk_id_linea');
+        return $this->belongsTo(FacturasClientes::class,'fk_id_documento','id_documento');
     }
     
     public function productos()

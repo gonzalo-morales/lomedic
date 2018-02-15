@@ -35,7 +35,7 @@ class OrdenesController extends ControllerBase
 	}
 	public function index($company, $attributes=[]){
 		$attributes = $attributes+['dataview'=>[
-				'detalles' => $this->entity->detalleOrdenes->where('cerrado',false),
+				'detalles' => $this->entity->detalle->where('cerrado',false),
 				'estatus' => 1,
 			]];
 			return parent::index($company,$attributes);
@@ -120,7 +120,7 @@ class OrdenesController extends ControllerBase
                     if(empty($detalle['fecha_necesario'])){
                         $detalle['fecha_necesario'] = null;
                     }
-					$isSuccess->detalleOrdenes()->save(new DetalleOrdenes($detalle));
+					$isSuccess->detalle()->save(new DetalleOrdenes($detalle));
 				}
 			}
 			if(isset($request->detalles)){
@@ -142,7 +142,7 @@ class OrdenesController extends ControllerBase
                     if(empty($detalle['fecha_necesario'])){
                         $detalle['fecha_necesario'] = null;
                     }
-                    $isSuccess->detalleOrdenes()->save(new DetalleOrdenes($detalle));
+                    $isSuccess->detalle()->save(new DetalleOrdenes($detalle));
                 }
                 switch ($tipo_documento){
                     case 1:
@@ -160,10 +160,10 @@ class OrdenesController extends ControllerBase
             $isSuccess->descuento_total = $descuento_rows + $isSuccess->descuento_general;
 			$isSuccess->save();
 
-            #$this->log('store', $isSuccess->id_orden);
+			#$this->log('store', $isSuccess->id_documento);
 
-			// dd($isSuccess->id_orden);
-			// $this->evaluarCondiciones($request, $isSuccess->id_orden);
+			// dd($isSuccess->id_documento);
+			// $this->evaluarCondiciones($request, $isSuccess->id_documento);
 
             return $this->redirect('store');
 		} else {
@@ -175,14 +175,14 @@ class OrdenesController extends ControllerBase
 	public function show($company,$id,$attributes = [])
 	{
 	    $proveedores = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
-		$estatus = Ordenes::where('id_orden',$id)->pluck('fk_id_estatus_autorizacion','id_orden')->first();
+		$estatus = Ordenes::where('id_documento',$id)->pluck('fk_id_estatus_autorizacion','id_documento')->first();
 		if ($estatus == 1 || $estatus == 3) {
 			$estatus = 1;
 		}else {
 			$estatus = 2;
 		}
 		$attributes = $attributes+['dataview'=>[
-			'detalles' => $this->entity->find($id)->detalleOrdenes->where('cerrado',false),
+			'detalles' => $this->entity->find($id)->detalle->where('cerrado',false),
 		    'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
 		    'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
             'proveedores' => $proveedores,
@@ -198,7 +198,7 @@ class OrdenesController extends ControllerBase
 	public function edit($company,$id,$attributes = [])
 	{
 	    $clientes = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
-		$estatus = Ordenes::where('id_orden',$id)->pluck('fk_id_estatus_autorizacion','id_orden')->first();
+		$estatus = Ordenes::where('id_documento',$id)->pluck('fk_id_estatus_autorizacion','id_documento')->first();
 		if ($estatus == 1 || $estatus == 3) {
 			$estatus = 1;
 		}else {
@@ -206,7 +206,7 @@ class OrdenesController extends ControllerBase
 		}
 
 		$attributes = $attributes+['dataview'=>[
-			'detalles' => $this->entity->find($id)->detalleOrdenes->where('cerrado',false),
+			'detalles' => $this->entity->find($id)->detalle->where('cerrado',false),
 		    'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
 		    'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
             'clientes' => $clientes,
@@ -265,8 +265,8 @@ class OrdenesController extends ControllerBase
 				foreach ($request->detalles as $detalle) {
                     $orden_detalle = $entity
                         ->findOrFail($id)
-                        ->detalleOrdenes()
-                        ->where('id_orden_detalle', $detalle['id_orden_detalle'])
+                        ->detalle()
+                        ->where('id_documento_detalle', $detalle['id_documento_detalle'])
                         ->first();
                     $descuento_rows += $orden_detalle->descuento_detalle;
 				}
@@ -286,7 +286,7 @@ class OrdenesController extends ControllerBase
                     if(empty($detalle['fecha_necesario'])){
                         $detalle['fecha_necesario'] = null;
                     }
-					$entity->detalleOrdenes()->save(new DetalleOrdenes($detalle));
+					$entity->detalle()->save(new DetalleOrdenes($detalle));
 				}
 			}
             $entity->descuento_total = $entity->descuento_general + $descuento_rows;
@@ -374,7 +374,7 @@ class OrdenesController extends ControllerBase
                 }
             }
         }else{
-            DetalleOrdenes::whereIn('id_orden_detalle', $request->ids)->update(['cerrado' => 't']);
+            DetalleOrdenes::whereIn('id_documento_detalle', $request->ids)->update(['cerrado' => 't']);
             // return true;
 			return response()->json([
 				'success' => true,
@@ -389,7 +389,7 @@ class OrdenesController extends ControllerBase
         $subtotal = 0;
         $iva = 0;
         $total = 0;
-        foreach ($orden->detalleOrdenes()->where('cerrado','f')->get() as $detalle)
+        foreach ($orden->detalle()->where('cerrado','f')->get() as $detalle)
         {
             $subtotal += $detalle->precio_unitario * $detalle->cantidad;
             $iva += (($detalle->precio_unitario*$detalle->cantidad)*$detalle->impuesto->porcentaje)/100;
@@ -397,8 +397,8 @@ class OrdenesController extends ControllerBase
         }
         $total = number_format($total,2,'.',',');
 
-        $barcode = DNS1D::getBarcodePNG($orden->id_orden,'EAN8');
-        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$orden->id_orden])), "QRCODE");
+        $barcode = DNS1D::getBarcodePNG($orden->id_documento,'EAN8');
+        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$orden->id_documento])), "QRCODE");
 
         $pdf = PDF::loadView(currentRouteName('compras.ordenes.imprimir'),[
             'orden' => $orden,

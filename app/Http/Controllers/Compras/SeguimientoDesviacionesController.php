@@ -59,13 +59,13 @@ class SeguimientoDesviacionesController extends ControllerBase
             return json_encode($json);
         }else if ($request->id_tipo_documento == "3"){ // Orden de compra
             $documentosProveedor = Ordenes::where('fk_id_socio_negocio',$request->fk_id_proveedor)
-                                            // ->where('id_orden', 'LIKE', '%' . $_POST['term']."" . '%')
-                                            ->where('id_orden', '=', $_POST['term'])
-                                            ->get(['id_orden','id_orden']);
+                                            // ->where('id_documento', 'LIKE', '%' . $_POST['term']."" . '%')
+                                            ->where('id_documento', '=', $_POST['term'])
+                                            ->get(['id_documento','id_documento']);
             foreach ($documentosProveedor as $document) {
                 $json[] = [
-                    'id'    => $document->id_orden,
-                    'text'  => $document->id_orden,
+                    'id'    => $document->id_documento,
+                    'text'  => $document->id_documento,
                 ];
             }
             return json_encode($json);

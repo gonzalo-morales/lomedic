@@ -30,7 +30,7 @@ class EntradasController extends ControllerBase
         switch (empty($entity) ? 0 :$entity->fk_id_tipo_documento)
         {
             case 3:
-                $datos_documento = Ordenes::where('id_orden',$entity->numero_documento)->first();
+                $datos_documento = Ordenes::where('id_documento',$entity->numero_documento)->first();
                 break;
             default:
                 $datos_documento = '';
@@ -51,7 +51,7 @@ class EntradasController extends ControllerBase
                 $detalle_productos[$id_row]['nombre_cliente'] = $detalle->cliente['nombre_comercial'];
                 $detalle_productos[$id_row]['nombre_proyecto'] = $detalle->proyecto['proyecto'];
                 $detalle_productos[$id_row]['cantidad'] = $detalle->cantidad;
-                $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($entity->fk_id_tipo_documento,$entity->numero_documento,$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_orden_detalle);
+                $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($entity->fk_id_tipo_documento,$entity->numero_documento,$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_documento_detalle);
                 $detalle_productos[$id_row]['lote'] = $detalle->entradaDetalle['lote'];
                 $detalle_productos[$id_row]['fecha_caducidad'] = $detalle->entradaDetalle['fecha_caducidad'];
                 $detalle_productos[$id_row]['precio_unitario'] = $detalle['precio_unitario'];
@@ -103,8 +103,8 @@ class EntradasController extends ControllerBase
     public function getProveedores()
     {
         $ordenes_compra = SociosNegocio::where('fk_id_sucursal',$_POST['id_sucursal'])
-            ->select('id_orden')
-            ->pluck('id_orden')
+            ->select('id_documento')
+            ->pluck('id_documento')
             ->toJson();
 
         return $ordenes_compra;
@@ -123,7 +123,7 @@ class EntradasController extends ControllerBase
                     $datos_documento = '';
                     break;
                 case 3:
-                    $datos_documento = Ordenes::where('id_orden',$_POST['numero_documento'])
+                    $datos_documento = Ordenes::where('id_documento',$_POST['numero_documento'])
                         ->first();
                     break;
             }
@@ -147,8 +147,8 @@ class EntradasController extends ControllerBase
                 $detalle_productos[$id_row]['fk_id_proyecto'] = $detalle->fk_id_proyecto;
                 $detalle_productos[$id_row]['nombre_proyecto'] = $detalle->proyecto['proyecto'];
                 $detalle_productos[$id_row]['cantidad'] = $detalle->cantidad;
-                $detalle_productos[$id_row]['id_detalle'] = $detalle->id_orden_detalle;
-                $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($_POST['fk_id_tipo_documento'],$_POST['numero_documento'],$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_orden_detalle);
+                $detalle_productos[$id_row]['id_detalle'] = $detalle->id_documento_detalle;
+                $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($_POST['fk_id_tipo_documento'],$_POST['numero_documento'],$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_documento_detalle);
                 $detalle_productos[$id_row]['lote'] = $detalle->entradaDetalle['lote'];
                 $detalle_productos[$id_row]['fecha_caducidad'] = $detalle->entradaDetalle['fecha_caducidad'];
                 $detalle_productos[$id_row]['precio_unitario'] = $detalle['precio_unitario'];

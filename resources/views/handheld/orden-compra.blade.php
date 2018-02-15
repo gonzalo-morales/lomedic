@@ -4,7 +4,7 @@
 @section('content')
 	{!! Form::open(['url' => companyRoute('handheld.entrada-detalle-store'),'method'=>'post','enctype' => 'multipart/form-data','id'=>'form']) !!}
 		<input type="hidden" name="fk_id_tipo_documento" value="{{ $orden->fk_id_tipo_documento }}">
-		<input type="hidden" name="numero_documento" value="{{ $orden->id_orden }}">
+		<input type="hidden" name="numero_documento" value="{{ $orden->id_documento }}">
 		<input type="hidden" name="fk_id_estatus_entrada" value="{{ $orden->fk_id_estatus_autorizacion }}">
 		<input type="hidden" name="fecha_entrada" value="{{ $fecha_entrada }}">
 		<div>
@@ -186,7 +186,7 @@
 						$.get('{{ companyRoute('api.index', ['entity' => 'compras.detalleOrdenes'], false) }}', {
 							'param_js': '{{$codigo_barras_js ?? ''}}',
 							'$upc': event.target.value,
-							'$orden':'{{ $orden->id_orden }}',
+							'$orden':'{{ $orden->id_documento }}',
 							'$id_sku':$('#skus').val()
 							// conditions: [{'where': ['upc', e.target.value]}],
 							// only: ['descripcion']

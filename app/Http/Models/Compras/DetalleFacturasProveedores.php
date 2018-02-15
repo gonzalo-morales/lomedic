@@ -43,7 +43,7 @@ class DetalleFacturasProveedores extends ModelCompany
         'cantidad',
         'fk_id_impuesto',
         'descuento',
-        'fk_id_orden_compra',
+        'fk_id_documento',
         'fk_id_detalle_orden_compra',
         'fk_id_nota_credito',
         'fk_id_factura_proveedor',
@@ -56,7 +56,7 @@ class DetalleFacturasProveedores extends ModelCompany
         'fk_id_clave_producto_servicio'=>'clave producto o servicio',
         'cantidad'=>'cantidad',
         'fk_id_impuesto'=>'impuesto',
-        'fk_id_orden_compra'=>'orden de compra',
+        'fk_id_documento'=>'orden de compra',
         'fk_id_nota_credito'=>'nota crédito',
     ];
 
@@ -102,7 +102,7 @@ class DetalleFacturasProveedores extends ModelCompany
             //                                         ->get();
 
             // dump(DetalleOrdenes::where('id_orden_detalle',$detalleFactura->fk_id_detalle_orden_compra)->get());
-            $detallesOrden = DetalleOrdenes::where('id_orden_detalle',$detalleFactura->fk_id_detalle_orden_compra)->get();
+            $detallesOrden = DetalleOrdenes::where('id_documento_detalle',$detalleFactura->fk_id_detalle_orden_compra)->get();
             // dump(array('detallesOrden'=> $detallesOrden));
             // dump($detallesOrden);
             foreach ($detallesOrden as $detOrden) {
@@ -130,8 +130,8 @@ class DetalleFacturasProveedores extends ModelCompany
                     $detSegDesv->precio_desviacion                  = $detalleFactura->precio_unitario - $detOrden->precio_unitario;
                     $detSegDesv->precio_factura                     = $detalleFactura->precio_unitario;
                     $detSegDesv->precio_orden_compra                = $detOrden->precio_unitario;
-                    $detSegDesv->fk_id_orden_compra                 = $detOrden->orden->id_orden;
-                    $detSegDesv->fk_id_detalle_orden_compra         = $detOrden->id_orden_detalle;
+                    $detSegDesv->fk_id_documento                 = $detOrden->orden->id_documento;
+                    $detSegDesv->fk_id_detalle_orden_compra         = $detOrden->id_documento_detalle;
                     $detSegDesv->fk_id_seguimiento_desviacion       = self::$idSeguimientoDesv;
                     $detSegDesv->fk_id_factura_proveedor            = $detalleFactura->fk_id_factura_proveedor;
                     $detSegDesv->fk_id_detalle_factura_proveedor    = $detalleFactura->id_detalle_factura_proveedor;
@@ -167,7 +167,7 @@ class DetalleFacturasProveedores extends ModelCompany
 
     public function orden()
     {
-        return $this->hasOne(Ordenes::class,'id_orden','fk_id_orden_compra');
+        return $this->hasOne(Ordenes::class,'id_documento','fk_id_orden_compra');
     }
     public function facturaProveedor()
     {

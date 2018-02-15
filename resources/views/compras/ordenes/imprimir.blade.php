@@ -18,7 +18,7 @@
                 <table width="100%" style="">
                     <tr align="center">
                         <td style="font-size: 15px;">
-                            <h4>No. orden  <b>{{$orden->id_orden}}</b></h4>
+                            <h4>No. orden  <b>{{$orden->id_documento}}</b></h4>
                         </td>
                     </tr>
                     <tr>
@@ -72,7 +72,7 @@
                 <th><h5>Total</h5></th>
             </tr>
             {{--For each detalle--}}
-            @foreach($orden->detalleOrdenes()->where('cerrado','f')->get() as $detalle)
+            @foreach($orden->detalle()->where('cerrado','f')->get() as $detalle)
             <tr>
                 <td>{{$detalle->sku->sku}}</td>
                 <td>{{isset($detalle->upc) ? $detalle->upc->upc : 'UPC no seleccionado'}}</td>

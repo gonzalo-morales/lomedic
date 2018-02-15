@@ -167,7 +167,7 @@ class HandheldController extends Controller
 	}
 	public function orden(Request $request, $company, ordenes $orden)
 	{
-		$detalles = DetalleOrdenes::where('fk_id_documento',$orden->id_orden)->with('sku:id_sku,sku')->get();
+	    $detalles = DetalleOrdenes::where('fk_id_documento',$orden->id_documento)->with('sku:id_sku,sku')->get();
 		$skus = $detalles->map(function ($detalle){
 			return $detalle->sku;
 		});
@@ -177,7 +177,7 @@ class HandheldController extends Controller
 			'ubicaciones_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$almacen"]}], "select": ["id_ubicacion","ubicacion"]'),
 			'fecha_entrada' => Carbon::now(),
 			'skus' => $skus->pluck('sku','id_sku'),
-			'codigo_barras_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_documento", "$orden"]},{"whereRaw":["cantidad - cantidad_recibida != 0"]},{"where": ["fk_id_sku","$id_sku"]}],"whereHas": [{"upc":{"where":["upc","ILIKE", "$upc"]}}], "select": ["fk_id_sku","fk_id_upc","cantidad","cantidad_recibida","id_orden_detalle","fk_id_proyecto","precio_unitario","fk_id_tipo_documento","fk_id_proyecto"]'),
+			'codigo_barras_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_documento", "$orden"]},{"whereRaw":["cantidad - cantidad_recibida != 0"]},{"where": ["fk_id_sku","$id_sku"]}],"whereHas": [{"upc":{"where":["upc","ILIKE", "$upc"]}}], "select": ["fk_id_sku","fk_id_upc","cantidad","cantidad_recibida","id_documento_detalle","fk_id_proyecto","precio_unitario","fk_id_tipo_documento","fk_id_proyecto"]'),
 		]);
 	}
 	public function entrada_detalle_store(Request $request, $company, $compact = false)
