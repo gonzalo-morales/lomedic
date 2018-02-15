@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+use App\Http\Models\RecursosHumanos\Empleados;
 #use App\Http\Models\Administracion\Monedas;
 
 class SociosNegocioController extends ControllerBase
@@ -42,10 +43,11 @@ class SociosNegocioController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 	    $tipo = TiposSocios::where('activo',1)->select('para_venta','tipo_socio','id_tipo_socio')->get();
-	    //dd($tipo->toarray());
+	    $ejecutivos = Empleados::where('activo',1)->whereIn('fk_id_departamento',[7,19])->selectRaw("id_empleado, CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, fk_id_departamento")->get();
 	    return [
 	        'ramos'                => Ramos::where('activo',1)->pluck('ramo','id_ramo')->sortBy('ramo')->prepend('...',''),
-	        'ejecutivos'           => Usuarios::where('activo',1)->pluck('nombre_corto','id_usuario')->sortBy('nombre_corto')->prepend('...',''),
+	        'ejecutivos_venta'     => $ejecutivos->where('fk_id_departamento',19)->pluck('empleado','id_empleado')->sortBy('empleado')->prepend('...',''),
+	        'ejecutivos_compra'    => $ejecutivos->where('fk_id_departamento',7)->pluck('empleado','id_empleado')->sortBy('empleado')->prepend('...',''),
 	        'paises'               => Paises::where('activo',1)->pluck('pais','id_pais')->sortBy('pais')->prepend('...',''),
 	        'tiposproveedores'     => TiposProveedores::where('activo',1)->pluck('tipo_proveedor','id_tipo_proveedor')->sortBy('tipo_proveedor')->prepend('...',''),
 	        'tipossociosventa'     => $tipo->where('para_venta',1)->pluck('tipo_socio','id_tipo_socio')->sortBy('tipo_socio')->prepend('No es Cliente',''),

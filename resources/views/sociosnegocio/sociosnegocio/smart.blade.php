@@ -108,11 +108,11 @@
     				</div>
     				
     				<div class="form-group col-md-6 col-lg-4">
-						{{ Form::cSelect('Ejecutivo de venta', 'fk_id_ejecutivo_venta', $ejecutivos ?? [], ['class'=>'select2']) }}
+						{{ Form::cSelect('Ejecutivo de venta', 'fk_id_ejecutivo_venta', $ejecutivos_venta ?? [], ['class'=>'select2']) }}
     				</div>
     				
     				<div class="form-group col-md-6 col-lg-4">
-    					{{ Form::cSelect('Ejecutivo de compra', 'fk_id_ejecutivo_compra', $ejecutivos ?? [], ['class'=>'select2']) }}
+    					{{ Form::cSelect('Ejecutivo de compra', 'fk_id_ejecutivo_compra', $ejecutivos_compra ?? [], ['class'=>'select2']) }}
     				</div>
     			
     				<div class="row col-md-12 col-lg-8 col-xl-4">

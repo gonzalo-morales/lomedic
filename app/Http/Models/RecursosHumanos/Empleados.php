@@ -26,9 +26,10 @@ class Empleados extends ModelBase
      *
      * @var array
      */
-    protected $fillable = ['nombre', 'apellido_paterno', 'apellido_materno', 'curp',
-        'rfc','fecha_nacimiento','correo_personal','telefono','celular','fk_id_empresa_alta_imss',
-        'numero_imss','fk_id_empresa_laboral','numero_infonavit','factor_documento','fk_id_departamento','fk_id_puesto'];
+    protected $fillable = [
+        'nombre','apellido_paterno','apellido_materno','curp','rfc','fecha_nacimiento','correo_personal','telefono','celular','fk_id_empresa_alta_imss','numero_imss',
+        'fk_id_empresa_laboral','numero_infonavit','factor_descuento','activo','fk_id_departamento','fk_id_puesto','fk_id_sucursal'
+    ];
     
     /**
      * Los atributos que seran visibles en index-datable
