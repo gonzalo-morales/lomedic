@@ -1,6 +1,7 @@
 @extends('handheld.layout')
 
 @section('title', 'Handheld - Sucursales')
+{{ session('message') ? HTML::tag('p', session('message'), ['class'=>'success-message']) : '' }}
 @section('content')
 	<p style="text-align: center;margin-bottom:0;">Selecciona la <b>Sucursal:</b></p>
 	<div id="navigation">

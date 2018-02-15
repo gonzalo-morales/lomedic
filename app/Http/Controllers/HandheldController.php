@@ -65,7 +65,7 @@ class HandheldController extends Controller
 	}
 
 	//NANDO'S stuff
-	/*Solicitudes*/
+	/*Solicitudes - Surtido de pedidos*/
 	public function solicitudes($company)
 	{
 		return view('handheld.solicitudes', [
@@ -98,7 +98,7 @@ class HandheldController extends Controller
 	}
 
 	//NANDO'S stuff
-	/*Movimiento_almacen*/
+	/*Sucursales - Cambio Ubicación*/
 	public function sucursales($company)
 	{
 		return view('handheld.sucursales', [
@@ -124,7 +124,7 @@ class HandheldController extends Controller
 			#movimientos con tipo captura handheld
 			'sucursal' => $request->id_sucursal,
 			'almacen' => $request->id,
-		    'stock'  => Stock::where('activo',1)->where('fk_id_almacen',$request->id)->with('upc:id_upc,upc,nombre_comercial,descripcion','almacen:id_almacen')->select('id_stock','fk_id_sku','fk_id_upc','lote','fecha_caducidad','stock','fk_id_ubicacion')->get(),
+		    'stock'  => Stock::where('activo',1)->where('fk_id_almacen',$request->id)->with('upc:id_upc,upc,nombre_comercial,descripcion','almacen:id_almacen')->select('id_stock','fk_id_sku','fk_id_upc','lote','fecha_caducidad','stock','fk_id_ubicacion','costo')->get(),
 		]);
 	}
 
@@ -154,15 +154,15 @@ class HandheldController extends Controller
 			$request->request->set('fk_id_movimiento',$isSuccess->id_movimiento);
 			MovimientoAlmacenDetalle::create( $request->all() );
 		}
-		return redirect(companyRoute('handheld.movimientos', ['id' => $request->fk_id_almacen]))->with('message', 'Registro almacenado.');
+		return redirect(companyRoute('handheld.sucursales'))->with('message', 'Registro almacenado.');
 	}
 
 	//NANDO'S stuff
-	/*Ordenes Compra*/
+	/*Ordenes - Recibo OC*/
 	public function ordenes($company)
 	{
 		return view('handheld.ordenes', [
-			'ordenes' => Ordenes::whereHas('detalleOrdenes',function ($q){$q->whereRaw('cantidad - cantidad_recibida != 0');})->with('detalleOrdenes')->where('fk_id_estatus_orden', 1)->get(),
+			'ordenes' => Ordenes::whereHas('detalle',function ($q){$q->whereRaw('cantidad - cantidad_recibida != 0');})->with('detalle')->where('fk_id_estatus_orden', 1)->get(),
 		]);
 	}
 	public function orden(Request $request, $company, ordenes $orden)
@@ -177,7 +177,7 @@ class HandheldController extends Controller
 			'ubicaciones_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$almacen"]}], "select": ["id_ubicacion","ubicacion"]'),
 			'fecha_entrada' => Carbon::now(),
 			'skus' => $skus->pluck('sku','id_sku'),
-			'codigo_barras_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_documento", "$orden"]},{"whereRaw":["cantidad - cantidad_recibida != 0"]},{"where": ["fk_id_sku","$id_sku"]}],"whereHas": [{"upc":{"where":["upc","ILIKE", "$upc"]}}], "select": ["fk_id_sku","fk_id_upc","cantidad","cantidad_recibida","id_documento_detalle","fk_id_proyecto","precio_unitario","fk_id_tipo_documento","fk_id_proyecto"]'),
+			'codigo_barras_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_documento", "$orden"]},{"whereRaw":["cantidad - cantidad_recibida != 0"]},{"where": ["fk_id_sku","$id_sku"]}],"whereHas": [{"upc":{"where":["upc","ILIKE", "$upc"]}}], "select": ["fk_id_sku","fk_id_upc","cantidad","cantidad_recibida","id_documento_detalle,"fk_id_proyecto","precio_unitario","fk_id_tipo_documento","fk_id_proyecto"]'),
 		]);
 	}
 	public function entrada_detalle_store(Request $request, $company, $compact = false)

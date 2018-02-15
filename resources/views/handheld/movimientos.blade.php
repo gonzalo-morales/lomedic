@@ -1,7 +1,6 @@
 @extends('handheld.layout')
 
 @section('title', 'Handheld - Stocks')
-{{ session('message') ? HTML::tag('p', session('message'), ['class'=>'success-message']) : '' }}
 @section('content')
 		@if($stock == '[]')
 			<p style="text-align: center">Al parecer esta sucursal no cuenta con <b>Skus</b> registrados :( prueba con otra</p>

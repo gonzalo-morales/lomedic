@@ -36,6 +36,7 @@ class Stock extends ModelCompany
         'stock',
         'costo',
         'apartados',
+        'fk_id_tipo_entrada_detalle',
         'activo'
     ];
 

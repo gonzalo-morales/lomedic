@@ -254,9 +254,7 @@
 			for(var i = 0; i < tableRows.length; i++){
 				var skuRow =  +$(tableRows[i]).find('.skuRow').val();
 				var upcRow =  $(tableRows[i]).find('.upcRow').text();
-				var idOrdenDetalle =  +$(tableRows[i]).find('.id_orden_detalle').val();
-				var fechaCaducidadRow =  $(tableRows[i]).find('.fechaCaducidadRow').val();
-				var loteRow =  $(tableRows[i]).find('.loteRow').val();
+				//var idOrdenDetalle =  +$(tableRows[i]).find('.id_orden_detalle').val();
 				if( $('#scan').val() == upcRow && $('#skus').val() == skuRow ){
 					rowFounded = tableRows[i];
 				}
@@ -294,7 +292,7 @@
 					'<input type="hidden" class="skuRow" name="datos_entradas['+row_id+'][fk_id_sku]" value="'+ response[0].fk_id_sku +'"/>'+
 					'<input type="hidden" name="datos_entradas['+row_id+'][precio_unitario]" value="'+ response[0].precio_unitario +'"/>'+
 					'<input type="hidden" name="datos_entradas['+row_id+'][fk_id_upc]" value="'+ response[0].fk_id_upc +'"/>'+
-					'<input type="hidden" class="id_orden_detalle" name="datos_entradas['+row_id+'][fk_id_linea]" value="'+ response[0].id_orden_detalle +'"/>'+
+					'<input type="hidden" class="id_orden_detalle" name="datos_entradas['+row_id+'][fk_id_linea]" value="'+ response[0].id_documento_detalle +'"/>'+
 					'<input type="hidden" name="datos_entradas['+row_id+'][fk_id_proyecto]" value="'+ response[0].fk_id_proyecto +'"/>'+
 					'<input type="hidden" class="fechaCaducidadRow" name="datos_entradas['+row_id+'][fecha_caducidad]" value="'+ fecha_caducidadVal +'"/>'+
 					'<input type="hidden" class="loteRow" name="datos_entradas['+row_id+'][lote]" value="'+ loteVal +'"/>'+
