@@ -432,7 +432,7 @@
 									@if(Route::currentRouteNamed(currentRouteName('edit')))
 									 {{--Ventana de autorizaciones --}}
 									<button class="condicion text-primary btn btn_tables is-icon eliminar bg-white" type="button" data-toggle="modal" data-target="#autorizacion">
-									<i class="material-icons">new_releases</i>
+									<i class="material-icons">feedback</i>
 									</button>
 									@endif
 								</td>

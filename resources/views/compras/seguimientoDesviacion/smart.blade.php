@@ -119,7 +119,7 @@
 						<td></td>
 						<td>
 							<button class="desviacion btn is-icon text-primary bg-white " type="button" data-item-id="{{$detDesviacion->getKey()}}" id="{{$detDesviacion->getKey()}}" data-delay="50" onclick="autorizar(this)" data-delete-type="single">
-								<i class="material-icons">new_releases</i>
+								<i class="material-icons">feedback</i>
 							</button>
 						</td>
 					</tr>

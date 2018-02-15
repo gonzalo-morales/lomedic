@@ -24,13 +24,13 @@
 		<div class="col-sm-12 col-md-7 col-lg-9">
 			<div class="row">
 				<div class="form-group col-md-6 col-lg-4">
-					{{ Form::cSelect('Tipo socio para venta', 'fk_id_tipo_socio_venta', $tipossociosventa ?? []) }}
+					{{ Form::cSelect('Tipo socio para venta', 'fk_id_tipo_socio_venta', $tipossociosventa ?? [], ['class'=>'select2']) }}
 				</div>
 				<div class="form-group col-md-6 col-lg-4">
-					{{ Form::cSelect('Tipo socio para compra', 'fk_id_tipo_socio_compra', $tipossocioscompra ?? []) }}
+					{{ Form::cSelect('Tipo socio para compra', 'fk_id_tipo_socio_compra', $tipossocioscompra ?? [], ['class'=>'select2']) }}
 				</div>
 				<div class="form-group col-md-6 col-lg-4">
-					{{ Form::cSelect('Tipo Proveedor', 'fk_id_tipo_proveedor', $tiposproveedores ?? []) }}
+					{{ Form::cSelect('Tipo Proveedor', 'fk_id_tipo_proveedor', $tiposproveedores ?? [], ['class'=>'select2']) }}
 				</div>
 			</div>
 			<div class="row">
@@ -44,7 +44,7 @@
 					{{ Form::cText('Nombre Comercial', 'nombre_comercial') }}
 				</div>
 				<div class="form-group col-md-12 col-lg-4">
-					{{ Form::cSelect('Ramo', 'fk_id_ramo', $ramos ?? []) }}
+					{{ Form::cSelect('Ramo', 'fk_id_ramo', $ramos ?? [], ['class'=>'select2']) }}
 				</div>
 			</div>
 		</div> <!-- Fin campos generales -->
@@ -104,15 +104,15 @@
     					{{ Form::cText('Sitio web', 'sitio_web') }}
     				</div>
     				<div class="form-group col-md-6 col-lg-4">
-    					{{ Form::cSelect('País de Origen', 'fk_id_pais_origen', $paises ?? []) }}
+    					{{ Form::cSelect('País de Origen', 'fk_id_pais_origen', $paises ?? [], ['class'=>'select2']) }}
     				</div>
     				
     				<div class="form-group col-md-6 col-lg-4">
-						{{ Form::cSelect('Ejecutivo de venta', 'fk_id_ejecutivo_venta', $ejecutivos ?? []) }}
+						{{ Form::cSelect('Ejecutivo de venta', 'fk_id_ejecutivo_venta', $ejecutivos ?? [], ['class'=>'select2']) }}
     				</div>
     				
     				<div class="form-group col-md-6 col-lg-4">
-    					{{ Form::cSelect('Ejecutivo de compra', 'fk_id_ejecutivo_compra', $ejecutivos ?? []) }}
+    					{{ Form::cSelect('Ejecutivo de compra', 'fk_id_ejecutivo_compra', $ejecutivos ?? [], ['class'=>'select2']) }}
     				</div>
     			
     				<div class="row col-md-12 col-lg-8 col-xl-4">
@@ -134,7 +134,7 @@
 					<div class="card-header">
 						<div class="row">
 							<div class="form-group col-sm-6 col-md-4">
-								{{ Form::cSelect('* Tipo de contacto', 'tipo_contacto', $tiposcontactos ?? []) }}
+								{{ Form::cSelect('* Tipo de contacto', 'tipo_contacto', $tiposcontactos ?? [], ['class'=>'select2']) }}
 							</div>
 							<div class="form-group col-sm-6- col-md-4">
 								{{ Form::cText('* Nombre', 'nombre_contacto') }}
@@ -219,7 +219,7 @@
     				<div class="card-header">
     					<div class="row">
     						<div class="form-group col-sm-3">
-    							{{ Form::cSelect('Tipo de dirección','tipo_direccion',$tiposdireccion ?? []) }}
+    							{{ Form::cSelect('Tipo de dirección','tipo_direccion',$tiposdireccion ?? [], ['class'=>'select2']) }}
     						</div>
 							<div class="form-group col-sm-12 col-md-3">
 								{{ Form::cText('* Calle', 'calle') }}
@@ -234,13 +234,13 @@
 								{{ Form::cNumber('* C.P.', 'cp') }}
 							</div>
 							<div class="form-group col-sm-6 col-md-3">
-								{{ Form::cSelect('* País', 'pais', $paises ?? []) }}
+								{{ Form::cSelect('* País', 'pais', $paises ?? [], ['class'=>'select2']) }}
 							</div>
 							<div class="form-group col-sm6 col-md-3">
-								{{ Form::cSelect('* Estado', 'estado', [], ['data-url'=>companyAction('HomeController@index').'/administracion.estados/api']) }}
+								{{ Form::cSelect('* Estado', 'estado', [], ['class'=>'select2','data-url'=>companyAction('HomeController@index').'/administracion.estados/api']) }}
 							</div>
 							<div class="form-group col-sm-6 col-md-3">
-								{{ Form::cSelect('* Municipio', 'municipio', [], ['data-url'=>companyAction('HomeController@index').'/administracion.municipios/api']) }}
+								{{ Form::cSelect('* Municipio', 'municipio', [], ['class'=>'select2','data-url'=>companyAction('HomeController@index').'/administracion.municipios/api']) }}
 							</div>
 							<div class="form-group col-sm-6 col-md-3">
 								{{ Form::cText('* Colonia', 'colonia') }}
@@ -320,7 +320,7 @@
             				</div>
             				<div class="card-body row">
             					<div class="col-sm-12 form-group">
-            						{{ Form::cSelect('Condicion de pago', 'fk_id_condicion_pago', $condicionpago ?? []) }}
+            						{{ Form::cSelect('Condicion de pago', 'fk_id_condicion_pago', $condicionpago ?? [], ['class'=>'select2']) }}
             					</div>
             					<div class="col-sm-12 form-group">
             						{{ Form::cNumber('Monto de crédito', 'monto_credito') }}
@@ -440,7 +440,7 @@
             			<div class="card-header">
     						<div class="row">
     							<div class="form-group col-md-4">
-    								{{ Form::cSelect('* Tipo Anexo', 'tipo_anexo', $tiposanexos ?? []) }}
+    								{{ Form::cSelect('* Tipo Anexo', 'tipo_anexo', $tiposanexos ?? [], ['class'=>'select2']) }}
     							</div>
     							<div class="form-group col-md-4">
     								{{ Form::cText('* Nombre', 'nombre_archivo') }}
