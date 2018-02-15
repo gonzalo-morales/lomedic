@@ -33,7 +33,9 @@ class MovimientoAlmacenDetalle extends ModelCompany
         'fecha_caducidad',
         'fk_id_ubicacion',
         'fk_id_ubicacion_anterior',
+        'costo',
         'stock',
+        'fk_id_documento_entrada',
         'activo'
     ];
 

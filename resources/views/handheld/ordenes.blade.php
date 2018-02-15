@@ -14,5 +14,5 @@
 			@endforeach
 		</div><br>
 	@endif
-	{{ link_to(companyRoute('.'), 'Regresar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
+	{{ link_to(companyAction('HomeController@index'), 'Regresar', ['class'=>'square actionBtn red','style'=>'width:100%;']) }}
 @endsection

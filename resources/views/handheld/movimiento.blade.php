@@ -4,12 +4,15 @@
 
 @section('content')
 {!! Form::open(['url' => companyRoute('handheld.stock-movimiento-detalle-store',['movimiento' => $movimiento->getKey()]),'method'=>'post','enctype' => 'multipart/form-data','id'=>'form']) !!}
+{{--  {{dump($movimiento)}}  --}}
     <input type="hidden" name="fk_id_stock" value="{{ $movimiento->id_stock }}">
     <input type="hidden" name="fk_id_sku" value="{{ $movimiento->fk_id_sku }}">
     <input type="hidden" name="fk_id_sucursal" value="{{ $fk_id_sucursal }}">
     <input type="hidden" name="fk_id_almacen" value="{{ $fk_id_almacen }}">
     <input type="hidden" name="fk_id_usuario" value="{{ $fk_id_usuario }}">
     <input type="hidden" name="fecha_operacion" value="{{ $fecha_operacion }}">
+    <input type="hidden" name="costo" value="{{ $movimiento->costo }}">
+    <input type="hidden" name="fk_id_documento_entrada" value="{{ $movimiento->fk_id_documento }}">
     <input type="hidden" name="total_productos" value="1">
     <div>
         <table class="table-columns">
