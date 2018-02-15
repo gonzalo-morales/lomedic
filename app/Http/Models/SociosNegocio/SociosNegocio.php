@@ -29,9 +29,10 @@ class SociosNegocio extends ModelBase
      * The attributes that are mass assignable.
      * @var array
      */
-    protected $fillable = ['fk_id_tipo_socio_venta','fk_id_tipo_socio_compra','fk_id_forma_pago','fk_id_tipo_entrega','fk_id_sucursal_entrega','fk_id_usuario_modificacion',
-    'razon_social','rfc','nombre_comercial','telefono','sitio_web','monto_credito','dias_credito','monto_minimo_facturacion','fecha_modificacion',
-    'ejecutivo_venta','fk_id_ramo','fk_id_pais_origen','fk_id_moneda','activo'];
+    protected $fillable = [
+        'fk_id_forma_pago','fk_id_tipo_entrega','razon_social','rfc','nombre_comercial','telefono','sitio_web','monto_credito','dias_credito','monto_minimo_facturacion',
+        'activo','fk_id_ramo','fk_id_pais_origen','fk_id_moneda','tiempo_entrega','fk_id_condicion_pago','fk_id_metodo_pago','fk_id_tipo_proveedor','fk_id_pago_paqueteria',
+        'fk_id_ejecutivo_venta','fk_id_tipo_socio_venta','fk_id_tipo_socio_compra','activo_desde','activo_hasta','fk_id_ejecutivo_compra'];
 
     protected $fields = [
         'razon_social' => 'Razon Social',
