@@ -19,6 +19,7 @@ Route::prefix('{company}')->group(function () {
         Route::view("/","administracion.index");
         
 		Route::resource('aplicacionesmedicamentos', 'Administracion\AplicacionesMedicamentosController');
+		Route::resource('agrupadorescuentas', 'Administracion\AgrupadoresCuentasController');
 		Route::resource('areas', 'Administracion\AreasController');
 		Route::resource('areasconsulta', 'Administracion\AreasConsultasController');
 		Route::resource('bancos', 'Administracion\BancosController');

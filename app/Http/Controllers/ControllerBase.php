@@ -291,7 +291,7 @@ class ControllerBase extends Controller
         $ids = !is_array($idOrIds) ? [$idOrIds] : $idOrIds;
 
         DB::beginTransaction();
-        foreach ($idOrIds as $id) {
+        foreach ($ids as $id) {
             $entity = $this->entity->find($id);
             # Log
             event(new LogModulos($entity, $company, 'eliminar', 'Eliminacion de registro'));

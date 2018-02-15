@@ -24,6 +24,12 @@ class CondicionesPago extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['condicion_pago'];
+    protected $fillable = ['condicion_pago','activo'];
+    
+    protected $fields = [
+        'condicion_pago' => 'Condicion Pago',
+        'activo_span' => 'Estatus'
+    ];
 
+    protected $unique = ['condicion_pago'];
 }
