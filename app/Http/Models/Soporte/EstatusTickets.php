@@ -37,6 +37,8 @@ class EstatusTickets extends ModelBase
 	    'activo_span' => 'Estatus'
 	];
 
+    protected $unique = ['estatus'];
+
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -49,7 +51,7 @@ class EstatusTickets extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'estatus' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
+		'estatus' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
 	];
 
 	public function solicitudes()

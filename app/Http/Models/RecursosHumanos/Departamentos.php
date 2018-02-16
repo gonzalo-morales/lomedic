@@ -47,12 +47,14 @@ class Departamentos extends ModelBase
      */
     public $timestamps = false;
 
+    protected $unique = ['descripcion','nomenclatura'];
+
     /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'descripcion' => 'required|max:255',
+        'descripcion' => 'required|max:255|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
         'nomenclatura' => 'required|max:50',
     ];
 

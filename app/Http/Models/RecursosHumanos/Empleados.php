@@ -53,6 +53,8 @@ class Empleados extends ModelBase
      */
     public $timestamps = false;
 
+    protected $unique = ['correo_personal','celular'];
+
     /**
      * The validation rules
      * @var array

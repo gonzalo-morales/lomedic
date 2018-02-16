@@ -37,6 +37,8 @@ class Acciones extends ModelBase
 	    'activo_span' => 'Estatus'
 	];
 
+	protected $unique = ['accion'];
+	
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -49,7 +51,7 @@ class Acciones extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'accion' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
+		'accion' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
         'fk_id_subcategoria' => 'required',
 	];
 

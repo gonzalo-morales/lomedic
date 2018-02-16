@@ -34,8 +34,8 @@ class SeguimientoSolicitudes extends ModelBase
     public $timestamps = false;
 
     public $rules = [
-        'asunto' => 'required',
-        'comentario' => 'required'
+        'asunto' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
+        'comentario' => 'required|max:255'
     ];
     
     public function solicitud()

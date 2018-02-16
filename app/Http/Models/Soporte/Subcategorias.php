@@ -37,6 +37,8 @@ class Subcategorias extends ModelBase
 	    'activo_span' => 'Estatus'
 	];
 
+    protected $unique = ['subcategoria'];
+	
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -49,7 +51,7 @@ class Subcategorias extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'subcategoria' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
+		'subcategoria' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
 	];
 
 

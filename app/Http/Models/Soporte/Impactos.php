@@ -37,6 +37,8 @@ class Impactos extends ModelBase
 	    'activo_span' => 'Estatus'
 	];
 
+    protected $unique = ['impacto'];
+
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -49,7 +51,7 @@ class Impactos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'impacto' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
+		'impacto' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
 	];
 
 	public function solicitud()

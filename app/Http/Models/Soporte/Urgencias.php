@@ -37,6 +37,8 @@ class Urgencias extends ModelBase
 	    'activo_span' => 'Estatus'
 	];
 
+    protected $unique = ['urgencia'];
+
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -49,7 +51,7 @@ class Urgencias extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'urgencia' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
+		'urgencia' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
 	];
 
     public function solicitud()

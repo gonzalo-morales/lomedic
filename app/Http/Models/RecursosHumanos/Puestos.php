@@ -46,12 +46,14 @@ class Puestos extends ModelBase
      */
     public $timestamps = false;
 
+    protected $unique = ['descripcion'];
+
     /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'descripcion' => 'required|max:100',
+        'descripcion' => 'required|max:100|regex:/^[a-zA-Z\s]+/',
     ];
 
     public function usuario()
