@@ -29,8 +29,10 @@ class TiposEventos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-        'tipo_evento' => 'required',
+        'tipo_evento' => 'required|max:40|regex:/^[a-zA-Z\s]+/',
 	];
+
+    protected $unique = ['tipo_evento'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

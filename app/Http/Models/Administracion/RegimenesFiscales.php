@@ -29,6 +29,8 @@ class RegimenesFiscales extends ModelBase
         'regimen_fiscal' => 'required|max:255'
     ];
 
+    protected $unique = ['regimen_fiscal'];
+
     /**
      * Los atributos que seran visibles en index-datable
      * @var null|array

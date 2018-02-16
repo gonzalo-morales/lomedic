@@ -24,10 +24,10 @@ class PedimentosAduana extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'aduana' => 'required|max:2',
-		'patente' => 'required|max:4',
-		'ejercicio' => 'required|max:4',
-		'cantidad' => 'required|max:255'
+		'aduana' => 'required|max:2|numeric',
+		'patente' => 'required|max:4|numeric',
+		'ejercicio' => 'required|max:4|numeric',
+		'cantidad' => 'required|max:255|numeric'
 	];
 
 	/**

@@ -30,7 +30,13 @@ class TiposProductos extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'tipo_producto' => 'required|max:100|regex:/^[a-zA-Z\s]+/',
+		'nomenclatura' => 'required|max:5|regex:/^[a-zA-Z\s]+/',
+		'prioridad' => 'required|max:16|numeric'
+	];
+
+    protected $unique = ['tipo_producto'];
 
     /**
      * Los atributos que seran visibles en index-datable

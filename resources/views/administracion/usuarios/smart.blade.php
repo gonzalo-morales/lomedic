@@ -1,5 +1,5 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
 
 @section('form-content')
 	{{ Form::setModel($data) }}
@@ -12,13 +12,13 @@
 							<div class="row">
 								<div class="col-md-6 col-sm-6">
 									<div class="form-group">
-										{{Form::label('nombre_corto','Nombre',['for'=>'name'])}}
+										{{Form::label('nombre_corto','* Nombre',['for'=>'name'])}}
 										{{Form::text('nombre_corto',null,array('id'=>'nombre_corto','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
 									</div>
 								</div>
 								<div class="col-md-6 col-sm-6">
 									<div class="form-group">
-										{{Form::label('usuario','Usuario',['for'=>'usuarios'])}}
+										{{Form::label('usuario','* Usuario',['for'=>'usuarios'])}}
 										{{Form::text('usuario','',array('id'=>'usuario','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
 									</div>
 								</div>
@@ -26,13 +26,13 @@
 							<div class="row">
 								<div class="col-md-6 col-sm-6">
 									<div class="form-group">
-										{{Form::label('password','Contraseña',['for'=>'password'])}}
+										{{Form::label('password','* Contraseña',['for'=>'password'])}}
 										{{Form::password('password',['class'=>'form-control','placeholder'=>'Contraseña'])}}
 									</div>
 								</div>
 								<div class="col-md-6 col-sm-6">
 									<div class="form-group">
-										{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
+										{{Form::label('fk_id_empresa_default','* Empresa',['for'=>'fk_id_empresa_default'])}}
 										{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'fk_id_empresa_default','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
 									</div>
 								</div>
@@ -45,14 +45,14 @@
 										<div class="row">
 											<div class="col-md-6 col-sm-6">
 												<div class="form-group">
-													{{Form::label('empresa_correo','Empresa:',['for'=>'empresa_correo'])}}
+													{{Form::label('empresa_correo','* Empresa:',['for'=>'empresa_correo'])}}
 													{{Form::select('empresa_correo',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'empresa_correo','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
 												</div>
 											</div>
 											<div class="col-md-6 col-sm-6">
 												<div class="form-group">
-													{{Form::label('correo','Correo:',['for'=>'correo'])}}
-													{{Form::text('correo',null,['id'=>'correo','class'=>'form-control','placeholder'=>'micorreogenial@mail.com'])}}
+													{{Form::label('correo','* Correo:',['for'=>'correo'])}}
+													{{Form::text('correo',null,['id'=>'correo','class'=>'form-control','placeholder'=>'micorreogenial@mail.com','type'=>'email'])}}
 												</div>
 											</div>
 										</div><!--/row forms-->
@@ -61,12 +61,12 @@
 								<div class="col-sm-12 text-center">
 									<div class="sep">
 										<div class="sepBtn">
-											{{Form::button('<i class="material-icons">add</i>',['class'=>'btn btn-primary btn-large','onclick'=>'agregarCorreo()','style'=>'width: 4em; height:4em; border-radius:50%;','data-delay'=>'50','data-toggle'=>'Agregar','title'=>'Agregar'])}}
+											{{Form::button('<i class="material-icons">add</i>',['class'=>'btn btn-primary btn-large','onclick'=>'agregarCorreo()','style'=>'width: 4em; height:4em; border-radius:50%;','data-delay'=>'50','data-toggle'=>'Agregar','title'=>'Agregar','type'=>'button'])}}
 										</div>
 									</div>
 								</div>
 								<div class="card-body">
-									<table class="table table-hover table-responsive">
+									<table class="table table-hover table-responsive-sm">
 										<thead>
 											<tr>
 												<th>Empresa</th>
@@ -81,7 +81,7 @@
 					</div>
 				</div>
 				<div class="col-md-4 col-sm-12">
-					<h5>Perfiles</h5>
+					<h5>* Perfiles</h5>
 					<div id="listProfiles" class="list-group">
 						@foreach( $profiles as $profile )
 							<a href="#" name="perfil[]"  class="list-group-item list-group-item-action" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">{{$profile->nombre_perfil}}</a>
@@ -92,9 +92,9 @@
 			<div class="row mb-3 mt-3">
 				<div class="col-md-12">
 					<div class="card">
-						<h4 class="card-header">Empresas</h4>
+						<h4 class="card-header">* Empresas</h4>
 						<div class="card-body">
-							<ul class="nav nav-tabs" role="tablist">
+							<ul class="nav nav-pills" role="tablist">
 								@foreach($companies as $data_company)
 									<li class="nav-item">
 										<a class="nav-link" data-toggle="tab" href="#empresa_{{$data_company->id_empresa}}" role="tab">{{$data_company->nombre_comercial}}</a>
@@ -313,7 +313,7 @@
     									<tr>
     										<th>Empresa</th>
     										<th>Correo</th>
-    										<th></th>
+    										<th>Acción</th>
     									</tr>
     									</thead>
     									<tbody id="lista_correo">
@@ -361,7 +361,7 @@
     				<div class="card">
     					<h4 class="card-header">Empresas</h4>
     					<div class="card-body">
-    						<ul class="nav nav-tabs" role="tablist">
+    						<ul class="nav nav-pills" role="tablist">
     							@foreach($companies as $data_company)
     								<li class="nav-item">
     									<a class="nav-link" data-toggle="tab" href="#empresa_{{$data_company->id_empresa}}" role="tab">{{$data_company->nombre_comercial}}</a>
@@ -429,8 +429,8 @@
             });
 		</script>
 		<script>
-            var profiles_permissions = {!!$profiles_permissions!!};
-            console.info(profiles_permissions);
+			var profiles_permissions = {!!$profiles_permissions!!};
+			console.info(profiles_permissions);
             var cont_correo = $('#lista_correo tr').length;
 		</script>
 	@endif

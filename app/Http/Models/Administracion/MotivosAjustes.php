@@ -26,12 +26,14 @@ class MotivosAjustes extends ModelBase
 	 */
 	protected $fillable = ['descripcion', 'activo'];
 
+	protected $unique = ['descripcion'];
+
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'descripcion'	=> 'required',
+		'descripcion'	=> 'required|max:255|regex:/^[a-zA-Z\s]+/',
 	];
 
 	/**

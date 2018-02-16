@@ -33,7 +33,11 @@ class Periodos extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'periodo' => 'Required|max:80|regex:/^[a-zA-Z\s]+/',
+	];
+
+    protected $unique = ['periodo'];
 
 	/**
 	 * Los atributos que seran visibles en smart-datatable

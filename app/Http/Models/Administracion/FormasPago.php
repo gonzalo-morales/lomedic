@@ -28,13 +28,15 @@ class FormasPago extends ModelBase
 	 */
 	protected $fillable = ['forma_pago', 'descripcion', 'activo'];
 
+	protected $unique = ['forma_pago'];
+
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'forma_pago'	=> 'required|max:5',
-		'descripcion'	=> 'required|max:255',
+		'forma_pago'	=> 'required|max:5|numeric',
+		'descripcion'	=> 'required|max:255|regex:/^[a-zA-Z\s]+/',
 		'activo'		=> 'required',
 	];
 

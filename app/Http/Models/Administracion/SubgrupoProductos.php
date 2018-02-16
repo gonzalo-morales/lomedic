@@ -30,7 +30,12 @@ class SubgrupoProductos extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'subgrupo' => 'max:100|regex:/^[a-zA-Z\s]+/|required',
+		'fk_id_grupo' => 'required',
+	];
+
+	protected $unique = ['subgrupo'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

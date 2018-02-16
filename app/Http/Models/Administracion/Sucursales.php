@@ -26,22 +26,62 @@ class Sucursales extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['sucursal', 'fk_id_tipo', 'fk_id_localidad', 'fk_id_zona',
-		'fk_id_cliente', 'responsable', 'telefono_1', 'telefono_2', 'calle',
-		'numero_interior', 'numero_exterior', 'colonia', 'codigo_postal',
-		'fk_id_pais', 'fk_id_estado', 'fk_id_municipio', 'latitud', 'longitud',
-		'registro_sanitario', 'inventario', 'embarque', 'tipo_batallon', 'region',
-		'zona_militar', 'clave_presupuestal', 'id_localidad_proveedor', 'id_jurisdiccion','activo'
+	protected $fillable = [
+		'sucursal',
+		'fk_id_tipo',
+		'fk_id_localidad',
+		'fk_id_zona',
+		'fk_id_cliente',
+		'responsable',
+		'telefono_1',
+		'telefono_2',
+		'calle',
+		'numero_interior',
+		'numero_exterior',
+		'colonia',
+		'codigo_postal',
+		'fk_id_pais',
+		'fk_id_estado',
+		'fk_id_municipio',
+		'latitud',
+		'longitud',
+		'registro_sanitario',
+		'inventario',
+		'embarque',
+		'tipo_batallon',
+		'region',
+		'zona_militar',
+		'clave_presupuestal',
+		'id_localidad_proveedor',
+		'id_jurisdiccion',
+		'activo'
 	];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'sucursal' => 'required|max:255',
+		'fk_id_tipo' => 'required',
+		'fk_id_localidad' => 'required',
+		'fk_id_zona' => 'required',
+		'fk_id_cliente' => 'required',
+		'calle' => 'required|max:255',
+		'numero_exterior' => 'required',
+		'colonia' => 'required|max:30',
+		'codigo_postal' => 'required|max:5|numeric',
+		'fk_id_pais' => 'required',
+		'fk_id_estado' => 'required',
+		'fk_id_municipio' => 'required',
+	];
 
 	public $niceNames = [
 		'fk_id_localidad' => 'localidad',
+	];
+
+	protected $unique = [
+		'sucursal',
 	];
 
 	/**

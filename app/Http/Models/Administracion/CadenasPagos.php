@@ -21,6 +21,8 @@ class CadenasPagos extends ModelBase
 	 */
 	protected $fillable = ['cadena_pago','descripcion','activo'];//Solicitante devoluciÃ³n. false: localidad; true: proveedor;
 
+	protected $unique = ['cadena_pago'];
+
 	/**
 	 * The validation rules
 	 * @var array

@@ -8,7 +8,7 @@
     		{{ Form::cText('* Acción','accion') }}
     	</div>
     	<div class="form-group col-md-6 col-xs-12">
-    		{{ Form::cSelect('* Subcategoria','fk_id_subcategoria'$subcategorys ?? []) }}
+    		{{ Form::cSelect('* Subcategoria','fk_id_subcategoria',$subcategorys ?? []) }}
     	</div>
     	<div  class="col-md-12 text-center mt-4">
     		<div class="alert alert-warning" role="alert">

@@ -37,7 +37,9 @@ class Tipocombustible extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = ['combustible' => 'required'];
+	public $rules = ['combustible' => 'required|max:20|regex:/^[a-zA-Z\s]+/'];
+
+	protected $unique = ['combustible'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

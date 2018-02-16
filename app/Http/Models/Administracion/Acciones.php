@@ -36,6 +36,13 @@ class Acciones extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $unique = ['accion'];
+
+    /**
      * The validation rules
      * @var array
      */

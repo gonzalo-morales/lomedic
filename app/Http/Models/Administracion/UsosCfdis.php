@@ -30,6 +30,8 @@ class UsosCfdis extends ModelBase
 		'descripcion' => 'required|max:255'
 	];
 
+    protected $unique = ['uso_cfdi'];
+
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array

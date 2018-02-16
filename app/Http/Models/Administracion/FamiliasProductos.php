@@ -31,11 +31,13 @@ class FamiliasProductos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'descripcion' => 'required',
+		'descripcion' => 'required|max:100',
 //		'tipo_presentacion' => 'required',
-		'nomenclatura' => 'required',
+		'nomenclatura' => 'required|max:3',
 //		'fk_id_tipo_producto' => 'required',
 	];
+
+	protected $unique = ['descripcion','nomenclatura'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

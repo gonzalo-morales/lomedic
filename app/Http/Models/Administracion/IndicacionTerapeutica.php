@@ -30,7 +30,11 @@ class IndicacionTerapeutica extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'indicacion_terapeutica' => 'required|max:100',
+		'descripcion' => 'max:255|regex:/^[a-zA-Z\s]+/'
+	];
+	protected $unique = ['indicacion_terapeutica'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

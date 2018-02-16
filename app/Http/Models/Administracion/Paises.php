@@ -38,8 +38,10 @@ class Paises extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'pais'		=> 'required',
+		'pais'		=> 'required|max:150|regex:/^[a-zA-Z\s]+/',
 	];
+
+    protected $unique = ['pais'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

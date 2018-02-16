@@ -26,8 +26,10 @@ class TiposEntrega extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'tipo_entrega' => 'required'
+		'tipo_entrega' => 'required|regex:/^[a-zA-Z\s]+/|max:255'
 	];
+
+    protected $unique = ['tipo_entrega'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

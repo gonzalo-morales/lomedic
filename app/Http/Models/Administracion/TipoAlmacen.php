@@ -26,8 +26,10 @@ class TipoAlmacen extends ModelBase
      * @var array
      */
     public $rules = [
-        'tipo' => 'required'
+        'tipo' => 'required|max:30'
     ];
+
+	protected $unique = ['tipo'];
 
     /**
      * Los atributos que seran visibles en index-datable

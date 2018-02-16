@@ -26,6 +26,8 @@ class TiposRelacionesCfdi extends ModelBase
 	 */
 	public $rules = [];
 
+    protected $unique = ['tipo_relacion'];
+
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array

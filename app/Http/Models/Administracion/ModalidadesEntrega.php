@@ -30,12 +30,14 @@ class ModalidadesEntrega extends ModelBase
 	protected $fillable = ['modalidad_entrega','activo'];
 
     public $rules = [
-        'modalidad_entrega' => 'required'
+        'modalidad_entrega' => 'required|max:255'
     ];
 
 	public $niceNames = [
 	    'modalidad_entrega' => 'modalidad entrega'
     ];
+
+    protected $unique = ['modalidad_entrega'];
 
 
 	function proyecto()

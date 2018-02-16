@@ -31,8 +31,10 @@ class Patrones extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'patron'	=> 'required|max:255',
+		'patron'	=> 'required|max:255|regex:/^[a-zA-Z\s]+/',
 	];
+
+    protected $unique = ['patron'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

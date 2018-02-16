@@ -33,13 +33,18 @@ class Impuestos extends ModelBase
      */
     protected $fillable = ['impuesto','porcentaje','activo','tasa_o_cuota','tipo_factor','Descripcion','numero_impuesto'];
     
+    protected $unique = ['impuesto'];
+
     protected $fields = [
         'impuesto' => 'Impuesto',
         'porcentaje' => 'Porcentaje',
         'activo_span' => 'Estatus',
     ];
 
-    public $rules = ['porcentaje'=>'numeric'];
+    public $rules = [
+        'porcentaje'=> 'numeric',
+        'impuesto' => 'required'
+    ];
 
     public function getFields()
     {

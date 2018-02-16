@@ -24,5 +24,7 @@ class EstatusDocumentos extends ModelBase
     
     protected $fields = ['id_estatus'=>'#','estatus'=>'Nombre de Estatus','activo_span' => 'Estatus'];
     
-    public $rules = ['estatus'=>'required'];
+    public $rules = ['estatus'=>'required|max:255|regex:/^[a-zA-Z\s]+/'];
+
+    protected $unique = ['estatus'];
 }

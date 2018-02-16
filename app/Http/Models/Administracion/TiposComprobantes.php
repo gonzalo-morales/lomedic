@@ -31,6 +31,8 @@ class TiposComprobantes extends ModelBase
         'limite' => 'required|numeric'
     ];
 
+    protected $unique = ['tipo_comprobante'];
+
     /**
      * Los atributos que seran visibles en index-datable
      * @var null|array

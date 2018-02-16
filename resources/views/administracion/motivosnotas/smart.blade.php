@@ -5,10 +5,10 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-6 col-xs-12">
-    		{{ Form::cText('Motivo','motivo') }}
+    		{{ Form::cText('* Motivo','motivo') }}
     	</div>
     	<div class="form-group col-md-6 col-xs-12">
-    		{{ Form::cSelect('Tipo','tipo', ['1' => 'Cuentas por Pagar', '2' => 'Cuentas por Cobrar']) }}
+    		{{ Form::cSelect('* Tipo','tipo', ['1' => 'Cuentas por Pagar', '2' => 'Cuentas por Cobrar']) }}
     	</div>
     	<div  class="col-md-12 text-center mt-4">
     		<div class="alert alert-warning" role="alert">

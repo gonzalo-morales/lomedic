@@ -8,23 +8,23 @@
     		<h2 class="font-light">Datos de sucursal</h2>
     		<hr>
     		<div class="row">
+    			<div class="form-group col-md-6">
+    				{{ Form::cText('* Sucursal', 'sucursal') }}
+    			</div>
+				<div class="form-group col-md-6">
+					{{ Form::cText('Responsable', 'responsable') }}
+				</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cText('Sucursal', 'sucursal') }}
+    				{{ Form::cSelect('* Tipo de Sucursal', 'fk_id_tipo', $tipos ?? []) }}
     			</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cSelect('Tipo de Sucursal', 'fk_id_tipo', $tipos ?? []) }}
+    				{{ Form::cSelect('* Localidad', 'fk_id_localidad', $localidades ?? []) }}
     			</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cSelect('Localidad', 'fk_id_localidad', $localidades ?? []) }}
+    				{{ Form::cSelect('* Zona', 'fk_id_zona', $zonas ?? []) }}
     			</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cSelect('Zona', 'fk_id_zona', $zonas ?? []) }}
-    			</div>
-    			<div class="form-group col-md-4">
-    				{{ Form::cSelect('Cliente', 'fk_id_cliente', $clientes ?? []) }}
-    			</div>
-    			<div class="form-group col-md-4">
-    				{{ Form::cText('Responsable', 'responsable') }}
+    				{{ Form::cSelect('* Cliente', 'fk_id_cliente', $clientes ?? []) }}
     			</div>
     			<div class="form-group col-md-4">
     				{{ Form::cText('Teléfono', 'telefono_1') }}
@@ -39,22 +39,22 @@
     		<hr>
     		<div class="row">
     			<div class="form-group col-md-6">
-    				{{ Form::cText('Calle', 'calle') }}
+    				{{ Form::cText('* Calle', 'calle') }}
     			</div>
     			<div class="form-group col-md-3">
     				{{ Form::cText('Num. Interior', 'numero_interior') }}
     			</div>
     			<div class="form-group col-md-3">
-    				{{ Form::cText('Num. Exterior', 'numero_exterior') }}
+    				{{ Form::cText('* Num. Exterior', 'numero_exterior') }}
     			</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cText('Colonia', 'colonia') }}
+    				{{ Form::cText('* Colonia', 'colonia') }}
     			</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cText('Codigo Postal', 'codigo_postal') }}
+    				{{ Form::cText('*Codigo Postal', 'codigo_postal') }}
     			</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cSelectWithDisabled('Pais', 'fk_id_pais', $paises ?? [], [
+    				{{ Form::cSelectWithDisabled('* Pais', 'fk_id_pais', $paises ?? [], [
     					'class' => 'select2 select-cascade',
     					'data-target-url' => companyRoute('paises.show', ['id' => '#ID#']),
     					'data-target-el' => '[targeted="fk_id_estado"]',
@@ -63,7 +63,7 @@
     				]) }}
     			</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cSelect('Estado', 'fk_id_estado', $estados ?? [], [
+    				{{ Form::cSelect('* Estado', 'fk_id_estado', $estados ?? [], [
     					'class' => 'select2 select-cascade',
     					'targeted' => 'fk_id_estado',
     					'data-target-url' => companyRoute('estados.show', ['id' => '#ID#']),
@@ -73,7 +73,7 @@
     				]) }}
     			</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cSelect('Municipio', 'fk_id_municipio', $municipios ?? [], [
+    				{{ Form::cSelect('* Municipio', 'fk_id_municipio', $municipios ?? [], [
     					'class' => 'select2',
     					'targeted' => 'fk_id_municipio',
     				]) }}

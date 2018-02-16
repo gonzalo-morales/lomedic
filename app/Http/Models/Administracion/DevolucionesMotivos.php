@@ -26,7 +26,7 @@ class DevolucionesMotivos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'devolucion_motivo' => 'required|max:75',
+		'devolucion_motivo' => 'required|max:75|regex:/^[a-zA-Z\s]+/',
         'solicitante_devolucion' => 'required|numeric'
 	];
 
@@ -39,6 +39,8 @@ class DevolucionesMotivos extends ModelBase
 		'solicitante_formated' => 'Devolucion A',
 		'activo_span' => 'Estatus'
 	];
+
+	protected $unique = ['devolucion_motivo'];
 
 	public function getSolicitanteFormatedAttribute()
 	{

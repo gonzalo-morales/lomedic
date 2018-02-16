@@ -27,12 +27,14 @@ class MotivosDesviaciones extends ModelBase
 	 */
 	protected $fillable = ['descripcion', 'activo'];
 
+	protected $unique = ['descripcion'];
+
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'descripcion'	=> 'required',
+		'descripcion'	=> 'required|max:100|regex:/^[a-zA-Z\s]+/',
 	];
 
 	/**

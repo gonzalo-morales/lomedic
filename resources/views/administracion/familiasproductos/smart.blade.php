@@ -5,10 +5,10 @@
     {{ Form::setModel($data) }}
     <div class="row">
         <div class="form-group col-md-6 col-xs-12">
-            {{ Form::cText('Familia','descripcion') }}
+            {{ Form::cText('* Familia','descripcion') }}
         </div>
         <div class="form-group col-md-6 col-xs-12">
-            {{ Form::cText('Nomenclatura','nomenclatura') }}
+            {{ Form::cText('* Nomenclatura','nomenclatura') }}
         </div>
         <div class="form-group col-md-6 col-xs-12">
             {{Form::cSelect('Tipo','fk_id_tipo_producto',$product_types ?? [])}}

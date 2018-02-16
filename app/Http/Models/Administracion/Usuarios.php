@@ -48,6 +48,8 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         'usuario', 'nombre_corto','activo','password','activo','fk_id_empresa_default','fecha_cambio_password','dias_expiracion'
     ];
 
+    // protected $unique = ['usuario'];
+
     protected $fields = [
         'id_usuario' => '#',
         'usuario' => 'Usuario',
@@ -62,8 +64,10 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
     protected $hidden = ['password', 'remember_token'];
 
     public $rules = [
-        'nombre_corto' => 'required',
-        'usuario' => 'required',
+        'nombre_corto' => 'required|max:100',
+        'usuario' => 'required|max:20',
+        'password' => 'required|max:60',
+        'fk_id_empresa_default' => 'required',
     ];
 
     public function sendPasswordResetNotification($token)

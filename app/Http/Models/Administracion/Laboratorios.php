@@ -28,12 +28,14 @@ class Laboratorios extends ModelBase
 	 */
 	protected $fillable = ['laboratorio','activo'];
 
+	protected $unique = ['laboratorio'];
+
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'laboratorio' => 'required',
+		'laboratorio' => 'required|regex:/^[a-zA-Z\s]+/|max:255',
 	];
 
 	/**

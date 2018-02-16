@@ -38,11 +38,13 @@ class NumerosCuenta extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'numero_cuenta' => 'required|numeric',
+		'numero_cuenta' => 'required|numeric|max:255',
 		'fk_id_banco' => 'required|numeric',
 		'fk_id_empresa' => 'required|numeric',
 		'fk_id_sat_moneda' => 'required|numeric'
 	];
+
+    protected $unique = ['numero_cuenta'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

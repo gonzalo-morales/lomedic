@@ -35,7 +35,7 @@ class PerfilesUsuarios extends ModelBase
 
 
     public $rules = [
-        'ffk_id_perfil' => 'required',
+        'fk_id_perfil' => 'required',
         'fk_id_usuario' => 'required',
     ];
 

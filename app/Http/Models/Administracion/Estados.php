@@ -31,9 +31,11 @@ class Estados extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'estado' => 'required',
+		'estado' => 'required|max:255|regex:/^[a-zA-Z\s]+/',
 		'fk_id_pais' => 'required',
 	];
+
+	protected $unique = ['estado'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

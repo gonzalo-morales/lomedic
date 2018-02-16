@@ -29,9 +29,11 @@ class Subdependencias extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-        'subdependencia' => 'required',
+        'subdependencia' => 'required|max:40|regex:/^[a-zA-Z\s]+/',
         'fk_id_dependencia' => 'required'
 	];
+
+	protected $unique = ['subdependencia'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

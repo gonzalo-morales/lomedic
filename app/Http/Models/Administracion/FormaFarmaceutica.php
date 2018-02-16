@@ -30,7 +30,12 @@ class FormaFarmaceutica extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'forma_farmaceutica' => 'required|max:100|regex:/^[a-zA-Z\s]+/',
+		'forma_farmaceutica' => 'required|max:255|regex:/^[a-zA-Z\s]+/',
+	];
+
+	protected $unique = ['forma_farmaceutica'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

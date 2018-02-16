@@ -21,6 +21,8 @@ class TipoSalida extends ModelBase
      */
     protected $fillable = ['salida','activo'];
 
+    protected $unique = ['salida'];
+
     /**
      * The validation rules
      * @var array

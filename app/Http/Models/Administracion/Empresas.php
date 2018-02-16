@@ -47,7 +47,19 @@ class Empresas extends ModelBase
 	 */
 	public $timestamps = false;
 	
-	public $rules = [];
+	public $rules = [
+		'nombre_comercial' => 'required|max:25',
+		'rfc' => 'required|max:13',
+		'empresa' => 'required',
+		'razon_social' => 'required|max:200',
+		'conexion' => 'required',
+		'fk_id_regimen_fiscal' => 'required',
+		'calle'  => 'required|max:60',
+		'no_exterior'  => 'required|max:30|numeric',
+		'no_interior'  => 'max:30|numeric',
+		'codigo_postal'  => 'required|max:10',
+		'colonia'  => 'required|max:80',
+	];
 
 	/**
 	 * Obtenemos empresas activas

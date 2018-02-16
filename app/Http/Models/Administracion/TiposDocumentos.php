@@ -24,8 +24,10 @@ class TiposDocumentos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'nombre_documento' => 'required'
+		'nombre_documento' => 'required|max:255'
 	];
+
+    protected $unique = ['nombre_documento'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

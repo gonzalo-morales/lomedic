@@ -24,7 +24,7 @@
 			<div class="row">
 				<div class="col-sm-12 col-md-7">
 					<div class="form-group">
-						<label for="nombre_perfil">Perfil:</label>
+						<label for="nombre_perfil">* Perfil:</label>
 						<input id="nombre_perfil" name="nombre_perfil" type="text" class="validate form-control">
 					</div>
 				</div>

@@ -5,10 +5,10 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-6">
-    		{{ Form::cText('Impuesto', 'impuesto',['class'=>'form-control']) }}
+    		{{ Form::cText('* Impuesto', 'impuesto',['class'=>'form-control']) }}
     	</div>
     	<div class="form-group col-md-6">
-    		{{ Form::cNumber('Porcentaje', 'porcentaje', ['max'=>'100','min'=>'0']) }}
+    		{{ Form::cNumber('* Porcentaje', 'porcentaje', ['max'=>'100','min'=>'0']) }}
     	</div>
     	<div  class="col-md-12 text-center mt-4">
     		<div class="alert alert-warning" role="alert">

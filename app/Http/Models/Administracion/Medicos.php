@@ -25,14 +25,21 @@ class Medicos extends ModelBase
      *
      * @var array
      */
-    protected $fillable = ['cedula','paterno', 'matenro','nombre','rfc','activo'];
+    protected $fillable = ['cedula','paterno', 'materno','nombre','rfc','activo'];
 
     /**
      * The validation rules
      * @var array
      */
     public $rules = [
+        'cedula' => 'max:12|required',
+        'paterno' => 'max:30|required|regex:/^[a-zA-Z\s]+/',
+        'materno' => 'max:30|required|regex:/^[a-zA-Z\s]+/',
+        'nombre' => 'max:35|required|regex:/^[a-zA-Z\s]+/',
+        'rfc' => 'max:16',
     ];
+
+    protected $unique = ['cedula','rfc'];
 
     /**
      * Los atributos que seran visibles en index-datable

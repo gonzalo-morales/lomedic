@@ -39,8 +39,10 @@ class Perfiles extends Model
      * @var array
      */
     public $rules = [
-        'nombre_perfil' => 'required|max:20',
+        'nombre_perfil' => 'required|max:20|regex:/^[a-zA-Z\s]+/',
     ];
+
+    protected $unique = ['nombre_perfil'];
 
     /**
      * Obtenemos usuarios relacionados al perfil

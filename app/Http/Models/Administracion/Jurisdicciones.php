@@ -33,6 +33,8 @@ class Jurisdicciones extends ModelBase
 	 */
 	public $timestamps = false;
 
+	protected $unique = ['jurisdiccion'];
+	
 	/**
 	 * The validation rules
 	 * @var array

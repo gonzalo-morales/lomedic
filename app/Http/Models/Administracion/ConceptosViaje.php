@@ -35,6 +35,8 @@ class ConceptosViaje extends ModelBase
 		'tipo_concepto'	=> 'required|max:50'
 	];
 
+	protected $unique = ['tipo_concepto'];
+
     /**
      * Los atributos que seran visibles en index-datable
      * @var array

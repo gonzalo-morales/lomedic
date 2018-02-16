@@ -28,7 +28,11 @@ class Programas extends ModelBase
      * The validation rules
      * @var array
      */
-    public $rules = [];
+    public $rules = [
+        'nombre_programa' => 'required|max:255',
+    ];
+
+    protected $unique = ['nombre_programa'];
 
     /**
      * Los atributos que seran visibles en index-datable

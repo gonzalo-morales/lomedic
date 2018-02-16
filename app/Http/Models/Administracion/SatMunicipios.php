@@ -31,10 +31,12 @@ class SatMunicipios extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'sat_municipio'	=> 'required|max:3',
+		'sat_municipio'	=> 'required|max:3|numeric',
 		'municipio'     => 'required|max:255',
 		'sat_estado'	=> 'required|max:3'
 	];
+
+    protected $unique = ['sat_municipio','municipio','sat_estado'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable
