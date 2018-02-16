@@ -132,12 +132,6 @@ class EntradaDetalle extends ModelCompany
         });
     }*/
 
-    /**
-     * The validation rules
-     * @var array
-     */
-//    public $rules = [];
-
     // public function sucursales()
     // {
     //     return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucurñsal','id_sucursal');

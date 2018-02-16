@@ -24,12 +24,6 @@ class Periodos extends ModelBase
 	protected $fillable = ['periodo','activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */

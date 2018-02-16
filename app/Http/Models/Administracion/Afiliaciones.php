@@ -35,8 +35,6 @@ class Afiliaciones extends ModelBase
      */
     protected $unique = ['id_afiliacion'];
 
-    public $rules = [];
-
     protected $fields = [
         'id_afiliado' => '#',
         'id_afiliacion' => 'Numero de paciente',

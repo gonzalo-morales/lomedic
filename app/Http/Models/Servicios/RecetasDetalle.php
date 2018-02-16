@@ -30,14 +30,6 @@ class RecetasDetalle extends ModelCompany
         'en_caso_presentar','recurrente','fecha_surtido','veces_surtir','veces_surtidas','eliminar','fk_id_clave_cliente_producto'];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'correo' => 'required|email',
-    ];
-
-    /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */

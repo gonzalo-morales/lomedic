@@ -23,8 +23,6 @@ class SociosNegocio extends ModelBase
      */
     protected $primaryKey = 'id_socio_negocio';
 
-    public $timestamps = false;
-
     /**
      * The attributes that are mass assignable.
      * @var array
@@ -41,24 +39,6 @@ class SociosNegocio extends ModelBase
         'ramo.ramo' => 'Ramo',
         'tipos_socios' => 'Tipo Socio',
         'activo_text' => 'Estatus'
-    ];
-
-    public $rules = [ /*
-        'razon_social' => 'required|min:5',
-        'rfc' => 'required',
-        'nombre_comercial' => 'required',
-        'ejecutivo_venta' => 'required',
-        'telefono' => 'required',
-        'sitio_web' => 'required',
-        'ramo' => 'required',
-        'pais_origen' => 'required',
-        'tipo_socio' => 'required',
-        'moneda' => 'required',
-        #'empresas' => 'required',
-        'condiciones_pago.monto_credito' => 'required',
-        'condiciones_pago.dias_credito' => 'required',
-        'condiciones_pago.forma_pago' => 'required',
-        'condiciones_pago.cuentas' => 'required',*/
     ];
 
     public $niceNames = [];

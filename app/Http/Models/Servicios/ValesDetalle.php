@@ -35,14 +35,6 @@ class ValesDetalle extends ModelCompany
     ];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'correo' => 'required|email',
-    ];
-
-    /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */

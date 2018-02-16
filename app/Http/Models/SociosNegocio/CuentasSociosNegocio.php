@@ -24,18 +24,6 @@ class CuentasSociosNegocio extends ModelBase
      * @var array
      */
     protected $fillable = ['fk_id_banco','fk_id_socio_negocio','no_cuenta','no_sucursal','clave_interbancaria','activo'];
-    
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
 
     /**
 	 * Los atributos que seran visibles en index-datable

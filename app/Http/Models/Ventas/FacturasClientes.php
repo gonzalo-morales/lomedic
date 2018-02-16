@@ -59,12 +59,6 @@ class FacturasClientes extends ModelCompany
         'total_pagado' => 'Total Pagado',
         'estatus.estatus' => 'Estatus'
     ];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
     
     public function empresa()
     {

@@ -27,14 +27,6 @@ class Perfiles extends Model
     protected $fillable = ['nombre_perfil', 'descripcion', 'activo'];
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-
-    public $timestamps =  false;
-
-    /**
      * The validation rules
      * @var array
      */

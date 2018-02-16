@@ -51,19 +51,6 @@ class Productos extends ModelCompany
         'activo_span' => 'Estatus',
     ];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public function getSkuDescripcionAttribute() {
         return $this->sku . ' - ' . $this->descripcion_corta;
     }

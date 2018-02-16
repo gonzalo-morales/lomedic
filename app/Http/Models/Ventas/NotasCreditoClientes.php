@@ -61,12 +61,6 @@ class NotasCreditoClientes extends ModelCompany
         'estatus.estatus' => 'Estatus'
     ];
 
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public function empresa()
     {
         return $this->hasOne(Empresas::class,'id_empresa','fk_id_empresa');

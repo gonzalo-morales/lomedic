@@ -39,13 +39,7 @@ class Prioridades extends ModelBase
 
     protected $unique = ['prioridad'];
 
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-	/**
+    /**
 	 * The validation rules
 	 * @var array
 	 */

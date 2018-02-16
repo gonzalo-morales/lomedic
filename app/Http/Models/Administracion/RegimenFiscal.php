@@ -25,12 +25,6 @@ class RegimenFiscal extends ModelBase
 	protected $fillable = ['regimen_fiscal','activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */

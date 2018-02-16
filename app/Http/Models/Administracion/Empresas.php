@@ -39,13 +39,6 @@ class Empresas extends ModelBase
 	];
 	
 	protected $unique = ['rfc','razon_social','nombre_comercial'];
-
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
 	
 	public $rules = [
 		'nombre_comercial' => 'required|max:25',

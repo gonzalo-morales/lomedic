@@ -40,13 +40,6 @@ class Categorias extends ModelBase
     protected $unique = ['categoria'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */

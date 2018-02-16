@@ -23,12 +23,6 @@ class MetodosValoracion extends ModelBase
 	 */
 	protected $fillable = ['metodo_valoracion','activo'];
 
-	/**
-	 * Indicates if the model should be timestamped.
-	 * @var bool
-	 */
-	public $timestamps = false;
-
     protected $unique = ['metodo_valoracion'];
 
 	/**

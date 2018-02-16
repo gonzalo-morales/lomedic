@@ -21,13 +21,6 @@ class Licitaciones extends ModelCompany
      */
     protected $primaryKey = 'no_oficial';
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
     protected $fillable = [
         'no_oficial','tipo_evento', 'dependencia', 'subdependencia', 'unidad', 'modalidad_entrega', 'caracter_evento',
         'forma_adjudicacion', 'pena_convencional', 'tipo_pena_convencional', 'tope_pena_convencional',

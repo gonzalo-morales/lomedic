@@ -46,12 +46,6 @@ class SolicitudesSalidaDetalle extends ModelCompany
     // protected $fields = [];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    // public $rules = [];
-
-    /**
      * Nice names to validator
      * @var array
      */

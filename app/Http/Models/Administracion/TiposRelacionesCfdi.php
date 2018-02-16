@@ -20,12 +20,6 @@ class TiposRelacionesCfdi extends ModelBase
 	 */
 	protected $fillable = ['tipo_relacion','descripcion','factura','nota_credito','nota_cargo','activo'];
 
-	/**
-	 * The validation rules
-	 * @var array
-	 */
-	public $rules = [];
-
     protected $unique = ['tipo_relacion'];
 
 	/**

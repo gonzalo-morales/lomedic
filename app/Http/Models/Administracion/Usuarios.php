@@ -19,13 +19,6 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 {
     use Notifiable, Authenticatable, Authorizable, CanResetPassword;
 
-    /*
-    const CREATED_AT = 'fecha_crea';
-    const UPDATED_AT = 'fecha_actualiza';
-    */
-
-    public $timestamps = false;
-
     /**
      * The table associated with the model.
      *

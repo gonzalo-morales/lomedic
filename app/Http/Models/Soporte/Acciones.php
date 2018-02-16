@@ -38,13 +38,6 @@ class Acciones extends ModelBase
 	];
 
 	protected $unique = ['accion'];
-	
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
 
 	/**
 	 * The validation rules

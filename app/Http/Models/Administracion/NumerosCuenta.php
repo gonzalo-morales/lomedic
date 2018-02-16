@@ -27,13 +27,6 @@ class NumerosCuenta extends ModelBase
 	protected $fillable = ['numero_cuenta', 'fk_id_banco','fk_id_sat_moneda','fk_id_empresa','activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */

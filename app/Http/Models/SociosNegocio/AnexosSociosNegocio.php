@@ -24,18 +24,6 @@ class AnexosSociosNegocio extends ModelBase
      */
     protected $fillable = ['fk_id_socio_negocio', 'fk_id_tipo_anexo', 'nombre', 'archivo', 'activo'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public function sociosnegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');
     }

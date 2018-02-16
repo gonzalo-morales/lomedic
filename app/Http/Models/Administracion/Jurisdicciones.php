@@ -26,13 +26,6 @@ class Jurisdicciones extends ModelBase
 	 */
 	protected $fillable = ['jurisdiccion', 'fk_id_estado','activo'];
 
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
 	protected $unique = ['jurisdiccion'];
 	
 	/**

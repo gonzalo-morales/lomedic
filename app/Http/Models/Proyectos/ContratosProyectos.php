@@ -24,18 +24,6 @@ class ContratosProyectos extends ModelCompany
      */
     protected $fillable = ['fk_id_proyecto','representante_legal','num_contrato','fecha_inicio','fecha_fin','archivo'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public function proyecto(){
         return $this->belongsTo(Proyectos::class,'fk_id_proyecto');
     }

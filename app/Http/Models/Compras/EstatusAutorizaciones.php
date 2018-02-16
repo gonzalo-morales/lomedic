@@ -21,12 +21,4 @@ class EstatusAutorizaciones extends ModelCompany
      */
     protected $primaryKey = 'id_estatus';
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-
 }

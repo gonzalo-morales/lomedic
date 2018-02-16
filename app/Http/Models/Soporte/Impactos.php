@@ -40,13 +40,6 @@ class Impactos extends ModelBase
     protected $unique = ['impacto'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */

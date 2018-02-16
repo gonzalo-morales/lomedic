@@ -23,23 +23,11 @@ class TiposSocioNegocio extends ModelBase
      * @var array
      */
     protected $fillable = ['tipo_socio','para_venta','activo'];
-
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
     
     protected $fields = [
         'tipo_socio' => 'Tipo Socio Negocio',
         'activo_text' => 'Estatus'
     ];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
 
     public function socionegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');

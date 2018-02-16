@@ -23,23 +23,11 @@ class TiposProveedores extends ModelBase
      * @var array
      */
     protected $fillable = ['tipo_proveedor', 'activo'];
-
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
     
     protected $fields = [
         'tipo_proveedor' => 'Tipo Proveedor',
         'activo_text' => 'Estatus'
     ];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
    
     public function socionegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_tipo_socio');

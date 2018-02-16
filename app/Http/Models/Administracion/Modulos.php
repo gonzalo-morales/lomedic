@@ -29,13 +29,6 @@ class Modulos extends Model
 	protected $fillable = ['nombre', 'descripcion', 'url', 'icono', 'accion_menu', 'accion_barra', 'accion_tabla', 'modulo_seguro','activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */

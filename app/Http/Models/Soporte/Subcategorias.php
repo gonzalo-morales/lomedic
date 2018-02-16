@@ -38,13 +38,6 @@ class Subcategorias extends ModelBase
 	];
 
     protected $unique = ['subcategoria'];
-	
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
 
 	/**
 	 * The validation rules

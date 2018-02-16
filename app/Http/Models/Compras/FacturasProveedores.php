@@ -85,17 +85,6 @@ class FacturasProveedores extends ModelCompany
         //'estatus.estatus' => 'Estatus'
     ];
 
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'fk_id_sucursal'=>'required',
-//        'fk_id_proveedor'=>'required',
-//        'fk_id_moneda'=>'required',
-//        'descuento_oferta'=>'nullable||regex:/^(\d{0,2}(\.\d{0,4})?\)$/'
-    ];
-
     public function getSerieFolioAttribute()
     {
         return $this->serie_factura.' '.$this->folio_factura;

@@ -40,13 +40,6 @@ class Departamentos extends ModelBase
         'activo_text' => 'Estatus'
     ];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
     protected $unique = ['descripcion','nomenclatura'];
 
     /**

@@ -46,13 +46,6 @@ class Empleados extends ModelBase
         'telefono' => 'Telefono'
     ];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
     protected $unique = ['correo_personal','celular'];
 
     /**

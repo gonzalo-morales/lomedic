@@ -26,13 +26,6 @@ class SeguimientoSolicitudes extends ModelBase
      */
     protected $fillable = ['asunto','fk_id_solicitud','comentario','fk_id_empleado_comentario','fecha_hora'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
     public $rules = [
         'asunto' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
         'comentario' => 'required|max:255'

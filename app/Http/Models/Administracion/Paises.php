@@ -27,13 +27,6 @@ class Paises extends ModelBase
 	protected $fillable = ['pais', 'activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */

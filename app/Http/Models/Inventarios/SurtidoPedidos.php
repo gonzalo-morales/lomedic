@@ -35,12 +35,6 @@ class SurtidoPedidos extends ModelCompany
     ];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    // public $rules = [];
-
-    /**
      * Nice names to validator
      * @var array
      */

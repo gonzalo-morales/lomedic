@@ -46,12 +46,6 @@ class PedidosDetalle extends ModelCompany
      * @var array
      */
     protected $fields = [];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
     
     public function pedido()
     {

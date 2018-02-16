@@ -23,23 +23,11 @@ class TiposDireccion extends ModelBase
      * @var array
      */
     protected $fillable = ['tipo_direccion', 'activo'];
-
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
     
     protected $fields = [
         'tipo_direccion' => 'Tipo Direccion',
         'activo_text' => 'Estatus'
     ];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
 
     public function direcciones(){
         return $this->hasOne(DireccionesSociosNegocio::class);

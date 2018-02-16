@@ -23,23 +23,11 @@ class TiposContacto extends ModelBase
      * @var array
      */
     protected $fillable = ['tipo_contacto', 'activo'];
-
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
     
     protected $fields = [
         'tipo_contacto' => 'Tipo Contacto',
         'activo_text' => 'Estatus'
     ];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
 
     public function contactos(){
         return $this->hasOne(ContactosSociosNegocio::class);

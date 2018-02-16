@@ -43,16 +43,6 @@ class SurtidoRequisicionHospitalariaDetalle extends ModelCompany
     protected $fillable = ['id_detalle_requisicion_hospitalaria','fk_id_surtido_requisicion','fk_id_clave_cliente_producto','cantidad_solicitada','cantidad_surtida'];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'id_sucursal' => 'required',
-//        'fecha_requerido' => 'required',
-//        'id_solicitante' => 'required',
-    ];
-
-    /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */

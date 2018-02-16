@@ -38,20 +38,6 @@ class Recetas extends ModelCompany
         'fecha_modificacion','peso','altura','presion_sistolica','presion_diastolica','fk_id_proyecto','fk_id_parentesco'];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'peso' => 'between:0,999.99',
-//        'altura' => 'between:0,9.99',
-//        'presion1' => 'between:0,999.99',
-//        'presion2' => 'between:0,999.99',
-//        'id_diagnostico' => 'required|numeric',
-//        'id_afiliacion' => 'required_without:nombre_paciente_no_afiliado',
-//        'nombre_paciente_no_afiliado' => 'required_without:id_afiliacion'
-    ];
-
-    /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */

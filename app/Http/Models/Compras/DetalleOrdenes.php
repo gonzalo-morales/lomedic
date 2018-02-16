@@ -32,13 +32,6 @@ class DetalleOrdenes extends ModelCompany
         'descuento_detalle','cerrado','fk_id_tipo_documento','fk_id_documento','fk_id_linea'];
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * The validation rules
      * @var array
      */

@@ -30,13 +30,6 @@ class Permisos extends Model
     protected $fillable = ['descripcion'];
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * The validation rules
      * @var array
      */

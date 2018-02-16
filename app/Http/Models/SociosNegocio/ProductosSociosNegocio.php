@@ -26,18 +26,6 @@ class ProductosSociosNegocio extends ModelBase
      */
     protected $fillable = ['fk_id_socio_negocio', 'fk_id_sku', 'fk_id_upc', 'tiempo_entrega', 'precio', 'precio_de', 'precio_hasta'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public function sociosnegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');
     }
