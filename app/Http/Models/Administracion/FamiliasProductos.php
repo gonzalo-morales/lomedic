@@ -3,6 +3,7 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
+use App\Http\Models\Administracion\TiposProductos;
 
 class FamiliasProductos extends ModelBase
 {
@@ -46,15 +47,15 @@ class FamiliasProductos extends ModelBase
 	protected $fields = [
 		'descripcion' => 'Familia',
 		'tipo_presentacion' => 'Presentación',
-		'tipo_producto_descripcion' => 'Tipo',
+		'tipo_producto.tipo_producto' => 'Tipo',
 		'nomenclatura' => 'Nomenclatura',
 		'activo_span' => 'Estatus',
 	];
 
-    public function getTipoProductoDescripcionAttribute()
-    {
-        return $this->tipo_producto->descripcion;
-    }
+    // public function getTipoProductoDescripcionAttribute()
+    // {
+    //     return $this->tipo_producto->nomenclatura;
+    // }
 
 	public function usuario()
 	{

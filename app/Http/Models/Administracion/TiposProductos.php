@@ -43,7 +43,7 @@ class TiposProductos extends ModelBase
      * @var null|array
      */
     protected $fields = [
-        'tipo_producto' => 'Tipo',
+        'tipo_producto' => 'Tipo Producto',
         'nomenclatura' => 'Nomenclatura',
         'prioridad' => 'Prioridad',
         'activo_span' => 'Estatus',

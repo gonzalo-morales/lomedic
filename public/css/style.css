@@ -109,6 +109,21 @@
   margin: 0;
   border: 1px solid transparent;
 }
+.btn-check.active::before{
+  content:'done';
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 18px;  /* Preferred icon size */
+  display: inline-block;
+  vertical-align: middle !important;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
 /*Metro Design*/
 .metrOpt{
   height: 6em;
@@ -256,6 +271,9 @@ box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
 }
 .not-wrap {
   white-space: nowrap;
+}
+.content-height {
+  height: calc(100% - 1rem);
 }
 .form-group.full-height {
   height: calc(100% - 1rem);

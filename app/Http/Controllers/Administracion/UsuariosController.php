@@ -12,7 +12,7 @@ use App\Http\Models\Administracion\ModulosAcciones;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\PermisosUsuarios;
 use App\Http\Models\Administracion\PerfilesUsuarios;
-
+use App\Http\Models\RecursosHumanos\Empleados;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,7 +39,7 @@ class UsuariosController extends ControllerBase
      */
     public function create($company, $attributes = [])
     {
-
+        $empleados = Empleados::selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->where('activo',1)->pluck('empleado','id_empleado');
         $companies = Empresas::all();
         $profiles = Perfiles::all();
         $profiles_permissions = Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')
@@ -48,7 +48,7 @@ class UsuariosController extends ControllerBase
             ->get();
 
 
-        $attributes['dataview'] =['companies'=>$companies,'profiles'=>$profiles,'profiles_permissions' => $profiles_permissions];
+        $attributes['dataview'] =['companies'=>$companies,'profiles'=>$profiles,'profiles_permissions' => $profiles_permissions,'empleados'=>$empleados];
 
         return parent::create($company,$attributes);
 
@@ -76,11 +76,11 @@ class UsuariosController extends ControllerBase
                 ]);
             }
 
-            foreach ($request->input('perfil') as $perfil )
+            foreach ( $request->input('perfil') as $perfil )
             {
                 $id_perfil = explode( '_', $perfil );
                 DB::table('adm_det_perfiles_usuarios')->insert([
-                    'fk_id_perfil' => $id_perfil[1],
+                    'fk_id_perfil' => $perfil,
                     'fk_id_usuario' => $isSuccess->id_usuario,
                 ]);
             }
@@ -156,6 +156,7 @@ class UsuariosController extends ControllerBase
 //    }
     public function edit($company, $id, $attributes =[])
     {
+        $empleados = Empleados::selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->where('activo',1)->pluck('empleado','id_empleado');
         $companies = Empresas::all();
         $perfiles = Perfiles::all();
         $profiles_permissions = Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')
@@ -184,6 +185,7 @@ class UsuariosController extends ControllerBase
         $dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
         return view(currentRouteName('smart'), $dataview+['companies'=>$companies,
                                                                     'data'=>$data,
+                                                                    'empleados'=>$empleados,
                                                                     'correos'=>$correos_user,
                                                                     'profiles'=>$perfiles,
                                                                     'perfiles_usuario'=>$perfiles_usuario,

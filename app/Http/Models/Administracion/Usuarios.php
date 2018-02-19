@@ -57,7 +57,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
     protected $hidden = ['password', 'remember_token'];
 
     public $rules = [
-        'nombre_corto' => 'required|max:100',
+        'nombre_corto' => 'required|max:100|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
         'usuario' => 'required|max:20',
         'password' => 'required|max:60',
         'fk_id_empresa_default' => 'required',

@@ -1,20 +1,23 @@
 /**
  * Created by ihernandezt on 03/08/2017.
  */
-
+$('#fk_id_empleado').select2({
+    placeholder: "Seleccione el concepto de la nota",
+    allowClear: true
+  });
 
 function accionesPerfil(profiel)
-{
-
+{   
+    
     var profiel_id = profiel.split('_');
-
-    if($("#perfil_check_"+profiel_id[1]).attr('checked') )
+    console.log(profiel_id);
+    if($("#perfil_"+profiel_id[1]).prop('checked') == true)
     {
-        $("#perfil_check_"+profiel_id[1]).attr('checked', false);
+        $("#perfil_"+profiel_id[1]).prop('checked', false);
     }
     else
     {
-        $("#perfil_check_"+profiel_id[1]).attr('checked', true);
+        $("#perfil_"+profiel_id[1]).prop('checked', true);
     }
 
 
@@ -51,6 +54,8 @@ function agregarCorreo()
         $('#empresa_correo').removeClass('border-danger');
         $('#correo').removeClass('border-danger');
         var id_correo = 'correo_'+cont_correo;
+        $.toaster({priority : 'success',title : '¡Éxito!',message : 'Correo agregado con éxito',
+        settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
         $('#lista_correo').append('<tr id="'+id_correo+'">' +
             '<th scope="row">'+empresa_correo+'</th> ' +
             '<td>'+correo+'</td>' +
@@ -63,9 +68,15 @@ function agregarCorreo()
     }
 }
 
-$('#listProfiles a').on('click', function (e) {
-    e.preventDefault()
-})
+$('#usuario').on('keyup', function (value) {
+    if($(this).val() == $('#nombre_corto').val()){
+        $(this).removeClass('border-success').addClass('border-danger');
+        $.toaster({priority : 'danger',title : '¡Error!',message : 'El Usuario tiene que ser diferente a su nombre actual.',
+        settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
+    } else {
+        $(this).removeClass('border-danger').addClass('border-success')
+    }
+});
 
 function validateEmail($email) {
     var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
@@ -78,7 +89,7 @@ function eliminarFila(fila)
 }
 
 $(document).on('submit',function(){
-    if(!checkingProfiles() || $('#lista_correo').length == 0){
+    if(!checkingProfiles() || $('#lista_correo').length == 0 || $('#usuario').hasClass('border-danger')){
         $.toaster({priority : 'danger',title : '¡Error!',message : 'Antes de Guardar es necesario lo siguiente: <ol><li>Es necesario mínimo un correo empresarial</li><li>Necesitas asignarle mínimo un Perfil</li></ol>',
         settings:{'timeout':6000,'toaster':{'css':{'top':'5em'}}}});
         return false;
@@ -87,9 +98,9 @@ $(document).on('submit',function(){
 
 function checkingProfiles(){
     var validator;
-    var $perfiles = $('#listProfiles a')
+    var $perfiles = $('#listProfiles input')
     for(var i = 0; i < $perfiles.length; i++){
-        if($($perfiles[i]).hasClass('active')){
+        if($($perfiles[i]).attr('checked',true)){
             return validator = $($perfiles[i]);
         }
     }

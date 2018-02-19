@@ -69,7 +69,7 @@ class MovimientoAlmacenController extends ControllerBase
                 "conditions":[{"where":["fk_id_almacen", "$fk_id_almacen"]}]
             '),
             'sku_js'     => Crypt::encryptString('
-                "select":["id_stock","fk_id_sku","fk_id_upc","lote","fecha_caducidad","stock","fk_id_almacen","fk_id_ubicacion"],
+                "select":["id_stock","fk_id_sku","fk_id_upc","lote","fecha_caducidad","stock","fk_id_almacen","fk_id_ubicacion","fk_id_documento","costo"],
                 "with":["sku:id_sku,sku,descripcion","upc:id_upc,upc,nombre_comercial,descripcion","almacen:id_almacen,almacen","ubicacion:id_ubicacion,ubicacion"],
                 "conditions":[{"where":["fk_id_almacen", "$fk_id_almacen"]}]
             '),
@@ -80,6 +80,7 @@ class MovimientoAlmacenController extends ControllerBase
     public function store(Request $request,$company, $compact = false){
         $request->request->set('fk_id_usuario',Auth::id());
         $request->request->set('total_productos',count($request->relations['has']['detalle']));
+        // dd($request->request);
         return parent::store($request, $company, $compact);
     }
 
