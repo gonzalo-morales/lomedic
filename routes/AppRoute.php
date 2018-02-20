@@ -28,9 +28,14 @@ Route::get('lang/{locale}', function ($locale) {
     return redirect()->back();
 });
 
-Route::get('setlang/{locale}', function ($locale) {
-    Session::put('locale', $locale);
-    return redirect()->back();
+Route::get('clear', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    system('redis-cli flushdb');
+    system('redis-cli flushall');
+    
+    return 'Clear complete <a href="'.redirect()->back().'">Regresar</a>';
 });
 
 Route::prefix('{company}')->group(function () {
