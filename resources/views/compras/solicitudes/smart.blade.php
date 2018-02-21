@@ -495,7 +495,7 @@
 @ver
 	@section('extraButtons')
 		@parent
-		{!! HTML::decode(link_to(companyAction('Compras\SolicitudesController@impress',['id'=>$data->id_documento]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
+		{!! HTML::decode(link_to(companyAction('impress',['id'=>$data->id_documento]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
 		@if($data->fk_id_estatus_solicitud == 1)
 			{!! HTML::decode(link_to(url($menuempresa->conexion.'/compras/'.$data->id_documento.'/1/ordenes/crear'),'<i class="material-icons align-middle">shopping_cart</i> Ordenar',['class'=>'btn btn-info'])) !!}
 			{!! HTML::decode(link_to(url($menuempresa->conexion.'/compras/solicitudes/'.$data->id_documento.'/ofertas/crear'),'<i class="material-icons align-middle">attach_money</i> Oferta',['class'=>'btn btn-info'])) !!}
