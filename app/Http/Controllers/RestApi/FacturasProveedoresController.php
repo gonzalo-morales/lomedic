@@ -16,10 +16,18 @@ class FacturasProveedoresController extends Controller
     {
         $facturas = FacturasProveedores::whereNull('no_poliza')->whereNotNull('uuid')->orderBy('id_factura_proveedor')->get();
         $facturas->map(function($factura){
-           return $factura->detalle_facturas_proveedores;
-        });
-        $facturas->map(function($factura){
             return $factura->notas;
+        });
+        $facturas->map(function ($factura){
+            $return = collect();
+            $return->proveedor= $factura->proveedor;
+            if(isset($factura->proveedor->cuentaproveedor))
+                $return->cuenta = $factura->proveedor->cuentaproveedor;
+            if(isset($factura->proveedor->cuentaproveedor->padre))
+                $return->padre = $factura->proveedor->cuentaproveedor->padre;
+            if(isset($factura->proveedor->cuentaproveedor->agrupadorcuenta))
+                $return->agrupadorsat = $factura->proveedor->cuentaproveedor->agrupadorcuenta;
+            return $return;
         });
 //        foreach ($facturas as $factura){
 //            $factura->relaciones->map(function ($relacion){

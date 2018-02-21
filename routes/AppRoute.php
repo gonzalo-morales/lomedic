@@ -33,6 +33,10 @@ Route::get('setlang/{locale}', function ($locale) {
     return redirect()->back();
 });
 
+Route::get('token', function () {
+    return csrf_token();
+});
+
 Route::prefix('{company}')->group(function () {
     Route::get('/phpinfo', function () { phpinfo(); });
     Route::resource('/', 'HomeController', ['middleware' => ['share','csrf','password_expired']]);

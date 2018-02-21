@@ -4,7 +4,9 @@ namespace App\Http\Models\SociosNegocio;
 
 use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\FormasPago;
+use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Administracion\Sucursales;
+use App\Http\Models\Finanzas\CuentasContables;
 use App\Http\Models\ModelBase;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
@@ -32,7 +34,8 @@ class SociosNegocio extends ModelBase
     protected $fillable = [
         'fk_id_forma_pago','fk_id_tipo_entrega','razon_social','rfc','nombre_comercial','telefono','sitio_web','monto_credito','dias_credito','monto_minimo_facturacion',
         'activo','fk_id_ramo','fk_id_pais_origen','fk_id_moneda','tiempo_entrega','fk_id_condicion_pago','fk_id_metodo_pago','fk_id_tipo_proveedor','fk_id_pago_paqueteria',
-        'fk_id_ejecutivo_venta','fk_id_tipo_socio_venta','fk_id_tipo_socio_compra','activo_desde','activo_hasta','fk_id_ejecutivo_compra','interes_retraso'];
+        'fk_id_ejecutivo_venta','fk_id_tipo_socio_venta','fk_id_tipo_socio_compra','activo_desde','activo_hasta','fk_id_ejecutivo_compra','interes_retraso','fk_id_cuenta_cliente',
+        'fk_id_cuenta_proveedor'];
 
     protected $fields = [
         'razon_social' => 'Razon Social',
@@ -122,8 +125,24 @@ class SociosNegocio extends ModelBase
         return $this->hasMany(Proyectos::class, 'fk_id_cliente', 'id_socio_negocio');
     }
 
+    public function pais()
+    {
+        return $this->hasOne(Paises::class,'id_pais','fk_id_pais');
+    }
+
     public function sucursalcliente()
     {
         return $this->hasOne(Sucursales::class,'fk_id_cliente','id_socio_negocio');
     }
+
+    public function cuentaproveedor()
+    {
+        return $this->hasOne(CuentasContables::class,'id_cuenta_contable','fk_id_cuenta_proveedor');
+    }
+
+    public function cuentacliente()
+    {
+        return $this->hasOne(CuentasContables::class,'id_cuenta_contable','fk_id_cuenta_cliente');
+    }
+
 }

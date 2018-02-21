@@ -122,7 +122,8 @@
 								</span>
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
 								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
-								'class'=>'form-control','style'=>'width:100%']) !!}
+								'class'=>'form-control','style'=>'width:100%',
+								'data-url-tiempo_entrega'=>companyAction('HomeController@index').'/SociosNegocio.ProductosSociosNegocio/api']) !!}
 							</div>
 						</div>
 						<div class="form-group input-field col-md-3 col-sm-6">

@@ -13,7 +13,7 @@ use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\FormasPago;
 use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Administracion\Sucursales;
-use App\Http\Models\Administracion\Usuarios;
+use App\Http\Models\Finanzas\CuentasContables;
 use App\Http\Models\Finanzas\CondicionesPago;
 use App\Http\Models\SociosNegocio\TiposAnexos;
 use App\Http\Models\Inventarios\Productos;
@@ -61,6 +61,8 @@ class SociosNegocioController extends ControllerBase
 	        'tiposcontactos'       => TiposContacto::where('activo',1)->pluck('tipo_contacto','id_tipo_contacto')->sortBy('tipo_contacto')->prepend('...',''),
 	        'tiposdireccion'       => TiposDireccion::where('activo',1)->pluck('tipo_direccion','id_tipo_direccion')->sortBy('tipo_direccion'),
 	        'skus'                 => Productos::where('activo',1)->pluck('sku','id_sku')->sortBy('sku')->prepend('...',''),
+            'cuentasproveedores'   => CuentasContables::where('activo',1)->where('eliminar',0)->whereRaw("tipo = 'B' or tipo = 'D' or tipo = 'F' or tipo = 'H' or tipo = 'J' or tipo = 'L'")->selectRaw("CONCAT(nombre,' ',cuenta) as cuenta, id_cuenta_contable")->pluck("cuenta",'id_cuenta_contable')->prepend('...',''),
+            'cuentasclientes'      => CuentasContables::where('activo',1)->where('eliminar',0)->whereRaw("tipo = 'A' or tipo = 'C' or tipo = 'E' or tipo = 'G' or tipo = 'I' or tipo = 'K'")->selectRaw("CONCAT(nombre,' ',cuenta) as cuenta, id_cuenta_contable")->pluck("cuenta",'id_cuenta_contable')->prepend('...',''),
 	        'js_estados'           => Crypt::encryptString('"select": ["estado", "id_estado"], "conditions": [{"where": ["fk_id_pais","$fk_id_pais"]}], "orderBy": [["estado", "ASC"]]'),
 	        'js_municipios'        => Crypt::encryptString('"select": ["municipio", "id_municipio"], "conditions": [{"where": ["fk_id_estado","$fk_id_estado"]}], "orderBy": [["municipio", "ASC"]]'),
 	        'js_upcs'              => Crypt::encryptString('"select": ["upc", "id_upc"], "conditions": [{"where": ["activo","1"]}], "whereHas": [{"skus":{"where":["fk_id_sku", "$fk_id_sku"]}}], "orderBy": [["upc", "ASC"]]'),
@@ -309,7 +311,7 @@ class SociosNegocioController extends ControllerBase
 	            $entity->anexos()->update(['eliminar' => 1]);
 	        }
 	        # Guardamos el detalle de los productos de los socios de negocio
-	        if(isset($request->productos)){
+	        if(isset($request->productos) && isset($request->productos['fk_id_sku'])){
 	            $productos = collect($request->productos);
 
 	            #Elimina los contactos que existian y que no se encuentran en el arreglo de datos

@@ -408,14 +408,6 @@ function tiemposentrega() {
         if($(row).find('.tiempo_entrega').val() != "null")
             mayor_tiempo = $(row).find('.tiempo_entrega').val() > mayor_tiempo ? $(row).find('.tiempo_entrega').val() : mayor_tiempo;
     });
-    // $('#fk_id_proveedor').on('change',function () {
-    //     var tiempo_entrega = $('#fk_id_proveedor').select2('data')[0].tiempo_entrega;
-    //     $('#tiempo_entrega').val(tiempo_entrega);
-    //         var fecha = new Date();
-    //         fecha.addDays(tiempo_entrega);
-    //         console.log(fecha);
-    //     $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate());
-    // });
     var fecha = new Date();
     fecha.addDays(mayor_tiempo);
     $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate());

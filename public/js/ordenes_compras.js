@@ -57,7 +57,7 @@ $(document).ready(function(){
                 $( this ).parent().nextAll( "select" ).val(0).trigger('change');
             }else{
                 if($('#fk_id_sku').val()){
-                    _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_sku').val());
+                    var _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_sku').val());
                     $( this ).parent().nextAll( "select" ).select2({
                         theme: "bootstrap",
                         minimumResultsForSearch: Infinity,
@@ -83,25 +83,37 @@ $(document).ready(function(){
         })//Fin UPC
 
         $('#agregar').on('click',function () {
-            agregarProducto();
+            $.ajax({
+                url: $('#fk_id_sku').data('url-tiempo_entrega'),
+                data: {
+                    'param_js':tiempo_entrega_js,
+                    $fk_id_sku:sku,
+                    $fk_id_socio_negocio:cliente,
+                    $fk_id_upc:upc
+                },
+                dataType:'JSON',
+                success: function (tiempo_entrega) {
+                    agregarProducto(tiempo_entrega);
+                }
+            });
         });
 
         $('#fk_id_socio_negocio').on('change',function () {
-            $('#tiempo_entrega').val($('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
-            var fecha = new Date();
-            fecha.setDate(fecha.getDate()+$('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
-            var dia = fecha.getDate()+1;
-            var mes = fecha.getMonth()+1;
-            var anio = fecha.getFullYear();
-            $('#fecha_estimada_entrega').val(anio+'/'+mes+'/'+dia);
+            // $('#tiempo_entrega').val($('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
+            // var fecha = new Date();
+            // fecha.setDate(fecha.getDate()+$('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
+            // var dia = fecha.getDate()+1;
+            // var mes = fecha.getMonth()+1;
+            // var anio = fecha.getFullYear();
+            // $('#fecha_estimada_entrega').val(anio+'/'+mes+'/'+dia);
         });
         $(document).on('submit',function (e) {
             // e.preventDefault();
             if(dataTable.activeRows.length > 0){
                 if(a.length>0) {
                     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-                    var url = $('#productos').data('devare');
-                    $.devare(url, {ids: a});
+                    var url = $('#productos').data('delete');
+                    $.delete(url, {ids: a});
                     a = [];
                 }
             }else{
@@ -218,7 +230,8 @@ function initSelects() {
             url: $("#fk_id_sku").data('url'),
             dataType: 'json',
             data: function (params) {
-                return {term: params.term};
+                return {
+                    term: params.term,fk_id_socio_negocio:$('#fk_id_socio_negocio').val()};
             },
             processResults: function (data) {
                 return {results: data}
@@ -272,7 +285,7 @@ function initSelects() {
     });
 }
 
-function agregarProducto() {
+function agregarProducto(tiempo_entrega) {
     validateDetail();
     if($('#form-model').valid()){
         var row_id = dataTable.activeRows.length;
@@ -280,7 +293,7 @@ function agregarProducto() {
 
         var data = [];
         data.push([
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_documento]"/>')[0].outerHTML + 'N/A',
+            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_documento]"/>')[0].outerHTML + 'N/A'+$('<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega">')[0].outerHTML,
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text,
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_upc').select2('data')[0].text,
             $('#fk_id_sku').select2('data')[0].descripcion_corta,
@@ -305,6 +318,7 @@ function agregarProducto() {
         });
         limpiarCampos();
         totalOrden();
+        tiemposentrega();
     }else{
         $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
@@ -477,3 +491,19 @@ function borrarFila_edit(el) {
 
     totalOrden();
 }
+
+function tiemposentrega() {
+    var mayor_tiempo = 0;
+    $('#productos tbody tr').each(function (index,row) {
+        if($(row).find('.tiempo_entrega').val() != "null")
+            mayor_tiempo = $(row).find('.tiempo_entrega').val() > mayor_tiempo ? $(row).find('.tiempo_entrega').val() : mayor_tiempo;
+    });
+    var fecha = new Date();
+    fecha.addDays(mayor_tiempo);
+    $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate());
+    $('#tiempo_entrega').val(mayor_tiempo);
+}
+Date.prototype.addDays = function(days) {
+    this.setDate(this.getDate() + days);
+    return this;
+};

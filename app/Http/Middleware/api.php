@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 use Closure;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class api
 {
-    public function handle($request, Closure $next){
+    public function handle(Request $request, Closure $next){
 
 //        if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']))
 //        {
