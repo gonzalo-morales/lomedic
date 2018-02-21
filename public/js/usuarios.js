@@ -1,10 +1,59 @@
 /**
  * Created by ihernandezt on 03/08/2017.
  */
-$('#fk_id_empleado').select2({
-    placeholder: "Seleccione el concepto de la nota",
-    allowClear: true
-  });
+$('.fk_id_sucursales').select2({
+    multiple: true,
+    disabled:true,
+    placeholder: 'Seleccione la empresa...'
+});
+$('#fk_id_empresa_default').on('change', function () {
+    $(".fk_id_sucursales").html("")
+    $('#loadingsucursales').show();
+    var idempresa = $('#fk_id_empresa_default option:selected').val();
+    var _url = $(this).data('url');
+    $.ajax({
+        url: _url,
+        data: {'param_js': api_sucursales ,$fk_id_empresa:idempresa},
+        dataType: "json",
+        success: function (data) {
+            if(data.length > 0){
+                var options = [];
+                for (var i = 0; i < data.length; i++) {
+                    options.push('<option value="' + data[i].id_sucursal + '">' + data[i].sucursal + '</option>');
+                };
+                $('.fk_id_sucursales').append(options.join(''));
+                $('.fk_id_sucursales').select2({
+                    multiple: true,
+                    disabled:false,
+                });
+                $('#loadingsucursales').hide();
+                $('.fk_id_sucursales').select2();
+            } else {
+                $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona otra <b>Sucursal</b>, ya que el seleccionado no cuenta con Empresas relacionadas.',
+                settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                $('.fk_id_sucursales').select2({
+                    multiple: true,
+                    disabled:true,
+                    placeholder: 'Seleccione otra empresa...'
+                });
+                $('#loadingsucursales').hide();
+            }
+        },
+        error: function(){
+            $('.fk_id_sucursales').select2({
+                multiple: true,
+                disabled:true,
+            });
+            $('#loadingsucursales').hide();
+            $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona otra <b>Sucursal</b>, ya que el seleccionado no cuenta con Empresas relacionadas.',
+            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        },
+    });
+});
+
+$('.fk_id_sucursales').on('change', function () {
+    console.log($(".fk_id_sucursales").val())
+});
 
 function accionesPerfil(profiel)
 {   

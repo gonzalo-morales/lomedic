@@ -47,13 +47,13 @@ class Sucursales extends ModelBase
 		'longitud',
 		'registro_sanitario',
 		'inventario',
-		'embarque',
+		'enbarque',
 		'tipo_batallon',
 		'region',
 		'zona_militar',
 		'clave_presupuestal',
-		'id_localidad_proveedor',
-		'id_jurisdiccion',
+		'id_sucursal_proveedor',
+		'fk_id_jurisdiccion',
 		'activo'
 	];
 
@@ -113,7 +113,7 @@ class Sucursales extends ModelBase
 	{
 		return $this->hasMany(Almacenes::class, 'fk_id_sucursal', 'id_sucursal');
 	}
-	
+
 	public function empleados()
     {
         return $this->belongsToMany(Empleados::class,'maestro.ges_det_empleado_sucursal','fk_id_sucursal','fk_id_empleado','id_sucursal','id_empleado');
@@ -122,5 +122,18 @@ class Sucursales extends ModelBase
     public function cliente()
     {
         return $this->belongsTo(SociosNegocio::class,'fk_id_cliente');
-    }
+	}
+	public function empresas()
+	{
+		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal', 'fk_id_sucursal','fk_id_empresa');
+	}
+	/*relación de tres*/
+	public function usuario_sucursales()
+	{
+		return $this->belongsToMany(Usuarios::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_usuario');
+	}
+	public function empresa_sucursales()
+	{
+		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_empresa');
+	}
 }

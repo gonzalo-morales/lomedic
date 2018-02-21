@@ -68,7 +68,7 @@ class Empleados extends ModelBase
 
     public function usuario()
     {
-        $this->hasOne('App\Http\Models\Administracion\Usuarios');
+        return $this->hasOne('App\Http\Models\Administracion\Usuarios','fk_id_empleado','id_empleado');
     }
 
     public function empresa()

@@ -38,7 +38,14 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
      * @var array
      */
     protected $fillable = [
-        'usuario', 'nombre_corto','activo','password','activo','fk_id_empresa_default','fecha_cambio_password','dias_expiracion'
+        'usuario',
+        'nombre_corto',
+        'activo',
+        'password',
+        'fk_id_empleado',
+        'fk_id_empresa_default',
+        'fecha_cambio_password',
+        'dias_expiracion'
     ];
 
     // protected $unique = ['usuario'];
@@ -62,6 +69,11 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         'password' => 'required|max:60',
         'fk_id_empresa_default' => 'required',
     ];
+
+	// protected $unique = [
+    //     'nombre_corto',
+    //     'usuario'
+	// ];
 
     public function sendPasswordResetNotification($token)
     {
@@ -177,4 +189,13 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
     {
         return $this->belongsToMany(CondicionesAutorizacion::class,'com_det_usuarios_autorizados','fk_id_usuario','fk_id_condicion');
     }
+	/*relación de tres*/
+	public function usuario_sucursales()
+	{
+		return $this->belongsToMany(Sucursales::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_sucursal');
+    }
+	public function usuario_empresa()
+	{
+		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_empresa');
+	}
 }

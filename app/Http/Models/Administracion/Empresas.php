@@ -149,5 +149,17 @@ class Empresas extends ModelBase
 		}
 		return collect($collection);
 	}
-
+	public function sucursales()
+	{
+		return $this->belongsToMany(Sucursales::class,'maestro.adm_det_empresa_sucursal', 'fk_id_empresa','fk_id_sucursal');
+	}
+	/*relación de tres*/
+	public function usuario_empresa()
+	{
+		return $this->belongsToMany(Usuarios::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_empresa','fk_id_usuario');
+	}
+	public function empresa_sucursales()
+	{
+		return $this->belongsToMany(Sucursales::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_empresa','fk_id_sucursal');
+	}
 }
