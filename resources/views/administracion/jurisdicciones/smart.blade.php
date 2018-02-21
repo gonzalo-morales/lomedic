@@ -5,7 +5,7 @@
     {{ Form::setModel($data) }}
     <div class="row">
         <div class="form-group col-md-12 col-xs-12">
-            {{ Form::cText('Jurisdicción','jurisdiccion') }}
+            {{ Form::cText('* Jurisdicción','jurisdiccion') }}
         </div>
     </div>
     <div class="row">

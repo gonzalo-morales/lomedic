@@ -31,9 +31,11 @@ class Municipios extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'municipio'     => 'required',
+		'municipio'     => 'required|max:100|regex:/^[a-zA-Z\s]+/',
 		'fk_id_estado'	=> 'required',
 	];
+
+    protected $unique = ['municipio'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

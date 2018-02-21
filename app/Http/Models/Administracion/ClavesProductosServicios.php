@@ -19,7 +19,7 @@ class ClavesProductosServicios extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['clave_producto_servicio','descripcion','vigencia','activo'];//Solicitante devoluciÃ³n. false: localidad; true: proveedor;
+	protected $fillable = ['clave_producto_servicio','descripcion','vigencia','activo'];
 
 	/**
 	 * The validation rules
@@ -30,6 +30,8 @@ class ClavesProductosServicios extends ModelBase
 		'descripcion' => 'required|max:255',
 		'vigencia' => 'nullable|date'
 	];
+
+	protected $unique = ['clave_producto_servicio'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

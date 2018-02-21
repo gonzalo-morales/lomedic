@@ -21,11 +21,5 @@ class TipoSalida extends ModelBase
      */
     protected $fillable = ['salida','activo'];
 
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-        'salida' => 'required'
-    ];
+    protected $unique = ['salida'];
 }

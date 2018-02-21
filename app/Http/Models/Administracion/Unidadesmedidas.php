@@ -32,8 +32,10 @@ class UnidadesMedidas extends ModelBase
      */
     public $rules = [
 
-        'nombre' => 'required',
+        'nombre' => 'required|max:255|regex:/^[a-zA-Z\s]+/',
     ];
+
+    protected $unique = ['nombre'];
 
     /**
      * Los atributos que seran visibles en index-datable

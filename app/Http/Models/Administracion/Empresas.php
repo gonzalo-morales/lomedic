@@ -39,15 +39,20 @@ class Empresas extends ModelBase
 	];
 	
 	protected $unique = ['rfc','razon_social','nombre_comercial'];
-
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
 	
-	public $rules = [];
+	public $rules = [
+		'nombre_comercial' => 'required|max:25',
+		'rfc' => 'required|max:13',
+		'empresa' => 'required',
+		'razon_social' => 'required|max:200',
+		'conexion' => 'required',
+		'fk_id_regimen_fiscal' => 'required',
+		'calle'  => 'required|max:60',
+		'no_exterior'  => 'required|max:30|numeric',
+		'no_interior'  => 'max:30|numeric',
+		'codigo_postal'  => 'required|max:10',
+		'colonia'  => 'required|max:80',
+	];
 
 	/**
 	 * Obtenemos empresas activas
@@ -144,5 +149,17 @@ class Empresas extends ModelBase
 		}
 		return collect($collection);
 	}
-
+	public function sucursales()
+	{
+		return $this->belongsToMany(Sucursales::class,'maestro.adm_det_empresa_sucursal', 'fk_id_empresa','fk_id_sucursal');
+	}
+	/*relación de tres*/
+	public function usuario_empresa()
+	{
+		return $this->belongsToMany(Usuarios::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_empresa','fk_id_usuario');
+	}
+	public function empresa_sucursales()
+	{
+		return $this->belongsToMany(Sucursales::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_empresa','fk_id_sucursal');
+	}
 }

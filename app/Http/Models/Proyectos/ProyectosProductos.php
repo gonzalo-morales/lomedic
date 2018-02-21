@@ -35,12 +35,6 @@ class ProyectosProductos extends ModelCompany
         'precio_sugerido' => 'precio sugerido'
     ];
 
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public $fields = [
         'id_proyecto_producto' => 'Proyecto',
         'cliente.nombre_corto' => 'Cliente',

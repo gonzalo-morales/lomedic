@@ -22,7 +22,7 @@ class SeriesDocumentosController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 	    return [
-	        'empresas' => Empresas::select(['id_empresa', 'nombre_comercial'])->orderBy('nombre_comercial')->pluck('nombre_comercial','id_empresa'),
+	        'empresas' => Empresas::select(['id_empresa', 'razon_social'])->orderBy('razon_social')->pluck('razon_social','id_empresa'),
 	        'tiposdocumentos' => TiposDocumentos::select(['id_tipo_documento', 'nombre_documento'])->orderBy('nombre_documento')->pluck('nombre_documento','id_tipo_documento'),
 	    ];
 	}

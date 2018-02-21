@@ -5,7 +5,7 @@
     {{ Form::setModel($data) }}
     <div class="row">
         <div class="form-group col-md-6 col-xs-12">
-            {{ Form::cText('Indicacion Terapeutica','indicacion_terapeutica') }}
+            {{ Form::cText('* Indicacion Terapeutica','indicacion_terapeutica') }}
         </div>
         <div class="form-group col-md-6 col-xs-12">
             {{ Form::cText('Descripcion','descripcion') }}

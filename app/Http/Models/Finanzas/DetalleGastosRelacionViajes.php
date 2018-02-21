@@ -49,26 +49,6 @@ class DetalleGastosRelacionViajes extends ModelBase
     //     'total'
     // ];
 
-    // /**
-    //  * Indicates if the model should be timestamped.
-    //  *
-    //  * @var bool
-    //  */
-    // public $timestamps = false;
-
-    // /**
-    //  * The validation rules
-    //  * @var array
-    //  */
-    // public $rules = [
-    //     'folio' => 'required',
-    //     'fk_id_tipo' => 'required',
-    //     'subtotal' => 'required',
-    //     'fk_id_impuesto' => 'required',
-    //     'total' => 'required'
-
-    // ];
-
     public function tipo()
     {
         return $this->hasOne(GastosViaje::class,'id_gastos','fk_id_gastos');

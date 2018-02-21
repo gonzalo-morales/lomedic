@@ -31,9 +31,11 @@ class MotivosNotas extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'motivo'	=> 'required',
+		'motivo'	=> 'required|max:50|regex:/^[a-zA-Z\s]+/',
 		'tipo'	=> 'required',
 	];
+
+    protected $unique = ['motivo'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

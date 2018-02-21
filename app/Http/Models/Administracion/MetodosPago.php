@@ -24,6 +24,8 @@ class MetodosPago extends ModelBase
 	 */
 	protected $fillable = ['metodo_pago', 'descripcion', 'activo'];
 
+	protected $unique = ['metodo_pago'];
+
 	/**
 	 * The validation rules
 	 * @var array

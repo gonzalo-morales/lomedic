@@ -47,19 +47,6 @@ class SolicitudesPagos extends ModelCompany
         'fk_id_estatus_solicitud_pago'
     ];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public function empleado()
     {
         return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_solicitante','id_empleado');

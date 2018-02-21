@@ -27,12 +27,6 @@ class EstatusRecetas extends ModelBase
     protected $fillable = ['estatus_receta'];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
-    /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */

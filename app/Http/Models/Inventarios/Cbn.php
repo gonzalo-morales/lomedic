@@ -20,13 +20,6 @@ class Cbn extends ModelCompany
     protected $primaryKey = 'id_cbn';
     
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-    
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -45,10 +38,4 @@ class Cbn extends ModelCompany
         'precio_imss' => 'Precio Imss',
         'activo_span'=> 'Estatus',
     ];
-    
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
 }

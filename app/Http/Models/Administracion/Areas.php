@@ -23,17 +23,12 @@ class Areas extends ModelBase
 	 */
 	protected $fillable = ['area', 'clave_area','activo'];
 
-	/**
-	 * Indicates if the model should be timestamped.
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
-	 * The validation rules
-	 * @var array
-	 */
-	public $rules = [];
+   /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $unique = ['area','clave_area'];
 
 	/**
 	 * Los atributos que seran visibles en smart-datatable

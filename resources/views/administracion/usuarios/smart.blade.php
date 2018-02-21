@@ -1,5 +1,5 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
 
 @section('form-content')
 	{{ Form::setModel($data) }}
@@ -7,110 +7,130 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-8 col-sm-12 mb-3">
-					<div class="card">
-						<div class="card-body">
-							<div class="row">
-								<div class="col-md-6 col-sm-6">
-									<div class="form-group">
-										{{Form::label('nombre_corto','Nombre',['for'=>'name'])}}
-										{{Form::text('nombre_corto',null,array('id'=>'nombre_corto','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
-									</div>
+					<div class="row">
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="form-group">
+								{{Form::label('nombre_corto','* Nombre corto',['for'=>'name'])}}
+								{{Form::text('nombre_corto',null,array('id'=>'nombre_corto','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="form-group">
+								{{Form::label('usuario','* Usuario',['for'=>'usuarios'])}}
+								{{Form::text('usuario','',array('id'=>'usuario','class'=>'form-control','placeholder'=>'Ejemplo: usuario_juan'))}}
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="form-group">
+								{{Form::label('password','* Contraseña',['for'=>'password'])}}
+								{{Form::password('password',['class'=>'form-control','placeholder'=>'Contraseña'])}}
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6 col-12">
+							{{ Form::cSelect('Empleado','fk_id_empleado', $empleados ?? [],['style' =>'width:100%;']) }}
+						</div>
+					</div><!--/row forms-->
+					<div class="row">
+						<div class="col-md-6 col-sm-12">
+							<div class="form-group">
+								{{Form::label('fk_id_empresa_default','* Empresa',['for'=>'fk_id_empresa_default'])}}
+								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,[
+									'id'=>'fk_id_empresa_default',
+									'class'=>'form-control',
+									'placeholder' => 'Seleccionar una empresa...',
+									'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',
+									])}}
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-12">
+								<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+									Cargando Sucursal(es)... <i class="material-icons align-middle loading">cached</i>
 								</div>
-								<div class="col-md-6 col-sm-6">
-									<div class="form-group">
-										{{Form::label('usuario','Usuario',['for'=>'usuarios'])}}
-										{{Form::text('usuario','',array('id'=>'usuario','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
-									</div>
-								</div>
-							</div><!--/row forms-->
-							<div class="row">
-								<div class="col-md-6 col-sm-6">
-									<div class="form-group">
-										{{Form::label('password','Contraseña',['for'=>'password'])}}
-										{{Form::password('password',['class'=>'form-control','placeholder'=>'Contraseña'])}}
-									</div>
-								</div>
-								<div class="col-md-6 col-sm-6">
-									<div class="form-group">
-										{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
-										{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'fk_id_empresa_default','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
-									</div>
-								</div>
-							</div><!--/row forms-->
-							<hr>
-							<h5>Correo Empresarial</h5>
-							<fieldset>
-								<div class="card">
-									<div class="card-header">
-										<div class="row">
-											<div class="col-md-6 col-sm-6">
-												<div class="form-group">
-													{{Form::label('empresa_correo','Empresa:',['for'=>'empresa_correo'])}}
-													{{Form::select('empresa_correo',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'empresa_correo','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
-												</div>
-											</div>
-											<div class="col-md-6 col-sm-6">
-												<div class="form-group">
-													{{Form::label('correo','Correo:',['for'=>'correo'])}}
-													{{Form::text('correo',null,['id'=>'correo','class'=>'form-control','placeholder'=>'micorreogenial@mail.com'])}}
-												</div>
-											</div>
-										</div><!--/row forms-->
-									</div>
-								</div>
-								<div class="col-sm-12 text-center">
-									<div class="sep">
-										<div class="sepBtn">
-											{{Form::button('<i class="material-icons">add</i>',['class'=>'btn btn-primary btn-large','onclick'=>'agregarCorreo()','style'=>'width: 4em; height:4em; border-radius:50%;','data-delay'=>'50','data-toggle'=>'Agregar','title'=>'Agregar'])}}
+								{{ Form::cSelect('* Sucursal(es)','fk_id_sucursal[]', $sucursales ?? [],[
+									'style' => 'width:100%;',
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2 fk_id_sucursales' : ''
+								]) }}
+						</div>
+					</div><!--/row forms-->
+					<hr>
+					<h5>Correo Empresarial</h5>
+					<fieldset>
+						<div class="card">
+							<div class="card-header">
+								<div class="row">
+									<div class="col-md-6 col-sm-6">
+										<div class="form-group">
+											{{Form::label('empresa_correo','* Empresa:',['for'=>'empresa_correo'])}}
+											{{Form::select('empresa_correo',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'empresa_correo','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
 										</div>
 									</div>
+									<div class="col-md-6 col-sm-6">
+										<div class="form-group">
+											{{Form::label('correo','* Correo:',['for'=>'correo'])}}
+											{{Form::text('correo',null,['id'=>'correo','class'=>'form-control','placeholder'=>'micorreogenial@mail.com','type'=>'email'])}}
+										</div>
+									</div>
+								</div><!--/row forms-->
+							</div>
+							<div class="col-sm-12 text-center">
+								<div class="sep">
+									<div class="sepBtn">
+										{{Form::button('<i class="material-icons">add</i>',['class'=>'btn btn-primary btn-large','onclick'=>'agregarCorreo()','style'=>'width: 4em; height:4em; border-radius:50%;','data-delay'=>'50','data-toggle'=>'Agregar','title'=>'Agregar','type'=>'button'])}}
+									</div>
 								</div>
-								<div class="card-body">
-									<table class="table table-hover table-responsive">
-										<thead>
-											<tr>
-												<th>Empresa</th>
-												<th>Correo</th>
-											</tr>
-										</thead>
-										<tbody id="lista_correo"></tbody>
-									</table>
-								</div>
-							</fieldset>
+							</div>
+							<div class="card-body">
+								<table class="table table-hover table-responsive-sm">
+									<thead>
+										<tr>
+											<th>Empresa</th>
+											<th>Correo</th>
+										</tr>
+									</thead>
+									<tbody id="lista_correo"></tbody>
+								</table>
+							</div>
 						</div>
-					</div>
+					</fieldset>
 				</div>
 				<div class="col-md-4 col-sm-12">
-					<h5>Perfiles</h5>
-					<div id="listProfiles" class="list-group">
-						@foreach( $profiles as $profile )
-							<a href="#" name="perfil[]"  class="list-group-item list-group-item-action" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">{{$profile->nombre_perfil}}</a>
-						@endforeach
-					</div>
+					<h5>* Perfiles</h5>
+						<div id="listProfiles" class="btn-group-toggle" data-toggle="buttons">
+							@foreach( $profiles as $profile )
+								<label class="btn btn-info btn-check">
+									<input name="perfil[]" value="{{$profile->id_perfil}}"  type="checkbox" autocomplete="off" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)"/>{{$profile->nombre_perfil}}
+								</label>
+							@endforeach
+						</div>
 				</div>
 			</div>
 			<div class="row mb-3 mt-3">
 				<div class="col-md-12">
-					<div class="card">
-						<h4 class="card-header">Empresas</h4>
+					<div class="card z-depth-1-half">
+						<h4 class="card-header">* Módulos y permisos</h4>
 						<div class="card-body">
+							<p>Aquí se muestran las empresas que <b>cuentan con sus respectivos módulos y permisos</b></p>
 							<ul class="nav nav-tabs" role="tablist">
 								@foreach($companies as $data_company)
-									<li class="nav-item">
-										<a class="nav-link" data-toggle="tab" href="#empresa_{{$data_company->id_empresa}}" role="tab">{{$data_company->nombre_comercial}}</a>
-									</li>
+									@if($data_company->modulos_empresa != '[]')
+										<li class="nav-item">
+											<a class="nav-link" data-toggle="tab" href="#empresa_{{$data_company->id_empresa}}" role="tab">{{$data_company->nombre_comercial}}</a>
+										</li>
+									@endif
 								@endforeach
 
 							</ul>
 							<div class="tab-content">
 								@foreach($companies as $data_company)
 									<div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">
-										<table class="table table-hover table-responsive-sm">
+										<table class="table table-hover table-responsive-sm border-0">
 											<thead>
 											<tr>
-												<th>Modulo</th>
-												<th>Accion</th>
-												<th></th>
+												<th class="border-top-0">Modulo</th>
+												<th class="border-top-0">Acciones</th>
+												<th class="border-top-0"></th>
+												<th class="border-top-0"></th>
+												<th class="border-top-0"></th>
 											</tr>
 											</thead>
 											<tbody>
@@ -132,7 +152,7 @@
 									</div>
 								@endforeach
 							</div>
-						</div>
+						</div>{{-- /cardbody --}}
 					</div>
 				</div>
 			</div>
@@ -143,100 +163,114 @@
     	<div class="container-fluid">
     		<div class="row">
     			<div class="col-md-8 col-sm-12 mb-3">
-    				<div class="card">
-    					<div class="card-body">
-    						<div class="row">
-    							<div class="col-md-6 col-sm-6">
-    								<div class="form-group">
-    									{{Form::label('nombre_corto','Nombre',['for'=>'name'])}}
-    									{{Form::text('nombre_corto',null,array('id'=>'nombre_corto','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
-    								</div>
-    							</div>
-    							<div class="col-md-6 col-sm-6">
-    								<div class="form-group">
-    									{{Form::label('usuario','Usuario',['for'=>'usuarios'])}}
-    									{{Form::text('usuario','',array('id'=>'usuario','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
-    								</div>
-    							</div>
-    						</div><!--/row forms-->
-    						<div class="row">
-    							<div class="col-md-6 col-sm-6">
-    								<div class="form-group">
-    									{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
-    									{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'fk_id_empresa_default','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
-    								</div>
-    							</div>
-    						</div><!--/row forms-->
-    						<hr>
-    						<h5>Correo Empresarial</h5>
-    						<fieldset>
-    							<div class="card-body">
-    								<table class="table table-hover table-responsive-sm">
-    									<thead>
-    									<tr>
-    										<th>Empresa</th>
-    										<th>Correo</th>
-    									</tr>
-    									</thead>
-    									<tbody id="lista_correo">
-    
-    										@foreach($correos as $correo)
-    											<tr>
-    												<td>{{$correo->nombre_comercial}}</td>
-    												<td>{{$correo->correo}}</td>
-    											</tr>
-    
-    										@endforeach
-    
-    									</tbody>
-    								</table>
-    							</div>
-    						</fieldset>
-    					</div>
-    				</div>
+					<div class="row">
+						<div class="col-md-3 col-12">
+							<div class="form-group">
+								{{Form::label('nombre_corto','Nombre',['for'=>'name'])}}
+								{{Form::text('nombre_corto',null,array('id'=>'nombre_corto','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
+							</div>
+						</div>
+						<div class="col-md-3 col-12">
+							<div class="form-group">
+								{{Form::label('usuario','Usuario',['for'=>'usuarios'])}}
+								{{Form::text('usuario','',array('id'=>'usuario','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
+							</div>
+						</div>
+						<div class="col-md-6 col-12">
+							{{ Form::cSelect('Empleado','fk_id_empleado', $empleados ?? [],['style' =>'width:100%;']) }}
+						</div>
+					</div><!--/row forms-->
+					<div class="row">
+						<div class="col-md-6 col-sm-6">
+							<div class="form-group">
+								{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
+								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'fk_id_empresa_default','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
+							</div>
+						</div>
+						{{--  {{dd($sucursales)}}  --}}
+						<div class="col-md-6 col-sm-6">
+							<div class="form-group">
+								<label>Sucursal(es):</label><br>
+								@foreach($sucursales as $sucursal)
+									<span class="badge badge-secondary badge_sucursales">{{$sucursal->sucursal}}</span>
+								@endforeach
+							</div>
+						</div>
+					</div><!--/row forms-->
+					<hr>
+					<h5>Correo Empresarial</h5>
+					<fieldset class="card">
+						<div class="card-body">
+							<table class="table table-hover table-responsive-sm">
+								<thead>
+								<tr>
+									<th>Empresa</th>
+									<th>Correo</th>
+								</tr>
+								</thead>
+								<tbody id="lista_correo">
+
+									@foreach($correos as $correo)
+										<tr>
+											<td>{{$correo->nombre_comercial}}</td>
+											<td>{{$correo->correo}}</td>
+										</tr>
+
+									@endforeach
+
+								</tbody>
+							</table>
+						</div>
+					</fieldset>
     			</div>
     			<div class="col-md-4 col-sm-12">
     				<h5>Perfiles</h5>
     				<div id="listProfiles" class="list-group">
-    					@foreach( $profiles as $profile )
-    						<a href="#" name="perfil[]"  class="list-group-item list-group-item-action" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">{{$profile->nombre_perfil}}</a>
-    					@endforeach
+						<div class="btn-group-toggle" data-toggle="buttons">
+							@foreach( $profiles as $profile )
+								<label class="btn btn-info active">
+									<input type="checkbox" name="perfil[]" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)"/>{{$profile->nombre_perfil}}
+								</label>
+							@endforeach
+						</div>
     				</div>
     			</div>
     		</div>
     		<div class="row mb-3 mt-3">
     			<div class="col-md-12">
-    				<div class="card">
+    				<div class="card z-depth-1-half">
     					<h4 class="card-header">Empresas</h4>
     					<div class="card-body">
     						<div class="tab-content">
-    							@foreach($companies as $data_company)
-    								<h4>{{$data_company->nombre_comercial}}</h4>
-    									<table class="table table-hover table-responsive-sm">
-    										<thead>
-    										<tr>
-    											<th>Modulo</th>
-    											<th>Accion</th>
-    											<th></th>
-    										</tr>
-    										</thead>
-    										<tbody>
-    										@foreach($data_company->modulos_usuario($data->id_usuario,$data_company->id_empresa)->unique() as $row_modul)
-    											<tr>
-    												<td>
-    													{{$row_modul->nombre}}
-    												</td>
-    												@foreach($data_company->accion_usuario($data->id_usuario,$data_company->id_empresa,$row_modul->id_modulo) as $row_accion)
-    													<td>
-    														{{$row_accion->nombre}}
-    													</td>
-    												@endforeach
-    											</tr>
-    										@endforeach
-    										</tbody>
-    									</table>
-    								{{--</div>--}}
-    							@endforeach
+								@foreach($companies as $data_company)
+									@if ($data_company->modulos_usuario($data->id_usuario,$data_company->id_empresa)->unique() != '[]')
+									<h4>{{$data_company->nombre_comercial}}</h4>
+									<table class="table table-hover table-responsive-sm">
+									<thead>
+										<tr>
+											<th>Modulo</th>
+											<th>Accion</th>
+											<th></th>
+										</tr>
+									</thead>
+										<tbody>
+											@foreach($data_company->modulos_usuario($data->id_usuario,$data_company->id_empresa)->unique() as $row_modul)
+											<tr>
+												<td>
+													{{$row_modul->nombre}}
+												</td>
+												@foreach($data_company->accion_usuario($data->id_usuario,$data_company->id_empresa,$row_modul->id_modulo) as $row_accion)
+												<td>
+													{{$row_accion->nombre}}
+												</td>
+												@endforeach
+											</tr>
+											@endforeach
+										</tbody>
+									</table>
+									{{--</div>--}}
+									@endif
+								@endforeach
     						</div>
     					</div>
     				</div>
@@ -249,160 +283,195 @@
     	<div class="container-fluid">
     		<div class="row">
     			<div class="col-md-8 col-sm-12 mb-3">
-    				<div class="card">
-    					<div class="card-body">
-    						<div class="row">
-    							<div class="col-md-6 col-sm-6">
-    								<div class="form-group">
-    									{{Form::label('nombre_corto','Nombre',['for'=>'name'])}}
-    									{{Form::text('nombre_corto',$data->nombre_corto,array('id'=>'nombre_corto','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
-    								</div>
-    							</div>
-    							<div class="col-md-6 col-sm-6">
-    								<div class="form-group">
-    									{{Form::label('usuario','Usuario',['for'=>'usuarios'])}}
-    									{{Form::text('usuario',$data->usuario,array('id'=>'usuario','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
-    								</div>
-    							</div>
-    						</div><!--/row forms-->
-    						<div class="row">
-    							{{--<div class="col-md-6 col-sm-6">--}}
-    								{{--<div class="form-group">--}}
-    									{{--{{Form::label('password','Contraseña',['for'=>'password'])}}--}}
-    									{{--{{Form::password('password',['class'=>'form-control','placeholder'=>'Contraseño'],$data->password)}}--}}
-    								{{--</div>--}}
-    							{{--</div>--}}
-    							<div class="col-md-6 col-sm-6">
-    								<div class="form-group">
-    									{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
-    									{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'fk_id_empresa_default','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
-    								</div>
-    							</div>
-    						</div><!--/row forms-->
-    						<hr>
-    						<h5>Correo Empresarial</h5>
-    						<fieldset>
-    							<div class="card">
-    								<div class="card-header">
-    									<div class="row">
-    										<div class="col-md-6 col-sm-6">
-    											<div class="form-group">
-    												{{Form::label('empresa_correo','Empresa:',['for'=>'empresa_correo'])}}
-    												{{Form::select('empresa_correo',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'empresa_correo','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
-    											</div>
-    										</div>
-    										<div class="col-md-6 col-sm-6">
-    											<div class="form-group">
-    												{{Form::label('correo','Correo:',['for'=>'correo'])}}
-    												{{Form::text('correo',null,['id'=>'correo','class'=>'form-control','placeholder'=>'micorreogenial@mail.com'])}}
-    											</div>
-    										</div>
-    									</div><!--/row forms-->
-    								</div>
-    							</div>
-    							<div class="col-sm-12 text-center">
-    								<div class="sep">
-    									<div class="sepBtn">
-    										{{Form::button('<i class="material-icons">add</i>',['class'=>'btn btn-primary btn-large','onclick'=>'agregarCorreo()','style'=>'width: 4em; height:4em; border-radius:50%;','data-delay'=>'50','data-toggle'=>'Agregar','title'=>'Agregar'])}}
-    									</div>
-    								</div>
-    							</div>
-    							<div class="card-body">
-    								<table class="table table-hover table-responsive-sm">
-    									<thead>
-    									<tr>
-    										<th>Empresa</th>
-    										<th>Correo</th>
-    										<th></th>
-    									</tr>
-    									</thead>
-    									<tbody id="lista_correo">
-    										@foreach( $correos as $cont => $correo )
-    											{{--{{dump($correo)}}--}}
-    											<tr id="correo_{{$cont}}">
-    												<th scope="row">{{$correo->nombre_comercial}}</th>
-    												<td>{{$correo->correo}}</td>
-    												<td><a href="javascript:void(0)" class="waves-effect " onclick="eliminarFila('correo_{{$cont}}')"><i class="material-icons">delete</i></a></td>
-    												<input type="hidden" value="{{$correo->fk_id_empresa}}" name="correo_empresa[{{$cont}}][id_empresa]">
-    												<input type="hidden" value="{{$correo->correo}}" name="correo_empresa[{{$cont}}][correo]">
-    
-    											</tr>
-    										@endforeach
-    
-    
-    									</tbody>
-    								</table>
-    							</div>
-    						</fieldset>
-    					</div>
-    				</div>
+					<div class="row">
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="form-group">
+								{{Form::label('nombre_corto','Nombre',['for'=>'name'])}}
+								{{Form::text('nombre_corto',$data->nombre_corto,array('id'=>'nombre_corto','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6 col-12">
+							<div class="form-group">
+								{{Form::label('usuario','Usuario',['for'=>'usuarios'])}}
+								{{Form::text('usuario',$data->usuario,array('id'=>'usuario','class'=>'form-control','placeholder'=>'Ejemplo: Juan'))}}
+							</div>
+						</div>
+						{{--<div class="col-md-3 col-sm-6 col-12">--}}
+							{{--<div class="form-group">--}}
+								{{--{{Form::label('password','Contraseña',['for'=>'password'])}}--}}
+								{{--{{Form::password('password',['class'=>'form-control','placeholder'=>'Contraseño'],$data->password)}}--}}
+							{{--</div>--}}
+						{{--</div>--}}
+						<div class="col-md-6 col-sm-6 col-12">
+							{{ Form::cSelect('Empleado','fk_id_empleado', $empleados ?? [],['style' =>'width:100%;']) }}
+						</div>
+					</div><!--/row forms-->
+					<div class="row">
+						<div class="col-md-6 col-sm-6">
+							<div class="form-group">
+								{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
+								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'fk_id_empresa_default','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-12">
+								<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+									Cargando Sucursal(es)... <i class="material-icons align-middle loading">cached</i>
+								</div>
+								{{ Form::cSelect('* Sucursal(es)','fk_id_sucursal[]', $sucursales ?? [],[
+									'style' => 'width:100%;',
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2 fk_id_sucursales' : ''
+								]) }}
+								<label>Actual(es):</label>
+								@foreach($sucursales_anteriores as $sucursal)
+									<span class="badge badge-secondary">{{$sucursal->sucursal}}</span>
+								@endforeach
+						</div>
+					</div><!--/row forms-->
+					<hr>
+					<h5>Correo Empresarial</h5>
+					<fieldset>
+						<div class="card">
+							<div class="card-header">
+								<div class="row">
+									<div class="col-md-6 col-sm-6">
+										<div class="form-group">
+											{{Form::label('empresa_correo','Empresa:',['for'=>'empresa_correo'])}}
+											{{Form::select('empresa_correo',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'empresa_correo','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
+										</div>
+									</div>
+									<div class="col-md-6 col-sm-6">
+										<div class="form-group">
+											{{Form::label('correo','Correo:',['for'=>'correo'])}}
+											{{Form::text('correo',null,['id'=>'correo','class'=>'form-control','placeholder'=>'micorreogenial@mail.com'])}}
+										</div>
+									</div>
+								</div><!--/row forms-->
+								<div class="col-sm-12 text-center">
+									<div class="sep">
+										<div class="sepBtn">
+											{{Form::button('<i class="material-icons">add</i>',['class'=>'btn btn-primary btn-large','onclick'=>'agregarCorreo()','style'=>'width: 4em; height:4em; border-radius:50%;','data-delay'=>'50','data-toggle'=>'Agregar','title'=>'Agregar'])}}
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-body">
+								<table class="table table-hover table-responsive-sm">
+									<thead>
+									<tr>
+										<th>Empresa</th>
+										<th>Correo</th>
+										<th>Acción</th>
+									</tr>
+									</thead>
+									<tbody id="lista_correo">
+										@foreach( $correos as $cont => $correo )
+											{{--{{dump($correo)}}--}}
+											<tr id="correo_{{$cont}}">
+												<th scope="row">{{$correo->nombre_comercial}}</th>
+												<td>{{$correo->correo}}</td>
+												<td><a href="javascript:void(0)" class="waves-effect " onclick="eliminarFila('correo_{{$cont}}')"><i class="material-icons">delete</i></a></td>
+												<input type="hidden" value="{{$correo->fk_id_empresa}}" name="correo_empresa[{{$cont}}][id_empresa]">
+												<input type="hidden" value="{{$correo->correo}}" name="correo_empresa[{{$cont}}][correo]">
+
+											</tr>
+										@endforeach
+
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</fieldset>
     			</div>
     			<div class="col-md-4 col-sm-12">
     				<h5>Perfiles</h5>
-    
-    				<div class="btn-group list-group">
+					
+    				<div class="btn-group-toggle" data-toggle="buttons">
     					@foreach( $profiles as $profile )
     						@if( array_intersect( $perfiles_usuario->pluck('nombre_perfil','id_perfil')->toArray() ,$profile->toArray() ) )
-    							<a href="#" class="list-group-item list-group-item-action active" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
+    							<label class="btn btn-info active" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
     								<input type="checkbox"  name="perfil[]"  id="perfil_check_{{$profile->id_perfil}}" value="{{$profile->id_perfil}}" checked="checked" style="display: none">{{$profile->nombre_perfil}}
-    							</a>
+								</label>
     						@else
-    							<a href="#" name="perfil[]" class="list-group-item list-group-item-action " id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
+    							<label class="btn btn-info active" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
     								<input type="checkbox" name="perfil[]" id="perfil_check_{{$profile->id_perfil}}" value="{{$profile->id_perfil}}"  style="display: none">{{$profile->nombre_perfil}}
-    							</a>
+								</label>
     						@endif
     					@endforeach
-    
     				</div>
     			</div>
-    		</div>
+			</div>
     		<div class="row mb-3 mt-3">
     			<div class="col-md-12">
     				<div class="card">
     					<h4 class="card-header">Empresas</h4>
     					<div class="card-body">
-    						<ul class="nav nav-tabs" role="tablist">
-    							@foreach($companies as $data_company)
-    								<li class="nav-item">
-    									<a class="nav-link" data-toggle="tab" href="#empresa_{{$data_company->id_empresa}}" role="tab">{{$data_company->nombre_comercial}}</a>
-    								</li>
-    							@endforeach
-    
-    						</ul>
-    						<div class="tab-content">
-    							@foreach($companies as $data_company)
-    								<div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">
-    									<table class="table table-hover table-responsive-sm">
-    										<thead>
-    										<tr>
-    											<th>Modulo</th>
-    											<th>Accion</th>
-    											<th></th>
-    										</tr>
-    										</thead>
-    										<tbody>
-    										@foreach($data_company->modulos_empresa->unique() as $row_modul)
-    											<tr>
-    												<td>
-    													{{$row_modul->nombre}}
-    												</td>
-    												@foreach($data_company->accion_empresa($row_modul->id_modulo) as $row_accion)
-    													<td>
-    														@if(array_search($row_accion->id_modulo_accion, array_column($acciones_usuario->toArray(), 'id_modulo_accion')) !== false)
-    															{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,true,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
-    														@else
-    															{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,false,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
-    														@endif
-    														{{Form::label('accion_modulo[]',$row_accion->nombre,array('for'=>'activo'))}}
-    													</td>
-    												@endforeach
-    											</tr>
-    										@endforeach
-    										</tbody>
-    									</table>
-    								</div>
-    							@endforeach
-    						</div>
+							<div class="col-sm-12">
+								<ul class="nav nav-tabs btn-group justify-content-center border-0 mb-3" id="pills-tab" role="tablist" data-tabs="tabs">
+									<li>
+										<a id="producto" class="btn m-0 tabs-bs btn-info active" data-toggle="tab" href="#permisos" role="tab" aria-controls="permisos" aria-selected="true">
+											<i class="material-icons align-middle">playlist_add_check</i> Módulos y permisos
+										</a>
+									</li>
+									<li>
+										<a id="pedido" class="btn m-0 tabs-bs btn-info" data-toggle="tab" href="#sucursales" role="tab" aria-controls="sucursales" aria-selected="false">
+											<i class="material-icons align-middle">store_mall_directory</i> Sucursales
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="tab-content">
+								<div class="tab-pane active" id="permisos" role="tabpanel">
+									<ul class="nav nav-tabs" role="tablist">
+										@foreach($companies as $data_company)
+											@if($data_company->modulos_empresa != '[]')
+												<li class="nav-item">
+													<a class="nav-link" data-toggle="tab" href="#empresa_{{$data_company->id_empresa}}" role="tab">{{$data_company->nombre_comercial}}</a>
+												</li>
+											@endif
+										@endforeach
+									</ul>
+									<div class="tab-content">
+										@foreach($companies as $data_company)
+											<div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">
+												<table class="table table-hover table-responsive-sm">
+													<thead>
+													<tr>
+														<th class="border-top-0">Modulo</th>
+														<th class="border-top-0">Accion</th>
+														<th class="border-top-0"></th>
+														<th class="border-top-0"></th>
+														<th class="border-top-0"></th>				
+													</tr>
+													</thead>
+													<tbody>
+													@foreach($data_company->modulos_empresa->unique() as $row_modul)
+														<tr>
+															<td>
+																{{$row_modul->nombre}}
+															</td>
+															@foreach($data_company->accion_empresa($row_modul->id_modulo) as $row_accion)
+																<td>
+																	@if(array_search($row_accion->id_modulo_accion, array_column($acciones_usuario->toArray(), 'id_modulo_accion')) !== false)
+																		{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,true,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
+																	@else
+																		{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,false,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
+																	@endif
+																	{{Form::label('accion_modulo[]',$row_accion->nombre,array('for'=>'activo'))}}
+																</td>
+															@endforeach
+														</tr>
+													@endforeach
+													</tbody>
+												</table>
+											</div>
+										@endforeach
+									</div>
+								</div>
+								<div class="tab-pane" id="sucursales" role="tabpanel">
+									<p>Seleccione las sucursales que estarán <b>relacionadas</b> a ésta empresa</p>
+								</div>{{-- /sucursales --}}
+							</div>
     					</div>
     				</div>
     			</div>
@@ -418,6 +487,7 @@
 
 		<script type="text/javascript">
             //iniciamos tooltips
+			var api_sucursales = '{!! $sucursales_js !!}'
             $(document).ready(function(){
                 $('[data-toggle]').tooltip();
 
@@ -429,8 +499,8 @@
             });
 		</script>
 		<script>
-            var profiles_permissions = {!!$profiles_permissions!!};
-            console.info(profiles_permissions);
+			var profiles_permissions = {!!$profiles_permissions!!};
+			console.info(profiles_permissions);
             var cont_correo = $('#lista_correo tr').length;
 		</script>
 	@endif

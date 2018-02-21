@@ -29,12 +29,6 @@ class AgrupadoresCuentas extends ModelBase
 	protected $fillable = ['codigo_agrupador', 'nombre_cuenta', 'activo'];
 
 	/**
-	 * The validation rules
-	 * @var array
-	 */
-	public $rules = [];
-
-	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array
 	 */

@@ -26,10 +26,6 @@ class CuentasContablesController extends ControllerBase
 	        'cuentas_mayor' => collect([1=>'Si', 2=>'No', 3=>'De Titulo', 4=>'De Subtitulo']),
 	        'cuentas_padre' => $this->entity->selectRaw("id_cuenta_contable, CONCAT(cuenta,' - ',nombre) as cuenta_contable")->where('activo',1)->pluck('cuenta_contable','id_cuenta_contable'),
 	        'agrupadores_cuentas' => AgrupadoresCuentas::selectRaw("id_agrupador_cuenta, CONCAT(codigo_agrupador,' - ',nombre_cuenta) as agrupador_cuenta")->where('activo',1)->pluck('agrupador_cuenta','id_agrupador_cuenta'),
-	        
-	        #'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('...',''),
-	        #'regimens' => RegimenesFiscales::where('activo',1)->select('regimen_fiscal','id_regimen_fiscal')->orderBy('regimen_fiscal')->pluck('regimen_fiscal','id_regimen_fiscal')->prepend('...',''),
-	        #'series' => SeriesDocumentos::where('activo',1)->select('prefijo','id_serie')->where('fk_id_tipo_documento',4)->pluck('prefijo','id_serie'),
         ];
 	}
 }

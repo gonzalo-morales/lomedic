@@ -68,13 +68,6 @@ class RequisicionesHospitalarias extends ModelCompany
 ////        'fk_id_forma_adjudicacion' => 'forma_adjudicacion'
 //    ];
 
-
-    public $rules = [
-//        'id_sucursal' => 'required',
-//        'fecha_requerido' => 'required',
-//        'id_solicitante' => 'required',
-    ];
-
     /**
      * Los atributos que seran ]visibles en index-datable
      * @var array

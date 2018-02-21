@@ -19,10 +19,10 @@
     @endif
     <div class="row">
     	<div class="form-group col-md-4 col-sm-6">
-    		{{Form::cText('Tipo de autorizacion','',isset($data) && !empty($data->condicion) ? $data->condicion->nombre : '',['class'=>'form-control','disabled'])}}
+    		{{Form::cText('* Tipo de autorizacion','',isset($data) && !empty($data->condicion) ? $data->condicion->nombre : '',['class'=>'form-control','disabled'])}}
     	</div>
     	<div class="form-group col-md-8 col-sm-6">
-    		{{Form::cRadio('¿Autorizado?','fk_id_estatus',[4=>'Autorizado',3=>'No Autorizado'])}}
+    		{{Form::cRadio('* ¿Autorizado?','fk_id_estatus',[4=>'Autorizado',3=>'No Autorizado'])}}
     	</div>
     	<div class="form-group col-md-12 col-sm-12">
     		{{Form::cTextArea('Motivo','observaciones',['readonly','style'=>'resize:none;'])}}

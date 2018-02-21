@@ -24,13 +24,34 @@ class SeriesSkus extends ModelCompany
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre_serie','prefijo','sufijo','primer_numero','numero_siguiente','ultimo_numero','descripcion','activo'];
+	protected $fillable = [
+		'nombre_serie',
+		'prefijo',
+		'sufijo',
+		'primer_numero',
+		'numero_siguiente',
+		'ultimo_numero',
+		'descripcion',
+		'activo'
+	];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'nombre_serie' => 'max:60|required|regex:/^[a-zA-Z\s]+/',
+		'prefijo' => 'max:10|required',
+		'sufijo' => 'max:255|required',
+		'primer_numero' => 'max:32|required|numeric',
+		'numero_siguiente' => 'max:32|required|numeric',
+		'ultimo_numero' => 'max:32|required|numeric',
+		'descripcion' => 'max:255|required|regex:/^[a-zA-Z\s]+/',
+	];
+
+	protected $unique = [
+		'nombre_serie',
+	];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

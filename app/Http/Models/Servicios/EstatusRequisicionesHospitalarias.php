@@ -37,15 +37,6 @@ class EstatusRequisicionesHospitalarias extends ModelBase
     ];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'id_estatus' => 'required',
-//        'estatus' => 'required',
-    ];
-
-    /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */

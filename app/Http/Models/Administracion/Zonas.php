@@ -21,12 +21,14 @@ class Zonas extends ModelBase
      */
     protected $fillable = ['zona','activo'];
 
+    protected $unique = ['zona'];
+    
     /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'zona' => 'required'
+        'zona' => 'required|max:30|regex:/^[a-zA-Z\s]+/'
     ];
 
     /**

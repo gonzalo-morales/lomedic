@@ -49,16 +49,6 @@ class SurtidoRecetaDetalle extends ModelCompany
     ];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'id_sucursal' => 'required',
-//        'fecha_requerido' => 'required',
-//        'id_solicitante' => 'required',
-    ];
-
-    /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */

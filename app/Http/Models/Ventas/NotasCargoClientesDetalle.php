@@ -43,12 +43,6 @@ class NotasCargoClientesDetalle extends ModelCompany
      * @var array
      */
     protected $fields = [];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
     
     public function nota()
     {

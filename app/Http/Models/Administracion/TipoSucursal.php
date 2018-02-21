@@ -26,8 +26,10 @@ class TipoSucursal extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'tipo' => 'required'
+		'tipo' => 'required|max:30|regex:/^[a-zA-Z\s]+/'
 	];
+
+    protected $unique = ['tipo'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

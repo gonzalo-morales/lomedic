@@ -26,12 +26,14 @@ class VehiculosModelos extends ModelBase
      */
     protected $fillable = ['modelo', 'fk_id_marca','activo'];
 
+    protected $unique = ['modelo'];
+
     /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'modelo' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
+        'modelo' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255',
         'fk_id_marca' => 'required|numeric'
     ];
 

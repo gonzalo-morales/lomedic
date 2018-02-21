@@ -38,14 +38,14 @@ class Bancos extends ModelBase
 	];
 	
 	protected $unique = ['rfc','banco'];
-
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'razon_social' => 'required',
-		'banco' => 'required',
+		'razon_social' => 'required|regex:/^[a-zA-Z\s]+/|max:200',
+		'banco' => 'required|regex:/^[a-zA-Z\s]+/|max:25',
+		'rfc' => 'required|max:13',
 	];
 	
 	public function getNacionalTextAttribute()

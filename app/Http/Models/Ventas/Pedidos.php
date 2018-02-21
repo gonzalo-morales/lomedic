@@ -55,12 +55,6 @@ class Pedidos extends ModelCompany
         'estatus.estatus' => 'Estatus'
     ];
 
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public function localidad()
     {
         return $this->belongsTo(Localidades::class,'fk_id_localidad','id_localidad');

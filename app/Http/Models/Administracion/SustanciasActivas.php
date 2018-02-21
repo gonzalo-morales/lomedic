@@ -29,6 +29,8 @@ class SustanciasActivas extends ModelBase
 		'sustancia_activa' => 'required',
 	];
 
+	protected $unique = ['sustancia_activa'];
+
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array

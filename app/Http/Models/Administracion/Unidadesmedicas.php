@@ -31,8 +31,10 @@ class UnidadesMedicas extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'nombre' => 'required',
+		'nombre' => 'required|max:255|regex:/^[a-zA-Z\s]+/',
 	];
+
+    protected $unique = ['nombre'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

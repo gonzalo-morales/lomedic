@@ -29,11 +29,11 @@ class Acciones extends Model
     protected $fillable = ['nombre','accion','activo'];
 
     /**
-     * Indicates if the model should be timestamped.
+     * The attributes that are mass assignable.
      *
-     * @var bool
+     * @var array
      */
-    public $timestamps = false;
+    protected $unique = ['accion'];
 
     /**
      * The validation rules

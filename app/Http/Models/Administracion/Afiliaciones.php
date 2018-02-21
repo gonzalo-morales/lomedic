@@ -28,7 +28,12 @@ class Afiliaciones extends ModelBase
         'fk_id_parentesco',
     ];
 
-    public $rules = [];
+   /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $unique = ['id_afiliacion'];
 
     protected $fields = [
         'id_afiliado' => '#',

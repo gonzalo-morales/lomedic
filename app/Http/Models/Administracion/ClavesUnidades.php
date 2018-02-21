@@ -30,6 +30,8 @@ class ClavesUnidades extends ModelBase
 		'descripcion' => 'required|max:255',
 	];
 
+	protected $unique = ['clave_unidad'];
+
 	/**
 	 * Los atributos que seran visibles en index-datable
 	 * @var null|array

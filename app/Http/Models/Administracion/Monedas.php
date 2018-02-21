@@ -33,9 +33,11 @@ class Monedas extends ModelBase
      */
     public $rules = [
         'moneda'   => 'required|max:3',
-        'descripcion'   => 'required|max:255',
+        'descripcion'   => 'required|max:255|regex:/^[a-zA-Z\s]+/',
         'total_decimales'   => 'required|integer|max:10'
     ];
+
+    protected $unique = ['moneda'];
 
     /**
      * Los atributos que seran visibles en index-datable

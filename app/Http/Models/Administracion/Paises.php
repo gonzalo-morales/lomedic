@@ -27,19 +27,14 @@ class Paises extends ModelBase
 	protected $fillable = ['pais', 'activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'pais'		=> 'required',
+		'pais'		=> 'required|max:150|regex:/^[a-zA-Z\s]+/',
 	];
+
+    protected $unique = ['pais'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

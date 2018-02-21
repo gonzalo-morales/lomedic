@@ -27,18 +27,6 @@ class Certificados extends ModelBase
 	protected $hidden = ['password'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
-	 * The validation rules
-	 * @var array
-	 */
-	public $rules = [];
-
-	/**
 	 * Los atributos que seran visibles en smart-datatable
 	 * @var array
 	 */

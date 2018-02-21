@@ -30,29 +30,6 @@ class DetalleSolicitudes extends ModelCompany
         'fk_id_unidad_medida','fk_id_impuesto','precio_unitario','importe','fk_id_proyecto','fecha_necesario',
         'fk_id_documento','fk_id_documento_base','fk_id_tipo_documento_base','fk_id_linea'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'fk_id_solicitud' => 'required',
-//        'fk_id_sku' => 'required',
-//        'fk_id_upc' => 'required',
-//        'fk_id_proveedor' => 'required',
-//        'cantidad' => 'required',
-//        'fk_id_unidad_medida' => 'required',
-//        'fk_id_impuesto' => 'required',
-//        'precio_unitario' => 'required',
-//        'importe' => 'required'
-    ];
-
     public function getFields()
     {
         return $this->fields;

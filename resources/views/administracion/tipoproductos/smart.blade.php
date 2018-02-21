@@ -5,13 +5,13 @@
     {{ Form::setModel($data) }}
     <div class="row">
         <div class="form-group col-lg-4 col-md-6 col-xs-12">
-            {{ Form::cText('Tipo Producto','tipo_producto') }}
+            {{ Form::cText('* Tipo Producto','tipo_producto') }}
         </div>
         <div class="form-group col-lg-4 col-md-4 col-xs-12">
-            {{ Form::cText('Nomenclatura','nomenclatura') }}
+            {{ Form::cText('* Nomenclatura','nomenclatura') }}
         </div>
         <div class="form-group col-lg-4 col-md-2 col-xs-12">
-            {{Form::cNumber('Prioridad','prioridad')}}
+            {{Form::cNumber('* Prioridad','prioridad')}}
         </div>
         <div  class="col-md-12 text-center mt-2">
             <div class="alert alert-warning" role="alert">

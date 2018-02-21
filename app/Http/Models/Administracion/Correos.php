@@ -31,8 +31,10 @@ class Correos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'correo' => 'required|email',
+		'correo' => 'required|email|max:255',
 	];
+
+	protected $unique = ['correo'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

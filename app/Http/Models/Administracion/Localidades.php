@@ -21,12 +21,14 @@ class Localidades extends ModelBase
 	 */
 	protected $fillable = ['localidad','activo'];
 
+	protected $unique = ['localidad'];
+
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'localidad' => 'required'
+		'localidad' => 'required|regex:/^[a-zA-Z\s]+/|max:30'
 	];
 
 	/**

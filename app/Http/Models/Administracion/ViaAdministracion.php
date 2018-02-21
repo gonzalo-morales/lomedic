@@ -26,11 +26,15 @@ class ViaAdministracion extends ModelBase
 	 */
 	protected $fillable = ['via_administracion', 'activo'];
 
+	protected $unique = ['via_administracion'];
+
 	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'via_administracion' => 'required|max:60|regex:/^[a-zA-Z\s]+/'
+	];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

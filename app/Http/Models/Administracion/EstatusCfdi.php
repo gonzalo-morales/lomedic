@@ -22,7 +22,11 @@ class EstatusCfdi extends ModelBase
     
     protected $fillable = ['estatus','activo'];
     
+    protected $unique = ['estatus'];
+
     protected $fields = ['id_estatus_cfdi'=>'#','estatus'=>'Nombre de Estatus','activo_span' => 'Estatus'];
     
-    public $rules = ['estatus'=>'required'];
+    public $rules = [
+        'estatus'=>'required|regex:/^[a-zA-Z\s]+/',
+    ];
 }

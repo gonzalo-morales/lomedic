@@ -27,30 +27,11 @@ class InventariosDetalle extends ModelCompany
 	 */
 	protected $fillable = ['fk_id_inventario', 'codigo_barras', 'cantidad_toma', 'cantidad_sistema', 'no_lote', 'caducidad', 'fk_id_almacen', 'fk_id_ubicacion', 'estatus', 'observaciones'];
 
-
 	/*
 	 * Los atributos que seran visibles en index-datable
 	 * @var array
 	 */
 	protected $fields = [];
-
-	/**
-	 * The validation rules
-	 * @var array
-	 */
-	public $rules = [
-		// 'fk_tipo_inventario' => 'required',
-		// 'fk_id_sucursal' => 'required',
-		// 'fk_id_almacen' => 'required',
-	];
-
-	/**
-	 * Nice names to validator
-	 * @var array
-	 */
-	// public $niceNames = [
-	// ];
-
 
 	/**
 	 * Obtenemos upc relacionadas a detalle
@@ -60,6 +41,4 @@ class InventariosDetalle extends ModelCompany
 	{
 		return $this->belongsTo(Upcs::class, 'codigo_barras', 'upc');
 	}
-
-
 }

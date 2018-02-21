@@ -46,20 +46,6 @@ class Vales extends ModelCompany
     ];
 
     /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'peso' => 'between:0,999.99',
-//        'altura' => 'between:0,9.99',
-//        'presion1' => 'between:0,999.99',
-//        'presion2' => 'between:0,999.99',
-//        'id_diagnostico' => 'required|numeric',
-//        'id_afiliacion' => 'required_without:nombre_paciente_no_afiliado',
-//        'nombre_paciente_no_afiliado' => 'required_without:id_afiliacion'
-    ];
-
-    /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */

@@ -18,13 +18,6 @@ class Impuestos extends ModelBase
      * @var string
      */
     protected $primaryKey = 'id_impuesto';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
     
     /**
      * The attributes that are mass assignable.
@@ -33,13 +26,18 @@ class Impuestos extends ModelBase
      */
     protected $fillable = ['impuesto','porcentaje','activo','tasa_o_cuota','tipo_factor','Descripcion','numero_impuesto'];
     
+    protected $unique = ['impuesto'];
+
     protected $fields = [
         'impuesto' => 'Impuesto',
         'porcentaje' => 'Porcentaje',
         'activo_span' => 'Estatus',
     ];
 
-    public $rules = ['porcentaje'=>'numeric'];
+    public $rules = [
+        'porcentaje'=> 'numeric',
+        'impuesto' => 'required'
+    ];
 
     public function getFields()
     {

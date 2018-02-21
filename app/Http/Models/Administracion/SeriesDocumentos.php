@@ -22,13 +22,41 @@ class SeriesDocumentos extends ModelCompany
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
-	protected $fillable = ['nombre_serie','prefijo','sufijo','primer_numero','siguiente_numero','ultimo_numero','fk_id_empresa','fk_id_tipo_documento','descripcion','activo'];
+	protected $fillable = [
+		'nombre_serie',
+		'prefijo',
+		'sufijo',
+		'primer_numero',
+		'siguiente_numero',
+		'ultimo_numero',
+		'fk_id_empresa',
+		'fk_id_tipo_documento',
+		'descripcion',
+		'activo'
+	];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'nombre_serie' => 'max:120|regex:/^[a-zA-Z\s]+/|required',
+		'prefijo' => 'max:6|required',
+		'sufijo' => 'max:6|required',
+		'primer_numero' => 'max:32|numeric|required',
+		'siguiente_numero' => 'max:32|numeric|required',
+		'ultimo_numero' => 'max:32|numeric|required',
+		'fk_id_empresa' => 'required',
+		'fk_id_tipo_documento' => 'required',
+		'descripcion' => 'max:255|regex:/^[a-zA-Z\s]+/',
+		'activo'
+	];
+
+    protected $unique = [
+		'nombre_serie',
+		'prefijo',
+		'sufijo',	
+	];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

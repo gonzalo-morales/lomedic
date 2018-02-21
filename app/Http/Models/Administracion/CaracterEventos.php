@@ -20,13 +20,15 @@ class CaracterEventos extends ModelBase
 
 	protected $fields = ['id_caracter_evento'=>'#','caracter_evento'=>'Caracter Evento','activo_span'=>'Estatus'];
 
+	protected $unique = ['caracter_evento'];
+	
 	/**
 	 * The attributes that are mass assignable.
 	 * @var array
 	 */
 	protected $fillable = ['caracter_evento','activo'];
 
-	public $rules = ['caracter_evento'=>'required'];
+	public $rules = ['caracter_evento'=>'required|max:255'];
 
 	public $niceNames = [
 	    'caracter_evento' => 'caracter evento'

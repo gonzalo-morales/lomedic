@@ -39,6 +39,7 @@ class ModelBase extends Model
 	public function __construct($attributes = [])
 	{
 		$this->eagerLoaders = $this->getAutoEager();
+		$this->rules = $this->getRulesDefaults();
 		$this->addUniqueRules();
 		return parent::__construct($attributes);
 	}
@@ -276,6 +277,9 @@ class ModelBase extends Model
                     array_push($rules[$col],$prop['comment']);
                 }
             }
+        } 
+        foreach($rules as $col=>$rule) {
+            $rules[$col] = \implode('|',$rule);
         }
         return $rules;
 	}

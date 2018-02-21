@@ -25,16 +25,14 @@ class RegimenFiscal extends ModelBase
 	protected $fillable = ['regimen_fiscal','activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'regimen_fiscal' => 'required|max:255'
+	];
+
+    protected $unique = ['regimen_fiscal'];
 
 	/**
 	 * Los atributos que seran visibles en smart-datatable

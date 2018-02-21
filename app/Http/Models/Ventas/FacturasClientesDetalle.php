@@ -50,12 +50,6 @@ class FacturasClientesDetalle extends ModelCompany
     protected $fields = [
         
     ];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
     
     public function factura()
     {

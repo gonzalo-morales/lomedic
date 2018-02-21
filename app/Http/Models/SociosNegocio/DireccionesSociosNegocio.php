@@ -27,18 +27,6 @@ class DireccionesSociosNegocio extends ModelBase
      */
     protected $fillable = ['fk_id_socio_negocio','fk_id_pais','fk_id_estado','fk_id_municipio','colonia','fk_id_tipo_direccion','calle','num_exterior','num_interior','codigo_postal','activo'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public function getDireccionConcatAttribute()
     {
         return sprintf('%s #%s CP.%s %s, %s', $this->calle, $this->num_exterior . '-' . $this->num_interior, $this->codigo_postal, $this->municipio->municipio, $this->estado->estado);

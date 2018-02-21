@@ -22,6 +22,8 @@ class ModosContacto extends ModelBase
      */
     protected $primaryKey = 'id_modo_contacto';
 
+    protected $unique = ['modo_contacto'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -43,19 +45,12 @@ class ModosContacto extends ModelBase
     ];
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * The validation rules
      * 
      * @var array
      */
     public $rules = [
-        'modo_contacto' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/'
+        'modo_contacto' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:255'
     ];
 
     public function solicitudes()

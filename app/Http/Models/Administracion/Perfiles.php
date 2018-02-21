@@ -27,20 +27,14 @@ class Perfiles extends Model
     protected $fillable = ['nombre_perfil', 'descripcion', 'activo'];
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-
-    public $timestamps =  false;
-
-    /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'nombre_perfil' => 'required|max:20',
+        'nombre_perfil' => 'required|max:20|regex:/^[a-zA-Z\s]+/',
     ];
+
+    protected $unique = ['nombre_perfil'];
 
     /**
      * Obtenemos usuarios relacionados al perfil

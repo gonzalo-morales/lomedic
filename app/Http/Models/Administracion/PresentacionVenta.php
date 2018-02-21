@@ -30,7 +30,11 @@ class PresentacionVenta extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'presentacion_venta' => 'required|max:150|regex:/^[a-zA-Z\s]+/'
+	];
+
+    protected $unique = ['presentacion_venta'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

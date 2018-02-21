@@ -29,8 +29,10 @@ class Dependencias extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-        'dependencia' => 'required',
+        'dependencia' => 'required|max:40|regex:/^[a-zA-Z\s]+/',
 	];
+
+	protected $unique = ['dependencia'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

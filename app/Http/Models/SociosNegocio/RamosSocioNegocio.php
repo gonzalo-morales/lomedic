@@ -24,18 +24,10 @@ class RamosSocioNegocio extends ModelBase
      */
     protected $fillable = ['ramo', 'activo'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
-
     protected $fields = [
         'ramo' => 'Ramo',
         'activo_text' => 'Estatus'
     ];
-    
-    public $rules = [];
 
     public function socionegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');

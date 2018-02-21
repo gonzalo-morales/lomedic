@@ -12,14 +12,17 @@ use App\Http\Models\Administracion\ModulosAcciones;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\PermisosUsuarios;
 use App\Http\Models\Administracion\PerfilesUsuarios;
-
+use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\Administracion\Sucursales;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Models\Logs;
 use Auth;
 use DB;
+use Illuminate\Support\Facades\Cache;
 
 class UsuariosController extends ControllerBase
 {
@@ -39,7 +42,9 @@ class UsuariosController extends ControllerBase
      */
     public function create($company, $attributes = [])
     {
-
+        // $sucursales = Sucursales::all();
+        $sucursales_js = Crypt::encryptString('"conditions": [{"where": ["activo", "1"]}],"whereHas": [{"empresas":{"where":["fk_id_empresa", "$fk_id_empresa"]}}], "select": ["id_sucursal","sucursal"]');
+        $empleados = Empleados::selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->where('activo',1)->pluck('empleado','id_empleado')->prepend('Seleccione el empleado',0);
         $companies = Empresas::all();
         $profiles = Perfiles::all();
         $profiles_permissions = Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')
@@ -48,7 +53,14 @@ class UsuariosController extends ControllerBase
             ->get();
 
 
-        $attributes['dataview'] =['companies'=>$companies,'profiles'=>$profiles,'profiles_permissions' => $profiles_permissions];
+        $attributes['dataview'] =[
+            'companies'=>$companies,
+            'profiles'=>$profiles,
+            'profiles_permissions' => $profiles_permissions,
+            'empleados'=>$empleados,
+            'sucursales_js'=>$sucursales_js,
+            // 'sucursales'=>$sucursales,
+        ];
 
         return parent::create($company,$attributes);
 
@@ -63,38 +75,54 @@ class UsuariosController extends ControllerBase
 
     public function store(Request $request, $company, $compact = false)
     {
-
-        $isSuccess = $this->entity->create($request->all());
-        if ($isSuccess) {
-
+        $entity = $this->entity->create($request->all());
+        if ($entity) {
+            $id = $entity->id_usuario;
             foreach ( $request->input('correo_empresa') as $email_company )
             {
                 DB::table('adm_det_correos')->insert([
                     'correo'=> $email_company['correo'],
                     'fk_id_empresa'=> $email_company['id_empresa'],
-                    'fk_id_usuario' => $isSuccess->id_usuario,
+                    'fk_id_usuario' => $entity->id_usuario,
                 ]);
             }
 
-            foreach ($request->input('perfil') as $perfil )
+            foreach ( $request->input('perfil') as $perfil )
             {
                 $id_perfil = explode( '_', $perfil );
                 DB::table('adm_det_perfiles_usuarios')->insert([
-                    'fk_id_perfil' => $id_perfil[1],
-                    'fk_id_usuario' => $isSuccess->id_usuario,
+                    'fk_id_perfil' => $perfil,
+                    'fk_id_usuario' => $entity->id_usuario,
                 ]);
             }
 //            dump($request->input('accion_modulo'));
             foreach ( $request->input('accion_modulo') as $accion_modulo )
             {
                 DB::table('adm_det_permisos_usuarios')->insert([
-                    'fk_id_usuario' => $isSuccess->id_usuario,
+                    'fk_id_usuario' => $entity->id_usuario,
                     'fk_id_modulo_accion' => $accion_modulo,
                 ]);
             }
-
-
-
+            # Guardamos el detalle de sucursales en la que estara disponible
+            if(isset($request->fk_id_sucursal)) {
+                $sync = [];
+                foreach ($request->fk_id_sucursal as $id_sucursal) {
+                    if($id_sucursal) {
+                        $sync[] = $id_sucursal;
+                    }
+                }
+                $entity->usuario_sucursales()->sync($sync);
+            }
+            # Guardamos el detalle de empresa en la que estara disponible
+            if(isset($request->fk_id_empresa_default)) {
+                $sync = [];
+                $sync[] = $request->fk_id_empresa_default;
+                $entity->usuario_empresa()->sync($sync);
+            }
+            DB::commit();
+            # Eliminamos cache
+            Cache::tags(getCacheTag('index'))->flush();
+            #$this->log('store', $id);
             return $this->redirect('store');
         } else {
             #$this->log('error_store');
@@ -112,32 +140,42 @@ class UsuariosController extends ControllerBase
     public function show($company, $id, $attributes =[])
     {
         # ¿Usuario tiene permiso para ver?
-
-        $this->authorize('view', $this->entity);
         $companies = Empresas::all();
         $correos = Correos::join('gen_cat_empresas','adm_det_correos.fk_id_empresa','=','gen_cat_empresas.id_empresa')
             ->where('fk_id_usuario','=',$id)
             ->get();
-
+        $sucursales = Sucursales::whereHas('usuario_sucursales',function($q)use ($id){
+            $q->where('fk_id_usuario','=',$id);
+        })->get();
         $perfiles = Perfiles::join('adm_det_perfiles_usuarios','adm_cat_perfiles.id_perfil','=','adm_det_perfiles_usuarios.fk_id_perfil')
-            ->where('fk_id_usuario','=',$id)
-            ->get();
-
-//        $profiles_permissions = Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')
-//            ->join('adm_det_modulo_accion','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_perfiles.fk_id_modulo_accion')
-//            ->select('adm_det_modulo_accion.*','adm_det_permisos_perfiles.fk_id_perfil')
-//            ->get();
-
+        ->where('fk_id_usuario','=',$id)
+        ->get();
+        
+        //        $profiles_permissions = Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')
+        //            ->join('adm_det_modulo_accion','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_perfiles.fk_id_modulo_accion')
+        //            ->select('adm_det_modulo_accion.*','adm_det_permisos_perfiles.fk_id_perfil')
+        //            ->get();
+        
         $acciones = ModulosAcciones::join('adm_det_permisos_usuarios','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_usuarios.fk_id_modulo_accion')
-            ->where('fk_id_usuario','=',$id)
-            ->get();
+        ->where('fk_id_usuario','=',$id)
+        ->get();
         # Log
         #$this->log('show', $id);
         $data = $this->entity->findOrFail($id);
+        $empleados = Empleados::whereHas('usuario',function($q)use ($data){
+            $q->where('fk_id_empleado',$data->fk_id_empleado);
+        })->selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->where('activo',1)->pluck('empleado','id_empleado');
         $attributes['dataview'] =['companies'=>$companies];
         $dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
-        return view(currentRouteName('smart'), $dataview+['data'=>$data,'correos'=>$correos,'profiles'=>$perfiles,'acciones' => $acciones]);
+        return view(currentRouteName('smart'), $dataview+[
+            'data'=>$data,
+            'correos'=>$correos,
+            'profiles'=>$perfiles,
+            'acciones' => $acciones,
+            'sucursales'=>$sucursales,
+            'empleados'=>$empleados,
+        ]);
     }
 //
 //    /**
@@ -156,12 +194,17 @@ class UsuariosController extends ControllerBase
 //    }
     public function edit($company, $id, $attributes =[])
     {
+        $sucursales_js = Crypt::encryptString('"conditions": [{"where": ["activo", "1"]}],"whereHas": [{"empresas":{"where":["fk_id_empresa", "$fk_id_empresa"]}}], "select": ["id_sucursal","sucursal"]');
+        $empleados = Empleados::selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->where('activo',1)->pluck('empleado','id_empleado')->prepend('Seleccione el empleado',0);
         $companies = Empresas::all();
         $perfiles = Perfiles::all();
         $profiles_permissions = Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')
             ->join('adm_det_modulo_accion','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_perfiles.fk_id_modulo_accion')
             ->select('adm_det_modulo_accion.*','adm_det_permisos_perfiles.fk_id_perfil')
             ->get();
+        $sucursalesAnteriores = Sucursales::whereHas('usuario_sucursales',function($q)use ($id){
+            $q->where('fk_id_usuario','=',$id);
+        })->get();
         $correos_user = Correos::join('gen_cat_empresas','adm_det_correos.fk_id_empresa','=','gen_cat_empresas.id_empresa')
             ->where('fk_id_usuario','=',$id)
             ->where('adm_det_correos.activo','=','true')
@@ -184,8 +227,11 @@ class UsuariosController extends ControllerBase
         $dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
         return view(currentRouteName('smart'), $dataview+['companies'=>$companies,
                                                                     'data'=>$data,
+                                                                    'empleados'=>$empleados,
+                                                                    'sucursales_anteriores'=>$sucursalesAnteriores,
                                                                     'correos'=>$correos_user,
                                                                     'profiles'=>$perfiles,
+                                                                    'sucursales_js'=>$sucursales_js,
                                                                     'perfiles_usuario'=>$perfiles_usuario,
                                                                     'acciones_usuario' => $acciones_usuario,
                                                                     'profiles_permissions'=>$profiles_permissions]);
@@ -205,7 +251,7 @@ class UsuariosController extends ControllerBase
         $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
         if ($entity->save()) {
-
+            $id = $entity->id_usuario;
             $correos_usuario = Correos::where('fk_id_usuario','=',$id)->get()->toArray();
 
             if( isset($request->correo_empresa ) )
@@ -316,7 +362,22 @@ class UsuariosController extends ControllerBase
                 }
             }
 
-
+            # Guardamos el detalle de sucursales en la que estara disponible
+            if(isset($request->fk_id_sucursal)) {
+                $sync = [];
+                foreach ($request->fk_id_sucursal as $id_sucursal) {
+                    if($id_sucursal) {
+                        $sync[] = $id_sucursal;
+                    }
+                }
+                $entity->usuario_sucursales()->sync($sync);
+            }
+            # Guardamos el detalle de empresa en la que estara disponible
+            if(isset($request->fk_id_empresa_default)) {
+                $sync = [];
+                $sync[] = $request->fk_id_empresa_default;
+                $entity->usuario_empresa()->sync($sync);
+            }
             # Eliminamos cache
 //            Cache::tags(getCacheTag('index'))->flush();
 

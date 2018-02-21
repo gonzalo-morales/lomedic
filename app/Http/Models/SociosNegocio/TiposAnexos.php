@@ -23,23 +23,11 @@ class TiposAnexos extends ModelBase
      * @var array
      */
     protected $fillable = ['tipo_anexo', 'activo'];
-
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
     
     protected $fields = [
         'tipo_anexo' => 'Tipo Anexo',
         'activo_text' => 'Estatus'
     ];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
 
     public function anexos(){
         return $this->hasOne(AnexosSociosNegocio::class);

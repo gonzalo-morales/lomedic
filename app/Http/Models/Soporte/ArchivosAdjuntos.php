@@ -26,13 +26,6 @@ class ArchivosAdjuntos extends ModelBase
      */
     protected $fillable = ['fk_id_solicitud','ruta_archivo','nombre_archivo','fk_id_mensaje'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
     public function seguimiento()
     {
         return $this->belongsTo('App\Http\Models\Soporte\SeguimientoSolicitudes','fk_id_mensaje','id_seguimiento');

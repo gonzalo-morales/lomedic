@@ -77,17 +77,6 @@ class SurtidoRequisicionHospitalaria extends ModelCompany
         return $this->estatus->estatus;
     }
 
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [
-//        'fk_id_socio_negocio' => 'required',
-//        'fk_id_sucursal' => 'required',
-//        'fk_id_condicion_pago' => 'required',
-//        'fk_id_tipo_entrega' => 'required'
-    ];
-
 //    public function sucursales()
 //    {
 //        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucurñsal','id_sucursal');

@@ -27,22 +27,17 @@ class NumerosCuenta extends ModelBase
 	protected $fillable = ['numero_cuenta', 'fk_id_banco','fk_id_sat_moneda','fk_id_empresa','activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'numero_cuenta' => 'required|numeric',
+		'numero_cuenta' => 'required|numeric|max:255',
 		'fk_id_banco' => 'required|numeric',
 		'fk_id_empresa' => 'required|numeric',
 		'fk_id_sat_moneda' => 'required|numeric'
 	];
+
+    protected $unique = ['numero_cuenta'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

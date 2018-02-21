@@ -27,17 +27,12 @@ class Tipocombustible extends ModelBase
 	protected $fillable = ['combustible', 'activo'];
 
 	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @var bool
-	 */
-	public $timestamps = false;
-
-	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = ['combustible' => 'required'];
+	public $rules = ['combustible' => 'required|max:20|regex:/^[a-zA-Z\s]+/'];
+
+	protected $unique = ['combustible'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

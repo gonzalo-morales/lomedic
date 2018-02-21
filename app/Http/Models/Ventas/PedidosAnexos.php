@@ -24,18 +24,6 @@ class PedidosAnexos extends ModelCompany
      */
     protected $fillable = ['fk_id_proyecto', 'nombre', 'archivo'];
 
-    /**
-     * Indicates if the model should be timestamped.
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    public $rules = [];
-
     public function pedido(){
         return $this->belongsTo(Pedidos::class,'fk_id_documento');
     }

@@ -52,9 +52,9 @@ class ResourceRegistrar extends OriginalRegistrar
 
     protected function addResourceImpress($name, $base, $controller, $options)
     {
-        $uri = $this->getResourceUri($name).'/exportar';
+        $uri = $this->getResourceUri($name).'/imprimir';
 
-        $action = $this->getResourceAction($name, $controller, 'export', $options);
+        $action = $this->getResourceAction($name, $controller, 'impress', $options);
 
         return $this->router->match(['GET', 'POST'], $uri, $action);
     }

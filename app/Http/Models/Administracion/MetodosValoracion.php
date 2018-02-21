@@ -23,17 +23,15 @@ class MetodosValoracion extends ModelBase
 	 */
 	protected $fillable = ['metodo_valoracion','activo'];
 
-	/**
-	 * Indicates if the model should be timestamped.
-	 * @var bool
-	 */
-	public $timestamps = false;
+    protected $unique = ['metodo_valoracion'];
 
 	/**
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [];
+	public $rules = [
+		'metodo_valoracion' => 'required|max:90|regex:/^[a-zA-Z\s]+/'
+	];
 
 	/**
 	 * Los atributos que seran visibles en smart-datatable

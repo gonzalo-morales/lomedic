@@ -36,7 +36,7 @@ class Stock extends ModelCompany
         'stock',
         'costo',
         'apartados',
-        'fk_id_tipo_entrada_detalle',
+        'fk_id_documento',
         'activo'
     ];
 
@@ -45,12 +45,6 @@ class Stock extends ModelCompany
      * @var array
      */
     // protected $fields = [];
-
-    /**
-     * The validation rules
-     * @var array
-     */
-    // public $rules = [];
 
     /**
      * Nice names to validator

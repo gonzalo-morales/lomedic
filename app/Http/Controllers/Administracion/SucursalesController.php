@@ -13,6 +13,9 @@ use App\Http\Models\Administracion\Zonas;
 use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\Empresas;
+use Illuminate\Http\Request;
+use DB;
+use Illuminate\Support\Facades\Cache;
 
 class SucursalesController extends ControllerBase
 {
@@ -29,7 +32,9 @@ class SucursalesController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 		if ($entity) {
+			// dd($entity);
 			return [
+				'empresas' => Empresas::select('id_empresa','nombre_comercial')->where('activo',1)->where('empresa',1)->get()->sortBy('nombre_comercial'),
 			    'localidades' => Localidades::select(['localidad','id_localidad'])->where('activo',1)->pluck('localidad','id_localidad'),
 			    'zonas' => Zonas::select(['zona','id_zona'])->where('activo',1)->pluck('zona','id_zona'),
 			    'paises' => Paises::select(['pais','id_pais'])->where('activo',1)->pluck('pais','id_pais'),
@@ -47,6 +52,7 @@ class SucursalesController extends ControllerBase
 			];
 		}
 		return [
+			'empresas' => Empresas::select('id_empresa','nombre_comercial')->where('activo',1)->where('empresa',1)->get()->sortBy('nombre_comercial'),
 		    'localidades' => Localidades::select(['localidad','id_localidad'])->where('activo',1)->pluck('localidad','id_localidad'),
 		    'zonas' => Zonas::select(['zona','id_zona'])->where('activo',1)->pluck('zona','id_zona'),
 		    'paises' => Paises::select(['pais','id_pais'])->where('activo',1)->pluck('pais','id_pais'),
@@ -71,5 +77,77 @@ class SucursalesController extends ControllerBase
 	public function sucursalesEmpleado($company,$id)
 	{
 		return Empleados::where('id_empleado',$id)->first()->sucursales()->select('id_sucursal as id','sucursal as text')->get()->toJson();
+	}
+
+	public function store(Request $request, $company, $compact = false)
+	{
+		$this->validate($request, $this->entity->rules);
+
+		DB::beginTransaction();
+		$entity = $this->entity->create($request->all());
+ 
+		if ($entity)
+		{
+			$id = $entity->id_sucursal;
+ 
+			# Guardamos el detalle de empresas en la que estara disponible
+			if(isset($request->empresas)) {
+				$sync = [];
+				foreach ($request->empresas as $id_empresa=>$active) {
+					if($active) {
+						$sync[] = $id_empresa;
+					}
+				}
+					$entity->empresas()->sync($sync);
+			}
+			DB::commit();
+ 
+			# Eliminamos cache
+			Cache::tags(getCacheTag('index'))->flush();
+			#$this->log('store', $id);
+			return $this->redirect('store');
+		} else {
+			DB::rollBack();
+			#$this->log('error_store');
+			return $this->redirect('error_store');
+		}
+
+	}
+	public function update(Request $request, $company, $id, $compact = false)
+	{
+	    # ¿Usuario tiene permiso para actualizar?
+	    #$this->authorize('update', $this->entity);
+
+	    # Validamos request, si falla regresamos atras
+	    $this->validate($request, $this->entity->rules);
+
+	    #DB::beginTransaction();
+	    $entity = $this->entity->findOrFail($id);
+		$entity->fill($request->all());
+		if ($entity->save())
+		{
+			$id = $entity->id_sucursal;
+ 
+			# Guardamos el detalle de empresas en la que estara disponible
+			if(isset($request->empresas)) {
+				$sync = [];
+				foreach ($request->empresas as $id_empresa=>$active) {
+					if($active) {
+						$sync[] = $id_empresa;
+					}
+				}
+					$entity->empresas()->sync($sync);
+			}
+			DB::commit();
+ 
+			# Eliminamos cache
+			Cache::tags(getCacheTag('index'))->flush();
+			#$this->log('store', $id);
+			return $this->redirect('store');
+		} else {
+			DB::rollBack();
+			#$this->log('error_store');
+			return $this->redirect('error_store');
+		}
 	}
 }

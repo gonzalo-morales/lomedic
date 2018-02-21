@@ -39,19 +39,14 @@ class CausasBajas extends ModelBase
         'activo_text' => 'Estatus'
     ];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+    protected $unique = ['causa_baja'];
 
     /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'causa_baja' => 'required|max:100',
+        'causa_baja' => 'required|max:100|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
 
     ];
 

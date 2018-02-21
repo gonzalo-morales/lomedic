@@ -31,10 +31,12 @@ class Diagnosticos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'clave_diagnostico' => 'required',
-		'diagnostico' => 'required',
+		'clave_diagnostico' => 'required|max:10',
+		'diagnostico' => 'required|max:200',
 		'medicamento_sugerido' => 'required',
 	];
+
+	protected $unique = ['clave_diagnostico','diagnostico'];
 
 	/**
 	 * Los atributos que seran visibles en smart-datatable

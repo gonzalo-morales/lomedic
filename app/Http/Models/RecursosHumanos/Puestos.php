@@ -39,19 +39,14 @@ class Puestos extends ModelBase
         'activo_text' => 'Estatus'
     ];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+    protected $unique = ['descripcion'];
 
     /**
      * The validation rules
      * @var array
      */
     public $rules = [
-        'descripcion' => 'required|max:100',
+        'descripcion' => 'required|max:100|regex:/^[a-zA-Z\s]+/',
     ];
 
     public function usuario()

@@ -26,13 +26,12 @@ class AplicacionesMedicamentos extends ModelBase
 	 */
 	protected $fillable = ['aplicacion', 'activo'];
 
-	/**
-	 * The validation rules
-	 * @var array
-	 */
-	public $rules = [
-		'aplicacion' => ['required','min:2','regex:/^[a-zA-Z\s]+/']
-	];
+   /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $unique = ['aplicacion'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable
