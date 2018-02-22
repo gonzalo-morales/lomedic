@@ -72,7 +72,7 @@ class OfertasController extends ControllerBase
         $request->request->set('fecha_creacion',Carbon::now()->toDateString());
 
         # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
+        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
@@ -134,7 +134,7 @@ class OfertasController extends ControllerBase
         $request->request->set('fecha_creacion',$entity->fecha_creacion);
 //        dd($request->request,$this->entity->rules);
         # Validamos request, si falla regresamos atras
-        $this->validate($request, $this->entity->rules);
+        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
         $entity->fill($request->all());
 		if ($entity->save()) {

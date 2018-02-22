@@ -85,7 +85,7 @@ class SolicitudesController extends ControllerBase
         $request->request->set('fk_id_estatus_solicitud',1);//Al estarse creando por primer vez, tiene que estar activa
 //        dd($request->request,$this->entity->rules);
         # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
+        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
         $isSuccess = $this->entity->create($request->all());
 
@@ -124,7 +124,7 @@ class SolicitudesController extends ControllerBase
         $request->request->set('fecha_creacion',$entity->fecha_creacion);
 //        dd($request->request,$this->entity->rules);
         # Validamos request, si falla regresamos atrás
-        $this->validate($request, $this->entity->rules);
+        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
         $entity->fill($request->all());
         if ($entity->save()) {

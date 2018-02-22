@@ -112,6 +112,19 @@ class ControllerBase extends Controller
 
         $request->request->set('activo',!empty($request->request->get('activo')));
 
+        foreach($this->entity->rules as $col=>$rules)
+        {
+            if(!in_array($col,$request->request->all())){
+                unset($this->entity->rules[$col]);
+            }
+        }
+
+//        foreach($request->request as $index=>$item){
+//            if(!isset($this->entity->rules[$index])){
+//                unset($this->entity->rules[$index]);
+//            }
+//        }
+
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 

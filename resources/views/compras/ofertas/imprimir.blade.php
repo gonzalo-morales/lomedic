@@ -90,7 +90,7 @@
                 <td>{{$detalle->impuesto->impuesto}}</td>
                 <td>${{number_format($detalle->precio_unitario,2,'.',',')}}</td>
                 <td>{{number_format($detalle->descuento_detalle,4,'.',',')}}%</td>
-                <td>${{number_format($detalle->total,2,'.',',')}}</td>
+                <td>${{number_format($detalle->total_producto,2,'.',',')}}</td>
             </tr>
             @endforeach
             {{--End for each detalle--}}
