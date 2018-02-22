@@ -248,13 +248,22 @@ class ModelBase extends Model
                 $rules[$col] = [];
                 $type = (string)$prop['type'];
 
+                if($prop['required'] == true && $type != 'Boolean') {
+                    array_push($rules[$col],'required');
+                }elseif ($prop['required'] == false){
+                    array_push($rules[$col],'nullable');
+                }
+
                 if($type == 'Boolean')
                 {
                     array_push($rules[$col],'min:0');
                     array_push($rules[$col],'max:1');
                 }
-                elseif(in_array($type,['Integer','Decimal'])) {
+                elseif(in_array($type,['Integer','SmallInt'])) {
                     array_push($rules[$col],'digits_between:0,'.$prop['length']);
+                }
+                elseif(in_array($type,['Decimal'])){
+                    array_push($rules[$col],'regex:/^(\d{0,'.$prop['length'].'}(\.\d{0,'.$prop['decimal'].'})?)$/');
                 }
                 elseif(!in_array($type,['Text','Date','DateTime'])) {
                     array_push($rules[$col],'max:'.$prop['length']);
@@ -269,15 +278,11 @@ class ModelBase extends Model
                     }
                 }
 
-                if($prop['required'] == true && $type != 'Boolean') {
-                    array_push($rules[$col],'required');
-                }
-
                 if(!empty($prop['comment'])) {
                     array_push($rules[$col],$prop['comment']);
                 }
             }
-        } 
+        }
         foreach($rules as $col=>$rule) {
             $rules[$col] = \implode('|',$rule);
         }

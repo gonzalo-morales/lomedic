@@ -74,7 +74,7 @@
 								{!! Form::cSelect('Cliente','fk_id_cliente',isset($clientes) ? $clientes->prepend('Sin cliente','0') : [],["class"=>'select2'])!!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{!! Form::cSelect('Proyecto','fk_id_proyecto',isset($proyectos)?$proyectos:[],['data-url'=>companyAction('HomeController@index').'/Proyectos.proyectos/api','class'=>'select2'])!!}
+								{!! Form::cSelect('Proyecto','fk_id_proyecto',isset($proyectos)?$proyectos:collect([])->prepend('Sin proyecto','0'),['data-url'=>companyAction('HomeController@index').'/Proyectos.proyectos/api','class'=>'select2'])!!}
 							</div>
     						<div class="form-group input-field col-md-3 col-sm-6">
     							{!! Form::cSelectWithDisabled('* SKU','fk_id_sku',[],[
@@ -148,7 +148,7 @@
     						<th>Precio unitario</th>
     						<th>Descuento (%)</th>
     						<th>Total</th>
-    						<th></th>
+    						<th>Eliminar</th>
     					</tr>
     					</thead>
     					<tbody>
@@ -303,11 +303,11 @@
     								<div class="form-group col-md-12">
     									<div class="input-group">
     										<span class="input-group-addon">$</span>
-    										{!! Form::text('total_oferta', null,['class'=>'form-control','disabled','placeholder'=>'0.00','id'=>'total_oferta']) !!}
+    										{!! Form::text('total_oferta', null,['class'=>'form-control','readonly','placeholder'=>'0.00','id'=>'total_oferta']) !!}
     									</div>
     								</div>
     							</td>
-    							<td></td>
+    							<td colspan="2"></td>
     						</tr>
     					</tfoot>
     				</table>

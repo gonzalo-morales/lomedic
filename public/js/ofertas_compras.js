@@ -216,7 +216,7 @@ function agregarProducto() {
                     $('<input type="hidden" name="_detalles['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />')[0].outerHTML + $('#precio_unitario').val(),
                     $('<input type="hidden" name="_detalles['+row_id+'][descuento_detalle]" value="' + $('#descuento_detalle').val() + '" />')[0].outerHTML + $('#descuento_detalle').val(),
                     $('<input type="text" value="'+ total +'" style="min-width: 100px" name="_detalles['+row_id+'][total_producto]" class="form-control total" readonly>')[0].outerHTML+$('<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega">')[0].outerHTML,
-                    '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">devare</i></button>'
+                    '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
                 ]);
                 dataTable.insert( {
                     data:data
@@ -409,11 +409,12 @@ function tiemposentrega() {
             mayor_tiempo = $(row).find('.tiempo_entrega').val() > mayor_tiempo ? $(row).find('.tiempo_entrega').val() : mayor_tiempo;
     });
     var fecha = new Date();
-    fecha.addDays(mayor_tiempo);
+    fecha.setDate(fecha.getDate() + +mayor_tiempo);
+    // fecha.addDays(mayor_tiempo);
     $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate());
     $('#tiempo_entrega').val(mayor_tiempo);
 }
-Date.prototype.addDays = function(days) {
-    this.setDate(this.getDate() + days);
-    return this;
-};
+// Date.prototype.addDays = function(days) {
+//     this.setDate(this.getDate() + days);
+//     return this;
+// };

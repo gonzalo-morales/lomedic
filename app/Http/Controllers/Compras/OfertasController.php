@@ -13,6 +13,7 @@ use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Compras\DetalleSolicitudes;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\Solicitudes;
+use Carbon\Carbon;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
 use App\Http\Models\Finanzas\CondicionesPago;
@@ -39,7 +40,7 @@ class OfertasController extends ControllerBase
             'actual_company_id'=>Empresas::where('conexion','LIKE',request()->company)->first()->id_empresa,
 	        'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
 	        'monedas'=>Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
-            'proyectos' => !empty($entity) ? Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto') : ['0'=>'Sin proyecto'],
+//            'proyectos' => !empty($entity) ? Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto')->prepend('Sin proyecto','0') : ['0'=>'Sin proyecto'],
 	        'unidadesmedidas'=>UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida'),
             "solicitud"=>Solicitudes::find(\request()->id_solicitud),
 	        "proveedores"=>SociosNegocio::where('activo',1)->whereHas('empresas',function ($q){
@@ -56,9 +57,7 @@ class OfertasController extends ControllerBase
 	public function store(Request $request, $company, $compact = false)
 	{
         # ¿Usuario tiene permiso para crear?
-//		$this->authorize('create', $this->entity);
-		# Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
+		$this->authorize('create', $this->entity);
 
 		$request->request->set('fk_id_estatus_oferta',1);
 		if(empty($request->fk_id_empresa)){
@@ -67,6 +66,14 @@ class OfertasController extends ControllerBase
         if(empty($request->descuento_oferta)){
 		    $request->request->set('descuento_oferta',0);
         }
+        if($request->fk_id_proyecto == 0){
+		    $request->fk_id_proyecto = null;
+        }
+        $request->request->set('fecha_creacion',Carbon::now()->toDateString());
+
+        # Validamos request, si falla regresamos pagina
+        $this->validate($request, $this->entity->rules);
+
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 			if(isset($request->_detalles)) {
@@ -112,10 +119,8 @@ class OfertasController extends ControllerBase
 	public function update(Request $request, $company, $id, $compact = false)
 	{
 		# ¿Usuario tiene permiso para actualizar?
-//		$this->authorize('update', $this->entity);
+		$this->authorize('update', $this->entity);
 
-		# Validamos request, si falla regresamos atras
-		$this->validate($request, $this->entity->rules);
 		$entity = $this->entity->findOrFail($id);
 
 		if($request->fk_id_empresa == 0){
@@ -124,6 +129,12 @@ class OfertasController extends ControllerBase
         if($request->fk_id_cliente == 0){
             $request->request->set('fk_id_cliente',$entity->fk_id_cliente);
         }
+
+        $request->request->set('fk_id_estatus_oferta',$entity->fk_id_estatus_oferta);
+        $request->request->set('fecha_creacion',$entity->fecha_creacion);
+//        dd($request->request,$this->entity->rules);
+        # Validamos request, si falla regresamos atras
+        $this->validate($request, $this->entity->rules);
 
         $entity->fill($request->all());
 		if ($entity->save()) {

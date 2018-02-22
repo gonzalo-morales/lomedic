@@ -119,7 +119,7 @@ class SolicitudesController extends ControllerBase
         # ¿Usuario tiene permiso para actualizar?
         $this->authorize('update', $this->entity);
 
-        # Validamos request, si falla regresamos atras
+        # Validamos request, si falla regresamos atrás
         $this->validate($request, $this->entity->rules);
 
         $entity = $this->entity->findOrFail($id);
