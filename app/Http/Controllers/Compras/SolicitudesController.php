@@ -17,6 +17,7 @@ use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\Ventas\FacturasClientes;
 use App\Http\Models\Ventas\Pedidos;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -75,17 +76,16 @@ class SolicitudesController extends ControllerBase
             $id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
             $request->request->set('fk_id_solicitante',$id_empleado);
         }
-
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
-
-        $request->request->set('fecha_creacion',DB::raw('now()'));
+        $request->request->set('fecha_creacion',Carbon::now()->toDateString());
 
         $request->request
             ->set('fk_id_departamento',Empleados::where('id_empleado',$request->fk_id_solicitante)
                 ->first()
                 ->fk_id_departamento);
         $request->request->set('fk_id_estatus_solicitud',1);//Al estarse creando por primer vez, tiene que estar activa
+//        dd($request->request,$this->entity->rules);
+        # Validamos request, si falla regresamos pagina
+        $this->validate($request, $this->entity->rules);
 
         $isSuccess = $this->entity->create($request->all());
 
