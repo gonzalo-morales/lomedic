@@ -118,11 +118,14 @@ class SolicitudesController extends ControllerBase
     {
         # ¿Usuario tiene permiso para actualizar?
         $this->authorize('update', $this->entity);
+        $entity = $this->entity->findOrFail($id);
 
+        $request->request->set('fk_id_estatus_solicitud',$entity->fk_id_estatus_solicitud);
+        $request->request->set('fecha_creacion',$entity->fecha_creacion);
+//        dd($request->request,$this->entity->rules);
         # Validamos request, si falla regresamos atrás
         $this->validate($request, $this->entity->rules);
 
-        $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
         if ($entity->save()) {
             if(isset($request->detalles)) {
