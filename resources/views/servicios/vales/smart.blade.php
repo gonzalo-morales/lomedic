@@ -8,13 +8,17 @@
 @endsection
 
 @section('content-width', 's12')
-@if(!Route::currentRouteNamed(currentRouteName('index')))
+
+@if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('create')))
     @section('left-actions')
-    {!! HTML::decode(link_to(companyAction('Servicios\ValesController@impress',['id'=>$data->id_vale]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
+        {!! HTML::decode(link_to(companyAction('Servicios\ValesController@impress',['id'=>$data->id_vale]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
     @endsection
+@endif
+@if(!Route::currentRouteNamed(currentRouteName('index')))
+
 @section('form-content')
     {{ Form::setModel($data) }}
-
+    {{--{{dd($data)}}--}}
     <div class="row">
         <div class="col-12 mb-3">
             {{--@if(Route::currentRouteNamed(currentRouteName('create')))--}}
@@ -39,7 +43,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        {{ Form::cText('Nombre del paciente', 'paciente') }}
+                                        {{ Form::cText('Nombre del paciente', 'paciente')}}
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
@@ -95,8 +99,8 @@
                                 <th>Clave producto</th>
                                 <th>Descripcion</th>
                                 <th>Cantidad solicitada</th>
-                                <th>Cantidad surtida</th>
                                 @if(!Route::currentRouteNamed(currentRouteName('show')))
+                                    <th>Cantidad surtida</th>
                                     <th>Cantidad disponible</th>
                                     <th>Cantidad a surtir</th>
                                     <th>Precio unitario</th>
@@ -162,7 +166,6 @@
     @include('layouts.smart.create')
 @endif
 @if (Route::currentRouteNamed(currentRouteName('index')))
-    {{--@section('title', 'Requisiciones Hospitalarias')--}}
     @include('layouts.smart.index')
 @endif
 
@@ -171,16 +174,11 @@
 @endif
 @if (Route::currentRouteNamed(currentRouteName('surtir')))
     @include('layouts.smart.edit')
-    {{--<script>--}}
-    {{--var detalle_requisicion = {!!json_encode($detalle_requisicion)!!};--}}
-    {{--</script>--}}
 @endif
 
 @if (Route::currentRouteNamed(currentRouteName('show')))
     @include('layouts.smart.show')
-
 @endif
-
 @if (Route::currentRouteNamed(currentRouteName('export')))
     @include('layouts.smart.export')
 @endif

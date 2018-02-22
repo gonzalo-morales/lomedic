@@ -198,6 +198,7 @@
     /*div.breakNow { page-break-inside:avoid; page-break-after:always; }*/
 </style>
 <body>
+    {{--{{$info_vale}}--}}
 {{--@for($i = 1 ; $i <= 4 ; $i++)--}}
    <div class="row margin-bottom">
        <div class="width-10 float-left text-center">
@@ -214,7 +215,7 @@
                <span style="color:white;"><b>FOLIO:</b></span>
            </div>
            <img src="img/b.png" style="height:20px; width:15px;"/>
-           <span id="folio"><b>asdf</b></span>
+           <span id="folio"><b>{{$vale->id_vale}}</b></span>
        </div>
    </div>
    <br>
@@ -229,7 +230,7 @@
             <div class="farmacies">Pila Seca</div>
         </div>
         <div class="width-25 float-left text-center input-group-addon">Fecha de expedición</div>
-        <div class="width-10 float-left text-center form-control" id="fecha" style="width:160px; font-size:18px;padding:2px; border:1px solid #ccc;"><b>12/12/2018</b></div>
+        <div class="width-10 float-left text-center form-control" id="fecha" style="width:160px; font-size:18px;padding:2px; border:1px solid #ccc;"><b>{{$vale->fecha_surtido}}</b></div>
    </div>
    <div class="row margin-bottom">
         <table class="float-left width-100">
@@ -239,7 +240,7 @@
                         <div class="text-center input-group-addon" style="width:148px;">Nombre del paciente</div>
                     </td>
                     <td style="padding: 5px 10px;" id="paciente">
-                        HERNANDO FERNANDO HERNÁNDEZ FERNÁNDEZ QUINTO DE LA NOVENA DINASTÍA
+                        {{$receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->nombre}}
                     </td>
                 </tr>
                 <tr>
@@ -247,7 +248,7 @@
                         <div class="text-center input-group-addon" style="width:148px;">Nombre del titular</div>
                     </td>
                     <td style="padding: 5px 10px;" id="titular">
-                        HERNANDO FERNANDO HERNÁNDEZ FERNÁNDEZ QUINTO DE LA NOVENA DINASTÍA
+                        {{$receta->dependiente($receta->fk_id_afiliacion,1)->nombre}}
                     </td>
                 </tr>
                 <tr>
@@ -255,7 +256,7 @@
                         <div class="text-center input-group-addon" style="width:148px;">Nombre del medico</div>
                     </td>
                     <td style="padding: 5px 10px;" id="medico">
-                        Brhadaranyakopanishadvivekachudamani Erreh Muñoz Castillo
+                       {{$receta->medico->NombreCompleto}}
                     </td>
                 </tr>
                 <tr>
@@ -263,7 +264,7 @@
                         <div class="text-center input-group-addon" style="width:148px;">Diagnóstico:</div>
                     </td>
                     <td style="padding: 5px 10px;" id="diagnostico">
-                        Espina bífida cervical sin hidrocéfalo Q05.6 Espina bífida torácica sin hidrocéfalo
+                       {{$receta->diagnostico->diagnostico}}
                     </td>
                 </tr>
             </tbody>
@@ -275,13 +276,18 @@
                         <div class="align-center" style="background-color: #eb742f;">
                             <span style="color:white;"><b>Edad:</b></span>
                         </div>
-                        200 años
+                        {{$edad}}
                     </td>
                     <td>
                         <div class="align-center" style="background-color: #eb742f;">
                             <span style="color:white;"><b>Patente:</b></span>
                         </div>
-                        Cantidad
+                        @if( $receta->pantente != '')
+                            {{ $receta->pantente }}
+                        @else
+                            &nbsp;
+                        @endif
+
                     </td>
                 </tr>
                 <tr>
@@ -289,13 +295,13 @@
                         <div class="align-center" style="background-color: #eb742f;">
                             <span style="color:white;"><b>Sexo:</b></span>
                         </div>
-                        Códigos
+                        {{$receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->genero}}
                     </td>
                     <td>
                         <div class="align-center" style="background-color: #eb742f;">
                             <span style="color:white;"><b>Tipo de usuario:</b></span>
                         </div>
-                        Cantidad
+                        {{$receta->parentesco['nombre']}}
                     </td>
                 </tr>
             </tbody>
@@ -312,13 +318,16 @@
                </tr>
                </thead>
                <tbody>
-                   <tr>
-                       <th>A123456789</th>
-                       <td>50,500</td>
-                       <td>
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit venenatis taciti, dignissim tincidunt orci tellus nullam cubilia libero rhoncus diam, quis blandit ac litora montes erat senectus duis. Mauris condimentum dictum neque lacinia lectus cras rutrum leo habitant habitasse sagittis, etiam imperdiet lacus id ridiculus convallis placerat primis fusce. Torquent blandit vivamus integer dis primis magna sed iaculis, rutrum aenean non dictumst urna congue parturient, pretium ac est eros bibendum leo tempor
-                       </td>
-                   </tr>
+
+                    @foreach(@$vale->detalles as $detalle)
+                        <tr>
+                            <th>{{$detalle->claveClienteProducto->clave_producto_cliente}}</th>
+                            <td>{{$detalle->cantidad_surtida}}</td>
+                            <td>{{$detalle->claveClienteProducto->producto($detalle->claveClienteProducto->fk_id_sku,$detalle->claveClienteProducto->fk_id_upc)}}</td>
+                        </tr>
+
+                    @endforeach
+
                    <tr>
                        <th style="border:none;"></th>
                        <td style="border:none;"></td>
@@ -342,7 +351,11 @@
                         <div class="text-center input-group-addon" style="width:148px;">Observaciones</div>
                     </td>
                     <td style="padding: 5px 10px;" id="observaciones">
-                            El aspecto de la cara se encuentra determinado por las modificaciones que en ella imprime las enfermedades. Puede reflejarse reacciones de miedo o estados de ánimo: alegría, tristeza, dolor. Tipos de facies: hipocrática, ictérica, anémica, tiroidea, cushingoide, acromegalia, mixedema.
+                        @if( $vale->observaciones != '')
+                            {{$vale->observaciones}}
+                        @else
+                            &nbsp;
+                        @endif
                     </td>
                 </tr>
             </tbody>

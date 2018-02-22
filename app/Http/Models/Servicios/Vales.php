@@ -9,27 +9,15 @@ use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\Medicos;
 use App\Http\Models\Administracion\Programas;
 use App\Http\Models\Proyectos\Proyectos;
+use App\Http\Models\Servicios\Recetas;
 
 class Vales extends ModelCompany
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
+
     protected $table = 'rec_opr_vales';
 
-    /**
-     * The primary key of the table
-     * @var string
-     */
     protected $primaryKey = 'id_vale';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'observaciones',
         'fk_id_usuario_captura',
@@ -43,24 +31,20 @@ class Vales extends ModelCompany
         'fk_id_usuario_cancelado',
         'eliminado',
         'fk_id_estatus_surtido',
+        'patente',
+        'fk_id_sucursal'
     ];
 
-    /**
-     * Los atributos que seran visibles en index-datable
-     * @var array
-     */
+    public $rules = [];
+
     protected $fields = [
         'id_vale' => '#',
         'fk_id_receta'=>'Receta',
-//        'observaciones'=>'Observaciones',
-//        'tipo_servicio' => 'Tipo de servicio',
-//        'id_afiliacion' => 'N. de afiliacion',
-//        'nombre_completo_paciente' => 'Paciente',
-//        'fecha_formated' => 'Fecha Captura',
-//        'estatus_formated' => 'Estatus de la receta'
+        'fecha_surtido'=>'Fecha de surtido',
+        'sucursal.sucursal'=>'Sucursal',
     ];
 
-    public function getNombreCompletoMedicoAttribute()
+    public function getNombreMedicoAttribute()
     {
         return $this->medico->nombre.' '.$this->medico->paterno.' '.$this->medico->materno;
     }
@@ -131,5 +115,9 @@ class Vales extends ModelCompany
     public function detalles()
     {
         return $this->hasMany( ValesDetalle::class,'fk_id_vale','id_vale');
+    }
+    public function receta()
+    {
+        return $this->hasMany( Recetas::class,'fk_id_receta','id_receta');
     }
 }

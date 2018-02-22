@@ -23,7 +23,6 @@ use App\Http\Models\Servicios\RequisicionesHospitalariasDetalle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade as PDF;
-
 use DB;
 
 class ValesController extends ControllerBase
@@ -37,12 +36,24 @@ class ValesController extends ControllerBase
 
     public function getDataView($entity = null)
     {
+
+        if(!empty($entity)){
+            $receta = Recetas::where('eliminar',false)->where('id_receta',$entity->fk_id_receta)->first();
+            $entity['titular'] = empty($entity) ? [] : $receta->dependiente($receta->fk_id_afiliacion,1)->nombre;
+            $entity['paciente'] = empty($entity) ? [] : $receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->nombre;
+            $entity['medico'] = empty($entity) ? [] : $receta->medico->NombreCompleto;
+            $entity['diagnostico'] = empty($entity) ? [] : $receta->diagnostico->diagnostico;
+//            $entity['edad'] = self::edad($receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->fecha_nacimiento);
+            $entity['edad'] = self::edad($receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->fecha_nacimiento);
+            $entity['patente'] = $receta->pantente;
+            $entity['genero'] = empty($entity) ? [] : $receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->genero;
+            $entity['parentesco'] = empty($entity) ? [] : $receta->parentesco['nombre'];
+        }
+
         return [
             'sucursales' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo', 1)->pluck('sucursal', 'id_sucursal')->prepend('Selecciona una opcion...', ''),
             'recetas' => empty($entity) ? [] : Recetas::where('eliminar',false)->pluck('folio','id_receta')->prepend('Selecciona una opcion...', ''),
             'solicitante' => Usuarios::select(['id_usuario','nombre_corto'])->where('activo',1)->pluck('nombre_corto','id_usuario')->prepend('Selecciona una opcion...', ''),
-//            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('Selecciona una opcion...', ''),
-//            'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'fk_id_usuario_captura' =>  Auth::id(),
         ];
 
@@ -110,7 +121,6 @@ class ValesController extends ControllerBase
             $json_detalle[$row] = [
                 'id_receta_detalle' => $detalle->id_receta_detalle,
                 'fk_id_receta' => $detalle->fk_id_receta,
-////                'fk_id_area' => $detalle->fk_id_area,
                 'fk_id_clave_cliente_producto' => $detalle->fk_id_clave_cliente_producto,
                 'cantidad_solicitada' => $detalle->cantidad_pedida,
                 'cantidad_surtida' => $detalle->cantidad_surtida,
@@ -123,12 +133,10 @@ class ValesController extends ControllerBase
             ];
         }
 
-        $json =[
-          'receta' => $json_receta,
-          'detalle' => $json_detalle,
-        ];
-
-        return $json;
+        return $json =[
+            'receta' => $json_receta,
+            'detalle' => $json_detalle,
+        ];;
     }
 
     public function edad($fecha_nac){
@@ -155,37 +163,14 @@ class ValesController extends ControllerBase
 
     public function impress($company,$id)
     {
-//        dd($company);
-//        $solicitud = Solicitudes::where('id_documento',$id)->first();
-////        $detalles = DetalleSolicitudes::where('fk_id_documento',$id)
-////            ->where('cerrado','f')->get();
-//        $subtotal = 0;
-//        $iva = 0;
-//        $total = 0;
-//        foreach ($solicitud->detalleSolicitudes as $detalle)
-//        {
-//            $subtotal += $detalle->precio_unitario * $detalle->cantidad;
-//            $iva += (($detalle->precio_unitario*$detalle->cantidad)*$detalle->impuesto->porcentaje)/100;
-//            $total += $detalle->importe;
-//        }
-//        $total = number_format($total,2,'.',',');
 
-//        $barcode = DNS1D::getBarcodePNG($solicitud->id_documento,'EAN8');
-//        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$solicitud->id_documento])), "QRCODE");
-
-//        $empresa = Empresas::where('conexion','LIKE',$company)->first();
+        $vale = Vales::where('id_vale',$id)->first();
+        $receta = Recetas::where('id_receta',$vale->fk_id_receta)->first();
 
         $pdf = PDF::loadView(currentRouteName('servicios.vales.imprimir'),[
-//            'solicitud' => $solicitud,
-////            'detalles' => $detalles,
-//            'subtotal' => $subtotal,
-//            'iva' => $iva,
-//            'importe' => $total,
-//            'total_letra' => num2letras($total),
-//            'barcode' => $barcode,
-//            'qr' => $qr,
-//            'empresa' => $empresa,
-//            'total' => $total
+            'vale' => $vale ,
+            'receta' => $receta ,
+            'edad' => self::edad($receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->fecha_nacimiento),
         ]);
 
         $pdf->setPaper('letter','landscape');
