@@ -208,7 +208,7 @@
     									['class'=>'form-control descuento','id'=>'descuento_detalle'.$detalle->id_documento_detalle,'style'=>'min-width:100px','placeholder'=>'99.0000','onkeyup'=>'total_row('.$detalle->id_documento_detalle.')']) !!}
     								</td>
     								<td>
-    									<input type="text" class="form-control total" id="total{{$detalle->id_documento_detalle}}" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total_producto]'}}" readonly value="{{number_format($detalle->total_producto,2,'.','')}}">
+    									<input type="text" class="form-control total" id="total{{$detalle->id_documento_detalle}}" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total_producto]'}}" readonly value="{{number_format($detalle->importe,2,'.','')}}">
     								</td>
     								<td>
     									<button class="btn is-icon text-primary bg-white"
