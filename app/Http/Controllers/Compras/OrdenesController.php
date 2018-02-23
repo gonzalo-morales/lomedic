@@ -13,6 +13,7 @@ use App\Http\Models\Compras\Ofertas;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\CondicionesAutorizacion;
 use App\Http\Models\Compras\Autorizaciones;
+use Carbon\Carbon;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
 use App\Http\Models\Finanzas\CondicionesPago;
@@ -25,7 +26,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Crypt;
 
 class OrdenesController extends ControllerBase
 {
@@ -76,7 +77,8 @@ class OrdenesController extends ControllerBase
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 			'estatus' => 2,
-            ]];
+            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]')
+        ]];
 		 return parent::create($company,$attributes);
 	}
 
@@ -85,23 +87,22 @@ class OrdenesController extends ControllerBase
         # ¿Usuario tiene permiso para crear?
 		$this->authorize('create', $this->entity);
 
-		# Validamos request, si falla regresamos pagina
-		$this->validate($request, $this->entity->rules);
-
-		$request->request->set('fecha_creacion',DB::raw('now()'));
+		$request->request->set('fecha_creacion',Carbon::now()->toDateString());
 
 		$request->request->set('fk_id_estatus_orden',1);
 		if(empty($request->fk_id_empresa)){
 		    $request->request->set('fk_id_empresa',Empresas::where('conexion','LIKE',$company)->first()->id_empresa);
         }
-
         if(!empty($request->importacion)){
 		    $request->request->set('importacion','t');
         }
 
-        $now = DB::raw('now()');
-        $request->request->set('fecha_estimada_entrega',DB::raw("date '$now' + integer '$request->tiempo_entrega'"));
+        $request->request->set('fecha_cancelacion',null);
+        $request->request->set('motivo_cancelacion',null);
 
+//        dd($request->request,$this->entity->rules);
+        # Validamos request, si falla regresamos pagina
+        $this->validate($request, $this->entity->rules);
         $isSuccess = $this->entity->create($request->all());
 		if ($isSuccess) {
 		    $descuento_rows = 0;
@@ -191,7 +192,8 @@ class OrdenesController extends ControllerBase
 		    'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 		    'condiciones'=>Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1),
 			'estatus' => $estatus,
-			]];
+            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]')
+            ]];
 		return parent::show($company,$id,$attributes);
 	}
 
@@ -215,7 +217,8 @@ class OrdenesController extends ControllerBase
 		    'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 		    'condiciones'=> Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1),
 			'estatus' => $estatus,
-			]];
+            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]')
+            ]];
 		return parent::edit($company, $id, $attributes);
 	}
 
@@ -253,11 +256,24 @@ class OrdenesController extends ControllerBase
 	{
 		# ¿Usuario tiene permiso para actualizar?
 		$this->authorize('update', $this->entity);
+        $entity = $this->entity->findOrFail($id);
+
+        $request->request->set('fecha_creacion',$entity->fecha_creacion);
+
+        $request->request->set('fk_id_estatus_orden',$entity->fk_id_estatus_orden);
+        if(empty($request->fk_id_empresa)){
+            $request->request->set('fk_id_empresa',Empresas::where('conexion','LIKE',$company)->first()->id_empresa);
+        }
+        if(!empty($request->importacion)){
+            $request->request->set('importacion','t');
+        }
+
+        $request->request->set('fecha_cancelacion',$entity->fecha_cancelacion);
+        $request->request->set('motivo_cancelacion',$entity->motivo_cancelacion);
 
 		# Validamos request, si falla regresamos atras
-		$this->validate($request, $this->entity->rules);
-		$entity = $this->entity->findOrFail($id);
-		$entity->fill($request->all());
+        $this->validate($request, $this->entity->rules);
+        $entity->fill($request->all());
 
 		if ($entity->save()) {
             $descuento_rows = 0;

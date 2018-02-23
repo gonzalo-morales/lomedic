@@ -83,8 +83,11 @@ $(document).ready(function(){
         })//Fin UPC
 
         $('#agregar').on('click',function () {
+            var sku = $('#fk_id_sku').val() ? $('#fk_id_sku').val() : "null";
+            var cliente = $('#fk_id_socio_negocio').val() ? $('#fk_id_socio_negocio').val() : "null";
+            var upc = $('#fk_id_upc').val() != null ? $('#fk_id_upc').val() : "null";
             $.ajax({
-                url: $('#fk_id_sku').data('url-tiempo_entrega'),
+                url: $('#fk_id_upc').data('url-tiempo_entrega'),
                 data: {
                     'param_js':tiempo_entrega_js,
                     $fk_id_sku:sku,
@@ -288,37 +291,39 @@ function initSelects() {
 function agregarProducto(tiempo_entrega) {
     validateDetail();
     if($('#form-model').valid()){
-        var row_id = dataTable.activeRows.length;
-        var total = totalProducto();
 
-        var data = [];
-        data.push([
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_documento]"/>')[0].outerHTML + 'N/A'+$('<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega">')[0].outerHTML,
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text,
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_upc').select2('data')[0].text,
-            $('#fk_id_sku').select2('data')[0].descripcion_corta,
-            $('#fk_id_sku').select2('data')[0].descripcion,
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_cliente]" value="' + $('#fk_id_cliente').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_cliente').select2('data')[0].text,
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_proyecto').select2('data')[0].text,
-            $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="' + $('#fecha_necesario').val() + '" />')[0].outerHTML + $('#fecha_necesario').val(),
-            $('<input type="hidden" name="_detalles['+row_id+'][cantidad]" class="cantidad_row" value="' + $('#cantidad').val() + '" />')[0].outerHTML + $('#cantidad').val(),
-            $('<input type="hidden" name="_detalles['+row_id+'][descuento_detalle]" class="descuento_row" value="' + $('#descuento').val() + '" />')[0].outerHTML + $('#descuento').val(),
-            $('<input type="hidden" name="_detalles['+row_id+'][fk_id_impuesto]" value="' + $('#fk_id_impuesto').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_impuesto').select2('data')[0].text+
-            $('<input type="hidden" class="porcentaje" value="' + $('#fk_id_impuesto').select2('data')[0].porcentaje + '" />')[0].outerHTML,
-            $('<input type="hidden" class="precio_unitario_row" name="_detalles['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />')[0].outerHTML + $('#precio_unitario').val(),
-            $('<input type="text" value="'+ total +'" name="_detalles['+row_id+'][total]" class="form-control total_row" readonly>')[0].outerHTML,
-            '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">devare</i></button>'
-        ]);
+            var row_id = dataTable.activeRows.length;
+            var total = totalProducto();
 
-        dataTable.insert( {
-            data:data
-        });
-        $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
-            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
-        });
-        limpiarCampos();
-        totalOrden();
-        tiemposentrega();
+            var data = [];
+            data.push([
+                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_documento]"/>')[0].outerHTML + 'N/A'+$('<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega">')[0].outerHTML,
+                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text,
+                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_upc').select2('data')[0].text,
+                $('#fk_id_sku').select2('data')[0].descripcion_corta,
+                $('#fk_id_sku').select2('data')[0].descripcion,
+                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_cliente]" value="' + $('#fk_id_cliente').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_cliente').select2('data')[0].text,
+                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_proyecto').select2('data')[0].text,
+                $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="' + $('#fecha_necesario').val() + '" />')[0].outerHTML + $('#fecha_necesario').val(),
+                $('<input type="hidden" name="_detalles['+row_id+'][cantidad]" class="cantidad_row" value="' + $('#cantidad').val() + '" />')[0].outerHTML + $('#cantidad').val(),
+                $('<input type="hidden" name="_detalles['+row_id+'][descuento_detalle]" class="descuento_row" value="' + $('#descuento').val() + '" />')[0].outerHTML + $('#descuento').val(),
+                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_impuesto]" value="' + $('#fk_id_impuesto').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_impuesto').select2('data')[0].text+
+                $('<input type="hidden" class="porcentaje" value="' + $('#fk_id_impuesto').select2('data')[0].porcentaje + '" />')[0].outerHTML,
+                $('<input type="hidden" class="precio_unitario_row" name="_detalles['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />')[0].outerHTML + $('#precio_unitario').val(),
+                $('<input type="text" value="'+ total +'" name="_detalles['+row_id+'][total]" class="form-control total_row" readonly>')[0].outerHTML+$('<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega">')[0].outerHTML,
+                '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">devare</i></button>'
+            ]);
+
+            dataTable.insert( {
+                data:data
+            });
+            $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
+                settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
+            });
+            limpiarCampos();
+            totalOrden();
+            tiemposentrega();
+
     }else{
         $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
@@ -504,6 +509,6 @@ function tiemposentrega() {
     $('#tiempo_entrega').val(mayor_tiempo);
 }
 Date.prototype.addDays = function(days) {
-    this.setDate(this.getDate() + days);
+    this.setDate(this.getDate() + +days);
     return this;
 };

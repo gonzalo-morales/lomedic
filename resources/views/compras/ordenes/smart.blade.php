@@ -11,6 +11,9 @@
 	@if (!Route::currentRouteNamed(currentRouteName('index')))
 		<script type="text/javascript" src="{{ asset('js/ordenes_compras.js') }}"></script>
 	@endif
+	<script type="text/javascript">
+        var tiempo_entrega_js = '{{$js_tiempo_entrega ?? ''}}';
+	</script>
 @endsection
 
 @section('form-actions')

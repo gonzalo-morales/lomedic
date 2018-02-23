@@ -87,7 +87,7 @@
                 <td>{{$detalle->unidad_medida->nombre}}</td>
                 <td>{{$detalle->impuesto->impuesto}}</td>
                 <td>${{number_format($detalle->precio_unitario,2,'.',',')}}</td>
-                <td>${{number_format($detalle->total,2,'.',',')}}</td>
+                <td>${{number_format($detalle->importe,2,'.',',')}}</td>
             </tr>
             @endforeach
             {{--End for each detalle--}}
