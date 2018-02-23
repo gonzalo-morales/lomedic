@@ -62,14 +62,15 @@
 						$empresa_socio = [];
 						if(isset($data->empresas))
 						{
-    						foreach ($data->empresas as $empresa)
-    						    array_push($empresa_socio, $empresa->pivot->fk_id_empresa);
+    						foreach ($data->empresas as $empresa){
+                                array_push($empresa_socio, $empresa->pivot->fk_id_empresa);
+							}
 						}
 						?>
 						
                         @foreach ($empresas as $row)
                         <li class="list-group-item form-group row">
-                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresas)?1:0) ) }}
+                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresas->toArray())?1:0) ) }}
                         </li>
                         @endforeach
                     </ul>
