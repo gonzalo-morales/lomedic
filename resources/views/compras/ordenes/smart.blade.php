@@ -63,7 +63,7 @@
 	<div class="form-group col-md-3 col-sm-12">
 		{{ Form::label('fk_id_socio_negocio', '* Proveedor a surtir') }}
 		@if(Route::currentRouteNamed(currentRouteName('show')))
-			{!! Form::select('fk_id_socio_negocio',isset($proveedores)?$proveedores:[],null,['id'=>'fk_id_socio_negocio','class'=>'form-control select2','style'=>'width:100%','data-url'=>companyAction('getProveedores')]) !!}
+			{!! Form::select('fk_id_socio_negocio',$proveedores ?? [],null,['id'=>'fk_id_socio_negocio','class'=>'form-control select2','style'=>'width:100%','data-url'=>companyAction('getProveedores')]) !!}
 		@else
 			{!! Form::select('fk_id_socio_negocio',[],null,['id'=>'fk_id_socio_negocio','class'=>'form-control select2','style'=>'width:100%','data-url'=>companyAction('getProveedores')]) !!}
 		@endif
@@ -82,8 +82,8 @@
 	<div class="form-group text-center col-md-3 col-sm-6">
 		{{ Form::label('', 'Días/Fecha') }}
 		<div class="input-group">
-			{!! Form::text('tiempo_entrega', null,['id'=>'tiempo_entrega','class'=>'form-control','readonly','placeholder'=>'Días para la entrega']) !!}
-			{!! Form::text('fecha_estimada_entrega', null,['id'=>'fecha_estimada_entrega','class'=>'form-control','readonly','placeholder'=>'Fecha estimada']) !!}
+			{!! Form::text('tiempo_entrega', $documento->tiempo_entrega ?? null,['id'=>'tiempo_entrega','class'=>'form-control','readonly','placeholder'=>'Días para la entrega']) !!}
+			{!! Form::text('fecha_estimada_entrega', $documento->fecha_estimada_entrega ?? null,['id'=>'fecha_estimada_entrega','class'=>'form-control','readonly','placeholder'=>'Fecha estimada']) !!}
 		</div>
 	</div>
 	<div class="form-group col-md-3 col-sm-6">

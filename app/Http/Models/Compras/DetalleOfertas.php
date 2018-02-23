@@ -70,7 +70,7 @@ class DetalleOfertas extends ModelCompany
 
     public function solicitud()
     {
-        return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_solicitud','fk_id_documento_base');
+        return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_documento','fk_id_documento_base');
     }
 
     public function unidadMedida()
