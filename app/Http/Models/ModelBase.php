@@ -129,7 +129,10 @@ class ModelBase extends Model
 	
 	public function addUniqueRules()
 	{
-	    $table = !strpos($this->getTable(), '.') ? $this->getTable() : substr($this->getTable(),strpos($this->getTable(), '.')+1,strlen($this->getTable()));
+	    $schema = config('database.connections.'.request()->company.'.schema');
+        $schema = !empty($schema) ? $schema : config('database.connections.'.request()->company.'.database');
+
+	    $table = !strpos($this->getTable(), '.') ? $schema.'.'.$this->getTable() : substr($this->getTable(),strpos($this->getTable(), '.')+1,strlen($this->getTable()));
 	    $key = $this->getKeyName();
 	    $id = !empty(request()->{$key}) ? request()->{$key} : 'null';
 	    

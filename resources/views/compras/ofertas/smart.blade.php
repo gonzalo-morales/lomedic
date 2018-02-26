@@ -158,7 +158,7 @@
     								<td>
     									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
     									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
-										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_linea]',$detalle->fk_id_documento_detalle) !!}
+										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_linea]',$detalle->id_documento_detalle) !!}
     								</td>
     								<td>
     									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}

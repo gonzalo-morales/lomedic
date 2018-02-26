@@ -40,13 +40,13 @@ class SeriesSkus extends ModelCompany
 	 * @var array
 	 */
 	public $rules = [
-		'nombre_serie' => 'max:60|required|regex:/^[a-zA-Z\s]+/',
+		'nombre_serie' => 'max:60|required|regex:/^[a-zA-Z\s]+$/',
 		'prefijo' => 'max:10|required',
 		'sufijo' => 'max:255|required',
-		'primer_numero' => 'max:32|required|numeric',
-		'numero_siguiente' => 'max:32|required|numeric',
-		'ultimo_numero' => 'max:32|required|numeric',
-		'descripcion' => 'max:255|required|regex:/^[a-zA-Z\s]+/',
+		'primer_numero' => 'required|numeric',
+		'numero_siguiente' => 'required|numeric',
+		'ultimo_numero' => 'required|numeric',
+		'descripcion' => 'max:255|required|regex:/^[a-zA-Z\s]+$/',
 	];
 
 	protected $unique = [

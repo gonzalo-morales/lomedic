@@ -92,8 +92,8 @@ class ControllerBase extends Controller
         event(new LogModulos($this->entity, $company, __FUNCTION__ , 'Antes de crear el registro'));
         
         $data = !isset($attributes['id']) ? $this->entity->getColumnsDefaultsValues() : $this->entity->find($attributes['id']);
-        $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
-
+        $this->entity->setConnection( $company );$validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
+//dd($validator);
         return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
             'data' => $data,
             'validator' => $validator

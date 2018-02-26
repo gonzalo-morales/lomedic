@@ -13,6 +13,7 @@ use App\Http\Models\Compras\Ofertas;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\CondicionesAutorizacion;
 use App\Http\Models\Compras\Autorizaciones;
+use App\Http\Models\SociosNegocio\ProductosSociosNegocio;
 use Carbon\Carbon;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
@@ -63,7 +64,6 @@ class OrdenesController extends ControllerBase
                 $detalles_documento = null;
                 break;
         }
-
         $clientes = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
 
         $attributes = ['dataview'=>[
@@ -77,7 +77,7 @@ class OrdenesController extends ControllerBase
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 			'estatus' => 2,
-            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]')
+            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]'),
         ]];
 		 return parent::create($company,$attributes);
 	}
@@ -95,6 +95,11 @@ class OrdenesController extends ControllerBase
         }
         if(!empty($request->importacion)){
 		    $request->request->set('importacion','t');
+        }
+
+        if(empty($request->tiempo_entrega || empty($request->fecha_estimada_entrega))){
+		    $request->request->set('tiempo_entrega',null);
+		    $request->request->set('fecha_estimada_entrega',null);
         }
 
         $request->request->set('fecha_cancelacion',null);
@@ -147,12 +152,12 @@ class OrdenesController extends ControllerBase
                 }
                 switch ($tipo_documento){
                     case 1:
-                        $solicitud = Solicitudes::where('id_solicitud',$request->id_solicitud)->first();
+                        $solicitud = Solicitudes::find($id_documento);
                         $solicitud->fk_id_estatus_solicitud = 2;
                         $solicitud->save();
                         break;
                     case 2:
-                        $oferta = Ofertas::where('id_oferta',$id_documento)->first();
+                        $oferta = Ofertas::find($id_documento);
                         $oferta->fk_id_estatus_oferta = 2;
                         $oferta->save();
                         break;
@@ -270,6 +275,11 @@ class OrdenesController extends ControllerBase
 
         $request->request->set('fecha_cancelacion',$entity->fecha_cancelacion);
         $request->request->set('motivo_cancelacion',$entity->motivo_cancelacion);
+
+        if(empty($request->tiempo_entrega || empty($request->fecha_estimada_entrega))){
+            $request->request->set('tiempo_entrega',null);
+            $request->request->set('fecha_estimada_entrega',null);
+        }
 
 		# Validamos request, si falla regresamos atras
         $this->validate($request, $this->entity->rules);
