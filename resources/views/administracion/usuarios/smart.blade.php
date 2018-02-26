@@ -184,7 +184,11 @@
 						<div class="col-md-6 col-sm-6">
 							<div class="form-group">
 								{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
-								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'fk_id_empresa_default','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
+								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,[
+									'id'=>'fk_id_empresa_default',
+									'class'=>'form-control',
+									'placeholder' => 'Seleccionar una empresa...',
+									])}}
 							</div>
 						</div>
 						{{--  {{dd($sucursales)}}  --}}
@@ -192,7 +196,7 @@
 							<div class="form-group">
 								<label>Sucursal(es):</label><br>
 								@foreach($sucursales as $sucursal)
-									<span class="badge badge-secondary badge_sucursales">{{$sucursal->sucursal}}</span>
+									<span class="badge badge-secondary rounded-0 badge_sucursales">{{$sucursal->sucursal}}</span>
 								@endforeach
 							</div>
 						</div>
@@ -228,7 +232,7 @@
     				<div id="listProfiles" class="list-group">
 						<div class="btn-group-toggle" data-toggle="buttons">
 							@foreach( $profiles as $profile )
-								<label class="btn btn-info active">
+								<label class="btn btn-info active btn-check">
 									<input type="checkbox" name="perfil[]" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)"/>{{$profile->nombre_perfil}}
 								</label>
 							@endforeach
@@ -310,7 +314,12 @@
 						<div class="col-md-6 col-sm-6">
 							<div class="form-group">
 								{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
-								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'fk_id_empresa_default','class'=>'form-control','placeholder' => 'Seleccionar una empresa...'])}}
+								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,[
+									'id'=>'fk_id_empresa_default',
+									'class'=>'form-control',
+									'placeholder' => 'Seleccionar una empresa...',
+									'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',
+									])}}
 							</div>
 						</div>
 						<div class="col-md-6 col-sm-12">
@@ -386,14 +395,14 @@
     			<div class="col-md-4 col-sm-12">
     				<h5>Perfiles</h5>
 					
-    				<div class="btn-group-toggle" data-toggle="buttons">
+    				<div id="listProfiles" class="btn-group-toggle" data-toggle="buttons">
     					@foreach( $profiles as $profile )
     						@if( array_intersect( $perfiles_usuario->pluck('nombre_perfil','id_perfil')->toArray() ,$profile->toArray() ) )
-    							<label class="btn btn-info active" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
+    							<label class="btn btn-info active btn-check" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
     								<input type="checkbox"  name="perfil[]"  id="perfil_check_{{$profile->id_perfil}}" value="{{$profile->id_perfil}}" checked="checked" style="display: none">{{$profile->nombre_perfil}}
 								</label>
     						@else
-    							<label class="btn btn-info active" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
+    							<label class="btn btn-info btn-check" id="perfil_{{$profile->id_perfil}}" onclick="accionesPerfil(this.id)">
     								<input type="checkbox" name="perfil[]" id="perfil_check_{{$profile->id_perfil}}" value="{{$profile->id_perfil}}"  style="display: none">{{$profile->nombre_perfil}}
 								</label>
     						@endif

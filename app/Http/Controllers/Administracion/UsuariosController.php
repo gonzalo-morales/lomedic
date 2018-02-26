@@ -75,27 +75,37 @@ class UsuariosController extends ControllerBase
 
     public function store(Request $request, $company, $compact = false)
     {
+        $password = Hash::make($request->passowrd);
+        $request->request->set('password',$password);
         $entity = $this->entity->create($request->all());
         if ($entity) {
             $id = $entity->id_usuario;
-            foreach ( $request->input('correo_empresa') as $email_company )
-            {
-                DB::table('adm_det_correos')->insert([
-                    'correo'=> $email_company['correo'],
-                    'fk_id_empresa'=> $email_company['id_empresa'],
-                    'fk_id_usuario' => $entity->id_usuario,
-                ]);
+
+            if(isset($request->correo_empresa)) {
+                $mails = [];
+                foreach ($request->correo_empresa as $email_company) {
+                    if($email_company) {
+                        $mails[]= 
+                        [
+                            'correo' =>  $email_company['correo'],
+                            'fk_id_empresa' =>  intval($email_company['id_empresa']),
+                            'fk_id_usuario' =>  $id
+                        ];
+                    }
+                }
+                $entity->mails()->insert($mails);
             }
 
-            foreach ( $request->input('perfil') as $perfil )
-            {
-                $id_perfil = explode( '_', $perfil );
-                DB::table('adm_det_perfiles_usuarios')->insert([
-                    'fk_id_perfil' => $perfil,
-                    'fk_id_usuario' => $entity->id_usuario,
-                ]);
+            if(isset($request->perfil)) {
+                $sync = [];
+                foreach ($request->perfil as $perfil) {
+                    if($perfil) {
+                        $sync[]= $perfil;
+                    }
+                }
+                $entity->perfiles()->sync($sync);
             }
-//            dump($request->input('accion_modulo'));
+
             foreach ( $request->input('accion_modulo') as $accion_modulo )
             {
                 DB::table('adm_det_permisos_usuarios')->insert([
@@ -103,6 +113,7 @@ class UsuariosController extends ControllerBase
                     'fk_id_modulo_accion' => $accion_modulo,
                 ]);
             }
+
             # Guardamos el detalle de sucursales en la que estara disponible
             if(isset($request->fk_id_sucursal)) {
                 $sync = [];
@@ -262,6 +273,10 @@ class UsuariosController extends ControllerBase
                     {
                         Correos::create(['correo' => $correo['correo'],'fk_id_empresa'=>$correo['id_empresa'] ,'fk_id_usuario' => $id]);
                     }
+                    else
+                    {
+                        Correos::where(['correo' => $correo['correo']])->update(['activo' => false]);
+                    }
                 }
             }
 
@@ -320,46 +335,15 @@ class UsuariosController extends ControllerBase
                 }
             }
 
-            $perfiles_usuario = PerfilesUsuarios::where('fk_id_usuario','=',$id)->get()->toArray();
-            if(isset($request->perfil))
-            {
-
-                foreach ($request->perfil as $perfil)
-                {
-                    if (array_search($perfil, array_column($perfiles_usuario, 'fk_id_perfil')) === false)
-                    {
-                        if(PerfilesUsuarios::where('fk_id_usuario',$id)->where('fk_id_perfil',$perfil)->first()== '')
-                        {
-                            PerfilesUsuarios::create(['fk_id_usuario' => $id,'fk_id_perfil' => $perfil]);
-                        }
+            # Guardamos el detalle de perfiles
+            if(isset($request->perfil)) {
+                $sync = [];
+                foreach ($request->perfil as $perfil) {
+                    if($perfil) {
+                        $sync[]= $perfil;
                     }
                 }
-            }
-
-            if(isset($request->perfil)){
-
-                foreach ($perfiles_usuario as $perfil)
-                {
-//                    dump($perfil);
-//                    dump($request->perfil);
-//                    dump(array_search($perfil['fk_id_perfil'], $request->perfil));
-                    if (array_search($perfil['fk_id_perfil'], $request->perfil) === false)
-                    {
-                        PerfilesUsuarios::where('fk_id_usuario','=',$id)
-                            ->where('fk_id_perfil','=',$perfil['fk_id_perfil'])
-                            ->delete();
-                    }
-                }
-
-            }
-            else
-            {
-                foreach ($perfiles_usuario as $perfil)
-                {
-                    PerfilesUsuarios::where('fk_id_usuario','=',$id)
-                        ->where('fk_id_perfil','=',$perfil['fk_id_perfil'])
-                        ->delete();
-                }
+                $entity->perfiles()->sync($sync);
             }
 
             # Guardamos el detalle de sucursales en la que estara disponible
