@@ -84,6 +84,7 @@ class RecetasController extends ControllerBase
             if($sku->clave_cliente_productos['cantidad_presentacion'] != null && $sku->clave_cliente_productos['tope_receta'] != null && $sku->clave_cliente_productos['disponibilidad'] != null ){
                 $json[] = [
                     'id' => (int)$sku->id_sku,
+                    'sku' => $sku->sku,
                     'fk_id_clave_cliente_producto' => $sku->clave_cliente_productos['id_clave_cliente_producto'],
                     'clave_cliente_producto' => $sku->clave_cliente_productos['clave_producto_cliente'],
                     'text' => $sku->descripcion,

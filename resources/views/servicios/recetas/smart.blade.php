@@ -167,7 +167,7 @@
                                                         </div>
                                                         <div class="form-group col-md-12 my-2">
                                                             <div class="sep sepBtn">
-                                                                <button id="agregar" class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button"><i class="material-icons">add</i></button>
+                                                                <button class="btn btn-primary btn-large btn-circle" data-placement="bottom" data-delay="100" data-tooltip="Agregar" data-toggle="tooltip" data-action="add" title="Agregar" type="button" onclick="agregar_medicamento();"><i class="material-icons">add</i></button>
                                                             </div>
                                                         </div>
 
