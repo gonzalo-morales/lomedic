@@ -539,7 +539,6 @@
                                 if (response[0].upcs.length > 0) {
                                     options.push('<option value="0" selected disabled>...</option>');
                                     for (i in response[0].upcs) {
-                                        console.log( response[0].upcs[i] )
                                         options.push('<option data-upc="'+response[0].upcs[i].upc+'" data-marca="'+response[0].upcs[i].marca+'" data-descripcion="'+response[0].upcs[i].descripcion+'" value="' + response[0].upcs[i].id_upc + '">' + response[0].upcs[i].upc + ' - ' + response[0].upcs[i].descripcion + '</option>');
                                     }
                                 } else {
@@ -652,8 +651,6 @@
                             /* Si detalle y formulario estan validados */
                             if ($(form).validate().form()) {
                                 form.submit()
-                            } else {
-                                console.log('nada aun ...')
                             }
                         } else {
                             //Validamos la otra sección

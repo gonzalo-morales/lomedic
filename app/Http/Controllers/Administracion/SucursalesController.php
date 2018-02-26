@@ -13,6 +13,7 @@ use App\Http\Models\Administracion\Zonas;
 use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\Empresas;
+use App\Http\Models\Administracion\Jurisdicciones;
 use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Cache;
@@ -48,6 +49,7 @@ class SucursalesController extends ControllerBase
     				})->pluck('municipio','id_municipio'),
 				'sucursales' => $this->entity->select(['sucursal','id_sucursal'])->where('activo',1)->pluck('sucursal','id_sucursal'),
 				'tipos' => TipoSucursal::select(['tipo','id_tipo'])->where('activo',1)->pluck('tipo','id_tipo'),
+				'jurisdicciones' => Jurisdicciones::select('id_jurisdiccion','jurisdiccion')->where('activo',1)->pluck('jurisdiccion','id_jurisdiccion'),
 				'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
 			];
 		}
@@ -55,7 +57,8 @@ class SucursalesController extends ControllerBase
 			'empresas' => Empresas::select('id_empresa','nombre_comercial')->where('activo',1)->where('empresa',1)->get()->sortBy('nombre_comercial'),
 		    'localidades' => Localidades::select(['localidad','id_localidad'])->where('activo',1)->pluck('localidad','id_localidad'),
 		    'zonas' => Zonas::select(['zona','id_zona'])->where('activo',1)->pluck('zona','id_zona'),
-		    'paises' => Paises::select(['pais','id_pais'])->where('activo',1)->pluck('pais','id_pais'),
+			'paises' => Paises::select(['pais','id_pais'])->where('activo',1)->pluck('pais','id_pais'),
+			'jurisdicciones' => Jurisdicciones::select('id_jurisdiccion','jurisdiccion')->where('activo',1)->pluck('jurisdiccion','id_jurisdiccion'),
 		    'sucursales' => $this->entity->select(['sucursal','id_sucursal'])->where('activo',1)->pluck('sucursal','id_sucursal'),
 		    'tipos' => TipoSucursal::select(['tipo','id_tipo'])->where('activo',1)->pluck('tipo','id_tipo'),
 		    'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
