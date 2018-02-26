@@ -26,6 +26,8 @@ class ClasificacionesProyectos extends ModelBase
 	 */
 	protected $fillable = ['clasificacion', 'nomenclatura','activo'];
 
+	protected $unique = ['clasificacion'];
+
 	/**
 	 * The validation rules
 	 * @var array
