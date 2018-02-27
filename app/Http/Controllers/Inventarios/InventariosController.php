@@ -18,9 +18,9 @@ class InventariosController extends ControllerBase
 	 * Create a new controller instance.
 	 * @return void
 	 */
-	public function __construct(Inventarios $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Inventarios;
 	}
 
 	public function getDataView($entity = null)

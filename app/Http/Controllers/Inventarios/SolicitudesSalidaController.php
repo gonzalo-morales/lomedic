@@ -22,9 +22,9 @@ class SolicitudesSalidaController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(SolicitudesSalida $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new SolicitudesSalida;
 	}
 
 	public function getDataView($entity = null)

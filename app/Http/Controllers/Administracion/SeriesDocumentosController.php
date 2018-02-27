@@ -14,9 +14,9 @@ class SeriesDocumentosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-    public function __construct(SeriesDocumentos $entity)
+    public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new SeriesDocumentos;
 	}
 	
 	public function getDataView($entity = null)

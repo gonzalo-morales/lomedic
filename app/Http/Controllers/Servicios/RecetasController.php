@@ -24,9 +24,9 @@ class RecetasController extends ControllerBase
      *
      * @return void
      */
-    public function __construct(Recetas $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Recetas;
     }
 
     public function getDataView($entity = null)

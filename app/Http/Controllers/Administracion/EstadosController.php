@@ -13,9 +13,9 @@ class EstadosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Estados $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Estados;
 	}
 
 	public function getDataView($entity = null)

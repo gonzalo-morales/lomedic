@@ -24,9 +24,9 @@ class SalidasController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Salidas $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Salidas;
 	}
 
 	public function getDataView($entity = null)

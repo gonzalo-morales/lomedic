@@ -11,8 +11,8 @@ class AgrupadoresCuentasController extends ControllerBase
 	 *
 	 * @return void
 	 */
-    public function __construct(AgrupadoresCuentas $entity)
+    public function __construct()
 	{
-		$this->entity = $entity;
+		$this->entity = new AgrupadoresCuentas;
 	}
 }

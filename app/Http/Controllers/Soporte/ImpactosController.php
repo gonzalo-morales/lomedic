@@ -7,8 +7,8 @@ use App\Http\Models\Soporte\Impactos;
 class ImpactosController extends ControllerBase
 {
 
-    public function __construct(Impactos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Impactos;
     }
 }

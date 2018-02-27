@@ -12,8 +12,8 @@ class IndicacionTerapeuticaController extends ControllerBase
 	 *
 	 * @return void
 	 */
-    public function __construct(IndicacionTerapeutica $entity)
+    public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new IndicacionTerapeutica;
 	}
 }

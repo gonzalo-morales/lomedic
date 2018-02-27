@@ -12,9 +12,9 @@ use DB;
 class AfiliacionesController extends ControllerBase
 {
 
-    public function __construct(Afiliaciones $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Afiliaciones;
     }
 
     public function getDataView($entity = null)

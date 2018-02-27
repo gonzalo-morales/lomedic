@@ -51,7 +51,7 @@ class Perfiles extends ModelBase
         'nombre_perfil' => 'required|max:20|regex:/^[a-zA-Z\s]+/',
     ];
 
-    // protected $unique = ['nombre_perfil'];
+    protected $unique = ['nombre_perfil'];
 
     /**
      * Obtenemos usuarios relacionados al perfil

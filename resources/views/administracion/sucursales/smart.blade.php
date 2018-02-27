@@ -166,7 +166,7 @@
 										{{ Form::cSelectWithDisabled('Sucursal proveedora', 'id_sucursal_proveedor', $sucursales ?? []) }}
 									</div>
 									<div class="form-group col-md-4">
-										{{ Form::cSelectWithDisabled('Jurisdiccion', 'fk_id_jurisdiccion') }}
+										{{ Form::cSelectWithDisabled('Jurisdiccion', 'fk_id_jurisdiccion',$jurisdicciones ?? []) }}
 									</div>
 								</div>
 							</div>

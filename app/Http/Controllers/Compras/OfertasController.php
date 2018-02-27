@@ -28,9 +28,9 @@ use Illuminate\Support\Facades\Crypt;
 
 class OfertasController extends ControllerBase
 {
-	public function __construct(Ofertas $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+		$this->entity = new Ofertas;
 	}
 	
 	public function getDataView($entity = null)

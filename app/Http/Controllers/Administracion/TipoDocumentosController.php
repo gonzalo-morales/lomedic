@@ -11,8 +11,8 @@ class TipoDocumentosController extends ControllerBase
 	 * Create a new controller instance.
 	 * @return void
 	 */
-	public function __construct(TiposDocumentos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new TiposDocumentos;
 	}
 }

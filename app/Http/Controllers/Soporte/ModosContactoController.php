@@ -7,8 +7,8 @@ use App\Http\Models\Soporte\ModosContacto;
 class ModosContactoController extends ControllerBase
 {
 
-    public function __construct(ModosContacto $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new ModosContacto;
     }
 }

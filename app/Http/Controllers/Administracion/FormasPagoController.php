@@ -13,8 +13,8 @@ class FormasPagoController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(FormasPago $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new FormasPago;
 	}
 }

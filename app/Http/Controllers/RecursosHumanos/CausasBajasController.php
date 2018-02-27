@@ -11,10 +11,8 @@ use App\Http\Models\Logs;
 
 class CausasBajasController extends ControllerBase
 {
-    public function __construct(CausasBajas $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
-        #$this->entity_name = strtolower(class_basename($entity));
-        $this->companies = Empresas::all();
+        $this->entity = new CausasBajas;
     }
 }

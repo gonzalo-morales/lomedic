@@ -6,7 +6,6 @@ $(document).ready(function () {
 
 
     $('#fk_id_sucursal').select2();
-    // $('#id_receta').select2();
     let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
     $('#fk_id_sucursal').on('change', function() {
         $.ajax({
@@ -43,11 +42,11 @@ $(document).ready(function () {
                     $('#parentesco').val(data.receta.parentesco);
 
                     $.each(data.detalle, function(key,values) {
-                        if(values.cantidad_solicitada != values.cantidad_surtida && values.cantidad_disponible == 0)
-                        {
+                        // if(values.cantidad_solicitada != values.cantidad_surtida && values.cantidad_disponible == 0)
+                        // {
                             $('#detalle').append(
                                 '<tr>' +
-                                '<td>'+values.clave_cliente_producto+'</td>'+
+                                '<td>'+values.sku+'</td>'+
                                 '<td>'+values.descripcion+'</td>'+
                                 '<td>'+values.cantidad_solicitada+'</td>'+
                                 '<td class="cantidad_surtida">'+values.cantidad_surtida+'</td>'+
@@ -64,12 +63,30 @@ $(document).ready(function () {
                                 '<input type="hidden" name="relations[has][detalles]['+ key +'][importe]" class="importe" value="'+ values.precio_unitario +'">'+
                                 '</tr>'
                             );
-                        }
+                        // }
                     });
                 }
             });
         }
     });
+
+    $("#form-model").submit(function(){
+        var cont = 0;
+        $.each($('.cantidad'),function (index,value) {
+            cont = cont + $(value).val();
+        });
+
+        if( cont == 0 )
+        {
+            mensajeAlerta('Favor de ingresar por lo menos un producto.','danger');
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    });
+
 });
 function calculatotal(el) {
     var cantidad = $(el).val();
@@ -83,12 +100,6 @@ function calculatotal(el) {
     {
         var nueva_cantidad_diponible = cantidad_disponible - cantidad;
     }
-    // else if( (cantidad_disponible - cantidad) < 0 )
-    // {
-    //     var nueva_cantidad_diponible = 0;
-    //     cantidad_total = cantidad_total - 1;
-    //     $(el).val(cantidad-1);
-    // }
 
     $(el).parent().parent().find('.cantidad_disponible').html(nueva_cantidad_diponible);
     $(el).parent().parent().find('.importe').val(cantidad_total*precio);
@@ -102,3 +113,17 @@ function calculatotal(el) {
     $('#total').html('$ '+parseFloat(total, 10).toFixed(2));
 };
 
+function mensajeAlerta(mensaje,tipo){
+
+    var titulo = '';
+
+    if(tipo == 'danger'){ titulo = '¡Error!'}
+    else if(tipo == 'success'){titulo = '¡Correcto!' }
+    $.toaster({priority:tipo,
+            title: titulo,
+            message:mensaje,
+            settings:{'timeout':10000,
+                'toaster':{'css':{'top':'5em'}}}
+        }
+    );
+}

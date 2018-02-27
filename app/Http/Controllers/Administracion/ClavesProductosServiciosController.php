@@ -13,8 +13,8 @@ class ClavesProductosServiciosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(ClavesProductosServicios $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new ClavesProductosServicios;
 	}
 }

@@ -13,9 +13,9 @@ class LaboratoriosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Laboratorios $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Laboratorios;
 	}
 
 	public function getDataView($entity = null)

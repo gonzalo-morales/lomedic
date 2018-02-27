@@ -31,9 +31,9 @@ use App\Http\Models\Administracion\ModalidadesEntrega;
 
 class ProyectosController extends ControllerBase
 {
-    public function __construct(Proyectos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Proyectos;
     }
     
     public function getDataView($entity = null)

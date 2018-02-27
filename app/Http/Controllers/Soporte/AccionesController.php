@@ -8,9 +8,9 @@ use App\Http\Models\Soporte\Subcategorias;
 class AccionesController extends ControllerBase
 {
 
-    public function __construct(Acciones $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Acciones;
     }
     
     public function getDataView($entity = null)

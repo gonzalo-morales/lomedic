@@ -14,9 +14,9 @@ class FamiliasProductosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(FamiliasProductos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new FamiliasProductos;
 	}
 
 	public function getDataView($entity = null)

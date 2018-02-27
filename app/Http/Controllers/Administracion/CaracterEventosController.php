@@ -12,8 +12,8 @@ class CaracterEventosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(CaracterEventos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new CaracterEventos;
 	}
 }

@@ -12,8 +12,8 @@ class DiagnosticosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Diagnosticos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Diagnosticos;
 	}
 }

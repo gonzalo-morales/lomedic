@@ -7,8 +7,8 @@ use App\Http\Models\Soporte\Urgencias;
 class UrgenciasController extends ControllerBase
 {
 
-    public function __construct(Urgencias $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Urgencias;
     }
 }

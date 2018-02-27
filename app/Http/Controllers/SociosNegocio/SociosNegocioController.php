@@ -35,9 +35,9 @@ use App\Http\Models\RecursosHumanos\Empleados;
 
 class SociosNegocioController extends ControllerBase
 {
-	public function __construct(SociosNegocio $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new SociosNegocio;
 	}
 
 	public function getDataView($entity = null)

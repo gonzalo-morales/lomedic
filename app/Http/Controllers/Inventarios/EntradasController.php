@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\DB;
 
 class EntradasController extends ControllerBase
 {
-    public function __construct(Entradas $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Entradas;
     }
 
     public function getDataView($entity = null)

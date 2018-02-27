@@ -22,9 +22,9 @@ use Illuminate\Support\Facades\Cache;
 
 class NotasCreditoProveedorController extends ControllerBase
 {
-	public function __construct(NotasCreditoProveedor $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new NotasCreditoProveedor;
 	}
 
 	public function getDataView($entity = null)

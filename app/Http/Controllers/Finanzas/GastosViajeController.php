@@ -13,9 +13,9 @@ use Illuminate\Support\Carbon;
 
 class GastosViajeController extends ControllerBase
 {
-    public function __construct(GastosViaje $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new GastosViaje;
     }
 
     public function getDataView($entity = null)

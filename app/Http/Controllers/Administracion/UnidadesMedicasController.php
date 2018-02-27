@@ -12,8 +12,8 @@ class UnidadesMedicasController extends ControllerBase
      *
      * @return void
      */
-    public function __construct(UnidadesMedicas $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new UnidadesMedicas;
     }
 }

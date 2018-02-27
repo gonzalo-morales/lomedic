@@ -14,9 +14,9 @@ use App\Events\LogModulos;
 
 class AutorizacionesController extends ControllerBase
 {
-    public function __construct(Autorizaciones $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Autorizaciones;
     }
 
     public function update(Request $request, $company, $id, $compact = false)

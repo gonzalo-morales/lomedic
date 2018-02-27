@@ -13,9 +13,9 @@ class SubgrupoProductosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(SubgrupoProductos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new SubgrupoProductos;
 	}
 	
 	public function getDataView($entity = null)

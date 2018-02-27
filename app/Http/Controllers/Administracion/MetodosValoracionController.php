@@ -11,8 +11,8 @@ class MetodosValoracionController extends ControllerBase
 	 * Create a new controller instance.
 	 * @return void
 	 */
-	public function __construct(MetodosValoracion $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new MetodosValoracion;
 	}
 }

@@ -12,8 +12,8 @@ class TiposComprobantesController extends ControllerBase
      *
      * @return void
      */
-    public function __construct(TiposComprobantes $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new TiposComprobantes;
     }
 }

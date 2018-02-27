@@ -12,8 +12,8 @@ class FormaFarmaceuticaController extends ControllerBase
 	 *
 	 * @return void
 	 */
-    public function __construct(FormaFarmaceutica $entity)
+    public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new FormaFarmaceutica;
 	}
 }

@@ -36,9 +36,9 @@ use App\Http\Models\Ventas\NotasCreditoClientes;
 
 class NotasCargoClientesController extends ControllerBase
 {
-    public function __construct(NotasCargoClientes $entity)
+    public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new NotasCargoClientes;
 	}
 
 	public function getDataView($entity = null)

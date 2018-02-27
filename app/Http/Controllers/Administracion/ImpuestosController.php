@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Response;
 
 class ImpuestosController extends ControllerBase
 {
-    public function __construct(Impuestos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Impuestos;
     }
 
     public function obtenerPorcentaje($company,$id)

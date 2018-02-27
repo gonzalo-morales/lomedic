@@ -13,9 +13,9 @@ class SubdependenciasController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Subdependencias $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Subdependencias;
 	}
 
 	public function getDataView($entity = null)

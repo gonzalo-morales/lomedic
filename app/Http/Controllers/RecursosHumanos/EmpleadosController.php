@@ -15,9 +15,9 @@ use DB;
 class EmpleadosController extends ControllerBase
 {
 
-    public function __construct(Empleados $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Empleados;
     }
     
     public function getDataView($entity = null)

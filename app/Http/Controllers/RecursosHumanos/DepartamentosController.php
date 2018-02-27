@@ -11,10 +11,8 @@ use App\Http\Models\Logs;
 
 class DepartamentosController extends ControllerBase
 {
-    public function __construct(Departamentos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
-        #$this->entity_name = strtolower(class_basename($entity));
-        $this->companies = Empresas::all();
+        $this->entity = new Departamentos;
     }
 }

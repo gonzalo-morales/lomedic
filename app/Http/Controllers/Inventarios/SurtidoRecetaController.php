@@ -27,9 +27,9 @@ class SurtidoRecetaController extends ControllerBase
 {
 
 
-    public function __construct(SurtidoReceta $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new SurtidoReceta;
     }
 
     public function getDataView($entity = null)
@@ -60,7 +60,7 @@ class SurtidoRecetaController extends ControllerBase
     {
 
         $detalle_receta = RecetasDetalle::where('fk_id_receta',$request->fk_id_receta)->get();
-        /*
+
         $json = [];
         foreach ($detalle_receta as $row => $detalle)
         {
@@ -76,10 +76,12 @@ class SurtidoRecetaController extends ControllerBase
                 'eliminar' => $detalle->eliminar,
                 'clave_cliente_producto' => $detalle->claveClienteProducto['clave_producto_cliente'],
                 'descripcion' => $detalle->claveClienteProducto->sku['descripcion'],
+                'sku' => $detalle->claveClienteProducto->sku['sku'],
 
             ];
-        }*/
-        return $detalle_receta->toJson();
+        }
+//        return $detalle_receta->toJson();
+        return $json;
     }
 
 }
