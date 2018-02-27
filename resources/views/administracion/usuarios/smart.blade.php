@@ -120,7 +120,7 @@
 								@endforeach
 
 							</ul>
-							<div class="tab-content">
+							<div id="modulos" class="tab-content">
 								@foreach($companies as $data_company)
 									<div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">
 										<table class="table table-hover table-responsive-sm border-0">
@@ -429,7 +429,7 @@
 									</li>
 								</ul>
 							</div>
-							<div class="tab-content">
+							<div id="modulos" class="tab-content">
 								<div class="tab-pane active" id="permisos" role="tabpanel">
 									<ul class="nav nav-tabs" role="tablist">
 										@foreach($companies as $data_company)

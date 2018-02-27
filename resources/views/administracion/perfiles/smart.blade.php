@@ -31,10 +31,19 @@
                         <h5>* Usuarios</h5>
                     </div>
                     <div class="card-body" style="overflow: auto;">
-                        <ul class="list-group">
+                        <ul id="usuariosList" class="list-group">
+                            <?php 
+                                $usuarios_data = [];
+                                if(isset($data->usuarios))
+                                {
+                                    foreach ($data->usuarios as $usuario)
+                                        array_push($usuarios_data, $usuario->pivot->fk_id_usuario);
+                                }
+                            ?>
+
                             @foreach ($usuarios as $row)
                             <li class="list-group-item form-group row">
-                                {{ Form::cCheckbox($row['usuario'], 'usuarios['.$row['id_usuario'].']',['class'=>'socio-empresa'], (in_array($row['id_usuario'], $usuarios)?1:0) ) }}
+                                {{ Form::cCheckbox($row['usuario'], 'usuarios['.$row['id_usuario'].']',['class'=>'socio-empresa'], (in_array($row['id_usuario'], $usuarios_data)?1:0) ) }}
                             </li>
                             @endforeach
                         </ul>
@@ -50,7 +59,7 @@
                 <h4 class="card-header">* Módulos y permisos</h4>
                 <div class="card-body">
                     <p>Aquí se muestran las empresas que <b>cuentan con sus respectivos módulos y permisos</b></p>
-                    <ul class="nav nav-tabs" role="tablist">
+                    <ul id="usuariosList" class="nav nav-tabs" role="tablist">
                         @foreach($companies as $data_company)
                             @if($data_company->modulos_empresa != '[]')
                                 <li class="nav-item">
@@ -60,7 +69,7 @@
                         @endforeach
 
                     </ul>
-                    <div class="tab-content">
+                    <div id="modulos" class="tab-content">
                         @foreach($companies as $data_company)
                             <div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">
                                 <table class="table table-hover table-responsive-sm border-0">
@@ -99,11 +108,24 @@
     @endif
 @endsection
 
-{{--  @section('header-bottom')
+@section('header-bottom')
     @parent
-    @inroute(['create','edit'])
-        <script type="text/javascript">
-
+    @inroute(['show'])
+        <script>
+            $(".nav-tabs li").click(function (e) {
+                e.preventDefault();
+                $(this).each(function () {
+                    $('.nav-tabs li').children().removeClass('active');
+                });
+                $('.tab-pane').removeClass('active');
+                $(e.currentTarget).children().addClass('active');
+                var tab = $(this).children().prop('href');
+                tab = tab.split('#');
+                $('#' + tab[1]).addClass('active');
+            });
         </script>
     @endif
-@endsection  --}}
+    @inroute(['create','edit'])
+        {{ HTML::script(asset('js/perfiles.js')) }}
+    @endif
+@endsection

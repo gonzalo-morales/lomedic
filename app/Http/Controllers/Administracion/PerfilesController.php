@@ -29,9 +29,7 @@ class PerfilesController extends ControllerBase
         {
             // dd($entity);
             return [
-                'usuarios' => Usuarios::select('id_usuario','usuario')->whereHas('perfiles',function($q) use ($entity){
-                    $q->where('fk_id_perfil',$entity->fk_id_perfil);
-                })->where('activo',1)->get()->sortBy('usuario')->toArray(),
+                'usuarios' => Usuarios::select('id_usuario','usuario')->where('activo',1)->get()->sortBy('usuario')->toArray(),
                 'companies' => Empresas::all(),
                 'profiles' => Perfiles::all(),
                 'profiles_permissions' => Perfiles::join('adm_det_permisos_perfiles','adm_cat_perfiles.id_perfil','=','adm_det_permisos_perfiles.fk_id_perfil')

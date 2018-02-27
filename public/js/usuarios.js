@@ -133,7 +133,7 @@ function eliminarFila(fila)
 }
 
 $(document).on('submit',function(){
-    if(!checkingProfiles() || $('#lista_correo').length == 0 || $('#usuario').hasClass('border-danger')){
+    if(!checkingProfiles() || $('#lista_correo').length == 0 || $('#usuario').hasClass('border-danger') || !checkingCheckboxes()){
         $.toaster({priority : 'danger',title : '¡Error!',message : 'Antes de Guardar es necesario lo siguiente: <ol><li>Es necesario mínimo un correo empresarial</li><li>Necesitas asignarle mínimo un Perfil</li><li>Verifica que el Nombre corto y el usuario no sean <b>iguales</b></li><li>Agrega mínimo una sucursal</li></ol>',
         settings:{'timeout':6000,'toaster':{'css':{'top':'5em'}}}});
         return false;
@@ -144,13 +144,27 @@ function checkingProfiles(){
     var validator;
     var $perfiles = $('#listProfiles input')
     for(var i = 0; i < $perfiles.length; i++){
-        if($($perfiles[i]).attr('checked',true)){
-            return validator = $($perfiles[i]);
+        if($($perfiles[i]).hasClass('active')){
+            validator = $($perfiles[i]);
         }
     }
     if(validator){
         return true;
     } else{
-        false;
+        return false;
+    }
+}
+function checkingCheckboxes(){
+    var validator = false;
+    var $modulos = $('#modulos input')
+    for(var i = 0; i < $modulos.length; i++){
+        if($($modulos[i]).is(':checked')){
+            validator = true;
+        }
+    }
+    if(validator == true){
+        return true;
+    } else{
+        return false;
     }
 }
