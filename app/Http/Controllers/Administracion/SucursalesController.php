@@ -25,9 +25,9 @@ class SucursalesController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Sucursales $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Sucursales;
 	}
 
 	public function getDataView($entity = null)

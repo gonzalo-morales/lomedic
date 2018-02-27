@@ -7,8 +7,8 @@ use App\Http\Models\Soporte\Prioridades;
 class PrioridadesController extends ControllerBase
 {
 
-    public function __construct(Prioridades $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Prioridades;
     }
 }

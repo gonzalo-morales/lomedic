@@ -7,8 +7,8 @@ use App\Http\Models\Soporte\EstatusTickets;
 class EstatusTicketsController extends ControllerBase
 {
 
-    public function __construct(EstatusTickets $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new EstatusTickets;
     }
 }

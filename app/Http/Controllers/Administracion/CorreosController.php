@@ -14,9 +14,9 @@ class CorreosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Correos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Correos;
 	}
 
 	public function getDataView($entity = null)

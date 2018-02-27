@@ -12,8 +12,8 @@ class MetodosPagoController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(MetodosPago $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new MetodosPago;
 	}
 }

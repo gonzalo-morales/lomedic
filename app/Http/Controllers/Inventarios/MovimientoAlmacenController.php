@@ -17,9 +17,9 @@ use Illuminate\Support\Carbon;
 
 class MovimientoAlmacenController extends ControllerBase
 {
-    public function __construct(MovimientoAlmacen $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new MovimientoAlmacen;
     }
 
     public function getDataView($entity = null)

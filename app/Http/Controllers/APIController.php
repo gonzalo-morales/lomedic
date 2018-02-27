@@ -39,8 +39,15 @@ class APIController extends Controller
 		$json = str_replace(array_keys($param_array),$param_array,$str_json);
         $request = json_decode($json,true);
 		# Obtenemos entidad
+		
+        $controllers = controllerByRoute();
+        $controllerName = substr($controllers[$entity.'.index'],0,-6);
         
-        $class = 'App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', $entity)));
+        $controller = new $controllerName;
+        $class = $controller->entity;
+        
+        #$class = 'App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', camel_case($entity))));
+        
         $entity = new $class;
         if ($entity) {
             # Si hay JOINS

@@ -29,9 +29,9 @@ use Illuminate\Support\Facades\Crypt;
 
 class SolicitudesController extends ControllerBase
 {
-    public function __construct(Solicitudes $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Solicitudes;
     }
     
     public function getDataView($entity = null)

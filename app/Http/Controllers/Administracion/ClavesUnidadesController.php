@@ -13,8 +13,8 @@ class ClavesUnidadesController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(ClavesUnidades $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new ClavesUnidades;
 	}
 }

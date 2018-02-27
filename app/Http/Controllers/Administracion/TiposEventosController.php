@@ -12,8 +12,8 @@ class TiposEventosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(TiposEventos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new TiposEventos;
 	}
 }

@@ -14,16 +14,13 @@ class AplicacionesMedicamentosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(AplicacionesMedicamentos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
-
+	    $this->entity = new AplicacionesMedicamentos;
 	}
 
 	public function update(Request $request, $company, $id, $compact = false)
     {
         return parent::update($request, $company, $id, $compact);
     }
-
-
 }

@@ -27,9 +27,9 @@ class SurtidoRecetaController extends ControllerBase
 {
 
 
-    public function __construct(SurtidoReceta $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new SurtidoReceta;
     }
 
     public function getDataView($entity = null)

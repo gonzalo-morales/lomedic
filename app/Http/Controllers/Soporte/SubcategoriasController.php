@@ -8,9 +8,9 @@ use App\Http\Models\Soporte\Subcategorias;
 class SubcategoriasController extends ControllerBase
 {
 
-    public function __construct(Subcategorias $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Subcategorias;
     }
     
     public function getDataView($entity = null)

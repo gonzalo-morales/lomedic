@@ -33,9 +33,9 @@ use App\Http\Models\Administracion\Subdependencias;
 
 class PedidosController extends ControllerBase
 {
-    public function __construct(Pedidos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Pedidos;
     }
     
     public function getDataView($entity = null)

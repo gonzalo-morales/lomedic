@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\DB;
 
 class SeguimientoDesviacionesController extends ControllerBase
 {
-    public function __construct(SeguimientoDesviacion $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new SeguimientoDesviacion;
     }
 
     // public function edit($company, Request $request){

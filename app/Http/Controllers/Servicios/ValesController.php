@@ -29,9 +29,9 @@ class ValesController extends ControllerBase
 {
 
 
-    public function __construct(Vales $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Vales;
     }
 
     public function getDataView($entity = null)

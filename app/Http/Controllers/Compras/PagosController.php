@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Storage;
 
 class PagosController extends ControllerBase
 {
-	public function __construct(Pagos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+		$this->entity = new Pagos;
 	}
 
 	public function getDataView($entity = null)

@@ -13,8 +13,8 @@ class CadenasPagosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(CadenasPagos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new CadenasPagos;
 	}
 }

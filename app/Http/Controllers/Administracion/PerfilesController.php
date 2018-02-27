@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Cache;
 class PerfilesController extends ControllerBase
 {
 
-    public function __construct(Perfiles $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Perfiles;
     }
 
     public function getDataView($entity = null)

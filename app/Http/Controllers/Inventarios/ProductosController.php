@@ -24,9 +24,9 @@ use App\Http\Models\Administracion\MetodosValoracion;
 
 class ProductosController extends ControllerBase
 {
-    public function __construct(Productos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Productos;
     }
 
     public function update(Request $request, $company, $id, $compact = false)

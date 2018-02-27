@@ -11,9 +11,9 @@ class CuentasContablesController extends ControllerBase
 	 * Create a new controller instance.
 	 * @return void
 	 */
-	public function __construct(CuentasContables $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new CuentasContables;
 	}
 	
 	public function getDataView($entity = null)

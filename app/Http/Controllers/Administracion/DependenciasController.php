@@ -12,8 +12,8 @@ class DependenciasController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Dependencias $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Dependencias;
 	}
 }

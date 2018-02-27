@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Crypt;
 
 class ClaveClienteProductosController extends ControllerBase
 {
-    public function __construct(ClaveClienteProductos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new ClaveClienteProductos;
     }
     
     public function getDataView($entity = null)

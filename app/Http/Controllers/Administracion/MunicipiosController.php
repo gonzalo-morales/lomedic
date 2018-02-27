@@ -13,9 +13,9 @@ class MunicipiosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Municipios $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Municipios;
 	}
 
 	public function getDataView($entity = null)

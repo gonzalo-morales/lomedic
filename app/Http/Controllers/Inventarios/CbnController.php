@@ -7,8 +7,8 @@ use App\Http\Models\Inventarios\Cbn;
 
 class CbnController extends ControllerBase
 {
-    public function __construct(Cbn $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Cbn;
     }
 }

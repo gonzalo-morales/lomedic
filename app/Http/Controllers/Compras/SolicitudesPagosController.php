@@ -18,9 +18,9 @@ use App\Http\Models\Compras\CondicionesAutorizacion;
 
 class SolicitudesPagosController extends ControllerBase
 {
-    public function __construct(SolicitudesPagos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new SolicitudesPagos;
     }
 
     public function getDataView($entity = null)

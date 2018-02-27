@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Cache;
 
 class ProyectosProductosController extends ControllerBase
 {
-    public function __construct(ProyectosProductos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new ProyectosProductos;
     }
 
     public function destroy(Request $request, $company, $idOrIds, $attributes = [])
