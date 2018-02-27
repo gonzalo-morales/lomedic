@@ -39,5 +39,4 @@ class PerfilesUsuarios extends ModelBase
         'fk_id_usuario' => 'required',
     ];
 
-
 }

@@ -34,11 +34,11 @@ class FacturasClientesController extends ControllerBase
 
 	public function getDataView($entity = null)
 	{
-	    dd(FacturasClientesDetalle::where('id_documento_detalle',7)->first()->documento()->get()->toarray());
+	    #dd(FacturasClientesDetalle::where('id_documento_detalle',7)->first()->documento()->get()->toarray());
 	    
-	    $documentos_relacionados = $entity->detalle->first()->documentos_destino(4)->get();
+	    #$documentos_relacionados = $entity->detalle->first()->documentos_destino(4)->get();
 	    
-	    dd($documentos_relacionados);
+	    #dd($documentos_relacionados);
 	    
         return [
             'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('...',''),

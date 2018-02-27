@@ -3,6 +3,7 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
+use App\Http\Models\Administracion\Usuarios;
 
 class Correos extends ModelBase
 {
@@ -53,7 +54,7 @@ class Correos extends ModelBase
 	 */
 	public function usuario()
 	{
-		return $this->belongsTo(Usuarios::class, 'fk_id_usuario', 'id_usuario');
+		return $this->belongsTo(Usuarios::class, 'id_usuario','fk_id_usuario');
 	}
 
 	/**

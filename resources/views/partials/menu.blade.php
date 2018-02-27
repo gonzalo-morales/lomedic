@@ -1,4 +1,5 @@
 <li>
+    {{--  {{dd($modulo)}}  --}}
     @if(!$modulo->submodulos->count())
     <a class="w-100" href="{{ !empty($modulo->url) ? companyAction($modulo->url) : '#' }}" title="{{ $modulo->nombre }}" data-toggle="tooltip" data-placement="right">
         <i class='material-icons'>{{ $modulo->icono }}</i>

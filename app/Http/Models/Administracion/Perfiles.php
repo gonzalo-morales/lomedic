@@ -2,9 +2,12 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use App\Http\Models\ModelBase;
+use App\Http\Models\Administracion\Usuarios;
+use App\Http\Models\Administracion\Permisos;
 
-class Perfiles extends Model
+class Perfiles extends ModelBase
 {
     /**
      * The table associated with the model.
@@ -24,7 +27,21 @@ class Perfiles extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre_perfil', 'descripcion', 'activo'];
+    protected $fillable = [
+        'nombre_perfil',
+        'descripcion', 
+        'activo'
+    ];
+
+    /**
+     * Los atributos que seran visibles en index-datable
+     * @var array
+     */
+    protected $fields = [
+        'nombre_perfil' => 'Nombre del perfil',
+        'descripcion' => 'Descripción',
+        'activo_span' => 'Estatus'
+    ];
 
     /**
      * The validation rules
@@ -34,14 +51,14 @@ class Perfiles extends Model
         'nombre_perfil' => 'required|max:20|regex:/^[a-zA-Z\s]+/',
     ];
 
-    protected $unique = ['nombre_perfil'];
+    // protected $unique = ['nombre_perfil'];
 
     /**
      * Obtenemos usuarios relacionados al perfil
      * @return array
      */
     public function usuarios(){
-        return $this->belongsToMany(Usuarios::class, 'ges_det_perfiles_usuarios', 'fk_id_perfil', 'fk_id_usuario');
+        return $this->belongsToMany(Usuarios::class, 'adm_det_perfiles_usuarios', 'fk_id_perfil', 'fk_id_usuario');
     }
 
     /**
@@ -55,7 +72,7 @@ class Perfiles extends Model
 
     public function permisos_perfiles()
     {
-        return $this->hasMany('adm_det_permisos_perfiles');
+        return $this->hasMany('adm_det_permisos_perfiles','fk_id_perfil','fk_id_modulo_accion');
     }
 
 }

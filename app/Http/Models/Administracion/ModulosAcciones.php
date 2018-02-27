@@ -49,20 +49,22 @@ class ModulosAcciones extends ModelBase
         'fk_id_empresa' => 'required',
     ];
 
+    #Relaciones para adm_det_modulo_accion
     public function empresas()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Empresas','fk_id_empresa','id_empresa');
+        return $this->belongsTo('App\Http\Models\Administracion\Empresas','adm_det_modulo_accion','fk_id_empresa','id_empresa');
     }
     public function modulos()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Modulos','fk_id_modulo','id_modulo');
+        return $this->belongsTo('App\Http\Models\Administracion\Modulos','adm_det_modulo_accion','fk_id_modulo','id_modulo');
     }
     public function acciones()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Acciones','fk_id_accion','id_accion');
+        return $this->belongsTo('App\Http\Models\Administracion\Acciones','adm_det_modulo_accion','fk_id_accion','id_accion');
     }
-//    public function numeroscuenta()
-//    {
-//        return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
-//    }
+
+    public function numeroscuenta()
+    {
+       return $this->hasMany('App\Http\Models\Administracion\NumerosCuenta');
+    }
 }

@@ -51,15 +51,10 @@ $('#fk_id_empresa_default').on('change', function () {
     });
 });
 
-$('.fk_id_sucursales').on('change', function () {
-    console.log($(".fk_id_sucursales").val())
-});
-
 function accionesPerfil(profiel)
 {   
     
     var profiel_id = profiel.split('_');
-    console.log(profiel_id);
     if($("#perfil_"+profiel_id[1]).prop('checked') == true)
     {
         $("#perfil_"+profiel_id[1]).prop('checked', false);
@@ -139,7 +134,7 @@ function eliminarFila(fila)
 
 $(document).on('submit',function(){
     if(!checkingProfiles() || $('#lista_correo').length == 0 || $('#usuario').hasClass('border-danger')){
-        $.toaster({priority : 'danger',title : '¡Error!',message : 'Antes de Guardar es necesario lo siguiente: <ol><li>Es necesario mínimo un correo empresarial</li><li>Necesitas asignarle mínimo un Perfil</li></ol>',
+        $.toaster({priority : 'danger',title : '¡Error!',message : 'Antes de Guardar es necesario lo siguiente: <ol><li>Es necesario mínimo un correo empresarial</li><li>Necesitas asignarle mínimo un Perfil</li><li>Verifica que el Nombre corto y el usuario no sean <b>iguales</b></li><li>Agrega mínimo una sucursal</li></ol>',
         settings:{'timeout':6000,'toaster':{'css':{'top':'5em'}}}});
         return false;
     }

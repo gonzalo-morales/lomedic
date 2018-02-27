@@ -2,9 +2,10 @@
 
 namespace App\Http\Models\Administracion;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use App\Http\Models\ModelBase;
 
-class Modulos extends Model
+class Modulos extends ModelBase
 {
 	// use SoftDeletes;
 
@@ -26,7 +27,27 @@ class Modulos extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nombre', 'descripcion', 'url', 'icono', 'accion_menu', 'accion_barra', 'accion_tabla', 'modulo_seguro','activo'];
+	protected $fillable = [
+		'nombre',
+		'descripcion',
+		'url',
+		'icono',
+		'accion_menu',
+		'accion_barra',
+		'accion_tabla',
+		'modulo_seguro',
+		'activo'
+	];
+
+    /**
+     * Los atributos que seran visibles en index-datable
+     * @var array
+     */
+    protected $fields = [
+        'nombre' => 'Nombre del perfil',
+        'descripcion' => 'Descripción',
+        'activo_span' => 'Estatus'
+    ];
 
 	/**
 	 * The validation rules
@@ -41,6 +62,7 @@ class Modulos extends Model
 		];
 	}
 
+	#	MEN'S STUFF
 	/**
 	 * Obtenemos las empresas relacionadas al modulo
 	 * @return array
@@ -66,9 +88,13 @@ class Modulos extends Model
     public function permisos()
     {
         return $this->belongsToMany(Permisos::class, 'ges_det_permisos_modulos', 'fk_id_modulo', 'fk_id_permiso');
-    }
+	}
+
+
+	#	NANDO'S STUFF (adm)
+	
     public function modulos_acciones()
     {
         return $this->belongsToMany(Acciones::class,'adm_det_modulo_accion','fk_id_modulo','fk_id_accion');
-    }
+	}
 }

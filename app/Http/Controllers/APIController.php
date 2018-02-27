@@ -40,7 +40,7 @@ class APIController extends Controller
         $request = json_decode($json,true);
 		# Obtenemos entidad
         
-        $class = 'App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', camel_case($entity))));
+        $class = 'App\\Http\\Models\\' . implode('\\', array_map('ucwords', explode('.', $entity)));
         $entity = new $class;
         if ($entity) {
             # Si hay JOINS

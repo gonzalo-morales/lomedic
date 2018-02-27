@@ -1,49 +1,49 @@
 @extends(smart())
-@section('content-width', 'col-12')
+@section('content-width')
 
 @section('form-content')
     {{ Form::setModel($data) }}
-    <div class="row">
-    	<div class="col-sm-4 col-md-12">
+    <div class="row mb-3">
+    	<div class="col-sm-4 col-md-4 col-12">
     		{{ Form::cText('* Nombre','nombre') }}
     	</div>
-    	<div class="col-sm-4 col-md-12">
+    	<div class="col-sm-4 col-md-4 col-12">
     		{{ Form::cText('* Url','url') }}
     	</div>
-    	<div class="col-sm-4 col-md-12">
+    	<div class="col-sm-4 col-md-4 col-12">
     		{{ Form::cText('* Icono','icono') }}
     	</div>
     </div>
     <div class="row">
     	<div class="col-md-12">
-    		{{ Form::textarea('descripcion', null, ['id'=>'descripcion','class'=>'validate materialize-textarea']) }}
-    		{{ Form::label('descripcion', '* Descripcion') }}
-    		{{ $errors->has('descripcion') ? HTML::tag('span', $errors->first('descripcion'), ['class'=>'help-block text-danger']) : '' }}
+			<div class="form-group">
+				{{ Form::cTextArea('* Descripción','descripcion') }}
+			</div>
     	</div>
     </div>
     <div class="row">
-    	<div class="col-md-3 col-sm-6">
+    	<div class="col-md-4 col-sm-4 col-12">
     		{{ Form::hidden('accion_menu', 0) }}
     		{{ Form::checkbox('accion_menu', null, old('accion_menu'), ['id'=>'accion_menu']) }}
     		{{ Form::label('accion_menu', '¿Accion Menu?') }}
     	</div>
-    	<div class="col-md-3 col-sm-6">
+    	<div class="col-md-4 col-sm-4 col-12">
     		{{ Form::hidden('accion_barra', 0) }}
     		{{ Form::checkbox('accion_barra', null, old('accion_barra'), ['id'=>'accion_barra']) }}
     		{{ Form::label('accion_barra', '¿Accion Menu?') }}
     	</div>
-    	<div class="col-md-3 col-sm-6">
+    	<div class="col-md-4 col-sm-4 col-12">
     		{{ Form::hidden('accion_tabla', 0) }}
     		{{ Form::checkbox('accion_tabla', null, old('accion_tabla'), ['id'=>'accion_tabla']) }}
     		{{ Form::label('accion_tabla', '¿Accion Menu?') }}
     	</div>
-    	<div class="col-md-3 col-sm-6">
-    		<div class="alert alert-warning" role="alert">
-                Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
-            </div>
-            {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
-    	</div>
     </div>
+	<div class="col-md-12">
+		<div class="alert alert-warning" role="alert">
+			Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
+		</div>
+		{{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
+	</div>
 @endsection
 
 @section('form-utils')

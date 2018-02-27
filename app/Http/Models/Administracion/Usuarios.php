@@ -4,6 +4,11 @@ namespace App\Http\Models\Administracion;
 
 use App\Http\Models\Compras\CondicionesAutorizacion;
 use App\Http\Models\ModelBase;
+use App\Notifications\MyResetPassword;
+use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\Administracion\Correos;
+use App\Http\Models\Administracion\Perfiles;
+
 use Illuminate\Support\Collection;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,8 +17,6 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use App\Notifications\MyResetPassword;
-use App\Http\Models\RecursosHumanos\Empleados;
 
 class Usuarios extends ModelBase implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
@@ -80,8 +83,9 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         $this->notify(new MyResetPassword($token));
     }
 
-    public function mails(){
-        return $this->hasMany('app\Http\Models\Correos');
+    public function mails()
+    {
+        return $this->hasMany(Correos::class,'adm_det_correos','fk_id_usuario','id_usuario');
     }
 
     public function branches(){
@@ -93,7 +97,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
      * @return array
      */
     public function perfiles(){
-        return $this->belongsToMany(Perfiles::class, 'ges_det_perfiles_usuarios', 'fk_id_usuario', 'fk_id_perfil');
+        return $this->belongsToMany(Perfiles::class, 'adm_det_perfiles_usuarios', 'fk_id_usuario', 'fk_id_perfil');
     }
 
     public function permisos()
