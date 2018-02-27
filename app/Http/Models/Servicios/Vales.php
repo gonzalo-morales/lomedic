@@ -35,7 +35,13 @@ class Vales extends ModelCompany
         'fk_id_sucursal'
     ];
 
-    public $rules = [];
+    public $niceNames =[
+        'fk_id_sucursal' =>'sucursal',
+    ];
+
+    public $rules = [
+        'fk_id_sucursal' => 'required',
+    ];
 
     protected $fields = [
         'id_vale' => '#',

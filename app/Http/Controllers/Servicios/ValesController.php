@@ -104,7 +104,7 @@ class ValesController extends ControllerBase
             'titular' => $titular,
             'paciente' => $paciente,
             'fk_id_dependiente' => $receta->fk_id_dependiente,
-            'parentesco' => $receta->parentesco->nombre,
+            'parentesco' => $receta->parentesco['nombre'],
             'medico' => $receta->medico->NombreCompleto,
             'diagnostico' => $receta->diagnostico->diagnostico,
             'edad' => $edad,
@@ -124,40 +124,26 @@ class ValesController extends ControllerBase
                 'fk_id_clave_cliente_producto' => $detalle->fk_id_clave_cliente_producto,
                 'cantidad_solicitada' => $detalle->cantidad_pedida,
                 'cantidad_surtida' => $detalle->cantidad_surtida,
-                'cantidad_disponible' => $detalle->claveClienteProducto->stock($detalle->claveClienteProducto->fk_id_sku,$detalle->claveClienteProducto->fk_id_upc),
-                'precio_unitario' => $detalle->claveClienteProducto->precio,
+                'cantidad_disponible' => $detalle->claveClienteProducto->stock($detalle->claveClienteProducto['fk_id_sku'],$detalle->claveClienteProducto['fk_id_upc']),
+                'precio_unitario' => $detalle->claveClienteProducto['precio'],
                 'eliminar' => $detalle->eliminar,
                 'clave_cliente_producto' => $detalle->claveClienteProducto['clave_producto_cliente'],
                 'descripcion' => $detalle->claveClienteProducto->sku['descripcion'],
+                'sku' => $detalle->claveClienteProducto->sku['sku'],
 
             ];
         }
 
         return $json =[
+//            '$detalle_receta' => $detalle_receta,
             'receta' => $json_receta,
             'detalle' => $json_detalle,
-        ];;
+        ];
     }
 
-    public function edad($fecha_nac){
-        $dia=date("j");
-        $mes=date("n");
-        $anno=date("Y");
-        //descomponer fecha de nacimiento
-        $anno_nac=substr($fecha_nac, 0, 4);
-        $mes_nac=substr($fecha_nac, 5, 2);
-        $dia_nac=substr($fecha_nac, 8, 2);
-        //
-        if($mes_nac>$mes){
-            $calc_edad= $anno-$anno_nac-1;
-        }else{
-            if($mes==$mes_nac AND $dia_nac>$dia){
-                $calc_edad= $anno-$anno_nac-1;
-            }else{
-                $calc_edad= $anno-$anno_nac;
-            }
-        }
-        return $calc_edad;
+    public function edad($fecha){
+        list($Y,$m,$d) = explode("-",$fecha);
+        return( date("md") < $m.$d ? date("Y")-$Y-1 : date("Y")-$Y );
     }
 
 
