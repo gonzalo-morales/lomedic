@@ -10,9 +10,9 @@ use App\Http\Models\Proyectos\TiposProyectos;
 
 class TiposProductosProyectosController extends ControllerBase
 {
-    public function __construct(TiposProductosProyectos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new TiposProductosProyectos;
     }
     
     public function getDataView($entity = null)

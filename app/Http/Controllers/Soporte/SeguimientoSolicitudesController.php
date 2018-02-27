@@ -14,9 +14,9 @@ use App\Http\Models\Soporte\EstatusTickets;
 class SeguimientoSolicitudesController extends ControllerBase
 {
 
-    public function __construct(SeguimientoSolicitudes $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new SeguimientoSolicitudes;
     }
 
     public function store(Request $request, $company, $compact = false) // Para crear un nuevo ticket

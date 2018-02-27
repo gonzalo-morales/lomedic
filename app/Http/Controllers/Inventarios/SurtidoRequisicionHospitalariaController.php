@@ -25,9 +25,9 @@ class SurtidoRequisicionHospitalariaController extends ControllerBase
 {
 
 
-    public function __construct(SurtidoRequisicionHospitalaria $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new SurtidoRequisicionHospitalaria;
     }
 
     public function getDataView($entity = null)

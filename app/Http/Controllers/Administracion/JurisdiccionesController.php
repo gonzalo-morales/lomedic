@@ -13,9 +13,9 @@ class JurisdiccionesController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Jurisdicciones $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Jurisdicciones;
 	}
 
 	public function getDataView($entity = null)

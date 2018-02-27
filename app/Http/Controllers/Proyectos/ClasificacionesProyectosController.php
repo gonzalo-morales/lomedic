@@ -8,8 +8,8 @@ use App\Http\Models\Proyectos\TiposProyectos;
 
 class ClasificacionesProyectosController extends ControllerBase
 {
-    public function __construct(ClasificacionesProyectos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new ClasificacionesProyectos;
     }
 }

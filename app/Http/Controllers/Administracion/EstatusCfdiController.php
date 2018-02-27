@@ -12,8 +12,8 @@ class EstatusCfdiController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(EstatusCfdi $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new EstatusCfdi;
 	}
 }

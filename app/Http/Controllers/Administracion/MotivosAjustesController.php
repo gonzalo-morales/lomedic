@@ -12,8 +12,8 @@ class MotivosAjustesController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(MotivosAjustes $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new MotivosAjustes;
 	}
 }

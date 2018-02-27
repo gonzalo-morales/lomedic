@@ -12,8 +12,8 @@ class GrupoProductosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(GrupoProductos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new GrupoProductos;
 	}
 }

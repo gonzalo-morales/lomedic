@@ -10,9 +10,9 @@ use App\Http\Models\Administracion\PresentacionVenta;
 
 class UpcsController extends ControllerBase
 {
-    public function __construct(Upcs $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Upcs;
     }
     
     public function getDataView($entity = null)

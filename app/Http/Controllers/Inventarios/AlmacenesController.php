@@ -15,9 +15,9 @@ class AlmacenesController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Almacenes $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Almacenes;
 	}
 
 	public function getDataView($entity = null)

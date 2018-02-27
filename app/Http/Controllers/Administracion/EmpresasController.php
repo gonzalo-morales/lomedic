@@ -21,9 +21,9 @@ use Illuminate\Support\Facades\Response;
 
 class EmpresasController extends ControllerBase
 {
-    public function __construct(Empresas $entity)
+    public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Empresas;
 	}
 	
 	public function getDataView($entity = null)

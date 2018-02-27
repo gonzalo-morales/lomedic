@@ -11,7 +11,7 @@ use App\Http\Models\Administracion\TiposDocumentos;
  * @param  string $action - Acción por la que reemplazar
  * @return array
  */
-function routeActionReplace($action = '')
+function routeActionReplace($action = null)
 {
 	# RouteAction actual, ej: HomeController@index
 	$current_action = str_replace('App\Http\Controllers\\', '', Route::currentRouteAction());
@@ -19,6 +19,19 @@ function routeActionReplace($action = '')
 	return array_map(function($current, $expected) {
 		return $expected === '' ? $current : $expected;
 	}, explode('@', $current_action), array_pad(explode('@', $action, 2), -2, '') );
+}
+
+function controllerByRoute()
+{
+    $controller_by_route = [];
+    foreach (\Route::getRoutes() as $route)
+    {
+        $action = $route->action;
+        if(isset($action['as']) && isset($action['controller']))
+            $controller_by_route[$action['as']] = $action['controller'];
+    }
+    
+    return $controller_by_route;
 }
 
 /**

@@ -21,9 +21,9 @@ use Illuminate\Support\Facades\Cache;
 
 class FacturasProveedoresController extends ControllerBase
 {
-	public function __construct(FacturasProveedores $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new FacturasProveedores;
 	}
 
 	public function getDataView($entity = null)

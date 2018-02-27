@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\DB;
 
 class DetalleSeguimientoDesviacionController extends ControllerBase
 {
-    public function __construct(DetalleSeguimientoDesviacion $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new DetalleSeguimientoDesviacion;
     }
 
     // public function getDataView($entity = null)

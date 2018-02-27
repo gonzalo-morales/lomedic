@@ -13,9 +13,9 @@ class SatMunicipiosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(SatMunicipios $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new SatMunicipios;
 	}
 
 	public function getDataView($entity = null)

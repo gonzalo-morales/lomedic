@@ -12,8 +12,8 @@ class ContratosController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Contratos $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Contratos;
 	}
 }

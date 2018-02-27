@@ -12,8 +12,8 @@ class ViaAdministracionController extends ControllerBase
 	 *
 	 * @return void
 	 */
-    public function __construct(ViaAdministracion $entity)
+    public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new ViaAdministracion;
 	}
 }

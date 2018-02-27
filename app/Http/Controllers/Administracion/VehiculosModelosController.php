@@ -13,9 +13,9 @@ class VehiculosModelosController extends ControllerBase
      *
      * @return void
      */
-    public function __construct(VehiculosModelos $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new VehiculosModelos;
     }
 
     public function getDataView($entity = null)

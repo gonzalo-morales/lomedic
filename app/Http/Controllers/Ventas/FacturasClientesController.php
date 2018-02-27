@@ -27,9 +27,9 @@ use App\Http\Models\Proyectos\ContratosProyectos;
 
 class FacturasClientesController extends ControllerBase
 {
-    public function __construct(FacturasClientes $entity)
+    public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new FacturasClientes;
 	}
 
 	public function getDataView($entity = null)

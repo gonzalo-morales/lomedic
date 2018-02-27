@@ -29,10 +29,10 @@ use Illuminate\Support\Facades\Response;
 
 class SolicitudesController extends ControllerBase
 {
-    public function __construct(Solicitudes $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
-        $this->entity_name = strtolower(class_basename($entity));
+        $this->entity = new Solicitudes;
+        #$this->entity_name = strtolower(class_basename($entity));
     }
 
     public function getDataView($entity = null)

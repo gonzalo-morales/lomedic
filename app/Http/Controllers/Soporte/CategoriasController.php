@@ -7,8 +7,8 @@ use App\Http\Models\Soporte\Categorias;
 class CategoriasController extends ControllerBase
 {
 
-    public function __construct(Categorias $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new Categorias;
     }
 }

@@ -12,8 +12,8 @@ class PaisesController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Paises $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Paises;
 	}
 }

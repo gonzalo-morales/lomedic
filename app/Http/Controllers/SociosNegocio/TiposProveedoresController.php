@@ -12,8 +12,8 @@ class TiposProveedoresController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(TiposProveedores $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new TiposProveedores;
 	}
 }

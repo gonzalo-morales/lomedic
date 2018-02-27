@@ -23,9 +23,9 @@ class RequisicionesHospitalariasController extends ControllerBase
 {
 
 
-    public function __construct(RequisicionesHospitalarias $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new RequisicionesHospitalarias;
     }
 
     public function getDataView($entity = null)

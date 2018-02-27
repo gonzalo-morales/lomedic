@@ -15,9 +15,9 @@ class NumerosCuentaController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(NumerosCuenta $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new NumerosCuenta;
 	}
 
 	public function getDataView($entity = null)

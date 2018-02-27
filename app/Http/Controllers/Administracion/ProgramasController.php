@@ -12,8 +12,8 @@ class ProgramasController extends ControllerBase
 	 *
 	 * @return void
 	 */
-	public function __construct(Programas $entity)
+	public function __construct()
 	{
-		$this->entity = $entity;
+	    $this->entity = new Programas;
 	}
 }

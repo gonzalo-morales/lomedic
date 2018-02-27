@@ -31,9 +31,9 @@ use Illuminate\Support\Facades\Crypt;
 
 class OrdenesController extends ControllerBase
 {
-	public function __construct(Ordenes $entity)
+	public function __construct(Ordenes)
 	{
-		$this->entity = $entity;
+		$this->entity = new;
 	}
 	public function index($company, $attributes=[]){
 		$attributes = $attributes+['dataview'=>[

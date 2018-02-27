@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class DetalleSolicitudesController extends ControllerBase
 {
-    public function __construct(DetalleSolicitudes $entity)
+    public function __construct()
     {
-        $this->entity = $entity;
+        $this->entity = new DetalleSolicitudes;
     }
 
     public function destroy(Request $request, $company, $idOrIds, $attributes = [])
