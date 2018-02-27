@@ -36,6 +36,7 @@ class SurtidoReceta extends ModelCompany
         'fk_id_usuario_cancelado',
         'eliminado',
         'fk_id_estatus_surtido',
+        'fk_id_sucursal'
     ];
 
 //    public $niceNames =[
