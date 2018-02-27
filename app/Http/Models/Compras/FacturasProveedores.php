@@ -23,7 +23,7 @@ class FacturasProveedores extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_factura_proveedor';
+    protected $primaryKey = 'id_documento';
 
     /**
      * The attributes that are mass assignable.
@@ -115,16 +115,16 @@ class FacturasProveedores extends ModelCompany
         return $this->hasOne(FormasPago::class,'id_forma_pago','fk_id_forma_pago');
     }
 
-    public function detalle_facturas_proveedores(){
-        return $this->hasMany(DetalleFacturasProveedores::class,'fk_id_factura_proveedor','id_factura_proveedor');
+    public function detalle(){
+        return $this->hasMany(DetalleFacturasProveedores::class,'fk_id_documento','id_documento');
     }
 
     public function detallePagos(){
-        return $this->hasMany(DetallePagos::class,'fk_id_documento','id_factura_proveedor');
+        return $this->hasMany(DetallePagos::class,'fk_id_documento','id_documento');
     }
 
     public function notas()
     {//Tiene muchas notas por medio de cfdi
-        return $this->hasManyThrough(NotasCreditoProveedor::class,CfdiRelacionesProveedores::class,'fk_id_documento_relacionado','id_nota_credito_proveedor','id_factura_proveedor','fk_id_documento');
+        return $this->hasManyThrough(NotasCreditoProveedor::class,CfdiRelacionesProveedores::class,'fk_id_documento_base','id_documento','id_documento','fk_id_documento');
     }
 }

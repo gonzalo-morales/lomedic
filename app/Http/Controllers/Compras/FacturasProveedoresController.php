@@ -38,21 +38,17 @@ class FacturasProveedoresController extends ControllerBase
     public function store(Request $request, $company, $compact = false)
     {
         # ¿Usuario tiene permiso para crear?
-        //		$this->authorize('create', $this->entity);
-
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-
+        $this->authorize('create', $this->entity);
         $fileName = $request->fk_id_socio_negocio."-".$request->uuid;
         $xml_save = Storage::disk('factura_proveedor')
-            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->archivo_xml_hidden->getRealPath()));
+            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->file('archivo_xml_hidden')->getRealPath()));
         $pdf_save = Storage::disk('factura_proveedor')
-            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->archivo_pdf_hidden->getRealPath()));
+            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->file('archivo_pdf_hidden')->getRealPath()));
 
-        $request->request->set('archivo_xml',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->archivo_xml_hidden->getRealPath()));
-        $request->request->set('archivo_pdf',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->archivo_pdf_hidden->getRealPath()));
+        $request->request->set('archivo_xml',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->file('archivo_xml_hidden')->getRealPath()));
+        $request->request->set('archivo_pdf',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->file('archivo_pdf_hidden')->getRealPath()));
 
-        $xml = simplexml_load_file($request->archivo_xml_hidden->getRealPath());
+        $xml = simplexml_load_file($request->file('archivo_xml_hidden')->getRealPath());
         $arrayData = xmlToArray($xml);
 		// dd($arrayData);
         if($request->version_sat == "3.3"){
@@ -77,27 +73,9 @@ class FacturasProveedoresController extends ControllerBase
             $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
         }
         $request->request->set('fk_id_estatus_factura',1);
-
-        DB::beginTransaction();
-        $isSuccess = $this->entity->create($request->all());
-        if ($isSuccess && $xml_save && $pdf_save) {
-            # Si tienes relaciones
-            foreach ($request->productos as $producto) {
-                $producto['fk_id_orden_compra'] = !empty($producto['fk_id_orden_compra']) ? $producto['fk_id_orden_compra'] : null;
-                $isSuccess->detalle_facturas_proveedores()->save(new DetalleFacturasProveedores($producto));
-            }
-            DB::commit();
-
-            # Eliminamos cache
-            Cache::tags(getCacheTag('index'))->flush();
-
-            #$this->log('store', $isSuccess->id_factura_proveedor);
-            return $this->redirect('store');
-        } else {
-            DB::rollBack();
-            #$this->log('error_store');
-            return $this->redirect('error_store');
-        }
+        # Validamos request, si falla regresamos pagina
+        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
+        return parent::store($request,$company,$compact);
     }
 
     public function update(Request $request, $company, $id, $compact = false)

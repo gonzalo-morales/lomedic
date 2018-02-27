@@ -90,7 +90,7 @@
     		{{Form::text('comprador',isset($data->fk_id_socio_negocio) ?
     		$data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno :
     		null,
-    		['disabled','class'=>'form-control','data-url'=>companyAction('HomeController@index').'/RecursosHumanos.empleados/api'])}}
+    		['disabled','class'=>'form-control','data-url'=>ApiAction('recursoshumanos.empleados')])}}
     	{{--{{Form::cText('Comprador','comprador',['disabled','data-url'=>companyAction('HomeController@index').'/RecursosHumanos.empleados/api'])}}--}}
     	</div>
     	<div class="form-group col-md-3 col-sm-12">
@@ -148,13 +148,13 @@
     	@crear
     		<div class="form-goup col-md-6 text-center">
     			{{Form::cFile('XML','archivo_xml_input',['data-url'=>companyAction('parseXML'),'accept'=>'.xml'])}}
-    			<input id="archivo_xml_hidden" class="custom-file-input" style="display:none" name="archivo_xml_hidden" type="file">
+    			<input id="archivo_xml_hidden" style="display:none" name="archivo_xml_hidden" type="file">
     			{{Form::hidden('uuid','',['id'=>'uuid'])}}
     			{{Form::hidden('version_sat','',['id'=>'version_sat'])}}
     		</div>
     		<div class="form-goup col-md-6 text-center">
     			{{Form::cFile('PDF','archivo_pdf_input',['accept'=>'.pdf'])}}
-    			<input id="archivo_pdf_hidden" class="custom-file-input" style="display:none" name="archivo_pdf_hidden" type="file">
+    			<input id="archivo_pdf_hidden" style="display:none" name="archivo_pdf_hidden" type="file">
     		</div>
     		<div class="form-group col-sm-12 text-center mt-3">
     			<div class="sep">
@@ -185,7 +185,7 @@
 					<li class="nav-item">
 						<a class="nav-link" role="tab" data-toggle="tab" href="#tab-pdf" id="pdf-tab" aria-controls="pdf" aria-expanded="true">PDF</a>
 					</li>
-					@crear
+					@inroute(['edit','show'])
 					<li class="nav-item">
 						<a class="nav-link" role="tab" data-toggle="tab" href="#tab-pagos" id="pagos-tab" aria-controls="pagos" aria-expanded="true">Pagos</a>
 					</li>
@@ -240,7 +240,7 @@
 								@inroute(['edit','show'])
 									@if($data->version_sat == "3.3")
 										{{-- {{ dd($data->detalle_facturas_proveedores) }} --}}
-										@foreach($data->detalle_facturas_proveedores as $detalle)
+										@foreach($data->detalle as $detalle)
 										<tr>
 											<td>{{$detalle->clave_producto_servicio->clave_producto_servicio}}</td>
 											<td>{{$detalle->clave_unidad->clave_unidad}}</td>
@@ -253,8 +253,8 @@
 											</td>
 											<td>${{number_format($detalle->importe,2)}}</td>
 											<td>{{$data->fk_id_estatus_factura == 1 ?
-											 Form::Text('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_orden_compra]',$detalle->fk_id_orden_compra,['class'=>'form-control integer orden-compra']) :
-											  $detalle->fk_id_orden_compra}}
+											 Form::Text('producto['.$detalle->id_documento_detalle.'][fk_id_orden_compra]',$detalle->fk_id_documento_base,['class'=>'form-control integer orden-compra']) :
+											  $detalle->fk_id_documento_base}}
 											  {{-- {{ $detalle->impuesto ?? 'null' }} --}}
 										  	</td>
 											<td>
@@ -265,7 +265,7 @@
 												// $det[-1] = 'Seleccione una opcion...';
 												@endphp
 													@if ($detalle->orden <> null)
-														<select class="form-control custom-select" name="{{ 'producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]' }}">
+														<select class="form-control custom-select" name="{{ 'producto['.$detalle->id_documento_detalle.'][fk_id_detalle_orden_compra]' }}">
 															<option value="" disabled>Seleccione una opcion...</option>
 														@foreach ($detalle->orden->detalle as $detalleOrden)
 																@php
@@ -277,7 +277,7 @@
 														</select>
 														{{-- {{ Form::select('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]', $det ?? [], $detalle->fk_id_detalle_orden_compra, ['class'=>'form-control custom-select']) }} --}}
 													@else
-														<select class="form-control custom-select" name="{{ 'producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]' }}">
+														<select class="form-control custom-select" name="{{ 'producto['.$detalle->id_documento_detalle.'][fk_id_detalle_orden_compra]' }}">
 															<option value="" disabled>Seleccione una opcion...</option>
 														</select>
 														{{-- {{ Form::select('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]', $det ?? [], $detalle->fk_id_detalle_orden_compra, ['class'=>'form-control custom-select']) }} --}}
@@ -287,7 +287,7 @@
 										</tr>
 										@endforeach
 									@elseif($data->version_sat == "3.2")
-										@foreach($data->detalle_facturas_proveedores as $detalle)
+										@foreach($data->detalle as $detalle)
 										<tr>
 											<td>{{$detalle->descripcion}}</td>
 											<td>{{$detalle->unidad}}</td>
@@ -295,8 +295,8 @@
 											<td>${{number_format($detalle->precio_unitario,2)}}</td>
 											<td>{{$detalle->importe}}</td>
 											<td>{{$data->fk_id_estatus_factura == 1 ?
-											 Form::Text('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_orden_compra]',$detalle->fk_id_orden_compra,['class'=>'form-control integer']) :
-											  $detalle->fk_id_orden_compra}}</td>
+											 Form::Text('producto['.$detalle->id_detalle.'][fk_id_orden_compra]',$detalle->fk_id_documento_base,['class'=>'form-control integer']) :
+											  $detalle->fk_id_documento_base}}</td>
 										</tr>
 										@endforeach
 									@endif
@@ -507,7 +507,7 @@
     		@endcan
             window['smart-model'].actions.itemsCancel = function(e, rv,motivo){
                 $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-                let data = {motivo}
+                var data = motivo;
                 $.delete(this.dataset.deleteUrl,data,function (response) {
                     if(response.success){
                         sessionStorage.reloadAfterPageLoad = true;
@@ -517,7 +517,7 @@
             };
             window['smart-model'].actions.showModalCancelar = function(e, rv) {
                 e.preventDefault();
-                let modal = window['smart-modal'];
+                var modal = window['smart-modal'];
                 modal.view = rivets.bind(modal, {
                     title: '¿Estas seguro que deseas cancelar la factura?',
                     content: '<form  id="cancel-form">' +
@@ -560,7 +560,7 @@
                     // Opcionales
                     onModalShow: function() {
 
-                        let btn = modal.querySelector('[rv-on-click="action"]');
+                        var btn = modal.querySelector('[rv-on-click="action"]');
 
                         // Copiamos data a boton de modal
                         for (var i in this.dataset) btn.dataset[i] = this.dataset[i];

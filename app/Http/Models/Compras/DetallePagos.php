@@ -31,6 +31,7 @@ class DetallePagos extends ModelCompany
     protected $fillable = [
         'fk_id_pago',
         'fk_id_documento',
+        'fk_id_tipo_documento',
         'monto',
         'fk_id_tipo_documento',
     ];
@@ -42,12 +43,12 @@ class DetallePagos extends ModelCompany
 
     public function facturaproveedor()
     {
-        return $this->hasOne(FacturasProveedores::class,'id_factura_proveedor','fk_id_documento');
+        return $this->hasOne(FacturasProveedores::class,'id_documento','fk_id_documento');
     }
 
     public function solicitudpago()
     {
-        return $this->hasOne(SolicitudesPagos::class,'id_solicitud_pago','fk_id_documento');
+        return $this->hasOne(SolicitudesPagos::class,'id_documento','fk_id_documento');
     }
 
     public function pago()

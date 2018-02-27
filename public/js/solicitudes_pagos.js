@@ -9,7 +9,7 @@ $(document).ready(function () {
     $('input[type=radio][name=fk_id_estatus]').change(function () {
         if($(this).val() == 4){//Si es autorizada
             $('#observaciones').attr('readonly','readonly');
-            $('#observaciones').empty();
+            $('#observaciones').val("");
         }else{
             $('#observaciones').removeAttr('readonly');
         }
@@ -17,12 +17,14 @@ $(document).ready(function () {
     $('.condicion').click(function () {
         $('#motivo_autorizacion').val($(this).parent().parent().find('td:first-child').text());
         // $('#fk_id_estatus\\ ').prop('checked',true);
-        $('#id_autorizacion').val($(this).parent().parent().find('td input:first').val());
+        $('#id_documento').val($(this).parent().parent().find('td input:first').val());
         $('#observaciones').val($(this).parent().parent().find('td input:first').next('input').val());
         if($(this).parent().parent().find('td input:last').val() == 3){
             $('#fk_id_estatus\\ 3').prop('checked',true);
+            $('#observaciones').removeAttr('readonly');
         }else if($(this).parent().parent().find('td input:last').val() == 4){
             $('#fk_id_estatus\\ 4').prop('checked',true);
+            $('#observaciones').attr('readonly','readonly');
         }
     });
 
@@ -39,7 +41,7 @@ $(document).ready(function () {
            });
         }else{
            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-           var autorizar_url = $('#id_autorizacion').data('url').replace('?id',$('#id_autorizacion').val());
+           var autorizar_url = $('#id_documento').data('url').replace('?id',$('#id_documento').val());
            $.ajax({
                url:autorizar_url,
                type:'PUT',
@@ -51,7 +53,7 @@ $(document).ready(function () {
                    if(data.status == 1){
                        $('#autorizacion').modal('toggle');
                        $.toaster({
-                           priority: 'success', title: 'Éxito', message: 'Se ha actualizado la información de la autorización',
+                           priority: 'success', title: 'Éxito', message: 'Se ha actualizado la información de la autorización. Recarga la página para ver los cambios.',
                            settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
                        });
                    }else{
@@ -85,14 +87,14 @@ $(document).ready(function () {
             }
         });
     });
-    $('#fk_id_orden_compra').select2({
+    $('.select2').select2({
         minimumResultsForSearch: 15
     });
 
-    $('#fk_id_orden_compra').change(function () {
+    $('#fk_id_linea').change(function () {
         var existe = false;
         $('#detalle_solicitud_pago tr').each (function (index,row) {
-            if($(this).find('.orden').val() == $('#fk_id_orden_compra').val()){
+            if($(this).find('.orden').val() == $('#fk_id_linea').val()){
                 $.toaster({
                     priority: 'danger', title: 'Error', message: 'Ya se ha agregado esta orden',
                     settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
@@ -100,12 +102,12 @@ $(document).ready(function () {
                 existe = true;
             }
         });
-        if(!existe && $('#fk_id_orden_compra').val() > 0) {
+        if(!existe && $('#fk_id_linea').val() > 0) {
             $('#loadingtabla').show();
             $.ajax({
-                url: $('#fk_id_orden_compra').data('url'),
+                url: $('#fk_id_linea').data('url'),
                 type: 'GET',
-                data: {'param_js': orden_js, $fk_id_orden: $('#fk_id_orden_compra').val()},
+                data: {'param_js': orden_js, $fk_id_orden: $('#fk_id_linea').val()},
                 dataType: 'json',
                 success: function (data) {
                     var i = $('#detalle_solicitud_pago tr').length;
@@ -115,8 +117,8 @@ $(document).ready(function () {
                     var total = +data[0].total_orden;
                     $('#detalle_solicitud_pago').append(
                         '<tr>' +
-                        '<td><input class="orden" type="hidden" name="relations[has][detalle][' + index + '][fk_id_orden_compra]" value="' + data[0].id_orden + '">' + data[0].id_orden + '<input type="hidden" id="index" value="'+index+'"></td>' +
-                        '<td><input type="hidden" name="relations[has][detalle][' + index + '][descripcion]" value="Orden de compra ' + data[0].id_orden + '">Orden de compra ' + data[0].id_orden + '</td>' +
+                        '<td><input class="orden" type="hidden" name="relations[has][detalle][' + index + '][fk_id_linea]" value="' + data[0].id_documento + '">' + data[0].id_documento + '<input type="hidden" id="index" value="'+index+'"><input type="hidden" name="relations[has][detalle][' + index + '][fk_id_tipo_documento_base]" value="'+data[0].fk_id_tipo_documento+'"></td>' +
+                        '<td><input type="hidden" name="relations[has][detalle][' + index + '][descripcion]" value="Orden de compra ' + data[0].id_documento + '">Orden de compra ' + data[0].id_documento + '</td>' +
                         '<td><input type="hidden" name="relations[has][detalle][' + index + '][cantidad]" value="1">1</td>' +
                         '<td><input type="hidden" name="relations[has][detalle][' + index + '][impuesto]" value="' + impuesto.toFixed(2) + '">' + impuesto.toFixed(2) + '</td>' +
                         '<td><input type="hidden" name="relations[has][detalle][' + index + '][precio_unitario]" value="' + subtotal.toFixed(2) + '">' + subtotal.toFixed(2) + '</td>' +
@@ -154,7 +156,7 @@ $(document).ready(function () {
             var total = impuesto + ( subtotal * cantidad);
             $('#detalle_solicitud_pago').append(
                 '<tr>' +
-                '<td><input type="hidden" id="index" value="'+index+'"><input type="hidden" name="relations[has][detalle][' + index + '][fk_id_orden_compra]" value="">N/A</td>' +
+                '<td><input type="hidden" id="index" value="'+index+'"><input type="hidden" name="relations[has][detalle][' + index + '][fk_id_linea]" value="">N/A</td>' +
                 '<td><input type="hidden" name="relations[has][detalle][' + index + '][descripcion]" value="' + $('#descripcion').val() + '">' + $('#descripcion').val() + '</td>' +
                 '<td><input type="hidden" name="relations[has][detalle][' + index + '][cantidad]" value="' + $('#cantidad').val() + '">' + $('#cantidad').val() + '</td>' +
                 '<td><input type="hidden" name="relations[has][detalle][' + index + '][impuesto]" value="' + $('#impuesto').val() + '">' + $('#impuesto').val() + '</td>' +

@@ -12,6 +12,12 @@
 	@endif
 @endsection
 
+@section('left-actions')
+	@parent
+	@if(!empty($data->comprobante))
+		{!! HTML::link(companyAction('show').'/download/','Descargar comprobante',['class'=>'btn btn-primary']) !!}
+	@endif
+@endsection
 
 @section('form-content')
     {{ Form::setModel($data) }}
@@ -45,8 +51,10 @@
     		{{Form::cNumber('Tipo de Cambio','tipo_cambio',[],isset($data->tipo_cambio) ? $data->tipo_cambio : null)}}
     	</div>
     	<div class="form-group col-md-12 col-sm-12 text-center">
-    		{{Form::cFile('Comprobante','comprobante_input',['accept'=>'.pdf,image/*'])}}
-    		<input id="comprobante_hidden" class="custom-file-input" style="display:none" name="comprobante_hidden" type="file">
+			@if(empty($data->comprobante))
+				{{Form::cFile('Comprobante','comprobante_input',['accept'=>'.pdf,image/*'])}}
+				<input id="comprobante_hidden" class="custom-file-input" style="display:none" name="comprobante_hidden" type="file">
+			@endif
     	</div>
     	<div class="form-group col-md-12 text-center mt-6">
     		{{Form::cTextArea('Observaciones','observaciones',['rows'=>2,'style'=>'resize:none'])}}
@@ -122,7 +130,7 @@
     				<tr>
     					<td colspan="3"></td>
     					<td>
-    						{{Form::cNumber('Monto Aplicado','monto_aplicado',['disabled'],isset($data->monto_aplicado) ? $data->monto_aplicado : null,null,'')}}
+    						{{Form::cNumber('Monto Aplicado','monto_aplicado',['readonly'],isset($data->monto_aplicado) ? $data->monto_aplicado : null,null,'')}}
     					</td>
     				</tr>
     			</tfoot>

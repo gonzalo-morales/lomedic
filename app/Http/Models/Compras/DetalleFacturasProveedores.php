@@ -28,7 +28,7 @@ class DetalleFacturasProveedores extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_detalle_factura_proveedor';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.
@@ -46,7 +46,7 @@ class DetalleFacturasProveedores extends ModelCompany
         'fk_id_documento',
         'fk_id_detalle_orden_compra',
         'fk_id_nota_credito',
-        'fk_id_factura_proveedor',
+        'fk_id_documento',
         'unidad'
     ];
 
@@ -56,7 +56,7 @@ class DetalleFacturasProveedores extends ModelCompany
         'fk_id_clave_producto_servicio'=>'clave producto o servicio',
         'cantidad'=>'cantidad',
         'fk_id_impuesto'=>'impuesto',
-        'fk_id_documento'=>'orden de compra',
+        'fk_id_documento_base'=>'orden de compra',
         'fk_id_nota_credito'=>'nota crédito',
     ];
 

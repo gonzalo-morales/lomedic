@@ -60,6 +60,7 @@ Route::prefix('{company}')->group(function () {
         Route::post('actualizarEstatus','Compras\DetalleSeguimientoDesviacionController@actualizarEstatus');
 
         Route::resource('pagos','Compras\PagosController');
+        Route::get('pagos/{id}/download','Compras\PagosController@descargaComprobante');
         Route::resource('solicitudes', 'Compras\SolicitudesController');
         Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
         Route::resource('solicitudes_detalles', 'Compras\DetalleSolicitudesController');
