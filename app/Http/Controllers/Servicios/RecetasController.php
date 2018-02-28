@@ -27,14 +27,14 @@ class RecetasController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'localidades' => Sucursales::select(['sucursal', 'id_sucursal'])->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
-            'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
-            'programas' => Programas::get()->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
-            'areas' => Areas::all()->pluck('area', 'id_area')->prepend('...', ''),
+            'localidades' => Sucursales::select('sucursal', 'id_sucursal')->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
+            'medicos' => Medicos::select('nombre_completo', 'id_medico')->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
+            'programas' => Programas::select('nombre_programa', 'id_programa')->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
+            'areas' => Areas::select('area', 'id_area')->pluck('area', 'id_area')->prepend('...', ''),
             'tipo_servicio' => [0 => 'afiliado', 1 => 'externo'],
             'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
-            'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo',1)->pluck('diagnostico', 'id_diagnostico'),
-            'proyectos' => empty($entity) ? [] : Proyectos::where('id_proyecto', $entity->fk_id_proyecto)->where('fk_id_estatus',1)->pluck('proyecto', 'id_proyecto'),
+            'diagnosticos' => empty($entity) ? [] : Diagnosticos::select('diagnostico', 'id_diagnostico')->where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo',1)->pluck('diagnostico', 'id_diagnostico'),
+            'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto', 'id_proyecto')->where('id_proyecto', $entity->fk_id_proyecto)->where('fk_id_estatus',1)->pluck('proyecto', 'id_proyecto'),
         ];
     }
 
@@ -79,6 +79,6 @@ class RecetasController extends ControllerBase
     
     public function getProyectos($company, Request $request)
     {
-        return Proyectos::where('fk_id_sucursal',$request->fk_id_sucursal)->pluck('proyecto','id_proyecto')->toJson();
+        return Proyectos::select('proyecto','id_proyecto')->where('fk_id_sucursal',$request->fk_id_sucursal)->pluck('proyecto','id_proyecto')->toJson();
     }
 }
