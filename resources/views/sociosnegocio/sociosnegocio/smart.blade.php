@@ -577,7 +577,7 @@
     			</fieldset>
 			</div><!--/aquí termina el tab content-->
 
-			<div  class="tab-pane active" id="contabilidad" role="tabpanel">
+			<div  class="tab-pane" id="contabilidad" role="tabpanel">
 				<div class="row">
 					<div class="form-group col-sm-6">
 						{{Form::cSelect('Cuenta proveedor','fk_id_cuenta_proveedor',$cuentasproveedores??[])}}
@@ -588,7 +588,7 @@
 				</div>
 			</div><!--/aquí termina el contenido de un tab-->
 
-			{{--<div  class="tab-pane active" id="bancos" role="tabpanel">--}}
+			{{--<div  class="tab-pane" id="bancos" role="tabpanel">--}}
 				{{--<div class="row">--}}
 					{{--<div class="col-sm-12">--}}
 						{{--@inroute(["edit","create"])--}}
