@@ -1,7 +1,4 @@
 <?php
-
-
-
 namespace App\Http\Controllers\Servicios;
 
 use App\Http\Controllers\ControllerBase;
@@ -13,15 +10,13 @@ use App\Http\Models\Administracion\Areas;
 use App\Http\Models\Administracion\Diagnosticos;
 use App\Http\Models\Servicios\Recetas;
 use App\Http\Models\Proyectos\Proyectos;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Models\Inventarios\Productos;
+use Illuminate\Http\Request;
 
 class RecetasController extends ControllerBase
 {
     /**
      * Create a new controller instance.
-     *
      * @return void
      */
     public function __construct()
@@ -41,46 +36,29 @@ class RecetasController extends ControllerBase
             'diagnosticos' => empty($entity) ? [] : Diagnosticos::where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo',1)->pluck('diagnostico', 'id_diagnostico'),
             'proyectos' => empty($entity) ? [] : Proyectos::where('id_proyecto', $entity->fk_id_proyecto)->where('fk_id_estatus',1)->pluck('proyecto', 'id_proyecto'),
         ];
-
-
     }
-
 
     public function getAfiliados($company, Request $request)
     {
-        $json = [];
-        $term = strtoupper($request->membership);
-        $afiliados = Afiliaciones::where('id_afiliacion', 'LIKE', $term . '%')->orWhere(DB::raw("CONCAT(paterno,' ',materno, ' ',nombre)"), 'LIKE', '%' . $term . '%')->get();
-        foreach ($afiliados as $afiliado) {
-            $json[] = ['id' => $afiliado->id_dependiente,
-                'text' => $afiliado->id_afiliacion . " - " . $afiliado->paterno . " " . $afiliado->materno . " " . $afiliado->nombre,
-                'afiliacion' => $afiliado->id_afiliacion];
-        }
-        return json_encode($json);
+        $term = $request->membership;
+        return Afiliaciones::selectRaw("id_dependiente as id, CONCAT(id_afiliacion,' - ',paterno,' ',materno,' ',nombre) as text, id_afiliacion as afiliacion")
+            ->where('id_afiliacion', 'ILIKE', $term . '%')->orWhereRaw("CONCAT(paterno,' ',materno, ' ',nombre) ILIKE '%$term%'")->get()->toJson();
     }
 
     public function getDiagnosticos($company, Request $request)
     {
-        $json = [];
-        $term = strtoupper($request->diagnostico);
-        $diagnosticos = Diagnosticos::where('diagnostico', 'LIKE', '%' . $term . '%')->orWhere('clave_diagnostico', 'LIKE', $term . '%')->where('activo',1)->get();
-        foreach ($diagnosticos as $diagnostico) {
-            $json[] = ['id' => $diagnostico->id_diagnostico,
-                'text' => '(' . $diagnostico->clave_diagnostico . ') ' . $diagnostico->diagnostico];
-        }
-        return json_encode($json);
+        $term = $request->diagnostico;
+        return Diagnosticos::selectRaw("id_diagnostico as id, CONCAT('(',clave_diagnostico,') ',diagnostico) as text")
+            ->where('diagnostico', 'ILIKE', '%' . $term . '%')->orWhere('clave_diagnostico', 'ILIKE', $term . '%')->where('activo',1)->get()->toJson();
     }
 
     public function getMedicamentos($company, Request $request)
     {
-
         $json = [];
-
         $term = $request->medicamento;
-        $skus = Productos::where('activo',1)->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'LIKE', '%' . $term . '%')->orWhere('descripcion', 'LIKE', '%' . $term . '%')->get();
+        $skus = Productos::where('activo',1)->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'ILIKE', '%' . $term . '%')->orWhere('descripcion', 'ILIKE', '%' . $term . '%')->get();
 
         foreach ($skus as $sku) {
-
             if($sku->clave_cliente_productos['cantidad_presentacion'] != null && $sku->clave_cliente_productos['tope_receta'] != null && $sku->clave_cliente_productos['disponibilidad'] != null ){
                 $json[] = [
                     'id' => (int)$sku->id_sku,
@@ -95,20 +73,12 @@ class RecetasController extends ControllerBase
                     'id_cuadro' => $sku->fk_id_proyecto
                 ];
             }
-
-
         }
         return json_encode($json);
-
     }
+    
     public function getProyectos($company, Request $request)
     {
-
-        $detalle_requision = Proyectos::where('fk_id_sucursal',$request->fk_id_sucursal)
-            ->pluck('proyecto','id_proyecto')
-            ->toJson();
-
-        return $detalle_requision;
+        return Proyectos::where('fk_id_sucursal',$request->fk_id_sucursal)->pluck('proyecto','id_proyecto')->toJson();
     }
-
 }

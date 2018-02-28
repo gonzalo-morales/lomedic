@@ -46,7 +46,7 @@ class Recetas extends ModelCompany
         'folio' => 'Folio',
         'unidad_medica'=>'Unidad medica',
         'tipo_servicio' => 'Tipo de servicio',
-        'id_afiliacion' => 'N. de afiliacion',
+        'fk_id_afiliacion' => 'N. de afiliacion',
         'nombre_completo_paciente' => 'Paciente',
         'fecha_formated' => 'Fecha Captura',
         'estatus_formated' => 'Estatus de la receta'
@@ -59,7 +59,7 @@ class Recetas extends ModelCompany
 
     public function getNombreCompletoPacienteAttribute()
     {
-        if($this->id_afiliacion != '' && $this->id_afiliacion != null){
+        if($this->fk_id_afiliacion != '' && $this->fk_id_afiliacion != null){
             return $this->afiliacion->paterno.' '.$this->afiliacion->materno.' '.$this->afiliacion->nombre;
         }else{
             return $this->nombre_paciente_no_afiliado;
@@ -67,7 +67,7 @@ class Recetas extends ModelCompany
     }
 
     public function getTipoServicioAttribute(){
-        if($this->id_afiliacion != '' || $this->id_afiliacion != null){
+        if($this->fk_id_afiliacion != '' || $this->fk_id_afiliacion != null){
             return 'Afiliado';
         }else{
             return 'Externo';
