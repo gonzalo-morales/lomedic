@@ -28,7 +28,7 @@ class RecetasController extends ControllerBase
     {
         return [
             'localidades' => Sucursales::select('sucursal', 'id_sucursal')->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
-            'medicos' => Medicos::select('nombre_completo', 'id_medico')->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
+            'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
             'programas' => Programas::select('nombre_programa', 'id_programa')->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'areas' => Areas::select('area', 'id_area')->pluck('area', 'id_area')->prepend('...', ''),
             'tipo_servicio' => [0 => 'afiliado', 1 => 'externo'],
