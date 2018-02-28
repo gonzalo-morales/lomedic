@@ -58,19 +58,20 @@
 				</div>
 				<div class="card-body" style="overflow: auto;">
 					<ul class="list-group">
-						<?php 
-						$empresa_socio = [];
-						if(isset($data->empresas))
-						{
-    						foreach ($data->empresas as $empresa){
-                                array_push($empresa_socio, $empresa->pivot->fk_id_empresa);
-							}
-						}
-						?>
+						@php
+							$empresa_socio = [];
+						@endphp
+						
+						
+						@if(isset($data->empresas))
+    						@foreach ($data->empresas as $empresa)
+                                {{ array_push($empresa_socio, $empresa->pivot->fk_id_empresa) }}
+							@endforeach
+						@endif
 						
                         @foreach ($empresas as $row)
                         <li class="list-group-item form-group row">
-                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresas->toArray())?1:0) ) }}
+                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresa_socio)?1:0) ) }}
                         </li>
                         @endforeach
                     </ul>
