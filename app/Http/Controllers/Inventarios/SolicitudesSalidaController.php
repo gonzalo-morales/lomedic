@@ -64,7 +64,6 @@ class SolicitudesSalidaController extends ControllerBase
 			'upcs' => $upcs,
 			'api_sku' => Crypt::encryptString('"select": ["id_sku","sku","descripcion"], "conditions": [{"where": ["id_sku", "$id_sku"]}], "with": ["upcs:id_upc,descripcion,marca,upc"]'),
 			'api_proyectos' => Crypt::encryptString('"conditions": [{"where":["fk_id_cliente", "$fk_id_cliente"]}], "only": ["id_proyecto", "proyecto"]'),
-			'api_direcciones' => Crypt::encryptString('"conditions": [{"where":["fk_id_socio_negocio", "$fk_id_socio_negocio"]},{"where":["fk_id_tipo_direccion", "2"]}], "only": ["id_direccion", "direccion_concat"]'),
 			'api_pedidos_detalle' => Crypt::encryptString('"conditions": [{"where":["id_documento", "$id_documento"]}], "with": ["detalle"], "select":["id_documento"]'),
 		];
 	}
