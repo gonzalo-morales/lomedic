@@ -33,7 +33,8 @@
                         $.each(data, function(key,values) {
                             $('#detalle').append(
                                 '<tr>' +
-                                    '<td>'+values.clave_cliente_producto+'</td>'+
+                                    '<td>'+values.sku+'</td>'+
+                                    // '<td>'+values.clave_cliente_producto+'</td>'+
                                     '<td>'+values.descripcion+'</td>'+
                                     '<td>'+values.cantidad_solicitada+'</td>'+
                                     '<td class="cantidad_surtida">'+values.cantidad_surtida+'</td>'+
@@ -55,7 +56,22 @@
             }
         });
 
+        $("#form-model").submit(function(){
+            var cont = 0;
+            $.each($('.cantidad'),function (index,value) {
+                cont = cont + $(value).val();
+            });
 
+            if( cont == 0 )
+            {
+                mensajeAlerta('Favor de ingresar por lo menos un producto.','danger');
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        });
         // $('#fk_id_sucursal').trigger("change");
     });
 function calculatotal(el) {
@@ -77,3 +93,19 @@ function calculatotal(el) {
 
     $('#total').html('$ '+parseFloat(total, 10).toFixed(2));
 };
+
+
+function mensajeAlerta(mensaje,tipo){
+
+    var titulo = '';
+
+    if(tipo == 'danger'){ titulo = '¡Error!'}
+    else if(tipo == 'success'){titulo = '¡Correcto!' }
+    $.toaster({priority:tipo,
+            title: titulo,
+            message:mensaje,
+            settings:{'timeout':10000,
+                'toaster':{'css':{'top':'5em'}}}
+        }
+    );
+}

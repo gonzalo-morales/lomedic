@@ -57,7 +57,7 @@ class SurtidoRequisicionHospitalariaController extends ControllerBase
     {
 
         $detalle_requision = RequisicionesHospitalariasDetalle::where('fk_id_requisicion',$request->fk_id_requiscion)->get();
-        /*
+
         $json = [];
         foreach ($detalle_requision as $row => $detalle)
         {
@@ -73,11 +73,12 @@ class SurtidoRequisicionHospitalariaController extends ControllerBase
                 'eliminar' => $detalle->eliminar,
                 'clave_cliente_producto' => $detalle->claveClienteProducto['clave_producto_cliente'],
                 'descripcion' => $detalle->claveClienteProducto->sku['descripcion'],
+                'sku' => $detalle->claveClienteProducto->sku['sku'],
 
             ];
         }
-        */
-        return $detalle_requision->toJson();
+        return $json;
+//        return $detalle_requision->toJson();
     }
 
 }
