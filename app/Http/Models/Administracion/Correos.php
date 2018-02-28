@@ -54,7 +54,7 @@ class Correos extends ModelBase
 	 */
 	public function usuario()
 	{
-		return $this->belongsTo(Usuarios::class, 'id_usuario','fk_id_usuario');
+		return $this->belongsTo(Usuarios::class, 'fk_id_usuario','id_usuario');
 	}
 
 	/**
