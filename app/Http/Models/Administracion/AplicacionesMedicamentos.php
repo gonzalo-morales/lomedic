@@ -11,7 +11,7 @@ class AplicacionesMedicamentos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_aplicaciones_medicamentos';
+	protected $table = 'maestro.gen_cat_aplicaciones_medicamentos';
 
 	/**
 	 * The primary key of the table

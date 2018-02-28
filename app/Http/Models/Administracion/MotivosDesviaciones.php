@@ -12,7 +12,7 @@ class MotivosDesviaciones extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'gen_cat_motivos_desviaciones';
+	protected $table = 'maestro.gen_cat_motivos_desviaciones';
 
 	/**
 	 * The primary key of the table

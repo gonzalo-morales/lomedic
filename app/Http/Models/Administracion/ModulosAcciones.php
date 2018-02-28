@@ -12,7 +12,7 @@ class ModulosAcciones extends ModelBase
      *
      * @var string
      */
-    protected $table = 'adm_det_modulo_accion';
+    protected $table = 'maestro.adm_det_modulo_accion';
 
     /**
      * The primary key of the table

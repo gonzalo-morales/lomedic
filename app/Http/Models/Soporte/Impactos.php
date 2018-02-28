@@ -13,7 +13,7 @@ class Impactos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'sop_cat_impactos';
+	protected $table = 'maestro.sop_cat_impactos';
 
 	/**
 	 * The primary key of the table

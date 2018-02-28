@@ -13,7 +13,7 @@ class Acciones extends Model
      *
      * @var string
      */
-    protected $table = 'adm_cat_acciones';
+    protected $table = 'maestro.adm_cat_acciones';
 
     /**
      * The primary key of the table

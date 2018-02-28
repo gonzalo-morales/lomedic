@@ -14,7 +14,7 @@ class Solicitudes extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'sop_opr_solicitudes';
+	protected $table = 'maestro.sop_opr_solicitudes';
 
 	/**
 	 * The primary key of the table

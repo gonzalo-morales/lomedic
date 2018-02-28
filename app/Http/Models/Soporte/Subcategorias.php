@@ -13,7 +13,7 @@ class Subcategorias extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'sop_cat_subcategorias';
+	protected $table = 'maestro.sop_cat_subcategorias';
 
 	/**
 	 * The primary key of the table

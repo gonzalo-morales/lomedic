@@ -10,7 +10,7 @@ class TiposProveedores extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'sng_cat_tipos_proveedor';
+    protected $table = 'maestro.sng_cat_tipos_proveedor';
 
     /**
      * The primary key of the table

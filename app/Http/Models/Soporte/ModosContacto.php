@@ -13,7 +13,7 @@ class ModosContacto extends ModelBase
      *
      * @var string
      */
-    protected $table = 'sop_cat_modos_contacto';
+    protected $table = 'maestro.sop_cat_modos_contacto';
 
     /**
      * The primary key of the table

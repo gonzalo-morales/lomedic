@@ -14,7 +14,7 @@ class Modulos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'ges_cat_modulos';
+	protected $table = 'maestro.ges_cat_modulos';
 //    protected $table = 'adm_cat_modulos';
 	/**
 	 * The primary key of the table

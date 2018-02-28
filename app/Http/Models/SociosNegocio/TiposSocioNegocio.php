@@ -10,7 +10,7 @@ class TiposSocioNegocio extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'sng_cat_tipos_socio_negocio';
+    protected $table = 'maestro.sng_cat_tipos_socio_negocio';
 
     /**
      * The primary key of the table
