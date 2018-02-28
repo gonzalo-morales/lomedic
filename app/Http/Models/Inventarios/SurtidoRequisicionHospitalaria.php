@@ -46,7 +46,8 @@ class SurtidoRequisicionHospitalaria extends ModelCompany
         'motivo_cancelado',
         'fk_id_usuario_cancelado',
         'eliminado',
-        'cantidad_surtida'
+        'cantidad_surtida',
+        'fk_id_sucursal',
 
     ];
 

@@ -11,7 +11,7 @@ class Proveedores extends ModelBase
      *
      * @var string
      */
-    protected $table = 'gen_cat_proveedor';
+    protected $table = 'maestro.gen_cat_proveedor';
 
     /**
      * The primary key of the table

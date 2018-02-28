@@ -10,7 +10,7 @@ class RegimenFiscal extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'sat_cat_regimenes_fiscales';
+	protected $table = 'maestro.sat_cat_regimenes_fiscales';
 
 	/**
 	 * The primary key of the table

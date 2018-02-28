@@ -58,19 +58,16 @@
 				</div>
 				<div class="card-body" style="overflow: auto;">
 					<ul class="list-group">
-						<?php 
-						$empresa_socio = [];
-						if(isset($data->empresas))
-						{
-    						foreach ($data->empresas as $empresa){
-                                array_push($empresa_socio, $empresa->pivot->fk_id_empresa);
-							}
-						}
-						?>
+						@php $empresa_socio = []; @endphp
+						@if(isset($data->empresas))
+    						@foreach ($data->empresas as $empresa)
+                                @php array_push($empresa_socio, $empresa->pivot->fk_id_empresa); @endphp
+							@endforeach
+						@endif
 						
                         @foreach ($empresas as $row)
                         <li class="list-group-item form-group row">
-                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresas->toArray())?1:0) ) }}
+                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresa_socio)?1:0) ) }}
                         </li>
                         @endforeach
                     </ul>
@@ -577,7 +574,7 @@
     			</fieldset>
 			</div><!--/aquí termina el tab content-->
 
-			<div  class="tab-pane active" id="contabilidad" role="tabpanel">
+			<div  class="tab-pane" id="contabilidad" role="tabpanel">
 				<div class="row">
 					<div class="form-group col-sm-6">
 						{{Form::cSelect('Cuenta proveedor','fk_id_cuenta_proveedor',$cuentasproveedores??[])}}
@@ -588,7 +585,7 @@
 				</div>
 			</div><!--/aquí termina el contenido de un tab-->
 
-			{{--<div  class="tab-pane active" id="bancos" role="tabpanel">--}}
+			{{--<div  class="tab-pane" id="bancos" role="tabpanel">--}}
 				{{--<div class="row">--}}
 					{{--<div class="col-sm-12">--}}
 						{{--@inroute(["edit","create"])--}}

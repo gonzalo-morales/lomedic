@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class SustanciasActivas extends ModelBase
 {
-	protected $table = 'gen_cat_sustancias_activas';
+	protected $table = 'maestro.gen_cat_sustancias_activas';
 
 	/**
 	 * The primary key of the table
