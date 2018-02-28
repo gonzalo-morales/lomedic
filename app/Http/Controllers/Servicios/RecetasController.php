@@ -42,21 +42,21 @@ class RecetasController extends ControllerBase
     {
         $term = $request->membership;
         return Afiliaciones::selectRaw("id_dependiente as id, CONCAT(id_afiliacion,' - ',paterno,' ',materno,' ',nombre) as text, id_afiliacion as afiliacion")
-            ->where('id_afiliacion', 'ILIKE', $term . '%')->orWhereRaw("CONCAT(paterno,' ',materno, ' ',nombre) ILIKE '%$term%'")->get()->toJson();
+            ->where('id_afiliacion', 'ILIKE',"%$term%")->orWhereRaw("CONCAT(paterno,' ',materno, ' ',nombre) ILIKE '%$term%'")->get()->toJson();
     }
 
     public function getDiagnosticos($company, Request $request)
     {
         $term = $request->diagnostico;
         return Diagnosticos::selectRaw("id_diagnostico as id, CONCAT('(',clave_diagnostico,') ',diagnostico) as text")
-            ->where('diagnostico', 'ILIKE', '%' . $term . '%')->orWhere('clave_diagnostico', 'ILIKE', $term . '%')->where('activo',1)->get()->toJson();
+            ->where('diagnostico', 'ILIKE', "%$term%")->orWhere('clave_diagnostico', 'ILIKE',"%$term%")->where('activo',1)->get()->toJson();
     }
 
     public function getMedicamentos($company, Request $request)
     {
         $json = [];
         $term = $request->medicamento;
-        $skus = Productos::where('activo',1)->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'ILIKE', '%' . $term . '%')->orWhere('descripcion', 'ILIKE', '%' . $term . '%')->get();
+        $skus = Productos::where('activo',1)->where('sku', 'ILIKE', '%' . $term . '%')->orWhere('descripcion_corta', 'ILIKE', "%$term%")->orWhere('descripcion', 'ILIKE', "%$term%")->get();
 
         foreach ($skus as $sku) {
             if($sku->clave_cliente_productos['cantidad_presentacion'] != null && $sku->clave_cliente_productos['tope_receta'] != null && $sku->clave_cliente_productos['disponibilidad'] != null ){
