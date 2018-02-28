@@ -58,11 +58,7 @@
 				</div>
 				<div class="card-body" style="overflow: auto;">
 					<ul class="list-group">
-						@php
-							$empresa_socio = [];
-						@endphp
-						
-						
+						@php $empresa_socio = []; @endphp
 						@if(isset($data->empresas))
     						@foreach ($data->empresas as $empresa)
                                 {{ array_push($empresa_socio, $empresa->pivot->fk_id_empresa) }}
