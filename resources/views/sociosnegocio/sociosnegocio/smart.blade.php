@@ -61,7 +61,7 @@
 						@php $empresa_socio = []; @endphp
 						@if(isset($data->empresas))
     						@foreach ($data->empresas as $empresa)
-                                {{ array_push($empresa_socio, $empresa->pivot->fk_id_empresa) }}
+                                @php array_push($empresa_socio, $empresa->pivot->fk_id_empresa); @endphp
 							@endforeach
 						@endif
 						
