@@ -11,7 +11,7 @@ class SeguimientoSolicitudes extends ModelBase
      *
      * @var string
      */
-    protected $table = 'sop_det_seguimiento_solicitudes';
+    protected $table = 'maestro.sop_det_seguimiento_solicitudes';
 
     /**
      * The primary key of the table

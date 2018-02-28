@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class CadenasPagos extends ModelBase
 {
-	protected $table = 'sat_cat_cadenas_pagos';
+	protected $table = 'maestro.sat_cat_cadenas_pagos';
 
 	/**
 	 * The primary key of the table

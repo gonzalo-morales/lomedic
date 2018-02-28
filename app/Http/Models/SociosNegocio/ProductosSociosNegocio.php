@@ -12,7 +12,7 @@ class ProductosSociosNegocio extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'sng_det_productos';
+    protected $table = 'maestro.sng_det_productos';
 
     /**
      * The primary key of the table

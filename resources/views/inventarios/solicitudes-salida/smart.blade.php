@@ -613,7 +613,7 @@
         
                         var target = $('#fk_id_direccion_entrega');
                         $(target).parent().prepend('<div class="w-100 h-100 text-center text-white align-middle loadingData">Cargando datos... <i class="material-icons align-middle loading">cached</i></div>');
-                        $.get(vm.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'sociosnegocio.direccionessociosnegocio'), {
+                        $.get(vm.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'sociosnegocio.sociosnegocio'), {
                             param_js: '{{$api_direcciones ?? ''}}', $fk_id_socio_negocio: this.value
                             // conditions: [{'where':['fk_id_socio_negocio', this.value]},{'where':['fk_id_tipo_direccion', 2]}],
                             // only: ['id_direccion', 'direccion_concat']
@@ -623,9 +623,11 @@
                             /* Si hay resultados */
                             if (response.length > 0) {
                                 options.push('<option value="0" selected disabled>Selecciona ...</option>');
-                                for (i in response) {
-                                    options.push('<option value="' + response[i].id_direccion + '">' + response[i].direccion_concat + '</option>');
-                                }
+                                $.each(response, function (i, el) { 
+                                    for (i in el.direcciones) {
+                                         options.push('<option value="' + el.direcciones[i].id_direccion + '">' + el.direcciones[i].calle + '-' + el.direcciones[i].num_exterior + '</option>');
+                                     }
+                                });
                             } else {
                                 options.push(
                                     '<option value="0" selected disabled>Sin resultados ...</option>'

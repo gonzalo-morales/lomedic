@@ -13,7 +13,7 @@ class Prioridades extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'sop_cat_prioridades';
+	protected $table = 'maestro.sop_cat_prioridades';
 
 	/**
 	 * The primary key of the table

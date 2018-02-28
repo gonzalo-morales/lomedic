@@ -11,7 +11,7 @@ class SatMunicipios extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'sat_cat_municipios';
+	protected $table = 'maestro.sat_cat_municipios';
 
 	/**
 	 * The primary key of the table

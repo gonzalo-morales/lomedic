@@ -11,7 +11,7 @@ class VehiculosModelos extends ModelBase
      *
      * @var string
      */
-    protected $table = 'gen_cat_vehiculos_modelos';
+    protected $table = 'maestro.gen_cat_vehiculos_modelos';
 
     /**
      * The primary key of the table

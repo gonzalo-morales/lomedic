@@ -13,7 +13,7 @@ class Urgencias extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'sop_cat_urgencias';
+	protected $table = 'maestro.sop_cat_urgencias';
 
 	/**
 	 * The primary key of the table
