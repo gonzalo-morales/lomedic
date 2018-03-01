@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Administracion;
 
+use App\Http\Models\Compras\Solicitudes;
 use App\Http\Models\Compras\CondicionesAutorizacion;
 use App\Http\Models\ModelBase;
 use App\Notifications\MyResetPassword;
@@ -201,5 +202,9 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 	public function usuario_empresa()
 	{
 		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_empresa');
-	}
+    }
+    public function solicitudes()
+    {
+        return $this->hasMany(Solicitudes::class,'id_usuario','fk_id_solicitante');
+    }
 }

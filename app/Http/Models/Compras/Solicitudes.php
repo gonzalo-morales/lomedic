@@ -3,6 +3,8 @@
 namespace App\Http\Models\Compras;
 
 use App\Http\Models\Administracion\EstatusDocumentos;
+use App\Http\Models\Administracion\Usuarios;
+use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\ModelCompany;
 use DB;
 
@@ -47,7 +49,8 @@ class Solicitudes extends ModelCompany
     ];
 
     function getNombreCompletoAttribute() {
-        return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
+        return $this->usuario->usuario.' / '.$this->empleado['nombre'].' '.$this->empleado['apellido_paterno'].' '.$this->empleado['apellido_materno'];
+        // return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
     }
 
     function getNombreSucursalAttribute(){
@@ -92,11 +95,14 @@ class Solicitudes extends ModelCompany
         return $data;
     }
 
+    public function usuario()
+    {
+        return $this->belongsTo(Usuarios::class,'fk_id_solicitante','id_usuario');
+    }
     public function empleado()
     {
-        return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_solicitante','id_empleado');
+        return $this->belongsTo(Empleados::class,'fk_id_solicitante','id_empleado');
     }
-
     public function sucursales()
     {
         return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');

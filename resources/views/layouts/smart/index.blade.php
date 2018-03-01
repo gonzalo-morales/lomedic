@@ -17,7 +17,7 @@
     		'class': 'btn is-icon',
     		'rv-get-show-url': '',
     		'data-toggle':'tooltip',
-    		'title':'@lang("forms.show")'
+    		'title':'{{ cTrans("forms.show","Ver")}}'
     	}};
     	@can('update', currentEntity())
     	window['smart-model'].collections.itemsOptions.edit = {a: {
@@ -25,7 +25,7 @@
     		'class': 'btn is-icon',
     		'rv-get-edit-url': '',
             'data-toggle':'tooltip',
-            'title':'@lang("forms.edit")'
+            'title':'{{cTrans("forms.edit","Editar")}}'
     	}};
     	@endcan
     	@can('delete', currentEntity())
@@ -37,7 +37,7 @@
     		'rv-get-delete-url': '',
     		'data-delete-type': 'single',
             'data-toggle':'tooltip',
-            'title':'@lang("forms.delete")'
+            'title':'{{cTrans("forms.delete","Eliminar")}}'
     	}};
     	@endcan
     	
@@ -48,7 +48,7 @@
 				class: 'btn btn-primary progress-button',
 				role: 'buttons',
 				'rv-get-create-url': '',
-				html: '<i class="material-icons left align-middle">add</i>@lang("forms.create")',
+				html: '<i class="material-icons left align-middle">add</i>{{cTrans("forms.create","Nuevo")}}',
 			}},
 			@endcan
 			@can('export', currentEntity())
@@ -61,17 +61,17 @@
 						'data-toggle': 'dropdown',
 						'aria-haspopup': 'true',
 						'aria-expanded': 'false',
-						html: '<i class="material-icons left align-middle">file_download</i>@lang("forms.export")'
+						html: '<i class="material-icons left align-middle">file_download</i>{{cTrans("forms.export","Exportar")}}'
 					}},
 					{div: {
 						class: 'dropdown-menu dropdown-menu-right',
 						childs: [
-							{a: {html:'<i class="material-icons text-info m-1">insert_link</i> ', text: '@lang("forms.file") Excel', style:'vertical-align: text-bottom', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLSX'}},
-							{a: {html:'<i class="material-icons text-info m-1">insert_link</i> ', text: '@lang("forms.file") Pdf', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'PDF'}},
+							{a: {html:'<i class="material-icons text-info m-1">insert_link</i> ', text: '{{cTrans("forms.file","Archivo")}} Excel', style:'vertical-align: text-bottom', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLSX'}},
+							{a: {html:'<i class="material-icons text-info m-1">insert_link</i> ', text: '{{cTrans("forms.file","Archivo")}} Pdf', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'PDF'}},
 							{div: {class: 'dropdown-divider'}},
 							{a: {text: 'Excel 97-2003', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLS'}},
-							{a: {text: '@lang("forms.file") CSV', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'CSV'}},
-							{a: {text: '@lang("forms.file") TXT', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'TXT'}},
+							{a: {text: '{{cTrans("forms.file","Archivo")}} CSV', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'CSV'}},
+							{a: {text: '{{cTrans("forms.file","Archivo")}} TXT', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'TXT'}},
 						]
 					}}
 				]
@@ -81,7 +81,7 @@
 
     	window['smart-model'].collections.headerOptionsOnChecks.splice(1, 0,
         	{button: {
-        		html: '<i class="material-icons left align-middle">select_all</i>@lang("forms.deselected") (<span rv-text="collections.items | length"></span>)',
+        		html: '<i class="material-icons left align-middle">select_all</i>{{cTrans("forms.deselected","Deseleccionar")}} (<span rv-text="collections.items | length"></span>)',
         		class: 'btn btn-default text-primary',
         		'rv-on-click': 'actions.uncheckAll'
         	}},
@@ -91,7 +91,7 @@
         		'rv-on-click': 'actions.showModalDelete',
         		'data-delete-type': 'multiple',
         		'data-delete-url': '{{companyRoute('destroyMultiple')}}',
-        		'html': '<i class="material-icons left align-middle">delete</i>@lang("forms.delete") (<span rv-text="collections.items | length"></span>)'
+        		'html': '<i class="material-icons left align-middle">delete</i>{{cTrans("forms.delete","Eliminar")}} (<span rv-text="collections.items | length"></span>)'
         	}},
         	@endcan
         	@can('export', currentEntity())
@@ -104,17 +104,17 @@
     					'data-toggle': 'dropdown',
     					'aria-haspopup': 'true',
     					'aria-expanded': 'false',
-    					html: '<i class="material-icons left align-middle">file_download</i>@lang("forms.export") (<span rv-text="collections.items | length"></span>)'
+    					html: '<i class="material-icons left align-middle">file_download</i>{{cTrans("forms.export","Exportar")}} (<span rv-text="collections.items | length"></span>)'
     				}},
     				{div: {
     					class: 'dropdown-menu dropdown-menu-right',
     					childs: [
-    						{a: {html:'<i class="material-icons text-info m-1">insert_link</i> ', text: '@lang("forms.file") Excel', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLSX'}},
-    						{a: {html:'<i class="material-icons text-info m-1">insert_link</i> ', text: '@lang("forms.file") Pdf', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'PDF'}},
+    						{a: {html:'<i class="material-icons text-info m-1">insert_link</i> ', text: '{{cTrans("forms.file","Archivo")}} Excel', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLSX'}},
+    						{a: {html:'<i class="material-icons text-info m-1">insert_link</i> ', text: '{{cTrans("forms.file","Archivo")}} Pdf', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'PDF'}},
     						{div: {class: 'dropdown-divider'}},
     						{a: {text: 'Excel 97-2003', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'XLS'}},
-    						{a: {text: '@lang("forms.file") CSV', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'CSV'}},
-    						{a: {text: '@lang("forms.file") TXT', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'TXT'}},
+    						{a: {text: '{{cTrans("forms.file","Archivo")}} CSV', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'CSV'}},
+    						{a: {text: '{{cTrans("forms.file","Archivo")}} TXT', href:'#', class: 'dropdown-item', 'rv-on-click': 'actions.itemsExport', 'data-export-type': 'TXT'}},
     					]
     				}}
     			]

@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Inicio')
+@section('title', cTrans('titles.home','Inicio'))
 
 @section('header-bottom')
     {{ HTML::script(asset('js/amcharts/amcharts.js')) }}
@@ -16,7 +16,7 @@
 @section('content')
 
 <div class="text-center">
-<h1 class="display-3"> @lang('messages.welcome')</h1>
+<h1 class="display-3">{{ cTrans('messages.welcome','�Bienvenido!') }}</h1>
 <h6>Aquí puedes consultar algúnos mensajes urgentes o últimas acitivades que realizaste:</h6>
 </div>
 <div class="container-fluid">

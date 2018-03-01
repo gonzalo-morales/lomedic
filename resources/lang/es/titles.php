@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'login' => utf8_encode('Iniciar Sessión'),
+    'home' => 'Inicio',
+    'login' => 'Iniciar Sessión',
     'edit' => 'Editar',
     'create' => 'Agregar',
     'show' => 'Ver',

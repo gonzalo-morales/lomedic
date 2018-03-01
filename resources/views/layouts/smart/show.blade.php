@@ -1,6 +1,6 @@
 @extends('layouts.smart.create')
 
-@section('title', currentEntityBaseName().' '.trans('titles.show'))
+@section('title', currentEntityBaseName().' '.cTrans('titles.show','Ver'))
 
 @section('fieldset', 'disabled')
 
@@ -20,18 +20,18 @@
         <div class="text-right">
             @yield('left-actions')
             @can('create', currentEntity())
-                {{ link_to(companyRoute('create'), trans('forms.create'), ['class'=>'btn btn-primary progress-button']) }}
+                {{ link_to(companyRoute('create'), cTrans('forms.create','Nuevo'), ['class'=>'btn btn-primary progress-button']) }}
             @endcan
             @can('update', currentEntity())
-            {{ link_to(companyRoute('edit'), trans('forms.edit'), ['class'=>'btn btn-info progress-button']) }}
+            {{ link_to(companyRoute('edit'), cTrans('forms.edit','Editar'), ['class'=>'btn btn-info progress-button']) }}
             @endcan
             @yield('extraButtons')
-            {{ link_to(companyRoute('index'), trans('forms.close'), ['class'=>'btn btn-default progress-button']) }}
+            {{ link_to(companyRoute('index'), cTrans('forms.close','Cerrar'), ['class'=>'btn btn-default progress-button']) }}
             @yield('right-actions')
         </div>
     </div>
 @endsection
 
 @section('form-title')
-    {{ HTML::tag('h1',trans('titles.show').' '.str_singular(currentEntityBaseName()),['class' => 'display-4']) }}
+    {{ HTML::tag('h1',cTrans('titles.show','Ver').' '.str_singular(currentEntityBaseName()),['class' => 'display-4']) }}
 @endsection

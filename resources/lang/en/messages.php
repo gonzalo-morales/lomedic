@@ -19,5 +19,6 @@ return [
     'help_section' => 'Help Section',
     'lang' => 'Languaje',
     'reset_password' => 'Reset Password',
-    'change_password' => 'You must change your password'
+    'change_password' => 'You must change your password',
+    'svg' => 'Your browser does not support SVG',
 ];
