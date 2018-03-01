@@ -76,7 +76,7 @@
     			Cargando datos... <i class="material-icons align-middle loading">cached</i>
     		</div>
     	{{Form::cText('Comprador','comprador',['disabled','data-url'=>companyAction('HomeController@index').'/recursoshumanos.empleados/api'],
-    		isset($data->fk_id_socio_negocio) ? $data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno : null)}}
+    		isset($data->proveedor->ejecutivocompra) ? $data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno : null)}}
     	</div>
     	<div class="form-group col-md-3 col-sm-12">
     		{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}
@@ -329,7 +329,7 @@
 											<tr>
 												<td>{{$detalle->pago->id_pago}}</td>
 												<td>{{$detalle->pago->numero_referencia}}</td>
-												<td>{{$detalle->pago->banco->banco}}</td>
+												<td>{{$detalle->pago->banco->banco ?? null}}</td>
 												<td>{{$detalle->pago->fecha_pago}}</td>
 												<td>${{number_format($detalle->pago->monto,2)}}</td>
 												<td>{{$detalle->pago->forma_pago->descripcion}}</td>
@@ -406,13 +406,13 @@
 								@if(!empty($data->notas))
 								@foreach($data->notas as $key => $nota)
 									<tr>
-										<td>{{$nota->id_nota_credito_proveedor}}</td>
+										<td>{{$nota->id_documento}}</td>
 										<td>{{$nota->serie_factura.$nota->folio_factura}}</td>
 										<td>{{$nota->total}}</td>
 										<td>{{'('.$nota->moneda->moneda.') '.$nota->moneda->descripcion}}</td>
-										<td>{{$nota->proveedor->nombre_comercial}}</td>
+										<td>{{$nota->proveedor->nombre_comercial ?? null}}</td>
 										<td>
-											<a href="{{companyAction('Compras\NotasCreditoProveedorController@show',['id'=>$nota->id_nota_credito_proveedor])}}"><i class="material-icons align-middle">visibility</i></a>
+											<a href="{{companyAction('Compras\NotasCreditoProveedorController@show',['id'=>$nota->id_documento])}}"><i class="material-icons align-middle">visibility</i></a>
 										</td>
 									</tr>
 									@endforeach

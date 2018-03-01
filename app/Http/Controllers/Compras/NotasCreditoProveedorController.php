@@ -47,37 +47,39 @@ class NotasCreditoProveedorController extends ControllerBase
 
     public function store(Request $request, $company, $compact = true)
     {
-        $fileName = $request->fk_id_socio_negocio."-".$request->uuid;
-        $xml_save = Storage::disk('notas_proveedor')
-            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->file('archivo_xml_hidden')->getRealPath()));
-        $pdf_save = Storage::disk('notas_proveedor')
-            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->file('archivo_pdf_hidden')->getRealPath()));
+        if(!empty($request->file('archivo_xml_hidden')) && !empty($request->file('archivo_pdf_hidden'))){
+            $fileName = $request->fk_id_socio_negocio."-".$request->uuid;
+            $xml_save = Storage::disk('notas_proveedor')
+                ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->file('archivo_xml_hidden')->getRealPath()));
+            $pdf_save = Storage::disk('notas_proveedor')
+                ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->file('archivo_pdf_hidden')->getRealPath()));
 
-        $request->request->set('archivo_xml',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->file('archivo_xml_hidden')->getRealPath()));
-        $request->request->set('archivo_pdf',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->file('archivo_pdf_hidden')->getRealPath()));
+            $request->request->set('archivo_xml',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->file('archivo_xml_hidden')->getRealPath()));
+            $request->request->set('archivo_pdf',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->file('archivo_pdf_hidden')->getRealPath()));
 
-        $xml = simplexml_load_file($request->file('archivo_xml_hidden')->getRealPath());
-        $arrayData = xmlToArray($xml);
-        if($request->version_sat == "3.3"){
-            $request->request->set('serie_factura',isset($arrayData['Comprobante']['@Serie']) ? $arrayData['Comprobante']['@Serie'] : null);
-            $request->request->set('fecha_factura',$arrayData['Comprobante']['@Fecha']);
-            $request->request->set('fk_id_forma_pago',FormasPago::where('forma_pago', 'LIKE', $arrayData['Comprobante']['@FormaPago'])->first()->id_forma_pago);
-            $request->request->set('total',$arrayData['Comprobante']['@Total']);
-            $request->request->set('iva',$arrayData['Comprobante']['cfdi:Impuestos']['@TotalImpuestosTrasladados']);
-            $request->request->set('subtotal',$arrayData['Comprobante']['@SubTotal']);
-            $request->request->set('fk_id_moneda',Monedas::where('moneda', 'LIKE', $arrayData['Comprobante']['@Moneda'])->first()->id_moneda);
-            $request->request->set('fk_id_metodo_pago',MetodosPago::where('metodo_pago', 'ILIKE', $arrayData['Comprobante']['@MetodoPago'])->first()->id_metodo_pago);
-            $request->request->set('folio_factura',isset($arrayData['Comprobante']['@Folio']) ? $arrayData['Comprobante']['@Folio'] : null);
-        }else if($request->version_sat == "3.2"){
-            $request->request->set('serie_factura',isset($arrayData['Comprobante']['@serie']) ? $arrayData['Comprobante']['@serie'] : null);
-            $request->request->set('fecha_factura',$arrayData['Comprobante']['@fecha']);
-            $request->request->set('fk_id_forma_pago',MetodosPago::where('descripcion', 'ILIKE', "%".utf8_decode($arrayData['Comprobante']['@formaDePago'])."%")->first()->id_metodos_pago);
-            $request->request->set('total',$arrayData['Comprobante']['@total']);
-            $request->request->set('iva',$arrayData['Comprobante']['cfdi:Impuestos']['@totalImpuestosTrasladados']);
-            $request->request->set('subtotal',$arrayData['Comprobante']['@subTotal']);
-            $request->request->set('fk_id_moneda',Monedas::where('moneda', 'LIKE', $arrayData['Comprobante']['@Moneda'])->first()->id_moneda);
-            $request->request->set('fk_id_metodo_pago',FormasPago::where('forma_pago', 'ILIKE', "%".$arrayData['Comprobante']['@metodoDePago']."%")->first()->id_forma_pago);
-            $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
+            $xml = simplexml_load_file($request->file('archivo_xml_hidden')->getRealPath());
+            $arrayData = xmlToArray($xml);
+            if($request->version_sat == "3.3"){
+                $request->request->set('serie_factura',isset($arrayData['Comprobante']['@Serie']) ? $arrayData['Comprobante']['@Serie'] : null);
+                $request->request->set('fecha_factura',$arrayData['Comprobante']['@Fecha']);
+                $request->request->set('fk_id_forma_pago',FormasPago::where('forma_pago', 'LIKE', $arrayData['Comprobante']['@FormaPago'])->first()->id_forma_pago);
+                $request->request->set('total',$arrayData['Comprobante']['@Total']);
+                $request->request->set('iva',$arrayData['Comprobante']['cfdi:Impuestos']['@TotalImpuestosTrasladados']);
+                $request->request->set('subtotal',$arrayData['Comprobante']['@SubTotal']);
+                $request->request->set('fk_id_moneda',Monedas::where('moneda', 'LIKE', $arrayData['Comprobante']['@Moneda'])->first()->id_moneda);
+                $request->request->set('fk_id_metodo_pago',MetodosPago::where('metodo_pago', 'ILIKE', $arrayData['Comprobante']['@MetodoPago'])->first()->id_metodo_pago);
+                $request->request->set('folio_factura',isset($arrayData['Comprobante']['@Folio']) ? $arrayData['Comprobante']['@Folio'] : null);
+            }else if($request->version_sat == "3.2"){
+                $request->request->set('serie_factura',isset($arrayData['Comprobante']['@serie']) ? $arrayData['Comprobante']['@serie'] : null);
+                $request->request->set('fecha_factura',$arrayData['Comprobante']['@fecha']);
+                $request->request->set('fk_id_forma_pago',MetodosPago::where('descripcion', 'ILIKE', "%".utf8_decode($arrayData['Comprobante']['@formaDePago'])."%")->first()->id_metodos_pago);
+                $request->request->set('total',$arrayData['Comprobante']['@total']);
+                $request->request->set('iva',$arrayData['Comprobante']['cfdi:Impuestos']['@totalImpuestosTrasladados']);
+                $request->request->set('subtotal',$arrayData['Comprobante']['@subTotal']);
+                $request->request->set('fk_id_moneda',Monedas::where('moneda', 'LIKE', $arrayData['Comprobante']['@Moneda'])->first()->id_moneda);
+                $request->request->set('fk_id_metodo_pago',FormasPago::where('forma_pago', 'ILIKE', "%".$arrayData['Comprobante']['@metodoDePago']."%")->first()->id_forma_pago);
+                $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
+            }
         }
         $request->request->set('fk_id_estatus_nota',1);
         $return = parent::store($request, $company, $compact);

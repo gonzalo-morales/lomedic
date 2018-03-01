@@ -76,7 +76,7 @@ class NotasCreditoProveedor extends ModelCompany
      * @var array
      */
     protected $fields = [
-        'id_nota_credito_proveedor' => 'Número de Nota',
+        'id_documento' => 'Número de Nota',
         'serie_folio' => 'Serie y Folio',
         'proveedor.nombre_comercial' => 'Proveedor',
         'sucursal.sucursal' => 'Sucursal',
@@ -91,8 +91,6 @@ class NotasCreditoProveedor extends ModelCompany
     public $rules = [
         'fk_id_sucursal'=>'required',
         'fk_id_proveedor'=>'required',
-//        'fk_id_moneda'=>'required',
-//        'descuento_oferta'=>'nullable||regex:/^(\d{0,2}(\.\d{0,4})?\)$/'
     ];
 
     public function getSerieFolioAttribute()

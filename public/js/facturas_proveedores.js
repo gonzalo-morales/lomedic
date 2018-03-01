@@ -223,6 +223,14 @@ $(document).ready(function () {
         if(!$('#form-model').valid()){
             e.preventDefault();
         }
+
+        if($('#productos_facturados tr').length < 1){
+            e.preventDefault();
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Por favor carga la tabla de facturas',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }
     });
 
     $(".nav-link").click(function (e) {

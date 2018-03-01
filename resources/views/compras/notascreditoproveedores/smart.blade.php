@@ -127,7 +127,7 @@
     	<div class="col-md-4 col-sm-12 card">
     		<div class="row">
     			<div class="col-md-12 col-sm-12">
-    				<h2 class="text-success text-center">Relaciones Facturas</h2>
+    				<h2 class="text-success text-center">Relaciones Notas</h2>
     			</div>
     			<div class="col-md-5 col-sm-10">
     				{{Form::cSelect('Tipo Relacion','fk_id_tipo_relacion',$relaciones ?? [],[empty($data->version_sat) || $data->version_sat == '3.3' ? 'disabled' : '','data-url'=>companyAction('HomeController@index').'/administracion.tiposrelacionescfdi/api'])}}
@@ -182,7 +182,7 @@
     <div id="detallefactura" class="container-fluid w-100 mt-2 px-0">
     	<div class="card text-center z-depth-1-half" style="min-height: 555px">
     		<div class="card-header py-2">
-    			<h4 class="card-title">Detalle de la factura</h4>
+    			<h4 class="card-title">Detalle de la nota</h4>
     			<div class="divider my-2"></div>
     			<ul id="clothing-nav" class="nav nav-pills nav-justified" role="tablist">
     				<li class="nav-item">

@@ -4,6 +4,16 @@ $('.datepicker').pickadate({
     format: 'yyyy-mm-dd'
 });
 
+$(document).submit(function (e) {
+   if($('#productos_facturados tr').length < 1){
+       e.preventDefault();
+       $.toaster({
+           priority: 'danger', title: '¡Error!', message: 'Por favor carga la tabla de facturas',
+           settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+       });
+   }
+});
+
 $(document).ready(function () {
     $('#cargar').click(function () {
         if($('#archivo_xml_input').val() && $('#archivo_pdf_input').val() && $('#fk_id_socio_negocio').val() > 0){

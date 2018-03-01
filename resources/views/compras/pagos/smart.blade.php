@@ -64,10 +64,10 @@
     	<div class="card-header col-md-12 col-sm-12">
     		<div class="row">
     			<div class="form-group col-md-4 col-sm-6">
-    				{{Form::cSelect('Factura','fk_id_factura',$facturas ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/Compras.facturasproveedores/api'])}}
+    				{{Form::cSelect('Factura','fk_id_factura',$facturas ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/compras.facturasproveedores/api'])}}
     			</div>
     			<div class="form-group col-md-4 col-sm-6">
-    				{{Form::cSelect('Solicitud Pago','fk_id_solicitud',$solicitudes ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/Compras.solicitudespagos/api'])}}
+    				{{Form::cSelect('Solicitud Pago','fk_id_solicitud',$solicitudes ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/compras.solicitudespagos/api'])}}
     			</div>
     			<div class="form-group col-md-4 col-sm-6">
     				{{Form::cText('Monto','monto_detalle')}}
@@ -140,7 +140,7 @@
 @endsection
 
 @index
-	@section('form-title','PagosController')
+	@section('form-title','Pagos')
 @endif
 
 @crear
