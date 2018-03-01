@@ -40,7 +40,7 @@
             <div class="navbar-header d-flex flex-row">
                 <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="Menu"><i class="material-icons">menu</i></button>
                 <div class="btn-group">
-                    <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" title="@lang('messages.company')" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" title="{{cTrans('messages.company','Empresa')}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             			{{ HTML::image(asset("img/logotipos/$menuempresa->icono"), null, ['width'=>'25px','class'=>'mr-2']) }} {{ $menuempresa->nombre_comercial }}
             		</a>
                     <ul id='enteDrop' class="dropdown-menu z-depth-2" aria-labelledby="dropdownMenu2">
@@ -54,8 +54,8 @@
                 	</ul>
                 </div>
             </div>
-            <a class="d-flex align-items-center" href="{{asset(request()->company)}}" title="@lang('messages.home')"><i class='material-icons left'>home</i></a>
-            <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="@lang('messages.help')"><i class="material-icons">live_help</i></button>
+            <a class="d-flex align-items-center" href="{{asset(request()->company)}}" title="{{cTrans('messages.home','Inicio')}}"><i class='material-icons left'>home</i></a>
+            <button type="button" id="rigth-sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="{{cTrans('messages.help','Ayuda')}}"><i class="material-icons">live_help</i></button>
         </nav>
     	
     </div>
@@ -72,14 +72,14 @@
                     	<div class="text-center"><object id="front-page-logo" class="sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Su navegador no soporta imagenes SVG</object></div>
                         <a href="#" class="mt-3"><p class="mt-3 d-flex justify-content-center w-100"><small>{{ Auth::User()->nombre_corto }}</small></p></a>
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text w-100 text-uppercase">
-            				<i class="tiny material-icons">power_settings_new</i> @lang('forms.logout')
+            				<i class="tiny material-icons">power_settings_new</i> {{cTrans('forms.logout','Cerrar Sesión')}}
             			</a>
                     </div>
                     <strong>
                     	<a href="#" title="{{ Auth::User()->nombre_corto }}" data-toggle="tooltip" data-placement="right">
                     		<object id="front-page-logo" class="sim w-50" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Su navegador no soporta imagenes  SVG</object>
                     	</a>
-        				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center" title="@lang('forms.logout')" data-toggle="tooltip" data-placement="right">
+        				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center" title="{{cTrans('forms.logout','Cerrar Sesión')}}" data-toggle="tooltip" data-placement="right">
             				<i class="tiny material-icons">power_settings_new</i>
             			</a>
         			</strong>
@@ -88,7 +88,7 @@
                 </div>
 
                 <ul id="menu-conten" class="list-unstyled components text-center">
-                	{!! Form::cText(null,'filter-menu',['placeholder'=>trans('forms.menu_search'),'class'=>'mt-2 p-1']) !!}
+                	{!! Form::cText(null,'filter-menu',['placeholder'=>cTrans('forms.menu_search','Buscar en menu'),'class'=>'mt-2 p-1']) !!}
                     @if(isset($menu))
         				@each('partials.menu', $menu, 'modulo')
         			@endif

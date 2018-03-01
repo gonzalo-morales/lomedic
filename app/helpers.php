@@ -34,6 +34,29 @@ function controllerByRoute()
     return $controller_by_route;
 }
 
+function cTrans($key, $dafault = null, $replace = [], $locale = null)
+{
+    $line = trans($key,$replace,$locale);
+    
+    if($line != $key)
+        return utf8_encode($line);
+    
+    $line = !empty($dafault) ? utf8_encode($dafault) : $key;
+    
+    if (empty($replace))
+        return $line;
+    
+    foreach ($replace as $key => $value) {
+        $line = str_replace(
+            [':'.$key, ':'.strtoupper($key), ':'.ucfirst($key)],
+            [$value, strtoupper($value), ucfirst($value)],
+            $line
+        );
+    }
+    
+    return $line;
+}
+
 /**
  * Obtenemos URL de accion
  * @param  string $action - Acción por la que reemplazar
