@@ -10,7 +10,7 @@
     <div class="col-md-12 col-xs-12">
         <div class="text-right">
         	@yield('left-actions')
-            {{ Form::button(cTrans('forms.save',Guardar), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+            {{ Form::button(cTrans('forms.save','Guardar'), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
             {{ link_to(companyRoute('index'), cTrans('forms.close','Cerrar'), ['class'=>'btn btn-default progress-button']) }}
             @yield('right-actions')
         </div>
