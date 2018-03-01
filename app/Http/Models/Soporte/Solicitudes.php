@@ -27,10 +27,27 @@ class Solicitudes extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['descripcion', 'asunto','fk_id_empleado_solicitud','fk_id_empresa_empleado_solicitud',
-        'fk_id_sucursal','fk_id_estatus_ticket','fk_id_categoria','fk_id_subcategoria','fk_id_accion',
-        'fk_id_prioridad','fk_id_modo_contacto','fk_id_empleado_tecnico','fk_id_impacto','fk_id_urgencia',
-        'resolucion','fecha_hora_resolucion','activo','nombre_solicitante','fk_id_departamento'];
+	protected $fillable = [
+		'descripcion',
+		'asunto',
+		'fk_id_empleado_solicitud',
+		'fk_id_empresa_empleado_solicitud',
+		'fk_id_sucursal',
+		'fk_id_estatus_ticket',
+		'fk_id_categoria',
+		'fk_id_subcategoria',
+		'fk_id_accion',
+		'fk_id_prioridad',
+		'fk_id_modo_contacto',
+		'fk_id_empleado_tecnico',
+		'fk_id_impacto',
+		'fk_id_urgencia',
+		'resolucion',
+		'fecha_hora_resolucion',
+		'activo',
+		'nombre_solicitante',
+		'fk_id_departamento'
+	];
 	
 	/**
 	 * Los atributos que seran visibles en index-datable

@@ -8,6 +8,11 @@ $('.datepicker').pickadate({
 });
 $(document).ready( function () {
 
+    $('#fk_id_sucursal.select2').select2({
+        placeholder: "Para iniciar es necesario indicar el Solicitante",
+        disabled: true
+    });
+
     $(document).on('submit',function (e) {
         $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
         $.validator.addClassRules('requerido',{
@@ -44,6 +49,84 @@ $(document).ready( function () {
     });
     select2Placeholder('fk_id_proveedor','Proveedor no seleccionado',50,true,false);
 
+$('#fk_id_solicitante').on('change', function () {
+    $('#fk_id_departamento').val('');
+    $('#fk_id_sucursal').empty();
+    $('#loadingsucursales').show();
+    $.ajax({
+        url: $('#fk_id_sucursal').data('url'),
+        data: {
+            'param_js': sucursales_js,
+            $usuario: $('#fk_id_solicitante').val()
+        },
+        dataType: "json",
+        success: function (response) {
+            var options = [];
+            if(response.length > 0){
+                options.push('<option value="0" selected disabled>Selecciona la Sucursal...</option>'); 
+                for (let i = 0; i < response.length; i++) {
+                    options.push('<option value="' + response[i].id_sucursal + '">' + response[i].sucursal + '</option>');
+                }
+                $('#fk_id_sucursal').append(options.join(''));
+                $('#fk_id_sucursal').select2({
+                    placeholder: "Seleccione la sucursal...",
+                    disabled: false,
+                });
+            } else{
+                $('#fk_id_sucursal').select2({
+                    placeholder: "Seleccione otro Solicitante...",
+                    disabled: true,
+                });
+                $.toaster({
+                    priority : 'warning',
+                    title : '¡Lo sentimos!',
+                    message : 'Al parecer el usuario no cuenta con sucursales registrados',
+                    settings:{
+                        'timeout':3000,
+                        'toaster':{
+                            'css':{
+                                'top':'5em'
+                            }
+                        }
+                    }
+                });
+            }
+            $('#loadingsucursales').hide();
+        },
+        error:function(){
+            $.toaster({
+                priority : 'danger',
+                title : '¡Lo sentimos!',
+                message : 'Al parecer no recibimos respuesta, trata de nuevo con otra opción.',
+                settings:{
+                    'timeout':3000,
+                    'toaster':{
+                        'css':{
+                            'top':'5em'
+                        }
+                    }
+                }
+            });
+            $('#loadingsucursales').hide();
+            $('#fk_id_sucursal.select2').select2({
+                placeholder: "Seleccione otro Solicitante...",
+                disabled: true,
+            });
+        }
+    }); // ajax-sucursales
+    $.ajax({
+        url: $('#fk_id_departamento').data('url'),
+        data: {
+            'param_js': usuarios_js,
+            $usuario: $('#fk_id_solicitante').val()
+        },
+        dataType: "json",
+        success: function (response) {
+            $('#fk_id_departamento').val(response[0].empleado.fk_id_departamento)
+        }
+    }); // ajax-usuarios
+});
+
     $('#_id_solicitante').val(getIdempleado());
     if(window.location.href.toString().indexOf('editar') > -1)//Si es editar
     {
@@ -61,18 +144,6 @@ $(document).ready( function () {
         $('select').prop('disabled',true);
     }
     $(':submit').attr('onclick','eliminarDetalle()');
-
-    if(window.location.href.toString().indexOf('crear')>-1 || window.location.href.toString().indexOf('editar') >-1)
-    {
-        $('#fk_id_sucursal_').prop('disabled',true);
-        sucursal();//Cargar las sucursales del usuario
-    }
-
-    // $('#fk_id_solicitante').select2();
-    $('#fk_id_solicitante').change(function () {
-        $('#_id_solicitante').val('');
-        sucursal();//Caga los nuevos datos de la sucursal
-    });
 
     //Inicializar tabla
     window.dataTable = new DataTable('#productos', {
@@ -146,7 +217,7 @@ $(document).ready( function () {
         }
     });
 
-});
+}); //documentOnReady
 
 function getIdempleado()
 {
@@ -169,65 +240,63 @@ function getIdempleado()
     return JSON.stringify(objempleado.readyState);
 }
 
-function sucursal()
-{
-    let data_empleado = $('#_id_solicitante').data('url');
-    $('#fk_id_sucursal_').prop('disabled',true);//Deshabilitar
+// function sucursal()
+// {
+//     let data_empleado = $('#_id_solicitante').data('url');
+//     $('#fk_id_sucursal_').prop('disabled',true);//Deshabilitar
 
-    if(!$('#_id_solicitante').val())
-    {
-            var _url = data_empleado.replace('?id', $('#fk_id_solicitante').val());
-            $('#_id_solicitante').val($('#fk_id_solicitante').val());
-    }
-    else
-        {var _url = data_empleado.replace('?id', $('#_id_solicitante').val());}
+//     if(!$('#_id_solicitante').val())
+//     {
+//             var _url = data_empleado.replace('?id', $('#fk_id_solicitante').val());
+//             $('#_id_solicitante').val($('#fk_id_solicitante').val());
+//     }
+//     else
+//         {var _url = data_empleado.replace('?id', $('#_id_solicitante').val());}
 
-    $.ajax({
-        async:false,
-        url: _url,
-        dataType: 'json',
-        success: function (data) {
-            // $('#fk_id_sucursal_').material_select('destroy');
-            $('#fk_id_sucursal_').empty();
-            let option = $('<option/>');
-            option.val(0);
-            option.attr('disabled','disabled');
-            option.attr('selected','selected');
-            option.text('Selecciona una sucursal');
-            $('#fk_id_sucursal_').append(option);
-            $.each(data, function (key, sucursal) {
-                let option = $('<option/>');
-                option.val(sucursal.id);
-                option.text(sucursal.text);
-                if(window.location.href.toString().indexOf('editar') > -1)
-                {
-                    if($('#sucursal_defecto').val() == sucursal.id)
-                    {
-                        option.prop('selected',true);
-                    }
-                }
-                $('#fk_id_sucursal_').append(option);
-            });
-            if(Object.keys(data).length ==0)
-            {$('#fk_id_sucursal_').prop('disabled',true)}
-            else{$('#fk_id_sucursal_').prop('disabled',false)}
+//     $.ajax({
+//         async:false,
+//         url: _url,
+//         dataType: 'json',
+//         success: function (data) {
+//             // $('#fk_id_sucursal_').material_select('destroy');
+//             $('#fk_id_sucursal_').empty();
+//             let option = $('<option/>');
+//             option.val(0);
+//             option.attr('disabled','disabled');
+//             option.attr('selected','selected');
+//             option.text('Selecciona una sucursal');
+//             $('#fk_id_sucursal_').append(option);
+//             $.each(data, function (key, sucursal) {
+//                 let option = $('<option/>');
+//                 option.val(sucursal.id);
+//                 option.text(sucursal.text);
+//                 if(window.location.href.toString().indexOf('editar') > -1)
+//                 {
+//                     if($('#sucursal_defecto').val() == sucursal.id)
+//                     {
+//                         option.prop('selected',true);
+//                     }
+//                 }
+//                 $('#fk_id_sucursal_').append(option);
+//             });
+//             if(Object.keys(data).length ==0)
+//             {$('#fk_id_sucursal_').prop('disabled',true)}
+//             else{$('#fk_id_sucursal_').prop('disabled',false)}
 
-            $('#fk_id_sucursal_').select2({
-                minimumResultsForSearch:'Infinity'
-            });
-        },
-    });
-}
+//             $('#fk_id_sucursal_').select2({
+//                 minimumResultsForSearch:'Infinity'
+//             });
+//         },
+//     });
+// }
 
 function codigosbarras()
 {
-    console.log($('#fk_id_sku').val());
     if($('#fk_id_sku').val() != 0) {
         let data_codigo = $('#fk_id_upc').data('url');
         $('#fk_id_upc').prop('disabled', true);//Deshabilitar
 
         var _url = data_codigo.replace('?id', $('#fk_id_sku').val());
-        console.log(_url);
         $.ajax({
             url: _url,
             dataType: 'json',
@@ -360,10 +429,10 @@ function agregarProducto() {
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proveedor]" value="'+$('#fk_id_proveedor').val()+'"/>')[0].outerHTML + proveedor + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val()+'"/>')[0].outerHTML +  $('#fecha_necesario').val() + "," +
             $('<select name="_detalles['+row_id+'][fk_id_proyecto]" id="fk_id_proyecto'+row_id+'" style="width: 100%" class="select">'+proyectos+'</select>')[0].outerHTML + ","+
-            $('<input type="text" name="_detalles['+row_id+'][cantidad]" onchange="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad form-control" />')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][cantidad]" onkeyup="total_producto_row('+row_id+')" id="_cantidad'+row_id+'" value="'+ $('#cantidad').val()+'" class="validate cantidad form-control" />')[0].outerHTML + "," +
             $('<input type="hidden" name="_detalles['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />')[0].outerHTML + $('#fk_id_unidad_medida option:selected').html() + ","+
             $('<select name="_detalles['+row_id+'][fk_id_impuesto]" onchange="total_producto_row('+row_id+')" id="_fk_id_impuesto'+row_id+'" style="width: 100%" class="select">'+impuestos+'</select>')[0].outerHTML + ","+
-            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onchange="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
+            $('<input type="text" name="_detalles['+row_id+'][precio_unitario]"  onkeyup="total_producto_row('+row_id+')" id="_precio_unitario'+row_id+'" value="'+ $('#precio_unitario').val()+'" class="precio_unitario form-control"/>')[0].outerHTML + "," +
             $('<input type="text" name="_detalles['+row_id+'][importe]" id="_total'+row_id+'" class="form-control" style="min-width: 100px" readonly value="'+ total+'" />')[0].outerHTML +"," +
             '<button class="btn is-icon text-primary bg-white" ' +
             'type="button" data-delay="50" onclick="borrarFila(this)">' +
