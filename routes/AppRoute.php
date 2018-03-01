@@ -24,8 +24,8 @@ Route::get('/phpinfo', function () { phpinfo(); });
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('lang/{locale}', function ($locale) {
-    Session::put('locale', $locale);
-    return redirect()->back();
+    $cookie = cookie()->forever('app_locale',$locale);
+    return redirect()->back()->withCookie($cookie);
 });
 
 Route::get('clear', function () {
