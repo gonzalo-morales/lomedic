@@ -9,6 +9,7 @@ $(document).on('change','.orden-compra',function () {
         var obj = $(this);
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         if ($(this).val() !== ''){
+            $('#loadinglinea').show();
             $.ajax({
                 url: _url,
                 type: 'POST',
@@ -24,9 +25,14 @@ $(document).on('change','.orden-compra',function () {
                         detSelect.append(option);
                     });
                         detSelect.prop('disabled', (data.length == 0));
+                    $('#loadinglinea').hide();
                 },
                 error: function (e) {
-                    console.log("error" + e);
+                    $.toaster({
+                        priority: 'danger', title: '¡Error!', message: "Error: "+e,
+                        settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                    });
+                    $('#loadinglinea').hide();
                 }
             });
         }else {
@@ -51,6 +57,10 @@ $(document).ready(function () {
                     $('#comprador').val(data[0].nombre + ' ' + data[0].apellido_paterno + ' ' + data[0].apellido_materno);
                 }else{
                     $('#comprador').val('');
+                    $.toaster({
+                        priority: 'warning', title: '¡Oooops!', message: 'No se encontró un nombre de comprador',
+                        settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                    });
                 }
                 $('#loadingcomprador').hide();
             },
@@ -128,7 +138,9 @@ $(document).ready(function () {
                                         '<td>'+value.Importe_impuesto+'<input name="relations[has][detalle]['+index+'][fk_id_impuesto]" type="hidden" value="'+value.IdImpuesto+'"></td>' +
                                         '<td>'+value.Importe+'<input name="relations[has][detalle]['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
                                         '<td><input name="relations[has][detalle]['+index+'][fk_id_documento_base]" class="form-control integer orden-compra" value=""></td>' +
-                                        '<td><select name="relations[has][detalle]['+index+'][fk_id_linea]" class="form-control custom-select" disabled>'+
+                                        '<td>' +
+                                            '<div id="loadinglinea" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">Cargando... <i class="material-icons align-middle loading">cached</i></div>' +
+                                            '<select name="relations[has][detalle]['+index+'][fk_id_linea]" class="form-control custom-select" disabled>'+
                                             '<option value="0" disabled="" selected="">Seleccione...</option>'+
                                         '</select></td>' +
                                         '</tr>');
@@ -154,7 +166,9 @@ $(document).ready(function () {
                                        '<td>'+value.ValorUnitario+'<input name="relations[has][detalle]['+index+'][precio_unitario]" type="hidden" value="'+value.ValorUnitario+'"></td>' +
                                        '<td>'+value.Importe+'<input name="relations[has][detalle]['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
                                        '<td><input name="relations[has][detalle]['+index+'][fk_id_documento_base]" class="form-control integer orden-compra" value=""></td>' +
-                                       '<td><select name="relations[has][detalle]['+index+'][fk_id_linea]" class="form-control custom-select" disabled>'+
+                                       '<td>' +
+                                            '<div id="loadinglinea" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">Cargando... <i class="material-icons align-middle loading">cached</i></div>' +
+                                            '<select name="relations[has][detalle]['+index+'][fk_id_linea]" class="form-control custom-select" disabled>'+
                                            '<option value="0" disabled="" selected="">Seleccione...</option>'+
                                        '</select></td>' +
                                        '</tr>');
@@ -209,30 +223,8 @@ $(document).ready(function () {
         if(!$('#form-model').valid()){
             e.preventDefault();
         }
-    })
+    });
 
-    //Si existe la tabla de órdenes
-    // if($('#ordenes').length){
-    //     if($('#ordenes_detalle tr').length < 1){
-    //         var cantidad_cabecera = $('#ordenes_cabecera th').length;
-    //         $('#ordenes_detalle').append(
-    //             '<tr>' +
-    //             '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin órdenes relacionadas</td>' +
-    //             '</tr>'
-    //         );
-    //     }
-    // }
-
-    // if($('#pagos').length){
-    //     if($('#detalle_pagos tr').length < 1){
-    //         var cantidad_cabecera = $('#encabezado_pagos th').length;
-    //         $('#detalle_pagos').append(
-    //             '<tr>' +
-    //             '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin pagos relacionados</td>' +
-    //             '</tr>'
-    //         );
-    //     }
-    // }
     $(".nav-link").click(function (e) {
         e.preventDefault();
         $('#clothing-nav li').each(function () {
@@ -272,6 +264,8 @@ $(document).ready(function () {
         e.preventDefault();
         $('#eliminar_pago_button').removeAttr('data-id');
     });
+
+
 });
 
 function getBase64(file) {

@@ -48,11 +48,11 @@ Route::prefix('{company}')->group(function () {
         Route::get('ordenes/{id}/impress', 'Compras\OrdenesController@impress')->name('ordenes');
         Route::get('ordenes/{id}/solicitudOrden','Compras\OrdenesController@createSolicitudOrden')->name('ordenes');
         Route::resource('ordenes','Compras\OrdenesController');
+        Route::post('getDetallesOrden','Compras\OrdenesController@getDetallesOrden');
 
         // Route::resource('facturasProveedores','Compras\FacturasProveedoresController');
         Route::post('getFacturaData2','Compras\FacturasProveedoresController@parseXML'); // Por conflicto con los nombres similares
 
-        Route::post('getDetallesOrden','Compras\FacturasProveedoresController@getDetallesOrden');
         Route::resource('seguimientodesviacion','Compras\SeguimientoDesviacionesController');
         Route::post('getDocumentos','Compras\SeguimientoDesviacionesController@getDocumentos');
         Route::post('getDesviaciones','Compras\SeguimientoDesviacionesController@getDesviaciones');

@@ -7,23 +7,12 @@
 @section('content-width', 's12')
 @section('header-bottom')
 	@parent
-	<script type="text/javascript" src="{{ asset('js/pickadate/picker.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/pickadate/picker.date.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/pickadate/translations/es_Es.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('js/toaster.js') }}"></script>
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
-	{{-- @index
-		<script type="text/javascript">
-			var comprador_js = '{{$js_comprador ?? ''}}';
-		</script>
-		{{HTML::script(asset('js/facturas_proveedores.js'))}}
-	@endif --}}
 	@if (!Route::currentRouteNamed(currentRouteName('index'))) )
 		<script type="text/javascript">
 			var comprador_js = '{{$js_comprador ?? ''}}';
 		</script>
 		<script type="text/javascript" src="{{ asset('js/facturas_proveedores.js') }}"></script>
-		{{--@endif--}}
 	@endif
 @endsection
 
@@ -80,18 +69,14 @@
     <div class="row">
     	<div class="form-group col-md-3 col-sm-12">
     		{{Form::cSelectWithDisabled('Proveedor','fk_id_socio_negocio',$proveedores ?? [],
-    		[!Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : ''])}}
+    		[!Route::currentRouteNamed(currentRouteName('create')) ? 'readonly' : ''])}}
     	</div>
     	<div class="form-group col-md-3 col-sm-6">
     		<div id="loadingcomprador" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
     			Cargando datos... <i class="material-icons align-middle loading">cached</i>
     		</div>
-    		{{Form::label('comprador','Comprador')}}
-    		{{Form::text('comprador',isset($data->fk_id_socio_negocio) ?
-    		$data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno :
-    		null,
-    		['disabled','class'=>'form-control','data-url'=>ApiAction('recursoshumanos.empleados')])}}
-    	{{--{{Form::cText('Comprador','comprador',['disabled','data-url'=>companyAction('HomeController@index').'/RecursosHumanos.empleados/api'])}}--}}
+    	{{Form::cText('Comprador','comprador',['disabled','data-url'=>companyAction('HomeController@index').'/recursoshumanos.empleados/api'],
+    		isset($data->fk_id_socio_negocio) ? $data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno : null)}}
     	</div>
     	<div class="form-group col-md-3 col-sm-12">
     		{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}
@@ -103,41 +88,40 @@
     		<div class="form-group col-md-2 col-sm-6">
     			{{Form::label('serie_folio_factura','Serie y Folio',['style'=>'display: block;text-align: center;'])}}
     			<div class="input-group">
-    				{{Form::Text('serie_factura',null,['disabled','class'=>'form-control'])}}
-    				{{Form::Text('folio_factura',null,['disabled','class'=>'form-control'])}}
+    				{{Form::cText('','serie_factura',['readonly','class'=>'form-control'])}}
+    				{{Form::cText('','folio_factura',['readonly','class'=>'form-control'])}}
     			</div>
     		</div>
     		<div class="form-group col-md-2 col-sm-4">
-    			{{Form::cText('Fecha Factura','fecha_factura',['disabled'])}}
+    			{{Form::cText('Fecha Factura','fecha_factura',['readonly'])}}
     		</div>
     		<div class="form-group col-md-2 col-sm-2">
-    			{{Form::cText('Versión','version_sat',['disabled'])}}
+    			{{Form::cText('Versión','version_sat',['readonly'])}}
     		</div>
+			<div class="form-group col-md-2 col-sm-6">
+				{{Form::hidden('fk_id_forma_pago')}}
+				{{Form::cText('Forma Pago','forma_pago',['disabled','class'=>'form-control'],'('.$data->forma_pago->forma_pago.') '.$data->forma_pago->descripcion)}}
+			</div>
     		<div class="form-group col-md-2 col-sm-6">
-    			{{Form::label('fk_id_estatus_factura','Estatus Factura')}}
-    			{{Form::Text('fk_id_estatus_factura',$data->estatus->estatus ?? '',['disabled','class'=>'form-control'])}}
+				{{Form::hidden('fk_id_estatus_factura')}}
+				{{Form::cText('Estatus Factura','estatus_factura',['disabled','class'=>'form-control'],$data->estatus->estatus ?? null)}}
     		</div>
     		<div class="form-group col-md-2 col-sm-6">
     			{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
     			{{Form::hidden('fk_id_moneda')}}
-    			{{Form::label('moneda','Moneda')}}
-    			{{Form::Text('moneda','('.$data->moneda->moneda.') '.$data->moneda->descripcion,['disabled','class'=>'form-control'])}}
-    		</div>
-    		<div class="form-group col-md-2 col-sm-6">
-    			{{Form::label('fk_id_forma_pago','Forma Pago')}}
-    			{{Form::Text('fk_id_forma_pago','('.$data->forma_pago->forma_pago.') '.$data->forma_pago->descripcion,['disabled','class'=>'form-control'])}}
+				{{Form::cText('Moneda','moneda',['disabled','class'=>'form-control'],'('.$data->moneda->moneda.') '.$data->moneda->descripcion)}}
     		</div>
     		<div class="form-group col-md-3 col-sm-6">
-    			{{Form::cText('Subtotal','subtotal',['disabled'])}}
+    			{{Form::cText('Subtotal','subtotal',['readonly'])}}
     		</div>
     		<div class="form-group col-md-3 col-sm-6">
-    			{{Form::cText('IVA','iva',['disabled'])}}
+    			{{Form::cText('IVA','iva',['readonly'])}}
     		</div>
     		<div class="form-group col-md-3 col-sm-6">
-    			{{Form::cText('Total pagado','total_pagado',['disabled'])}}
+    			{{Form::cText('Total pagado','total_pagado',['readonly'])}}
     		</div>
     		<div class="form-group col-md-3 col-sm-6">
-    			{{Form::cText('Total','total',['disabled'])}}
+    			{{Form::cText('Total','total',['readonly'])}}
     		</div>
     		@if($data->fk_id_estatus_factura == 3){{-- Si está cancelado --}}
     		<div class="form-group col-md-12 col-sm-12 text-center">
@@ -207,7 +191,7 @@
 								Cargando datos... <i class="material-icons align-middle loading">cached</i>
 							</div>
 							<h1 class="text-success text-center">Productos facturados</h1>
-							<table id="factura" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};" data-urlorden="{{ companyAction('getDetallesOrden') }}">
+							<table id="factura" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};" data-urlorden="{{ companyAction('Compras\OrdenesController@getDetallesOrden') }}">
 								<thead id="encabezado_factura">
 								@inroute(['edit','show'])
 									@if($data->version_sat == "3.3")
@@ -242,7 +226,10 @@
 										{{-- {{ dd($data->detalle_facturas_proveedores) }} --}}
 										@foreach($data->detalle as $detalle)
 										<tr>
-											<td>{{$detalle->clave_producto_servicio->clave_producto_servicio}}</td>
+											<td>
+												{{Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle)}}
+												{{$detalle->clave_producto_servicio->clave_producto_servicio}}
+											</td>
 											<td>{{$detalle->clave_unidad->clave_unidad}}</td>
 											<td>{{$detalle->descripcion}}</td>
 											<td>{{$detalle->cantidad}}</td>
@@ -252,51 +239,46 @@
 												{{$detalle->impuesto->impuesto ?? 'NA' }}
 											</td>
 											<td>${{number_format($detalle->importe,2)}}</td>
-											<td>{{$data->fk_id_estatus_factura == 1 ?
-											 Form::Text('producto['.$detalle->id_documento_detalle.'][fk_id_orden_compra]',$detalle->fk_id_documento_base,['class'=>'form-control integer orden-compra']) :
-											  $detalle->fk_id_documento_base}}
-											  {{-- {{ $detalle->impuesto ?? 'null' }} --}}
+											<td>
+												{{$data->fk_id_estatus_factura == 1 ? Form::Text('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_documento_base]',
+												$detalle->fk_id_documento_base,['class'=>'form-control integer orden-compra']) :
+												$detalle->fk_id_documento_base}}
 										  	</td>
 											<td>
-												{{-- {{ dd($detalle) }} --}}
-
-												@php
-												$det = [];
-												// $det[-1] = 'Seleccione una opcion...';
-												@endphp
-													@if ($detalle->orden <> null)
-														<select class="form-control custom-select" name="{{ 'producto['.$detalle->id_documento_detalle.'][fk_id_detalle_orden_compra]' }}">
-															<option value="" disabled>Seleccione una opcion...</option>
-														@foreach ($detalle->orden->detalle as $detalleOrden)
-																@php
-																	 $upc = isset($detalleOrden->upc->upc) ? ' - '.$detalleOrden->upc->upc :'';
-																	$det[$detalleOrden->id_documento_detalle] = $detalleOrden->sku->sku.$upc ;
-																@endphp
-																<option value="{{ $detalleOrden->id_documento_detalle }}">{{ $detalleOrden->sku->sku.$upc }}</option>
-												  		@endforeach
-														</select>
-														{{-- {{ Form::select('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]', $det ?? [], $detalle->fk_id_detalle_orden_compra, ['class'=>'form-control custom-select']) }} --}}
-													@else
-														<select class="form-control custom-select" name="{{ 'producto['.$detalle->id_documento_detalle.'][fk_id_detalle_orden_compra]' }}">
-															<option value="" disabled>Seleccione una opcion...</option>
-														</select>
-														{{-- {{ Form::select('producto['.$detalle->id_detalle_factura_proveedor.'][fk_id_detalle_orden_compra]', $det ?? [], $detalle->fk_id_detalle_orden_compra, ['class'=>'form-control custom-select']) }} --}}
-													@endif
-
+												<div id="loadinglinea" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+													Cargando... <i class="material-icons align-middle loading">cached</i>
+												</div>
+												{{Form::cSelectWithDisabled('','relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_linea]',isset($detalle->orden->detalle) ? $detalle->orden->detalle
+												->mapWithKeys(function ($detalle){
+													return $detalle->upc->upc ? [$detalle->id_documento_detalle=>$detalle->sku->sku.' - '.$detalle->upc->upc] : [$detalle->id_documento_detalle=>$detalle->sku->sku];
+												}) : null,null,null,$detalle->fk_id_linea)}}
 										  	</td>
 										</tr>
 										@endforeach
 									@elseif($data->version_sat == "3.2")
 										@foreach($data->detalle as $detalle)
 										<tr>
-											<td>{{$detalle->descripcion}}</td>
+											<td>
+												{{Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle)}}
+												{{$detalle->descripcion}}
+											</td>
 											<td>{{$detalle->unidad}}</td>
 											<td>{{$detalle->cantidad}}</td>
 											<td>${{number_format($detalle->precio_unitario,2)}}</td>
 											<td>{{$detalle->importe}}</td>
 											<td>{{$data->fk_id_estatus_factura == 1 ?
-											 Form::Text('producto['.$detalle->id_detalle.'][fk_id_orden_compra]',$detalle->fk_id_documento_base,['class'=>'form-control integer']) :
-											  $detalle->fk_id_documento_base}}</td>
+											 	Form::Text('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_documento_base]',$detalle->fk_id_documento_base,['class'=>'form-control integer orden-compra']) :
+											  	$detalle->fk_id_documento_base}}
+											</td>
+											<td>
+												<div id="loadinglinea" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+													Cargando... <i class="material-icons align-middle loading">cached</i>
+												</div>
+												{{Form::cSelectWithDisabled('','relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_linea]',isset($detalle->orden->detalle) ? $detalle->orden->detalle
+												->mapWithKeys(function ($detalle){
+													return $detalle->upc->upc ? [$detalle->id_documento_detalle=>$detalle->sku->sku.' - '.$detalle->upc->upc] : [$detalle->id_documento_detalle=>$detalle->sku->sku];
+												}) : null,null,null,$detalle->fk_id_linea)}}
+											</td>
 										</tr>
 										@endforeach
 									@endif
@@ -325,7 +307,7 @@
 							<h1 class="text-success text-center">Pagos</h1>
 							<table id="pagos" class="table responsive-table highlight" style="display: {{Route::currentRouteNamed(currentRouteName('create')) ?? 'none'}};">
 								<thead id="encabezado_pagos">
-								@inroute(['create','index'])
+								@inroute(['show','edit'])
 									<tr>
 										<th>ID</th>
 										<th>Número Referencia</th>
@@ -341,7 +323,7 @@
 								@endif
 								</thead>
 								<tbody id="detalle_pagos">
-								@inroute(['create','index'])
+								@inroute(['show','edit'])
 									@if(!empty($data->detallePagos))
 										@foreach($data->detallePagos->where('eliminar',false) as $detalle)
 											<tr>
@@ -384,8 +366,8 @@
 									</tr>
 								</thead>
 								<tbody id="ordenes_detalle">
-								@foreach($data->detalle_facturas_proveedores()->select('fk_id_orden_compra')->distinct()->orderBy('fk_id_orden_compra')->get() as $detalle)
-									@if(!empty($detalle->fk_id_orden_compra))
+								@foreach($data->detalle()->distinct()->orderBy('fk_id_documento_base')->get() as $detalle)
+									@if(!empty($detalle->fk_id_documento_base))
 									<tr>
 										<td>{{$detalle->orden->id_documento}}</td>
 										<td>{{$detalle->orden->proveedor->nombre_comercial}}</td>

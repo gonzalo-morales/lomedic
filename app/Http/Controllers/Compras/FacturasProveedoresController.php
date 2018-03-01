@@ -37,8 +37,6 @@ class FacturasProveedoresController extends ControllerBase
 
     public function store(Request $request, $company, $compact = false)
     {
-        # ¿Usuario tiene permiso para crear?
-        $this->authorize('create', $this->entity);
         $fileName = $request->fk_id_socio_negocio."-".$request->uuid;
         $xml_save = Storage::disk('factura_proveedor')
             ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->file('archivo_xml_hidden')->getRealPath()));
@@ -73,46 +71,7 @@ class FacturasProveedoresController extends ControllerBase
             $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
         }
         $request->request->set('fk_id_estatus_factura',1);
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
         return parent::store($request,$company,$compact);
-    }
-
-    public function update(Request $request, $company, $id, $compact = false)
-    {
-        # ¿Usuario tiene permiso para actualizar?
-        //		$this->authorize('update', $this->entity);
-
-        # Validamos request, si falla regresamos atras
-        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-
-        DB::beginTransaction();
-        $entity = $this->entity->findOrFail($id);
-        $entity->fill($request->all());
-        if ($entity->save()) {
-
-            # Si tienes relaciones
-            foreach ($request->producto as $key => $producto){
-                $detalle = $entity
-                    ->findOrFail($id)
-                    ->detalle_facturas_proveedores()
-                    ->where('id_detalle_factura_proveedor',$key)
-                    ->first();
-                $detalle->fill($producto);
-                $detalle->save();
-            }
-            DB::commit();
-
-            # Eliminamos cache
-            Cache::tags(getCacheTag('index'))->flush();
-
-            #$this->log('update', $id);
-            return $this->redirect('update');
-        } else {
-            DB::rollBack();
-            #$this->log('error_update', $id);
-            return $this->redirect('error_update');
-        }
     }
 
     public function destroy(Request $request, $company, $idOrIds, $attributes = [])
@@ -199,17 +158,5 @@ class FacturasProveedoresController extends ControllerBase
                 'resultado' => "No se pudo leer el XML porque tiene un formato incorrecto",
             ]);
         }
-    }
-    public function getDetallesOrden()
-    {
-		$result = DetalleOrdenes::join('inv_cat_skus','com_det_ordenes.fk_id_sku','=','inv_cat_skus.id_sku')
-					->leftJoin('maestro.inv_cat_upcs',function($join){
-						$join->on('com_det_ordenes.fk_id_upc','=','maestro.inv_cat_upcs.id_upc');
-					})
-		            ->where('fk_id_documento','=',$_POST['id_orden'])
-					->select(db::raw("concat(inv_cat_skus.sku, ' - ' ,maestro.inv_cat_upcs.upc) as value"),'com_det_ordenes.id_documento_detalle as id')
-		            ->get();
-
-        return $result;
     }
 }

@@ -50,8 +50,7 @@ class FacturasProveedores extends ModelCompany
         'motivo_cancelacion',
         'fk_id_metodo_pago',
         'version_sat',
-        'folio_factura',
-        'unidad_medida'
+        'folio_factura'
     ];
 
     public $niceNames =[
@@ -76,7 +75,7 @@ class FacturasProveedores extends ModelCompany
      * @var array
      */
     protected $fields = [
-        'id_factura_proveedor' => 'Número de factura',
+        'id_documento' => 'Número de factura',
         'serie_folio' => 'Serie y Folio',
         'proveedor.nombre_comercial' => 'Proveedor',
         'sucursal.sucursal' => 'Sucursal',
@@ -125,6 +124,6 @@ class FacturasProveedores extends ModelCompany
 
     public function notas()
     {//Tiene muchas notas por medio de cfdi
-        return $this->hasManyThrough(NotasCreditoProveedor::class,CfdiRelacionesProveedores::class,'fk_id_documento_base','id_documento','id_documento','fk_id_documento');
+        return $this->hasManyThrough(NotasCreditoProveedor::class,CfdiRelacionesProveedores::class,'fk_id_documento','id_documento','id_documento','fk_id_documento_relacionado')->where('fk_id_tipo_documento_relacionado',11);
     }
 }

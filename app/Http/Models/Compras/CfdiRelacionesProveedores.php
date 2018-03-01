@@ -35,11 +35,11 @@ class CfdiRelacionesProveedores extends ModelCompany
 
     function notaCreditoProveedor()
     {
-        return $this->belongsTo(NotasCreditoProveedor::class,'fk_id_documento','id_nota_credito_proveedor');
+        return $this->hasOne(NotasCreditoProveedor::class,'id_documento','fk_id_documento_relacionado');
     }
     function factura()
     {
-        return $this->belongsTo(FacturasProveedores::class,'fk_id_documento','id_factura_proveedor');
+        return $this->hasOne(FacturasProveedores::class,'id_documento','fk_id_documento_relacionado');
     }
     function tiporelacion()
     {

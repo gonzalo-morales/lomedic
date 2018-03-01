@@ -534,7 +534,6 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
 //Función comprobar(arrayData,id_socio_negocio,company,tipo de comprobante I= ingreso y E= egreso )
     $version = "";
     $uuid = "";
-    $tipo_relacion = null;
     $relacionados = [];
     $mensaje = '';
     $detalles = array();
@@ -586,18 +585,23 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
             $uuid = $arrayData['Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital']['@UUID'];
         }
 
-//        print_r($arrayData);
-
         if(isset($arrayData['Comprobante']['cfdi:CfdiRelacionados'])){
-            $tipo_relacion = $arrayData['Comprobante']['cfdi:CfdiRelacionados']['@TipoRelacion'];
-            if(isset($arrayData['Comprobante']['cfdi:CfdiRelacionados']['cfdi:CfdiRelacionado'][0])){
-                foreach ($arrayData['Comprobante']['cfdi:CfdiRelacionados']['cfdi:CfdiRelacionado'] as $cfdi){
-                    $relacionados[] = $cfdi['@UUID'];
+            if(isset($arrayData['Comprobante']['cfdi:CfdiRelacionados'][0])) {
+                foreach ($arrayData['Comprobante']['cfdi:CfdiRelacionados'] as $relacionado) {
+                    $tipo_relacion = \App\Http\Models\Administracion\TiposRelacionesCfdi::where('tipo_relacion',$relacionado['@TipoRelacion'])->first();
+                    $relacionados[] =
+                        $relacionado +
+                        ["id_sat_tipo_relacion"=>$tipo_relacion->id_sat_tipo_relacion] +
+                        ["descripcion"=>$tipo_relacion->descripcion];
                 }
             }else{
-                $relacionados[0] = $arrayData['Comprobante']['cfdi:CfdiRelacionados']['cfdi:CfdiRelacionado']['@UUID'];
+                $tipo_relacion = \App\Http\Models\Administracion\TiposRelacionesCfdi::where('tipo_relacion',$arrayData['Comprobante']['cfdi:CfdiRelacionados']['@TipoRelacion'])->first();
+                $relacionados[0] = $arrayData['Comprobante']['cfdi:CfdiRelacionados'];
+                $relacionados[0] += ["id_sat_tipo_relacion"=>$tipo_relacion->id_sat_tipo_relacion]+
+                $relacionados[0] += ["descripcion"=>$tipo_relacion->descripcion];
             }
         }
+
         if (!empty($mensaje)) {
             return response()->json([
                 'estatus' => -2,
@@ -775,7 +779,6 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
         'resultado' => $detalles,
         'uuid' => $uuid,
         'version' => $version,
-        'tipo_relacion' => $tipo_relacion,
         'relacionados' => $relacionados
     ]);
 }

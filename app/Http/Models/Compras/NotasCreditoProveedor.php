@@ -27,7 +27,7 @@ class NotasCreditoProveedor extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_nota_credito_proveedor';
+    protected $primaryKey = 'id_documento';
 
     /**
      * The attributes that are mass assignable.
@@ -126,20 +126,20 @@ class NotasCreditoProveedor extends ModelCompany
     }
 
     public function detalle(){
-        return $this->hasMany(DetalleNotasCreditoProveedor::class,'fk_id_documento','id_nota_credito_proveedor');
+        return $this->hasMany(DetalleNotasCreditoProveedor::class,'fk_id_documento','id_documento');
     }
     public function facturas()
     {
-        return $this->hasManyThrough(FacturasClientes::class,CfdiRelacionesClientes::class,'fk_id_documento_relacionado','id_nota_credito','id_factura','fk_id_documento');
+        return $this->hasManyThrough(FacturasProveedores::class,CfdiRelacionesProveedores::class,'fk_id_documento','id_documento','id_documento','fk_id_documento_relacionado')->where('fk_id_tipo_documento_relacionado',7);
     }
 
     public function notascredito()
     {
-        return $this->hasManyThrough(NotasCreditoClientes::class,CfdiRelacionesClientes::class,'fk_id_documento_relacionado','id_nota_credito','id_nota_credito','fk_id_documento');
+        return $this->hasManyThrough(NotasCreditoProveedor::class,CfdiRelacionesProveedores::class,'fk_id_documento','id_documento','id_documento','fk_id_documento_relacionado')->where('fk_id_tipo_documento_relacionado',11);
     }
 
     public function relaciones()
     {
-        return $this->hasMany(CfdiRelacionesClientes::class,'fk_id_documento','id_nota_credito');
+        return $this->hasMany(CfdiRelacionesProveedores::class,'fk_id_documento','id_documento');
     }
 }

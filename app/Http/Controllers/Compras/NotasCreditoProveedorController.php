@@ -32,36 +32,31 @@ class NotasCreditoProveedorController extends ControllerBase
         $facturas = [];
         if($entity && $entity->version_sat == "3.2")
         {
-            $facturas = FacturasProveedores::select('id_factura_proveedor as id',db::raw("concat(serie_factura,folio_factura) as text"))->where('version_sat','3.2')->where('fk_id_socio_negocio',$entity->fk_id_socio_negocio)->pluck('text','id')->prepend('...',0);
+            $facturas = FacturasProveedores::select('id_documento as id',db::raw("concat(serie_factura,folio_factura) as text"))->where('version_sat','3.2')->where('fk_id_socio_negocio',$entity->fk_id_socio_negocio)->pluck('text','id')->prepend('...',0);
         }
         return [
             'proveedores' => SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->pluck('nombre_comercial','id_socio_negocio'),
             'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
             'relaciones' => TiposRelacionesCfdi::select(db::raw("concat('(',tipo_relacion,') ',descripcion) as text"),'id_sat_tipo_relacion')->where('activo',1)->where('nota_credito',1)->pluck('text','id_sat_tipo_relacion')->prepend('...',0),
-            'js_facturas' => Crypt::encryptString('"select":["id_factura_proveedor","serie_factura","folio_factura"], "conditions":[{"where":["version_sat","3.2"]},{"where":["fk_id_socio_negocio",$fk_id_socio_negocio]}]'),
+            'js_facturas' => Crypt::encryptString('"select":["id_documento","serie_factura","folio_factura"], "conditions":[{"where":["version_sat","3.2"]},{"where":["fk_id_socio_negocio",$fk_id_socio_negocio]}]'),
             'facturas' => $facturas,
-            'js_relacionadas' => Crypt::encryptString('"select":["id_factura_proveedor","serie_factura","folio_factura","uuid"],"conditions":[{"where":["fk_id_estatus_factura",1]},{"whereIn":["uuid",$uuid]}]'),
+            'js_relacionadas' => Crypt::encryptString('"select":["id_documento","serie_factura","folio_factura","uuid"],"conditions":[{"where":["fk_id_estatus_factura",1]},{"whereIn":["uuid",["$uuid"]]}]'),
             'js_tiporelacion' => Crypt::encryptString('"select":["id_sat_tipo_relacion","descripcion"],"conditions":[{"where":["tipo_relacion","$tipo_relacion"]}]'),
         ];
     }
 
     public function store(Request $request, $company, $compact = true)
     {
-        # ¿Usuario tiene permiso para crear?
-        //		$this->authorize('create', $this->entity);
-
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
         $fileName = $request->fk_id_socio_negocio."-".$request->uuid;
         $xml_save = Storage::disk('notas_proveedor')
-            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->archivo_xml_hidden->getRealPath()));
+            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->file('archivo_xml_hidden')->getRealPath()));
         $pdf_save = Storage::disk('notas_proveedor')
-            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->archivo_pdf_hidden->getRealPath()));
+            ->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->file('archivo_pdf_hidden')->getRealPath()));
 
-        $request->request->set('archivo_xml',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->archivo_xml_hidden->getRealPath()));
-        $request->request->set('archivo_pdf',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->archivo_pdf_hidden->getRealPath()));
+        $request->request->set('archivo_xml',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".xml",file_get_contents($request->file('archivo_xml_hidden')->getRealPath()));
+        $request->request->set('archivo_pdf',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName.".pdf",file_get_contents($request->file('archivo_pdf_hidden')->getRealPath()));
 
-        $xml = simplexml_load_file($request->archivo_xml_hidden->getRealPath());
+        $xml = simplexml_load_file($request->file('archivo_xml_hidden')->getRealPath());
         $arrayData = xmlToArray($xml);
         if($request->version_sat == "3.3"){
             $request->request->set('serie_factura',isset($arrayData['Comprobante']['@Serie']) ? $arrayData['Comprobante']['@Serie'] : null);

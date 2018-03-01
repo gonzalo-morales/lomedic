@@ -456,4 +456,17 @@ class OrdenesController extends ControllerBase
         })->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
 	    return Response::json($proveedores);
     }
+
+    public function getDetallesOrden()
+    {
+        $result = DetalleOrdenes::join('inv_cat_skus','com_det_ordenes.fk_id_sku','=','inv_cat_skus.id_sku')
+            ->leftJoin('maestro.inv_cat_upcs',function($join){
+                $join->on('com_det_ordenes.fk_id_upc','=','maestro.inv_cat_upcs.id_upc');
+            })
+            ->where('fk_id_documento','=',$_POST['id_orden'])
+            ->select(db::raw("concat(inv_cat_skus.sku, ' - ' ,maestro.inv_cat_upcs.upc) as value"),'com_det_ordenes.id_documento_detalle as id')
+            ->get();
+
+        return $result;
+    }
 }
