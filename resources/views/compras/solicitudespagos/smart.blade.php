@@ -56,25 +56,25 @@
     	</div>
     </div>
     <div class="row">
-    	<div class="form-group col-md-6 col-sm-6">
+    	<div class="form-group col-sm-12">
     		<div class="row">
     			<div class="col-md-6 col-sm-6">
-    				{{Form::cSelectWithDisabled('*Solicitante','fk_id_solicitante',$solicitantes ?? [])}}
+    				{{Form::cSelectWithDisabled('*Solicitante','fk_id_solicitante',$solicitantes ?? [],['class'=>'select2'])}}
     			</div>
     			<div class="col-md-6 col-sm-6">
     				<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
     					Cargando datos... <i class="material-icons align-middle loading">cached</i>
     				</div>
-    				{{Form::cSelect('*Sucursal','fk_id_sucursal', $sucursales ?? [],['data-url'=>companyAction('HomeController@index').'/Administracion.sucursales/api'])}}
+    				{{Form::cSelect('*Sucursal','fk_id_sucursal', $sucursales ?? [],['class'=>'select2','data-url'=>ApiAction('administracion.sucursales')])}}
     			</div>
-    			<div class="col-md-4 col-sm-6">
+    			<div class="col-md-6">
+    				{{Form::cSelectWithDisabled('*Forma de Pago','fk_id_forma_pago',$formas_pago ?? [],['class'=>'select2'])}}
+    			</div>
+    			<div class="col-md-4">
+    				{{Form::cSelectWithDisabled('*Monedas','fk_id_moneda',$monedas ?? [],['class'=>'select2'])}}
+    			</div>
+    			<div class="col-md-2">
     				{{Form::cText('*Fecha necesaria','fecha_necesaria',['class'=>'datepicker','placeholder'=>'Vence'])}}
-    			</div>
-    			<div class="col-md-4 col-sm-6">
-    				{{Form::cSelectWithDisabled('*Forma de Pago','fk_id_forma_pago',$formas_pago ?? [])}}
-    			</div>
-    			<div class="col-md-4 col-sm-6">
-    				{{Form::cSelectWithDisabled('*Monedas','fk_id_moneda',$monedas ?? [])}}
     			</div>
     			@if(isset($data->fk_id_estatus_solicitud_pago) && $data->fk_id_estatus_solicitud_pago != 1)
     			<div class="col-md-4 col-sm-6">
@@ -86,7 +86,7 @@
     			@endif
     		</div>
     	</div>
-    	<div class="form-group col-sm-6 col-md-6">
+    	<div class="form-group col-sm-12">
     		<div class="card">
     			<div class="card-header">
     				<h4 class="text-center">Detalle</h4>
@@ -107,7 +107,7 @@
     									{{Form::Select('fk_id_linea',
     									collect($ordenes ?? [])->prepend('...','0'),
     									null,
-    									['id'=>'fk_id_linea','class'=>!Route::currentRouteNamed(currentRouteName("show")) ? 'form-control select2' : 'form-control','data-url'=>companyAction('HomeController@index').'/Compras.Ordenes/api'])}}
+    									['id'=>'fk_id_linea','class'=>!Route::currentRouteNamed(currentRouteName("show")) ? 'form-control select2' : 'form-control','data-url'=>ApiAction('compras.ordenes')])}}
     								</div>
     							</div>
     						</div>

@@ -42,7 +42,7 @@ class OrdenesController extends ControllerBase
         switch (\request('tipo_documento')){
             case 1:
                 $documento = Solicitudes::find(\request('id'));
-                $detalles_documento = $documento->detalleSolicitudes()->where('cerrado',0)->select('*','fk_id_documento','importe as total_producto')->get();
+                $detalles_documento = $documento->detalle()->where('cerrado',0)->select('*','fk_id_documento','importe as total_producto')->get();
                 break;
             case 2:
                 $documento = Ofertas::find(\request('id'));
