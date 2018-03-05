@@ -65,7 +65,7 @@
     				<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
     					Cargando datos... <i class="material-icons align-middle loading">cached</i>
     				</div>
-    				{{Form::cSelect('*Sucursal','fk_id_sucursal', $sucursales ?? [],['data-url'=>companyAction('HomeController@index').'/Administracion.sucursales/api'])}}
+    				{{Form::cSelect('*Sucursal','fk_id_sucursal', $sucursales ?? [],['data-url'=>ApiAction('administracion.sucursales')])}}
     			</div>
     			<div class="col-md-4 col-sm-6">
     				{{Form::cText('*Fecha necesaria','fecha_necesaria',['class'=>'datepicker','placeholder'=>'Vence'])}}
