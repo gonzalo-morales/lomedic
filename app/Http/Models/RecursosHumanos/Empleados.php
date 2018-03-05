@@ -73,7 +73,7 @@ class Empleados extends ModelBase
 
     public function empresa()
     {
-        $this->$this->hasOne('App\Http\Models\Administracion\Empresas');
+        $this->hasOne('App\Http\Models\Administracion\Empresas');
     }
 
     public function solicitudes()

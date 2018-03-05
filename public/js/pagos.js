@@ -136,6 +136,14 @@ $(document).ready(function () {
                settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
            });
        }
+
+       if( +$('#monto').val() != +$('#monto_aplicado').val()){
+           e.preventDefault();
+           $.toaster({
+               priority: 'danger', title: 'Error', message: 'El monto aplicado debe ser igual al monto del pago',
+               settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+           });
+       }
     });
 });
 function validateDetail(a_pagar,pagado) {

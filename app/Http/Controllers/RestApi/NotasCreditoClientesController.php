@@ -5,6 +5,7 @@ namespace App\Http\Controllers\RestApi;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Ventas\FacturasClientes;
 use App\Http\Models\Ventas\NotasCreditoClientes;
+use Illuminate\Http\Request;
 
 class NotasCreditoClientesController extends Controller
 {
@@ -37,5 +38,20 @@ class NotasCreditoClientesController extends Controller
             });
         }
         return response()->json(['status'=>200,'data'=>$notas], 200);
+    }
+
+    public function store(Request $request)
+    {
+        foreach ($request->poliza['movimientos'] as $movimiento){
+            $nota = NotasCreditoClientes::find($movimiento['id_documento']);
+            $nota->no_poliza = $request->poliza['id_poliza'];
+            $nota->no_movimiento = $movimiento['id_movimiento'];//Número de movimiento en la póliza
+            $nota->ejercicio = $request->poliza['ejercicio'];
+            $nota->periodo = $request->poliza['periodo'];
+            $nota->guid_movimiento = $movimiento['guid'];
+            $nota->save();
+        }
+
+        return response()->json(["status"=>201,'data'=>'Notas de crédito de cliente actualizadas'],201);
     }
 }

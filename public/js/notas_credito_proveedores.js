@@ -12,6 +12,7 @@ $(document).submit(function (e) {
            settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
        });
    }
+
 });
 
 $(document).ready(function () {
