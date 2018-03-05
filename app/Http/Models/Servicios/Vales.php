@@ -9,7 +9,6 @@ use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\Medicos;
 use App\Http\Models\Administracion\Programas;
 use App\Http\Models\Proyectos\Proyectos;
-use App\Http\Models\Servicios\Recetas;
 
 class Vales extends ModelCompany
 {
