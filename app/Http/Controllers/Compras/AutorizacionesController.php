@@ -52,5 +52,9 @@ class AutorizacionesController extends ControllerBase
             ]);
         }
     }
+    
+    public function destroy(Request $request, $company, $idOrIds, $attributes = ['fk_id_estatus'=>5])
+    {
+        return parent::destroy($request, $company, $idOrIds, $attributes);
+    }
 }
-
