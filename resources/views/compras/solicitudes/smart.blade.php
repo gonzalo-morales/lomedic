@@ -147,7 +147,7 @@
 				</div>
 				@endif
 			    <div class="card-body" style="height: auto">
-					<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}"
+					<table id="productos" class="table table-responsive-sm highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}"
 					data-delete="{{companyAction('Compras\DetalleSolicitudesController@destroyMultiple')}}">
 						<thead>
 							<tr>
