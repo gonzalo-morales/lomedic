@@ -130,7 +130,7 @@ $(document).ready( function () {
                 if(response.length > 0){
                     options.push('<option value="0" selected disabled>Selecciona la Sucursal...</option>'); 
                     for (let i = 0; i < response.length; i++) {
-                        options.push('<option value="' + response[i].id_sucursal + '">' + response[i].sucursal + '</option>');
+                        options.push('<option value="' + response[i].id + '">' + response[i].text + '</option>');
                     }
                     $('#fk_id_sucursal').append(options.join(''));
                     $('#fk_id_sucursal').select2({
