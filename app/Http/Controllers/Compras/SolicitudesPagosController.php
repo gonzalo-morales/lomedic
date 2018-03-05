@@ -28,8 +28,8 @@ class SolicitudesPagosController extends ControllerBase
     {
         return [
             'solicitantes'=>Empleados::select(DB::raw("concat(nombre,' ',apellido_paterno,' ',apellido_materno) as text"),'id_empleado')->where('activo',1)->pluck('text','id_empleado'),
-            'formas_pago'=>FormasPago::select('descripcion','id_forma_pago')->where('activo',1)->pluck('descripcion','id_forma_pago'),
-            'monedas'=>Monedas::select(DB::raw("concat('(',moneda,') ',descripcion) as text"),'id_moneda')->where('activo',1)->pluck('text','id_moneda'),
+            'formas_pago'=> FormasPago::selectRaw("CONCAT(forma_pago,' - ',descripcion) as forma_pago, id_forma_pago")->where('activo',1)->orderBy('forma_pago')->pluck('forma_pago','id_forma_pago'),
+            'monedas'=> Monedas::selectRaw("CONCAT(descripcion,' (',moneda,')') as text, id_moneda as id")->where('activo',1)->orderBy('moneda')->pluck('text','id'),
             'ordenes'=>Ordenes::select('id_documento')->where('fk_id_estatus_orden',1)->where('total_orden','>',0)->whereHas('detalle')->pluck('id_documento','id_documento'),
             'js_sucursales'=>Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"], "conditions":[{"where":["activo",1]}],"whereHas":[{"usuario_sucursales":{"where":["fk_id_empleado","$fk_id_empleado"]}}],"whereHas":[{"empresa_sucursales":{"where":["fk_id_empresa","'.dataCompany()->id_empresa.'"]}}]'),
             'js_orden'=>Crypt::encryptString('"conditions":[{"where":["id_documento",$fk_id_orden]}]'),
