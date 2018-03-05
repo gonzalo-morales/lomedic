@@ -113,7 +113,7 @@ class Solicitudes extends ModelCompany
         return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_solicitud');
     }
 
-    public function detalleSolicitudes()
+    public function detalle()
     {
         return $this->hasMany('App\Http\Models\Compras\DetalleSolicitudes','fk_id_documento', 'id_documento');
     }

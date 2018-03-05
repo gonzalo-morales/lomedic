@@ -2,55 +2,56 @@
 <body>
 <div style="">
     <div style="width: 100%">
-            {{HTML::image(asset("img/logotipos/$empresa->logotipo"),'',['height'=>'56'])}}
-            <div style="width: 60.5%; float: left">
-                <h4 align="center">Solicitud de compra</h4>
-                <h6 align="center">
-                    {{$empresa->razon_social}}
-                    <br><b>Calle Chicle 234, Col. El coli industrial</b>
-                    <br><b>Zapopan, Jalisco, CP 45069</b>
-                    <br><b>Tel: (33) 1002-1130</b>
-                    <br><b>RFC: AIS091015H50</b>{{$empresa->rfc}}
-                </h6>
-            </div>
-            <div style="width: 20%; float: left">
-                <table width="100%" style="">
-                    <tr align="center">
-                        <td style="font-size: 15px;">
-                            <h4>No. Solicitud  <b>{{$solicitud->id_documento}}</b></h4>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center">
-{{--                            <h6 align="center"><img src="{{$barcode}}"></h6>--}}
-                            <img src="data:image/png;charset=binary;base64,{{$qr}}" style="float:none;width: 50px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="font-size: 15px;">
-                            <h6 align="center">
-                                <b>Fecha creación: {{$solicitud->fecha_creacion}}</b>
-                            </h6>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center">
-                            <img src="data:image/png;charset=binary;base64,{{$barcode}}" style="float:none;" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        {{HTML::image(asset("img/logotipos/$empresa->logotipo"),'',['height'=>'56'])}}
+        <div style="width: 60.5%; float: left">
+            <h4 align="center">Solicitud de compra</h4>
+            <h6 align="center">
+                {{$empresa->razon_social}}
+                <br><b>Calle Chicle 234, Col. El coli industrial</b>
+                <br><b>Zapopan, Jalisco, CP 45069</b>
+                <br><b>Tel: (33) 1002-1130</b>
+                <br><b>RFC: AIS091015H50</b>{{$empresa->rfc}}
+            </h6>
+        </div>
+        <div style="width: 20%; float: left">
+            <table width="100%" style="">
+                <tr align="center">
+                    <td style="font-size: 15px;">
+                        <h4>No. Solicitud  <b>{{$solicitud->id_documento}}</b></h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">
+                        {{--                            <h6 align="center"><img src="{{$barcode}}"></h6>--}}
+                        <img src="data:image/png;charset=binary;base64,{{$qr}}" style="float:none;width: 50px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size: 15px;">
+                        <h6 align="center">
+                            <b>Fecha creación: {{$solicitud->fecha_creacion}}</b>
+                        </h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">
+                        <img src="data:image/png;charset=binary;base64,{{$barcode}}" style="float:none;" />
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     <div style="width: 100%;clear: both;">
         <h6>
             <div style="float: left;">
-                Solicitante: {{$solicitud->empleado->nombre
-                .' '.$solicitud->empleado->apellido_paterno
-                .' '.$solicitud->empleado->apellido_materno}}
+                Solicitante: {{$solicitud->usuario->empleado->nombre
+                .' '.$solicitud->usuario->empleado->apellido_paterno
+                .' '.$solicitud->usuario->empleado->apellido_materno}}
                 &nbsp;
             </div>
+            {{--  {{dd($solicitud)}}  --}}
             <div style="float: left;">
-                Sucursal: {{$solicitud->sucursales->nombre_sucursal}}
+                Sucursal: {{$solicitud->sucursales->sucursal}}
                 &nbsp;
             </div>
             <div style="float: left;">
@@ -75,12 +76,12 @@
                 <th><h5>Total</h5></th>
             </tr>
             {{--For each detalle--}}
-            @foreach($solicitud->detalleSolicitudes->where('cerrado',0) as $detalle)
+            @foreach($solicitud->detalle->where('cerrado',0) as $detalle)
             <tr>
                 <td>{{$detalle->sku->sku}}</td>
                 <td>{{$detalle->upc->upc ?? ''}}</td>
                 <td>{{$detalle->sku->descripcion_corta}}</td>
-                <td>{{$detalle->proveedor->nombre_corto ?? ''}}</td>
+                <td>{{$detalle->proveedor->nombre_comercial ?? ''}}</td>
                 <td>{{$detalle->fecha_necesario}}</td>
                 <td>{{isset($detalle->fk_id_proyecto) ? $detalle->proyecto->id_proyecto.' - '.$detalle->proyecto->proyecto : ''}}</td>
                 <td>{{$detalle->cantidad}}</td>
@@ -128,9 +129,9 @@
     <div style="width: 100%;clear: both">
         <div style="float: left">
             <p style="font-size: 12px; border-top:1px solid #000; margin-top: 80px; padding: 0px 10px;">
-                {{$solicitud->empleado->nombre
-                .' '.$solicitud->empleado->apellido_paterno
-                .' '.$solicitud->empleado->apellido_materno}}
+                {{$solicitud->usuario->empleado->nombre
+                .' '.$solicitud->usuario->empleado->apellido_paterno
+                .' '.$solicitud->usuario->empleado->apellido_materno}}
             </p>
         </div>
     </div>
