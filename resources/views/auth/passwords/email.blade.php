@@ -10,7 +10,7 @@
     		@endforeach
     	</div>
 		<div class="card card-block text-center" style="background: rgba(0,0,0,0.3);"> <!-- class="card-panel hoverable row"> -->
-        	<h4 class="mt-3 text-white">@lang('messages.reset_password')</h4>
+        	<h4 class="mt-3 text-white">{{cTrans('messages.reset_password')}}</h4>
 		
 			{!! Form::open(['route' => 'password.email', 'id' => 'form-reset', 'class' => 'card-body center']) !!}
 			<div class="container-fluid">
@@ -22,17 +22,17 @@
 						<span class="input-group-addon" id="username">
 							<i class="material-icons prefix">email</i>
                         </span>
-                        {{ Form::text('email', null, ['id'=>'email','class'=>'validate form-control','placeholder'=>'* '.trans('forms.email'),'autofocus'=>true]) }}
+                        {{ Form::text('email', null, ['id'=>'email','class'=>'validate form-control','placeholder'=>'* '.cTrans('forms.email','Dirección Correo Electronico'),'autofocus'=>true]) }}
 					</div>
                         {{ $errors->has('email') ? HTML::tag('span', $errors->first('email'), ['class'=>'form-text text-white bg-danger p-1 m-0 rounded-bottom']) : '' }}
 				</div>
 				<div class="form-group mt-5">
 					<div class=" container">
-					{{ Form::button(trans('forms.send'), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+					{{ Form::button(cTrans('forms.send','Enviar'), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
 					</div>
 				</div>
 				<div class="form-group mt-4">
-					<small><b>{{ link_to_route('login', trans('forms.back'), null, ['class'=>'card-link text-white']) }}</b></small>
+					<small><b>{{ link_to_route('login', cTrans('forms.back','Regresar'), null, ['class'=>'card-link text-white']) }}</b></small>
 				</div>
 			</div>
 			{!! Form::close() !!}

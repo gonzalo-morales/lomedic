@@ -59,10 +59,9 @@ class SolicitudesController extends ControllerBase
             'impuestos'=> Impuestos::select('id_impuesto','impuesto')->where('activo',1)->orderBy('impuesto')->pluck('impuesto','id_impuesto'),
             'unidadesmedidas' => Unidadesmedidas::select('nombre','id_unidad_medida')->where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida'),
             'skus' => Productos::where('activo',1)->orderBy('sku')->pluck('sku','id_sku'),
-            'empleados' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno) as nombre, id_empleado")->where('activo',1)->orderBy('nombre')->pluck('nombre','id_empleado'),
-            'sucursalesempleado' => !empty($entity) ?
-            Empleados::find($entity->fk_id_solicitante)->sucursales->where('activo',1)->pluck('sucursal','id_sucursal') :
-                Auth::user()->empleado->sucursales->where('activo',1)->pluck('sucursal','id_sucursal'),
+            'usuarios' => Usuarios::where('activo',1)->orderBy('usuario')->pluck('usuario','id_usuario'),
+            'js_sucursales' => Crypt::encryptString('"conditions":[ {"where":["activo","1"]}],"whereHas": [{"usuario_sucursales":{"where":["fk_id_usuario", "$usuario"]}}]'),
+            'js_usuarios' => Crypt::encryptString('"conditions":[ {"where":["activo","1"]}, {"where":["id_usuario",$usuario]}],"with": ["empleado"]'),
             'js_proveedores' => Crypt::encryptString('"select":["id_socio_negocio as id","nombre_comercial as text"],"whereHas":[{"productos":{"where":["fk_id_sku",$id_sku]}}]'),
             'detalles_documento'=>$detalles_documento
         ];
@@ -73,15 +72,12 @@ class SolicitudesController extends ControllerBase
         # ¿Usuario tiene permiso para crear?
         $this->authorize('create', $this->entity);
         if(!isset($request->fk_id_solicitante)){
-            $id_empleado = Usuarios::where('id_usuario', Auth::id())->first()->fk_id_empleado;
+            $id_empleado = Usuarios::find(Auth::id())->fk_id_empleado;
             $request->request->set('fk_id_solicitante',$id_empleado);
         }
         $request->request->set('fecha_creacion',Carbon::now()->toDateString());
-
-        $request->request
-            ->set('fk_id_departamento',Empleados::where('id_empleado',$request->fk_id_solicitante)
-                ->first()
-                ->fk_id_departamento);
+        // $fk_id_departamento = Usuarios::find()
+        // $request->request->set('fk_id_departamento',Empleados::find($request->fk_id_solicitante)->fk_id_departamento);
         $request->request->set('fk_id_estatus_solicitud',1);//Al estarse creando por primer vez, tiene que estar activa
 //        dd($request->request,$this->entity->rules);
         # Validamos request, si falla regresamos pagina

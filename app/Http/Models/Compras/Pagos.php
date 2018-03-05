@@ -25,7 +25,8 @@ class Pagos extends ModelCompany
      * The attributes that are mass assignable.
      * @var array
      */
-    protected $fillable = ['numero_referencia','fk_id_banco','fecha_pago','fk_id_forma_pago','fk_id_moneda','tipo_cambio','observaciones','comprobante','monto','no_poliza'];
+    protected $fillable = ['numero_referencia','fk_id_banco','fecha_pago','fk_id_forma_pago','fk_id_moneda',
+        'tipo_cambio','observaciones','comprobante','monto','no_poliza','monto_aplicado'];
 
     public $niceNames =[
         'numero_referencia'=>'número de referencia',

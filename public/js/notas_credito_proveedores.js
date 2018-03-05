@@ -4,6 +4,16 @@ $('.datepicker').pickadate({
     format: 'yyyy-mm-dd'
 });
 
+$(document).submit(function (e) {
+   if($('#productos_facturados tr').length < 1){
+       e.preventDefault();
+       $.toaster({
+           priority: 'danger', title: '¡Error!', message: 'Por favor carga la tabla de facturas',
+           settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+       });
+   }
+});
+
 $(document).ready(function () {
     $('#cargar').click(function () {
         if($('#archivo_xml_input').val() && $('#archivo_pdf_input').val() && $('#fk_id_socio_negocio').val() > 0){
@@ -16,6 +26,7 @@ $(document).ready(function () {
                 //Para leer el XML
                 $('#encabezado_factura').empty();
                 $('#productos_facturados').empty();
+                $('#relaciones').empty();
                 $('#factura').hide();
                 $('#loadingxml').show();
                 $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
@@ -45,16 +56,16 @@ $(document).ready(function () {
                         }else{
                             if(data.version == "3.3"){
                                 $('#encabezado_factura').append(
-                                  '<tr>' +
-                                  '<th>Clave Producto Servicio</th>' +
-                                  '<th>Clave Unidad</th>' +
-                                  '<th>Descripcion</th>' +
-                                  '<th>Cantidad</th>' +
-                                  '<th>Precio Unitario</th>' +
-                                  '<th>Descuento</th>' +
-                                  '<th>Impuesto</th>' +
-                                  '<th>Importe</th>' +
-                                  '</tr>'
+                                    '<tr>' +
+                                    '<th>Clave Producto Servicio</th>' +
+                                    '<th>Clave Unidad</th>' +
+                                    '<th>Descripcion</th>' +
+                                    '<th>Cantidad</th>' +
+                                    '<th>Precio Unitario</th>' +
+                                    '<th>Descuento</th>' +
+                                    '<th>Impuesto</th>' +
+                                    '<th>Importe</th>' +
+                                    '</tr>'
                                 );
                                 $.each(data.resultado,function (index,value) {
                                     value.Descuento = value.Descuento != null ? value.Descuento : "0.00";
@@ -70,25 +81,87 @@ $(document).ready(function () {
                                         '<td>'+value.Importe+'<input name="relations[has][detalle]['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
                                         '</tr>');
                                 });
+
+                                $.each(data.relacionados,function (indice,relacion) {
+                                    var uuids = [];
+                                    $.each(relacion['cfdi:CfdiRelacionado'],function (row,uuid) {
+                                        uuids.push(uuid);
+                                    });
+                                    $.ajax({
+                                        url: $('#fk_id_factura_proveedor').data('url'),
+                                        data:{
+                                            param_js: relacionadas_js,
+                                            $uuid: uuids.toString()
+                                        },
+                                        tipoRelacion:{
+                                            relacion:relacion['@TipoRelacion'],
+                                            id_relacion:relacion['id_sat_tipo_relacion'],
+                                            descripcion:relacion['descripcion']
+                                        },
+                                        success: function (documentos) {
+                                            var self = this;
+                                            $.each(documentos,function (linea,documento) {
+                                                var i = $('#relaciones tr').length;
+                                                var index = i > 0 ? +$('#relaciones tr:last').find('#index').val() + 1 : 0;
+
+                                                $('#relaciones').append(
+                                                    '<tr>' +
+                                                    '<td>' +
+                                                    '<input type="hidden" id="index" value="'+index+'">' +
+                                                    '<input type="hidden" name="relations[has][relaciones]['+index+'][fk_id_documento_relacionado]" value="'+documento.id_documento+'">' +
+                                                    '<input type="hidden" name="relations[has][relaciones]['+index+'][fk_id_tipo_documento_relacionado]" value="7">' +
+                                                    '<input type="hidden" name="relations[has][relaciones]['+index+'][fk_id_tipo_documento]" value="11">' +
+                                                    documento.id_documento +
+                                                    '</td>' +
+                                                    '<td>' +
+                                                        documento.serie_factura + ' ' + documento.folio_factura +
+                                                    '</td>' +
+                                                    '<td>' +
+                                                        '<input type="hidden" name="relations[has][relaciones]['+index+'][fk_id_tipo_relacion]" value="'+self.tipoRelacion.id_relacion+'">' +
+                                                        "("+self.tipoRelacion.relacion+ ") " + self.tipoRelacion.descripcion +
+                                                    '</td>'+
+                                                    '</tr>'
+                                                )
+                                            });
+                                        }
+                                    });
+                                });
                             }else if(data.version == "3.2"){
                                 $('#encabezado_factura').append(
-                                  '<tr>' +
-                                  '<th>Descripcion</th>' +
-                                  '<th>Unidad</th>' +
-                                  '<th>Cantidad</th>' +
-                                  '<th>Valor Unitario</th>' +
-                                  '<th>Importe</th>' +
-                                  '</tr>'
+                                    '<tr>' +
+                                    '<th>Descripcion</th>' +
+                                    '<th>Unidad</th>' +
+                                    '<th>Cantidad</th>' +
+                                    '<th>Valor Unitario</th>' +
+                                    '<th>Importe</th>' +
+                                    '</tr>'
                                 );
                                 $.each(data.resultado,function (index,value) {
-                                   $("#productos_facturados").append(
-                                       '<tr>' +
-                                       '<td>'+value.Descripcion+'<input name="relations[has][detalle]['+index+'][descripcion]" type="hidden" value="'+value.Descripcion+'"></td>' +
-                                       '<td>'+value.Unidad+'<input name="relations[has][detalle]['+index+'][unidad]" type="hidden" value="'+value.Unidad+'"></td>' +
-                                       '<td>'+value.Cantidad+'<input name="relations[has][detalle]['+index+'][cantidad]" type="hidden" value="'+value.Cantidad+'"></td>' +
-                                       '<td>'+value.ValorUnitario+'<input name="relations[has][detalle]['+index+'][precio_unitario]" type="hidden" value="'+value.ValorUnitario+'"></td>' +
-                                       '<td>'+value.Importe+'<input name="relations[has][detalle]['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
-                                       '</tr>');
+                                    $("#productos_facturados").append(
+                                        '<tr>' +
+                                        '<td>'+value.Descripcion+'<input name="relations[has][detalle]['+index+'][descripcion]" type="hidden" value="'+value.Descripcion+'"></td>' +
+                                        '<td>'+value.Unidad+'<input name="relations[has][detalle]['+index+'][unidad]" type="hidden" value="'+value.Unidad+'"></td>' +
+                                        '<td>'+value.Cantidad+'<input name="relations[has][detalle]['+index+'][cantidad]" type="hidden" value="'+value.Cantidad+'"></td>' +
+                                        '<td>'+value.ValorUnitario+'<input name="relations[has][detalle]['+index+'][precio_unitario]" type="hidden" value="'+value.ValorUnitario+'"></td>' +
+                                        '<td>'+value.Importe+'<input name="relations[has][detalle]['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
+                                        '</tr>');
+                                });
+                                $.ajax({
+                                    url: $('#fk_id_socio_negocio').data('url'),
+                                    data: {
+                                        $param_js: js_facturas,
+                                        $fk_id_socio_negocio: $('#fk_id_socio_negocio').val()
+                                    },
+                                    success: function (values) {
+                                        $('#fk_id_factura_proveedor').empty();
+                                        $.each(values,function (value) {
+                                            $('#fk_id_factura_proveedor').append('<option value="'+value.id_documento+'">'+value.serie_factura+'-'+value.folio_factura+'</option>');
+                                        });
+                                        $('#fk_id_factura_proveedor').prepend('<option value="0" selected>Selecciona...</option>');
+                                        $('#fk_id_tipo_relacion').removeAttr('disabled');
+                                        $('#fk_id_factura_proveedor').removeAttr('disabled');
+                                        $('#agregar_relacion').removeAttr('disabled');
+                                    }
                                 });
                             }
                             $.toaster({
@@ -96,78 +169,12 @@ $(document).ready(function () {
                                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                             });
                             $('#factura').show();
-
                         }
                         $('#loadingxml').hide();
-                        $('#archivo_xml_hidden').prop('files',$('#archivo_xml_input').prop('files'));
+                        var archivo = $('#archivo_xml_input').prop('files');
+                        $('#archivo_xml_hidden').prop('files',archivo);
                         $('#uuid').val(data.uuid);
                         $('#version_sat').val(data.version);
-                        if(data.version == "3.3"){
-                            $('#fk_id_tipo_relacion').attr('disabled','disabled');
-                            $('#agregar_relacion').attr('disabled','disabled');
-                            $('#fk_id_factura_proveedor').attr('disabled','disabled');
-                            $.ajax({
-                                url: $('#fk_id_tipo_relacion').data('url'),
-                                data: {'param_js': tiporelacion_js,$tipo_relacion:data.tipo_relacion},
-                                success:function (relacion) {
-                                    $.ajax({
-                                        url: $('#fk_id_socio_negocio').data('url'),
-                                        type: 'GET',
-                                        data: {'param_js': relacionadas_js, '$uuid':JSON.stringify(data.relacionados)},
-                                        success: function (factura) {
-                                            console.log(factura);
-                                            $.each(factura,function (indice,valor) {
-                                                var id_factura_proveedor = valor.id_factura_proveedor;
-                                                var texto = ''
-                                                if(!valor.serie_factura && !valor.folio_factura){
-                                                    texto = valor.uuid;
-                                                }else{
-                                                    texto = valor.serie_factura + ' ' + valor.folio_factura;
-                                                }
-                                                $('#relaciones').append(
-                                                    '<tr>' +
-                                                    '<td>' +
-                                                    '<input type="hidden" name="relations[has][cfdirelacionado]['+indice+'][fk_id_documento_relacionado]" value="'+id_factura_proveedor+'">' +
-                                                    '<input type="hidden" name="relations[has][cfdirelacionado]['+indice+'][fk_id_tipo_documento_relacionado]" value="7">' +
-                                                    '<input type="hidden" name="relations[has][cfdirelacionado]['+indice+'][fk_id_tipo_documento]" value="11">' +
-                                                    id_factura_proveedor +
-                                                    '</td>'+
-                                                    '<td>'+texto+'</td>' +
-                                                    '<td><input type="hidden" name="relations[has][cfdirelacionado]['+indice+'][fk_id_tipo_relacion]" value="'+relacion[0].id_sat_tipo_relacion+'">('+data.tipo_relacion+') '+relacion[0].descripcion+'</td>' +
-                                                    '<td></td>' +
-                                                    '</tr>'
-                                                    )
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        }else{
-                            $('#fk_id_tipo_relacion').removeAttr('disabled');
-                            $('#agregar_relacion').removeAttr('disabled');
-                            $('#fk_id_factura_proveedor').removeAttr('disabled');
-                            $.ajax({
-                                url: $('#fk_id_socio_negocio').data('url'), 
-                                type: 'GET',
-                                data: {'param_js': facturas_js, $fk_id_socio_negocio:$('#fk_id_socio_negocio').val()},
-                                dataType: 'json',
-                                success: function (facturas) {
-                                    let option = $('<option/>');
-                                    option.val(0);
-                                    option.attr('disabled','disabled');
-                                    option.attr('selected','selected');
-                                    option.text('...');
-                                    $('#fk_id_factura_proveedor').empty().prepend(option);
-                                    $.each(facturas,function (indice,valor) {
-                                        let option = $('<option/>');
-                                        option.val(valor.id_factura_proveedor);
-                                        option.text(valor.serie_factura+valor.folio_factura);
-                                        $('#fk_id_factura_proveedor').append(option);
-                                    });
-                                    $('#fk_id_factura_proveedor').select2();
-                                }
-                            });
-                        }
                     },
                     error: function (jqXHR) {
                         $.toaster({
@@ -181,7 +188,8 @@ $(document).ready(function () {
                 //Para mostrar el pdf
                 var pdf = $('#archivo_pdf_input').prop('files')[0];
                 getBase64(pdf);
-                $('#archivo_pdf_hidden').prop('files',$('#archivo_pdf_input').prop('files'));
+                var archivo = $('#archivo_pdf_input').prop('files');
+                $('#archivo_pdf_hidden').prop('files',archivo);
             }
         }else{
             $.toaster({
@@ -199,13 +207,13 @@ $(document).ready(function () {
                 '<tr>' +
                 '<td>' +
                     '<input type="hidden" id="index" value="'+index+'">' +
-                    '<input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_documento_relacionado]" value="'+$('#fk_id_factura_proveedor').val()+'">'+
-                    '<input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_tipo_documento_relacionado]" value="7">' +
-                    '<input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_tipo_documento]" value="11">' +
+                    '<input type="hidden" name="relations[has][relaciones]['+index+'][fk_id_documento_relacionado]" value="'+$('#fk_id_factura_proveedor').val()+'">'+
+                    '<input type="hidden" name="relations[has][relaciones]['+index+'][fk_id_tipo_documento_relacionado]" value="7">' +
+                    '<input type="hidden" name="relations[has][relaciones]['+index+'][fk_id_tipo_documento]" value="11">' +
                     $('#fk_id_factura_proveedor').val()+
                 '</td>'+
                 '<td>'+$('#fk_id_factura_proveedor').select2('data')[0].text+'</td>' +
-                '<td><input type="hidden" name="relations[has][cfdirelacionado]['+index+'][fk_id_tipo_relacion]" value="'+$('#fk_id_tipo_relacion').val()+'">'+$('#fk_id_tipo_relacion option:selected').text()+'</td>' +
+                '<td><input type="hidden" name="relations[has][relaciones]['+index+'][fk_id_tipo_relacion]" value="'+$('#fk_id_tipo_relacion').val()+'">'+$('#fk_id_tipo_relacion option:selected').text()+'</td>' +
                 '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>' +
                 '</tr>'
             );
@@ -226,12 +234,21 @@ function getBase64(file) {
     var reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
-         $('#pdf').prop('data',reader.result);
-         $('#loadingpdf').hide();
-        $.toaster({
-            priority: 'success', title: '¡Éxito!', message: 'Se ha importado el PDF correctamente',
-            settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
-        });
+        if(reader.result != "data:"){
+            $('#pdf').prop('data',reader.result);
+            $('#loadingpdf').hide();
+            $.toaster({
+                priority: 'success', title: '¡Éxito!', message: 'Se ha importado el PDF correctamente',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }else{
+            $.toaster({
+                priority: 'info', title: '¡Advertencia!', message: 'El PDF no contiene información',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+            $('#loadingpdf').hide();
+        }
+
     };
     reader.onerror = function (error) {
         console.log('Error: ', error);

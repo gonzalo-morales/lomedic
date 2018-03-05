@@ -436,7 +436,7 @@
 		var sucursales_js = '{{$js_sucursales ?? ''}}';
         var contratos_js = '{{$js_contratos ?? ''}}';
         var partidas_js = '{{$js_partidas ?? ''}}';
-        var subdependencias_js = '{{$js_subdependencias}}'
+        var subdependencias_js = '{{$js_subdependencias ?? ''}}'
 	</script>
     <!-- Resources -->
     <style>

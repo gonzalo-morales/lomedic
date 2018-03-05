@@ -18,7 +18,7 @@
     @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
     	<div class="row">
     		<div class="col-md-12 text-center text-success">
-    			<h1>Factura No. {{$data->id_solicitud_pago}}</h1>
+    			<h1>Factura No. {{$data->id_documento}}</h1>
     		</div>
     	</div>
     @endif
@@ -33,7 +33,7 @@
     			</div>
     			<div class="modal-body">
     				<div class="row">
-    					{{Form::hidden('',null,['id'=>'id_autorizacion','data-url'=>companyAction('Compras\AutorizacionesController@update',['id'=>'?id'])])}}
+    					{{Form::hidden('',null,['id'=>'id_documento','data-url'=>companyAction('Compras\AutorizacionesController@update',['id'=>'?id'])])}}
     					<div class="form-group col-md-12 col-sm-6">
     						{{Form::label('','Tipo de autorizacion')}}
     						{{Form::text('',null,['class'=>'form-control','readonly','id'=>'motivo_autorizacion'])}}
@@ -104,10 +104,10 @@
     							<div class="card-body">
     								<div id="detalle" class="col-md-12 col-sm-12">
     									<h5>Orden de compra</h5>
-    									{{Form::Select('fk_id_orden_compra',
+    									{{Form::Select('fk_id_linea',
     									collect($ordenes ?? [])->prepend('...','0'),
     									null,
-    									['id'=>'fk_id_orden_compra','class'=>'form-control','data-url'=>companyAction('HomeController@index').'/Compras.ordenes/api'])}}
+    									['id'=>'fk_id_linea','class'=>!Route::currentRouteNamed(currentRouteName("show")) ? 'form-control select2' : 'form-control','data-url'=>companyAction('HomeController@index').'/Compras.Ordenes/api'])}}
     								</div>
     							</div>
     						</div>
@@ -168,11 +168,11 @@
     					</tr>
     				</thead>
     				<tbody id="detalle_solicitud_pago">
-    				<input type="hidden" name="relations[has][detalle][-1][id_detalle_solicitud_pago]" value="-1">
+    				<input type="hidden" name="relations[has][detalle][-1][id_documento_detalle]" value="-1">
     				@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
     					@foreach($data->detalle->where('eliminar',0) as $row=>$detalle)
     					<tr>
-    						<td><input type="hidden" id="index" value="{{$row}}"><input class="orden" type="hidden" name="relations[has][detalle][{{$row}}][fk_id_orden_compra]" value="{{$detalle->fk_id_orden_compra ?? ''}}">{{$detalle->fk_id_orden_compra ?? 'N/A'}}<input type="hidden" value="{{$detalle->id_detalle_solicitud_pago}}" name="relations[has][detalle][{{$row}}][id_detalle_solicitud_pago]"></td>
+    						<td><input type="hidden" id="index" value="{{$row}}"><input class="orden" type="hidden" name="relations[has][detalle][{{$row}}][fk_id_linea]" value="{{$detalle->fk_id_linea ?? ''}}">{{$detalle->fk_id_linea ?? 'N/A'}}<input type="hidden" value="{{$detalle->id_documento_detalle}}" name="relations[has][detalle][{{$row}}][id_documento_detalle]"></td>
     						<td>{{$detalle->descripcion}}</td>
     						<td>{{$detalle->cantidad}}</td>
     						<td>{{number_format($detalle->impuesto,2)}}</td>
@@ -189,8 +189,8 @@
     				</tbody>
     				<tfoot>
     					<tr>
-    						<td colspan="5" style="text-align: right">Total</td>
-    						<td>{{Form::Text('total',null,['class'=>'form-control','readonly','id'=>'total'])}}</td>
+    						<td colspan="4" style="text-align: right">Total</td>
+    						<td colspan="2">{{Form::Text('total',null,['class'=>'form-control','readonly','id'=>'total'])}}</td>
     						<td></td>
     					</tr>
     				</tfoot>
@@ -310,7 +310,7 @@
     		@endcan
             window['smart-model'].actions.itemsCancel = function(e, rv,motivo){
                 $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-                let data = {motivo}
+                var data = motivo;
                 $.delete(this.dataset.deleteUrl,data,function (response) {
                     if(response.success){
                         sessionStorage.reloadAfterPageLoad = true;
@@ -320,7 +320,7 @@
             };
             window['smart-model'].actions.showModalCancelar = function(e, rv) {
                 e.preventDefault();
-                let modal = window['smart-modal'];
+                var modal = window['smart-modal'];
                 modal.view = rivets.bind(modal, {
                     title: '¿Estas seguro que deseas cancelar la factura?',
                     content: '<form  id="cancel-form">' +
@@ -363,7 +363,7 @@
                     // Opcionales
                     onModalShow: function() {
     
-                        let btn = modal.querySelector('[rv-on-click="action"]');
+                        var btn = modal.querySelector('[rv-on-click="action"]');
     
                         // Copiamos data a boton de modal
                         for (var i in this.dataset) btn.dataset[i] = this.dataset[i];

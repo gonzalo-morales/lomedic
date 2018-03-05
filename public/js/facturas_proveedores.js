@@ -9,6 +9,7 @@ $(document).on('change','.orden-compra',function () {
         var obj = $(this);
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         if ($(this).val() !== ''){
+            $('#loadinglinea').show();
             $.ajax({
                 url: _url,
                 type: 'POST',
@@ -24,9 +25,14 @@ $(document).on('change','.orden-compra',function () {
                         detSelect.append(option);
                     });
                         detSelect.prop('disabled', (data.length == 0));
+                    $('#loadinglinea').hide();
                 },
                 error: function (e) {
-                    console.log("error" + e);
+                    $.toaster({
+                        priority: 'danger', title: '¡Error!', message: "Error: "+e,
+                        settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                    });
+                    $('#loadinglinea').hide();
                 }
             });
         }else {
@@ -47,10 +53,14 @@ $(document).ready(function () {
             data: {'param_js':comprador_js,$id_socio_negocio:$(this).val()},
             dataType: 'json',
             success: function (data) {
-                if(data){
+                if(data.length > 0){
                     $('#comprador').val(data[0].nombre + ' ' + data[0].apellido_paterno + ' ' + data[0].apellido_materno);
                 }else{
                     $('#comprador').val('');
+                    $.toaster({
+                        priority: 'warning', title: '¡Oooops!', message: 'No se encontró un nombre de comprador',
+                        settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                    });
                 }
                 $('#loadingcomprador').hide();
             },
@@ -119,16 +129,18 @@ $(document).ready(function () {
                                     value.Descuento = value.Descuento != null ? value.Descuento : "0.00";
                                     $("#productos_facturados").append(
                                         '<tr>' +
-                                        '<td>'+value.ClaveProdServ+'<input name="productos['+index+'][fk_id_clave_producto_servicio]" type="hidden" value="'+value.IdClaveProdServ+'"></td>' +
-                                        '<td>'+value.ClaveUnidad+'<input name="productos['+index+'][fk_id_clave_unidad]" type="hidden" value="'+value.IdClaveUnidad+'"></td>' +
-                                        '<td>'+value.Descripcion+'<input name="productos['+index+'][descripcion]" type="hidden" value="'+value.Descripcion+'"></td>' +
-                                        '<td>'+value.Cantidad+'<input name="productos['+index+'][cantidad]" type="hidden" value="'+value.Cantidad+'"></td>' +
-                                        '<td>'+value.ValorUnitario+'<input name="productos['+index+'][precio_unitario]" type="hidden" value="'+value.ValorUnitario+'"></td>' +
-                                        '<td>'+value.Descuento+'<input name="productos['+index+'][descuento]" type="hidden" value="'+value.Descuento+'"></td>' +
-                                        '<td>'+value.Importe_impuesto+'<input name="productos['+index+'][fk_id_impuesto]" type="hidden" value="'+value.IdImpuesto+'"></td>' +
-                                        '<td>'+value.Importe+'<input name="productos['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
-                                        '<td><input name="productos['+index+'][fk_id_orden_compra]" class="form-control integer orden-compra" value=""></td>' +
-                                        '<td><select name="productos['+index+'][fk_id_detalle_orden_compra]" class="form-control custom-select" disabled>'+
+                                        '<td>'+value.ClaveProdServ+'<input name="relations[has][detalle]['+index+'][fk_id_clave_producto_servicio]" type="hidden" value="'+value.IdClaveProdServ+'"></td>' +
+                                        '<td>'+value.ClaveUnidad+'<input name="relations[has][detalle]['+index+'][fk_id_clave_unidad]" type="hidden" value="'+value.IdClaveUnidad+'"></td>' +
+                                        '<td>'+value.Descripcion+'<input name="relations[has][detalle]['+index+'][descripcion]" type="hidden" value="'+value.Descripcion+'"></td>' +
+                                        '<td>'+value.Cantidad+'<input name="relations[has][detalle]['+index+'][cantidad]" type="hidden" value="'+value.Cantidad+'"></td>' +
+                                        '<td>'+value.ValorUnitario+'<input name="relations[has][detalle]['+index+'][precio_unitario]" type="hidden" value="'+value.ValorUnitario+'"></td>' +
+                                        '<td>'+value.Descuento+'<input name="relations[has][detalle]['+index+'][descuento]" type="hidden" value="'+value.Descuento+'"></td>' +
+                                        '<td>'+value.Importe_impuesto+'<input name="relations[has][detalle]['+index+'][fk_id_impuesto]" type="hidden" value="'+value.IdImpuesto+'"></td>' +
+                                        '<td>'+value.Importe+'<input name="relations[has][detalle]['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
+                                        '<td><input name="relations[has][detalle]['+index+'][fk_id_documento_base]" class="form-control integer orden-compra" value=""></td>' +
+                                        '<td>' +
+                                            '<div id="loadinglinea" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">Cargando... <i class="material-icons align-middle loading">cached</i></div>' +
+                                            '<select name="relations[has][detalle]['+index+'][fk_id_linea]" class="form-control custom-select" disabled>'+
                                             '<option value="0" disabled="" selected="">Seleccione...</option>'+
                                         '</select></td>' +
                                         '</tr>');
@@ -148,13 +160,15 @@ $(document).ready(function () {
                                 $.each(data.resultado,function (index,value) {
                                    $("#productos_facturados").append(
                                        '<tr>' +
-                                       '<td>'+value.Descripcion+'<input name="productos['+index+'][descripcion]" type="hidden" value="'+value.Descripcion+'"></td>' +
-                                       '<td>'+value.Unidad+'<input name="productos['+index+'][unidad]" type="hidden" value="'+value.Unidad+'"></td>' +
-                                       '<td>'+value.Cantidad+'<input name="productos['+index+'][cantidad]" type="hidden" value="'+value.Cantidad+'"></td>' +
-                                       '<td>'+value.ValorUnitario+'<input name="productos['+index+'][precio_unitario]" type="hidden" value="'+value.ValorUnitario+'"></td>' +
-                                       '<td>'+value.Importe+'<input name="productos['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
-                                       '<td><input name="productos['+index+'][fk_id_orden_compra]" class="form-control integer orden-compra" value=""></td>' +
-                                       '<td><select name="productos['+index+'][fk_id_detalle_orden_compra]" class="form-control custom-select" disabled>'+
+                                       '<td>'+value.Descripcion+'<input name="relations[has][detalle]['+index+'][descripcion]" type="hidden" value="'+value.Descripcion+'"></td>' +
+                                       '<td>'+value.Unidad+'<input name="relations[has][detalle]['+index+'][unidad]" type="hidden" value="'+value.Unidad+'"></td>' +
+                                       '<td>'+value.Cantidad+'<input name="relations[has][detalle]['+index+'][cantidad]" type="hidden" value="'+value.Cantidad+'"></td>' +
+                                       '<td>'+value.ValorUnitario+'<input name="relations[has][detalle]['+index+'][precio_unitario]" type="hidden" value="'+value.ValorUnitario+'"></td>' +
+                                       '<td>'+value.Importe+'<input name="relations[has][detalle]['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
+                                       '<td><input name="relations[has][detalle]['+index+'][fk_id_documento_base]" class="form-control integer orden-compra" value=""></td>' +
+                                       '<td>' +
+                                            '<div id="loadinglinea" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">Cargando... <i class="material-icons align-middle loading">cached</i></div>' +
+                                            '<select name="relations[has][detalle]['+index+'][fk_id_linea]" class="form-control custom-select" disabled>'+
                                            '<option value="0" disabled="" selected="">Seleccione...</option>'+
                                        '</select></td>' +
                                        '</tr>');
@@ -167,7 +181,8 @@ $(document).ready(function () {
                             $('#factura').show();
                         }
                         $('#loadingxml').hide();
-                        $('#archivo_xml_hidden').prop('files',$('#archivo_xml_input').prop('files'));
+                        var archivo = $('#archivo_xml_input').prop('files');
+                        $('#archivo_xml_hidden').prop('files',archivo);
                         $('#uuid').val(data.uuid);
                         $('#version_sat').val(data.version);
                     },
@@ -183,7 +198,8 @@ $(document).ready(function () {
                 //Para mostrar el pdf
                 var pdf = $('#archivo_pdf_input').prop('files')[0];
                 getBase64(pdf);
-                $('#archivo_pdf_hidden').prop('files',$('#archivo_pdf_input').prop('files'));
+                var archivo = $('#archivo_pdf_input').prop('files');
+                $('#archivo_pdf_hidden').prop('files',archivo);
             }
         }else{
             $.toaster({
@@ -207,30 +223,16 @@ $(document).ready(function () {
         if(!$('#form-model').valid()){
             e.preventDefault();
         }
-    })
 
-    //Si existe la tabla de órdenes
-    // if($('#ordenes').length){
-    //     if($('#ordenes_detalle tr').length < 1){
-    //         var cantidad_cabecera = $('#ordenes_cabecera th').length;
-    //         $('#ordenes_detalle').append(
-    //             '<tr>' +
-    //             '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin órdenes relacionadas</td>' +
-    //             '</tr>'
-    //         );
-    //     }
-    // }
+        if($('#productos_facturados tr').length < 1){
+            e.preventDefault();
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Por favor carga la tabla de facturas',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }
+    });
 
-    // if($('#pagos').length){
-    //     if($('#detalle_pagos tr').length < 1){
-    //         var cantidad_cabecera = $('#encabezado_pagos th').length;
-    //         $('#detalle_pagos').append(
-    //             '<tr>' +
-    //             '<td colspan="'+cantidad_cabecera+'" style="text-align: center">Sin pagos relacionados</td>' +
-    //             '</tr>'
-    //         );
-    //     }
-    // }
     $(".nav-link").click(function (e) {
         e.preventDefault();
         $('#clothing-nav li').each(function () {
@@ -270,18 +272,29 @@ $(document).ready(function () {
         e.preventDefault();
         $('#eliminar_pago_button').removeAttr('data-id');
     });
+
+
 });
 
 function getBase64(file) {
     var reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
-         $('#pdf').prop('data',reader.result);
-         $('#loadingpdf').hide();
-        $.toaster({
-            priority: 'success', title: '¡Éxito!', message: 'Se ha importado el PDF correctamente',
-            settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
-        });
+        if(reader.result != "data:"){
+            $('#pdf').prop('data',reader.result);
+            $('#loadingpdf').hide();
+            $.toaster({
+                priority: 'success', title: '¡Éxito!', message: 'Se ha importado el PDF correctamente',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }else{
+            $.toaster({
+                priority: 'info', title: '¡Advertencia!', message: 'El PDF no contiene información',
+                settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+            $('#loadingpdf').hide();
+        }
+
     };
     reader.onerror = function (error) {
         console.log('Error: ', error);

@@ -70,26 +70,28 @@ class ValesController extends ControllerBase
         $json_receta = [];
         $json_detalle = [];
 
-        $receta = Recetas::where('id_receta',$request->fk_id_receta)->first();
-
-        if($receta->fk_id_parentesco == 1) {
-            $titular = $receta->afiliacion->FullName;
-            $paciente = $receta->afiliacion->FullName;
-            $edad = self::edad($receta->afiliacion->fecha_nacimiento);
-            $genero = $receta->afiliacion->genero;
-        }
-        else
+        $receta = Recetas::find($request->fk_id_receta);
+        
+        if(!empty($receta))
         {
-            $titular = $receta->afiliacion->FullName;
-            $paciente = Afiliaciones::where('id_afiliacion',$receta->fk_id_afiliacion)
-                ->where('id_dependiente',$receta->fk_id_dependiente)
-                ->first()->FullName;
-            $edad = self::edad(Afiliaciones::where('id_afiliacion',$receta->fk_id_afiliacion)
-                ->where('id_dependiente',$receta->fk_id_dependiente)
-                ->first()->fecha_nacimiento);
-            $genero = $receta->afiliacion->genero;
+            if($receta->fk_id_parentesco == 1) {
+                $titular = $receta->afiliacion->FullName;
+                $paciente = $receta->afiliacion->FullName;
+                $edad = self::edad($receta->afiliacion->fecha_nacimiento);
+                $genero = $receta->afiliacion->genero;
+            }
+            else
+            {
+                $titular = $receta->afiliacion->FullName;
+                $paciente = Afiliaciones::where('id_afiliacion',$receta->fk_id_afiliacion)
+                    ->where('id_dependiente',$receta->fk_id_dependiente)
+                    ->first()->FullName;
+                $edad = self::edad(Afiliaciones::where('id_afiliacion',$receta->fk_id_afiliacion)
+                    ->where('id_dependiente',$receta->fk_id_dependiente)
+                    ->first()->fecha_nacimiento);
+                $genero = $receta->afiliacion->genero;
+            }
         }
-
 
 
         $json_receta = [

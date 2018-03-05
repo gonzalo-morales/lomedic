@@ -7,7 +7,7 @@
         	<div class="card col-md-8 col-lg-6 row mt-3">
         		<div class="card-header row">
         			<h5 class="col-md-12 text-center">
-        				@lang('messages.change_password')
+        				{{ cTrans('messages.change_password','Restablecer contraseña') }}
         				<span title="Por cuestiones de seguridad debe realizar el cambio de contrase&ntilde;a periodicamente." data-toggle="tooltip" data-placement="bottom">
                     		<i class="text-primary material-icons">help_outline</i>
                     	</span>
@@ -16,13 +16,13 @@
             	</div>
             	<div class="card-body row">
             		<div class="col-md-12">
-            			{{Form::cPassword('* '.trans('forms.cpassword'),'actual')}}
+            			{{Form::cPassword('* '.cTrans('forms.cpassword','Contraseña actual'),'actual')}}
         			</div>
         			<div class="col-md-12 col-lg-6">
-        				{{Form::cPassword('* '.trans('forms.npassword'),'password')}}
+        				{{Form::cPassword('* '.cTrans('forms.npassword','Nueva contraseña'),'password')}}
         			</div>
         			<div class="col-md-12 col-lg-6">
-        				{{Form::cPassword('* '.trans('forms.opassword'),'confirmar')}}
+        				{{Form::cPassword('* '.cTrans('forms.opassword','Confirmar contraseña'),'confirmar')}}
         			</div>
                 	<div class="mt-4 text-center col-sm-12 alert alert-warning">
                 		Si no realiza el cambio de la contrase&ntilde;a, no podra acceder a ningun modulo.
@@ -30,7 +30,7 @@
             	</div>
             	<div class="card-footer row">
         			<div class="form-group text-center col-sm-12">
-        				{{ Form::button(trans('forms.change'), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+        				{{ Form::button(cTrans('forms.change','Cambiar'), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
         			</div>
             	</div>
         	</div>

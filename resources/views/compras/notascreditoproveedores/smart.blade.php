@@ -3,11 +3,10 @@
 
 @section('header-bottom')
 	@parent
-	@index
+	@inroute(['show','edit','create'])
 		<script type="text/javascript">
 			var facturas_js = '{{$js_facturas ?? ''}}';
-			var relacionadas_js = '{{$js_relacionadas ?? ''}}';
-			var tiporelacion_js = '{{$js_tiporelacion ?? ''}}';
+			var relacionadas_js = '{{$js_relacionadas ?? ''}}'
 		</script>
 		{{HTML::script(asset('js/notas_credito_proveedores.js'))}}
 	@endif
@@ -19,7 +18,7 @@
     @inroute(['show','edit'])
     	<div class="row">
     		<div class="col-md-12 text-center text-success">
-    			<h3>Factura No. {{$data->id_factura_proveedor}}</h3>
+    			<h3>Nota No. {{$data->id_documento}}</h3>
     		</div>
     	</div>
     @endif
@@ -49,8 +48,7 @@
     		<div class="row">
     			<div class="form-group col-md-6 col-sm-12">
     				{{Form::cSelectWithDisabled('Proveedor','fk_id_socio_negocio',$proveedores ?? [],
-    				[!Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : '',
-    				'data-url'=>companyAction('HomeController@index').'/compras.facturasproveedores/api'])}}
+    				['data-url'=>companyAction('HomeController@index').'/compras.facturasproveedores/api'])}}
     			</div>
     			<div class="form-group col-md-6 col-sm-12">
     				{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}
@@ -63,7 +61,7 @@
     						{{Form::Text('folio_factura',null,['disabled','class'=>'form-control'])}}
     					</div>
     				</div>
-    				<div class="form-group col-md-2 col-sm-4">
+    				<div class="form-group col-md-3 col-sm-4">
     					{{Form::cText('Fecha Factura','fecha_factura',['disabled'])}}
     				</div>
     				<div class="form-group col-md-2 col-sm-2">
@@ -73,13 +71,13 @@
     					{{Form::label('fk_id_estatus_nota','Estatus Nota')}}
     					{{Form::Text('fk_id_estatus_nota',isset($data->estatus->estatus) ? $data->estatus->estatus : '',['disabled','class'=>'form-control'])}}
     				</div>
-    				<div class="form-group col-md-2 col-sm-6">
+    				<div class="form-group col-md-3 col-sm-6">
     					{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
     					{{Form::hidden('fk_id_moneda')}}
     					{{Form::label('moneda','Moneda')}}
     					{{Form::Text('moneda','('.$data->moneda->moneda.') '.$data->moneda->descripcion,['disabled','class'=>'form-control'])}}
     				</div>
-    				<div class="form-group col-md-2 col-sm-6">
+    				<div class="form-group col-md-3 col-sm-6">
     					{{Form::label('fk_id_forma_pago','Forma Pago')}}
     					{{Form::Text('fk_id_forma_pago',!empty($data->fk_id_forma_pago) ?'('.$data->forma_pago->forma_pago.') '.$data->forma_pago->descripcion : '',['disabled','class'=>'form-control'])}}
     				</div>
@@ -88,9 +86,6 @@
     				</div>
     				<div class="form-group col-md-3 col-sm-6">
     					{{Form::cText('IVA','iva',['disabled'])}}
-    				</div>
-    				<div class="form-group col-md-3 col-sm-6">
-    					{{Form::cText('Total pagado','total_pagado',['disabled'])}}
     				</div>
     				<div class="form-group col-md-3 col-sm-6">
     					{{Form::cText('Total','total',['disabled'])}}
@@ -104,13 +99,13 @@
     			@crear
     				<div class="form-goup col-md-6 text-center">
     					{{Form::cFile('XML','archivo_xml_input',['data-url'=>companyAction('parseXML'),'accept'=>'.xml'])}}
-    					<input id="archivo_xml_hidden" class="custom-file-input" style="display:none" name="archivo_xml_hidden" type="file">
+    					<input id="archivo_xml_hidden" style="display:none" name="archivo_xml_hidden" type="file">
     					{{Form::hidden('uuid','',['id'=>'uuid'])}}
     					{{Form::hidden('version_sat','',['id'=>'version_sat'])}}
     				</div>
     				<div class="form-goup col-md-6 text-center">
     					{{Form::cFile('PDF','archivo_pdf_input',['accept'=>'.pdf'])}}
-    					<input id="archivo_pdf_hidden" class="custom-file-input" style="display:none" name="archivo_pdf_hidden" type="file">
+    					<input id="archivo_pdf_hidden" style="display:none" name="archivo_pdf_hidden" type="file">
     				</div>
     				<div class="form-group col-sm-12 text-center mt-3">
     					<div class="sep">
@@ -132,13 +127,13 @@
     	<div class="col-md-4 col-sm-12 card">
     		<div class="row">
     			<div class="col-md-12 col-sm-12">
-    				<h2 class="text-success text-center">Relaciones Facturas</h2>
+    				<h2 class="text-success text-center">Relaciones Notas</h2>
     			</div>
     			<div class="col-md-5 col-sm-10">
     				{{Form::cSelect('Tipo Relacion','fk_id_tipo_relacion',$relaciones ?? [],[empty($data->version_sat) || $data->version_sat == '3.3' ? 'disabled' : '','data-url'=>companyAction('HomeController@index').'/administracion.tiposrelacionescfdi/api'])}}
     			</div>
     			<div class="col-md-5 col-sm-10">
-    				{{Form::cSelect('Factura','fk_id_factura_proveedor',$facturas ?? [],[empty($data->version_sat) || $data->version_sat == '3.3' ? 'disabled' : '','class'=>'select2'])}}
+    				{{Form::cSelect('Factura','fk_id_factura_proveedor',$facturas ?? [],[empty($data->version_sat) || $data->version_sat == '3.3' ? 'disabled' : '','class'=>'select2','data-url'=>ApiAction('compras.facturasproveedores')])}}
     			</div>
     			<div class="col-md-2 col-sm-2">
     				<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large tooltipped"
@@ -158,18 +153,17 @@
     					</tr>
     					</thead>
     					<tbody id="relaciones">
-    					@inroute(['create','index'])
-    						@if(!empty($data->cfdirelacionado))
-    							@foreach($data->cfdirelacionado->where('eliminar',false) as $index => $cfdirelacionado)
-    								{{--{{dd($cfdirelacionado)}}--}}
+    					@inroute(['show','edit'])
+    						@if(!empty($data->relaciones))
+    							@foreach($data->relaciones as $index => $relacion)
     								<tr>
     									<td>
     										{{Form::hidden('index',$index)}}
-    										{{Form::hidden('relations[has][cfdirelacionado]['.$index.'][id_relacion_cfdi_proveedores]',$cfdirelacionado->id_relacion_cfdi_proveedores)}}
-    										{{$cfdirelacionado->fk_id_documento}}
+    										{{Form::hidden('relations[has][relaciones]['.$index.'][id_relacion_cfdi_proveedores]',$relacion->id_relacion_cfdi_proveedores)}}
+    										{{$relacion->fk_id_documento_relacionado}}
     									</td>
-    									<td>{{$cfdirelacionado->factura->serie_factura.$cfdirelacionado->factura->folio_factura}}</td>
-    									<td>{{'('.$cfdirelacionado->tiporelacion->tipo_relacion.') '.$cfdirelacionado->tiporelacion->descripcion}}</td>
+										<td>{{$relacion->factura->serie_factura.$relacion->factura->folio_factura}}</td>
+    									<td>{{'('.$relacion->tiporelacion->tipo_relacion.') '.$relacion->tiporelacion->descripcion}}</td>
     									<td>
     										@if($data->version == "3.2")
     											<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>
@@ -188,7 +182,7 @@
     <div id="detallefactura" class="container-fluid w-100 mt-2 px-0">
     	<div class="card text-center z-depth-1-half" style="min-height: 555px">
     		<div class="card-header py-2">
-    			<h4 class="card-title">Detalle de la factura</h4>
+    			<h4 class="card-title">Detalle de la nota</h4>
     			<div class="divider my-2"></div>
     			<ul id="clothing-nav" class="nav nav-pills nav-justified" role="tablist">
     				<li class="nav-item">
@@ -221,7 +215,6 @@
     										<th>Descuento</th>
     										<th>Impuesto</th>
     										<th>Importe</th>
-    										<th>Orden de Compra</th>
     									</tr>
     								@elseif($data->version_sat == "3.2")
     									<tr>

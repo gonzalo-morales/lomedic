@@ -108,7 +108,7 @@ class ProyectosController extends ControllerBase
         
         $return = parent::store($request, $company, true);
         
-        
+        /*
         if(!empty($return['entity']))
         {
             $email = 'juan.franco@lomedic.com';
@@ -122,7 +122,7 @@ class ProyectosController extends ControllerBase
             
             $return['entity']->sendNotification($email,$options);
         }
-        
+        */
         
         return $return['redirect'];
     }

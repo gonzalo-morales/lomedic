@@ -9,7 +9,9 @@
 	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if(!Route::currentRouteNamed(currentRouteName('index')))
     <script type="text/javascript">
-        var proveedores_js = '{{$js_proveedores ?? ''}}';
+		var proveedores_js = '{{$js_proveedores ?? ''}}';
+		var sucursales_js = '{{$js_sucursales ?? ''}}';
+		var usuarios_js = '{{$js_usuarios ?? ''}}';
     </script>
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
 	@endif
@@ -20,14 +22,21 @@
 	<div class="row">
 		<div class="form-group col-md-4 col-sm-6">
 			{{ Form::label('fk_id_solicitante', '* Solicitante') }}
-			{!! Form::select('fk_id_solicitante',isset($empleados)?$empleados:[],null,['id'=>'fk_id_solicitante','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado'),'class'=>'form-control','style'=>'width:100%']) !!}
+			{!! Form::select('fk_id_solicitante',isset($usuarios)?$usuarios:[],null,['id'=>'fk_id_solicitante','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado'),'class'=>'form-control','style'=>'width:100%']) !!}
 			{{ $errors->has('fk_id_solicitante') ? HTML::tag('span', $errors->first('fk_id_solicitante'), ['class'=>'help-block deep-orange-text']) : '' }}
-			{{Form::hidden('_id_solicitante',null,['id'=>'_id_solicitante','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])])}}
+			{{ Form::hidden('_id_solicitante',null,['id'=>'_id_solicitante','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])]) }}
 		</div>
 		<div class="form-group input-field col-md-4 col-sm-6">
+			<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+				Cargando datos... <i class="material-icons align-middle loading">cached</i>
+			</div>
 			{{--Se utilizan estas comprobaciones debido a que este campo se carga dinámicamente con base en el solicitante seleccionado y no se muestra el que está por defecto sin esto--}}
-			{{Form::cSelect('*Sucursal','fk_id_sucursal',$sucursalesempleado ?? [])}}
-			{!! Form::hidden('sucursal_defecto',null,['id'=>'sucursal_defecto']) !!}
+			{{Form::cSelect('*Sucursal','fk_id_sucursal',$sucursalesempleado ?? [],[
+                'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',
+                'style' => 'width:100%;',
+                'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+			])}}
+			{{ Form::hidden('fk_id_departamento',0, ['id'=>'fk_id_departamento','data-url'=> companyAction('HomeController@index').'/administracion.usuarios/api']) }}
 		</div>
 		<div class="form-group input-field col-md-2 col-sm-6">
 			{{ Form::label('fecha_necesidad', '* ¿Para cuándo se necesita?') }}

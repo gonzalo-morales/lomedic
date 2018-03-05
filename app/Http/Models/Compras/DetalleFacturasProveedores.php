@@ -28,7 +28,7 @@ class DetalleFacturasProveedores extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_detalle_factura_proveedor';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.
@@ -44,10 +44,11 @@ class DetalleFacturasProveedores extends ModelCompany
         'fk_id_impuesto',
         'descuento',
         'fk_id_documento',
-        'fk_id_detalle_orden_compra',
         'fk_id_nota_credito',
-        'fk_id_factura_proveedor',
-        'unidad'
+        'fk_id_documento',
+        'unidad',
+        'fk_id_documento_base',
+        'fk_id_linea'
     ];
 
     public $niceNames =[
@@ -56,7 +57,7 @@ class DetalleFacturasProveedores extends ModelCompany
         'fk_id_clave_producto_servicio'=>'clave producto o servicio',
         'cantidad'=>'cantidad',
         'fk_id_impuesto'=>'impuesto',
-        'fk_id_documento'=>'orden de compra',
+        'fk_id_documento_base'=>'orden de compra',
         'fk_id_nota_credito'=>'nota crédito',
     ];
 
@@ -156,10 +157,10 @@ class DetalleFacturasProveedores extends ModelCompany
 
     public function orden()
     {
-        return $this->hasOne(Ordenes::class,'id_documento','fk_id_orden_compra');
+        return $this->belongsTo(Ordenes::class,'fk_id_documento_base','id_documento');
     }
     public function facturaProveedor()
     {
-        return $this->belongsTo(FacturasProveedores::class,'fk_id_factura_proveedor','id_factura_proveedor');
+        return $this->belongsTo(FacturasProveedores::class,'fk_id_documento','id_documento');
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', currentEntityBaseName().' '.trans('titles.create'))
+@section('title', currentEntityBaseName().' '.cTrans('titles.create','Nuevo'))
 
 @section('form-header')
 	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col-md-12 col-xs-12', 'enctype' => 'multipart/form-data']) !!}
@@ -17,15 +17,15 @@
 	<div class="col-12">
 		<div class="text-right">
 			@yield('left-actions')
-			{{ Form::button(trans('forms.save'), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
-			{{ link_to(companyRoute('index'), trans('forms.close'), ['class'=>'btn btn-default progress-button']) }}
+			{{ Form::button(cTrans('forms.save','Guardar'), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
+			{{ link_to(companyRoute('index'), cTrans('forms.close','Cerrar'), ['class'=>'btn btn-default progress-button']) }}
 			@yield('right-actions')
 		</div>
 	</div>
 @endsection
 
 @section('form-title')
-	{{ HTML::tag('h1',trans('titles.create').' '.str_singular(currentEntityBaseName()),['class' => 'display-4']) }}
+	{{ HTML::tag('h1',cTrans('titles.create','Nuevo').' '.str_singular(currentEntityBaseName()),['class' => 'display-4']) }}
 @endsection
 
 @section('content')

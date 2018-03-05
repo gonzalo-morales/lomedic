@@ -21,7 +21,7 @@ class DetalleNotasCreditoProveedor extends ModelCompany
      * The primary key of the table
      * @var string
      */
-    protected $primaryKey = 'id_detalle_nota_credito_proveedor';
+    protected $primaryKey = 'id_documento_detalle';
 
     /**
      * The attributes that are mass assignable.
@@ -58,6 +58,6 @@ class DetalleNotasCreditoProveedor extends ModelCompany
 
     public function notacredito()
     {
-        return $this->belongsTo(NotasCreditoProveedor::class,'id_nota_credito_proveedor','fk_id_nota_credito_proveedor');
+        return $this->belongsTo(NotasCreditoProveedor::class,'id_documento','fk_id_documento');
     }
 }

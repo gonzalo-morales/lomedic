@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Events\LogModulos;
 
 class AutorizacionesController extends ControllerBase
 {
@@ -51,5 +52,9 @@ class AutorizacionesController extends ControllerBase
             ]);
         }
     }
+    
+    public function destroy(Request $request, $company, $idOrIds, $attributes = ['fk_id_estatus'=>5])
+    {
+        return parent::destroy($request, $company, $idOrIds, $attributes);
+    }
 }
-

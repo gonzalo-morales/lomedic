@@ -11,7 +11,7 @@ class SeriesSkus extends ModelCompany
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_series_sku';
+	protected $table = 'gen_cat_series_sku';
 
 	/**
 	 * The primary key of the table

@@ -43,11 +43,6 @@ class OrdenesController extends ControllerBase
 			return parent::index($company,$attributes);
 	}
 
-	// public function getDataView($entity = null)
-    // {
-	// 	return [];
-	// }
-
 	public function create($company, $attributes =[])
 	{
         switch (\request('tipo_documento')){
@@ -180,7 +175,7 @@ class OrdenesController extends ControllerBase
 
 	public function show($company,$id,$attributes = [])
 	{
-	    $proveedores = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio');
+	    $proveedores = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra','3')->pluck('nombre_comercial','id_socio_negocio');
 		$estatus = Ordenes::where('id_documento',$id)->pluck('fk_id_estatus_autorizacion','id_documento')->first();
 		if ($estatus == 1 || $estatus == 3) {
 			$estatus = 1;
@@ -453,7 +448,20 @@ class OrdenesController extends ControllerBase
 	    $id_empresa = \request()->fk_id_empresa > 0 ? \request()->fk_id_empresa : Empresas::where('conexion',$company)->first()->id_empresa;
 	    $proveedores = SociosNegocio::where('activo',1)->whereHas('empresas',function ($q) use ($id_empresa){
             $q->where('id_empresa',$id_empresa);
-        })->whereNotNull('fk_id_tipo_socio_compra')->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
+        })->where('fk_id_tipo_socio_compra',3)->select('id_socio_negocio as id','nombre_comercial as text','tiempo_entrega')->get();
 	    return Response::json($proveedores);
+    }
+
+    public function getDetallesOrden()
+    {
+        $result = DetalleOrdenes::join('inv_cat_skus','com_det_ordenes.fk_id_sku','=','inv_cat_skus.id_sku')
+            ->leftJoin('maestro.inv_cat_upcs',function($join){
+                $join->on('com_det_ordenes.fk_id_upc','=','maestro.inv_cat_upcs.id_upc');
+            })
+            ->where('fk_id_documento','=',$_POST['id_orden'])
+            ->select(db::raw("concat(inv_cat_skus.sku, ' - ' ,maestro.inv_cat_upcs.upc) as value"),'com_det_ordenes.id_documento_detalle as id')
+            ->get();
+
+        return $result;
     }
 }
