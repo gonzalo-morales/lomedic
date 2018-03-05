@@ -95,7 +95,7 @@ class ControllerBase extends Controller
         $this->entity->setConnection( $company );$validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 //dd($validator);
         return view(currentRouteName('smart'), ($attributes['dataview'] ?? []) + [
-            'data' => $data,
+            'data' => isset($attributes['data']) ? $attributes['data'] : $data,
             'validator' => $validator
         ] + $this->getDataView());
     }
@@ -236,6 +236,13 @@ class ControllerBase extends Controller
         //$this->authorize('update', $this->entity);
 
         $request->request->set('activo',!empty($request->request->get('activo')));
+
+        foreach($this->entity->rules as $col=>$rules)
+        {
+            if(!in_array($col,$request->request->all())){
+                unset($this->entity->rules[$col]);
+            }
+        }
 
         # Validamos request, si falla regresamos atras
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
