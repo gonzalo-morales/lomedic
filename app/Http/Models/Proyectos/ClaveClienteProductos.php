@@ -9,24 +9,11 @@ use App\Http\Models\Inventarios\Stock;
 
 class ClaveClienteProductos extends ModelCompany
 {
-	/**
-	 * The table associated with the model.
-	 *
-	 * @var string
-	 */
+
 	protected $table = 'pry_cat_clave_cliente_productos';
 
-	/**
-	 * The primary key of the table
-	 * @var string
-	 */
 	protected $primaryKey = 'id_clave_cliente_producto';
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
 	protected $fillable = ['fk_id_cliente', 'clave_producto_cliente','subclave','descripcion','presentacion',
         'cantidad_presentacion','fk_id_unidad_medida','fk_id_clave_producto_servicio','fk_id_clave_unidad',
         'marca','fabricante','precio','precio_referencia','descuento','descuento_porcentaje','fk_id_impuesto',
@@ -34,10 +21,6 @@ class ClaveClienteProductos extends ModelCompany
         'fk_id_tipo_almacen','pertenece_cuadro','minimo','maximo','fk_id_sku','activo','tope_receta','disponibilidad',
         'fk_id_upc'];
 
-	/**
-	 * The validation rules
-	 * @var array
-	 */
 	public $rules = [
         'cantidad_presentacion' => 'required|numeric',
         'precio' => ['required','numeric','regex:/^([1-9][0-9]{1,10})(\.[0-9]{2})?$/'],
@@ -51,10 +34,6 @@ class ClaveClienteProductos extends ModelCompany
         'tope_receta' => ['required','numeric','min:1'],
     ];
 
-	/**
-	 * Los atributos que seran visibles en index-datable
-	 * @var null|array
-	 */
 	protected $fields = [
 	    'cliente.nombre_comercial' => 'Cliente',
 	    'clave_producto_cliente' => 'Clave Cliente',
@@ -65,8 +44,7 @@ class ClaveClienteProductos extends ModelCompany
 	    'fabricante' => 'Fabricante',
 	];
 
-	public $niceNames = [
-    ];
+	public $niceNames = [];
 
 	function sku()
     {
@@ -85,5 +63,10 @@ class ClaveClienteProductos extends ModelCompany
     public function proyectos()
     {
         return $this->belongsToMany(Proyectos::class,'pry_cat_proyectos_productos','fk_id_clave_cliente_producto','fk_id_proyecto','id_clave_cliente_producto','id_proyecto');
+    }
+
+    public function producto()
+    {
+        return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
     }
 }

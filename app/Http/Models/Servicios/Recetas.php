@@ -33,20 +33,61 @@ class Recetas extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['folio','fk_id_sucursal', 'fecha','fk_id_afiliacion','fk_id_dependiente','fk_id_medico','fk_id_diagnostico',
-        'fk_id_programa','fk_id_estatus_receta','fk_id_area','nombre_paciente_no_afiliado','observaciones',
-        'fecha_modificacion','peso','altura','presion_sistolica','presion_diastolica','fk_id_proyecto','fk_id_parentesco'];
+    protected $fillable = [
+        'folio',
+        'fk_id_sucursal',
+        'fecha',
+        'fk_id_afiliacion',
+        'fk_id_dependiente',
+        'fk_id_medico',
+        'fk_id_diagnostico',
+        'fk_id_programa',
+        'fk_id_estatus_receta',
+        'fk_id_area',
+        'nombre_paciente_no_afiliado',
+        'observaciones',
+        'fecha_modificacion',
+        'peso',
+        'altura',
+        'presion_sistolica',
+        'presion_diastolica',
+        'fk_id_proyecto',
+        'fk_id_parentesco',
+        'fk_id_afiliado',
+    ];
 
     /**
      * Los atributos que seran visibles en index-datable
      * @var array
      */
+
+    public $niceNames =[
+        'fk_id_cliente'=>'cliente',
+        'fecha_contrato' =>'fecha de contrato',
+        'fecha_inicio_contrato' => 'fecha de inicio de contrato',
+        'fecha_fin_contrato' => 'fecha de fin de contrato',
+        'numero_contrato' => 'número de contrato',
+        'numero_proyecto' => 'número de proyecto',
+        'monto_adjudicado' => 'monto adjudicado',
+        'fk_id_clasificacion_proyecto' => 'clasificación proyecto',
+        'representante_legal' => 'representante legal',
+        'numero_fianza' => 'número de fianza',
+        'num_evento' => 'número de evento',
+        'fk_id_tipo_evento' => 'tipo evento',
+        'fk_id_dependencia' => 'dependencia',
+        'fk_id_subdependencia' => 'subdependencia',
+        'fk_id_sucursal' => 'sucursal',
+        'fk_id_caracter_evento' => 'caracter evento',
+        'fk_id_forma_adjudicacion' => 'forma_adjudicacion',
+        'fk_id_modalidad_entrega' => 'modalidad_entrega'
+    ];
+
     protected $fields = [
         'id_receta'=>'#',
         'folio' => 'Folio',
         'unidad_medica'=>'Unidad medica',
         'tipo_servicio' => 'Tipo de servicio',
-        'fk_id_afiliacion' => 'N. de afiliacion',
+        'numero_afiliado' => 'N. de afiliacion',
         'nombre_completo_paciente' => 'Paciente',
         'fecha_formated' => 'Fecha Captura',
         'estatus_formated' => 'Estatus de la receta'
@@ -59,20 +100,26 @@ class Recetas extends ModelCompany
 
     public function getNombreCompletoPacienteAttribute()
     {
-        if($this->fk_id_afiliacion != '' && $this->fk_id_afiliacion != null){
+        if($this->fk_id_afiliado != '' && $this->fk_id_afiliado != null){
             return $this->afiliacion->paterno.' '.$this->afiliacion->materno.' '.$this->afiliacion->nombre;
         }else{
             return $this->nombre_paciente_no_afiliado;
         }
     }
 
+    public function getNumeroAfiliadoAttribute()
+    {
+        return $this->afiliacion['id_afiliacion'];
+    }
+
     public function getTipoServicioAttribute(){
-        if($this->fk_id_afiliacion != '' || $this->fk_id_afiliacion != null){
+        if($this->fk_id_afiliado != '' || $this->fk_id_afiliado != null){
             return 'Afiliado';
         }else{
             return 'Externo';
         }
     }
+
 
     public function getUnidadMedicaAttribute(){
         return $this->sucursal->sucursal;
@@ -89,7 +136,7 @@ class Recetas extends ModelCompany
 
     public function afiliacion()
     {
-        return $this->belongsTo(Afiliaciones::class,'fk_id_afiliacion','id_afiliacion');
+        return $this->belongsTo(Afiliaciones::class,'fk_id_afiliado','id_afiliado');
     }
 
     public function diagnostico()

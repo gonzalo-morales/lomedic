@@ -26,13 +26,14 @@ class RecetasController extends ControllerBase
 
     public function getDataView($entity = null)
     {
+//        dd($entity);
         return [
             'localidades' => Sucursales::select('sucursal', 'id_sucursal')->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
             'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
             'programas' => Programas::select('nombre_programa', 'id_programa')->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'areas' => Areas::select('area', 'id_area')->pluck('area', 'id_area')->prepend('...', ''),
             'tipo_servicio' => [0 => 'afiliado', 1 => 'externo'],
-            'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliacion")->where('id_afiliacion', $entity->fk_id_afiliacion)->pluck('nombre_afiliado', 'id_afiliacion'),
+            'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliado")->where('id_afiliado', $entity->fk_id_afiliado)->pluck('nombre_afiliado', 'id_afiliado'),
             'diagnosticos' => empty($entity) ? [] : Diagnosticos::select('diagnostico', 'id_diagnostico')->where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo',1)->pluck('diagnostico', 'id_diagnostico'),
             'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto', 'id_proyecto')->where('id_proyecto', $entity->fk_id_proyecto)->where('fk_id_estatus',1)->pluck('proyecto', 'id_proyecto'),
         ];
@@ -41,7 +42,7 @@ class RecetasController extends ControllerBase
     public function getAfiliados($company, Request $request)
     {
         $term = $request->membership;
-        return Afiliaciones::selectRaw("id_dependiente as id, CONCAT(id_afiliacion,' - ',paterno,' ',materno,' ',nombre) as text, id_afiliacion as afiliacion")
+        return Afiliaciones::selectRaw("id_afiliado as id, CONCAT(id_afiliacion,' - ',paterno,' ',materno,' ',nombre) as text, id_afiliacion as afiliacion")
             ->where('id_afiliacion', 'ILIKE',"%$term%")->orWhereRaw("CONCAT(paterno,' ',materno, ' ',nombre) ILIKE '%$term%'")->get()->toJson();
     }
 

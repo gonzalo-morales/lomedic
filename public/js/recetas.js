@@ -1,55 +1,10 @@
 
 $(document).ready(function () {
 
+    medicamento();
+    afiliafos();
 
-    //Deshabilitar siempre al iniciar
-    $('#surtido_numero').prop('disabled',true);
-    $('#tiempo').prop('disabled',true);
-    $(':submit').attr('id','guardar');
-    $(':submit').attr('type','button');
-
-    $('.altura').keypress(function(e) {
-        var valid = /^([0-9]{0,1})?(\.)?([0-9]{0,2})$/gm.test(this.value + e.key);
-        if(!valid){
-            if(e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 127 || (e.keyCode > 36 && e.keyCode < 41)){
-                return true;
-            }
-            return false;
-        }
-    }).on("cut copy paste", function(e) {
-        e.preventDefault();
-    });
-
-    $('.peso').keypress(function(e) {
-        var valid = /^([0-9]{0,3})?(\.)?([0-9]{0,2})$/gm.test(this.value + e.key);
-        if(!valid){
-            if(e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 127 || (e.keyCode > 36 && e.keyCode < 41)){
-                return true;
-            }
-            return false;
-        }
-    }).on("cut copy paste", function(e) {
-        e.preventDefault();
-    });
-
-    $('.integer').keypress(function (e) {
-        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)){
-            e.preventDefault();
-            return false;
-        }else if(this.value.length>2 && e.which != 8 && e.which != 0){
-            e.preventDefault();
-            return false;
-        }
-    }).on("cut copy paste", function(e) {
-        e.preventDefault();
-    });
-
-    // $(".unidad").select2();
-    // $('.medico').select2();
-    // $('.programa').select2();
-    // $('.area').select2();
-
-    let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+    var token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
     $('#fk_id_sucursal').on('change', function() {
         $.ajax({
             type: "POST",
@@ -66,8 +21,7 @@ $(document).ready(function () {
         });
     });
 
-    initPaciente();
-    // let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+    var  token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
     $("#fk_id_diagnostico").select2({
         placeholder: 'Escriba el diagnóstico del paciente',
         ajax: {
@@ -100,206 +54,74 @@ $(document).ready(function () {
         escapeMarkup: function(markup) {
             return markup;
         }
-    });
-
-    medicamento();
-
-    $('input[name=tipo_servicio]').change(function () {
-        if(this.value == 'afiliado') {
-            //Esconder y borrar no afiliado
-            $('#nombre_paciente_no_afiliado').val('');
-            $('#nombre_paciente_no_afiliado').prop('style','display:none');
-            $('#fk_id_dependiente').prop('style','display:block');
-            initPaciente();
-        }else if(this.value == 'externo'){
-            //Para vaciar el Selec2
-            $('#fk_id_dependiente').select2('destroy');
-            $('#fk_id_dependiente').empty();
-            //Volverlo a crear
-            $('#fk_id_dependiente').select2();
-            //Esconderlo
-            $('#fk_id_dependiente').next(".select2-container").hide();
-            //Borrar el afiliado
-            $('#fk_id_dependiente').val('');
-            //Mostrar el no afiliado
-            $('#nombre_paciente_no_afiliado').prop('style','display:block');
-        }
-    });
-
-    // $('.dosis_checkbox').on('change',function(){
-    //     if(this.id == 'dosis14'){
-    //         $('#dosis12').prop('checked',false);
-    //         $('#dosis12').parent().removeClass('active');
-    //     }
-    //     if(this.id == 'dosis12'){
-    //         $('#dosis14').prop('checked',false);
-    //         $('#dosis14').parent().removeClass('active');
-    //     }
-    // });
-    //
-    // $('.checkbox_surtido').on('change',function () {
-    //     if($('.checkbox_surtido').prop('checked') == true){
-    //         $('#surtido_numero').prop('disabled',false);
-    //         $('#surtido_tiempo').prop('disabled',false);
-    //     }else if($('.checkbox_surtido').prop('checked') == false){
-    //         $('#surtido_numero').prop('disabled',true);
-    //         $('#surtido_numero').val('');
-    //         $('#surtido_tiempo').prop('disabled',true);
-    //     }
-    // });
 
 
-
-
-    $('#medicamento').on('change',function () {
-        var medicamento = $('#medicamento').select2('data');
-        $('#_dosis').val(medicamento[0].familia);
-        $('#labelmaximo').prop('style','display:block');
-        $('#labelmaximo').text('Máximo para recetar: '+medicamento[0].tope_receta);
 
     });
 
-    $('.unidad').on('change',function () {
-        $('.medicine_detail').empty();
-        $('.medicamento').select2('destroy');
-        $('.medicamento').empty();
-        medicamento();
-    });
-
-    //ValidaciÃ³n de medicamentos
-    $('#guardar').on('click',function (e) {
-
-        $('#medicamento_modal').text('');
-        var medicamento = [];
-        var medicamento_agotado = [];
-        $('#detalle tbody tr').each(function (index) {
-            var data = {};
-            var id = this.id;
-            data.clave_cliente = id;
-            data.dosis = $(escaparID('tbdosis'+id)).val();
-            data.en_caso_presentar = $(escaparID('tben_caso_presentar'+id)).val();
-
-            if($(escaparID('tbrecurrente'+id)).val()>0){
-                data.recurrente = $(escaparID('tbrecurrente'+id)).val()/24;//Se divide entre 24 para convertirlo a dÃ­as
-            }else{
-                data.recurrente = 0;
+    $('#cargar_receta').click(function () {
+        $.ajax({
+            method: "POST",
+            url: 'https://pensiones.jalisco.gob.mx/Farmacia/wsFarmacia.asmx/consulta_folio',
+            data: { Usr: "ABISALUD",Pwd:'TB-x23-G3',farmacia:'UNIMEF JAVIER MINA',folio:'205490',sufijo:'A'},
+            dataType: 'json',
+            success:function (data) {
+                console.info(data);
             }
-            data.cantidad_pedida = $(escaparID('tbcantidad_pedida'+id)).val();//Cantidad que se va a dar cada vez que se surta
-            data.localidad = $('.unidad').val();
-            medicamento.push(data);
-            // validaciÃ³n; si los medicamentos siguen disponibles, valid = true
-            $.ajax({
-                url: $('#detalle').data('url'),
-                type: 'POST',
-                data: data,
-                async: false,
-                success:function (response) {
-                    var arreglo = $.parseJSON(response);
-                    if(parseInt(arreglo['disponible'])<$(escaparID('tbcantidad_pedida'+id)).val()){//Si ya no estÃ¡ disponible, agregar al arreglo de medicamentos agotados
-                        medicamento_agotado.push(arreglo);
-                    }
-                }
-            });
         });
-
-        if(medicamento_agotado.length>0){
-            e.preventDefault();//Evita que se envÃ­e el formulario si se agotÃ³ un medicamento
-            for(var i = 0;i<medicamento_agotado.length;i++){
-                $('#medicamento_modal').append(medicamento_agotado[i].descripcion+'<br>');
-            }
-            $('#medicamento_modal').append('¿Aún así deseas agregarlos a la receta?');
-            $('#modal').modal('show');
-        }else{//Si no se agotÃ³ ningÃºn medicamento
-            var campos = '';
-            // if($('#fk_id_dependiente').select2('data').length ==0  && ($('#nombre_paciente_no_afiliado').val() == '' || $('#nombre_paciente_no_afiliado').val() == null)){
-            //     campos += '<br><br>Afiliacion/Dependiente: ¿Seleccionaste un paciente?';
-            // }
-
-            if($('#fk_id_diagnostico').length > 0)
-            {
-                if($('#fk_id_diagnostico').select2('data').length == 0 )
-                    campos += '<br><br>Necesito que muestres el <b>diagnostico</b> del paciente';
-                if(($('#presion1').val()>1 && !($('#presion2').val()>1)) || ($('#presion2').val()>1 && !($('#presion1').val()>1)))
-                    campos += '<br><br>Verifica los campos de <b>presión</b>';
-                if(campos!=''){
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    $.toaster({
-                        priority : 'danger',//'success' cuando es un mensaje de éxito
-                        title : 'Verifica los siguientes campos',//El título del Toaster
-                        message : campos,//String con el mensaje
-                        settings:{
-                            'timeout':10000,//Para que dure 10 segundos
-                            'toaster':{//Especificaciones de diseño
-                                'css':{
-                                    'top':'5em'//Para que se baje 5 em y funcione bien en el Stand alone
-                                }
-                            }
-                        }
-                    });
-                }else{
-                    $('form').submit();
-                }
-            }
-            else
-            {
-                $('form').submit();
-            }
-
-        }
-
     });
 
-    $('#aceptar').on('click',function () {//En caso de que un medicamento se agotara y aÃºn asÃ­ se desee surtir
-        var campos = '';
-        if($('#fk_id_dependiente').select2('data').length ==0  && ($('#nombre_paciente_no_afiliado').val() == '' || $('#nombre_paciente_no_afiliado').val() == null)){
-            campos += '<br><br>Afiliacion/Dependiente: ¿Seleccionaste un paciente?';
+    $('#tipo_servicio').on('change', function() {
+
+        if( $('#tipo_servicio').parent().find('span').html() == 'Externo')
+        {
+            $('#nombre_paciente_no_afiliado').prop('disabled',false);
+            $('#fk_id_afiliado').empty().append('<option value="0"> </option>').val('0').trigger('change');
+            $('#fk_id_afiliado').prop('disabled',true);
         }
-        if($('#fk_id_diagnostico').select2('data').length == 0)
-            campos += '<br><br>Necesito que muestres el <b>diagnóstico</b> del paciente';
-
-        var presion1 = 0;
-        if(!isNaN($('#presion1').val()) && $('#presion1').val() != '')
-            presion1 = parseInt($('#presion1').val());
-        var presion2 = 0;
-        if(!isNaN($('#presion2').val()) && $('#presion2').val() != '')
-            presion2 = parseInt($('#presion2').val());
-
-        if((presion1 > 0 && !(presion2 > 0)) || (presion2 > 0 && !(presion1 > 0)))
-            campos += '<br><br>Necesito que los capos de <b>presión</b> estén completos';
-        if(campos!=''){
-            $.toaster({
-                priority : 'danger',//'success' cuando es un mensaje de éxito
-                title : 'Verifica los siguientes campos',//El título del Toaster
-                message : campos,//String con el mensaje
-                settings:{
-                    'timeout':10000,//Para que dure 10 segundos
-                    'toaster':{//Especificaciones de diseño
-                        'css':{
-                            'top':'5em'//Para que se baje 5 em y funcione bien en el Stand alone
-                        }
-                    }
-                }
-            });
-            $('#modal').modal('hide');
-        }else{
-            $('form').submit();
+        else if( $('#tipo_servicio').parent().find('span').html() == 'Afiliado' )
+        {
+            $('#nombre_paciente_no_afiliado').prop('disabled',true);
+            $('#nombre_paciente_no_afiliado').val('');
+            $('#fk_id_afiliado').prop('disabled',false);
         }
     });
 
-    // $('#fk_id_dependiente').on('change',function () {
-    //     $('#fk_id_dependiente').val($('#fk_id_dependiente').select2('data')[0].afiliacion);
-    // });
 
-    $('#fk_id_dependiente').on('change',function () {
-        $('#fk_id_afiliacion').val($( '#fk_id_dependiente').select2('data')[0].afiliacion);
+    $("#form-model").submit(function(){
+
+        var fila = $('.medicine_detail tr').length;
+
+        if( fila <= 0 )
+        {
+            mensajeAlerta('Favor de ingresar por lo menos un medicamento.','danger');
+            return false;
+        }
+        else
+        {
+            // $('#form-model').prop("disabled", true);
+            $('#fk_id_afiliado').prop('disabled',false);
+            return true;
+        }
     });
 
-    if($('#surtir')){
-        $('.btn').prop('disabled',false);
-    }
-    $('#guardar.btn-danger').prop('disabled',true);
 });
+
+
+function resurtir()
+{
+    if($('#surtido_numero').prop('disabled') == true)
+    {
+        $('#surtido_numero').prop('disabled',false);
+        $('#surtido_tiempo').prop('disabled',false);
+    }
+    else if($('#surtido_numero').prop('disabled') == false)
+    {
+        $('#surtido_numero').prop('disabled',true);
+        $('#surtido_tiempo').prop('disabled',true);
+    }
+}
+
 
 
 function agregar_medicamento() {
@@ -322,21 +144,7 @@ function agregar_medicamento() {
 
     if (campos != '') {
 
-        mensaje('Verifica los siguientes campos', 'danger');
-
-        // $.toaster({
-        //     priority : 'danger',
-        //     title : 'Verifica los siguientes campos',
-        //     message : campos,
-        //     settings:{
-        //         'timeout':10000,
-        //         'toaster':{
-        //             'css':{
-        //                 'top':'5em'
-        //             }
-        //         }
-        //     }
-        // });
+        mensajeAlerta('Verifica los siguientes campos', 'danger');
         return
     }
     var filas = $('.medicine_detail tr').length;
@@ -363,38 +171,11 @@ function agregar_medicamento() {
                 cantidad_final++;
             }
             if (cantidad_final > medicamento[0].tope_receta) {
-                $.toaster({
-                    priority: 'danger',
-                    title: 'Medicamento',
-                    message: 'Asegúrate que la cantidad entregable no sea mayor al tope de entrega',
-                    settings: {
-                        'timeout': 10000,
-                        'toaster': {
-                            'css': {
-                                'top': '5em'
-                            }
-                        }
-                    }
-                });
+                mensajeAlerta('Asegúrate que la cantidad entregable no sea mayor al tope de entrega', 'danger');
                 return
             }
         } else {
-            $.toaster({
-                priority: 'danger',
-                css: {
-                    'top': '5em'
-                },
-                title: 'Medicamento',
-                message: 'Este medicamento no cuenta con la información necesaria. Te recomendamos seleccionar otro.',
-                settings: {
-                    'timeout': 10000,
-                    'toaster': {
-                        'css': {
-                            'top': '5em'
-                        }
-                    }
-                }
-            });
+            mensajeAlerta('Este medicamento no cuenta con la información necesaria. Te recomendamos seleccionar otro.', 'danger');
             return
         }
 
@@ -404,19 +185,7 @@ function agregar_medicamento() {
         recurrencia_text += 'Recoger ' + cantidad_final + '<b> caja(s)</b> cada <b>' + $('#surtido_numero').val() + ' ' + $('#surtido_tiempo option:selected').text() + '</b> durante ' + _duracion;
         recurrencia_hidden += $('#surtido_numero').val() * $('#surtido_tiempo option:selected').val();
         if (($('#surtido_tiempo option:selected').val() * $('#surtido_numero').val()) >= $('#_por option:selected').val() * $('#por').val() || !($('#surtido_numero').val() > 0)) {
-            $.toaster({
-                priority: 'danger',
-                title: 'Medicamento',
-                message: 'Verifica el tiempo de recurrencia y el de la duración del tratamiento',
-                settings: {
-                    'timeout': 10000,
-                    'toaster': {
-                        'css': {
-                            'top': '5em'
-                        }
-                    }
-                }
-            });
+            mensajeAlerta('Verifica el tiempo de recurrencia y el de la duración del tratamiento', 'danger');
             return
         }
         veces_surtir = parseInt($('#por').val()) * (parseInt($('#_por option:selected').val()) / 24);
@@ -429,41 +198,11 @@ function agregar_medicamento() {
                 cantidad_final++;
             }
             if (cantidad_final > medicamento[0].tope_receta) {
-                $.toaster({
-                    priority: 'danger',
-                    css: {
-                        'top': '5em'
-                    },
-                    title: 'Medicamento',
-                    message: 'Asegúrate que la cantidad entregable no sea mayor al tope de entrega',
-                    settings: {
-                        'timeout': 10000,
-                        'toaster': {
-                            'css': {
-                                'top': '5em'
-                            }
-                        }
-                    }
-                });
+                mensajeAlerta('Asegúrate que la cantidad entregable no sea mayor al tope de entrega', 'danger');
                 return
             }
         } else {
-            $.toaster({
-                priority: 'danger',
-                css: {
-                    'top': '5em'
-                },
-                title: 'Medicamento',
-                message: 'Este medicamento no cuenta con la informaciÃ³n necesaria. Te recomendamos seleccionar otro.',
-                settings: {
-                    'timeout': 10000,
-                    'toaster': {
-                        'css': {
-                            'top': '5em'
-                        }
-                    }
-                }
-            });
+            mensajeAlerta('Este medicamento no cuenta con la informaciÃ³n necesaria. Te recomendamos seleccionar otro.', 'danger');
             return
         }
     }
@@ -488,21 +227,7 @@ function agregar_medicamento() {
         $('#detalle tbody tr').each(function (index) {
             if (this.id == medicamento[0].id) {
                 agregar = false;
-                $.toaster({
-                    priority: 'danger',
-                    css: {
-                        'top': '3em'
-                    },
-                    title: '¡Error!',
-                    message: '<br>Medicamento agregado anteriormente',
-                    settings: {
-                        'toaster': {
-                            'css': {
-                                'top': '3em'
-                            }
-                        }
-                    }
-                });
+                mensajeAlerta('<br>Medicamento agregado anteriormente', 'danger');
             }
         })
     }
@@ -530,31 +255,19 @@ function agregar_medicamento() {
             '</tr>');
         $('#guardar').prop('disabled', filas = 0);
         limpiarCampos();
-        mensaje('Medicamento agregado exitosamente', 'success');
+        mensajeAlerta('Medicamento agregado exitosamente', 'success');
 
-        // $.toaster({
-        //     priority: 'success',
-        //     title: 'Éxito!',
-        //     message: '<br>Medicamento agregado exitosamente',
-        //     settings: {
-        //         'toaster': {
-        //             'css': {
-        //                 'top': '5em'
-        //             }
-        //         }
-        //     }
-        // });
     }
-    // });
 }
 
-function initPaciente() {
+function afiliafos() {
+
     let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-    $("#fk_id_dependiente").select2({
+    $("#fk_id_afiliado").select2({
         placeholder: 'Escriba el número de afiliación o el nombre del paciente',
         ajax: {
             type: 'POST',
-            url: $("#fk_id_dependiente").data('url'),
+            url: $("#fk_id_afiliado").data('url'),
             dataType: 'json',
             data:function(params) {
                 return {
@@ -597,12 +310,11 @@ function eliminarFila(el)
     $(el).parent().parent('tr').remove();
     $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 
-    // $(a).closest('tr').remove();
-    // if($('.medicine_detail tr').length <= 0)
-    // {
-    //     $('#guardar').prop('disabled',true);
-    // }
 }
+
+
+
+
 
 function medicamento() {
     let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
@@ -648,8 +360,8 @@ function limpiarCampos() {
     $('#por').val('');
     $('#surtido_numero').val('');
     $('#nota_medicamento').val('');
-    $('.medicamento').select2('destroy');
-    $('.medicamento').empty();
+    $('#medicamento').select2('destroy');
+    $('#medicamento').empty();
     medicamento();
     $('#dosis12').prop('checked',false);
     $('#dosis12').parent().removeClass('active');
@@ -662,32 +374,20 @@ function escaparID(myid){
 }
 
 
-function mensaje(mensaje,tipo)
-{
-    $.toaster({
-        priority : tipo,//'success' cuando es un mensaje de éxito
-        // title : '',//El título del Toaster
-        message : mensaje,//String con el mensaje
-        settings:{
-            'timeout':10000,//Para que dure 10 segundos
-            'toaster':{//Especificaciones de diseño
-                'css':{
-                    'top':'5em'//Para que se baje 5 em y funcione bien en el Stand alone
-                }
-            }
+function mensajeAlerta(mensaje,tipo){
+
+    var titulo = '';
+
+    if(tipo == 'danger'){ titulo = '¡Error!'}
+    else if(tipo == 'success'){titulo = '¡Correcto!' }
+    $.toaster({priority:tipo,
+            title: titulo,
+            message:mensaje,
+            settings:{'timeout':10000,
+                'toaster':{'css':{'top':'5em'}}}
         }
-    });
+    );
 }
 
 
-$('#cargar_receta').click(function () {
-    $.ajax({
-        method: "POST",
-        url: 'https://pensiones.jalisco.gob.mx/Farmacia/wsFarmacia.asmx/consulta_folio',
-        data: { Usr: "ABISALUD",Pwd:'TB-x23-G3',farmacia:'UNIMEF JAVIER MINA',folio:'205490',sufijo:'A'},
-        dataType: 'json',
-        success:function (data) {
-            console.info(data);
-        }
-    });
-});
+
