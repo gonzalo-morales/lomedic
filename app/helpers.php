@@ -5,6 +5,7 @@ use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\MetodosPago;
 use App\Http\Models\Administracion\RegimenesFiscales;
 use App\Http\Models\Administracion\TiposDocumentos;
+use App\Http\Models\Administracion\Empresas;
 
 /**
  * Obtenemos arreglo accion de ruta personalizada
@@ -120,6 +121,11 @@ function routeNameReplace($route = '')
 	return array_map(function($current, $expected) {
 		return $expected === '' ? $current : $expected;
 	}, $routeName, array_pad(explode('.', $route, $countRouteName), 0 - $countRouteName, '') );
+}
+
+function dataCompany()
+{
+    return Empresas::where('activo',1)->where('conexion', '=', request()->company)->first();
 }
 
 /**

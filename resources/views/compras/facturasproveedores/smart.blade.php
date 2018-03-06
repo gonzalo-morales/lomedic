@@ -76,7 +76,7 @@
     			Cargando datos... <i class="material-icons align-middle loading">cached</i>
     		</div>
     	{{Form::cText('Comprador','comprador',['disabled','data-url'=>companyAction('HomeController@index').'/recursoshumanos.empleados/api'],
-    		isset($data->proveedor->ejecutivocompra) ? $data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno : null)}}
+    		isset($data->proveedor) ? $data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno : null)}}
     	</div>
     	<div class="form-group col-md-3 col-sm-12">
     		{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}

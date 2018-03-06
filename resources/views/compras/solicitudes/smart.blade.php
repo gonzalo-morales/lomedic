@@ -1,17 +1,17 @@
 @extends(smart())
 @section('form-title', 'Solicitudes de Compra')
 
-@section('header-top')
+{{--  @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
-@endsection
+@endsection  --}}
 @section('header-bottom')
 	@parent
-	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if(!Route::currentRouteNamed(currentRouteName('index')))
     <script type="text/javascript">
 		var proveedores_js = '{{$js_proveedores ?? ''}}';
 		var sucursales_js = '{{$js_sucursales ?? ''}}';
 		var usuarios_js = '{{$js_usuarios ?? ''}}';
+		var porcentaje_js = '{{ $js_porcentaje ?? '' }}';
     </script>
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
 	@endif
@@ -21,22 +21,22 @@
 	{{ Form::setModel($data) }}
 	<div class="row">
 		<div class="form-group col-md-4 col-sm-6">
-			{{ Form::label('fk_id_solicitante', '* Solicitante') }}
-			{!! Form::select('fk_id_solicitante',isset($usuarios)?$usuarios:[],null,['id'=>'fk_id_solicitante','data-url'=>companyAction('RecursosHumanos\EmpleadosController@obtenerEmpleado'),'class'=>'form-control','style'=>'width:100%']) !!}
-			{{ $errors->has('fk_id_solicitante') ? HTML::tag('span', $errors->first('fk_id_solicitante'), ['class'=>'help-block deep-orange-text']) : '' }}
-			{{ Form::hidden('_id_solicitante',null,['id'=>'_id_solicitante','data-url'=>companyAction('Administracion\SucursalesController@sucursalesEmpleado',['id'=>'?id'])]) }}
+			{{Form::cSelect('* Solicitante','fk_id_solicitante',$usuarios ?? [],[
+				'style' => 'width:100%;',
+				'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+			])}}
 		</div>
 		<div class="form-group input-field col-md-4 col-sm-6">
 			<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 				Cargando datos... <i class="material-icons align-middle loading">cached</i>
 			</div>
 			{{--Se utilizan estas comprobaciones debido a que este campo se carga dinámicamente con base en el solicitante seleccionado y no se muestra el que está por defecto sin esto--}}
-			{{Form::cSelect('*Sucursal','fk_id_sucursal',$sucursalesempleado ?? [],[
+			{{Form::cSelect('*Sucursal','fk_id_sucursal',$sucursales ?? [],[
                 'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',
                 'style' => 'width:100%;',
                 'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
 			])}}
-			{{ Form::hidden('fk_id_departamento',0, ['id'=>'fk_id_departamento','data-url'=> companyAction('HomeController@index').'/administracion.usuarios/api']) }}
+			{{ Form::hidden('fk_id_departamento',isset($data->fk_id_departamento) ? $data->fk_id_departamento : 0, ['id'=>'fk_id_departamento','data-url'=> companyAction('HomeController@index').'/administracion.usuarios/api']) }}
 		</div>
 		<div class="form-group input-field col-md-2 col-sm-6">
 			{{ Form::label('fecha_necesidad', '* ¿Para cuándo se necesita?') }}
@@ -72,12 +72,13 @@
 					<fieldset name="detalle-form" id="detalle-form">
 						<div class="row">
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{{--{{Form::label('fk_id_sku','SKU')}}--}}
-								{{--{!!Form::select('fk_id_sku',isset($skus)?$skus:[],null,['id'=>'fk_id_sku','class'=>'form-control','style'=>'width:100%'])!!}--}}
+								<div id="whaitplease" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+									Espere porfavor... <i class="material-icons align-middle loading">cached</i>
+								</div>
 								{{Form::cSelectWithDisabled('*SKU','fk_id_sku',$skus??[],['id'=>'fk_id_sku','class'=>'select2'])}}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{{Form::label('fk_id_upc','Código de barras')}}
+								{{Form::label('fk_id_upc','* Código de barras')}}
 								<div id="loadingUPC" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 									Cargando datos... <i class="material-icons align-middle loading">cached</i>
 								</div>
@@ -88,39 +89,49 @@
 							<div class="form-group input-field col-md-3 col-sm-6">
                                 <div id="loadingproveedor" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                     Cargando datos... <i class="material-icons align-middle loading">cached</i>
-                                </div>
-                                {{Form::cSelect('Proveedor','fk_id_proveedor',$proveedores ?? [],['data-url'=>companyAction('HomeController@index').'/SociosNegocio.sociosnegocio/api'])}}
+								</div>
+                                {{Form::cSelect('* Proveedor','fk_id_proveedor',$proveedores ?? [],[
+									'style' => 'width:100%;',
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+									'data-url'=>companyAction('HomeController@index').'/sociosnegocio.sociosnegocio/api',
+								])}}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{{Form::label('fk_id_proyecto','Proyecto')}}
-								{!!Form::select('fk_id_proyecto',isset($proyectos)?$proyectos:[],null,['id'=>'fk_id_proyecto','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%',])!!}
+								{{Form::cSelect('* Proyecto','fk_id_proyecto',$proyectos ?? [],[
+									'style' => 'width:100%;',
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+									'data-url'=>companyAction('HomeController@index').'/sociosnegocio.sociosnegocio/api',
+								])}}
 							</div>
 							<div class="form-group input-field col-md-2 col-sm-4">
 								{{ Form::label('fecha_necesario', '* ¿Para cuándo se necesita?') }}
 								{!! Form::text('fecha_necesario',null,['id'=>'fecha_necesario','class'=>'datepicker form-control','value'=>old('fecha_necesario'),'placeholder'=>'Selecciona una fecha']) !!}
 							</div>
 							<div class="form-group input-field col-md-2 col-sm-4">
-								{{Form::label('cantidad','Cantidad')}}
-								{!! Form::text('cantidad','1',['id'=>'cantidad','min'=>'1','class'=>'validate form-control cantidad','autocomplete'=>'off']) !!}
+								{{Form::label('cantidad','* Cantidad')}}
+								{!! Form::number('cantidad','1',['id'=>'cantidad','min'=>'1','class'=>'validate form-control cantidad','autocomplete'=>'off']) !!}
 							</div>
 							<div class="form-group input-field col-md-2 col-sm-4">
-								{{Form::label('fk_id_unidad_medida','Unidad de medida')}}
+								{{Form::label('fk_id_unidad_medida','* Unidad de medida')}}
 								{!! Form::select('fk_id_unidad_medida',
 								isset($unidadesmedidas) ? $unidadesmedidas : [],
 								null,['id'=>'fk_id_unidad_medida','class'=>'form-control select2','style'=>'width:100%']) !!}
 							</div>
 							<div class="form-group input-field col-md-2 col-sm-6">
-								{{Form::label('fk_id_impuesto','Tipo de impuesto')}}
-								{!! Form::select('fk_id_impuesto',[]
+								{{Form::label('fk_id_impuesto','* Tipo de impuesto')}}
+								{!! Form::select('fk_id_impuesto',$impuestos ?? []
 									,null,['id'=>'fk_id_impuesto',
-									'data-url'=>companyAction('Administracion\ImpuestosController@obtenerImpuestos'),
+									'data-url'=>companyAction('HomeController@index').'/administracion.impuestos/api',
 									'class'=>'form-control','style'=>'width:100%']) !!}
 								{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}
 							</div>
 							<div class="form-group input-field col-md-2 col-sm-6">
-								{{Form::label('precio_unitario','Precio unitario',['class'=>'validate'])}}
+								<div id="loadingprecio" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+									Actualizando precio... <i class="material-icons align-middle loading">cached</i>
+								</div>
+								{{Form::label('precio_unitario','* Precio unitario',['class'=>'validate'])}}
 
-								{!! Form::text('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio_unitario','autocomplete'=>'off']) !!}
+								{!! Form::number('precio_unitario',old('precio_unitario'),['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio_unitario','autocomplete'=>'off']) !!}
 							</div>
 							<div class="col-sm-12 text-center">
 								<div class="sep">
@@ -136,15 +147,13 @@
 				</div>
 				@endif
 			    <div class="card-body" style="height: auto">
-					<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}"
-					data-delete="{{companyAction('Compras\DetalleSolicitudesController@destroyMultiple')}}"
-					data-impuestos="{{companyAction('Administracion\ImpuestosController@obtenerImpuestos')}}"
-							data-porcentaje="{{companyAction('Administracion\ImpuestosController@obtenerPorcentaje',['id'=>'?id'])}}">
+					<table id="productos" class="table table-responsive-sm highlight" data-url="{{companyAction('Compras\SolicitudesController@store')}}"
+					data-delete="{{companyAction('Compras\DetalleSolicitudesController@destroyMultiple')}}">
 						<thead>
 							<tr>
 								<th>Documento</th>
-								<th>SKU</th>
-								<th>Código de Barras</th>
+								<th>SKU(s)</th>
+								<th>UPC(s)</th>
 								<th>Proveedor</th>
 								<th>Fecha necesidad</th>
 								<th>Proyecto</th>
@@ -157,153 +166,161 @@
 							</tr>
 						</thead>
 						<tbody>
-						@if(!empty($detalles_documento) && Route::currentRouteNamed(currentRouteName('create')))
+							@if(!empty($detalles_documento) && Route::currentRouteNamed(currentRouteName('create')))
 							@foreach($detalles_documento as $index => $detalle)
 								<tr>
 									<td>
-										{{Form::hidden('_detalles['.$index.'][fk_id_documento_base]',$detalle->fk_id_documento)}}
+										{{Form::hidden('relations[has][detalle]['.$index.'][fk_id_documento_base]',$detalle->fk_id_documento)}}
 										{{$detalle->fk_id_documento}}
 									</td>
 									<td>
-										{{Form::hidden('_detalles['.$index.'][fk_id_tipo_documento_base]',$detalle->fk_id_tipo_documento)}}
-										{!! Form::hidden('_detalles['.$index.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+										{!! Form::hidden('relations[has][detalle]['.$index.'][fecha_necesario]',$detalle->fecha_necesario ?? Carbon\Carbon::now()->toDateString()) !!}
+										{{Form::hidden('relations[has][detalle]['.$index.'][fk_id_tipo_documento_base]',$detalle->fk_id_tipo_documento)}}
+										{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+										{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_upc]',$detalle->fk_id_upc) !!}
 										{{$detalle->sku->sku ?? ''}}
 									</td>
 									<td>
-										{!! Form::hidden('_detalles['.$index.'][fk_id_upc]',$detalle->fk_id_upc) !!}
 										{{$detalle->upc->upc ?? ''}}
 									</td>
 									<td>
 {{--										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_proveedor]',$detalle->fk_id_proveedor) !!}--}}
-										{{Form::Select('_detalles['.$index.'][fk_id_proveedor]',isset($proveedores) ? $proveedores->prepend('Selecciona un proveedor',0) : [],$detalle->fk_id_proveedor ?? 0,['class'=>'form-control custom-select'],[0=>['disabled']])}}
+										{{Form::Select('relations[has][detalle]['.$index.'][fk_id_proveedor]',isset($proveedores) ? $proveedores : [], $detalle->fk_id_proveedor ?? 0,['class'=>'form-control custom-select'],[0=>['disabled']])}}
 									</td>
 									<td>
-										{!! Form::hidden('_detalles['.$index.'][fecha_necesario]',$detalle->fecha_necesario ?? Carbon\Carbon::now()->toDateString()) !!}
 										{{$detalle->fecha_necesario ?? Carbon\Carbon::now()->toDateString()}}
 									</td>
 									<td>
-										{{Form::Select('_detalles['.$index.'][fk_id_proyecto]',isset($proyectos) ? $proyectos->prepend('Selecciona un proyecto',0) : [],$detalle->fk_id_proveedor ?? 0,['class'=>'form-control custom-select'],[0=>['disabled']])}}
+										{{Form::Select('relations[has][detalle]['.$index.'][fk_id_proyecto]',isset($proyectos) ? $proyectos : [],$detalle->fk_id_proveedor ?? 0,['class'=>'form-control custom-select'],[0=>['disabled']])}}
 									</td>
 									<td>
-										{{Form::hidden('_detalles['.$index.'][cantidad]',$detalle->cantidad)}}
+										{{Form::hidden('relations[has][detalle]['.$index.'][cantidad]',$detalle->cantidad)}}
 										{{$detalle->cantidad}}
 									</td>
 									<td>
-										{{Form::Select('_detalles['.$index.'][fk_id_unidad_medida]',isset($unidadesmedidas) ? $unidadesmedidas->prepend('Selecciona una unidad',0) : [],$detalle->fk_id_unidad_medida ?? 0,['class'=>'form-control custom-select requerido'],[0=>['disabled']])}}
+										{{Form::Select('relations[has][detalle]['.$index.'][fk_id_unidad_medida]',isset($unidadesmedidas) ? $unidadesmedidas : [],$detalle->fk_id_unidad_medida ?? 0,['class'=>'form-control custom-select requerido'],[0=>['disabled']])}}
 									</td>
 									<td>
-										{{Form::Select('_detalles['.$index.'][fk_id_impuesto]',isset($impuestos) ? $impuestos->prepend('Selecciona una unidad',0) : [],$detalle->fk_id_impuesto ?? 0,['class'=>'form-control custom-select requerido'],[0=>['disabled']])}}
+										{{Form::Select('relations[has][detalle]['.$index.'][fk_id_impuesto]',isset($impuestos) ? $impuestos  : [],$detalle->fk_id_impuesto ?? 0,['class'=>'form-control custom-select requerido'],[0=>['disabled']])}}
 									</td>
 									<td>
-										{{Form::hidden('_detalles['.$index.'][precio_unitario]',number_format($detalle->precio_unitario,2,'.',''))}}
+										{{Form::hidden('relations[has][detalle]['.$index.'][precio_unitario]',number_format($detalle->precio_unitario,2,'.',''))}}
 										{{number_format($detalle->precio_unitario,2,'.','')}}
 									</td>
 									<td>
-										{{Form::hidden('_detalles['.$index.'][importe]',number_format($detalle->importe,2,'.',''))}}
+										{{Form::hidden('relations[has][detalle]['.$index.'][importe]',number_format($detalle->importe,2,'.',''))}}
 										{{number_format($detalle->importe,2,'.','')}}
 									</td>
 									<td>
 										<button class="btn is-icon text-primary bg-white "
-										   type="button" data-item-id="{{$detalle->id_documento_detalle}}"
-										   id="{{$detalle->id_documento_detalle}}" data-delay="50"
-										   onclick="borrarFila_edit(this)" data-delete-type="single">
+											type="button" data-item-id="{{$detalle->id_documento_detalle}}"
+											id="{{$detalle->id_documento_detalle}}" data-delay="50"
+											onclick="borrarFila_edit(this)" data-delete-type="single">
 											<i class="material-icons">delete</i>
 										</button>
 									</td>
 								</tr>
 							@endforeach
-						@elseif( isset( $data->detalleSolicitudes ) )
-							@foreach( $data->detalleSolicitudes as $detalle)
-								<tr>
-									<td>
-										{{$detalle->fk_id_documento_base ?? 'N/A'}}
-									</td>
-									<td>
-										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle,['class'=>'id']) !!}
-										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
-										{{$detalle->sku->sku}}
-										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_documento_base]',$detalle->fk_id_documento_base) !!}
-									</td>
-									<td>
-										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
-										{{$detalle->upc->upc ?? ''}}
-									</td>
-									<td>
-										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_proveedor]',$detalle->fk_id_proveedor) !!}
-										{{$detalle->proveedor->nombre_comercial ?? 'Sin proveedor'}}
-									</td>
-									<td>
-										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
-										{{$detalle->fecha_necesario}}</td>
-									<td>
-										@if(!Route::currentRouteNamed(currentRouteName('edit')))
-											{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
-											{{$detalle->proyecto->proyecto ?? 'Sin proyecto'}}
-										@else
-											{!! Form::select('detalles['.$detalle->id_documento_detalle.'][fk_id_proyecto]',
-													isset($proyectos) ? $proyectos->prepend('Selecciona un proyecto','0') : [],
-													$detalle->fk_id_proyecto,['id'=>'detalles['.$detalle->id_documento_detalle.'][fk_id_proyecto]',
-													'class'=>'form-control detalle_select','style'=>'width:100%'])
-											!!}
-										@endif
-									</td>
-									<td>
-										@if (!Route::currentRouteNamed(currentRouteName('edit')))
-											{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad) !!}
-											{{$detalle->cantidad}}
-										@else
-											{!! Form::text('detalles['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad,
-											['class'=>'form-control cantidad',
-											'id'=>'cantidad'.$detalle->id_documento_detalle,
-											'onkeypress'=>'total_producto_row('.$detalle->id_documento_detalle.',"old")']) !!}
-										@endif
-									</td>
-									<td>
-										{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_unidad_medida]',$detalle->fk_unidad_medida) !!}
-										{{$detalle->unidad_medida->nombre}}
-									</td>
-									<td>
-										@if (!Route::currentRouteNamed(currentRouteName('edit')))
-											{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
-											{{$detalle->impuesto->impuesto}}
-										@else
-											{!! Form::select('detalles['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$impuestos,
-													$detalle->fk_id_impuesto,['class'=>'form-control detalle_select','style'=>'width:100%','id'=>'fk_id_impuesto'.$detalle->id_documento_detalle,
-													'onchange'=>'total_producto_row('.$detalle->id_documento_detalle.',"old")'])
-											!!}
-										@endif
-									</td>
-									<td>
-										@if(!Route::currentRouteNamed(currentRouteName('edit')))
-											{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][precio_unitario]',$detalle->precio_unitario) !!}
-											{{number_format($detalle->precio_unitario,2,'.','')}}
-										@else
-											{!! Form::text('detalles['.$detalle->id_documento_detalle.'][precio_unitario]',number_format($detalle->precio_unitario,2,'.','')
-											,['class'=>'form-control precio_unitario','onkeypress'=>'total_producto_row('.$detalle->id_documento_detalle.',"old")',
-											'id'=>'precio_unitario'.$detalle->id_documento_detalle]) !!}
-										@endif
-									</td>
-									<td>
-										@if (!Route::currentRouteNamed(currentRouteName('edit')))
-											{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][importe]',$detalle->importe) !!}
-											{{number_format($detalle->importe,2,'.','')}}
-										@else
-											{!! Form::text('detalles['.$detalle->id_documento_detalle.'][importe]',number_format($detalle->importe,2,'.','')
-											,['class'=>'form-control','id'=>'importe'.$detalle->id_documento_detalle,'readonly','style'=>'min-width:100px'])!!}
-										@endif
-									<td>
-										{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
-										@if(Route::currentRouteNamed(currentRouteName('edit')) && $data->fk_id_estatus_solicitud == 1)
-											<button class="btn is-icon text-primary bg-white "
-											   type="button" data-item-id="{{$detalle->id_documento_detalle}}"
-											   id="{{$detalle->id_documento_detalle}}" data-delay="50"
-											   onclick="borrarFila_edit(this)" data-delete-type="single">
-											<i class="material-icons">delete</i></button>
-										@endif
-									</td>
-								</tr>
-							@endforeach
-						@endif
+							@elseif( isset( $data->detalle ) )
+							@foreach( $data->detalle as $detalle)
+							{{--  {{dump($detalle)}}  --}}
+									<tr>
+										<th>
+											{{$detalle->fk_id_documento_base ?? 'N/A'}}
+										</th>
+										<td>
+											<img style="max-height:40px" src="img/sku.png" alt="sku"/>
+											{{$detalle->sku->sku}}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle,['class'=>'id']) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_solicitud]',$detalle->fk_id_solicitud) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_documento_base]',$detalle->fk_id_documento_base) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proveedor]',$detalle->fk_id_proveedor) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad) !!}
+										</td>
+										<td>
+											<img style="max-height:40px" src="img/upc.png" alt="upc"/>
+											{{$detalle->upc->upc ?? ''}}
+										</td>
+										<td>
+											{{$detalle->proveedor->nombre_comercial ?? 'Sin proveedor'}}
+										</td>
+										<td><i class="material-icons align-middle">today</i>
+											{{$detalle->fecha_necesario}}</td>
+										<td>
+											@if(!Route::currentRouteNamed(currentRouteName('edit')))
+												{{$detalle->proyecto->proyecto ?? 'Sin proyecto'}}
+											@else
+												{!! Form::select('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',
+														isset($proyectos) ? $proyectos->prepend('Selecciona un proyecto','0') : [],
+														$detalle->fk_id_proyecto,['id'=>'relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',
+														'class'=>'form-control detalle_select','style'=>'width:100%'])
+												!!}
+											@endif
+										</td>
+										<td>
+											@if (!Route::currentRouteNamed(currentRouteName('edit')))
+												{{$detalle->cantidad}}
+											@else
+												{!! Form::number('relations[has][detalle]['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad,
+												['class'=>'form-control rowCantidad',
+												'style'=>'width:80px',
+												'id'=>'cantidad'.$detalle->id_documento_detalle,
+												'onkeyup'=>'total_producto_row(this)']) !!}
+											@endif
+										</td>
+										<td>
+											{{$detalle->unidad_medida->nombre}}
+										</td>
+										<td>
+											@if (!Route::currentRouteNamed(currentRouteName('edit')))
+												{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+												{{$detalle->impuesto->impuesto}}
+												@else
+												{!! Form::select('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$impuestos,
+														$detalle->fk_id_impuesto,['class'=>'form-control detalle_select selectImpuestos','style'=>'width:100%','id'=>'fk_id_impuesto'.$detalle->id_documento_detalle,
+														'onchange'=>'getImpuestos(this)'])
+														!!}
+												{{Form::hidden('',null,['class'=>'rowImpuestos'])}}
+											@endif
+										</td>
+										<td>
+											@if(!Route::currentRouteNamed(currentRouteName('edit')))
+												{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][precio_unitario]',$detalle->precio_unitario) !!}
+												{{number_format($detalle->precio_unitario,2,'.','')}}
+											@else
+												{!! Form::number('relations[has][detalle]['.$detalle->id_documento_detalle.'][precio_unitario]',number_format($detalle->precio_unitario,2,'.','')
+												,['class'=>'form-control rowPrecioUnitario','onkeyup'=>'total_producto_row(this)',
+												'style'=>'width:80px',
+												'id'=>'precio_unitario'.$detalle->id_documento_detalle]) !!}
+											@endif
+										</td>
+										<td class="position-relative">
+											@if (!Route::currentRouteNamed(currentRouteName('edit')))
+												{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][importe]',$detalle->importe) !!}
+												{{number_format($detalle->importe,2,'.','')}}
+											@else
+												<div class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">Calculando el total... <i class="material-icons align-middle loading">cached</i></div>
+												{!! Form::number('relations[has][detalle]['.$detalle->id_documento_detalle.'][importe]',number_format($detalle->importe,2,'.','')
+												,['class'=>'form-control rowTotal','id'=>'importe'.$detalle->id_documento_detalle,'readonly','style'=>'width:100px'])!!}
+											@endif
+										<td>
+											{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
+											@if(Route::currentRouteNamed(currentRouteName('edit')) && $data->fk_id_estatus_solicitud == 1)
+												<button class="btn is-icon text-primary bg-white "
+												type="button" data-item-id="{{$detalle->id_documento_detalle}}"
+												id="{{$detalle->id_documento_detalle}}" data-delay="50"
+												onclick="borrarFila(this)" data-delete-type="single">
+												<i class="material-icons">delete</i></button>
+											@endif
+										</td>
+									</tr>
+								@endforeach
+							@endif
 						</tbody>
 					</table>
 				</div>

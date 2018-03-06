@@ -39,7 +39,7 @@ class PagosController extends ControllerBase
     public function store(Request $request, $company, $compact = false)
     {
         $myfile = $request->file('comprobante_input');
-        $fileName = utf8_encode(str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName()));
+        $fileName = preg_replace("/[^a-zA-Z0-9\_\-\.]+/", "",str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName()));
         Storage::disk('pagos')->put($company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName, file_get_contents($myfile->getRealPath()));
         $request->request->set('comprobante',$company.'/'.Carbon::now()->year.'/'.Carbon::now()->month.'/'.$fileName, file_get_contents($myfile->getRealPath()));
         return parent::store($request, $company, $compact);

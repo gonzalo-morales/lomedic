@@ -45,7 +45,7 @@ class FacturasClientesController extends Controller
         foreach ($request->poliza['movimientos'] as $movimiento){
             $factura = FacturasClientes::find($movimiento['id_documento']);
             $factura->no_poliza = $request->poliza['id_poliza'];//Es la llave primaria de la póliza
-            $factura->no_movimiento = $movimiento['id_movimiento'];//Número de movimiento de la póliza
+            $factura->no_movimiento = $movimiento['id_movimiento'];//Número de movimiento en la póliza
             $factura->ejercicio = $request->poliza['ejercicio'];
             $factura->periodo = $request->poliza['periodo'];
             $factura->guid_movimiento = $movimiento['guid'];

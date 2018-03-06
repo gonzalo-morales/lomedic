@@ -21,30 +21,34 @@ class AutorizacionesController extends ControllerBase
 
     public function update(Request $request, $company, $id, $compact = false)
     {
+        $entity = $this->entity->findOrFail($id);
         $request->request->set('fk_id_usuario_autoriza',Auth::id());
         $request->request->set('fecha_autorizacion',Carbon::now());
+        $request->request->set('fecha_creacion',$entity->fecha_creacion);
+        $request->request->set('fk_id_documento',$entity->fk_id_documento);
+        $request->request->set('fk_id_condicion',$entity->fk_id_condicion);
+        $request->request->set('fk_id_tipo_documento',$entity->fk_id_tipo_documento);
         # ¿Usuario tiene permiso para actualizar?
-        //		$this->authorize('update', $this->entity);
+        $this->authorize('update', $this->entity);
 
         # Validamos request, si falla regresamos atras
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
         DB::beginTransaction();
-        $entity = $this->entity->findOrFail($id);
         $entity->fill($request->all());
         if ($entity->save()) {
             DB::commit();
             # Eliminamos cache
             Cache::tags(getCacheTag('index'))->flush();
-            
+
             # Log
             event(new LogModulos($entity, $company, 'editar', 'Registro actualizado'));
-            
+
             return \response()->json([
                 'status'=>'1'
             ]);
         } else {
             DB::rollBack();
-            
+
             # Log
             event(new LogModulos($entity, $company, 'editar', 'Error al actualizar el registro'));
             return \response()->json([

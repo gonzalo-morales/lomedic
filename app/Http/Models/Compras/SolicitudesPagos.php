@@ -6,6 +6,7 @@ use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\ModelCompany;
 use DB;
+use App\Http\Models\RecursosHumanos\Empleados;
 
 class SolicitudesPagos extends ModelCompany
 {
@@ -50,12 +51,12 @@ class SolicitudesPagos extends ModelCompany
 
     public function empleado()
     {
-        return $this->belongsTo('App\Http\Models\RecursosHumanos\Empleados','fk_id_solicitante','id_empleado');
+        return $this->belongsTo(Empleados::class,'fk_id_solicitante','id_empleado');
     }
 
     public function sucursales()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
+        return $this->belongsTo(Sucursales::class,'fk_id_sucursal','id_sucursal');
     }
 
     public function estatus()

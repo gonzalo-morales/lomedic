@@ -41,7 +41,7 @@ $(document).ready(function () {
            });
         }else{
            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-           var autorizar_url = $('#id_documento').data('url').replace('?id',$('#id_documento').val());
+           var autorizar_url = $('#id_documento').data('url').replace('?id',$('#id_documento').val());//id_autorizacion
            $.ajax({
                url:autorizar_url,
                type:'PUT',

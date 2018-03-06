@@ -35,20 +35,14 @@ class OrdenesController extends ControllerBase
 	{
 	    $this->entity = new Ordenes;
 	}
-	public function index($company, $attributes=[]){
-		$attributes = $attributes+['dataview'=>[
-				'detalles' => $this->entity->detalle->where('cerrado',false),
-				'estatus' => 1,
-			]];
-			return parent::index($company,$attributes);
-	}
 
-	public function create($company, $attributes =[])
-	{
+	public function getDataView($entity = null)
+    {
+
         switch (\request('tipo_documento')){
             case 1:
                 $documento = Solicitudes::find(\request('id'));
-                $detalles_documento = $documento->detalleSolicitudes()->where('cerrado',0)->select('*','fk_id_documento','importe as total_producto')->get();
+                $detalles_documento = $documento->detalle()->where('cerrado',0)->select('*','fk_id_documento','importe as total_producto')->get();
                 break;
             case 2:
                 $documento = Ofertas::find(\request('id'));
@@ -60,20 +54,38 @@ class OrdenesController extends ControllerBase
                 break;
         }
         $clientes = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
-
-        $attributes = ['dataview'=>[
-            'companies' => Empresas::where('activo',1)->where('conexion','<>',$company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
+        return [
+            'companies' => Empresas::where('activo',1)->where('conexion','<>',\request()->company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
             'documento' =>$documento,
             'detalles_documento'=>$detalles_documento,
             'tipo_documento' => \request('tipo_documento'),
-            'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
+            'sucursales' => Sucursales::select('id_sucursal','sucursal')->where('activo',1)->whereHas('empresa_sucursales')->pluck('sucursal','id_sucursal'),
             'clientes' => $clientes,
             'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
-			'estatus' => 2,
+            'estatus' => 2,
             'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]'),
-        ]];
+        ];
+    }
+
+    public function index($company, $attributes=[]){
+		$attributes = $attributes+['dataview'=>[
+				'detalles' => $this->entity->detalle->where('cerrado',false),
+				'estatus' => 1,
+			]];
+			return parent::index($company,$attributes);
+	}
+
+	public function create($company, $attributes =[])
+	{
+	    $documento = $this->getDataView()['documento'];
+
+        $data = $this->entity->getColumnsDefaultsValues();
+        $data['fk_id_empresa'] = $documento->fk_id_empresa;
+        $data['fk_id_sucursal'] = $documento->fk_id_sucursal;
+        dd($data);
+        $attributes['data'] = $data;
 		 return parent::create($company,$attributes);
 	}
 
