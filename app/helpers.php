@@ -696,13 +696,13 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
         if (empty($arrayData['Comprobante']['@fecha'])) {
             $mensaje .= "\n-Verifica que el CFDI tenga una fecha";
         }
-        if (is_null(MetodosPago::where('descripcion', 'ILIKE', "%".utf8_decode($arrayData['Comprobante']['@formaDePago'])."%")->first())) {
+        if (is_null(MetodosPago::whereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@formaDePago'].'\')')->first())) {
             $mensaje .= "\n-Verifica que la forma de pago exista";
         }
         if (empty($arrayData['Comprobante']['@noCertificado']) || empty($arrayData['Comprobante']['@certificado'])) {
             $mensaje .= "\n-Verifica que exista un certificado";
         }
-        if (is_null(Monedas::where('moneda', 'LIKE', $arrayData['Comprobante']['@Moneda'])->first())) {
+        if (is_null(Monedas::whereRaw('to_ascii(moneda) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->first())) {
             $mensaje .= "\n-Verifica que exista la moneda utilizada";
         }
         //Para verificar el tipo de comprobante
@@ -719,7 +719,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
             }
             $mensaje .= "\n-Verifica que el tipo de comprobante sea $tipo_comprobante";
         }
-        if (is_null(FormasPago::where('forma_pago', 'ILIKE', "%".$arrayData['Comprobante']['@metodoDePago']."%")->first())) {
+        if (is_null(FormasPago::whereRaw('to_ascii(forma_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->first())) {
             $mensaje .= "\n-Verifica que la forma de pago exista";
         }
         if (!isset($arrayData['Comprobante']['@sello'])) {
@@ -734,10 +734,10 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
 //        if($arrayData['Comprobante']['cfdi:Receptor']['@rfc'] != $rfc_receptor){
 //            $mensaje .= "\n-Por favor verifica que la empresa activa sea la misma del XML";
 //        }
-        if (!isset($arrayData['Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital'])) {
+        if (!isset($arrayData['Comprobante']['Complemento']['TimbreFiscalDigital']) && !isset($arrayData['Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital'])) {
             $mensaje .= "\n-No se encontró el timbre en la factura";
         } else {
-            $uuid = $arrayData['Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital']['@UUID'];
+            $uuid = $arrayData['Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital']['@UUID'] ?? $arrayData['Comprobante']['Complemento']['TimbreFiscalDigital']['@UUID'] ;
         }
 
         if (!empty($mensaje)) {
@@ -749,8 +749,8 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
             $collection = collect($arrayData);
             //Esta comprobación se hace debido a la forma en que la función xmlToArray trabaja
             //Si tiene muchos conceptos
-            if (isset($collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto'][0])) {
-                foreach ($collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto'] as $concepto) {
+            if (isset($collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto'][0]) || isset($collection['Comprobante']['Conceptos']['Concepto'][0])) {
+                foreach ($collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto'] ?? $collection['Comprobante']['Conceptos']['Concepto'] as $concepto) {
                     $detalles[] = [
                         'Cantidad' => $concepto['@cantidad'],
                         'Unidad' => $concepto['@unidad'],
@@ -759,13 +759,13 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
                         'Importe' => $concepto['@importe'],
                     ];
                 }
-            } elseif (isset($collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto'])) {
+            } elseif (isset($collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']) || isset($collection['Comprobante']['Conceptos']['Concepto'])) {
                 $detalles[0] = [
-                    'Cantidad' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@cantidad'],
-                    'Unidad' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@unidad'],
-                    'Descripcion' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@descripcion'],
-                    'ValorUnitario' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@valorUnitario'],
-                    'Importe' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@importe']
+                    'Cantidad' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@cantidad'] ?? $collection['Comprobante']['Conceptos']['Concepto']['@cantidad'],
+                    'Unidad' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@unidad'] ?? $collection['Comprobante']['Conceptos']['Concepto']['@unidad'],
+                    'Descripcion' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@descripcion'] ?? $collection['Comprobante']['Conceptos']['Concepto']['@descripcion'],
+                    'ValorUnitario' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@valorUnitario'] ?? $collection['Comprobante']['Conceptos']['Concepto']['@valorUnitario'],
+                    'Importe' => $collection['Comprobante']['cfdi:Conceptos']['cfdi:Concepto']['@importe'] ?? $collection['Comprobante']['Conceptos']['Concepto']['@importe']
                 ];
             } else {
                 return response()->json([

@@ -75,7 +75,7 @@ class SolicitudesController extends ControllerBase
             'sucursales'        => $sucursales ?? '',
             'impuestos'         => Impuestos::select('id_impuesto','impuesto')->where('activo',1)->orderBy('impuesto')->with('porcentaje')->pluck('impuesto','id_impuesto')->prepend('Seleccione...',''),
             'unidadesmedidas'   => Unidadesmedidas::select('nombre','id_unidad_medida')->where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida')->prepend('Seleccione...',''),
-            'skus'              => Productos::where('activo',1)->orderBy('sku')->pluck('sku','id_sku'),
+            'skus'              => Productos::where('activo',1)->where('articulo_compra',1)->orderBy('sku')->pluck('sku','id_sku'),
             'usuarios'          => Usuarios::where('activo',1)->orderBy('usuario')->pluck('usuario','id_usuario')->prepend('Seleccione un usuario','')->put($user,'Yo'.' ('.$userName.')'),
             // 'usuarios'       => Usuarios::where('activo',1)->orderBy('usuario')->get()->put($user,'Yo'.' ('.$userName.')'),
             'js_sucursales'     => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"], "conditions":[{"where":["activo",1]}],"whereHas":[{"empresa_sucursales":{"where":["fk_id_empresa","'.dataCompany()->id_empresa.'"]}}],"whereHas":[{"usuario_sucursales":{"where":["fk_id_usuario","$usuario"]}}]'),
@@ -94,39 +94,8 @@ class SolicitudesController extends ControllerBase
             $request->request->set('fk_id_solicitante',$id_empleado);
         }
         $request->request->set('fecha_creacion',Carbon::now()->toDateString());
-        // $fk_id_departamento = Usuarios::find()
-        // $request->request->set('fk_id_departamento',Empleados::find($request->fk_id_solicitante)->fk_id_departamento);
         $request->request->set('fk_id_estatus_solicitud',1);//Al estarse creando por primer vez, tiene que estar activa
-//        dd($request->request,$this->entity->rules);
         return parent::store($request,$company,$compact);
-
-        // # Validamos request, si falla regresamos pagina
-        // $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-        // $isSuccess = $this->entity->create($request->all());
-
-        // if ($isSuccess) {
-        //     if(isset($request->_detalles)) {
-        //         foreach ($request->_detalles as $detalle) {
-        //             if(empty($detalle['fk_id_upc'])){
-        //                 $detalle['fk_id_upc'] = null;
-        //             }
-        //             if(empty($detalle['fk_id_proyecto'])){
-        //                 $detalle['fk_id_proyecto'] = null;
-        //             }
-        //             if(empty($detalle['fk_id_proveedor'])){
-        //                 $detalle['fk_id_proveedor'] = null;
-        //             }
-        //             $isSuccess->detalleSolicitudes()->save(new DetalleSolicitudes($detalle));
-        //         }
-        //     }
-
-        //     Cache::tags(getCacheTag('index'))->flush();
-        //     event(new LogModulos($isSuccess, $company, 'crear' , 'Registro creado'));
-        //     return $this->redirect('store');
-        // } else {
-        //     event(new LogModulos($isSuccess, $company, 'crear' , 'Error al crear registro'));
-        //     return $this->redirect('error_store');
-        // }
     }
 
     public function update(Request $request, $company, $id, $compact = false)
@@ -136,48 +105,6 @@ class SolicitudesController extends ControllerBase
         $request->request->set('fk_id_estatus_solicitud',$entity->fk_id_estatus_solicitud);
         $request->request->set('fecha_creacion',$entity->fecha_creacion);
         return parent::update($request,$company,$id,$compact);
-//        dd($request->request,$this->entity->rules);
-        // # Validamos request, si falla regresamos atrás
-        // $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-
-        // $entity->fill($request->all());
-        // if ($entity->save()) {
-        //     if(isset($request->detalles)) {
-        //         foreach ($request->detalles as $detalle) {
-        //             $solicitud_detalle = $entity
-        //                 ->findOrFail($id)
-        //                 ->detalleSolicitudes()
-        //                 ->where('id_documento_detalle', $detalle['id_documento_detalle'])
-        //                 ->first();
-        //             if(empty($detalle['fk_id_proyecto'])){
-        //                 $detalle['fk_id_proyecto'] = null;
-        //             }
-        //             $solicitud_detalle->fill($detalle);
-        //             $solicitud_detalle->save();
-        //         }
-        //     }
-        //     if(isset($request->_detalles)){
-        //         foreach ($request->_detalles as $detalle){
-        //             if(empty($detalle['fk_id_upc'])){
-        //                 $detalle['fk_id_upc'] = null;
-        //             }
-        //             if(empty($detalle->fk_id_proyecto)){
-        //                 $detalle['fk_id_proyecto'] = null;
-        //             }
-        //             if(empty($detalle->fk_id_proveedor)){
-        //                 $detalle['fk_id_proveedor'] = null;
-        //             }
-        //             $entity->detalleSolicitudes()->save(new DetalleSolicitudes($detalle));
-        //         }
-        //     }
-
-        //     Cache::tags(getCacheTag('index'))->flush();
-        //     event(new LogModulos($entity, $company, 'editar', 'Registro actualizado'));
-        //     return $this->redirect('update');
-        // } else {
-        //     event(new LogModulos($entity, $company, 'editar', 'Error al editar el registro'));
-        //     return $this->redirect('error_update');
-        // }
     }
 
     public function destroy(Request $request, $company, $idOrIds, $attributes = [])

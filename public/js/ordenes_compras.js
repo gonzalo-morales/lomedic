@@ -10,16 +10,16 @@ $('.datepicker').pickadate({
 $(document).ready(function(){
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     //Inicializar tabla
-    window.dataTable = new DataTable('#productos', {
-        fixedHeight: true,
-        fixedColumns: true,
-        searchable: false,
-        perPageSelect: false,
-        labels:{
-            info: "Mostrando del registro {start} al {end} de {rows}"
-        },
-        footer:true,
-    });
+    // window.dataTable = new DataTable('#productos', {
+    //     fixedHeight: true,
+    //     fixedColumns: true,
+    //     searchable: false,
+    //     perPageSelect: false,
+    //     labels:{
+    //         info: "Mostrando del registro {start} al {end} de {rows}"
+    //     },
+    //     footer:true,
+    // });
 
     // window.dataTableCondiciones = new DataTable('#autorizaciones', {
     //     fixedHeight: true,
@@ -43,13 +43,13 @@ $(document).ready(function(){
             validateDetail();
         }
         //Por si se selecciona una empresa diferente
-        $('#otra_empresa').on('change',function () {
-            $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-            if( !this.checked ){
-                if(window.location.href.toString().indexOf('crear') > -1)
-                    $( this ).parent().nextAll( "select" ).val(0).trigger('change');
-            }
-        });
+        // $('#otra_empresa').on('change',function () {
+        //     $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+        //     if( !this.checked ){
+        //         if(window.location.href.toString().indexOf('crear') > -1)
+        //             $( this ).parent().nextAll( "select" ).val(0).trigger('change');
+        //     }
+        // });
         //Por si se selecciona un UPC
         $('#activo_upc').on('change',function () {
             $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
@@ -247,35 +247,13 @@ function initSelects() {
         theme:'bootstrap'
     });
 
-    if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1){
-        $('#fk_id_condicion_pago').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        $('#fk_id_tipo_entrega').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        $('#fk_id_sucursal_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        // $('#fk_id_empresa_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        totalOrden();
-    }else{
-        select2Placeholder('fk_id_empresa_','Selecciona una empresa',0,true,true,0,false);
-        select2Placeholder('fk_id_socio_negocio','Selecciona un proveedor',50,true,true,0,false);
-        select2Placeholder('fk_id_sucursal_','Selecciona una sucursal',30,true,true);
-        select2Placeholder('fk_id_condicion_pago','Selecciona una condición de pago','Infinity',true,true);
-        select2Placeholder('fk_id_tipo_entrega','Selecciona una forma de entrega','Infinity',true,true);
-    }
-    $.ajax({
-        url: $('#fk_id_socio_negocio').data('url'),
-        dataType:'json',
-        success:function (data) {
-            $('#fk_id_socio_negocio').select2({
-                theme:'bootstrap',
-                minimumResultsForSearch:'Infinity',
-                data:data,
-            });
-        }
-    });
+    totalOrden();
 
     select2Placeholder('fk_id_upc','UPC no seleccionado',null,true,true,0,false);
     select2Placeholder('fk_id_cliente','Sin cliente',10,true,false);
     select2Placeholder('fk_id_proyecto','Sin proyecto',10,true,false);
     $('#fk_id_upc').select2();
+    //Para obtener los IVAS con sus porcentajes y IDs
     $.ajax({
         url: $('#fk_id_impuesto').data('url'),
         dataType:'json',
@@ -294,29 +272,25 @@ function agregarProducto(tiempo_entrega) {
 
             var row_id = dataTable.activeRows.length;
             var total = totalProducto();
+            $('#productos').append(
+                '<tr>' +
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento]"/>N/A<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega"></td>' +
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />' + $('#fk_id_sku').select2('data')[0].text + '</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />' + $('#fk_id_upc').select2('data')[0].text + '</td>'+
+                    '<td>'+$('#fk_id_sku').select2('data')[0].descripcion_corta + '</td>'+
+                    '<td>'+$('#fk_id_sku').select2('data')[0].descripcion + '</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_cliente]" value="' + $('#fk_id_cliente').select2('data')[0].id + '" /> '+ $('#fk_id_cliente').select2('data')[0].text + '</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').select2('data')[0].id + '" />'+ $('#fk_id_proyecto').select2('data')[0].text + '</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fecha_necesario]" value="' + $('#fecha_necesario').val() + '" />'+ $('#fecha_necesario').val()+'</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][cantidad]" class="cantidad_row" value="' + $('#cantidad').val() + '" />' + $('#cantidad').val() + '</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descuento_detalle]" class="descuento_row" value="' + $('#descuento').val() + '" />' + $('#descuento').val() + '</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="' + $('#fk_id_impuesto').select2('data')[0].id + '" />' + $('#fk_id_impuesto').select2('data')[0].text + '</td>'+'<input type="hidden" class="porcentaje" value="' + $('#fk_id_impuesto').select2('data')[0].porcentaje + '" />'+
+                    '<td><input type="hidden" class="precio_unitario_row" name="relations[has][detalle]['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />'+$('#precio_unitario').val()+'</td>' +
+                    '<td><input type="text" value="'+ total +'" name="relations[has][detalle]['+row_id+'][total]" class="form-control total_row" readonly><input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega"></td>'+
+                    '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>'+
+                '</tr>'
+            );
 
-            var data = [];
-            data.push([
-                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_documento]"/>')[0].outerHTML + 'N/A'+$('<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega">')[0].outerHTML,
-                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_sku').select2('data')[0].text,
-                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_upc').select2('data')[0].text,
-                $('#fk_id_sku').select2('data')[0].descripcion_corta,
-                $('#fk_id_sku').select2('data')[0].descripcion,
-                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_cliente]" value="' + $('#fk_id_cliente').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_cliente').select2('data')[0].text,
-                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_proyecto').select2('data')[0].text,
-                $('<input type="hidden" name="_detalles['+row_id+'][fecha_necesario]" value="' + $('#fecha_necesario').val() + '" />')[0].outerHTML + $('#fecha_necesario').val(),
-                $('<input type="hidden" name="_detalles['+row_id+'][cantidad]" class="cantidad_row" value="' + $('#cantidad').val() + '" />')[0].outerHTML + $('#cantidad').val(),
-                $('<input type="hidden" name="_detalles['+row_id+'][descuento_detalle]" class="descuento_row" value="' + $('#descuento').val() + '" />')[0].outerHTML + $('#descuento').val(),
-                $('<input type="hidden" name="_detalles['+row_id+'][fk_id_impuesto]" value="' + $('#fk_id_impuesto').select2('data')[0].id + '" />')[0].outerHTML + $('#fk_id_impuesto').select2('data')[0].text+
-                $('<input type="hidden" class="porcentaje" value="' + $('#fk_id_impuesto').select2('data')[0].porcentaje + '" />')[0].outerHTML,
-                $('<input type="hidden" class="precio_unitario_row" name="_detalles['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />')[0].outerHTML + $('#precio_unitario').val(),
-                $('<input type="text" value="'+ total +'" name="_detalles['+row_id+'][total]" class="form-control total_row" readonly>')[0].outerHTML+$('<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega">')[0].outerHTML,
-                '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">devare</i></button>'
-            ]);
-
-            dataTable.insert( {
-                data:data
-            });
             $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
                 settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
             });
@@ -348,34 +322,44 @@ function totalOrden() {
     var subtotal = 0;
     var impuesto = 0;
     var descuento_total = 0;
-    $.each(window.dataTable.data,function () {
-        //Del producto
-        var cantidad_row = $(this).find('td .cantidad_row').val();
-        var precio_row = $(this).find('td .precio_unitario_row').val();
-        var porcentaje_row = $(this).find('td .porcentaje').val()/100;//Decimal
-        var descuento_row = $(this).find('td .descuento_row').val();//Decimal
-        descuento_row = (descuento_row * precio_row)/100;
-        descuento_total += descuento_row;
-        var subtotal_row = (precio_row - descuento_row) * cantidad_row;
-        // var total_row = (subtotal_row * porcentaje_row) + subtotal_row;
-        //Del total
-        subtotal += subtotal_row;
-        impuesto += subtotal_row * porcentaje_row;
-        // console.log('cantidad: '+cantidad_row+' precio: '+precio_row+' porcentaje: '+porcentaje_row+' descuento: '+descuento_row+' impuesto: '+impuesto+' subtotal: '+subtotal_row+' total:'+total_row);
-    });
-    subtotal = subtotal - $('#descuento_general').val();
-    descuento_total += +$('#descuento_general').val();
 
-    // console.log('subtotal: '+subtotal);
-    // console.log('impuesto: '+impuesto);
-    // console.log('total: '+total);
-    var total = (subtotal)+impuesto;
-    $('#subtotal_lbl').text(subtotal.toFixed(2));
-    $('#subtotal').val(subtotal.toFixed(2));
-    $('#impuesto_lbl').text(impuesto.toFixed(2));
-    $('#impuesto_total').val(impuesto.toFixed(2));
-    $('#total_orden').val(total.toFixed(2));
-    $('#descuento_total').val(descuento_total.toFixed(2));
+    if($('#productos tr').length){
+        $('#productos tr').each(function () {
+            //Del producto
+            var cantidad_row = $(this).find('td .cantidad_row').val();
+            var precio_row = $(this).find('td .precio_unitario_row').val();
+            var porcentaje_row = $(this).find('td .porcentaje').val()/100;//Decimal
+            var descuento_row = $(this).find('td .descuento_row').val();//Decimal
+            descuento_row = (descuento_row * precio_row)/100;
+            descuento_total += descuento_row;
+            var subtotal_row = (precio_row - descuento_row) * cantidad_row;
+            // var total_row = (subtotal_row * porcentaje_row) + subtotal_row;
+            //Del total
+            subtotal += subtotal_row;
+            impuesto += subtotal_row * porcentaje_row;
+            // console.log('cantidad: '+cantidad_row+' precio: '+precio_row+' porcentaje: '+porcentaje_row+' descuento: '+descuento_row+' impuesto: '+impuesto+' subtotal: '+subtotal_row+' total:'+total_row);
+        });
+        subtotal = subtotal - $('#descuento_general').val();
+        descuento_total += +$('#descuento_general').val();
+
+        // console.log('subtotal: '+subtotal);
+        // console.log('impuesto: '+impuesto);
+        // console.log('total: '+total);
+        var total = (subtotal)+impuesto;
+        $('#subtotal_lbl').text(subtotal.toFixed(2));
+        $('#subtotal').val(subtotal.toFixed(2));
+        $('#impuesto_lbl').text(impuesto.toFixed(2));
+        $('#impuesto_total').val(impuesto.toFixed(2));
+        $('#total_orden').val(total.toFixed(2));
+        $('#descuento_total').val(descuento_total.toFixed(2));
+    }else{
+        $('#subtotal_lbl').text(0);
+        $('#subtotal').val(0);
+        $('#impuesto_lbl').text(0);
+        $('#impuesto_total').val(0);
+        $('#total_orden').val(0);
+        $('#descuento_total').val(0);
+    }
 }
 
 function borrarFila(el) {

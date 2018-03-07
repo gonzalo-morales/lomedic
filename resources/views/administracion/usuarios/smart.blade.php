@@ -37,7 +37,6 @@
 								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,[
 									'id'=>'fk_id_empresa_default',
 									'class'=>'form-control',
-									'placeholder' => 'Seleccionar una empresa...',
 									'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',
 									])}}
 							</div>
@@ -415,71 +414,50 @@
     				<div class="card">
     					<h4 class="card-header">Empresas</h4>
     					<div class="card-body">
-							<div class="col-sm-12">
-								<ul class="nav nav-tabs btn-group justify-content-center border-0 mb-3" id="pills-tab" role="tablist" data-tabs="tabs">
-									<li>
-										<a id="producto" class="btn m-0 tabs-bs btn-info active" data-toggle="tab" href="#permisos" role="tab" aria-controls="permisos" aria-selected="true">
-											<i class="material-icons align-middle">playlist_add_check</i> Módulos y permisos
-										</a>
-									</li>
-									<li>
-										<a id="pedido" class="btn m-0 tabs-bs btn-info" data-toggle="tab" href="#sucursales" role="tab" aria-controls="sucursales" aria-selected="false">
-											<i class="material-icons align-middle">store_mall_directory</i> Sucursales
-										</a>
-									</li>
-								</ul>
-							</div>
+							<ul class="nav nav-tabs" role="tablist">
+								@foreach($companies as $data_company)
+									@if($data_company->modulos_empresa != '[]')
+										<li class="nav-item">
+											<a class="nav-link" data-toggle="tab" href="#empresa_{{$data_company->id_empresa}}" role="tab">{{$data_company->nombre_comercial}}</a>
+										</li>
+									@endif
+								@endforeach
+							</ul>
 							<div id="modulos" class="tab-content">
-								<div class="tab-pane active" id="permisos" role="tabpanel">
-									<ul class="nav nav-tabs" role="tablist">
-										@foreach($companies as $data_company)
-											@if($data_company->modulos_empresa != '[]')
-												<li class="nav-item">
-													<a class="nav-link" data-toggle="tab" href="#empresa_{{$data_company->id_empresa}}" role="tab">{{$data_company->nombre_comercial}}</a>
-												</li>
-											@endif
-										@endforeach
-									</ul>
-									<div class="tab-content">
-										@foreach($companies as $data_company)
-											<div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">
-												<table class="table table-hover table-responsive-sm">
-													<thead>
-													<tr>
-														<th class="border-top-0">Modulo</th>
-														<th class="border-top-0">Accion</th>
-														<th class="border-top-0"></th>
-														<th class="border-top-0"></th>
-														<th class="border-top-0"></th>				
-													</tr>
-													</thead>
-													<tbody>
-													@foreach($data_company->modulos_empresa->unique() as $row_modul)
-														<tr>
-															<td>
-																{{$row_modul->nombre}}
-															</td>
-															@foreach($data_company->accion_empresa($row_modul->id_modulo) as $row_accion)
-																<td>
-																	@if(array_search($row_accion->id_modulo_accion, array_column($acciones_usuario->toArray(), 'id_modulo_accion')) !== false)
-																		{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,true,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
-																	@else
-																		{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,false,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
-																	@endif
-																	{{Form::label('accion_modulo[]',$row_accion->nombre,array('for'=>'activo'))}}
-																</td>
-															@endforeach
-														</tr>
+								@foreach($companies as $data_company)
+									<div class="tab-pane " id="empresa_{{$data_company->id_empresa}}" role="tabpanel">
+										<table class="table table-hover table-responsive-sm">
+											<thead>
+											<tr>
+												<th class="border-top-0">Modulo</th>
+												<th class="border-top-0">Accion</th>
+												<th class="border-top-0"></th>
+												<th class="border-top-0"></th>
+												<th class="border-top-0"></th>				
+											</tr>
+											</thead>
+											<tbody>
+											@foreach($data_company->modulos_empresa->unique() as $row_modul)
+												<tr>
+													<td>
+														{{$row_modul->nombre}}
+													</td>
+													@foreach($data_company->accion_empresa($row_modul->id_modulo) as $row_accion)
+														<td>
+															@if(array_search($row_accion->id_modulo_accion, array_column($acciones_usuario->toArray(), 'id_modulo_accion')) !== false)
+																{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,true,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
+															@else
+																{{Form::checkbox('accion_modulo[]',$row_accion->id_modulo_accion,false,array('id'=>'accion_'.$row_accion->id_modulo_accion))}}
+															@endif
+															{{Form::label('accion_modulo[]',$row_accion->nombre,array('for'=>'activo'))}}
+														</td>
 													@endforeach
-													</tbody>
-												</table>
-											</div>
-										@endforeach
+												</tr>
+											@endforeach
+											</tbody>
+										</table>
 									</div>
-								</div>
-								<div class="tab-pane" id="sucursales" role="tabpanel">
-									<p>Seleccione las sucursales que estarán <b>relacionadas</b> a ésta empresa</p>
-								</div>{{-- /sucursales --}}
+								@endforeach
 							</div>
     					</div>
     				</div>
@@ -493,21 +471,8 @@
 	@parent
 	@inroute(['create','edit'])
 		{{ HTML::script(asset('js/usuarios.js')) }}
-
 		<script type="text/javascript">
-            //iniciamos tooltips
-			var api_sucursales = '{!! $sucursales_js !!}'
-            $(document).ready(function(){
-                $('[data-toggle]').tooltip();
-
-                //función para clic en el listado
-                $(".list-group-item").click(function(){
-                    $(this).toggleClass('active');
-                });
-
-            });
-		</script>
-		<script>
+			var api_sucursales = '{{ $sucursales_js ?? '' }}';
 			var profiles_permissions = {!!$profiles_permissions!!};
 			console.info(profiles_permissions);
             var cont_correo = $('#lista_correo tr').length;

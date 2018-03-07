@@ -1,56 +1,168 @@
 /**
  * Created by ihernandezt on 03/08/2017.
  */
-$('.fk_id_sucursales').select2({
-    multiple: true,
-    disabled:true,
-    placeholder: 'Seleccione la empresa...'
-});
-$('#fk_id_empresa_default').on('change', function () {
-    $(".fk_id_sucursales").html("")
-    $('#loadingsucursales').show();
-    var idempresa = $('#fk_id_empresa_default option:selected').val();
-    var _url = $(this).data('url');
-    $.ajax({
-        url: _url,
-        data: {'param_js': api_sucursales ,$fk_id_empresa:idempresa},
-        dataType: "json",
-        success: function (data) {
-            if(data.length > 0){
-                var options = [];
-                for (var i = 0; i < data.length; i++) {
-                    options.push('<option value="' + data[i].id_sucursal + '">' + data[i].sucursal + '</option>');
-                };
-                $('.fk_id_sucursales').append(options.join(''));
-                $('.fk_id_sucursales').select2({
-                    multiple: true,
-                    disabled:false,
-                });
-                $('#loadingsucursales').hide();
-                $('.fk_id_sucursales').select2();
-            } else {
-                $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona otra <b>Sucursal</b>, ya que el seleccionado no cuenta con Empresas relacionadas.',
-                settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+$(document).ready(function(){
+    $('[data-toggle]').tooltip();
+
+    //función para clic en el listado
+    $(".list-group-item").click(function(){
+        $(this).toggleClass('active');
+    });
+
+    $('.fk_id_sucursales').select2({
+        multiple: true,
+        disabled:true,
+        placeholder: 'Seleccione la empresa...'
+    });
+    $('#fk_id_empresa_default').on('change', function () {
+        $(".fk_id_sucursales").empty();
+        $('#loadingsucursales').show();
+        var idempresa = $('#fk_id_empresa_default option:selected').val();
+        var _url = $(this).data('url');
+        $.ajax({
+            url: _url,
+            data: {'param_js': api_sucursales ,$fk_id_empresa:idempresa},
+            dataType: "json",
+            success: function (data) {
+                if(data.length > 0){
+                    var options = [];
+                    for (var i = 0; i < data.length; i++) {
+                        options.push('<option value="' + data[i].id_sucursal + '">' + data[i].sucursal + '</option>');
+                    };
+                    $('.fk_id_sucursales').append(options.join(''));
+                    $('.fk_id_sucursales').select2({
+                        multiple: true,
+                        disabled:false,
+                    });
+                    $('#loadingsucursales').hide();
+                    $('.fk_id_sucursales').select2();
+                } else {
+                    $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona otra <b>Sucursal</b>, ya que el seleccionado no cuenta con Empresas relacionadas.',
+                    settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                    $('.fk_id_sucursales').select2({
+                        multiple: true,
+                        disabled:true,
+                        placeholder: 'Seleccione otra empresa...'
+                    });
+                    $('#loadingsucursales').hide();
+                }
+            },
+            error: function(){
                 $('.fk_id_sucursales').select2({
                     multiple: true,
                     disabled:true,
-                    placeholder: 'Seleccione otra empresa...'
                 });
                 $('#loadingsucursales').hide();
-            }
-        },
-        error: function(){
-            $('.fk_id_sucursales').select2({
-                multiple: true,
-                disabled:true,
-            });
-            $('#loadingsucursales').hide();
-            $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona otra <b>Sucursal</b>, ya que el seleccionado no cuenta con Empresas relacionadas.',
-            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-        },
+                $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona otra <b>Sucursal</b>, ya que el seleccionado no cuenta con Empresas relacionadas.',
+                settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            },
+        });
     });
+    
+    if($('#fk_id_empresa_default').val() > 0){
+        $(".fk_id_sucursales").empty();
+        $('#loadingsucursales').show();
+        var idempresa = $('#fk_id_empresa_default option:selected').val();
+        var _url = $('#fk_id_empresa_default').data('url');
+        $.ajax({
+            url: _url,
+            data: {'param_js': api_sucursales, $fk_id_empresa:idempresa},
+            dataType: "json",
+            success: function (data) {
+                if(data.length > 0){
+                    var options = [];
+                    for (var i = 0; i < data.length; i++) {
+                        options.push('<option value="' + data[i].id_sucursal + '">' + data[i].sucursal + '</option>');
+                    };
+                    $('.fk_id_sucursales').append(options.join(''));
+                    $('.fk_id_sucursales').select2({
+                        multiple: true,
+                        disabled:false,
+                    });
+                    $('#loadingsucursales').hide();
+                    $('.fk_id_sucursales').select2();
+                } else {
+                    $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona otra <b>Sucursal</b>, ya que el seleccionado no cuenta con Empresas relacionadas.',
+                    settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                    $('.fk_id_sucursales').select2({
+                        multiple: true,
+                        disabled:true,
+                        placeholder: 'Seleccione otra empresa...'
+                    });
+                    $('#loadingsucursales').hide();
+                }
+            },
+            error: function(){
+                $('.fk_id_sucursales').select2({
+                    multiple: true,
+                    disabled:true,
+                });
+                $('#loadingsucursales').hide();
+                $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Selecciona otra <b>Sucursal</b>, ya que el seleccionado no cuenta con Empresas relacionadas.',
+                settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            },
+        });
+    }
+    
+    $('#usuario').on('keyup', function (value) {
+        if($(this).val() == $('#nombre_corto').val()){
+            $(this).removeClass('border-success').addClass('border-danger');
+            $.toaster({priority : 'danger',title : '¡Error!',message : 'El Usuario tiene que ser diferente a su nombre actual.',
+            settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
+        } else {
+            $(this).removeClass('border-danger').addClass('border-success')
+        }
+    });
+    
+    $(document).on('submit',function(){
+        if(!checkingProfiles() || $('#lista_correo').length == 0 || $('#usuario').hasClass('border-danger') || !checkingCheckboxes()){
+            $.toaster({priority : 'danger',title : '¡Error!',message : 'Antes de Guardar es necesario lo siguiente: <ol><li>Es necesario mínimo un correo empresarial</li><li>Necesitas asignarle mínimo un Perfil</li><li>Verifica que el Nombre corto y el usuario no sean <b>iguales</b></li><li>Agrega mínimo una sucursal</li></ol>',
+            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            return false;
+        }
+    });
+    
 });
 
+function validateEmail($email) {
+    var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    return emailReg.test( $email );
+}
+
+function eliminarFila(fila)
+{
+    $('#'+fila).remove();
+}
+
+function checkingProfiles(){
+    var validator = false;
+    var $perfiles = $('#listProfiles input')
+    for(var i = 0; i < $perfiles.length; i++){
+        console.log($perfiles[i])
+        if($($perfiles[i]).is(':checked')){
+            validator = true;
+        }
+    }
+    if(validator == true){
+        return true;
+    } else{
+        return false;
+    }
+}
+function checkingCheckboxes(){
+    var validator = false;
+    var $modulos = $('#modulos input')
+    for(var i = 0; i < $modulos.length; i++){
+        if($($modulos[i]).is(':checked')){
+            validator = true;
+        }
+    }
+    if(validator == true){
+        return true;
+    } else{
+        return false;
+    }
+}
 function accionesPerfil(profiel)
 {   
     
@@ -109,62 +221,5 @@ function agregarCorreo()
             '</tr>');
         cont_correo++;
         $('#correo').val('');
-    }
-}
-
-$('#usuario').on('keyup', function (value) {
-    if($(this).val() == $('#nombre_corto').val()){
-        $(this).removeClass('border-success').addClass('border-danger');
-        $.toaster({priority : 'danger',title : '¡Error!',message : 'El Usuario tiene que ser diferente a su nombre actual.',
-        settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
-    } else {
-        $(this).removeClass('border-danger').addClass('border-success')
-    }
-});
-
-function validateEmail($email) {
-    var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    return emailReg.test( $email );
-}
-
-function eliminarFila(fila)
-{
-    $('#'+fila).remove();
-}
-
-$(document).on('submit',function(){
-    if(!checkingProfiles() || $('#lista_correo').length == 0 || $('#usuario').hasClass('border-danger') || !checkingCheckboxes()){
-        $.toaster({priority : 'danger',title : '¡Error!',message : 'Antes de Guardar es necesario lo siguiente: <ol><li>Es necesario mínimo un correo empresarial</li><li>Necesitas asignarle mínimo un Perfil</li><li>Verifica que el Nombre corto y el usuario no sean <b>iguales</b></li><li>Agrega mínimo una sucursal</li></ol>',
-        settings:{'timeout':6000,'toaster':{'css':{'top':'5em'}}}});
-        return false;
-    }
-});
-
-function checkingProfiles(){
-    var validator;
-    var $perfiles = $('#listProfiles input')
-    for(var i = 0; i < $perfiles.length; i++){
-        if($($perfiles[i]).hasClass('active')){
-            validator = $($perfiles[i]);
-        }
-    }
-    if(validator){
-        return true;
-    } else{
-        return false;
-    }
-}
-function checkingCheckboxes(){
-    var validator = false;
-    var $modulos = $('#modulos input')
-    for(var i = 0; i < $modulos.length; i++){
-        if($($modulos[i]).is(':checked')){
-            validator = true;
-        }
-    }
-    if(validator == true){
-        return true;
-    } else{
-        return false;
     }
 }

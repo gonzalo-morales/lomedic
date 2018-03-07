@@ -15,6 +15,7 @@ use App\Http\Models\Compras\CondicionesAutorizacion;
 use App\Http\Models\Compras\Autorizaciones;
 use App\Http\Models\SociosNegocio\ProductosSociosNegocio;
 use Carbon\Carbon;
+use function foo\func;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
 use App\Http\Models\Finanzas\CondicionesPago;
@@ -38,7 +39,6 @@ class OrdenesController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
-
         switch (\request('tipo_documento')){
             case 1:
                 $documento = Solicitudes::find(\request('id'));
@@ -53,20 +53,42 @@ class OrdenesController extends ControllerBase
                 $detalles_documento = null;
                 break;
         }
-        $clientes = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
+        $clientes = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_venta',1)->whereHas('empresas',function ($empresa){
+            $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
+        })->pluck('nombre_comercial','id_socio_negocio');
+        $proveedores = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->whereHas('empresas',function ($empresa){
+            $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
+        })->pluck('nombre_comercial','id_socio_negocio');
         return [
             'companies' => Empresas::where('activo',1)->where('conexion','<>',\request()->company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
             'documento' =>$documento,
             'detalles_documento'=>$detalles_documento,
             'tipo_documento' => \request('tipo_documento'),
-            'sucursales' => Sucursales::select('id_sucursal','sucursal')->where('activo',1)->whereHas('empresa_sucursales')->pluck('sucursal','id_sucursal'),
-            'clientes' => $clientes,
+            'sucursales' 	=> Sucursales::whereHas('usuario_sucursales',
+                function ($q){
+                    $q->where('id_usuario',Auth::id());})
+                ->whereHas('empresa_sucursales',function ($empresa){
+                    $empresa->where('id_empresa',dataCompany()->id_empresa);
+                })->pluck('sucursal','id_sucursal'),
+            'clientes' => $clientes ?? '',
+            'proveedores' => $proveedores ?? '',
             'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
-            'estatus' => 2,
-            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]'),
+//            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]'),
+            'js_tiempo_entrega' => Crypt::encryptString('
+                "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],
+                "withFunction": [{
+                "productos": {
+                    "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],
+                    "whereRaw": ["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"],
+                    "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
+                }
+                }],
+                "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
+            '),
         ];
+
     }
 
     public function index($company, $attributes=[]){
@@ -80,189 +102,117 @@ class OrdenesController extends ControllerBase
 	public function create($company, $attributes =[])
 	{
 	    $documento = $this->getDataView()['documento'];
-
         $data = $this->entity->getColumnsDefaultsValues();
-        $data['fk_id_empresa'] = $documento->fk_id_empresa;
-        $data['fk_id_sucursal'] = $documento->fk_id_sucursal;
-        dd($data);
-        $attributes['data'] = $data;
+        if(!empty($documento) && $documento->fk_id_tipo_documento == 2){
+            $data['fk_id_empresa'] = $documento->fk_id_empresa;
+            $data['fk_id_sucursal'] = $documento->fk_id_sucursal;
+            $attributes['data'] = $data;
+        }
 		 return parent::create($company,$attributes);
 	}
 
 	public function store(Request $request, $company, $compact = false)
 	{
-        # ¿Usuario tiene permiso para crear?
-		$this->authorize('create', $this->entity);
+	    $return = parent::store($request,$company,$compact);
 
-		$request->request->set('fecha_creacion',Carbon::now()->toDateString());
+	    $datos = $return['entity'];
 
-		$request->request->set('fk_id_estatus_orden',1);
-		if(empty($request->fk_id_empresa)){
-		    $request->request->set('fk_id_empresa',Empresas::where('conexion','LIKE',$company)->first()->id_empresa);
+	    if($datos){
+//            switch ($tipo_documento){
+//                case 1:
+//                    $solicitud = Solicitudes::find($id_documento);
+//                    $solicitud->fk_id_estatus_solicitud = 2;
+//                    $solicitud->save();
+//                    break;
+//                case 2:
+//                    $oferta = Ofertas::find($id_documento);
+//                    $oferta->fk_id_estatus_oferta = 2;
+//                    $oferta->save();
+//                    break;
+//            }
         }
-        if(!empty($request->importacion)){
-		    $request->request->set('importacion','t');
-        }
 
-        if(empty($request->tiempo_entrega || empty($request->fecha_estimada_entrega))){
-		    $request->request->set('tiempo_entrega',null);
-		    $request->request->set('fecha_estimada_entrega',null);
-        }
-
-        $request->request->set('fecha_cancelacion',null);
-        $request->request->set('motivo_cancelacion',null);
-
-//        dd($request->request,$this->entity->rules);
-        # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules);
-        $isSuccess = $this->entity->create($request->all());
-		if ($isSuccess) {
-		    $descuento_rows = 0;
-			if(isset($request->_detalles)) {
-				foreach ($request->_detalles as $detalle) {
-				    $descuento_rows += $detalle['descuento_detalle'];
-                    if(empty($detalle['fk_id_upc'])){
-                        $detalle['fk_id_upc'] = null;
-                    }
-                    if(empty($detalle['fk_id_cliente'])){
-                        $detalle['fk_id_cliente'] = null;
-                    }
-                    if(empty($detalle['fk_id_proyecto'])){
-                        $detalle['fk_id_proyecto'] = null;
-                    }
-                    if(empty($detalle['fecha_necesario'])){
-                        $detalle['fecha_necesario'] = null;
-                    }
-					$isSuccess->detalle()->save(new DetalleOrdenes($detalle));
-				}
-			}
-			if(isset($request->detalles)){
-			    $id_documento = 0;
-			    $tipo_documento = 0;
-			    foreach ($request->detalles as $detalle){
-                    $descuento_rows += $detalle['descuento_detalle'];
-                    $id_documento = $detalle['fk_id_documento_base'];
-                    $tipo_documento = $detalle['fk_id_tipo_documento_base'];
-                    if(empty($detalle['fk_id_upc'])){
-                        $detalle['fk_id_upc'] = null;
-                    }
-                    if(empty($detalle['fk_id_cliente'])){
-                        $detalle['fk_id_cliente'] = null;
-                    }
-                    if(empty($detalle['fk_id_proyecto'])){
-                        $detalle['fk_id_proyecto'] = null;
-                    }
-                    if(empty($detalle['fecha_necesario'])){
-                        $detalle['fecha_necesario'] = null;
-                    }
-                    $isSuccess->detalle()->save(new DetalleOrdenes($detalle));
-                }
-                switch ($tipo_documento){
-                    case 1:
-                        $solicitud = Solicitudes::find($id_documento);
-                        $solicitud->fk_id_estatus_solicitud = 2;
-                        $solicitud->save();
-                        break;
-                    case 2:
-                        $oferta = Ofertas::find($id_documento);
-                        $oferta->fk_id_estatus_oferta = 2;
-                        $oferta->save();
-                        break;
-			    }
-            }
-            $isSuccess->descuento_total = $descuento_rows + $isSuccess->descuento_general;
-			$isSuccess->save();
-
-			#$this->log('store', $isSuccess->id_documento);
-
-			// dd($isSuccess->id_documento);
-			// $this->evaluarCondiciones($request, $isSuccess->id_documento);
-
-            return $this->redirect('store');
-		} else {
-			#$this->log('error_store');
-			return $this->redirect('error_store');
-		}
+//        # ¿Usuario tiene permiso para crear?
+//		$this->authorize('create', $this->entity);
+//
+//		$request->request->set('fecha_creacion',Carbon::now()->toDateString());
+//
+//		$request->request->set('fk_id_estatus_orden',1);
+//		if(empty($request->fk_id_empresa)){
+//		    $request->request->set('fk_id_empresa',Empresas::where('conexion','LIKE',$company)->first()->id_empresa);
+//        }
+//        if(!empty($request->importacion)){
+//		    $request->request->set('importacion','t');
+//        }
+//
+//        if(empty($request->tiempo_entrega || empty($request->fecha_estimada_entrega))){
+//		    $request->request->set('tiempo_entrega',null);
+//		    $request->request->set('fecha_estimada_entrega',null);
+//        }
+//
+//        $request->request->set('fecha_cancelacion',null);
+//        $request->request->set('motivo_cancelacion',null);
+//
+////        dd($request->request,$this->entity->rules);
+//        # Validamos request, si falla regresamos pagina
+//        $this->validate($request, $this->entity->rules);
+//        $isSuccess = $this->entity->create($request->all());
+//		if ($isSuccess) {
+//		    $descuento_rows = 0;
+//			if(isset($request->_detalles)) {
+//				foreach ($request->_detalles as $detalle) {
+//				    $descuento_rows += $detalle['descuento_detalle'];
+//                    if(empty($detalle['fk_id_upc'])){
+//                        $detalle['fk_id_upc'] = null;
+//                    }
+//                    if(empty($detalle['fk_id_cliente'])){
+//                        $detalle['fk_id_cliente'] = null;
+//                    }
+//                    if(empty($detalle['fk_id_proyecto'])){
+//                        $detalle['fk_id_proyecto'] = null;
+//                    }
+//                    if(empty($detalle['fecha_necesario'])){
+//                        $detalle['fecha_necesario'] = null;
+//                    }
+//					$isSuccess->detalle()->save(new DetalleOrdenes($detalle));
+//				}
+//			}
+//			if(isset($request->detalles)){
+//			    $id_documento = 0;
+//			    $tipo_documento = 0;
+//			    foreach ($request->detalles as $detalle){
+//                    $descuento_rows += $detalle['descuento_detalle'];
+//                    $id_documento = $detalle['fk_id_documento_base'];
+//                    $tipo_documento = $detalle['fk_id_tipo_documento_base'];
+//                    if(empty($detalle['fk_id_upc'])){
+//                        $detalle['fk_id_upc'] = null;
+//                    }
+//                    if(empty($detalle['fk_id_cliente'])){
+//                        $detalle['fk_id_cliente'] = null;
+//                    }
+//                    if(empty($detalle['fk_id_proyecto'])){
+//                        $detalle['fk_id_proyecto'] = null;
+//                    }
+//                    if(empty($detalle['fecha_necesario'])){
+//                        $detalle['fecha_necesario'] = null;
+//                    }
+//                    $isSuccess->detalle()->save(new DetalleOrdenes($detalle));
+//                }
+//            }
+//            $isSuccess->descuento_total = $descuento_rows + $isSuccess->descuento_general;
+//			$isSuccess->save();
+//
+//			#$this->log('store', $isSuccess->id_documento);
+//
+//			// dd($isSuccess->id_documento);
+//			// $this->evaluarCondiciones($request, $isSuccess->id_documento);
+//
+//            return $this->redirect('store');
+//		} else {
+//			#$this->log('error_store');
+//			return $this->redirect('error_store');
+//		}
 	}
-
-	public function show($company,$id,$attributes = [])
-	{
-	    $proveedores = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra','3')->pluck('nombre_comercial','id_socio_negocio');
-		$estatus = Ordenes::where('id_documento',$id)->pluck('fk_id_estatus_autorizacion','id_documento')->first();
-		if ($estatus == 1 || $estatus == 3) {
-			$estatus = 1;
-		}else {
-			$estatus = 2;
-		}
-		$attributes = $attributes+['dataview'=>[
-			'detalles' => $this->entity->find($id)->detalle->where('cerrado',false),
-		    'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
-		    'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-            'proveedores' => $proveedores,
-            'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
-		    'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
-		    'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
-		    'condiciones'=>Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1),
-			'estatus' => $estatus,
-            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]')
-            ]];
-		return parent::show($company,$id,$attributes);
-	}
-
-	public function edit($company,$id,$attributes = [])
-	{
-	    $clientes = SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->pluck('nombre_comercial','id_socio_negocio');
-		$estatus = Ordenes::where('id_documento',$id)->pluck('fk_id_estatus_autorizacion','id_documento')->first();
-		if ($estatus == 1 || $estatus == 3) {
-			$estatus = 1;
-		}else {
-			$estatus = 2;
-		}
-
-		$attributes = $attributes+['dataview'=>[
-			'detalles' => $this->entity->find($id)->detalle->where('cerrado',false),
-		    'companies' => Empresas::where('activo',1)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
-		    'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-            'clientes' => $clientes,
-            'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
-		    'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
-		    'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
-		    'condiciones'=> Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',3)->where('activo',1),
-			'estatus' => $estatus,
-            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]')
-            ]];
-		return parent::edit($company, $id, $attributes);
-	}
-
-	/*public function update(Request $request, $company, $id, $compact = false)
-	{
-		# ¿Usuario tiene permiso para actualizar?
-		// $this->authorize('update', $this->entity);
-
-		# Validamos request, si falla regresamos atras
-		$this->validate($request, $this->entity->rules);
-		$entity = $this->entity->findOrFail($id);
-		if(isset($request->_detalles)){
-			$descuento_rows = 0;
-			foreach ($request->_detalles as $detalle){
-				$descuento_rows += $detalle['descuento_detalle'];
-				if(empty($detalle['fk_id_upc'])){
-					$detalle['fk_id_upc'] = null;
-				}
-				if(empty($detalle['fk_id_cliente'])){
-					$detalle['fk_id_cliente'] = null;
-				}
-				if(empty($detalle['fk_id_proyecto'])){
-					$detalle['fk_id_proyecto'] = null;
-				}
-				if(empty($detalle['fecha_necesario'])){
-					$detalle['fecha_necesario'] = null;
-				}
-			}
-			$entity->descuento_total = $entity->descuento_general + $descuento_rows;
-		}
-		return parent::update($request, $company, $id, $compact);
-	}*/
 
 	public function update(Request $request, $company, $id, $compact = false)
 	{
@@ -331,88 +281,6 @@ class OrdenesController extends ControllerBase
 			#$this->log('error_update', $id);
 			return $this->redirect('error_update');
 		}
-	}
-
-	public function destroy(Request $request, $company, $idOrIds, $attributes = [])
-	{
-	    if($request->url() != companyAction('Compras\OrdenesController@destroyDetail')){
-            if (!is_array($idOrIds)) {
-
-                $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
-                    ->update(['fk_id_estatus_orden' => 3,
-                        'motivo_cancelacion'=>$request->motivo_cancelacion,
-                        'fecha_cancelacion'=>DB::raw('now()')]);
-                if ($isSuccess) {
-
-                    #$this->log('destroy', $idOrIds);
-
-                    if ($request->ajax()) {
-                        # Respuesta Json
-                        return response()->json([
-                            'success' => true,
-                        ]);
-                    } else {
-                        return $this->redirect('destroy');
-                    }
-
-                } else {
-
-                    #$this->log('error_destroy', $idOrIds);
-
-                    if ($request->ajax()) {
-                        # Respuesta Json
-                        return response()->json([
-                            'success' => false,
-                        ]);
-                    } else {
-                        return $this->redirect('error_destroy');
-                    }
-                }
-
-                # Multiple
-            } else {
-
-                $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)
-                    ->update(['fk_id_estatus_orden' => 3,
-                        'motivo_cancelacion'=>$request->motivo_cancelacion,
-                        'fecha_cancelacion'=>DB::raw('now()')]);
-                if ($isSuccess) {
-
-                    # Shorthand
-                    #foreach ($idOrIds as $id) $this->log('destroy', $id);
-
-                    if ($request->ajax()) {
-                        # Respuesta Json
-                        return response()->json([
-                            'success' => true,
-                        ]);
-                    } else {
-                        return $this->redirect('destroy');
-                    }
-					return $this->redirect('destroy');
-
-                } else {
-
-                    # Shorthand
-                    #foreach ($idOrIds as $id) $this->log('error_destroy', $id);
-
-                    if ($request->ajax()) {
-                        # Respuesta Json
-                        return response()->json([
-                            'success' => false,
-                        ]);
-                    } else {
-                        return $this->redirect('error_destroy');
-                    }
-                }
-            }
-        }else{
-            DetalleOrdenes::whereIn('id_documento_detalle', $request->ids)->update(['cerrado' => 't']);
-            // return true;
-			return response()->json([
-				'success' => true,
-			]);
-        }
 	}
 
     public function impress($company,$id)

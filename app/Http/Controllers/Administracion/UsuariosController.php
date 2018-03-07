@@ -175,7 +175,7 @@ class UsuariosController extends ControllerBase
         $data = $this->entity->findOrFail($id);
         $empleados = Empleados::whereHas('usuario',function($q)use ($data){
             $q->where('fk_id_empleado',$data->fk_id_empleado);
-        })->selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->where('activo',1)->pluck('empleado','id_empleado');
+        })->selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->where('activo',1)->pluck('empleado','id_empleado')->prepend('Seleccione el empleado',0);
         $attributes['dataview'] =['companies'=>$companies];
         $dataview = isset($attributes['dataview']) ? $attributes['dataview'] : [];
 
@@ -345,6 +345,13 @@ class UsuariosController extends ControllerBase
                 }
                 $entity->perfiles()->sync($sync);
             }
+
+            //         $mails[]= 
+            //         [
+            //             'correo' =>  $email_company['correo'],
+            //             'fk_id_empresa' =>  intval($email_company['id_empresa']),
+            //             'fk_id_usuario' =>  $id
+            //         ];
 
             # Guardamos el detalle de sucursales en la que estara disponible
             if(isset($request->fk_id_sucursal)) {

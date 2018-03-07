@@ -1,13 +1,8 @@
 @extends(smart())
-@section('header-top')
-	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/pickadate/default.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/pickadate/default.date.css') }}">
-@endsection
 @section('content-width', 's12')
+
 @section('header-bottom')
 	@parent
-	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if (!Route::currentRouteNamed(currentRouteName('index'))) )
 		<script type="text/javascript">
 			var comprador_js = '{{$js_comprador ?? ''}}';
@@ -21,7 +16,7 @@
     @inroute(['show','edit'])
     	<div class="row">
     		<div class="col-md-12 text-center text-success">
-    			<h3>Factura No. {{$data->id_factura_proveedor}}</h3>
+    			<h3>Factura No. {{$data->id_documento}}</h3>
     		</div>
     	</div>
     @endif
@@ -76,7 +71,7 @@
     			Cargando datos... <i class="material-icons align-middle loading">cached</i>
     		</div>
     	{{Form::cText('Comprador','comprador',['disabled','data-url'=>companyAction('HomeController@index').'/recursoshumanos.empleados/api'],
-    		isset($data->proveedor) ? $data->proveedor->ejecutivocompra->nombre.' '.$data->proveedor->ejecutivocompra->apellido_paterno.' '.$data->proveedor->ejecutivocompra->apellido_materno : null)}}
+    		isset($data->proveedor) && isset($data->proveedor->ejecutivocompra) ? $data->proveedor->ejecutivocompra->nombre ?? '' .' '.$data->proveedor->ejecutivocompra->apellido_paterno ?? '' .' '.$data->proveedor->ejecutivocompra->apellido_materno ?? ''  : null)}}
     	</div>
     	<div class="form-group col-md-3 col-sm-12">
     		{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}
@@ -88,8 +83,8 @@
     		<div class="form-group col-md-2 col-sm-6">
     			{{Form::label('serie_folio_factura','Serie y Folio',['style'=>'display: block;text-align: center;'])}}
     			<div class="input-group">
-    				{{Form::cText('','serie_factura',['readonly','class'=>'form-control'])}}
-    				{{Form::cText('','folio_factura',['readonly','class'=>'form-control'])}}
+    				{{Form::cText('','serie_factura',['readonly'])}}
+    				{{Form::cText('','folio_factura',['readonly'])}}
     			</div>
     		</div>
     		<div class="form-group col-md-2 col-sm-4">
@@ -98,18 +93,22 @@
     		<div class="form-group col-md-2 col-sm-2">
     			{{Form::cText('Versión','version_sat',['readonly'])}}
     		</div>
-			<div class="form-group col-md-2 col-sm-6">
+			<div class="form-group col-md-3 col-sm-6">
 				{{Form::hidden('fk_id_forma_pago')}}
-				{{Form::cText('Forma Pago','forma_pago',['disabled','class'=>'form-control'],'('.$data->forma_pago->forma_pago.') '.$data->forma_pago->descripcion)}}
+				{{Form::cText($data->version_sat == 3.3 ? 'Forma Pago' : 'Método Pago','forma_pago',['disabled'],'('.$data->forma_pago->forma_pago.') '.$data->forma_pago->descripcion)}}
 			</div>
+            <div class="form-group col-md-3 col-sm-6">
+                {{Form::hidden('fk_id_metodo_pago')}}
+                {{Form::cText($data->version_sat == 3.3 ? 'Método Pago' : 'Forma Pago','metodo_pago',['disabled'],'('.$data->metodo_pago->metodo_pago.') '.$data->metodo_pago->descripcion)}}
+            </div>
     		<div class="form-group col-md-2 col-sm-6">
 				{{Form::hidden('fk_id_estatus_factura')}}
-				{{Form::cText('Estatus Factura','estatus_factura',['disabled','class'=>'form-control'],$data->estatus->estatus ?? null)}}
+				{{Form::cText('Estatus Factura','estatus_factura',['disabled'],$data->estatus->estatus ?? null)}}
     		</div>
-    		<div class="form-group col-md-2 col-sm-6">
+    		<div class="form-group col-md-3 col-sm-6">
     			{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
     			{{Form::hidden('fk_id_moneda')}}
-				{{Form::cText('Moneda','moneda',['disabled','class'=>'form-control'],'('.$data->moneda->moneda.') '.$data->moneda->descripcion)}}
+				{{Form::cText('Moneda','moneda',['disabled'],'('.$data->moneda->moneda.') '.$data->moneda->descripcion)}}
     		</div>
     		<div class="form-group col-md-3 col-sm-6">
     			{{Form::cText('Subtotal','subtotal',['readonly'])}}

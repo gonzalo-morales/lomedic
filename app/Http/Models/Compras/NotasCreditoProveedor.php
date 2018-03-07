@@ -4,6 +4,7 @@ namespace App\Http\Models\Compras;
 
 use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Administracion\FormasPago;
+use App\Http\Models\Administracion\MetodosPago;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\ModelCompany;
@@ -121,6 +122,11 @@ class NotasCreditoProveedor extends ModelCompany
     public function forma_pago()
     {
         return $this->hasOne(FormasPago::class,'id_forma_pago','fk_id_forma_pago');
+    }
+
+    public function metodo_pago()
+    {
+        return $this->hasOne(MetodosPago::class,'id_metodo_pago','fk_id_metodo_pago');
     }
 
     public function detalle(){
