@@ -4,6 +4,17 @@ $('.datepicker').pickadate({
     format: 'yyyy-mm-dd'
 });
 
+$(document).on('submit',function (e) {
+    if($('#detalle_solicitud_pago tr').length < 1)
+    {
+        e.preventDefault();
+        $.toaster({
+            priority: 'danger', title: 'Error', message: 'Por favor agrega al menos un detalle',
+            settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+        });
+    }
+});
+
 $(document).ready(function () {
     //Para las autorizaciones de solicitudes de compras
     $('input[type=radio][name=fk_id_estatus]').change(function () {
@@ -15,7 +26,7 @@ $(document).ready(function () {
         }
     });
     $('.condicion').click(function () {
-        $('#motivo_autorizacion').val($(this).parent().parent().find('td:first-child').text());
+        $('#motivo_autorizacion').val($(this).parent().parent().find('td:nth-child(2)').text());
         // $('#fk_id_estatus\\ ').prop('checked',true);
         $('#id_documento').val($(this).parent().parent().find('td input:first').val());
         $('#observaciones').val($(this).parent().parent().find('td input:first').next('input').val());

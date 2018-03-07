@@ -12,7 +12,9 @@ use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Administracion\MetodosPago;
 use Carbon\Carbon;
+use function foo\func;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use XmlParser;
@@ -30,7 +32,12 @@ class FacturasProveedoresController extends ControllerBase
     {
         return [
             'proveedores' 	=> SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->pluck('nombre_comercial','id_socio_negocio'),
-            'sucursales' 	=> Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
+            'sucursales' 	=> Sucursales::whereHas('usuario_sucursales',
+                function ($q){
+                $q->where('id_usuario',Auth::id());})
+                ->whereHas('empresa_sucursales',function ($empresa){
+                $empresa->where('id_empresa',dataCompany()->id_empresa);
+                })->pluck('sucursal','id_sucursal'),
             'js_comprador' => Crypt::encryptString('"select": ["nombre","apellido_paterno","apellido_materno"], "conditions": [{"where": ["activo","1"]}], "whereHas": [{"ejecutivocompra":{"where":["id_socio_negocio","$id_socio_negocio"]}}]')
         ];
     }
@@ -48,7 +55,6 @@ class FacturasProveedoresController extends ControllerBase
 
         $xml = simplexml_load_file($request->file('archivo_xml_hidden')->getRealPath());
         $arrayData = xmlToArray($xml);
-		// dd($arrayData);
         if($request->version_sat == "3.3"){
             $request->request->set('serie_factura',isset($arrayData['Comprobante']['@Serie']) ? $arrayData['Comprobante']['@Serie'] : null);
             $request->request->set('fecha_factura',$arrayData['Comprobante']['@Fecha']);
@@ -62,15 +68,16 @@ class FacturasProveedoresController extends ControllerBase
         }else if($request->version_sat == "3.2"){
             $request->request->set('serie_factura',isset($arrayData['Comprobante']['@serie']) ? $arrayData['Comprobante']['@serie'] : null);
             $request->request->set('fecha_factura',$arrayData['Comprobante']['@fecha']);
-            $request->request->set('fk_id_forma_pago',MetodosPago::where('descripcion', 'ILIKE', "%".utf8_decode($arrayData['Comprobante']['@formaDePago'])."%")->first()->id_metodos_pago);
+            $request->request->set('fk_id_metodo_pago',MetodosPago::whereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@formaDePago'].'\')')->first()->id_metodo_pago);
             $request->request->set('total',$arrayData['Comprobante']['@total']);
             $request->request->set('iva',$arrayData['Comprobante']['cfdi:Impuestos']['@totalImpuestosTrasladados']);
             $request->request->set('subtotal',$arrayData['Comprobante']['@subTotal']);
-            $request->request->set('fk_id_moneda',Monedas::where('moneda', 'LIKE', $arrayData['Comprobante']['@Moneda'])->first()->id_moneda);
-            $request->request->set('fk_id_metodo_pago',FormasPago::where('forma_pago', 'ILIKE', "%".$arrayData['Comprobante']['@metodoDePago']."%")->first()->id_forma_pago);
+            $request->request->set('fk_id_moneda',Monedas::whereRaw('to_ascii(moneda) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->first()->id_moneda);
+            $request->request->set('fk_id_forma_pago',FormasPago::whereRaw('to_ascii(forma_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->first()->id_forma_pago);
             $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
         }
         $request->request->set('fk_id_estatus_factura',1);
+//        dd($request->request);
         return parent::store($request,$company,$compact);
     }
 

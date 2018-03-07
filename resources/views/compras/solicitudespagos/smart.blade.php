@@ -12,7 +12,6 @@
 	@endif
 @endsection
 
-
 @section('form-content')
 	{{ Form::setModel($data) }}
     @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
@@ -33,7 +32,10 @@
     			</div>
     			<div class="modal-body">
     				<div class="row">
-    					{{Form::hidden('',null,['id'=>'id_documento','data-url'=>companyAction('Compras\AutorizacionesController@update',['id'=>'?id'])])}}
+						<div class="form-group text-center col-md-12 col-sm-6">
+						{{Form::label('','ID')}}
+    					{{Form::text('',null,['id'=>'id_documento','disabled','data-url'=>companyAction('Compras\AutorizacionesController@update',['id'=>'?id']),'class'=>'form-control text-center'])}}
+						</div>
     					<div class="form-group col-md-12 col-sm-6">
     						{{Form::label('','Tipo de autorizacion')}}
     						{{Form::text('',null,['class'=>'form-control','readonly','id'=>'motivo_autorizacion'])}}
@@ -212,6 +214,7 @@
     		<table class="table">
     			<thead>
     				<tr>
+						<th>ID</th>
     					<th>Condición</th>
     					<th>Fecha</th>
     					<th>Estatus</th>
@@ -224,6 +227,7 @@
     					@foreach($condiciones as $condicion)
     						@if($autorizacion->fk_id_condicion == $condicion->id_condicion)
     							<tr>
+									<td>{{$autorizacion->id_autorizacion}}</td>
     								<td>{{$autorizacion->condicion->nombre}}{{Form::hidden('',$autorizacion->id_autorizacion)}}{{Form::hidden('',$autorizacion->observaciones)}}{{Form::hidden('',$autorizacion->fk_id_estatus)}}</td>
     								<td>{{$autorizacion->fecha_creacion}}</td>
     								@if($autorizacion->fk_id_estatus == 1)

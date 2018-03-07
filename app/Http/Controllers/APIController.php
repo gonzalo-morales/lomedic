@@ -66,9 +66,22 @@ class APIController extends Controller
                 $entity = call_user_func_array([$entity, 'distinct'], $request['distinct'] ?? []);
             }
 			# Si hay eagerloaders
-		    $entity = $entity->with($request['with'] ?? []);
+            if(isset($request['withFunction'])){
+                foreach ($request['withFunction'] as $relations){
+                    foreach ($relations as $relation=>$actions){
+                        $entity = $entity->with([$relation=>function($pivot) use ($actions){
+                            foreach ($actions as $action=>$value){
+                                $pivot->{$action}($value);
+                            }
+                            return $pivot;
+                        }]);
+                    }
+                }
+            }
 
-			# Condiciones ... (where, whereIn etc)
+            $entity = $entity->with($request['with'] ?? []);
+
+            # Condiciones ... (where, whereIn etc)
 		    foreach (($request['conditions'] ?? []) as $conditions) {
 				foreach ($conditions as $condition => $args) {
 					call_user_func_array([$entity, $condition], $args);

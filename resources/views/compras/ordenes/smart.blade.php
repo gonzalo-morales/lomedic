@@ -17,7 +17,7 @@
 @endsection
 
 @section('form-actions')
-	{{-- {{ dd($data) }} --}}
+	 {{--{{ dd($data) }}--}}
    <div class="col-md-12 col-xs-12">
        <div class="text-right">
 		   @if(!Route::currentRouteNamed(currentRouteName('create')))
@@ -61,13 +61,7 @@
 @endif
 <div class="row">
 	<div class="form-group col-md-3 col-sm-12">
-		{{ Form::label('fk_id_socio_negocio', '* Proveedor a surtir') }}
-		@if(Route::currentRouteNamed(currentRouteName('show')))
-			{!! Form::select('fk_id_socio_negocio',$proveedores ?? [],null,['id'=>'fk_id_socio_negocio','class'=>'form-control select2','style'=>'width:100%','data-url'=>companyAction('getProveedores')]) !!}
-		@else
-			{!! Form::select('fk_id_socio_negocio',[],null,['id'=>'fk_id_socio_negocio','class'=>'form-control select2','style'=>'width:100%','data-url'=>companyAction('getProveedores')]) !!}
-		@endif
-		{{ $errors->has('fk_id_socio_negocio') ? HTML::tag('span', $errors->first('fk_id_socio_negocio'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{{Form::cSelectWithDisabled('* Proveedor','fk_id_socio_negocio',$proveedores ?? [],['class'=>'select2'])}}
 	</div>
 	<div class="form-group col-md-3 col-sm-12">
 		{{ Form::label('fk_id_empresa', 'Otra empresa realiza la compra') }}
@@ -75,9 +69,10 @@
 			<span class="input-group-addon">
 				<input type="checkbox" id="otra_empresa" {{isset($data->fk_id_empresa)?'checked':''}}>
 			</span>
-			{!! Form::select('fk_id_empresa',isset($companies)?$companies:[],null,['id'=>'fk_id_empresa_','class'=>'form-control','style'=>'width:100%',!isset($data->fk_id_empresa)?'disabled':'']) !!}
+			{!! Form::cSelectWithDisabled('','fk_id_empresa',$companies ?? [],[!isset($data->fk_id_empresa)?'disabled':'','id'=>'fk_id_empresa_']) !!}
+{{--			{!! Form::select('fk_id_empresa',isset($companies)?$companies:[],null,['id'=>'fk_id_empresa_','class'=>'form-control','style'=>'width:100%',!isset($data->fk_id_empresa)?'disabled':'']) !!}--}}
 		</div>
-		{{ $errors->has('fk_id_empresa') ? HTML::tag('span', $errors->first('fk_id_empresa'), ['class'=>'help-block deep-orange-text']) : '' }}
+{{--		{{ $errors->has('fk_id_empresa') ? HTML::tag('span', $errors->first('fk_id_empresa'), ['class'=>'help-block deep-orange-text']) : '' }}--}}
 	</div>
 	<div class="form-group text-center col-md-3 col-sm-6">
 		{{ Form::label('', 'Días/Fecha') }}
@@ -87,19 +82,13 @@
 		</div>
 	</div>
 	<div class="form-group col-md-3 col-sm-6">
-		{{ Form::label('fk_id_sucursal', '* Sucursal de entrega') }}
-		{!! Form::select('fk_id_sucursal',isset($sucursales)?$sucursales:[],null,['id'=>'fk_id_sucursal_','class'=>'form-control select2','style'=>'width:100%']) !!}
-		{{ $errors->has('fk_id_sucursal') ? HTML::tag('span', $errors->first('fk_id_sucursal'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{!! Form::cSelectWithDisabled('*Sucursal entrega','fk_id_sucursal',$sucursales ?? []) !!}
 	</div>
 	<div class="form-group col-md-3 col-sm-6">
-		{{ Form::label('fk_id_condicion_pago', '* Condición de pago') }}
-		{!! Form::select('fk_id_condicion_pago',isset($condicionesPago)?$condicionesPago:[],null,['id'=>'fk_id_condicion_pago','class'=>'form-control select2','style'=>'width:100%']) !!}
-		{{ $errors->has('fk_id_condicion_pago') ? HTML::tag('span', $errors->first('fk_id_condicion_pago'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{!! Form::cSelectWithDisabled('* Condición de pago','fk_id_condicion_pago',$condicionesPago ?? []) !!}
 	</div>
 	<div class="form-group col-md-3 col-sm-6">
-		{{ Form::label('fk_id_tipo_entrega', '* Tipo de entrega') }}
-		{!! Form::select('fk_id_tipo_entrega',isset($tiposEntrega)?$tiposEntrega:[],null,['id'=>'fk_id_tipo_entrega','class'=>'form-control select2','style'=>'width:100%']) !!}
-		{{ $errors->has('fk_id_tipo_entrega') ? HTML::tag('span', $errors->first('fk_id_tipo_entrega'), ['class'=>'help-block deep-orange-text']) : '' }}
+		{!! Form::cSelectWithDisabled('* Tipo de entrega','fk_id_tipo_entrega',$tiposEntrega ?? []) !!}
 	</div>
 	<div class="form-group col-md-3 col-sm-6">
 		{{Form::cCheckboxYesOrNo('¿Importación?','importacion')}}
@@ -126,7 +115,7 @@
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
 								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
 								'class'=>'form-control','style'=>'width:100%',
-								'data-url-tiempo_entrega'=>companyAction('HomeController@index').'/SociosNegocio.ProductosSociosNegocio/api']) !!}
+								'data-url-tiempo_entrega'=>ApiAction('sociosnegocio.sociosnegocio')]) !!}
 							</div>
 						</div>
 						<div class="form-group input-field col-md-3 col-sm-6">
@@ -557,7 +546,7 @@
 						}
 					});
 				}else{
-					let data = {motivo};
+					var data = motivo;
 					$.delete(this.dataset.deleteUrl,data,function (response) {
 						if(response.success){
 							sessionStorage.reloadAfterPageLoad = true;
@@ -569,7 +558,7 @@
 			window['smart-model'].actions.showModalCancelar = function(e, rv) {
 				e.preventDefault();
 
-				let modal = window['smart-modal'];
+				var modal = window['smart-modal'];
 				modal.view = rivets.bind(modal, {
 					title: '¿Estas seguro que deseas cancelar la orden?',
 					content: '<form  id="cancel-form">' +
@@ -605,7 +594,7 @@
 					// Opcionales
 					onModalShow: function() {
 
-						let btn = modal.querySelector('[rv-on-click="action"]');
+						var btn = modal.querySelector('[rv-on-click="action"]');
 
 						// Copiamos data a boton de modal
 						for (var i in this.dataset) btn.dataset[i] = this.dataset[i];
