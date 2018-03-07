@@ -76,8 +76,7 @@
                 <th><h5>Total</h5></th>
             </tr>
             {{--For each detalle--}}
-            @foreach($oferta->DetalleOfertas()->where('cerrado','f')->get() as $detalle)
-
+            @foreach($oferta->detalle()->where('cerrado','f')->get() as $detalle)
             <tr align="center">
                 <td>{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_documento_base:'N/A'}}</td>
                 <td>{{$detalle->sku->sku}}</td>

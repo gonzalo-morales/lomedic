@@ -74,10 +74,10 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         'fk_id_empresa_default' => 'required',
     ];
 
-	protected $unique = [
-        'nombre_corto',
-        'usuario'
-	];
+	// protected $unique = [
+    //     'nombre_corto',
+    //     'usuario'
+	// ];
 
     public function sendPasswordResetNotification($token)
     {
@@ -197,11 +197,11 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 	/*relación de tres*/
 	public function usuario_sucursales()
 	{
-		return $this->belongsToMany(Sucursales::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_sucursal');
+		return $this->hasMany(Sucursales::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_sucursal');
     }
 	public function usuario_empresa()
 	{
-		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_empresa');
+		return $this->hasMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_empresa');
     }
     public function solicitudes()
     {

@@ -91,7 +91,7 @@ class Ofertas extends ModelCompany
         return $this->hasOne(Monedas::class,'id_moneda','fk_id_moneda');
     }
 
-    public function DetalleOfertas()
+    public function detalle()
     {
         return $this->hasMany(DetalleOfertas::class,'fk_id_documento','id_documento');
     }
