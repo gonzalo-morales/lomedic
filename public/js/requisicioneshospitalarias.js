@@ -17,19 +17,6 @@ $(document).ready(function () {
         if(campos!=''){
 
             mensajeAlerta('Verifica los siguientes campos '+campos,'danger');
-            // $.toaster({
-            //     priority : 'danger',
-            //     title : 'Verifica los siguientes campos',
-            //     message : campos,
-            //     settings:{
-            //         'timeout':10000,
-            //         'toaster':{
-            //             'css':{
-            //                 'top':'5em'
-            //             }
-            //         }
-            //     }
-            // });
             return
         }
 
@@ -65,7 +52,7 @@ $(document).ready(function () {
             $('.medicine_detail').append('' +
                 '<tr id="'+ filas +'">' +
                     '<td>' + area[0]['text'] + '</td>' +
-                    '<td>' + medicamento[0].clave_cliente_producto + '</td>' +
+                    '<td>' + medicamento[0].sku + '</td>' +
                     '<td>' + medicamento[0]['text'] + '</td>' +
                     '<td>' + cantidad.val() + '</td>' +
                     '<td>' +
@@ -80,18 +67,6 @@ $(document).ready(function () {
             limpiarCampos();
 
             mensajeAlerta('Medicamento agregado exitosamente','success');
-            // $.toaster({
-            //     priority: 'success',
-            //     title: 'Éxito!',
-            //     message: '<br>Medicamento agregado exitosamente',
-            //     settings: {
-            //         'toaster': {
-            //             'css': {
-            //                 'top': '5em'
-            //             }
-            //         }
-            //     }
-            // });
         }
     });
 
