@@ -130,6 +130,7 @@ class FacturasProveedores extends ModelCompany
 
     public function notas()
     {//Tiene muchas notas por medio de cfdi
-        return $this->hasManyThrough(NotasCreditoProveedor::class,CfdiRelacionesProveedores::class,'fk_id_documento','id_documento','id_documento','fk_id_documento_relacionado')->where('fk_id_tipo_documento_relacionado',11);
+        return $this->hasManyThrough(NotasCreditoProveedor::class,CfdiRelacionesProveedores::class,'fk_id_documento_relacionado','id_documento','id_documento','fk_id_documento')->where('fac_det_cfdi_relaciones_proveedores.fk_id_tipo_documento',11)->where('fac_det_cfdi_relaciones_proveedores.fk_id_tipo_documento_relacionado',7);
+        //Tiene notas de crédito por medio de relaciones de proveedores. ID del documento relacionado. ID de la nota en la tabla de notas. ID de la factura en la tabla de facturas. ID de la factura en la tabla de relaciones
     }
 }

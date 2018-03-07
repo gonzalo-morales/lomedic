@@ -696,15 +696,15 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
         if (empty($arrayData['Comprobante']['@fecha'])) {
             $mensaje .= "\n-Verifica que el CFDI tenga una fecha";
         }
-        if (is_null(MetodosPago::whereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@formaDePago'].'\')')->first())) {
+        if (is_null(MetodosPago::whereRaw('to_ascii(metodo_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@formaDePago'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@formaDePago'].'\')')->first())) {
             $mensaje .= "\n-Verifica que la forma de pago exista";
         }
         if (empty($arrayData['Comprobante']['@noCertificado']) || empty($arrayData['Comprobante']['@certificado'])) {
             $mensaje .= "\n-Verifica que exista un certificado";
         }
-        if (is_null(Monedas::whereRaw('to_ascii(moneda) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->first())) {
-            $mensaje .= "\n-Verifica que exista la moneda utilizada";
-        }
+//        if (is_null(Monedas::whereRaw('to_ascii(moneda) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->first())) {
+//            $mensaje .= "\n-Verifica que exista la moneda utilizada";
+//        }
         //Para verificar el tipo de comprobante
         if($tipo_comprobante == 'I'){
             $tipo_comprobante = 'ingreso';
@@ -719,7 +719,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
             }
             $mensaje .= "\n-Verifica que el tipo de comprobante sea $tipo_comprobante";
         }
-        if (is_null(FormasPago::whereRaw('to_ascii(forma_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->first())) {
+        if (is_null(FormasPago::whereRaw('to_ascii(forma_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->first())) {
             $mensaje .= "\n-Verifica que la forma de pago exista";
         }
         if (!isset($arrayData['Comprobante']['@sello'])) {
