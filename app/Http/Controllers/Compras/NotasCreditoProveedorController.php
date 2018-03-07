@@ -45,7 +45,7 @@ class NotasCreditoProveedorController extends ControllerBase
                     $empresa->where('id_empresa',dataCompany()->id_empresa);
                 })->pluck('sucursal','id_sucursal'),
             'relaciones' => TiposRelacionesCfdi::select(db::raw("concat('(',tipo_relacion,') ',descripcion) as text"),'id_sat_tipo_relacion')->where('activo',1)->where('nota_credito',1)->pluck('text','id_sat_tipo_relacion')->prepend('...',0),
-            'js_facturas' => Crypt::encryptString('"select":["id_documento","serie_factura","folio_factura"], "conditions":[{"where":["version_sat","3.2"]},{"where":["fk_id_socio_negocio","$fk_id_socio_negocio"]}]'),
+            'js_facturas' => Crypt::encryptString('"select":["id_documento","serie_factura","folio_factura"], "conditions":[{"where":["fk_id_socio_negocio","$fk_id_socio_negocio"]}]'),
             'facturas' => $facturas,
             'js_relacionadas' => Crypt::encryptString('"select":["id_documento","serie_factura","folio_factura","uuid"],"conditions":[{"where":["fk_id_estatus_factura",1]},{"whereIn":["uuid",["$uuid"]]}]'),
             'js_tiporelacion' => Crypt::encryptString('"select":["id_sat_tipo_relacion","descripcion"],"conditions":[{"where":["tipo_relacion","$tipo_relacion"]}]'),
