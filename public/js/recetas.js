@@ -99,9 +99,23 @@ $(document).ready(function () {
         }
         else
         {
+            if( $('#nombre_paciente_no_afiliado').prop('disabled') == false )
+            {
+                if($('#nombre_paciente_no_afiliado').val() == ''){
+                    mensajeAlerta('Favor de ingresar el nombre del paciente no afiliado.','danger');
+                    return false;
+                }
+                else
+                {
+                    $('#fk_id_afiliado').prop('disabled',false);
+                    return true;
+                }
+            }else{
+                $('#fk_id_afiliado').prop('disabled',false);
+                return true;
+            }
             // $('#form-model').prop("disabled", true);
-            $('#fk_id_afiliado').prop('disabled',false);
-            return true;
+
         }
     });
 
