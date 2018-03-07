@@ -41,13 +41,29 @@
     		</div>
     	</div>
     </div>
+	<div id="confirmar_proveedor" class="modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Cambio de proveedor</h5>
+				</div>
+				<div class="modal-body">
+					Recuerda que al cambiar el proveedor se eliminarán los datos actuales de la nota.
+				</div>
+				<div class="modal-footer">
+					<button id="cancelarcambio" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+					<button id="confirmarcambio" type="button" class="btn btn-primary" data-dismiss="modal">Cambiar</button>
+				</div>
+			</div>
+		</div>
+	</div>
     @endif
     <div class="row">
     	<div class="col-md-8">
     		<div class="row">
     			<div class="form-group col-md-6 col-sm-12">
     				{{Form::cSelectWithDisabled('Proveedor','fk_id_socio_negocio',$proveedores ?? [],
-    				['data-url'=>ApiAction('compras.facturasproveedores')])}}
+    				['data-url'=>ApiAction('compras.facturasproveedores'),'class'=>'select2'])}}
     			</div>
     			<div class="form-group col-md-6 col-sm-12">
     				{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}

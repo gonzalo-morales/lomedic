@@ -719,7 +719,7 @@ function validarRequerimientosCFDI($arrayData,$fk_id_socio_negocio,$company,$tip
             }
             $mensaje .= "\n-Verifica que el tipo de comprobante sea $tipo_comprobante";
         }
-        if (is_null(FormasPago::whereRaw('to_ascii(forma_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->first())) {
+        if (is_null(FormasPago::whereRaw('to_ascii(forma_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->first()) && strtoupper($arrayData['Comprobante']['@metodoDePago']) != "NA"){
             $mensaje .= "\n-Verifica que la forma de pago exista";
         }
         if (!isset($arrayData['Comprobante']['@sello'])) {

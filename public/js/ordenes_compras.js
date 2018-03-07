@@ -210,7 +210,7 @@ $(document).ready(function(){
 
 });
 
-function select2Placeholder(id_select,text,searchable = 1,selected = true, disabled = true,value = 0,select2=true) {
+function select2Placeholder(id_select,text,searchable = 1,selected = true, disabled = true,value = 0,select2=true){
     var option = $('<option/>');
     option.val(value);
     option.attr('disabled',disabled);
@@ -219,7 +219,7 @@ function select2Placeholder(id_select,text,searchable = 1,selected = true, disab
     if(select2)
         $('#'+id_select).prepend(option).select2({
             minimumResultsForSearch:searchable,
-            theme: "bootstrap",
+            theme: "bootstrap"
         });
     else
         $('#'+id_select).prepend(option);

@@ -16,6 +16,28 @@ $(document).submit(function (e) {
 });
 
 $(document).ready(function () {
+
+    $("#fk_id_socio_negocio").on('select2:selecting',function() {
+        var val = $('#fk_id_socio_negocio').val() ? $('#fk_id_socio_negocio').val() : 0;
+        $('#fk_id_socio_negocio').attr("data-old",val).trigger('change');
+    });
+
+    $('#fk_id_socio_negocio').change(function () {
+        $('#confirmar_proveedor').modal('show');
+    });
+
+    $('#cancelarcambio').click(function () {
+        var val = $('#fk_id_socio_negocio').data('old');
+        $('#fk_id_socio_negocio').val(val).trigger('change');
+    });
+
+    $('#confirmarcambio').click(function () {
+        $('#encabezado_factura').empty();
+        $('#productos_facturados').empty();
+        $('#relaciones').empty();
+        $('#factura').hide();
+    });
+
     $('#cargar').click(function () {
         if($('#archivo_xml_input').val() && $('#archivo_pdf_input').val() && $('#fk_id_socio_negocio').val() > 0){
             if($('#archivo_xml_input').val().substring($('#archivo_xml_input').val().lastIndexOf(".")) != '.xml' || $('#archivo_pdf_input').val().substring($('#archivo_pdf_input').val().lastIndexOf(".")) != '.pdf'){
@@ -147,7 +169,10 @@ $(document).ready(function () {
                                         '<td>'+value.Importe+'<input name="relations[has][detalle]['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
                                         '</tr>');
                                 });
-                                console.log(facturas_js);
+                                $('#fk_id_factura_proveedor').empty();
+                                $('#fk_id_tipo_relacion').prop('disabled',true);
+                                $('#fk_id_factura_proveedor').prop('disabled',true);
+                                $('#agregar_relacion').prop('disabled',true);
                                 $.ajax({
                                     url: $('#fk_id_socio_negocio').data('url'),
                                     data: {
@@ -155,9 +180,16 @@ $(document).ready(function () {
                                         $fk_id_socio_negocio: $('#fk_id_socio_negocio').val()
                                     },
                                     success: function (values) {
-                                        $('#fk_id_factura_proveedor').empty();
                                         $.each(values,function (index,value) {
-                                            $('#fk_id_factura_proveedor').append('<option value="'+value.id_documento+'">'+value.serie_factura+'-'+value.folio_factura+'</option>');
+                                            var serie = '';
+                                            if(value.serie_factura) {
+                                                serie = value.serie_factura;
+                                            }
+                                            var folio = '';
+                                            if(value.folio_factura){
+                                                folio = value.folio_factura;
+                                            }
+                                            $('#fk_id_factura_proveedor').append('<option value="'+value.id_documento+'">'+serie+'-'+folio+'</option>');
                                         });
                                         $('#fk_id_factura_proveedor').prepend('<option value="0" selected>Selecciona...</option>');
                                         $('#fk_id_tipo_relacion').removeAttr('disabled');
