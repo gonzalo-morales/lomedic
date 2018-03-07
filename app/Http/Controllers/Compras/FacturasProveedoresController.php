@@ -30,8 +30,12 @@ class FacturasProveedoresController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
+        $proveedores = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->whereHas('empresas',function ($empresa){
+            $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
+        })->pluck('nombre_comercial','id_socio_negocio');
+
         return [
-            'proveedores' 	=> SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->pluck('nombre_comercial','id_socio_negocio'),
+            'proveedores' 	=> $proveedores,
             'sucursales' 	=> Sucursales::whereHas('usuario_sucursales',
                 function ($q){
                 $q->where('id_usuario',Auth::id());})
@@ -77,7 +81,6 @@ class FacturasProveedoresController extends ControllerBase
             $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
         }
         $request->request->set('fk_id_estatus_factura',1);
-//        dd($request->request);
         return parent::store($request,$company,$compact);
     }
 

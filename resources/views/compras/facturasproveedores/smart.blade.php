@@ -1,13 +1,8 @@
 @extends(smart())
-@section('header-top')
-	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/pickadate/default.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/pickadate/default.date.css') }}">
-@endsection
 @section('content-width', 's12')
+
 @section('header-bottom')
 	@parent
-	<script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
 	@if (!Route::currentRouteNamed(currentRouteName('index'))) )
 		<script type="text/javascript">
 			var comprador_js = '{{$js_comprador ?? ''}}';
@@ -88,8 +83,8 @@
     		<div class="form-group col-md-2 col-sm-6">
     			{{Form::label('serie_folio_factura','Serie y Folio',['style'=>'display: block;text-align: center;'])}}
     			<div class="input-group">
-    				{{Form::cText('','serie_factura',['readonly','class'=>'form-control'])}}
-    				{{Form::cText('','folio_factura',['readonly','class'=>'form-control'])}}
+    				{{Form::cText('','serie_factura',['readonly'])}}
+    				{{Form::cText('','folio_factura',['readonly'])}}
     			</div>
     		</div>
     		<div class="form-group col-md-2 col-sm-4">
