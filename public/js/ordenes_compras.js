@@ -43,13 +43,13 @@ $(document).ready(function(){
             validateDetail();
         }
         //Por si se selecciona una empresa diferente
-        $('#otra_empresa').on('change',function () {
-            $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-            if( !this.checked ){
-                if(window.location.href.toString().indexOf('crear') > -1)
-                    $( this ).parent().nextAll( "select" ).val(0).trigger('change');
-            }
-        });
+        // $('#otra_empresa').on('change',function () {
+        //     $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
+        //     if( !this.checked ){
+        //         if(window.location.href.toString().indexOf('crear') > -1)
+        //             $( this ).parent().nextAll( "select" ).val(0).trigger('change');
+        //     }
+        // });
         //Por si se selecciona un UPC
         $('#activo_upc').on('change',function () {
             $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );

@@ -39,9 +39,6 @@ class OrdenesController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
-//        dd(SociosNegocio::with(['productos'=>function ($producto){
-//        $producto->selectRaw('max(tiempo_entrega) as tiempo_entrega')->where('fk_id_socio_negocio',11)->where('fk_id_sku',11);
-//        }])->get());
         switch (\request('tipo_documento')){
             case 1:
                 $documento = Solicitudes::find(\request('id'));
@@ -80,15 +77,15 @@ class OrdenesController extends ControllerBase
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 //            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]'),
             'js_tiempo_entrega' => Crypt::encryptString('
-                "select": ["tiempo_entrega"],
+                "selectRaw": ["max(tiempo_entrega)"],
                 "withFunction": [{
                 "productos": {
-                    "selectRaw": "max(tiempo_entrega) as tiempo_entrega",
-                    "whereRaw": "(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)",
-                    "orderBy": "tiempo_entrega",
-                    "groupBy": "fk_id_socio_negocio"
+                    "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],
+                    "whereRaw": ["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"],
+                    "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
                 }
-                }]
+                }],
+                "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
             '),
         ];
 

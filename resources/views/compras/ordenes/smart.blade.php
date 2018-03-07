@@ -63,17 +63,17 @@
 	<div class="form-group col-md-3 col-sm-12">
 		{{Form::cSelectWithDisabled('* Proveedor','fk_id_socio_negocio',$proveedores ?? [],['class'=>'select2'])}}
 	</div>
-	<div class="form-group col-md-3 col-sm-12">
-		{{ Form::label('fk_id_empresa', 'Otra empresa realiza la compra') }}
-		<div class="input-group">
-			<span class="input-group-addon">
-				<input type="checkbox" id="otra_empresa" {{isset($data->fk_id_empresa)?'checked':''}}>
-			</span>
-			{!! Form::cSelectWithDisabled('','fk_id_empresa',$companies ?? [],[!isset($data->fk_id_empresa)?'disabled':'','id'=>'fk_id_empresa_']) !!}
+	{{--<div class="form-group col-md-3 col-sm-12">--}}
+		{{--{{ Form::label('fk_id_empresa', 'Otra empresa realiza la compra') }}--}}
+		{{--<div class="input-group">--}}
+			{{--<span class="input-group-addon">--}}
+				{{--<input type="checkbox" id="otra_empresa" {{isset($data->fk_id_empresa)?'checked':''}}>--}}
+			{{--</span>--}}
+			{{--{!! Form::cSelectWithDisabled('','fk_id_empresa',$companies ?? [],[!isset($data->fk_id_empresa)?'disabled':'','id'=>'fk_id_empresa_']) !!}--}}
 {{--			{!! Form::select('fk_id_empresa',isset($companies)?$companies:[],null,['id'=>'fk_id_empresa_','class'=>'form-control','style'=>'width:100%',!isset($data->fk_id_empresa)?'disabled':'']) !!}--}}
-		</div>
+		{{--</div>--}}
 {{--		{{ $errors->has('fk_id_empresa') ? HTML::tag('span', $errors->first('fk_id_empresa'), ['class'=>'help-block deep-orange-text']) : '' }}--}}
-	</div>
+	{{--</div>--}}
 	<div class="form-group text-center col-md-3 col-sm-6">
 		{{ Form::label('', 'Días/Fecha') }}
 		<div class="input-group">
