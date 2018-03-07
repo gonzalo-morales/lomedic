@@ -79,12 +79,12 @@ class NotasCreditoProveedorController extends ControllerBase
             }else if($request->version_sat == "3.2"){
                 $request->request->set('serie_factura',isset($arrayData['Comprobante']['@serie']) ? $arrayData['Comprobante']['@serie'] : null);
                 $request->request->set('fecha_factura',$arrayData['Comprobante']['@fecha']);
-                $request->request->set('fk_id_metodo_pago',MetodosPago::whereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@formaDePago'].'\')')->first()->id_metodo_pago);
+                $request->request->set('fk_id_metodo_pago',MetodosPago::whereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@formaDePago'].'\')')->orWhereRaw('to_ascii(metodo_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@formaDePago'].'\')')->first()->id_metodo_pago);
                 $request->request->set('total',$arrayData['Comprobante']['@total']);
                 $request->request->set('iva',$arrayData['Comprobante']['cfdi:Impuestos']['@totalImpuestosTrasladados']);
                 $request->request->set('subtotal',$arrayData['Comprobante']['@subTotal']);
-                $request->request->set('fk_id_moneda',Monedas::whereRaw('to_ascii(moneda) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->first()->id_moneda);
-                $request->request->set('fk_id_forma_pago',FormasPago::whereRaw('to_ascii(forma_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->first()->id_forma_pago);
+                $request->request->set('fk_id_moneda',Monedas::whereRaw('to_ascii(moneda) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@Moneda'].'\')')->first()->id_moneda ?? 100);
+                $request->request->set('fk_id_forma_pago',FormasPago::whereRaw('to_ascii(forma_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->first()->id_forma_pago);
                 $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
             }
         }
