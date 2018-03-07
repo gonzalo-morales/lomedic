@@ -247,13 +247,7 @@ function initSelects() {
         theme:'bootstrap'
     });
 
-    if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1){
-        $('#fk_id_condicion_pago').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        $('#fk_id_tipo_entrega').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        $('#fk_id_sucursal').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        // $('#fk_id_empresa_').select2({theme:"bootstrap",minimumResultsForSearch:'Infinity'});
-        totalOrden();
-    }
+    totalOrden();
 
     select2Placeholder('fk_id_upc','UPC no seleccionado',null,true,true,0,false);
     select2Placeholder('fk_id_cliente','Sin cliente',10,true,false);
@@ -329,34 +323,43 @@ function totalOrden() {
     var impuesto = 0;
     var descuento_total = 0;
 
-    $('#productos tr').each(function () {
-        //Del producto
-        var cantidad_row = $(this).find('td .cantidad_row').val();
-        var precio_row = $(this).find('td .precio_unitario_row').val();
-        var porcentaje_row = $(this).find('td .porcentaje').val()/100;//Decimal
-        var descuento_row = $(this).find('td .descuento_row').val();//Decimal
-        descuento_row = (descuento_row * precio_row)/100;
-        descuento_total += descuento_row;
-        var subtotal_row = (precio_row - descuento_row) * cantidad_row;
-        // var total_row = (subtotal_row * porcentaje_row) + subtotal_row;
-        //Del total
-        subtotal += subtotal_row;
-        impuesto += subtotal_row * porcentaje_row;
-        // console.log('cantidad: '+cantidad_row+' precio: '+precio_row+' porcentaje: '+porcentaje_row+' descuento: '+descuento_row+' impuesto: '+impuesto+' subtotal: '+subtotal_row+' total:'+total_row);
-    });
-    subtotal = subtotal - $('#descuento_general').val();
-    descuento_total += +$('#descuento_general').val();
+    if($('#productos tr').length){
+        $('#productos tr').each(function () {
+            //Del producto
+            var cantidad_row = $(this).find('td .cantidad_row').val();
+            var precio_row = $(this).find('td .precio_unitario_row').val();
+            var porcentaje_row = $(this).find('td .porcentaje').val()/100;//Decimal
+            var descuento_row = $(this).find('td .descuento_row').val();//Decimal
+            descuento_row = (descuento_row * precio_row)/100;
+            descuento_total += descuento_row;
+            var subtotal_row = (precio_row - descuento_row) * cantidad_row;
+            // var total_row = (subtotal_row * porcentaje_row) + subtotal_row;
+            //Del total
+            subtotal += subtotal_row;
+            impuesto += subtotal_row * porcentaje_row;
+            // console.log('cantidad: '+cantidad_row+' precio: '+precio_row+' porcentaje: '+porcentaje_row+' descuento: '+descuento_row+' impuesto: '+impuesto+' subtotal: '+subtotal_row+' total:'+total_row);
+        });
+        subtotal = subtotal - $('#descuento_general').val();
+        descuento_total += +$('#descuento_general').val();
 
-    // console.log('subtotal: '+subtotal);
-    // console.log('impuesto: '+impuesto);
-    // console.log('total: '+total);
-    var total = (subtotal)+impuesto;
-    $('#subtotal_lbl').text(subtotal.toFixed(2));
-    $('#subtotal').val(subtotal.toFixed(2));
-    $('#impuesto_lbl').text(impuesto.toFixed(2));
-    $('#impuesto_total').val(impuesto.toFixed(2));
-    $('#total_orden').val(total.toFixed(2));
-    $('#descuento_total').val(descuento_total.toFixed(2));
+        // console.log('subtotal: '+subtotal);
+        // console.log('impuesto: '+impuesto);
+        // console.log('total: '+total);
+        var total = (subtotal)+impuesto;
+        $('#subtotal_lbl').text(subtotal.toFixed(2));
+        $('#subtotal').val(subtotal.toFixed(2));
+        $('#impuesto_lbl').text(impuesto.toFixed(2));
+        $('#impuesto_total').val(impuesto.toFixed(2));
+        $('#total_orden').val(total.toFixed(2));
+        $('#descuento_total').val(descuento_total.toFixed(2));
+    }else{
+        $('#subtotal_lbl').text(0);
+        $('#subtotal').val(0);
+        $('#impuesto_lbl').text(0);
+        $('#impuesto_total').val(0);
+        $('#total_orden').val(0);
+        $('#descuento_total').val(0);
+    }
 }
 
 function borrarFila(el) {

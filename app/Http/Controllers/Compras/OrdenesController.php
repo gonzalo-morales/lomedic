@@ -77,7 +77,7 @@ class OrdenesController extends ControllerBase
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 //            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]'),
             'js_tiempo_entrega' => Crypt::encryptString('
-                "selectRaw": ["max(tiempo_entrega)"],
+                "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],
                 "withFunction": [{
                 "productos": {
                     "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],

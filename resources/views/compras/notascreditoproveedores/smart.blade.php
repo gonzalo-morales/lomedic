@@ -12,7 +12,6 @@
 	@endif
 @endsection
 
-
 @section('form-content')
     {{ Form::setModel($data) }}
     @inroute(['show','edit'])
@@ -48,51 +47,55 @@
     		<div class="row">
     			<div class="form-group col-md-6 col-sm-12">
     				{{Form::cSelectWithDisabled('Proveedor','fk_id_socio_negocio',$proveedores ?? [],
-    				['data-url'=>companyAction('HomeController@index').'/compras.facturasproveedores/api'])}}
+    				['data-url'=>ApiAction('compras.facturasproveedores')])}}
     			</div>
     			<div class="form-group col-md-6 col-sm-12">
     				{{Form::cSelectWithDisabled('Sucursal','fk_id_sucursal', $sucursales ?? [])}}
     			</div>
     			@inroute(['edit','show'])
-    				<div class="form-group col-md-2 col-sm-6">
+    				<div class="form-group col-md-3 col-sm-6">
     					{{Form::label('serie_folio_factura','Serie y Folio',['style'=>'display: block;text-align: center;'])}}
     					<div class="input-group">
-    						{{Form::Text('serie_factura',null,['disabled','class'=>'form-control'])}}
-    						{{Form::Text('folio_factura',null,['disabled','class'=>'form-control'])}}
+							{{Form::cText('','serie_factura',['readonly'])}}
+							{{Form::cText('','folio_factura',['readonly'])}}
     					</div>
     				</div>
     				<div class="form-group col-md-3 col-sm-4">
-    					{{Form::cText('Fecha Factura','fecha_factura',['disabled'])}}
+						{{Form::cText('Fecha Factura','fecha_factura',['readonly'])}}
     				</div>
     				<div class="form-group col-md-2 col-sm-2">
-    					{{Form::cText('Versión','version_sat',['disabled'])}}
+    					{{Form::cText('Versión','version_sat',['readonly'])}}
     				</div>
+					<div class="form-group col-md-4 col-sm-6">
+						{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
+						{{Form::hidden('fk_id_moneda')}}
+						{{Form::label('moneda','Moneda')}}
+						{{Form::Text('moneda','('.$data->moneda->moneda.') '.$data->moneda->descripcion,['disabled','class'=>'form-control'])}}
+					</div>
+					<div class="form-group col-md-5 col-sm-6">
+						{{Form::hidden('fk_id_forma_pago')}}
+						{{Form::cText($data->version_sat == 3.3 ? 'Forma Pago' : 'Método Pago','forma_pago',['disabled'],'('.$data->forma_pago->forma_pago.') '.$data->forma_pago->descripcion)}}
+					</div>
+					<div class="form-group col-md-5 col-sm-6">
+						{{Form::hidden('fk_id_metodo_pago')}}
+						{{Form::cText($data->version_sat == 3.3 ? 'Método Pago' : 'Forma Pago','metodo_pago',['disabled'],'('.$data->metodo_pago->metodo_pago.') '.$data->metodo_pago->descripcion)}}
+					</div>
     				<div class="form-group col-md-2 col-sm-6">
     					{{Form::label('fk_id_estatus_nota','Estatus Nota')}}
     					{{Form::Text('fk_id_estatus_nota',isset($data->estatus->estatus) ? $data->estatus->estatus : '',['disabled','class'=>'form-control'])}}
     				</div>
     				<div class="form-group col-md-3 col-sm-6">
-    					{{--{{Form::cText('Moneda','fk_id_moneda',['disabled','value'=>'('.$data->moneda->moneda.') '.$data->moneda->descripcion])}}--}}
-    					{{Form::hidden('fk_id_moneda')}}
-    					{{Form::label('moneda','Moneda')}}
-    					{{Form::Text('moneda','('.$data->moneda->moneda.') '.$data->moneda->descripcion,['disabled','class'=>'form-control'])}}
+    					{{Form::cText('Subtotal','subtotal',['readonly'])}}
     				</div>
     				<div class="form-group col-md-3 col-sm-6">
-    					{{Form::label('fk_id_forma_pago','Forma Pago')}}
-    					{{Form::Text('fk_id_forma_pago',!empty($data->fk_id_forma_pago) ?'('.$data->forma_pago->forma_pago.') '.$data->forma_pago->descripcion : '',['disabled','class'=>'form-control'])}}
+    					{{Form::cText('IVA','iva',['readonly'])}}
     				</div>
     				<div class="form-group col-md-3 col-sm-6">
-    					{{Form::cText('Subtotal','subtotal',['disabled'])}}
-    				</div>
-    				<div class="form-group col-md-3 col-sm-6">
-    					{{Form::cText('IVA','iva',['disabled'])}}
-    				</div>
-    				<div class="form-group col-md-3 col-sm-6">
-    					{{Form::cText('Total','total',['disabled'])}}
+    					{{Form::cText('Total','total',['readonly'])}}
     				</div>
     				@if($data->fk_id_estatus_nota == 3){{-- Si está cancelado --}}
     				<div class="form-group col-md-12 col-sm-12 text-center">
-    					{{Form::cTextArea('Motivo Cancelacion','motivo_cancelacion',['rows'=>2,'style'=>'resize:none'])}}
+						{{Form::cTextArea('Motivo Cancelacion','motivo_cancelacion',['rows'=>2,'style'=>'resize:none'])}}
     				</div>
     				@endif
     			@endif
@@ -124,6 +127,7 @@
     				</div>
     		</div>
     	</div>
+
     	<div class="col-md-4 col-sm-12 card">
     		<div class="row">
     			<div class="col-md-12 col-sm-12">
@@ -232,20 +236,20 @@
     								@if($data->version_sat == "3.3")
     									@foreach($data->detalle as $detalle)
     									<tr>
-    										<td>{{$detalle->clave_producto_servicio->clave_producto_servicio}}</td>
+    										<td>{{Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle)}}{{$detalle->clave_producto_servicio->clave_producto_servicio}}</td>
     										<td>{{$detalle->clave_unidad->clave_unidad}}</td>
     										<td>{{$detalle->descripcion}}</td>
     										<td>{{$detalle->cantidad}}</td>
     										<td>${{number_format($detalle->precio_unitario,2)}}</td>
     										<td>${{number_format($detalle->descuento,2)}}</td>
-    										<td>{{$detalle->impuesto->impuesto}}</td>
+    										<td>{{$detalle->impuesto->impuesto ?? 'NA'}}</td>
     										<td>${{number_format($detalle->importe,2)}}</td>
     									</tr>
     									@endforeach
     								@elseif($data->version_sat == "3.2")
     									@foreach($data->detalle as $detalle)
     									<tr>
-    										<td>{{$detalle->descripcion}}</td>
+    										<td>{{Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle)}}{{$detalle->descripcion}}</td>
     										<td>{{$detalle->unidad}}</td>
     										<td>{{$detalle->cantidad}}</td>
     										<td>${{number_format($detalle->precio_unitario,2)}}</td>
@@ -332,7 +336,7 @@
     		@endcan
             window['smart-model'].actions.itemsCancel = function(e, rv,motivo){
                 $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-                let data = {motivo}
+                var data = motivo;
                 $.delete(this.dataset.deleteUrl,data,function (response) {
                     if(response.success){
                         sessionStorage.reloadAfterPageLoad = true;
@@ -342,7 +346,7 @@
             };
             window['smart-model'].actions.showModalCancelar = function(e, rv) {
                 e.preventDefault();
-                let modal = window['smart-modal'];
+                var modal = window['smart-modal'];
                 modal.view = rivets.bind(modal, {
                     title: '¿Estas seguro que deseas cancelar la factura?',
                     content: '<form  id="cancel-form">' +
@@ -385,7 +389,7 @@
                     // Opcionales
                     onModalShow: function() {
     
-                        let btn = modal.querySelector('[rv-on-click="action"]');
+                        var btn = modal.querySelector('[rv-on-click="action"]');
     
                         // Copiamos data a boton de modal
                         for (var i in this.dataset) btn.dataset[i] = this.dataset[i];

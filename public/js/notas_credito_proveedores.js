@@ -147,15 +147,16 @@ $(document).ready(function () {
                                         '<td>'+value.Importe+'<input name="relations[has][detalle]['+index+'][importe]" type="hidden" value="'+value.Importe+'"></td>' +
                                         '</tr>');
                                 });
+                                console.log(facturas_js);
                                 $.ajax({
                                     url: $('#fk_id_socio_negocio').data('url'),
                                     data: {
-                                        $param_js: js_facturas,
+                                        param_js: facturas_js,
                                         $fk_id_socio_negocio: $('#fk_id_socio_negocio').val()
                                     },
                                     success: function (values) {
                                         $('#fk_id_factura_proveedor').empty();
-                                        $.each(values,function (value) {
+                                        $.each(values,function (index,value) {
                                             $('#fk_id_factura_proveedor').append('<option value="'+value.id_documento+'">'+value.serie_factura+'-'+value.folio_factura+'</option>');
                                         });
                                         $('#fk_id_factura_proveedor').prepend('<option value="0" selected>Selecciona...</option>');
