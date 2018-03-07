@@ -20,10 +20,10 @@
 
 @section('form-content')
     {{ Form::setModel($data) }}
-    <div class="row">
+    {{--<div class="row">--}}
         <div class="col-sm-12">
-            <div class="card z-depth-1-half">
-                <div class="card-header">
+            {{--<div class="card z-depth-1-half">--}}
+                {{--<div class="card-header">--}}
                     <div class="row">
                         <div class="col-12 mb-3">
                             @if(Route::currentRouteNamed(currentRouteName('create')))
@@ -42,18 +42,8 @@
                                                 {{ Form::cSelect('Numero de receta', 'fk_id_receta', $recetas ?? [],['class'=>'select2','data-url'=>companyRoute('getRecetaDetalle')]) }}
                                             </div>
                                         </div>
-
-                                        {{--<input type="hidden" id="fecha_captura" name="fecha_captura" value="{{date('Y-m-d H:i:s')}}">--}}
                                         <input type="hidden" name="fk_id_usuario_captura" value="{{$fk_id_usuario_captura}}">
-
-                                    </div><!--/row forms-->
-                                    {{--<div class="row" >--}}
-                                        {{--<div class="col-sm-12">--}}
-                                            {{--<div class="form-group">--}}
-                                                {{--{{ Form::cTextArea('Observaciones', 'observaciones',['rows'=>'3'] ) }}--}}
-                                            {{--</div>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
+                                    </div>
                                 </div>
                             </div><!--/row-->
                             </div>
@@ -130,8 +120,8 @@
                                  </div>
                             </div>
                     </div>
-                    </div>
-                </div>
+                    {{--</div>--}}
+                {{--</div>--}}
             </div>
 
 

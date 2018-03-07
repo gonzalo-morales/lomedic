@@ -8,6 +8,7 @@
 
 namespace App\Http\Models\Inventarios;
 
+use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Inventarios\SurtidoRequisicionHospitalariaDetalle;
 use App\Http\Models\ModelCompany;
 use Illuminate\Support\Facades\Auth;
@@ -49,10 +50,11 @@ class SurtidoReceta extends ModelCompany
 
     protected $fields = [
         'id_surtido_receta' => '#',
+        'sucursal.sucursal' => 'Sucursal',
         'fk_id_receta' => 'Receta',
-        'observaciones' => 'observaciones',
         'fecha_surtido' => 'Fecha surtido',
-        'estatus.estatus_surtido' => 'Estatus'
+        'estatus.estatus_surtido' => 'Estatus',
+        'observaciones' => 'observaciones',
     ];
 
     function getNombreCompletoAttribute() {
@@ -67,38 +69,15 @@ class SurtidoReceta extends ModelCompany
         return $this->estatus->estatus;
     }
 
-//    public function sucursales()
-//    {
-//        return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucurñsal','id_sucursal');
-//    }
-//
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursales::class,'fk_id_sucursal','id_sucursal');
+    }
+
     public function estatus()
     {
         return $this->hasOne('App\Http\Models\Inventarios\EstatusSurtido','id_estatus_surtido','fk_id_estatus_surtido');
     }
-
-//
-//
-//
-//    public function empresa()
-//    {
-//        return $this->belongsTo('App\Http\Models\Administracion\Empresas','fk_id_empresa','id_empresa');
-//    }
-//
-//    public function tipoEntrega()
-//    {
-//        return $this->hasOne('App\Http\Models\SociosNegocio\TiposEntrega','id_tipo_entrega','fk_id_tipo_entrega');
-//    }
-//
-//    public function proveedor()
-//    {
-//        return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_socio_negocio');
-//    }
-//
-//    public function detalleOrdenes()
-//    {
-//        return $this->hasMany('App\Http\Models\Compras\DetalleOrdenes','fk_id_orden', 'id_orden');
-//    }
 
     public function detalles()
     {

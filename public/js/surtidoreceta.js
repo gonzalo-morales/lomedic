@@ -33,7 +33,7 @@ $(document).ready(function () {
                 data: {'fk_id_receta':$(this).val(),'_token':token},
                 dataType: "json",
                 success:function(data) {
-                    // console.info(data);
+                    $('#detalle').empty();
                     $.each(data, function(key,values) {
                         $('#detalle').append(
                             '<tr>' +
@@ -71,11 +71,18 @@ $(document).ready(function () {
             mensajeAlerta('Favor de ingresar por lo menos un producto.','danger');
             return false;
         }
+        else if(validarSurtido() != 0 )
+        {
+            mensajeAlerta('Se esta excediendo la cantidad solicita.','danger');
+            return false;
+        }
         else
         {
             return true;
         }
     });
+
+
 
 });
 
@@ -86,18 +93,19 @@ function calculatotal(el) {
     var cantidad_total = parseInt(cantidad_surtida)+parseInt(cantidad);
     var cantidad_disponible = parseInt($(el).parent().parent().find('.cantidad_inicial_disponible').val());
 
-    console.info(cantidad_disponible+' '+cantidad);
     if( (cantidad_disponible - cantidad) >= 0 )
     {
         var nueva_cantidad_diponible = cantidad_disponible - cantidad;
+
     }
     else if( (cantidad_disponible - cantidad) < 0 )
     {
         var nueva_cantidad_diponible = 0;
         cantidad_total = cantidad_total - 1;
         $(el).val(cantidad-1);
-    }
 
+    }
+    validarSurtido();
     $(el).parent().parent().find('.cantidad_disponible').html(nueva_cantidad_diponible);
     $(el).parent().parent().find('.importe').val(cantidad_total*precio);
     $(el).parent().parent().find('.total').html('$ '+parseFloat((cantidad_total*precio), 10).toFixed(2));
@@ -108,8 +116,36 @@ function calculatotal(el) {
     });
 
     $('#total').html('$ '+parseFloat(total, 10).toFixed(2));
+
+    // validarSurtido();
+
 };
 
+function validarSurtido()
+{
+    var correcto = 0;
+
+    $.each($('#detalle tr'),function(index,value) {
+
+        var cant_solicitada = parseInt($(value).find('td').eq(2).html());
+        var cant_surtida = parseInt($(value).find('td').eq(3).html());
+        var cant_a_surtir = parseInt($(value).find('.cantidad').val());
+
+        if(cant_solicitada < cant_surtida + cant_a_surtir)
+        {
+            $(value).css("background-color", "#F8D7DA");
+            correcto++;
+        }
+        else
+        {
+            $(value).css("background-color", "#FFFFFF");
+        }
+
+
+    });
+
+    return correcto;
+}
 
 function mensajeAlerta(mensaje,tipo){
 
