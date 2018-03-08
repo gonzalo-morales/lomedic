@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Models\ModelCompany;
+
 class HomeController extends Controller
 {
 	/**
@@ -12,6 +14,7 @@ class HomeController extends Controller
 	public function __construct()
 	{
 		$this->middleware('auth');
+		$this->entity = new ModelCompany;
 	}
 
 	/**
