@@ -50,7 +50,7 @@ $(document).ready(function () {
 		archivo = $("#contrato").prop('files');
 		
 		if(representante == '' || contrato == '' || fechainicio == '' || fechafin == '' || !$("#contrato").val()) {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleContratos').append('<tr>'+
@@ -71,7 +71,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileContrato-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
     
@@ -83,10 +83,10 @@ $(document).ready(function () {
 		archivo = $("#archivo").prop('files');
 		
 		if(nombre == '') {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(!$("#archivo").val()) {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleAnexos').append('<tr>'+
@@ -96,7 +96,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileAnexo-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 
@@ -163,7 +163,7 @@ $(document).ready(function () {
                             $('#fk_id_forma_adjudicacion').val(forma_adjudicacion[0]).trigger('change');
                             $('#pena_convencional').val(data[0].pena_convencional);
                             $('#tope_pena_convencional').val(data[0].tope_pena_convencional);
-                            $.toaster({priority:'success',title:'LICIPLUS',message:'Licitación encontrada.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                            $.toaster({priority:'success',title:'LICIPLUS',message:'LicitaciÃ³n encontrada.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                             $('#importar_contratos').removeAttr('disabled');
                             $('#importar_productos').removeAttr('disabled');
                             $('#loadinglicitacion').hide();
@@ -173,7 +173,7 @@ $(document).ready(function () {
                         }
                     });
 				}else{
-                    $.toaster({priority:'info',title:'LICIPLUS',message:'No se encontró ninguna licitación.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                    $.toaster({priority:'info',title:'LICIPLUS',message:'No se encontrÃ³ ninguna licitaciÃ³n.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                     $('#importar_contratos').attr('disabled','disabled');
                     $('#importar_productos').attr('disabled','disabled');
                     $('#loadinglicitacion').hide();
@@ -226,16 +226,16 @@ $(document).ready(function () {
                     });
 
 					if(repetidos.length){
-                        $.toaster({priority:'danger',title:'¡Error!',message:'Algunos contratos ya se encuentran en la tabla: '+repetidos.toString(),
+                        $.toaster({priority:'danger',title:'Â¡Error!',message:'Algunos contratos ya se encuentran en la tabla: '+repetidos.toString(),
                             settings:{'donotdismiss':['danger'],'toaster':{'css':{'top':'5em'}}}});
 					}else{
-                        $.toaster({priority:'success',title:'¡Éxito!',message:'Se han agregado los contratos relacionados de LICIPLUS',
+                        $.toaster({priority:'success',title:'Â¡Ã‰xito!',message:'Se han agregado los contratos relacionados de LICIPLUS',
                             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 					}
 				}
             },
 			error: function () {
-				$.toaster({priority:'danger',title:'¡Error!',message:'Ocurrió un error al obtener los contratos',
+				$.toaster({priority:'danger',title:'Â¡Error!',message:'OcurriÃ³ un error al obtener los contratos',
 					settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             }
 		});
@@ -243,7 +243,7 @@ $(document).ready(function () {
 
     $('#importar_productos').click(function () {
     	if(!$('#fk_id_cliente').val()){
-            $.toaster({priority:'danger',title:'¡Error!',message:'Por favor selecciona un cliente',
+            $.toaster({priority:'danger',title:'Â¡Error!',message:'Por favor selecciona un cliente',
                 settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}else{
 			$.ajax({
@@ -336,7 +336,7 @@ $(document).ready(function () {
                                 }
                             });
                             if(repetidos.length){
-                                $.toaster({priority:'info',title:'¡Error!',message:'Algunos productos ya se encuentran en la tabla: '+repetidos.toString(),
+                                $.toaster({priority:'info',title:'Â¡Error!',message:'Algunos productos ya se encuentran en la tabla: '+repetidos.toString(),
                                     settings:{'donotdismiss':['danger'],'toaster':{'css':{'top':'5em'}}}});
                             }else{
                                 $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
@@ -479,7 +479,7 @@ $(document).ready(function () {
                 $('.archivo').rules('remove');
             }
             $.toaster({
-                priority: 'danger', title: 'Â¡Error!', message: 'Hay campos que requieren de tu atencion. Revisa todas las pestañas.',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: 'Ã‚Â¡Error!', message: 'Hay campos que requieren de tu atencion. Revisa todas las pestaÃ±as.',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
 
         }
@@ -490,7 +490,7 @@ $(document).ready(function () {
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function cargar_sucursales() {

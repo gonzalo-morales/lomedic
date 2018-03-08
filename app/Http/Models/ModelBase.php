@@ -97,10 +97,20 @@ class ModelBase extends Model
 	}
 
 	public function newQuery() {
+	    $parent = parent::newQuery();
+	    
 	    if(in_array('eliminar',$this->getlistColumns())) {
-	       return parent::newQuery()->where($this->getTable().'.eliminar',0);
+	        $parent->newQuery()->where($this->getTable().'.eliminar',0);
 	    }
-	    return parent::newQuery();
+	    
+	    $route = \Route::getCurrentRoute()->getActionName();
+	    $controller = substr($route,0,strpos($route,'@'));
+
+	    if(in_array('activo',$this->getlistColumns()) && get_class((new $controller)->entity) != get_class($this)) {
+	        $parent->newQuery()->where($this->getTable().'.activo',1);
+	    }
+	    
+	    return $parent;
 	}
 
 	/**

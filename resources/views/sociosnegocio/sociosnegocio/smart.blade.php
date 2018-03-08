@@ -174,35 +174,33 @@
 							</thead>
 							<tbody>
 							@if(isset($data->contactos)) 
-    							@foreach($data->contactos->where('eliminar',0) as $key=>$detalle)
+    							@foreach($data->contactos->where('eliminar',0) as $row=>$detalle)
 								<tr>
 									<td>
-										{!! Form::hidden('contactos['.$key.'][id_contacto]',$detalle->id_contacto,['class'=>'id_contacto']) !!}
+										{{ Form::hidden('relations[has][contratos]['.$row.'][index]',$row,['class'=>'index']) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][id_contacto]',$detalle->id_contacto,['class'=>'id_contacto']) }}
 										{{$detalle->tipocontacto->tipo_contacto}}
-										{!! Form::hidden('contactos['.$key.'][fk_id_tipo_contacto]',$detalle->fk_id_tipo_contacto,['class'=>'fk_id_tipo_contacto']) !!}
 									</td>
 									<td>
 										{{$detalle->nombre}}
-										{!! Form::hidden('contactos['.$key.'][nombre]',$detalle->nombre) !!} 
 									</td>
 									<td>
 										{{$detalle->puesto}}
-										{!! Form::hidden('contactos['.$key.'][puesto]',$detalle->puesto) !!} 
 									</td>
 									<td>
 										{{$detalle->correo}}
-										{!! Form::hidden('contactos['.$key.'][correo]',$detalle->correo) !!} 
 									</td>
 									<td>
 										{{$detalle->celular}}
-										{!! Form::hidden('contactos['.$key.'][celular]',$detalle->celular) !!} 
 									</td>
 									<td>
 										{{$detalle->telefono_oficina.' '.$detalle->extension_oficina}}
-										{!! Form::hidden('contactos['.$key.'][telefono_oficina]',$detalle->telefono_oficina) !!}
-										{!! Form::hidden('contactos['.$key.'][extension_oficina]',$detalle->extension_oficina) !!}
 									</td>
-									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button></td>
+									<td>
+    									@if(Route::currentRouteNamed(currentRouteName('edit')))
+											<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Contrato"><i class="material-icons">delete</i></button>
+										@endif
+									</td>
 								</tr>
     							@endforeach
     						@endif
@@ -266,40 +264,36 @@
     						</thead>
     						<tbody>
     						@if(isset($data->direcciones)) 
-    							@foreach($data->direcciones as $key=>$detalle)
+    							@foreach($data->direcciones as $row=>$detalle)
 								<tr>
 									<td>
-										{!! Form::hidden('direcciones['.$key.'][id_direccion]',$detalle->id_direccion,['class'=>'id_direccion']) !!}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][index]',$row,['class'=>'index']) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][id_direccion]',$detalle->id_direccion,['class'=>'id_direccion']) }}
 										{{$detalle->tipoDireccion->tipo_direccion}}
-										{!! Form::hidden('direcciones['.$key.'][fk_id_tipo_direccion]',$detalle->fk_id_tipo_direccion,['class'=>'fk_id_tipo_direccion']) !!}
 									</td>
 									<td>
 										{{$detalle->calle.' '.$detalle->num_exterior.' '.$detalle->num_interior}}
-										{!! Form::hidden('direcciones['.$key.'][calle]',$detalle->calle) !!} 
-										{!! Form::hidden('direcciones['.$key.'][num_exterior]',$detalle->num_exterior) !!} 
-										{!! Form::hidden('direcciones['.$key.'][num_interior]',$detalle->num_interior) !!}
 									</td>
 									<td>
 										{{$detalle->codigo_postal}}
-										{!! Form::hidden('direcciones['.$key.'][codigo_postal]',$detalle->codigo_postal) !!} 
 									</td>
 									<td>
 										{{$detalle->colonia}}
-										{!! Form::hidden('direcciones['.$key.'][colonia]',$detalle->colonia) !!} 
 									</td>
 									<td>
 										{{$detalle->municipio->municipio}}
-										{!! Form::hidden('direcciones['.$key.'][fk_id_municipio]',$detalle->fk_id_municipio) !!} 
 									</td>
 									<td>
 										{{$detalle->estado->estado}}
-										{!! Form::hidden('direcciones['.$key.'][fk_id_estado]',$detalle->fk_id_estado) !!}
 									</td>
 									<td>
 										{{$detalle->pais->pais}}
-										{!! Form::hidden('direcciones['.$key.'][fk_id_pais]',$detalle->fk_id_pais) !!}
 									</td>
-									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarDireccion(this)"> <i class="material-icons">delete</i></button></td>
+									<td>
+    									@if(Route::currentRouteNamed(currentRouteName('edit')))
+											<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Contrato"><i class="material-icons">delete</i></button>
+										@endif
+									</td>
 								</tr>
     							@endforeach
     						@endif
@@ -502,6 +496,9 @@
     								{{ Form::cSelect('* Sku', 'sku', $skus ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/inventarios.productos/api']) }}
     							</div>
     							<div class="form-group col-md-4">
+    								<div id="loadingUPC" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+    									Cargando datos... <i class="material-icons align-middle loading">cached</i>
+    								</div>
     								{{ Form::cSelect('Upc', 'upc', $upcs ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api']) }}
     							</div>
     							<div class="form-group col-md-4">

@@ -410,7 +410,8 @@ a:hover .window {
     to { transform: scale(1) rotate(0deg); }
 }
 .loadingData{
-  position:absolute;z-index:999;
+  position:absolute;
+  z-index:1999;
   background:rgba(0,0,0,0.5);
   top:0;
   left:0;

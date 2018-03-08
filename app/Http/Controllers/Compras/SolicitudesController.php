@@ -58,9 +58,6 @@ class SolicitudesController extends ControllerBase
         $proveedores = [];
         if($entity != null)
         {
-            $sucursales  = Sucursales::select('id_sucursal','sucursal')->where('activo',1)->whereHas('usuario_sucursales',function($q) use ($entity){
-                $q->where('fk_id_usuario',$entity->fk_id_solicitante);
-            })->pluck('sucursal','id_sucursal');
             $proveedores = SociosNegocio::where('activo',1)->whereHas('empresas',function ($q) use ($entity){
                 $q->where('fk_id_socio_negocio',$entity->fk_id_socio_negocio);
             })->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio')->prepend('Seleccione el proveedor','');
@@ -72,7 +69,9 @@ class SolicitudesController extends ControllerBase
         return [
             'proyectos'         => Proyectos::where('fk_id_estatus',1)->orderBy('proyecto')->pluck('proyecto','id_proyecto')->prepend('Seleccione el proyecto',''),
             'proveedores'       => $proveedores ?? '',
-            'sucursales'        => $sucursales ?? '',
+            'sucursales'        => empty($entity) ? [] : Sucursales::select('id_sucursal','sucursal')->where('activo',1)
+                ->whereHas('usuario_sucursales',function($q) use ($entity){ $q->where('fk_id_usuario',$entity->fk_id_solicitante); })
+                ->whereHas('usuario_empresa',function($q) use ($entity){ $q->where('fk_id_empresa',dataCompany()->id_empresa); }),
             'impuestos'         => Impuestos::select('id_impuesto','impuesto')->where('activo',1)->orderBy('impuesto')->with('porcentaje')->pluck('impuesto','id_impuesto')->prepend('Seleccione...',''),
             'unidadesmedidas'   => Unidadesmedidas::select('nombre','id_unidad_medida')->where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida')->prepend('Seleccione...',''),
             'skus'              => Productos::where('activo',1)->where('articulo_compra',1)->orderBy('sku')->pluck('sku','id_sku'),

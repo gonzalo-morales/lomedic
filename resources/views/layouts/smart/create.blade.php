@@ -32,6 +32,10 @@
 <div class="container-fluid">
 	<div class="@yield('content-width')">
 		@yield('form-header')
+    	<div id="loadingActions" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+    		<h4 style="margin-top:15%">Cargando informacion!</h4>
+    		<h5>Espere... <i class="material-icons align-middle loading">cached</i></h5>
+    	</div>
     		<div class="row">
     			@yield('form-actions')
 				<div class="col-12">

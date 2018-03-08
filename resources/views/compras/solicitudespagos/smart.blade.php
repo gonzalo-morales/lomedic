@@ -275,7 +275,7 @@
     	<script type="text/javascript">
             rivets.binders['hide-delete'] = {
                 bind: function (el) {
-                    if(el.dataset.fk_id_estatus_solicitud_pago != 1)
+                	if(el.dataset.fk_id_estatus_solicitud_pago != 1 )
                     {
                         $(el).hide();
                     }
@@ -283,7 +283,7 @@
             };
             rivets.binders['hide-update'] = {
                 bind: function (el) {
-                    if(el.dataset.fk_id_estatus_solicitud_pago != 1)
+                	if(el.dataset.fk_id_estatus_solicitud_pago != 1 | el.dataset.fk_id_estatus_autorizacion == 4)
                     {
                         $(el).hide();
                     }
@@ -301,7 +301,7 @@
     		@endcan
     		@can('delete', currentEntity())
                 window['smart-model'].collections.itemsOptions.delete = {a: {
-                'html': '<i class="material-icons">delete</i>',
+            	'html': '<i class="material-icons">do_not_disturb_alt</i>',
                 'href' : '#',
                 'class': 'btn is-icon',
                 'rv-on-click': 'actions.showModalCancelar',

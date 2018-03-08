@@ -31,7 +31,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use App\Http\Models\RecursosHumanos\Empleados;
-#use App\Http\Models\Administracion\Monedas;
 
 class SociosNegocioController extends ControllerBase
 {
@@ -70,7 +69,41 @@ class SociosNegocioController extends ControllerBase
 	        'js_upc'               => Crypt::encryptString('"select": ["descripcion", "id_upc"], "conditions": [{"where": ["id_upc","$id_upc"]}], "limit": 1'),
 	    ];
 	}
-
+	
+	public function store(Request $request, $company, $compact = false)
+	{
+	    # Guardamos el detalle de los anexos de los socios de negocio
+	    if(isset($request->relations['has']['anexos'])){
+	        $detalles = $request->relations['has']['anexos'];
+	        foreach ($detalles as $row=>$detalle)
+	        {
+	            if(isset($detalle['archivo'])) {
+	                $myfile = $detalle['archivo'];
+	                $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
+	                $file_save = Storage::disk('socios_anexos')->put($filename, file_get_contents($myfile->getRealPath()));
+	                if($file_save){
+	                    $arreglo = $request->relations;
+	                    $arreglo['has']['anexos'][$row]['archivo'] = $filename;
+	                    $request->merge(["relations"=>$arreglo]);
+	                }
+	            }
+	        }
+	    }
+	    
+	    $arreglo = $request->relations;
+	    unset($arreglo['has']['productos']['$row_id']);
+	    $request->merge(["relations"=>$arreglo]);
+	    
+	    $return = parent::store($request, $company, true);
+	    
+	    return $return['redirect'];
+	}
+	
+	
+	
+	
+	
+    /*
 	public function store(Request $request, $company, $compact = false)
 	{
 	    # ¿Usuario tiene permiso para crear?
@@ -189,6 +222,7 @@ class SociosNegocioController extends ControllerBase
 	        return $this->redirect('error_store');
 	    }
 	}
+	*/
 
 	public function update(Request $request, $company, $id, $compact = false)
 	{

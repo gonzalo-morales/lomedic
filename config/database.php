@@ -43,7 +43,8 @@ return [
 	        'timezone' =>config('app.timezone'),
 	        'prefix'   => '',
 	        'schema'   => 'maestro',
-	        'sslmode'   => 'prefer',
+	        'sslmode'  => 'prefer',
+	        'options'  => [PDO::ATTR_PERSISTENT => true],
 	    ],
 
 		'abisa' => [
@@ -53,11 +54,11 @@ return [
 			'database' => env('DB_DATABASE', ''),
 			'username' => env('DB_USERNAME', ''),
 			'password' => env('DB_PASSWORD', ''),
-			'charset' => 'utf8',
+			'charset'  => 'utf8',
 		    'timezone' =>config('app.timezone'),
-			'prefix' => '',
-			'schema' => 'abisa',
-			'sslmode' => 'prefer',
+			'prefix'   => '',
+			'schema'   => 'abisa',
+			'sslmode'  => 'prefer',
 		],
 
 		'lomedic' => [
