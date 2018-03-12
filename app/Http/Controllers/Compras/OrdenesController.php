@@ -13,6 +13,7 @@ use App\Http\Models\Compras\Ofertas;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\CondicionesAutorizacion;
 use App\Http\Models\Compras\Autorizaciones;
+use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\ProductosSociosNegocio;
 use Carbon\Carbon;
 use function foo\func;
@@ -39,6 +40,11 @@ class OrdenesController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
+
+//        dd(ClaveClienteProductos::with(['cliente'=>function($query){
+//            $query->select('id_socio_negocio','razon_social');
+//        }])->where('fk_id_sku',1)->where('fk_id_upc',1)->get());
+
         switch (\request('tipo_documento')){
             case 1:
                 $documento = Solicitudes::find(\request('id'));
@@ -87,6 +93,13 @@ class OrdenesController extends ControllerBase
                 }],
                 "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
             '),
+            'js_cliente' => Crypt::encryptString('
+                "withFunction": [{
+                    "clientes":{
+                        "select" : ["razon_social"]
+                    }                
+                }]
+            ')
         ];
 
     }
@@ -101,7 +114,7 @@ class OrdenesController extends ControllerBase
 
 	public function create($company, $attributes =[])
 	{
-	    $documento = $this->getDataView()['documento'];
+	    $documento = $this->getDataView()['documento'] ?? null;
         $data = $this->entity->getColumnsDefaultsValues();
         if(!empty($documento) && $documento->fk_id_tipo_documento == 2){
             $data['fk_id_empresa'] = $documento->fk_id_empresa;

@@ -13,6 +13,7 @@
 	@endif
 	<script type="text/javascript">
         var tiempo_entrega_js = '{{$js_tiempo_entrega ?? ''}}';
+        var clientes_js = '{{$js_clientes ?? ''}}';
 	</script>
 @endsection
 
@@ -167,7 +168,7 @@
 			</div>
 			@endif
 			<div class="card-body">
-				<table id="productos" class="table-responsive highlight" data-url="{{companyAction('Compras\OrdenesController@store')}}"
+				<table id="productos" class="table-responsive-sm table highlight" data-url="{{companyAction('Compras\OrdenesController@store')}}"
 					   @if(isset($data->id_documento))
 					   data-delete="{{companyAction('Compras\OrdenesController@destroyDetail')}}"
 					   @endif
@@ -176,16 +177,16 @@
 					<thead>
 					<tr>
 						<th>Documento</th>
-						<th id="idsku">SKU</th>
-						<th id="idupc">UPC</th>
-						<th id="descripcioncorta">Producto</th>
-						<th id="descripcion">Descripción</th>
-						<th id="idcliente">Cliente</th>
-						<th id="idproyecto" >Proyecto</th>
-						<th id="fechanecesario" >Fecha límite</th>
+						<th>SKU</th>
+						<th>UPC</th>
+						<th>Producto</th>
+						<th>Descripción</th>
+						<th>Cliente</th>
+						<th>Proyecto</th>
+						<th>Fecha límite</th>
 						<th>Cantidad</th>
 						<th>Descuento</th>
-						<th id="idimpuesto" >Tipo de impuesto</th>
+						<th>Tipo de impuesto</th>
 						<th>Precio unitario</th>
 						<th>Total</th>
 						<th></th>
