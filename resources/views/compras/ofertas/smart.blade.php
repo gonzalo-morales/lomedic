@@ -13,7 +13,7 @@
 			var proyectos_js = '{{$js_proyectos ?? ''}}';
 			var tiempo_entrega_js = '{{$js_tiempo_entrega ?? ''}}';
 			var porcentaje_js = '{{ $js_porcentaje ?? '' }}';
-			var sucursales_js = '{{ $js_sucursales ?? '' }}';
+			var skus_js = '{{ $js_skus ?? '' }}';
 			var upcs_js = '{{ $js_upcs ?? '' }}'
         </script>
 	@endif
@@ -31,26 +31,6 @@
     	</div>
     @endif
     <div class="row">
-    	<div class="form-group col-md-3 col-sm-12">
-			@if(!Route::currentRouteNamed(currentRouteName('index')) && $companies->count() > 1 )
-				{{Form::cSelect('* Empresa','fk_id_empresa',$companies ?? [],[
-					'style' => 'width:100%;',
-					'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
-				])}}
-			@else
-				{{Form::cSelect('* Empresa','fk_id_empresa',$companies ?? [],[
-					'style' => 'width:100%;',
-					'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'form-control' : '',
-				])}}
-			@endif
-    		{{--  {{ Form::label('fk_id_empresa', 'Otra empresa realiza la oferta') }}  --}}
-    		{{--  <div class="input-group">
-    			<span class="input-group-addon">
-    				<input type="checkbox" id="otra_empresa" {{isset($data->fk_id_empresa) && $data->fk_id_empresa != $actual_company_id?'checked':''}}>
-				</span>
-    			{!! Form::cselect('fk_id_empresa',isset($companies)?$companies->prepend('...','0'):[],null,['id'=>'fk_id_empresa','class'=>'form-control','style'=>'width:100%',(isset($data->fk_id_empresa) && $data->fk_id_empresa != $actual_company_id) || !isset($data->fk_id_empresa) ? 'disabled':'']) !!}
-    		</div>  --}}
-    	</div>
     	<div class="form-group col-md-3 col-sm-6">
 			<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 				Ingresando sucursales... <i class="material-icons align-middle loading">cached</i>
@@ -64,7 +44,7 @@
     	<div class="form-group col-md-3 col-sm-6">
     		{!! Form::cSelect('*Proveedor','fk_id_proveedor',$proveedores ?? [],[
 				'style' => 'width:100%;',
-				'data-url'=>companyAction('Compras\OrdenesController@getProveedores'),
+				'data-url' => ApiAction('sociosnegocio.sociosnegocio'),
 				'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
 			])!!}
     	</div>
@@ -81,7 +61,7 @@
     	<div class="form-group col-md-3 col-sm-6">
 			{!! Form::cSelectWithDisabled('*Moneda','fk_id_moneda',isset($monedas)?$monedas:[],['class'=>'select2'])!!}
 		</div>
-    	<div class="form-group col-md-6">
+    	<div class="form-group col-md-9">
     		{!! Form::cTextArea('Condiciones de la oferta','condiciones_oferta',['rows'=>3,'maxlength'=>'255'])!!}
     	</div>
     </div>
@@ -94,10 +74,24 @@
     				<fieldset name="detalle-form" id="detalle-form">
     					<div class="row">
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{!! Form::cSelect('Cliente','fk_id_cliente',$clientes ?? [],[
+								<div id="loadingskus" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+									Actualizando. Porfavor espere...<i class="material-icons align-middle loading">cached</i>
+								</div>
+								{!! Form::cSelect('* SKU','fk_id_sku',$skus ?? [],[
 									'style' => 'width:100%;',
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
-								])!!}
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+									'data-url-tiempo_entrega'=>companyAction('HomeController@index').'/sociosnegocio.sociosnegocio/api'
+								]) !!}
+							</div>
+							<div class="form-group input-field col-md-3 col-sm-6">
+								<div id="loadingupcs" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+									Ingresando UPC's... <i class="material-icons align-middle loading">cached</i>
+								</div>
+								{!! Form::cSelect('UPC','fk_id_upc',$upcs ?? [],[
+									'data-url' => companyAction('HomeController@index').'/inventarios.upcs/api',
+									'style' => 'width:100%;',
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+								]) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								<div id="loadingproyectos" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
@@ -106,28 +100,9 @@
 								{!! Form::cSelect('Proyecto','fk_id_proyecto',$proyectos ?? [],[
 									'style' => 'width:100%;',
 									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
-									'data-url' => companyAction('HomeController@index').'/proyectos.proyectos/api',
 									])!!}
 							</div>
     						<div class="form-group input-field col-md-3 col-sm-6">
-    							{!! Form::cSelect('* SKU','fk_id_sku',$skus ?? [],[
-    								'style' => 'width:100%;',
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
-    								'data-url' => companyAction('HomeController@index').'/inventarios.upcs/api',
-    								'data-url-tiempo_entrega'=>companyAction('HomeController@index').'/sociosnegocio.productossociosnegocio/api'
-    							]) !!}
-    						</div>
-    						<div class="form-group input-field col-md-3 col-sm-6">
-								<div id="loadingupcs" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-									Ingresando UPC's... <i class="material-icons align-middle loading">cached</i>
-								</div>
-    							{!! Form::cSelect('UPC','fk_id_upc',$upcs ?? [],[
-									'data-url' => companyAction('HomeController@index').'/inventarios.upcs/api',
-    								'style' => 'width:100%;',
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
-								]) !!}
-    						</div>
-    						<div class="form-group input-field col-md-2 col-sm-6">
     							{!! Form::cSelect('Unidad medida','fk_id_unidad_medida',isset($unidadesmedidas)?$unidadesmedidas:[],['class'=>'select2']) !!}
     						</div>
     						<div class="form-group input-field col-md-2 col-sm-4">
@@ -159,7 +134,7 @@
     						<div class="col-sm-12 text-center">
     							<div class="sep">
     								<div class="sepBtn">
-    									<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" onclick="agregarProducto()" type="button" id="agregar">
+    									<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button" id="agregar">
 											<i class="material-icons">add</i>
 										</button>
     								</div>
@@ -170,6 +145,7 @@
     			</div>
     			@endif
     			<div class="card-body">
+					<div id="loadingRow" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">Cargando datos al detalle y calculando días de entrega, espere porfavor... <i class="material-icons align-middle loading">cached</i></div>
     				<table id="productos" class=" table table-responsive-sm table-striped table-hover">
     					<thead>
 							<tr align="center">

@@ -33,10 +33,10 @@
 					<div class="row">
 						<div class="col-md-6 col-sm-12">
 							<div class="form-group">
-								{{Form::label('fk_id_empresa_default','* Empresa',['for'=>'fk_id_empresa_default'])}}
-								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,[
-									'id'=>'fk_id_empresa_default',
-									'class'=>'form-control',
+								{{Form::label('fk_id_empresa','* Empresa',['for'=>'fk_id_empresa'])}}
+								{{ Form::select('fk_id_empresa',$companies->pluck('nombre_comercial','id_empresa')->prepend('Seleccione la empresa',0),null,[
+									'id'=>'fk_id_empresa',
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
 									'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',
 									])}}
 							</div>

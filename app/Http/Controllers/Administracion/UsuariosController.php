@@ -125,9 +125,9 @@ class UsuariosController extends ControllerBase
                 $entity->usuario_sucursales()->sync($sync);
             }
             # Guardamos el detalle de empresa en la que estara disponible
-            if(isset($request->fk_id_empresa_default)) {
+            if(isset($request->fk_id_empresa)) {
                 $sync = [];
-                $sync[] = $request->fk_id_empresa_default;
+                $sync[] = $request->fk_id_empresa;
                 $entity->usuario_empresa()->sync($sync);
             }
             DB::commit();

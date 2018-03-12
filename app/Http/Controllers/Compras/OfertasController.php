@@ -25,6 +25,7 @@ use App\Http\Models\SociosNegocio\TiposEntrega;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Crypt;
 
@@ -43,26 +44,37 @@ class OfertasController extends ControllerBase
             $sucursales = Sucursales::where('activo',1)->where('id_sucursal',$entity->fk_id_sucursal)->pluck('sucursal','id_sucursal');
         }
 	    return [
-            'sucursales'       => $sucursales ?? '',
-	        'companies'        => Empresas::where('activo',1)->where('conexion','<>',request()->company)->where('conexion','<>','corporativo')->where('activo',1)->pluck('nombre_comercial','id_empresa'),
-            'actual_company_id'=> Empresas::where('conexion','LIKE',request()->company)->first()->id_empresa,
+            'sucursales' 	   => Sucursales::whereHas('usuario_sucursales', function ($q){
+                    $q->where('id_usuario',Auth::id());})->whereHas('empresa_sucursales',function ($empresa){
+                    $empresa->where('id_empresa',dataCompany()->id_empresa);
+                })->pluck('sucursal','id_sucursal'),
+	        // 'companies'        => Empresas::where('activo',1)->where('conexion','<>',request()->company)->where('conexion','<>','corporativo')->where('activo',1)->pluck('nombre_comercial','id_empresa'),
+            // 'actual_company_id'=> Empresas::where('conexion','LIKE',request()->company)->first()->id_empresa,
 	        'monedas'          => Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
-//            'proyectos' => !empty($entity) ? Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto')->prepend('Sin proyecto','0') : ['0'=>'Sin proyecto'],
 	        'unidadesmedidas'  => UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida')->prepend('Seleccione..',''),
             "solicitud"        => Solicitudes::find(\request()->id_solicitud),
-            'skus'             => Productos::where('activo',1)->pluck('sku','id_sku')->prepend('Seleccione el SKU...',''),
             'impuestos'        => Impuestos::select('id_impuesto','impuesto')->where('activo',1)->orderBy('impuesto')->with('porcentaje')->pluck('impuesto','id_impuesto')->prepend('Seleccione...',''),
 	        "proveedores"      => SociosNegocio::where('activo',1)->whereHas('empresas',function ($q){
                 $q->where('conexion',\request()->company);
             })->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio')->prepend('Seleccione el proveedor...',''),
-            "clientes"         => SociosNegocio::where('activo',1)->whereHas('empresas',function ($q){
-                $q->where('conexion',\request()->company);
-            })->where('fk_id_tipo_socio_venta',1)->pluck('nombre_comercial','id_socio_negocio')->prepend('Seleccione el cliente...',''),
-            'js_sucursales'    => Crypt::encryptString('"conditions": [{"where": ["activo", "1"]}],"whereHas": [{"empresas":{"where":["fk_id_empresa", "$fk_id_empresa"]}}], "select": ["id_sucursal","sucursal"]'),
+            // 'js_skus'          => Crypt::encryptString('"conditions": [{"where": ["activo", "1"]}],"whereHas": [{"proveedores":{"where":["fk_id_socio_negocio", "$socio_negocio"]}}]'),
+            'js_skus'          => Crypt::encryptString('"conditions": [{"where": ["activo", "1"]}],"withFunction": [{
+                "productos":{
+                    "selectRaw": ["fk_id_sku"],
+                    "whereRaw":["(fk_id_socio_negocio = $socio_negocio)"]}}]
+            '),
             'js_upcs'          => Crypt::encryptString('"select":["id_upc","upc","descripcion","nombre_comercial"], "conditions": [{"where": ["activo", "1"]}],"whereHas": [{"skus":{"where":["fk_id_sku","$id_sku"]}}]'),
             'js_porcentaje'    => Crypt::encryptString('"select": ["tasa_o_cuota"], "conditions": [{"where":["id_impuesto", "$id_impuesto"]}], "limit": "1"'),
-            'js_proyectos'     => Crypt::encryptString('"select":["id_proyecto as id","proyecto as text"],"conditions":[{"where":["fk_id_estatus",1]},{"where":["fk_id_cliente",$fk_id_cliente]}]'),
-            'js_tiempo_entrega'=> Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]')
+            'js_proyectos'     => Crypt::encryptString('"select":["id_proyecto as id","proyecto as text"],"conditions":[{"where":["fk_id_estatus",1]},{"where":["fk_id_sku",$id_sku]}]'),
+            'js_tiempo_entrega'=> Crypt::encryptString('"selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],"withFunction": [{
+                "productos": {
+                    "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],
+                    "whereRaw": ["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"],
+                    "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
+                    }
+                }],
+                "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
+            '),
 	    ];
 	}
 

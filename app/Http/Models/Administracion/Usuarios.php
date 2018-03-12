@@ -201,7 +201,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
     }
 	public function usuario_empresa()
 	{
-		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_empresa');
+		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_empresa')->on(Sucursales::class,'fk_id_sucursal','id_sucursal');
     }
     public function solicitudes()
     {

@@ -14,10 +14,10 @@ $(document).ready(function(){
         disabled:true,
         placeholder: 'Seleccione la empresa...'
     });
-    $('#fk_id_empresa_default').on('change', function () {
+    $('#fk_id_empresa').on('change', function () {
         $(".fk_id_sucursales").empty();
         $('#loadingsucursales').show();
-        var idempresa = $('#fk_id_empresa_default option:selected').val();
+        var idempresa = $('#fk_id_empresa option:selected').val();
         var _url = $(this).data('url');
         $.ajax({
             url: _url,
@@ -59,11 +59,11 @@ $(document).ready(function(){
         });
     });
     
-    if($('#fk_id_empresa_default').val() > 0){
+    if($('#fk_id_empresa').val() > 0){
         $(".fk_id_sucursales").empty();
         $('#loadingsucursales').show();
-        var idempresa = $('#fk_id_empresa_default option:selected').val();
-        var _url = $('#fk_id_empresa_default').data('url');
+        var idempresa = $('#fk_id_empresa option:selected').val();
+        var _url = $('#fk_id_empresa').data('url');
         $.ajax({
             url: _url,
             data: {'param_js': api_sucursales, $fk_id_empresa:idempresa},

@@ -25,7 +25,7 @@ class RedirectIfAuthenticated
         # Si existe session, redirige a empresa default
         if (Auth::guard($guard)->check()) {
             $usuario = Usuarios::where('id_usuario', Auth::Id())->first();
-            $empresa = Empresas::findOrFail($usuario->fk_id_empresa_default);
+            $empresa = Empresas::findOrFail($usuario->fk_id_empresa);
             return redirect("/$empresa->conexion");
         }
         return $next($request);
