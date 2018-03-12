@@ -156,10 +156,14 @@ class Empresas extends ModelBase
 	/*relación de tres*/
 	public function usuario_empresa()
 	{
-		return $this->belongsToMany(Usuarios::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_empresa','fk_id_usuario');
+		return $this->belongsToMany(Usuarios::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_empresa','fk_id_usuario')
+        ->withPivot('fk_id_sucursal')
+        ->join(Sucursales::class,'fk_id_sucursal','=','id_sucursal');
 	}
 	public function empresa_sucursales()
 	{
-		return $this->belongsToMany(Sucursales::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_empresa','fk_id_sucursal');
+		return $this->belongsToMany(Sucursales::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_empresa','fk_id_sucursal')
+		->withPivot('fk_id_usuario')
+        ->join(Usuarios::class,'fk_id_usuario','=','id_usuario');
 	}
 }
