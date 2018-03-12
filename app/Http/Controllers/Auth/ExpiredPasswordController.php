@@ -7,13 +7,19 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Http\Models\Administracion\Usuarios;
 
 class ExpiredPasswordController extends Controller
 {
     public $rules = ['actual'=>'required','password'=>'required|min:6','confirmar'=>'required|min:6'];
     public $nice = ['actual'=>'Contrase&ntilde;a actual','password'=>'Nueva contrase&ntilde;a','confirmar'=>'Confirmar contrase&ntilde;a'];
     
-	public function expired($company)
+    public function __construct()
+    {
+        $this->entity = new Usuarios;
+    }
+    
+    public function expired($company)
 	{
 	    $user = Auth::user();
 	    $fechapassword = new Carbon($user->fecha_cambio_password ? $user->fecha_cambio_password : $user->fecha_creacion);
