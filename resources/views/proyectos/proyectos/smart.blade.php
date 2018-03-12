@@ -28,7 +28,7 @@
 			{{Form::cSelectWithDisabled('* Clase Proyecto','fk_id_clasificacion_proyecto',$clasificaciones ?? [],['class'=>'select2'])}}
 		</div>
 		<div class="form-group col-md-8 col-xs-12">
-			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',$clientes ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/Administracion.sucursales/api'])}}
+			{{Form::cSelectWithDisabled('* Cliente','fk_id_cliente',$clientes ?? [],['class'=>'select2','data-url'=>ApiAction('administracion.sucursales')])}}
 		</div>
 		<div class="form-group col-md-4 col-xs-12">
 			{{Form::cSelectWithDisabled('* Estatus','fk_id_estatus',$estatus ?? [])}}
@@ -82,7 +82,7 @@
                 			{{Form::cSelectWithDisabled('Dependencia','fk_id_dependencia', $dependencias ?? [],['class'=>'select2'])}}
                 		</div>
                 		<div class="form-group col-md-3">
-                			{{Form::cSelectWithDisabled('Subdependencia','fk_id_subdependencia', $subdependencias ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/administracion.subdependencias/api'])}}
+                			{{Form::cSelectWithDisabled('Subdependencia','fk_id_subdependencia', $subdependencias ?? [],['class'=>'select2','data-url'=>ApiAction('administracion.subdependencias')])}}
                 		</div>
     					<div class="form-group col-md-3">
     						{{Form::cSelectWithDisabled('Modalidad entrega','fk_id_modalidad_entrega', $modalidadesentrega ?? [],['class'=>'select2'])}}
@@ -108,13 +108,13 @@
     					@if(Route::currentRouteNamed(currentRouteName('create')))
     					<div class="row col-md-12 text-center">
     						<div class="form-goup col-md-4 text-center">
-    							<button type="button" data-url="{{companyAction('HomeController@index').'/Liciplus.licitaciones/api'}}" id="importar_liciplus" disabled class="btn btn-info btn-lg">LICIPLUS</button>
+    							<button type="button" data-url="{{ApiAction('liciplus.licitaciones')}}" id="importar_liciplus" disabled class="btn btn-info btn-lg">LICIPLUS</button>
     						</div>
     						<div class="form-goup col-md-4 text-center">
-    							<button type="button" data-url="{{companyAction('HomeController@index').'/Liciplus.contratos/api'}}" id="importar_contratos" disabled class="btn btn-info btn-lg">Importar Contratos</button>
+    							<button type="button" data-url="{{ApiAction('liciplus.contratos')}}" id="importar_contratos" disabled class="btn btn-info btn-lg">Importar Contratos</button>
     						</div>
     						<div class="form-goup col-md-4 text-center">
-    							<button type="button" data-url="{{companyAction('HomeController@index').'/Liciplus.partidas/api'}}" id="importar_productos" disabled class="btn btn-info btn-lg">Importar Productos</button>
+    							<button type="button" data-url="{{ApiAction('liciplus.partidas')}}" id="importar_productos" disabled class="btn btn-info btn-lg">Importar Productos</button>
     						</div>
     					</div>
     					@endif
