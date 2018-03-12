@@ -142,11 +142,13 @@
 @section('content')
     <div class="container-fluid">
     	<div class="row">
-			<div id="loadingActions" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-        		<h4 style="margin-top:15%">Cargando informacion!</h4>
-        		<h5>Espere... <i class="material-icons align-middle loading">cached</i></h5>
-        	</div>
     		<div class="col-sm-12">
+    			@if(config('view.load_data'))
+    			<div id="loadingActions" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+            		<h4 style="margin-top:15%">Cargando informacion!</h4>
+            		<h5>Espere... <i class="material-icons align-middle loading">cached</i></h5>
+            	</div>
+            	@endif
     			<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-create-url="{{ companyRoute('create') }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}" data-item-export-url="{{companyRoute('export', ['type' => '_ID_'])}}">
     				<div class="col-sm-6">
     					<table class=table bordered striped highlight" hidden>
