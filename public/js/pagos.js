@@ -1,11 +1,5 @@
 $(document).ready(function () {
-	
-    $('.datepicker').pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 3, // Creates a dropdown of 3 years to control year
-        format: 'yyyy-mm-dd'
-    });
-    
+
     $('#fk_id_moneda').on('change', function() {
 		$('#tipo_cambio').attr('readonly',$('#fk_id_moneda').val() == 100);
 		
@@ -94,7 +88,7 @@ $(document).ready(function () {
                                 calcular_total_pagado();
                                 limpiarcampos();
                                 $.toaster({
-                                    priority: 'success', title: 'Éxito', message: 'Se ha insertado el registro',
+                                    priority: 'success', title: 'Ã‰xito', message: 'Se ha insertado el registro',
                                     settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
                                 });
                                 $('#loadingpagos').hide();
@@ -149,7 +143,7 @@ $(document).ready(function () {
 function validateDetail(a_pagar,pagado) {
     $.validator.addMethod('precio',function (value,element) {
         return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-    },'El precio no debe tener mÃƒÆ’Ã‚Â¡s de dos decimales');
+    },'El precio no debe tener mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s de dos decimales');
     $.validator.addMethod( "greaterThan", function( value, element, param ) {
         return value > param;
     }, "Please enter a greater value." );
@@ -169,8 +163,8 @@ function validateDetail(a_pagar,pagado) {
             lessThanDocumento: +a_pagar - +pagado,
             messages:{
                 required: 'Ingresa un precio unitario',
-                number: 'El campo debe ser un Número',
-                greaterThan: 'El número debe ser mayor a 0',
+                number: 'El campo debe ser un NÃºmero',
+                greaterThan: 'El nÃºmero debe ser mayor a 0',
                 lessThanPago:'El monto no puede superar al monto general menos el total pagado',
                 lessThanDocumento:'El monto debe ser menor al total documento menos lo pagado ',
                 precio: 'El precio no debe tener mas de dos decimales ni mas de 10 enteros y debe ser positivo'
@@ -180,7 +174,7 @@ function validateDetail(a_pagar,pagado) {
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado la orden correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado la orden correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     calcular_total_pagado();
 }
 

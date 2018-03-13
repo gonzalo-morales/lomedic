@@ -36,6 +36,11 @@
     					</div>
                             {{ $errors->has('password') ? HTML::tag('span', $errors->first('password'), ['class'=>'form-text text-white bg-danger p-1 m-0 rounded-bottom']) : '' }}
     				</div>
+        			@if (count($errors) == 1)
+                            @foreach ($errors->all() as $error)
+                                <div class="alert alert-danger" role="alert" style="background: rgba(238,205,208,0.9);">{!! $error !!}</div>
+                            @endforeach
+                    @endif 
     				<div class="form-group">
     					<div class=" container">
     					{{ Form::button(cTrans('forms.login','Entrar'), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}

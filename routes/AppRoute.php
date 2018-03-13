@@ -27,6 +27,11 @@ Route::get('lang/{locale}', function ($locale) {
     return redirect()->back()->withCookie(cookie()->forever('app_locale',$locale));
 });
 
+Route::get('menu/{active}', function ($active) {
+    $class = $active ? 'active' : '';
+    return redirect()->back()->withCookie(cookie()->forever('menu_active',$class));
+});
+
 Route::get('clear', function () {
     Artisan::call('cache:clear');
     Artisan::call('config:clear');

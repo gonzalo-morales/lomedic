@@ -1,12 +1,6 @@
 var a=[];
 var subtotal_original = 0;
-// Inicializar los datepicker para las fechas necesarias
-$('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 3, // Creates a dropdown of 3 years to control year
-    min: true,
-    format: 'yyyy/mm/dd'
-});
+
 $(document).ready(function(){
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
@@ -367,6 +361,13 @@ function totalOrden() {
 }
 
 function borrarFila(el) {
+    var cantidad = $(el).find('.cantidad_row').val();
+    var precio = $(el).find('.precio_unitario_row').val();
+    var descuento = $(el).find('.descuento_row').val();
+    descuento = (descuento * precio)/100;
+    var subtotal = (precio-descuento)*cantidad;
+    subtotal_original -= subtotal;
+    subtotal_original = subtotal_original.toFixed(2);
     var tr = $(el).closest('tr');
     tr.fadeOut(400, function(){
         tr.remove().stop();

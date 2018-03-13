@@ -5,13 +5,6 @@
 	@section('title', 'Cuadro Basico Nacional')
 @endif
 
-@section('header-bottom')
-	@parent
-	<script type="text/javascript">
-        $('#vigencia').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' })
-	</script>
-@endsection
-
 @section('form-content')
 	{{ Form::setModel($data) }}
     <div class="row">
@@ -26,7 +19,7 @@
     		</div>
     	</div>
     	<div class="col-sm-12 col-md-6 col-lg-4">
-    		{{ Form::cText('Vigencia', 'vigencia') }}
+    		{{ Form::cText('Vigencia', 'vigencia',['class'=>'datepicker']) }}
     	</div>
     	
     	<div class="col-sm-12 col-md-6 col-lg-4">

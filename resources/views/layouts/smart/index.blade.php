@@ -171,7 +171,7 @@
     		<div class="col-sm-12">
     			@if(config('view.load_data'))
     			<div id="loadingActions" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-            		<h4 style="margin-top:15%">Cargando informacion!</h4>
+            		<h4 style="margin-top:5%">Cargando informacion!</h4>
             		<h5>Espere... <i class="material-icons align-middle loading">cached</i></h5>
             	</div>
             	@endif
@@ -207,9 +207,7 @@
     						<tbody>
     							@foreach ($data as $row)
     							<tr>
-    								<td class="width-auto">
-    									<input type="checkbox" id="check-{{$row->getKey()}}" name="check-{{$row->getKey()}}" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="{{$row->getKey()}}">
-    								</td>
+    								<td class="width-auto"><input type="checkbox" id="check-{{$row->getKey()}}" name="check-{{$row->getKey()}}" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="{{$row->getKey()}}"></td>
     								@foreach ($fields as $field => $label)
     								<td>{{ str_limit(object_get($row, $field),90) }}</td>
     								@endforeach

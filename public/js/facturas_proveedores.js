@@ -1,9 +1,3 @@
-$('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 3, // Creates a dropdown of 3 years to control year
-    format: 'yyyy-mm-dd'
-});
-
 $(document).on('change','.orden-compra',function () {
         var _url = $('#factura').data('urlorden');
         var obj = $(this);
@@ -29,7 +23,7 @@ $(document).on('change','.orden-compra',function () {
                 },
                 error: function (e) {
                     $.toaster({
-                        priority: 'danger', title: '¡Error!', message: "Error: "+e,
+                        priority: 'danger', title: 'Â¡Error!', message: "Error: "+e,
                         settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                     });
                     $('#loadinglinea').hide();
@@ -58,7 +52,7 @@ $(document).ready(function () {
                 }else{
                     $('#comprador').val('');
                     $.toaster({
-                        priority: 'warning', title: '¡Oooops!', message: 'No se encontró un nombre de comprador',
+                        priority: 'warning', title: 'Â¡Oooops!', message: 'No se encontrÃ³ un nombre de comprador',
                         settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                     });
                 }
@@ -75,7 +69,7 @@ $(document).ready(function () {
         if($('#archivo_xml_input').val() && $('#archivo_pdf_input').val() && $('#fk_id_socio_negocio').val() > 0){
             if($('#archivo_xml_input').val().substring($('#archivo_xml_input').val().lastIndexOf(".")) != '.xml' || $('#archivo_pdf_input').val().substring($('#archivo_pdf_input').val().lastIndexOf(".")) != '.pdf'){
                 $.toaster({
-                    priority: 'danger', title: '¡Error!', message: 'Por favor verifica la extensión de ambos archivos',
+                    priority: 'danger', title: 'Â¡Error!', message: 'Por favor verifica la extensiÃ³n de ambos archivos',
                     settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                 });
             }else{
@@ -101,12 +95,12 @@ $(document).ready(function () {
                         console.log(data.estatus);
                         if(data.estatus == -1){
                             $.toaster({
-                                priority: 'danger', title: '¡Error -1 !', message: 'Ha ocurrido un error al cargar los datos',
+                                priority: 'danger', title: 'Â¡Error -1 !', message: 'Ha ocurrido un error al cargar los datos',
                                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                             });
                         }else if(data.estatus == -2 || data.estatus == -3){
                             $.toaster({
-                                priority: 'danger', title: '¡Error'+data.estatus+' !', message: data.resultado,
+                                priority: 'danger', title: 'Â¡Error'+data.estatus+' !', message: data.resultado,
                                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                             });
                         }else{
@@ -175,7 +169,7 @@ $(document).ready(function () {
                                 });
                             }
                             $.toaster({
-                                priority: 'success', title: '¡Éxito!', message: 'Se han importado los datos correctamente',
+                                priority: 'success', title: 'Â¡Ã‰xito!', message: 'Se han importado los datos correctamente',
                                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                             });
                             $('#factura').show();
@@ -188,7 +182,7 @@ $(document).ready(function () {
                     },
                     error: function (jqXHR) {
                         $.toaster({
-                            priority: 'danger', title: '¡Error '+jqXHR.status+'!', message: 'Ha ocurrido un error al cargar los datos',
+                            priority: 'danger', title: 'Â¡Error '+jqXHR.status+'!', message: 'Ha ocurrido un error al cargar los datos',
                             settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                         });
                         $('#loadingxml').hide();
@@ -203,7 +197,7 @@ $(document).ready(function () {
             }
         }else{
             $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Por favor sube ambos archivos y selecciona un proveedor',
+                priority: 'danger', title: 'Â¡Error!', message: 'Por favor sube ambos archivos y selecciona un proveedor',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
@@ -213,7 +207,7 @@ $(document).ready(function () {
 
         $.validator.addMethod('minStrict', function (value, element, param) {
             return (value > param);
-        },'El valor debe ser mayor a {0} y numérico');
+        },'El valor debe ser mayor a {0} y numÃ©rico');
         $.validator.addMethod('cDigits',$.validator.methods.digits,'El campo debe ser entero');
         $.validator.addClassRules('integer',{
             minStrict:-1,
@@ -227,7 +221,7 @@ $(document).ready(function () {
         if($('#productos_facturados tr').length < 1){
             e.preventDefault();
             $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Por favor carga la tabla de facturas',
+                priority: 'danger', title: 'Â¡Error!', message: 'Por favor carga la tabla de facturas',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
@@ -284,12 +278,12 @@ function getBase64(file) {
             $('#pdf').prop('data',reader.result);
             $('#loadingpdf').hide();
             $.toaster({
-                priority: 'success', title: '¡Éxito!', message: 'Se ha importado el PDF correctamente',
+                priority: 'success', title: 'Â¡Ã‰xito!', message: 'Se ha importado el PDF correctamente',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }else{
             $.toaster({
-                priority: 'info', title: '¡Advertencia!', message: 'El PDF no contiene información',
+                priority: 'info', title: 'Â¡Advertencia!', message: 'El PDF no contiene informaciÃ³n',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
             $('#loadingpdf').hide();

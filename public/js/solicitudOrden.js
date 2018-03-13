@@ -1,11 +1,4 @@
 var a=[];
-// Inicializar los datepicker para las fechas necesarias
-$('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 3, // Creates a dropdown of 3 years to control year
-    min: true,
-    format: 'yyyy-mm-dd'
-});
 $(document).ready(function(){
     //Inicializar tabla
     window.dataTable = new DataTable('#productos', {
@@ -49,7 +42,7 @@ $(document).ready(function(){
             }else{
                 $( this ).prop('checked',false);
                 $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-                $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes un SKU',
+                $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Selecciona antes un SKU',
                     settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             }
         }
@@ -107,7 +100,7 @@ function initSelects() {
     select2Placeholder('fk_id_empresa_','Selecciona una empresa',0,true,true,0,false);
     select2Placeholder('fk_id_socio_negocio','Selecciona un proveedor',50,true,true,0,false);
     $('#fk_id_sucursal_').select2({theme:'bootstrap',minimumResultsForSearch:50});
-    select2Placeholder('fk_id_condicion_pago','Selecciona una condición de pago','Infinity',true,true);
+    select2Placeholder('fk_id_condicion_pago','Selecciona una condiciÃ³n de pago','Infinity',true,true);
     select2Placeholder('fk_id_tipo_entrega','Selecciona una forma de entrega','Infinity',true,true);
     $.ajax({
         url: $('#fk_id_socio_negocio').data('url'),
@@ -160,13 +153,13 @@ function agregarProducto() {
             '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
             ]
         });
-        $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
+        $.toaster({priority : 'success',title : 'Â¡Ã‰xito!',message : 'Producto agregado con Ã©xito',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
         });
         limpiarCampos();
         totalOrden();
     }else{
-        $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
+        $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Hay campos que requieren de tu atenciÃ³n',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     }
 }
@@ -191,7 +184,7 @@ function totalOrden() {
 
 function borrarFila(el) {
     dataTable.rows().remove([$(el).parents('tr').dataIndex]);
-        $.toaster({priority : 'warning',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
+        $.toaster({priority : 'warning',title : 'Â¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     if(dataTable.activeRows.length<1)
         validateDetail();
@@ -209,7 +202,7 @@ function limpiarCampos() {
     $('#fecha_necesario').val('');
     $('#cantidad').val('1');
     $('#precio_unitario').val('');
-    //Eliminar reglas de validación detalle
+    //Eliminar reglas de validaciÃ³n detalle
     $('#fk_id_sku').rules('remove');
     $('#fk_id_upc').rules('remove');
     $('#fk_id_proyecto').rules('remove');
@@ -232,8 +225,8 @@ function validateDetail() {
         range: [1,9999],
         messages:{
             required: 'Ingresa una cantidad',
-            number: 'El campo debe ser un número',
-            range: 'El número debe ser entre 1 y 9999'
+            number: 'El campo debe ser un nÃºmero',
+            range: 'El nÃºmero debe ser entre 1 y 9999'
         }
     });
     $('#fk_id_impuesto').rules('add',{
@@ -244,7 +237,7 @@ function validateDetail() {
     });
     $.validator.addMethod('precio',function (value,element) {
         return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-    },'El precio no debe tener más de dos decimales');
+    },'El precio no debe tener mÃ¡s de dos decimales');
     $.validator.addMethod( "greaterThan", function( value, element, param ) {
 
         if ( this.settings.onfocusout ) {
@@ -262,9 +255,9 @@ function validateDetail() {
         greaterThan:0,
         messages:{
             required: 'Ingresa un precio unitario',
-            number: 'El campo debe ser un número',
-            greaterThan: 'El número debe ser mayor a 0',
-            precio: 'El precio no debe tener más de dos decimales'
+            number: 'El campo debe ser un nÃºmero',
+            greaterThan: 'El nÃºmero debe ser mayor a 0',
+            precio: 'El precio no debe tener mÃ¡s de dos decimales'
         }
     });
 }

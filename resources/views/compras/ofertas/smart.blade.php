@@ -44,7 +44,7 @@
     	<div class="form-group col-md-3 col-sm-6">
     		{!! Form::cSelect('*Proveedor','fk_id_proveedor',$proveedores ?? [],[
 				'style' => 'width:100%;',
-				'data-url' => ApiAction('sociosnegocio.sociosnegocio'),
+				'data-url'=>companyAction('Inventarios\ProductosController@obtenerSkus'),
 				'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
 			])!!}
     	</div>
@@ -84,22 +84,24 @@
 								]) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
-								<div id="loadingupcs" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-									Ingresando UPC's... <i class="material-icons align-middle loading">cached</i>
+								{{Form::label('fk_id_upc','UPC')}}
+								<div class="input-group">
+									<span class="input-group-addon">
+										<input type="checkbox" id="activo_upc">
+									</span>
+									{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
+									'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
+									'class'=>'form-control','style'=>'width:100%',])!!}
 								</div>
-								{!! Form::cSelect('UPC','fk_id_upc',$upcs ?? [],[
-									'data-url' => companyAction('HomeController@index').'/inventarios.upcs/api',
-									'style' => 'width:100%;',
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
-								]) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								<div id="loadingproyectos" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 									Agregando proyectos... <i class="material-icons align-middle loading">cached</i>
 								</div>
 								{!! Form::cSelect('Proyecto','fk_id_proyecto',$proyectos ?? [],[
-									'style' => 'width:100%;',
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+									'style' 	=> 	'width:100%;',
+									'data-url'	=>	ApiAction('proyectos.proyectos'),
+									'class' 	=> 	!Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
 									])!!}
 							</div>
     						<div class="form-group input-field col-md-3 col-sm-6">

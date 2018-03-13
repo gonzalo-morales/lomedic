@@ -1,20 +1,6 @@
 @extends(smart())
 @section('content-width', 's12')
 
-@section('header-bottom')
-	@parent
-	@index
-	<script type="text/javascript">
-        // Inicializar los datepicker para las fechas necesarias
-        $('.datepicker').pickadate({
-            selectMonths: true, // Creates a dropdown to control month
-            selectYears: 3, // Creates a dropdown of 3 years to control year
-            format: 'yyyy-mm-dd'
-        });
-    </script>
-    @endif
-@endsection
-
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">
