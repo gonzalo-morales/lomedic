@@ -89,7 +89,7 @@ class ProductosController extends ControllerBase
 
     public function obtenerSkus($company,Request $request)
     {
-        $term = $request->term;
+        $term = $request->term;     
         $id_proyecto = $request->fk_id_proyecto;
         $id_socio = $request->fk_id_socio_negocio;
         $skus = null;
