@@ -58,7 +58,7 @@
 	border: 1px solid transparent;
 	float: left;
 	margin-left: 2px;
-	padding: 6px 12px;
+	padding: 3px 8px;
 	position: relative;
 	text-decoration: none;
 	color: #333;
@@ -66,13 +66,16 @@
 
 .dataTable-pagination a:hover {
 	background-color: #d9d9d9;
+	border-radius: 2px;
 }
 
 .dataTable-pagination .active a,
 .dataTable-pagination .active a:focus,
 .dataTable-pagination .active a:hover {
-	background-color: #d9d9d9;
+	background-color: #d5d5d5;
 	cursor: default;
+	border-radius: 2px;
+	font-weight: bold;
 }
 
 .dataTable-pagination .ellipsis a,
@@ -101,13 +104,17 @@
 }
 
 .dataTable-table > tbody > tr > td,
-.dataTable-table > tbody > tr > th,
+.dataTable-table > tbody > tr > th
+{
+	vertical-align: top;
+	padding: 4px 6px;
+}
 .dataTable-table > tfoot > tr > td,
 .dataTable-table > tfoot > tr > th,
 .dataTable-table > thead > tr > td,
 .dataTable-table > thead > tr > th {
 	vertical-align: top;
-	padding: 8px 10px;
+	padding: 6px 6px;
 }
 
 .dataTable-table > thead > tr > th {

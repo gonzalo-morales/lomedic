@@ -15,9 +15,9 @@ return [
 
 	'previous' => '&laquo; Anterior',
 	'next' => 'Siguiente &raquo;',
-    'search_data' => 'Buscar datos...',
-    'no_rows' => 'No hay datos que mostrar',
-    'info' => 'Mostrando {start} a {end} de {rows} datos [Pagina {page} de {pages}]',
-    'per_page' => '{select} datos por pagina',
-    'load_data' => 'Obteniendo elementos...',
+    'search_data' => 'Buscar...',
+    'no_rows' => 'No hay registros que mostrar',
+    'info' => 'Mostrando {start} a {end} de {rows} registros [Pagina {page} de {pages}]',
+    'per_page' => '{select} registros por pagina',
+    'load_data' => 'Obteniendo registros...',
 ];

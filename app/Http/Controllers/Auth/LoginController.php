@@ -79,7 +79,7 @@ class LoginController extends Controller
 	 */
 	protected function authenticated(Request $request, $usuario)
 	{
-		$empresa = Empresas::findOrFail($usuario->fk_id_empresa_default);
+		$empresa = Empresas::findOrFail($usuario->fk_id_empresa);
 
 		return \Redirect::intended("/$empresa->conexion");
 	}
