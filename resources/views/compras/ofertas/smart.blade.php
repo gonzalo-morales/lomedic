@@ -170,7 +170,6 @@
     					<tbody>
     					@if(isset($solicitud) && Route::currentRouteNamed(currentRouteName('create')))
 							@foreach( $solicitud->detalle->where('cerrado',false) as $detalle)
-							{{dump($detalle)}}
     							<tr class="list-left bg-light">
     								<td>
     									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
