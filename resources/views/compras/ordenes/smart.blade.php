@@ -13,7 +13,7 @@
 	@endif
 	<script type="text/javascript">
         var tiempo_entrega_js = '{{$js_tiempo_entrega ?? ''}}';
-        var clientes_js = '{{$js_clientes ?? ''}}';
+        var proyectos_js = '{{$js_proyectos ?? ''}}';
 	</script>
 @endsection
 
@@ -120,14 +120,10 @@
 							</div>
 						</div>
 						<div class="form-group input-field col-md-3 col-sm-6">
-							{{Form::label('fk_id_cliente','Cliente')}}
-							{!!Form::select('fk_id_cliente',isset($clientes)?$clientes:[],null,['id'=>'fk_id_cliente','autocomplete'=>'off','class'=>'form-control','style'=>'width:100%'])!!}
-						</div>
-						<div class="form-group input-field col-md-3 col-sm-6">
 							{{Form::label('fk_id_proyecto','Proyecto')}}
-							{!!Form::select('fk_id_proyecto',isset($proyectos)?$proyectos:[],null,['id'=>'fk_id_proyecto','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%',])!!}
+							{!!Form::select('fk_id_proyecto',isset($proyectos)?$proyectos:[],null,['id'=>'fk_id_proyecto','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%','data-url'=>ApiAction('proyectos.proyectos')])!!}
 						</div>
-						<div class="form-group input-field col-md-2 col-sm-4">
+						<div class="form-group input-field col-md-3 col-sm-4">
 							{{ Form::label('fecha_necesario', '* ¿Para cuándo se necesita?') }}
 							{!! Form::text('fecha_necesario',null,['id'=>'fecha_necesario','class'=>'datepicker form-control','value'=>old('fecha_necesario'),'placeholder'=>'Selecciona una fecha']) !!}
 						</div>
@@ -181,7 +177,6 @@
 						<th>UPC</th>
 						<th>Producto</th>
 						<th>Descripción</th>
-						<th>Cliente</th>
 						<th>Proyecto</th>
 						<th>Fecha límite</th>
 						<th>Cantidad</th>
@@ -215,10 +210,6 @@
 								</td>
 								<td>
 									{{$detalle->sku->descripcion}}
-								</td>
-								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
-									{{isset($detalle->cliente->nombre_corto)?$detalle->cliente->nombre_corto:'Sin cliente'}}
 								</td>
 								<td>
 									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
@@ -279,10 +270,6 @@
 									{{$detalle->sku->descripcion}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
-									{{isset($detalle->cliente->nombre_comercial)?$detalle->cliente->nombre_comercial:'Sin cliente'}}
-								</td>
-								<td>
 									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
 									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
 								</td>
@@ -326,15 +313,15 @@
 					</tbody>
 					<tfoot class="table-dark">
 					<tr>
-						<td colspan="2"></td>
-						<td colspan="2">
+						<td colspan="1"></td>
+						<td colspan="3">
 								{{ Form::label('subtotal_lbl', 'Subtotal',['class'=>'h5']) }}
 								<span class="">$</span>
 							{{ Form::label('subtotal_lbl', '0.00',['class'=>'h5','id'=>'subtotal_lbl']) }}
 							{{Form::hidden('subtotal',null,['id'=>'subtotal'])}}
 							{{--{!! Form::text('subtotal', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}--}}
 						</td>
-						<td colspan="4">
+						<td colspan="3">
 {{--							{{ Form::label('0','',['class'=>'h5','id'=>'descuento_porcentaje']) }}--}}
 							<div class="form-group col-sm-6">
 								{{ Form::label('', 'Descuento: ',['class'=>'h5']) }}

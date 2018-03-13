@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use function foo\func;
 use Illuminate\Support\Facades\Crypt;
 
 /*
@@ -66,19 +67,6 @@ class APIController extends Controller
                 $entity = call_user_func_array([$entity, 'distinct'], $request['distinct'] ?? []);
             }
 			# Si hay eagerloaders
-//            if(isset($request['withFunction'])){
-//                foreach ($request['withFunction'] as $relations){
-//                    foreach ($relations as $relation=>$actions){
-//                        $entity = $entity->with([$relation=>function($pivot) use ($actions){
-//                            foreach ($actions as $action=>$value){
-//                                $pivot->{$action}($value);
-//                            }
-//                            return $pivot;
-//                        }]);
-//                    }
-//                }
-//            }
-
             foreach (($request['withFunction'] ?? []) as $relations) {
                 foreach ($relations as $relation => $conditions) {
                     $entity = $entity->with([$relation => function($query) use($conditions) {
@@ -104,15 +92,26 @@ class APIController extends Controller
 			}
 
 			# Condiciones de relacion ...
-			foreach (($request['whereHas'] ?? []) as $relations) {
-				foreach ($relations as $relation => $conditions) {
-					$entity = $entity->whereHas($relation, function($query) use($conditions) {
-						foreach ($conditions as $condition => $args) {
-							call_user_func_array([$query, $condition], $args);
-						}
-					});
-				}
-			}
+            if($request['whereHas']){
+                foreach (($request['whereHas'] ?? []) as $relations) {
+                    foreach ($relations as $relation => $conditions) {
+                        $entity = $entity->whereHas($relation, function($query) use($conditions) {
+                            foreach ($conditions as $condition => $args) {
+                                if(!is_array($args) && $condition != 'whereHas')
+                                    call_user_func_array([$query, $condition], $args);
+                                else{
+                                    $argumento = $args[0];
+                                    $query->whereHas(array_keys($argumento)[0],function ($item) use ($argumento){
+                                        foreach ($argumento[array_keys($argumento)[0]][0] as $condition => $value){
+                                            call_user_func_array([$item,$condition],[$value]);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            }
 
 			# Orden de registros
 			foreach (($request['orderBy'] ?? []) as $orderBy) {
@@ -152,4 +151,5 @@ class APIController extends Controller
 			return $collections;
 		}
 	}
+
 }
