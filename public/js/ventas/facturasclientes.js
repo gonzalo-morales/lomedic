@@ -47,6 +47,7 @@ $(document).ready(function () {
     		    dataType: 'json',
                 success: function (data) {
                 	$("#fk_id_serie option").remove();
+                		series.append('<option value="">...</option>')
                     $.each(data, function(){
                     	series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
                     });
@@ -191,7 +192,7 @@ $(document).ready(function () {
 		factura = $('#fk_id_factura_relacion option:selected').text();
 		
 		if(id_tipo == '' | id_factura == '') {
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleRelaciones').append('<tr>'+
@@ -206,14 +207,33 @@ $(document).ready(function () {
 				'</td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-			$.toaster({priority:'success',title:'ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		
 	});
+	
+	$('#fk_id_serie').on('change',function () {
+        let url = $(this).data('url');
+        $.ajax({
+            async: true,
+            url: url,
+            data: {'param_js':serie_js,$id_serie:$(this).val()},
+            dataType: 'json',
+            success: function (data) {
+                if(data[0].sufijo){
+                    $('#serie').val(data[0].prefijo+'-'+data[0].sufijo);
+                }else{
+                    $('#serie').val(data[0].prefijo);
+                }
+                var folio = !data[0].siguiente_numero ? 1 : +data[0].siguiente_numero;
+                $('#folio').val(folio);
+            }
+        });
+    });
 	
 });
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }

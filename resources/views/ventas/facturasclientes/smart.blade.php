@@ -9,6 +9,7 @@
 		var cliente_js    = '{{ $js_cliente ?? '' }}';
 		var clientes_js   = '{{ $js_clientes ?? '' }}';
 		var series_js     = '{{ $js_series ?? '' }}';
+		var serie_js      = '{{ $js_serie ?? '' }}';
     	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
     	var contratos_js = '{{ $js_contratos ?? '' }}';
@@ -66,7 +67,7 @@
         	</div>
         	<div class="card-body row">
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Serie','fk_id_serie', $series ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.seriesdocumentos')])}}
+        			{{Form::cSelectWithDisabled('* Serie','fk_id_serie', $series ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.seriesdocumentos')])}}
         		</div>
         		<div class="form-group col-md-6">
         			{{Form::hidden('serie')}}

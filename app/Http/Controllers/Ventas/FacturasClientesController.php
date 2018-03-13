@@ -44,8 +44,9 @@ class FacturasClientesController extends ControllerBase
             'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('...',''),
             'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa","$id_empresa"]}]'),
             'regimens' => RegimenesFiscales::where('activo',1)->select('regimen_fiscal','id_regimen_fiscal')->orderBy('regimen_fiscal')->pluck('regimen_fiscal','id_regimen_fiscal')->prepend('...',''),
-            'series' => SeriesDocumentos::where('activo',1)->select('prefijo','id_serie')->where('fk_id_tipo_documento',4)->pluck('prefijo','id_serie'),
-            'js_series' => Crypt::encryptString('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["activo",1]}]'),
+            'series' => SeriesDocumentos::select('prefijo','id_serie')->where('activo',1)->where('fk_id_tipo_documento',4)->pluck('prefijo','id_serie'),
+            'js_series' => Crypt::encryptString('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["fk_id_tipo_documento",4]}, {"where": ["activo",1]}]'),
+            'js_serie'=> Crypt::encryptString('"select":["prefijo","sufijo","siguiente_numero"],"conditions":[{"where":["id_serie",$id_serie]},{"whereRaw":["(siguiente_numero <= coalesce(ultimo_numero,0) OR ultimo_numero IS NULL)"]}]'),
             'municipios' => Municipios::where('activo',1)->select('municipio','id_municipio')->pluck('municipio','id_municipio')->prepend('...',''),
             'estados' => Estados::where('activo',1)->select('estado','id_estado')->pluck('estado','id_estado')->prepend('...',''),
             'paises' => Paises::where('activo',1)->select('pais','id_pais')->pluck('pais','id_pais')->prepend('...',''),
@@ -66,7 +67,7 @@ class FacturasClientesController extends ControllerBase
             'condicionespago' => CondicionesPago::where('activo',1)->select('condicion_pago','id_condicion_pago')->orderBy('condicion_pago')->pluck('condicion_pago','id_condicion_pago')->prepend('...',''),
             'usoscfdi' => UsosCfdis::where('activo',1)->selectRaw("CONCAT(uso_cfdi,' - ',descripcion) as uso_cfdi, id_uso_cfdi")->orderBy('uso_cfdi')->pluck('uso_cfdi','id_uso_cfdi')->prepend('...',''),
             'tiposrelacion' => TiposRelacionesCfdi::where('activo',1)->selectRaw("CONCAT(tipo_relacion,' - ',descripcion) as tipo_relacion, id_sat_tipo_relacion")->where('factura',1)->orderBy('tipo_relacion')->pluck('tipo_relacion','id_sat_tipo_relacion')->prepend('...',''),
-            'facturasrelacionadas' =>FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_documento")->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_documento')->prepend('...',''),
+            'facturasrelacionadas' =>FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_documento")->where('fk_id_estatus',3)->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_documento')->prepend('...',''),
         ];
     }
     
