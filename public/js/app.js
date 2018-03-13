@@ -607,6 +607,10 @@ $(document).ready(function(){
         file_name(this);
     });
 
+    $('.select2-hidden-accessible').on('select2:closing',function (e) {
+        if($('#loadingActions').is(':visible'))
+            e.preventDefault();
+    });
 });
 
 function file_name(obj) {

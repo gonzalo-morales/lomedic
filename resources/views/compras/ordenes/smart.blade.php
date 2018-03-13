@@ -105,7 +105,7 @@
 					<div class="row">
 						<div class="form-group input-field col-md-3 col-sm-6">
 							{{Form::label('fk_id_sku','* SKU')}}
-							{!!Form::select('fk_id_sku',[],null,['id'=>'fk_id_sku','class'=>'form-control','style'=>'width:100%','data-url'=>companyAction('Inventarios\ProductosController@obtenerSkus')])!!}
+							{!!Form::select('fk_id_sku',[],null,['id'=>'fk_id_sku','class'=>!Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '' . 'form-control','style'=>'width:100%','data-url'=>companyAction('Inventarios\ProductosController@obtenerSkus')])!!}
 						</div>
 						<div class="form-group input-field col-md-3 col-sm-6">
 							{{Form::label('fk_id_upc','UPC')}}
@@ -115,24 +115,24 @@
 								</span>
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
 								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
-								'class'=>'form-control','style'=>'width:100%',
+								'class'=>!Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '' . 'form-control','style'=>'width:100%',
 								'data-url-tiempo_entrega'=>ApiAction('sociosnegocio.sociosnegocio')]) !!}
 							</div>
 						</div>
 						<div class="form-group input-field col-md-3 col-sm-6">
 							{{Form::label('fk_id_proyecto','Proyecto')}}
-							{!!Form::select('fk_id_proyecto',isset($proyectos)?$proyectos:[],null,['id'=>'fk_id_proyecto','autocomplete'=>'off','class'=>'validate form-control','style'=>'width:100%','data-url'=>ApiAction('proyectos.proyectos')])!!}
+							{!!Form::select('fk_id_proyecto',isset($proyectos)?$proyectos:[],null,['id'=>'fk_id_proyecto','autocomplete'=>'off','class'=> !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '' . 'validate form-control','style'=>'width:100%','data-url'=>ApiAction('proyectos.proyectos')])!!}
 						</div>
 						<div class="form-group input-field col-md-3 col-sm-4">
 							{{ Form::label('fecha_necesario', '* ¿Para cuándo se necesita?') }}
 							{!! Form::text('fecha_necesario',null,['id'=>'fecha_necesario','class'=>'datepicker form-control','value'=>old('fecha_necesario'),'placeholder'=>'Selecciona una fecha']) !!}
 						</div>
 						<div class="form-group input-field col-md-2 col-sm-4">
-							{{Form::label('cantidad','Cantidad')}}
+							{{Form::label('cantidad','* Cantidad')}}
 							{!! Form::text('cantidad','1',['id'=>'cantidad','min'=>'1','class'=>'validate form-control cantidad','autocomplete'=>'off']) !!}
 						</div>
 						<div class="form-group input-field col-md-2 col-sm-6">
-							{{Form::label('fk_id_impuesto','Tipo de impuesto')}}
+							{{Form::label('fk_id_impuesto','* Tipo de impuesto')}}
 							{!! Form::select('fk_id_impuesto',[]
                                 ,null,['id'=>'fk_id_impuesto',
                                 'data-url'=>companyAction('Administracion\ImpuestosController@obtenerImpuestos'),
@@ -140,11 +140,11 @@
 							{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}
 						</div>
 						<div class="form-group input-field col-md-2 col-sm-6">
-							{{Form::label('precio_unitario','Precio unitario',['class'=>'validate'])}}
+							{{Form::label('precio_unitario','* Precio unitario',['class'=>'validate'])}}
 							{!! Form::text('precio_unitario',null,['id'=>'precio_unitario','placeholder'=>'0.00','class'=>'validate form-control precio_unitario','autocomplete'=>'off']) !!}
 						</div>
 						<div class="form-group input-field col-md-2 col-sm-6">
-							{{Form::label('descuento','Descuento',['class'=>'validate'])}}
+							{{Form::label('descuento','* Descuento',['class'=>'validate'])}}
 							<div class="input-group">
 								{!! Form::text('descuento',null,['id'=>'descuento','placeholder'=>'00.0000','class'=>'form-control','autocomplete'=>'off']) !!}
 								{!! Form::label('','%',['class'=>'input-group-addon']) !!}
@@ -208,7 +208,7 @@
 								<td>
 									{{$detalle->sku->descripcion_corta}}
 								</td>
-								<td>
+								<td style="max-width: 500px">
 									{{$detalle->sku->descripcion}}
 								</td>
 								<td>
@@ -266,7 +266,7 @@
 								<td>
 									{{$detalle->sku->descripcion_corta}}
 								</td>
-								<td>
+								<td style="max-width: 500px">
 									{{$detalle->sku->descripcion}}
 								</td>
 								<td>

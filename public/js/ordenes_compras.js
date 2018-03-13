@@ -12,7 +12,6 @@ $(document).ready(function(){
 
     totalOrden();
     subtotal_original = $('#subtotal_lbl').text();
-    // console.log(subtotal_original);
     validateDetail();
     if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
     {
@@ -33,9 +32,6 @@ $(document).ready(function(){
                         ajax:{
                             url: _url,
                             dataType: 'json',
-                            data: function (term) {
-                                return {term: term};
-                            },
                             processResults: function (data) {
                                 return {results: data}
                             },
@@ -52,9 +48,19 @@ $(document).ready(function(){
         })//Fin UPC
 
         $('#agregar').on('click',function () {
-            var sku = $('#fk_id_sku').val() ? $('#fk_id_sku').val() : "null";
-            var proveedor = $('#fk_id_socio_negocio').val() ? $('#fk_id_socio_negocio').val() : "null";
-            var upc = $('#fk_id_upc').val() != null ? $('#fk_id_upc').val() : "null";
+            var sku = "NULL";
+            if($('#fk_id_sku').val() > 0){
+                proveedor = $('#fk_id_sku').val();
+            }
+
+            var proveedor = "NULL";
+            if($('#fk_id_socio_negocio').val() > 0){
+                proveedor = $('#fk_id_socio_negocio').val();
+            }
+            var upc = "NULL";
+            if($('#fk_id_upc').val() > 0){
+                upc = $('#fk_id_upc').val();
+            }
             $.ajax({
                 url: $('#fk_id_upc').data('url-tiempo_entrega'),
                 data: {
@@ -173,12 +179,12 @@ $(document).ready(function(){
             url: $('#fk_id_proyecto').data('url'),
             dataType: 'json',
             data: function(){
-                var upc = 'NULL'
+                var upc = 'NULL';
                 if($('#fk_id_upc').val()){
                     upc = $('#fk_id_upc').val();
                 }
 
-                var sku = 'NULL'
+                var sku = 'NULL';
                 if($('#fk_id_sku').val()){
                     sku = $('#fk_id_sku').val();
                 }
@@ -191,24 +197,11 @@ $(document).ready(function(){
             cache:true,
             processResults: function (data) {
                 if(data.length > 0){
-                    return {
-                        results: $.map(data, function (value) {
-                            return {
-                                id: value.id,
-                                text: value.text
-                            }
-                        })
-                    }
+                    return {results: data}
                 }else{
                     $.toaster({priority : 'warning',title : '¡Oooops!',message : 'No se encontraron proyectos. Verifica que el SKU y el UPC coincidan con un proyecto',
                         settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
                     });
-                    return{
-                        results:{
-                            id:0,
-                            text: 'Sin proyecto'
-                        }
-                    }
                 }
             }
         }
@@ -239,13 +232,20 @@ function initSelects() {
         theme: "bootstrap",
         ajax:{
             url: $("#fk_id_sku").data('url'),
+            delay:500,
             dataType: 'json',
             data: function (params) {
                 return {
                     term: params.term,fk_id_socio_negocio:$('#fk_id_socio_negocio').val()};
             },
             processResults: function (data) {
-                return {results: data}
+                if(data.length > 0){
+                    return {results: data}
+                }else{
+                    $.toaster({priority : 'warning',title : '¡Oooops!',message : 'No se encontraron productos de este proveedor. Por favor selecciona otro.',
+                        settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
+                    });
+                }
             }
         }
     });
@@ -257,7 +257,7 @@ function initSelects() {
 
     totalOrden();
 
-    select2Placeholder('fk_id_upc','UPC no seleccionado',null,true,true,0,false);
+    select2Placeholder('fk_id_upc','UPC no seleccionado',20,true,true,0,false);
     $('#fk_id_upc').select2();
     //Para obtener los IVAS con sus porcentajes y IDs
     $.ajax({
@@ -275,17 +275,23 @@ function initSelects() {
 function agregarProducto(tiempo_entrega) {
     validateDetail();
     if($('#form-model').valid()){
-
-            var row_id = dataTable.activeRows.length;
+            var i = $('#productos tbody tr').length;
+            var row_id = i > 0 ? +$('#productos tbody tr:last').find('.index').val() + 1 : 0;
             var total = totalProducto();
+            var id_proyecto = null;
+            var proyecto = "Sin proyecto";
+            if($('#fk_id_proyecto').select2('data').length){
+                id_proyecto = $('#fk_id_proyecto').select2('data')[0].id;
+                proyecto = $('#fk_id_proyecto').select2('data')[0].text;
+            }
             $('#productos').append(
                 '<tr>' +
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento]"/>N/A<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega"></td>' +
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento]"/>N/A<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega"><input type="hidden" class="index" value="'+row_id+'"></td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />' + $('#fk_id_sku').select2('data')[0].text + '</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />' + $('#fk_id_upc').select2('data')[0].text + '</td>'+
                     '<td>'+$('#fk_id_sku').select2('data')[0].descripcion_corta + '</td>'+
-                    '<td>'+$('#fk_id_sku').select2('data')[0].descripcion + '</td>'+
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').select2('data')[0].id + '" />'+ $('#fk_id_proyecto').select2('data')[0].text + '</td>'+
+                    '<td style="max-width: 500px">'+$('#fk_id_sku').select2('data')[0].descripcion + '</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proyecto]" value="' + id_proyecto + '" />'+ proyecto + '</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fecha_necesario]" value="' + $('#fecha_necesario').val() + '" />'+ $('#fecha_necesario').val()+'</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][cantidad]" class="cantidad_row" value="' + $('#cantidad').val() + '" />' + $('#cantidad').val() + '</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descuento_detalle]" class="descuento_row" value="' + $('#descuento').val() + '" />' + $('#descuento').val() + '</td>'+
@@ -310,16 +316,14 @@ function agregarProducto(tiempo_entrega) {
 }
 
 function totalProducto() {
-    var cantidad = $('#cantidad').val();
-    var precio = $('#precio_unitario').val();
+    var cantidad = +$('#cantidad').val();
+    var precio = +$('#precio_unitario').val();
     var subtotal =cantidad*precio;
-    subtotal = subtotal - (subtotal * ($('#descuento').val()/100));
+    subtotal = subtotal - (subtotal * (+$('#descuento').val()/100));
     var impuesto = ($('#fk_id_impuesto').select2('data')[0].porcentaje * subtotal)/100;
-    subtotal_original = parseFloat(subtotal_original)+subtotal;
+    subtotal_original = +subtotal_original + +subtotal;
     subtotal_original = subtotal_original.toFixed(2);
-    // console.log('Subtotal original: '+subtotal_original);
-    console.log('AGREGAR. original: '+subtotal_original+' producto: '+subtotal);
-    return (subtotal + impuesto).toFixed(2);
+    return (subtotal + +impuesto).toFixed(2);
 }
 
 function totalOrden() {
@@ -328,28 +332,23 @@ function totalOrden() {
     var impuesto = 0;
     var descuento_total = 0;
 
-    if($('#productos tr').length){
-        $('#productos tr').each(function () {
+    if($('#productos tbody tr').length){
+        $('#productos tbody tr').each(function () {
             //Del producto
-            var cantidad_row = $(this).find('td .cantidad_row').val();
-            var precio_row = $(this).find('td .precio_unitario_row').val();
-            var porcentaje_row = $(this).find('td .porcentaje').val()/100;//Decimal
-            var descuento_row = $(this).find('td .descuento_row').val();//Decimal
+            var cantidad_row = $(this).find('.cantidad_row').val();
+            var precio_row = $(this).find('.precio_unitario_row').val();
+            var porcentaje_row = $(this).find('.porcentaje').val()/100;//Decimal
+            var descuento_row = $(this).find('.descuento_row').val();//Decimal
             descuento_row = (descuento_row * precio_row)/100;
             descuento_total += descuento_row;
             var subtotal_row = (precio_row - descuento_row) * cantidad_row;
-            // var total_row = (subtotal_row * porcentaje_row) + subtotal_row;
             //Del total
             subtotal += subtotal_row;
             impuesto += subtotal_row * porcentaje_row;
-            // console.log('cantidad: '+cantidad_row+' precio: '+precio_row+' porcentaje: '+porcentaje_row+' descuento: '+descuento_row+' impuesto: '+impuesto+' subtotal: '+subtotal_row+' total:'+total_row);
         });
         subtotal = subtotal - $('#descuento_general').val();
         descuento_total += +$('#descuento_general').val();
 
-        // console.log('subtotal: '+subtotal);
-        // console.log('impuesto: '+impuesto);
-        // console.log('total: '+total);
         var total = (subtotal)+impuesto;
         $('#subtotal_lbl').text(subtotal.toFixed(2));
         $('#subtotal').val(subtotal.toFixed(2));
@@ -368,19 +367,12 @@ function totalOrden() {
 }
 
 function borrarFila(el) {
-    var fila = dataTable.data[$(el).parents('tr').index()];
-    var cantidad = $(fila).find('td .cantidad_row').val();
-    var precio = $(fila).find('td .precio_unitario_row').val();
-    var descuento = $(fila).find('td .descuento_row').val();
-    descuento = (descuento * precio)/100;
-    var subtotal = (precio-descuento)*cantidad;
-    subtotal_original -= subtotal;
-    subtotal_original = subtotal_original.toFixed(2);
-    dataTable.rows().remove([$(el).parents('tr').index()]);
-        $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
-            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-
-    console.log('BORRAR. original: '+subtotal_original+' producto: '+subtotal);
+    var tr = $(el).closest('tr');
+    tr.fadeOut(400, function(){
+        tr.remove().stop();
+    });
+    $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
+        settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     totalOrden();
 }
 
@@ -472,18 +464,6 @@ function validateDetail() {
     }
 }
 
-function borrarFila_edit(el) {
-    var fila = dataTable.data[$(el).parents('tr').index()];
-    var cantidad = $(fila).find('td .cantidad_row').val();
-    var precio = $(fila).find('td .precio_unitario_row').val();
-    var subtotal = cantidad * precio;
-    subtotal = subtotal - (subtotal * ($('#descuento').val()/100));
-    subtotal_original = parseFloat(subtotal_original) - parseFloat(subtotal);
-    a.push(el.id);
-    dataTable.rows().remove([$(el).parents('tr').index()]);
-
-    totalOrden();
-}
 
 function tiemposentrega() {
     var mayor_tiempo = 0;

@@ -92,7 +92,7 @@ class APIController extends Controller
 			}
 
 			# Condiciones de relacion ...
-            if($request['whereHas']){
+            if(isset($request['whereHas'])){
                 foreach (($request['whereHas'] ?? []) as $relations) {
                     foreach ($relations as $relation => $conditions) {
                         $entity = $entity->whereHas($relation, function($query) use($conditions) {
