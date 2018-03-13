@@ -57,12 +57,16 @@
 								@endif
 							</div>
 						</div>
+						
+						@if (count($errors) == 1)
+                            @foreach ($errors->all() as $error)
+                                <div class="alert alert-danger" role="alert" style="background: rgba(238,205,208,0.9);">{!! $error !!}</div>
+                            @endforeach
+                    	@endif 
 
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">
-									Reset Password
-								</button>
+								<button type="submit" class="btn btn-primary">Reset Password</button>
 							</div>
 						</div>
 					{!! Form::close() !!}

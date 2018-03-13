@@ -70,6 +70,13 @@ class LoginController extends Controller
 		$this->session->forget('url.intended');
 		return $this->to($path, $status, $headers, $secure);
 	}
+	
+	protected function sendFailedLoginResponse(Request $request)
+	{
+	    return redirect()->back()
+	    ->withInput($request->only($this->username(), 'remember'))
+	    ->withErrors([$this->username() => cTrans('auth.failed','Usuario o Contrasena incorrectos')]);
+	}
 
 	/**
 	 * Redirige a usuario una nez iniciada la session
