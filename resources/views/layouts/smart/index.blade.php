@@ -127,7 +127,33 @@
 @section('header-bottom')
     <script src="{{ asset('vendor/rivets/rivets.js') }}"></script>
     <script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
+    
+    <script type="text/javascript">
+        var datatable = new DataTable('.smart-table', {
+        	perPageSelect: [20,30,50],
+        	perPage: 20,
+        	columns: [
+        		{select: [0], sortable: false },
+        	],
+        	// data: data,
+        	labels: {
+        		placeholder: '{{cTrans("pagination.search_data","Buscar datos...")}}',
+        		perPage: '{{cTrans("pagination.per_page","Mostrar {select} datos por pagina")}}',
+        		noRows: '{{cTrans("pagination.no_rows","No hay datos que mostrar")}}',
+        		info: '{{cTrans("pagination.info","Mostrando {start} a {end} de {rows} datos (Pagina {page} de {pages})")}}',
+        		icon:'<i class="material-icons prefix">search</i>',
+        	},
+        });
+    </script>
     <script src="{{ asset('js/smartindex.js') }}"></script>
+    <script type="text/javascript">
+        if (datatable.hasRows) {
+        	datatable.setMessage('{{cTrans("pagination.load_data","Obteniendo elementos...")}}');
+        	getItems(1);
+        } else {
+        	datatable.setMessage('{{cTrans("pagination.no_rows","No hay datos que mostrar")}}');
+        }
+    </script>
     @if (session('message'))
         <script type="text/javascript">
         	$.toaster({
@@ -142,11 +168,13 @@
 @section('content')
     <div class="container-fluid">
     	<div class="row">
-			<div id="loadingActions" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-        		<h4 style="margin-top:15%">Cargando informacion!</h4>
-        		<h5>Espere... <i class="material-icons align-middle loading">cached</i></h5>
-        	</div>
     		<div class="col-sm-12">
+    			@if(config('view.load_data'))
+    			<div id="loadingActions" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+            		<h4 style="margin-top:5%">Cargando informacion!</h4>
+            		<h5>Espere... <i class="material-icons align-middle loading">cached</i></h5>
+            	</div>
+            	@endif
     			<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-create-url="{{ companyRoute('create') }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}" data-item-export-url="{{companyRoute('export', ['type' => '_ID_'])}}">
     				<div class="col-sm-6">
     					<table class=table bordered striped highlight" hidden>
@@ -179,9 +207,7 @@
     						<tbody>
     							@foreach ($data as $row)
     							<tr>
-    								<td class="width-auto">
-    									<input type="checkbox" id="check-{{$row->getKey()}}" name="check-{{$row->getKey()}}" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="{{$row->getKey()}}">
-    								</td>
+    								<td class="width-auto"><input type="checkbox" id="check-{{$row->getKey()}}" name="check-{{$row->getKey()}}" class="single-check" rv-on-click="actions.itemCheck" rv-append-items="collections.items" value="{{$row->getKey()}}"></td>
     								@foreach ($fields as $field => $label)
     								<td>{{ str_limit(object_get($row, $field),90) }}</td>
     								@endforeach

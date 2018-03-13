@@ -130,10 +130,14 @@ class Sucursales extends ModelBase
 	/*relación de tres*/
 	public function usuario_sucursales()
 	{
-		return $this->belongsToMany(Usuarios::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_usuario');
+		return $this->belongsToMany(Usuarios::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_usuario')
+		->withPivot('fk_id_empresa')
+        ->join(Empresas::class,'fk_id_empresa','=','id_empresa');
 	}
 	public function empresa_sucursales()
 	{
-		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_empresa');
+		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_empresa')
+        ->withPivot('fk_id_usuario')
+        ->join(Usuarios::class,'fk_id_usuario','=','id_usuario');
 	}
 }

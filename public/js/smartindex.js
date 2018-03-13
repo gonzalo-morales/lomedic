@@ -29,10 +29,10 @@ var _createElement = function(a, b) {
 	return d;
 };
 
-	function post_to_url(path, params, method) {
-		method = method || 'post';
+function post_to_url(path, params, method) {
+	method = method || 'post';
 
-		var form = document.createElement('form');
+	var form = document.createElement('form');
 
 	//Move the submit function to another variable
 	//so that it doesn't get overwritten.
@@ -53,22 +53,6 @@ var _createElement = function(a, b) {
 	document.body.appendChild(form);
 	form._submit_function_(); //Call the renamed function.
 }
-
-let datatable = new DataTable('.smart-table', {
-	perPageSelect: [20,30,50],
-	perPage: 20,
-	columns: [
-		{select: [0], sortable: false },
-	],
-	// data: data,
-	labels: {
-		placeholder: 'Buscar datos ...',
-		perPage: 'Mostrar {select} datos por pagina',
-		noRows: 'No hay datos que mostrar',
-		info: 'Mostrando {start} a {end} de {rows} datos (Pagina {page} de {pages})',
-		icon:'<i class="material-icons prefix">search</i>',
-	},
-})
 
 datatable.on('datatable.update', function() {
 	view.unbind();
@@ -165,8 +149,8 @@ window['smart-model'] = {
 
 			let modal = window['smart-modal'];
 			modal.view = rivets.bind(modal, {
-				title: '¿Estas seguro?',
-				content: 'Una vez eliminado(s) no podrás recuperarlo(s).',
+				title: 'Â¿Estas seguro?',
+				content: 'Una vez eliminado(s) no podrÃ¡s recuperarlo(s).',
 				buttons: [
 					{button: {
 						'text': 'Cancelar',
@@ -399,13 +383,6 @@ window['smart-view'].querySelector('.dataTable-selector').classList.add('custom-
 window['smart-view'].querySelector('.dataTable-input').setAttribute('rv-append-filters','')
 
 let view = rivets.bind(window['smart-view'], window['smart-model']);
-
-if (datatable.hasRows) {
-	datatable.setMessage('Obteniendo elementos ...');
-	getItems(1);
-} else {
-	datatable.setMessage('Sin elementos.');
-}
 
 function getItems($page) {
 

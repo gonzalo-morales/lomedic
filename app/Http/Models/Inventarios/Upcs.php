@@ -6,6 +6,8 @@ use App\Http\Models\ModelCompany;
 use App\Http\Models\Administracion\PresentacionVenta;
 use App\Http\Models\Administracion\Laboratorios;
 use App\Http\Models\Administracion\Paises;
+use App\Http\Models\Proyectos\ClaveClienteProductos;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Upcs extends ModelCompany
 {
@@ -76,5 +78,15 @@ class Upcs extends ModelCompany
     public function skus()
     {
         return $this->belongsToMany('App\Http\Models\Inventarios\Productos','inv_det_sku_upc','fk_id_upc','fk_id_sku','id_upc','id_sku')->withPivot('fk_id_upc','fk_id_sku','cantidad');
+    }
+
+    public function clavesclientes()
+    {
+        return $this->hasMany(ClaveClienteProductos::class,'fk_id_upc','id_upc');
+    }
+
+    public function clientes()
+    {
+        return $this->hasManyThrough(SociosNegocio::class,ClaveClienteProductos::class,'fk_id_upc','id_socio_negocio','id_upc','fk_id_cliente');
     }
 }

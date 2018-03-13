@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    {{Form::cDate('Fecha de nacimiento','fecha_nacimiento',['class'=>' datepicker'])}}
+                                    {{Form::cText('Fecha de nacimiento','fecha_nacimiento',['class'=>'datepicker'])}}
                                 </div>
                             </div>
                         </div>

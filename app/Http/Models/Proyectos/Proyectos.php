@@ -3,7 +3,10 @@
 namespace App\Http\Models\Proyectos;
 
 use App\Http\Models\Administracion\Sucursales;
-use App\Http\Models\Compras\Licitaciones;
+use App\Http\Models\Liciplus\Licitaciones;
+use App\Http\Models\Administracion\TiposEventos;
+use App\Http\Models\Administracion\Dependencias;
+use App\Http\Models\Administracion\Subdependencias;
 use App\Http\Models\ModelCompany;
 use DB;
 use App\Http\Models\SociosNegocio\SociosNegocio;

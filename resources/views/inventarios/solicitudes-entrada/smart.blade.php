@@ -27,7 +27,7 @@
         </div>
         <div class="col-sm-6 col-lg-3">
             <div class="form-group">
-                {{ Form::cText('Fecha de entrega', 'fecha_entrega') }}
+                {{ Form::cText('Fecha de entrega', 'fecha_entrega',['class'=>'datepicker']) }}
             </div>
         </div>
     </div>
@@ -336,13 +336,6 @@
                             $('.loadingData', $(this).parent()).remove();
                         }.bind(target))
                     });
-        
-                    $('#fecha_entrega').pickadate({
-                        selectMonths: true, /* Creates a dropdown to control month */
-                        selectYears: 3, /* Creates a dropdown of 3 years to control year */
-                        min: true,
-                        format: 'yyyy-mm-dd',
-                    })
         
                     $('#form-model').on('submit', function(e) {
                         e.preventDefault();

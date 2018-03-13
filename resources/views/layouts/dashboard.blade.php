@@ -38,7 +38,7 @@
     <div class="w-100 fixed-top z-depth-1-half" id="top-nav">
     	<nav class="navbar navbar-default bg-white">
             <div class="navbar-header d-flex flex-row">
-                <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="Menu"><i class="material-icons">menu</i></button>
+                <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="Menu" onclick="menu()"><i class="material-icons">menu</i></button>
                 <div class="btn-group">
                     <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" title="{{cTrans('messages.company','Empresa')}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             			{{ HTML::image(asset("img/logotipos/$menuempresa->icono"), null, ['width'=>'25px','class'=>'mr-2']) }} {{ $menuempresa->nombre_comercial }}
@@ -65,7 +65,7 @@
     @else
     <div class="wrapper" style="margin-top: 44.5px;">
         <!-- Sidebar Holder -->
-        <nav id="sidebar" class="active bg-dark text-white">
+        <nav id="sidebar" class="bg-dark text-white {{ cookie::get('menu_active','active') }}">
         	<div id="sidebar-content">
                 <div class="sidebar-header text-center" style="position: relative;">
                     <div class="title">

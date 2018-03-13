@@ -44,7 +44,7 @@ return [
 	        'prefix'   => '',
 	        'schema'   => 'maestro',
 	        'sslmode'  => 'prefer',
-	        'options'  => [PDO::ATTR_PERSISTENT => true],
+	        #'options'  => [PDO::ATTR_PERSISTENT => true],
 	    ],
 
 		'abisa' => [

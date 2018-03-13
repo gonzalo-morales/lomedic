@@ -1,36 +1,8 @@
 var a=[];
 var subtotal_original = 0;
-// Inicializar los datepicker para las fechas necesarias
-$('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 3, // Creates a dropdown of 3 years to control year
-    min: true,
-    format: 'yyyy/mm/dd'
-});
+
 $(document).ready(function(){
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-    //Inicializar tabla
-    // window.dataTable = new DataTable('#productos', {
-    //     fixedHeight: true,
-    //     fixedColumns: true,
-    //     searchable: false,
-    //     perPageSelect: false,
-    //     labels:{
-    //         info: "Mostrando del registro {start} al {end} de {rows}"
-    //     },
-    //     footer:true,
-    // });
-
-    // window.dataTableCondiciones = new DataTable('#autorizaciones', {
-    //     fixedHeight: true,
-    //     fixedColumns: true,
-    //     searchable: false,
-    //     perPageSelect: false,
-    //     labels:{
-    //         info: "Mostrando del registro {start} al {end} de {rows}"
-    //     },
-    //     footer:true,
-    // });
 
     totalOrden();
     subtotal_original = $('#subtotal_lbl').text();
@@ -42,14 +14,6 @@ $(document).ready(function(){
         if(window.location.href.toString().indexOf('crear') > -1){
             validateDetail();
         }
-        //Por si se selecciona una empresa diferente
-        // $('#otra_empresa').on('change',function () {
-        //     $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-        //     if( !this.checked ){
-        //         if(window.location.href.toString().indexOf('crear') > -1)
-        //             $( this ).parent().nextAll( "select" ).val(0).trigger('change');
-        //     }
-        // });
         //Por si se selecciona un UPC
         $('#activo_upc').on('change',function () {
             $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
@@ -59,7 +23,6 @@ $(document).ready(function(){
                 if($('#fk_id_sku').val()){
                     var _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_sku').val());
                     $( this ).parent().nextAll( "select" ).select2({
-                        theme: "bootstrap",
                         minimumResultsForSearch: Infinity,
                         ajax:{
                             url: _url,
@@ -76,7 +39,7 @@ $(document).ready(function(){
                 }else{
                     $( this ).prop('checked',false);
                     $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-                    $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes un SKU',
+                    $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Selecciona antes un SKU',
                         settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 }
             }
@@ -84,14 +47,14 @@ $(document).ready(function(){
 
         $('#agregar').on('click',function () {
             var sku = $('#fk_id_sku').val() ? $('#fk_id_sku').val() : "null";
-            var cliente = $('#fk_id_socio_negocio').val() ? $('#fk_id_socio_negocio').val() : "null";
+            var proveedor = $('#fk_id_socio_negocio').val() ? $('#fk_id_socio_negocio').val() : "null";
             var upc = $('#fk_id_upc').val() != null ? $('#fk_id_upc').val() : "null";
             $.ajax({
                 url: $('#fk_id_upc').data('url-tiempo_entrega'),
                 data: {
                     'param_js':tiempo_entrega_js,
                     $fk_id_sku:sku,
-                    $fk_id_socio_negocio:cliente,
+                    $fk_id_socio_negocio:proveedor,
                     $fk_id_upc:upc
                 },
                 dataType:'JSON',
@@ -101,15 +64,6 @@ $(document).ready(function(){
             });
         });
 
-        $('#fk_id_socio_negocio').on('change',function () {
-            // $('#tiempo_entrega').val($('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
-            // var fecha = new Date();
-            // fecha.setDate(fecha.getDate()+$('#fk_id_socio_negocio').select2('data')[0].tiempo_entrega);
-            // var dia = fecha.getDate()+1;
-            // var mes = fecha.getMonth()+1;
-            // var anio = fecha.getFullYear();
-            // $('#fecha_estimada_entrega').val(anio+'/'+mes+'/'+dia);
-        });
         $(document).on('submit',function (e) {
             // e.preventDefault();
             if(dataTable.activeRows.length > 0){
@@ -122,7 +76,7 @@ $(document).ready(function(){
             }else{
                 e.preventDefault();
                 $.toaster({
-                    priority: 'danger', title: '¡Advertencia!', message: 'La orden de compra debe tener al menos un detalle',
+                    priority: 'danger', title: 'Â¡Advertencia!', message: 'La orden de compra debe tener al menos un detalle',
                     settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
                 });
             }
@@ -178,7 +132,7 @@ $(document).ready(function(){
                    if(data.status == 1){
                        $('#autorizacion').modal('toggle');
                        $.toaster({
-                           priority: 'success', title: 'Éxito', message: 'Se ha actualizado la información de la autorización',
+                           priority: 'success', title: 'Ã‰xito', message: 'Se ha actualizado la informaciÃ³n de la autorizaciÃ³n',
                            settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
                        });
                    }else{
@@ -196,7 +150,7 @@ $(document).ready(function(){
         e.preventDefault();
         window.location.reload(true);
     })
-    //Aquí termina la parte de las autorizaciones
+    //AquÃ­ termina la parte de las autorizaciones
 
     $('#descuento_porcentaje').on('keyup',function () {
         $('#descuento_general').val(((subtotal_original*$(this).val())/100).toFixed(2));
@@ -206,6 +160,54 @@ $(document).ready(function(){
         $('#descuento_porcentaje').val((($(this).val()/subtotal_original)*100).toFixed(4));
         totalOrden();
     });
+
+    $('#fk_id_proyecto').select2({
+        minimumResultsForSearch: Infinity,
+        ajax:{
+            url: $('#fk_id_proyecto').data('url'),
+            dataType: 'json',
+            data: function(){
+                var upc = 'NULL'
+                if($('#fk_id_upc').val()){
+                    upc = $('#fk_id_upc').val();
+                }
+
+                var sku = 'NULL'
+                if($('#fk_id_sku').val()){
+                    sku = $('#fk_id_sku').val();
+                }
+                return{
+                    'param_js':proyectos_js,
+                    $fk_id_upc: upc,
+                    $fk_id_sku: sku
+                }
+            },
+            cache:true,
+            processResults: function (data) {
+                if(data.length > 0){
+                    return {
+                        results: $.map(data, function (value) {
+                            return {
+                                id: value.id,
+                                text: value.text
+                            }
+                        })
+                    }
+                }else{
+                    $.toaster({priority : 'warning',title : 'Â¡Oooops!',message : 'No se encontraron proyectos. Verifica que el SKU y el UPC coincidan con un proyecto',
+                        settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
+                    });
+                    return{
+                        results:{
+                            id:0,
+                            text: 'Sin proyecto'
+                        }
+                    }
+                }
+            }
+        }
+    });
+
     limpiarCampos();
 
 });
@@ -250,8 +252,6 @@ function initSelects() {
     totalOrden();
 
     select2Placeholder('fk_id_upc','UPC no seleccionado',null,true,true,0,false);
-    select2Placeholder('fk_id_cliente','Sin cliente',10,true,false);
-    select2Placeholder('fk_id_proyecto','Sin proyecto',10,true,false);
     $('#fk_id_upc').select2();
     //Para obtener los IVAS con sus porcentajes y IDs
     $.ajax({
@@ -279,7 +279,6 @@ function agregarProducto(tiempo_entrega) {
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />' + $('#fk_id_upc').select2('data')[0].text + '</td>'+
                     '<td>'+$('#fk_id_sku').select2('data')[0].descripcion_corta + '</td>'+
                     '<td>'+$('#fk_id_sku').select2('data')[0].descripcion + '</td>'+
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_cliente]" value="' + $('#fk_id_cliente').select2('data')[0].id + '" /> '+ $('#fk_id_cliente').select2('data')[0].text + '</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').select2('data')[0].id + '" />'+ $('#fk_id_proyecto').select2('data')[0].text + '</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fecha_necesario]" value="' + $('#fecha_necesario').val() + '" />'+ $('#fecha_necesario').val()+'</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][cantidad]" class="cantidad_row" value="' + $('#cantidad').val() + '" />' + $('#cantidad').val() + '</td>'+
@@ -291,7 +290,7 @@ function agregarProducto(tiempo_entrega) {
                 '</tr>'
             );
 
-            $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
+            $.toaster({priority : 'success',title : 'Â¡Ã‰xito!',message : 'Producto agregado con Ã©xito',
                 settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
             });
             limpiarCampos();
@@ -299,7 +298,7 @@ function agregarProducto(tiempo_entrega) {
             tiemposentrega();
 
     }else{
-        $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
+        $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Hay campos que requieren de tu atenciÃ³n',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     }
 }
@@ -372,7 +371,7 @@ function borrarFila(el) {
     subtotal_original -= subtotal;
     subtotal_original = subtotal_original.toFixed(2);
     dataTable.rows().remove([$(el).parents('tr').index()]);
-        $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
+        $.toaster({priority : 'success',title : 'Â¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 
     console.log('BORRAR. original: '+subtotal_original+' producto: '+subtotal);
@@ -384,12 +383,11 @@ function limpiarCampos() {
     $('#fk_id_upc').val(0).trigger('change').prop('disabled',true);
     $('#activo_upc').prop('checked',false);
     $('#fk_id_proyecto').val(0).trigger('change');
-    $('#fk_id_cliente').val(0).trigger('change');
     $('#fk_id_impuesto').val('0').trigger('change');
     $('#fecha_necesario').val('');
     $('#cantidad').val('1');
     $('#precio_unitario').val('');
-    //Eliminar reglas de validación detalle
+    //Eliminar reglas de validaciÃ³n detalle
     if ($("#fk_id_sku").length > 0) {
         $('#fk_id_sku').rules('remove');
         $('#fk_id_upc').rules('remove');
@@ -415,8 +413,8 @@ function validateDetail() {
             range: [1,9999],
             messages:{
                 required: 'Ingresa una cantidad',
-                number: 'El campo debe ser un número',
-                range: 'El número debe ser entre 1 y 9999'
+                number: 'El campo debe ser un nÃºmero',
+                range: 'El nÃºmero debe ser entre 1 y 9999'
             }
         });
         $('#fk_id_impuesto').rules('add',{
@@ -427,7 +425,7 @@ function validateDetail() {
         });
         $.validator.addMethod('precio',function (value,element) {
             return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-        },'El precio no debe tener más de dos decimales');
+        },'El precio no debe tener mÃ¡s de dos decimales');
         $.validator.addMethod( "greaterThan", function( value, element, param ) {
             return value > param;
         }, "Please enter a greater value." );
@@ -438,9 +436,9 @@ function validateDetail() {
             greaterThan:0,
             messages:{
                 required: 'Ingresa un precio unitario',
-                number: 'El campo debe ser un número',
-                greaterThan: 'El número debe ser mayor a 0',
-                precio: 'El precio no debe tener más de dos decimales'
+                number: 'El campo debe ser un nÃºmero',
+                greaterThan: 'El nÃºmero debe ser mayor a 0',
+                precio: 'El precio no debe tener mÃ¡s de dos decimales'
             }
         });
         $.validator.addMethod('porcentaje',function (value,element) {
@@ -454,7 +452,7 @@ function validateDetail() {
             greaterThan: -1,
             lessThan: 100,
             messages:{
-                greaterThan: 'El número no debe ser menor a 0',
+                greaterThan: 'El nÃºmero no debe ser menor a 0',
                 lessThan: 'El porcentaje debe ser menor a 100'
             }
         });

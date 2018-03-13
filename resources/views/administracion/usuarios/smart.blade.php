@@ -182,12 +182,8 @@
 					<div class="row">
 						<div class="col-md-6 col-sm-6">
 							<div class="form-group">
-								{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
-								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,[
-									'id'=>'fk_id_empresa_default',
-									'class'=>'form-control',
-									'placeholder' => 'Seleccionar una empresa...',
-									])}}
+								{{Form::label('fk_id_empresa','Empresa',['for'=>'fk_id_empresa'])}}
+								{{ Form::select('fk_id_empresa',$companies->pluck('nombre_comercial','id_empresa'),null,['id'=>'fk_id_empresa','class'=>'form-control','placeholder' => 'Seleccionar una empresa...',])}}
 							</div>
 						</div>
 						{{--  {{dd($sucursales)}}  --}}
@@ -312,9 +308,9 @@
 					<div class="row">
 						<div class="col-md-6 col-sm-6">
 							<div class="form-group">
-								{{Form::label('fk_id_empresa_default','Empresa',['for'=>'fk_id_empresa_default'])}}
-								{{ Form::select('fk_id_empresa_default',$companies->pluck('nombre_comercial','id_empresa'),null,[
-									'id'=>'fk_id_empresa_default',
+								{{Form::label('fk_id_empresa','Empresa',['for'=>'fk_id_empresa'])}}
+								{{ Form::select('fk_id_empresa',$companies->pluck('nombre_comercial','id_empresa'),null,[
+									'id'=>'fk_id_empresa',
 									'class'=>'form-control',
 									'placeholder' => 'Seleccionar una empresa...',
 									'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',

@@ -70,6 +70,13 @@ class LoginController extends Controller
 		$this->session->forget('url.intended');
 		return $this->to($path, $status, $headers, $secure);
 	}
+	
+	protected function sendFailedLoginResponse(Request $request)
+	{
+	    return redirect()->back()
+	    ->withInput($request->only($this->username(), 'remember'))
+	    ->withErrors([$this->username() => cTrans('auth.failed','Usuario o Contrasena incorrectos')]);
+	}
 
 	/**
 	 * Redirige a usuario una nez iniciada la session
@@ -79,7 +86,7 @@ class LoginController extends Controller
 	 */
 	protected function authenticated(Request $request, $usuario)
 	{
-		$empresa = Empresas::findOrFail($usuario->fk_id_empresa_default);
+		$empresa = Empresas::findOrFail($usuario->fk_id_empresa);
 
 		return \Redirect::intended("/$empresa->conexion");
 	}

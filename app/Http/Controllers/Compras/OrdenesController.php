@@ -13,6 +13,7 @@ use App\Http\Models\Compras\Ofertas;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\CondicionesAutorizacion;
 use App\Http\Models\Compras\Autorizaciones;
+use App\Http\Models\Inventarios\Upcs;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\ProductosSociosNegocio;
 use Carbon\Carbon;
@@ -40,11 +41,6 @@ class OrdenesController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
-
-//        dd(ClaveClienteProductos::with(['cliente'=>function($query){
-//            $query->select('id_socio_negocio','razon_social');
-//        }])->where('fk_id_sku',1)->where('fk_id_upc',1)->get());
-
         switch (\request('tipo_documento')){
             case 1:
                 $documento = Solicitudes::find(\request('id'));
@@ -59,9 +55,6 @@ class OrdenesController extends ControllerBase
                 $detalles_documento = null;
                 break;
         }
-        $clientes = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_venta',1)->whereHas('empresas',function ($empresa){
-            $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
-        })->pluck('nombre_comercial','id_socio_negocio');
         $proveedores = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->whereHas('empresas',function ($empresa){
             $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
         })->pluck('nombre_comercial','id_socio_negocio');
@@ -76,9 +69,7 @@ class OrdenesController extends ControllerBase
                 ->whereHas('empresa_sucursales',function ($empresa){
                     $empresa->where('id_empresa',dataCompany()->id_empresa);
                 })->pluck('sucursal','id_sucursal'),
-            'clientes' => $clientes ?? '',
             'proveedores' => $proveedores ?? '',
-            'proyectos' => Proyectos::where('fk_id_estatus',1)->pluck('proyecto','id_proyecto'),
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
 //            'js_tiempo_entrega' => Crypt::encryptString('"selectRaw":["max(tiempo_entrega) as tiempo_entrega"],"conditions":[{"whereRaw":["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"]}]'),
@@ -86,20 +77,29 @@ class OrdenesController extends ControllerBase
                 "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],
                 "withFunction": [{
                 "productos": {
-                    "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],
-                    "whereRaw": ["(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = $fk_id_upc)"],
+                    "selectRaw": "max(tiempo_entrega) as tiempo_entrega",
+                    "whereRaw": "(fk_id_socio_negocio IS NULL OR fk_id_socio_negocio = \'$fk_id_socio_negocio\') AND fk_id_sku = \'$fk_id_sku\' AND ($fk_id_upc IS NULL OR fk_id_upc = \'$fk_id_upc\')",
                     "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
                 }
                 }],
-                "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
-            '),
-            'js_cliente' => Crypt::encryptString('
-                "withFunction": [{
-                    "clientes":{
-                        "select" : ["razon_social"]
-                    }                
+                "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]'),
+            'js_proyectos'=>Crypt::encryptString('
+                "select":["id_proyecto as id","proyecto as text"],
+                "whereHas": [{
+                    "productos": {
+                        "whereHas": [{
+                            "claveClienteProducto": [{
+                                "whereRaw": "($fk_id_sku = NULL OR fk_id_sku = $fk_id_sku) AND ($fk_id_upc = NULL OR fk_id_upc = $fk_id_upc)"
+                            }]
+                        }]
+                    }
                 }]
             ')
+// dd(Proyectos::select('id_proyecto')->whereHas('productos',function ($producto){
+//     $producto->whereHas('claveClienteProducto',function ($clave){
+//         $clave->where('fk_id_sku',1)->where('fk_id_upc',1);
+//     });
+// })->get());
         ];
 
     }
@@ -272,9 +272,6 @@ class OrdenesController extends ControllerBase
                     $descuento_rows += $detalle['descuento_detalle'];
                     if(empty($detalle['fk_id_upc'])){
                         $detalle['fk_id_upc'] = null;
-                    }
-                    if(empty($detalle['fk_id_cliente'])){
-                        $detalle['fk_id_cliente'] = null;
                     }
                     if(empty($detalle['fk_id_proyecto'])){
                         $detalle['fk_id_proyecto'] = null;

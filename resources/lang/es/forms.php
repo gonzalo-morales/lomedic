@@ -23,4 +23,5 @@ return [
     'cpassword' => 'Contraseña actual',
     'npasswword' => 'Nueva contraseña',
     'opassword' => 'Confirmar contraseña',
+    'save_stamp' =>'Guardar y Timbrar'
 ];

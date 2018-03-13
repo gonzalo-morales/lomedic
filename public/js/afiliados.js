@@ -2,7 +2,7 @@
  * Created by ihernandezt on 22/1/2018.
  */
 
-var from_contrato = $('#fecha_nacimiento').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
+//var from_contrato = $('#fecha_nacimiento').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 
 // $('#fk_id_afiliacion').on('change', function() {
 //

@@ -10,7 +10,9 @@
     	var contratos_js =  "{{ $js_contratos ?? '' }}";
     	var modeldata =     "{!! $data->toJson() ?? '' }}";
     </script>
-    {{ HTML::script(asset('js/ventas/pedidos.js')) }}
+    @notroute(['index'])
+    	{{ HTML::script(asset('js/ventas/pedidos.js')) }}
+    @endif
 @endsection
 
 @section('form-content')

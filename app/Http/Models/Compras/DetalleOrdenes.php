@@ -27,7 +27,7 @@ class DetalleOrdenes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_documento','fk_id_sku','fk_id_upc','fk_id_cliente','cantidad',
+    protected $fillable = ['fk_id_documento','fk_id_sku','fk_id_upc','cantidad',
         'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario','fk_id_solicitud',
         'descuento_detalle','cerrado','fk_id_tipo_documento','fk_id_documento','fk_id_linea'];
 

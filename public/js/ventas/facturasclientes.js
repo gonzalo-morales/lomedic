@@ -1,12 +1,6 @@
 $(document).ready(function () {
 	$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-	
-	$('.datepicker').pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 3, // Creates a dropdown of 3 years to control year
-        format: 'yyyy-mm-dd'
-    });
-	
+		
 	$('#fk_id_empresa').on('change', function() {
 		let cliente = $('#fk_id_socio_negocio');
 		let series = $('#fk_id_serie');
@@ -197,7 +191,7 @@ $(document).ready(function () {
 		factura = $('#fk_id_factura_relacion option:selected').text();
 		
 		if(id_tipo == '' | id_factura == '') {
-			$.toaster({priority:'danger',title:'ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleRelaciones').append('<tr>'+
@@ -207,12 +201,12 @@ $(document).ready(function () {
 				    '<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_relacion]" type="hidden" value="'+id_tipo+'">'+tipo_relacion+
 				'</td>'+
 				'<td>'+
-					'<input name="relations[has][relaciones]['+row_id+'][fk_id_documento_relacionado]" type="hidden" value="'+id_documento+'">'+factura+
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_documento_relacionado]" type="hidden" value="'+id_factura+'">'+factura+
 					'<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_documento_relacionado]" type="hidden" value="4">'+
 				'</td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-			$.toaster({priority:'success',title:'Ã‚Â¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		
 	});
@@ -221,5 +215,5 @@ $(document).ready(function () {
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }

@@ -105,7 +105,7 @@ class ModelBase extends Model
 	    $route = \Route::getCurrentRoute()->getActionName();
 	    $controller = substr($route,0,strpos($route,'@'));
 
-	    if(in_array('activo',$this->getlistColumns()) && isset((new $controller)->entity) && get_class((new $controller)->entity) != get_class($this)) {
+	    if(in_array('activo',$this->getlistColumns()) && !empty($controller) && isset((new $controller)->entity) && get_class((new $controller)->entity) != get_class($this)) {
 	        $parent->newQuery()->where($this->getTable().'.activo',1);
 	    }
 

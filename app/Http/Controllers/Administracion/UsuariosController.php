@@ -114,30 +114,30 @@ class UsuariosController extends ControllerBase
                 ]);
             }
 
-            # Guardamos el detalle de sucursales en la que estara disponible
+            # Guardamos las llaves para tabla pivote(3) en la que estara disponible
             if(isset($request->fk_id_sucursal)) {
                 $sync = [];
                 foreach ($request->fk_id_sucursal as $id_sucursal) {
                     if($id_sucursal) {
-                        $sync[] = $id_sucursal;
+                        $sync[] = 
+                        [
+                            'fk_id_sucursal'=>  $id_sucursal,
+                            'fk_id_empresa' =>  $request->fk_id_empresa,
+                            'fk_id_usuario' =>  $id,
+                        ];
                     }
                 }
                 $entity->usuario_sucursales()->sync($sync);
-            }
-            # Guardamos el detalle de empresa en la que estara disponible
-            if(isset($request->fk_id_empresa)) {
-                $sync = [];
-                $sync[] = $request->fk_id_empresa;
                 $entity->usuario_empresa()->sync($sync);
+                DB::commit();
+                # Eliminamos cache
+                Cache::tags(getCacheTag('index'))->flush();
+                #$this->log('store', $id);
+                return $this->redirect('store');
+            } else {
+                #$this->log('error_store');
+                return $this->redirect('error_store');
             }
-            DB::commit();
-            # Eliminamos cache
-            Cache::tags(getCacheTag('index'))->flush();
-            #$this->log('store', $id);
-            return $this->redirect('store');
-        } else {
-            #$this->log('error_store');
-            return $this->redirect('error_store');
         }
     }
 
@@ -353,30 +353,30 @@ class UsuariosController extends ControllerBase
             //             'fk_id_usuario' =>  $id
             //         ];
 
-            # Guardamos el detalle de sucursales en la que estara disponible
+            # Guardamos las llaves para tabla pivote(3) en la que estara disponible
             if(isset($request->fk_id_sucursal)) {
                 $sync = [];
                 foreach ($request->fk_id_sucursal as $id_sucursal) {
                     if($id_sucursal) {
-                        $sync[] = $id_sucursal;
+                        $sync[] = 
+                        [
+                            'fk_id_sucursal'=>  $id_sucursal,
+                            'fk_id_empresa' =>  $request->fk_id_empresa,
+                            'fk_id_usuario' =>  $id,
+                        ];
                     }
                 }
                 $entity->usuario_sucursales()->sync($sync);
-            }
-            # Guardamos el detalle de empresa en la que estara disponible
-            if(isset($request->fk_id_empresa_default)) {
-                $sync = [];
-                $sync[] = $request->fk_id_empresa_default;
                 $entity->usuario_empresa()->sync($sync);
+                DB::commit();
+                # Eliminamos cache
+                Cache::tags(getCacheTag('index'))->flush();
+                #$this->log('store', $id);
+                return $this->redirect('store');
+            } else {
+                #$this->log('error_store');
+                return $this->redirect('error_store');
             }
-            # Eliminamos cache
-//            Cache::tags(getCacheTag('index'))->flush();
-
-            #$this->log('update', $id);
-            return $this->redirect('update');
-        } else {
-            #$this->log('error_update', $id);
-            return $this->redirect('error_update');
         }
     }
 
