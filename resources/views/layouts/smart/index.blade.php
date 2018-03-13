@@ -127,7 +127,33 @@
 @section('header-bottom')
     <script src="{{ asset('vendor/rivets/rivets.js') }}"></script>
     <script src="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.js') }}"></script>
+    
+    <script type="text/javascript">
+        var datatable = new DataTable('.smart-table', {
+        	perPageSelect: [20,30,50],
+        	perPage: 20,
+        	columns: [
+        		{select: [0], sortable: false },
+        	],
+        	// data: data,
+        	labels: {
+        		placeholder: '{{cTrans("pagination.search_data","Buscar datos...")}}',
+        		perPage: '{{cTrans("pagination.per_page","Mostrar {select} datos por pagina")}}',
+        		noRows: '{{cTrans("pagination.no_rows","No hay datos que mostrar")}}',
+        		info: '{{cTrans("pagination.info","Mostrando {start} a {end} de {rows} datos (Pagina {page} de {pages})")}}',
+        		icon:'<i class="material-icons prefix">search</i>',
+        	},
+        });
+    </script>
     <script src="{{ asset('js/smartindex.js') }}"></script>
+    <script type="text/javascript">
+        if (datatable.hasRows) {
+        	datatable.setMessage('{{cTrans("pagination.load_data","Obteniendo elementos...")}}');
+        	getItems(1);
+        } else {
+        	datatable.setMessage('{{cTrans("pagination.no_rows","No hay datos que mostrar")}}');
+        }
+    </script>
     @if (session('message'))
         <script type="text/javascript">
         	$.toaster({

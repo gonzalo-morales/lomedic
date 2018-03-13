@@ -11,7 +11,7 @@ class ClasificacionesProyectos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'pry_cat_clasificaciones_proyectos';
+	protected $table = 'maestro.pry_cat_clasificaciones_proyectos';
 
 	/**
 	 * The primary key of the table

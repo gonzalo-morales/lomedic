@@ -383,8 +383,8 @@
 	</div>
 @endsection
 
-@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('create')))
+@inroute(['edit','create'])
     @section('left-actions')
-		{{ Form::button('Guardar y Timbrar', ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-info progress-button']) }}
+		{{ Form::button(cTrans('forms.save_stamp','Guardar y Timbrar'), ['id'=>'timbrar','type' =>'submit', 'class'=>'btn btn-info progress-button']) }}
     @endsection
 @endif

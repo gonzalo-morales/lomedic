@@ -15,4 +15,9 @@ return [
 
 	'previous' => '&laquo; Previous',
 	'next' => 'Next &raquo;',
+    'search_data' => 'search data...',
+    'no_rows' => 'No entries to found',
+    'info' => 'Showing {start} to {end} of {rows} entries [Page {page} of {pages}]',
+    'per_page' => '{select} entries per page',
+    'load_data' => 'Loading entries...',
 ];
