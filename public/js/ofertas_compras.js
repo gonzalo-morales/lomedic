@@ -1,13 +1,6 @@
 // Inicializar los datepicker para las fechas necesarias
 $(document).ready(function(){
 
-    $('.datepicker').pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 3, // Creates a dropdown of 3 years to control year
-        min: true,
-        format: 'yyyy-mm-dd'
-    });
-
     $('[data-toggle]').tooltip();
     
     initSelects()
@@ -70,7 +63,7 @@ $(document).ready(function(){
                 });
             },
             error: function(){
-                $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'No hay productos disponibles en el proveedor. Verifique la información.',
+                $.toaster({priority : 'warning',title : 'Â¡Lo sentimos!',message : 'No hay productos disponibles en el proveedor. Verifique la informaciÃ³n.',
                 settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                 $('#loadingskus').hide();
                 $('#fk_id_sku').select2({
@@ -111,7 +104,7 @@ $(document).ready(function(){
                 });
             },
             error: function(){
-                $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'No hay Proyectos disponibles.',
+                $.toaster({priority : 'warning',title : 'Â¡Lo sentimos!',message : 'No hay Proyectos disponibles.',
                 settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                 $('#loadingproyectos').hide();
                 $('#loadingskus').hide();
@@ -155,7 +148,7 @@ function upcs(){
             });
         },
         error: function(){
-            $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'No hay UPCs disponibles.',
+            $.toaster({priority : 'warning',title : 'Â¡Lo sentimos!',message : 'No hay UPCs disponibles.',
             settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
             $('#loadingupcs').hide();
             $('#fk_id_upc').select2({
@@ -217,7 +210,7 @@ function agregarProducto() {
                     total + '</td>' +
                 '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
                 );
-                $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
+                $.toaster({priority : 'success',title : 'Â¡Ã‰xito!',message : 'Producto agregado con Ã©xito',
                     settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
                 });
                 limpiarCampos();
@@ -229,7 +222,7 @@ function agregarProducto() {
         });
         $('[data-toggle]').tooltip();
     }else{
-        $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
+        $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Hay campos que requieren de tu atenciÃ³n',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
 }
@@ -296,7 +289,7 @@ function limpiarCampos() {
     $('#fk_id_impuesto').val('');
     $('#precio_unitario').val(0);
     $('#descuento_detalle').val(0);
-    //Eliminar reglas de validación detalle
+    //Eliminar reglas de validaciÃ³n detalle
     $('#fk_id_sku').rules('remove');
     $('#fk_id_upc').rules('remove');
     $('#cantidad').rules('remove');
@@ -324,8 +317,8 @@ function validateDetail() {
         range: [1,9999],
         messages:{
             required: 'Ingresa una cantidad',
-            number: 'El campo debe ser un número',
-            range: 'El número debe ser entre 1 y 9999'
+            number: 'El campo debe ser un nÃºmero',
+            range: 'El nÃºmero debe ser entre 1 y 9999'
         }
     });
     $('#fk_id_impuesto').rules('add',{
@@ -336,7 +329,7 @@ function validateDetail() {
     });
     $.validator.addMethod('precio',function (value,element) {
         return this.optional(element) || /^\d{0,6}(\.\d{0,2})?$/g.test(value);
-    },'El precio no tiene un formato válido');
+    },'El precio no tiene un formato vÃ¡lido');
     $.validator.addMethod( "greaterThan", function( value, element, param ) {
 
         if ( this.settings.onfocusout ) {
@@ -354,21 +347,21 @@ function validateDetail() {
         greaterThan:0,
         messages:{
             required: 'Ingresa un precio unitario',
-            number: 'El campo debe ser un número',
-            greaterThan: 'El número debe ser mayor a 0',
+            number: 'El campo debe ser un nÃºmero',
+            greaterThan: 'El nÃºmero debe ser mayor a 0',
         }
     });
     $.validator.addMethod('descuento',function (value,element) {
         return this.optional(element) || /^\d{0,2}(\.\d{0,4})?$/g.test(value);
-    },'El descuento no tiene un formato válido');
+    },'El descuento no tiene un formato vÃ¡lido');
     $('#descuento_detalle').rules('add',{
         number: true,
         descuento:true,
         greaterThan:-1,
         messages:{
             required: 'Ingresa un precio unitario',
-            number: 'El campo debe ser un número',
-            greaterThan: 'El número debe ser mayor a {0}',
+            number: 'El campo debe ser un nÃºmero',
+            greaterThan: 'El nÃºmero debe ser mayor a {0}',
         }
     });
 
@@ -396,7 +389,7 @@ function tiemposentrega() {
 function borrarFila(el) {
     var tr = $(el).closest('tr');
     tr.remove().stop();
-    $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
+    $.toaster({priority : 'success',title : 'Â¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
         settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}});
     totalOrden();
 }

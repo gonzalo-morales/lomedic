@@ -1,9 +1,3 @@
-$('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 3, // Creates a dropdown of 3 years to control year
-    format: 'yyyy-mm-dd'
-});
-
 $(document).on('submit',function (e) {
     if($('#detalle_solicitud_pago tr').length < 1)
     {
@@ -64,7 +58,7 @@ $(document).ready(function () {
                    if(data.status == 1){
                        $('#autorizacion').modal('toggle');
                        $.toaster({
-                           priority: 'success', title: 'Éxito', message: 'Se ha actualizado la información de la autorización. Recarga la página para ver los cambios.',
+                           priority: 'success', title: 'Ã‰xito', message: 'Se ha actualizado la informaciÃ³n de la autorizaciÃ³n. Recarga la pÃ¡gina para ver los cambios.',
                            settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
                        });
                    }else{
@@ -77,7 +71,7 @@ $(document).ready(function () {
            });
        }
     });
-    //Aquí termina la parte de las autorizaciones
+    //AquÃ­ termina la parte de las autorizaciones
 
     $('#fk_id_solicitante').change(function () {
         $('#fk_id_sucursal').empty();
@@ -201,7 +195,7 @@ $(document).ready(function () {
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la orden correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado la orden correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     total_solicitud();
 }
 function total_solicitud() {
@@ -236,13 +230,13 @@ function validateDetail() {
         range: [1,9999],
         messages:{
             required: 'Ingresa una cantidad',
-            number: 'El campo debe ser un número',
-            range: 'El número debe ser entre 1 y 9999'
+            number: 'El campo debe ser un nÃºmero',
+            range: 'El nÃºmero debe ser entre 1 y 9999'
         }
     });
     $.validator.addMethod('precio',function (value,element) {
         return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-    },'El precio no debe tener más de dos decimales');
+    },'El precio no debe tener mÃ¡s de dos decimales');
     $.validator.addMethod( "greaterThan", function( value, element, param ) {
         return value > param;
     }, "Please enter a greater value." );
@@ -256,9 +250,9 @@ function validateDetail() {
         greaterThan:0,
         messages:{
             required: 'Ingresa un precio unitario',
-            number: 'El campo debe ser un número',
-            greaterThan: 'El número debe ser mayor a 0',
-            precio: 'El precio no debe tener más de dos decimales ni más de 10 enteros y debe ser positivo'
+            number: 'El campo debe ser un nÃºmero',
+            greaterThan: 'El nÃºmero debe ser mayor a 0',
+            precio: 'El precio no debe tener mÃ¡s de dos decimales ni mÃ¡s de 10 enteros y debe ser positivo'
         }
     });
     var impuesto_maximo = $('#precio_unitario').val()*$('#cantidad').val();
@@ -268,9 +262,9 @@ function validateDetail() {
         precio:true,
         lessThan:impuesto_maximo,
         messages:{
-            number: 'El campo debe ser un número',
-            lessThan: 'El número debe ser menor a precio por cantidad',
-            precio: 'El impuesto no debe tener más de dos decimales ni más de 10 enteros y y debe ser positivo'
+            number: 'El campo debe ser un nÃºmero',
+            lessThan: 'El nÃºmero debe ser menor a precio por cantidad',
+            precio: 'El impuesto no debe tener mÃ¡s de dos decimales ni mÃ¡s de 10 enteros y y debe ser positivo'
         }
     });
 }

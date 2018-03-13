@@ -1,10 +1,3 @@
-// Inicializar los datepicker para las fechas necesarias
-$('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 3, // Creates a dropdown of 3 years to control year
-    min: true,
-    format: 'yyyy-mm-dd'
-});
 $(document).ready( function () {
 
     // function dataUsers($usuarios){
@@ -108,7 +101,7 @@ $(document).ready( function () {
            cRequerido: true
         });
         if(!$('#form-model').valid()){
-            $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren tu atención',
+            $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Hay campos que requieren tu atenciÃ³n',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             e.preventDefault();
         }
@@ -142,13 +135,13 @@ $(document).ready( function () {
                         placeholder: "Seleccione otro Solicitante...",
                         disabled: true,
                     });
-                    $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer el usuario no cuenta con sucursales registrados',
+                    $.toaster({priority : 'warning',title : 'Â¡Lo sentimos!',message : 'Al parecer el usuario no cuenta con sucursales registrados',
                     settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                 }
                 $('#loadingsucursales').hide();
             },
             error:function(){
-                $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Al parecer no recibimos respuesta, trata de nuevo con otra opción.',
+                $.toaster({priority : 'danger',title : 'Â¡Lo sentimos!',message : 'Al parecer no recibimos respuesta, trata de nuevo con otra opciÃ³n.',
                 settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                 $('#loadingsucursales').hide();
                 $('#fk_id_sucursal.select2').select2({
@@ -204,7 +197,7 @@ $(document).ready( function () {
                         });
                         $('#fk_id_proveedor').append(options.join(''));
                     } else{
-                        $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay Proveedores con este SKU, intente con otro',
+                        $.toaster({priority : 'warning',title : 'Â¡Lo sentimos!',message : 'Al parecer no hay Proveedores con este SKU, intente con otro',
                         settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                         $('#fk_id_proveedor').select2({
                             placeholder: "Proveedor no encontrado",
@@ -228,7 +221,7 @@ $(document).ready( function () {
     $('.imprimir').on('click',function (e) {
         if($('#productos > tbody') < 1 && $('.imprimir').length){
             e.preventDefault();
-            $.toaster({priority : 'danger',title : '¡Espera!',message : 'Al parecer no cuentas con Productos para imprimir, requieres de mínimo un producto',
+            $.toaster({priority : 'danger',title : 'Â¡Espera!',message : 'Al parecer no cuentas con Productos para imprimir, requieres de mÃ­nimo un producto',
             settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
         }
     });
@@ -274,7 +267,7 @@ function codigosbarras(){
                     });
                     $('#fk_id_upc').append(options.join(''));
                 } else{
-                    $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay UPCs en el SKU seleccionado, intente con otro',
+                    $.toaster({priority : 'warning',title : 'Â¡Lo sentimos!',message : 'Al parecer no hay UPCs en el SKU seleccionado, intente con otro',
                     settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                     $('#fk_id_upc').select2({
                         placeholder: "UPC no encontrado",
@@ -376,7 +369,7 @@ function agregarProducto() {
         //Para obtener las opciones del select de proyectos en el detalle de la solicitud
         let proyectos = '';
         $.each($('#fk_id_proyecto option').clone(), function (key, proyecto) {
-            //Este if es para verificar la opción seleccionada por defecto
+            //Este if es para verificar la opciÃ³n seleccionada por defecto
             if(proyecto.value == $('#fk_id_proyecto').val())
                 {proyectos += '<option value="'+proyecto.value+'" selected>'+proyecto.innerText+'</option>';}
             else
@@ -385,7 +378,7 @@ function agregarProducto() {
         //Para obtener las opciones del select de impuestos en el detalle de la solicitud
         let impuestos = '';
         $.each($('#fk_id_impuesto option').clone(), function (key, impuesto) {
-            //Este if es para verificar la opción seleccionada por defecto
+            //Este if es para verificar la opciÃ³n seleccionada por defecto
             if(impuesto.value == $('#fk_id_impuesto').val() && impuesto.value != -1)
                 {
                     impuestos += '<option value="'+impuesto.value+'" selected>'+impuesto.innerText+'</option>';
@@ -428,12 +421,12 @@ function agregarProducto() {
         '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
         );
         $('[data-toggle]').tooltip();
-            $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
+            $.toaster({priority : 'success',title : 'Â¡Ã‰xito!',message : 'Producto agregado con Ã©xito',
             settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}
         });
         limpiarFormulario();//Limpiar el formulario de algunos de los valores
     }else {
-        $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
+        $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Hay campos que requieren de tu atenciÃ³n',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     }
 }
@@ -461,7 +454,7 @@ function limpiarFormulario() {
     $('#fecha_necesario').val('');
     $('#cantidad').val('1');
     $('#precio_unitario').val('0');
-    //Eliminar reglas de validación detalle
+    //Eliminar reglas de validaciÃ³n detalle
     $('#fk_id_sku').rules('remove');
     $('#fk_id_upc').rules('remove');
     $('#fk_id_proyecto').rules('remove');
@@ -477,7 +470,7 @@ function borrarFila(el) {
     tr.fadeOut(400, function(){
         tr.remove().stop();
     })
-    $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
+    $.toaster({priority : 'success',title : 'Â¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
         settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}});
 }
 
@@ -512,8 +505,8 @@ function validateDetail() {
         range: [1,9999],
         messages:{
             required: 'Ingresa una cantidad',
-            number: 'El campo debe ser un número',
-            range: 'El número debe ser entre 1 y 9999'
+            number: 'El campo debe ser un nÃºmero',
+            range: 'El nÃºmero debe ser entre 1 y 9999'
         }
     });
     $('#fk_id_unidad_medida').rules('add',{
@@ -530,16 +523,16 @@ function validateDetail() {
     });
     $.validator.addMethod('precio',function (value,element) {
         return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-    },'El precio no debe tener más de dos decimales');
+    },'El precio no debe tener mÃ¡s de dos decimales');
     $('#precio_unitario').rules('add',{
         required: true,
         number: true,
         precio:true,
         messages:{
             required: 'Ingresa un precio unitario',
-            number: 'El campo debe ser un número',
-            greaterThan: 'El número debe ser mayor a 0',
-            precio: 'El precio no debe tener más de dos decimales'
+            number: 'El campo debe ser un nÃºmero',
+            greaterThan: 'El nÃºmero debe ser mayor a 0',
+            precio: 'El precio no debe tener mÃ¡s de dos decimales'
         }
     });
 }

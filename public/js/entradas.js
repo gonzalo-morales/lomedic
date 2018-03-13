@@ -130,7 +130,7 @@ $('#entrada_escaner').on('change', function() {
                     '                           </div>' +
                     '                           <div class="col-12 col-md-6 col-lg-4">' +
                     '                               <div class="form-group">' +
-                    '                                   <label for="codigo_barras">Código del producto</label>' +
+                    '                                   <label for="codigo_barras">CÃ³digo del producto</label>' +
                     '                                   <input class="form-control" id="codigo_barras" name="codigo_barras_'+tipo_documento+'_'+numero_documento+'" type="text">' +
                     '                               </div>' +
                     '                           </div>' +
@@ -142,7 +142,7 @@ $('#entrada_escaner').on('change', function() {
                     '                               <tr>' +
                     '                                   <th>Sku</th> ' +
                     '                                   <th>Upc</th> ' +
-                    '                                   <th>Descripción</th> ' +
+                    '                                   <th>DescripciÃ³n</th> ' +
                     '                                   <th>Cliente</th>' +
                     '                                   <th>Proyecto</th>' +
                     '                                   <th>Lote</th>' +
@@ -159,18 +159,12 @@ $('#entrada_escaner').on('change', function() {
                     '                   </div> ' +
                             '   </div>' +
                             '</div></div>');
-                        $.toaster({priority : 'success',title : '¡Éxito!',message : 'Tipo de documento agregado con éxito',
+                        $.toaster({priority : 'success',title : 'Â¡Ã‰xito!',message : 'Tipo de documento agregado con Ã©xito',
                         settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
-
-                        $('#caducidad_'+tipo_documento+'_'+numero_documento).pickadate({ selectMonths: true, // Creates a dropdown to control month
-                            selectYears: 3, // Creates a dropdown of 3 years to control year
-                            min: true,
-                            format: 'yyyy-mm-dd'
-                        });
                     }
                 },
                 error:function(){
-                    $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'El código de entrada no se encuentra registrado a éste tipo de documento',
+                    $.toaster({priority : 'danger',title : 'Â¡Lo sentimos!',message : 'El cÃ³digo de entrada no se encuentra registrado a Ã©ste tipo de documento',
                     settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                 },
             });
@@ -314,8 +308,8 @@ function mensajeAlerta(mensaje,tipo){
 
     var titulo = '';
 
-    if(tipo == 'danger'){ titulo = '¡Error!'}
-    else if(tipo == 'success'){titulo = '¡Correcto!' }
+    if(tipo == 'danger'){ titulo = 'Â¡Error!'}
+    else if(tipo == 'success'){titulo = 'Â¡Correcto!' }
     $.toaster({priority:tipo,
             title: titulo,
             message:mensaje,

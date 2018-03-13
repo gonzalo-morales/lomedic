@@ -1,14 +1,8 @@
-$('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 3, // Creates a dropdown of 3 years to control year
-    format: 'yyyy-mm-dd'
-});
-
 $(document).submit(function (e) {
    if($('#productos_facturados tr').length < 1){
        e.preventDefault();
        $.toaster({
-           priority: 'danger', title: '¡Error!', message: 'Por favor carga la tabla de facturas',
+           priority: 'danger', title: 'Â¡Error!', message: 'Por favor carga la tabla de facturas',
            settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
        });
    }
@@ -42,7 +36,7 @@ $(document).ready(function () {
         if($('#archivo_xml_input').val() && $('#archivo_pdf_input').val() && $('#fk_id_socio_negocio').val() > 0){
             if($('#archivo_xml_input').val().substring($('#archivo_xml_input').val().lastIndexOf(".")) != '.xml' || $('#archivo_pdf_input').val().substring($('#archivo_pdf_input').val().lastIndexOf(".")) != '.pdf'){
                 $.toaster({
-                    priority: 'danger', title: '¡Error!', message: 'Por favor verifica la extensión de ambos archivos',
+                    priority: 'danger', title: 'Â¡Error!', message: 'Por favor verifica la extensiÃ³n de ambos archivos',
                     settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                 });
             }else{
@@ -68,12 +62,12 @@ $(document).ready(function () {
                     success: function (data) {
                         if(data.estatus == -1){
                             $.toaster({
-                                priority: 'danger', title: '¡Error -1 !', message: 'Ha ocurrido un error al cargar los datos',
+                                priority: 'danger', title: 'Â¡Error -1 !', message: 'Ha ocurrido un error al cargar los datos',
                                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                             });
                         }else if(data.estatus == -2 || data.estatus == -3){
                             $.toaster({
-                                priority: 'danger', title: '¡Error'+data.estatus+' !', message: data.resultado,
+                                priority: 'danger', title: 'Â¡Error'+data.estatus+' !', message: data.resultado,
                                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                             });
                         }else{
@@ -199,7 +193,7 @@ $(document).ready(function () {
                                 });
                             }
                             $.toaster({
-                                priority: 'success', title: '¡Éxito!', message: 'Se han importado los datos correctamente',
+                                priority: 'success', title: 'Â¡Ã‰xito!', message: 'Se han importado los datos correctamente',
                                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                             });
                             $('#factura').show();
@@ -212,7 +206,7 @@ $(document).ready(function () {
                     },
                     error: function (jqXHR) {
                         $.toaster({
-                            priority: 'danger', title: '¡Error '+jqXHR.status+'!', message: 'Ha ocurrido un error al cargar los datos',
+                            priority: 'danger', title: 'Â¡Error '+jqXHR.status+'!', message: 'Ha ocurrido un error al cargar los datos',
                             settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
                         });
                         $('#loadingxml').hide();
@@ -227,7 +221,7 @@ $(document).ready(function () {
             }
         }else{
             $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Por favor sube ambos archivos y selecciona un proveedor',
+                priority: 'danger', title: 'Â¡Error!', message: 'Por favor sube ambos archivos y selecciona un proveedor',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
@@ -252,12 +246,12 @@ $(document).ready(function () {
                 '</tr>'
             );
             $.toaster({
-                priority: 'success', title: '¡Éxito!', message: 'Se ha agregado una factura relacionada',
+                priority: 'success', title: 'Â¡Ã‰xito!', message: 'Se ha agregado una factura relacionada',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }else{
             $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Selecciona un tipo de relación y una factura',
+                priority: 'danger', title: 'Â¡Error!', message: 'Selecciona un tipo de relaciÃ³n y una factura',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
@@ -272,12 +266,12 @@ function getBase64(file) {
             $('#pdf').prop('data',reader.result);
             $('#loadingpdf').hide();
             $.toaster({
-                priority: 'success', title: '¡Éxito!', message: 'Se ha importado el PDF correctamente',
+                priority: 'success', title: 'Â¡Ã‰xito!', message: 'Se ha importado el PDF correctamente',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }else{
             $.toaster({
-                priority: 'info', title: '¡Advertencia!', message: 'El PDF no contiene información',
+                priority: 'info', title: 'Â¡Advertencia!', message: 'El PDF no contiene informaciÃ³n',
                 settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
             $('#loadingpdf').hide();
@@ -292,5 +286,5 @@ function getBase64(file) {
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la fila correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado la fila correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
