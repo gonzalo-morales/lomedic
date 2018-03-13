@@ -136,7 +136,7 @@
     						<div class="col-sm-12 text-center">
     							<div class="sep">
     								<div class="sepBtn">
-    									<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button" id="agregar">
+    									<button style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button" id="agregar" onclick="agregarProducto()">
 											<i class="material-icons">add</i>
 										</button>
     								</div>
@@ -147,7 +147,6 @@
     			</div>
     			@endif
     			<div class="card-body">
-					<div id="loadingRow" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">Cargando datos al detalle y calculando días de entrega, espere porfavor... <i class="material-icons align-middle loading">cached</i></div>
     				<table id="productos" class=" table table-responsive-sm table-striped table-hover">
     					<thead>
 							<tr align="center">
@@ -156,7 +155,6 @@
 								<th>UPC</th>
 								<th>Descripción</th>
 								<th>Producto</th>
-								<th>Cliente</th>
 								<th>Proyecto</th>
 								<th>Unidad de medida</th>
 								<th>Cantidad</th>
@@ -192,10 +190,6 @@
     								</td>
     								<td>
     									{{str_limit($detalle->sku->descripcion,250)}}
-    								</td>
-    								<td>
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
-    									{{isset($detalle->cliente->nombre_corto)?$detalle->cliente->nombre_corto:'Sin cliente'}}
     								</td>
     								<td>
     									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
@@ -246,7 +240,6 @@
 										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle) !!}
 										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
 										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
 										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad) !!}
 										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
@@ -269,9 +262,6 @@
     								</td>
     								<td>
     									{{$detalle->sku->descripcion}}
-    								</td>
-    								<td>
-    									{{isset($detalle->cliente->nombre_corto)?$detalle->cliente->nombre_corto:'Sin cliente'}}
     								</td>
     								<td>
     									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}

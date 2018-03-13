@@ -61,7 +61,7 @@ class OfertasController extends ControllerBase
                 "select":["id_proyecto as id","proyecto as text"],
                 "whereHas": [{
                     "productos": {
-                        "whereHas": [{
+                        "cwhereHas": [{
                             "claveClienteProducto": [{
                                 "whereRaw": "($fk_id_sku = NULL OR fk_id_sku = $fk_id_sku) AND ($fk_id_upc = NULL OR fk_id_upc = $fk_id_upc)"
                             }]
