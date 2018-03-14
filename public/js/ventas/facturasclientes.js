@@ -188,11 +188,24 @@ $(document).ready(function () {
         var row_id = i > 0 ? +$('#detalleRelaciones tbody tr:last').find('.index').val()+1 : 0;
 		id_tipo = $('#fk_id_tipo_relacion option:selected').val();
 		tipo_relacion = $('#fk_id_tipo_relacion option:selected').text();
-		id_factura = $('#fk_id_factura_relacion option:selected').val();
+		id_documento_relacionado = $('#fk_id_factura_relacion option:selected').val();
 		factura = $('#fk_id_factura_relacion option:selected').text();
+		id_tipo_documento_relacionado = 4;
 		
-		if(id_tipo == '' | id_factura == '') {
-			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		var agregar = true;
+        if($('#detalleRelaciones tbody tr').length >0){
+            $('.fk_id_documento_relacionado').each(function (i) {
+                var relacionado = $('.fk_id_documento_relacionado')[i].value+'-'+$('.fk_id_tipo_documento_relacionado')[i].value;
+                if(relacionado == id_documento_relacionado+'-'+id_tipo_documento_relacionado) {
+                    agregar = false;
+                }
+            });
+        }
+		
+		if(agregar == false)
+			$.toaster({priority:'danger',title:'¡Error!',message:'<br>El documento seleccionado ya esta relacionado.',settings:{'timeout':10000,'toaster':{'css':{'top':'3em'}}}});
+		else if(id_tipo == '' | id_documento_relacionado == '') {
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el tipo de relacion y la factura a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'3em'}}}});
 		}
 		else {
 			$('#detalleRelaciones').append('<tr>'+
@@ -202,12 +215,12 @@ $(document).ready(function () {
 				    '<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_relacion]" type="hidden" value="'+id_tipo+'">'+tipo_relacion+
 				'</td>'+
 				'<td>'+
-					'<input name="relations[has][relaciones]['+row_id+'][fk_id_documento_relacionado]" type="hidden" value="'+id_factura+'">'+factura+
-					'<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_documento_relacionado]" type="hidden" value="4">'+
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_documento_relacionado]" type="hidden" value="'+id_documento_relacionado+'" class="fk_id_documento_relacionado">'+factura+
+					'<input name="relations[has][relaciones]['+row_id+'][fk_id_tipo_documento_relacionado]" type="hidden" value="'+id_tipo_documento_relacionado+'" class="fk_id_tipo_documento_relacionado">'+
 				'</td>'+
-				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
+				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="documento relacionado"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-			$.toaster({priority:'success',title:'¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'3em'}}}});
 		}
 		
 	});
