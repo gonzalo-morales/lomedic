@@ -12,7 +12,8 @@ $.get('http://localhost:8000/abisa/administracion.paises/api', {
 	//conditions: [{'whereIn':['id_pais',[5,42]]}],
 	//conditions: [{'where':['pais','like','Argen%']}],
 	//with: ['estados:id_estado,fk_id_pais,estado'],
-	//has: ['estados'],
+    //has: ['estados'],
+    //"whereHas": [{"stock":{"where":["fk_id_almacen", "$fk_id_almacen"]}}]
 	//whereHas: [{'estados':{[{'where':['fk_id_pais', 42]},{'cwhereHas':[municipio:{'where':['id_municipio',5]}]}]}}]
 	//orderBy: [['id_pais', 'DESC']],
     //joins:[
@@ -39,8 +40,8 @@ class APIController extends Controller
 		$param_array = request()->all();
 		$json = str_replace(array_keys($param_array),$param_array,$str_json);
         $request = json_decode($json,true);
+        // dd($request);
 		# Obtenemos entidad
-		
         $controllers = controllerByRoute();
         $controllerName = substr($controllers[$entity.'.index'],0,-6);
         
@@ -71,12 +72,13 @@ class APIController extends Controller
                 foreach ($relations as $relation => $conditions) {
                     $entity = $entity->with([$relation => function($query) use($conditions) {
                         foreach ($conditions as $condition => $args) {
+                            // dump($args);
                             call_user_func_array([$query, $condition], $args);
                         }
                     }]);
                 }
             }
-
+            // exit();
             $entity = $entity->with($request['with'] ?? []);
 
             # Condiciones ... (where, whereIn etc)

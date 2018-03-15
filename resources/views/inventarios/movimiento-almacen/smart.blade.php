@@ -61,7 +61,6 @@
           </div>
             {{ Form::cSelect('* Almacenes','fk_id_almacen', $almacenes ?? [],[
               'data-url' => companyAction('HomeController@index').'/inventarios.almacenes/api',
-              'data-url2' => companyAction('HomeController@index').'/inventarios.ubicaciones/api',
               'style' => 'width:100%;',
               'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
               Route::currentRouteNamed(currentRouteName('edit')) && $data['fk_id_almacen'] > 0 ? '' : 'disabled'
@@ -86,7 +85,7 @@
                 Cargando sku(s)... <i class="material-icons align-middle loading">cached</i>
               </div>
                 {{ Form::cSelect('* SKU','fk_id_sku', $skus ?? [],[
-                  'data-url' => companyAction('HomeController@index').'/inventarios.stock/api',
+                  'data-url' => companyAction('HomeController@index').'/inventarios.productos/api',
                   'style' => 'width:100%;',
                   'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
                 ]) }}

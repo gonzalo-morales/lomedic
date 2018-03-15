@@ -58,20 +58,18 @@ class SolicitudesController extends ControllerBase
         $proveedores = [];
         if($entity != null)
         {
+            // dd(Sucursales::select('id_sucursal','sucursal')->where('activo',1)
+            // ->whereHas('usuario_sucursales',function($q) use ($entity){ $q->where('fk_id_usuario',$entity->fk_id_solicitante); })
+            // ->whereHas('empresa_sucursales',function($q) use ($entity){ $q->where('fk_id_empresa',dataCompany()->id_empresa); }));
             $proveedores = SociosNegocio::where('activo',1)->whereHas('empresas',function ($q) use ($entity){
                 $q->where('fk_id_socio_negocio',$entity->fk_id_socio_negocio);
             })->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio')->prepend('Seleccione el proveedor','');
+            $sucursales = Sucursales::where('activo',1)->where('id_sucursal',$entity->fk_id_sucursal)->pluck('sucursal','id_sucursal');
         }
-//        dd($entity->fk_id_sucursal);
-//        dd(SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')->whereHas('empresas',function ($q){
-//            $q->where('conexion',\request()->company);
-//        })->pluck('nombre_comercial','id_socio_negocio'));
         return [
             'proyectos'         => Proyectos::where('fk_id_estatus',1)->orderBy('proyecto')->pluck('proyecto','id_proyecto')->prepend('Seleccione el proyecto',''),
             'proveedores'       => $proveedores ?? '',
-            'sucursales'        => empty($entity) ? [] : Sucursales::select('id_sucursal','sucursal')->where('activo',1)
-                ->whereHas('usuario_sucursales',function($q) use ($entity){ $q->where('fk_id_usuario',$entity->fk_id_solicitante); })
-                ->whereHas('usuario_empresa',function($q) use ($entity){ $q->where('fk_id_empresa',dataCompany()->id_empresa); }),
+            'sucursales'        => $sucursales ?? '', 
             'impuestos'         => Impuestos::select('id_impuesto','impuesto')->where('activo',1)->orderBy('impuesto')->with('porcentaje')->pluck('impuesto','id_impuesto')->prepend('Seleccione...',''),
             'unidadesmedidas'   => Unidadesmedidas::select('nombre','id_unidad_medida')->where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida')->prepend('Seleccione...',''),
             'skus'              => Productos::where('activo',1)->where('articulo_compra',1)->orderBy('sku')->pluck('sku','id_sku'),
