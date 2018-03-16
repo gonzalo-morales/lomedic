@@ -50,6 +50,18 @@
 			@elseif(Route::currentRouteNamed(currentRouteName('create')))
 				{!! Form::text('estatus_solicitud','Abierto',['disabled','class'=>'form-control']) !!}
 			@endif
+			{{ Form::hidden('total_solicitud',
+				isset($data->total_solicitud) ? $data->total_solicitud : 0,
+				['id' => 'sumImporteSolicitud']
+			) }}
+			{{ Form::hidden('total_impuesto',
+				isset($data->total_impuesto) ? $data->total_impuesto : 0,
+				['id' => 'sumImpuestoSolicitud']
+			) }}
+			{{ Form::hidden('total_subtotal',
+				isset($data->total_subtotal) ? $data->total_subtotal : 0,
+				['id' => 'sumSubtotalSolicitud']
+			) }}
 		</div>
 		{{--Si la solicitud está cancelada--}}
 			@if(isset($data->fk_id_estatus_solicitud) && $data->fk_id_estatus_solicitud ==3)

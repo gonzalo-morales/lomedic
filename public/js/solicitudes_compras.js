@@ -101,7 +101,7 @@ $(document).ready( function () {
            cRequerido: true
         });
         if(!$('#form-model').valid()){
-            $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Hay campos que requieren tu atenciÃ³n',
+            $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren tu atención',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             e.preventDefault();
         }
@@ -135,13 +135,13 @@ $(document).ready( function () {
                         placeholder: "Seleccione otro Solicitante...",
                         disabled: true,
                     });
-                    $.toaster({priority : 'warning',title : 'Â¡Lo sentimos!',message : 'Al parecer el usuario no cuenta con sucursales registrados',
+                    $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer el usuario no cuenta con sucursales registrados',
                     settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                 }
                 $('#loadingsucursales').hide();
             },
             error:function(){
-                $.toaster({priority : 'danger',title : 'Â¡Lo sentimos!',message : 'Al parecer no recibimos respuesta, trata de nuevo con otra opciÃ³n.',
+                $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'Al parecer no recibimos respuesta, trata de nuevo con otra opción.',
                 settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                 $('#loadingsucursales').hide();
                 $('#fk_id_sucursal.select2').select2({
@@ -197,7 +197,7 @@ $(document).ready( function () {
                         });
                         $('#fk_id_proveedor').append(options.join(''));
                     } else{
-                        $.toaster({priority : 'warning',title : 'Â¡Lo sentimos!',message : 'Al parecer no hay Proveedores con este SKU, intente con otro',
+                        $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay Proveedores con este SKU, intente con otro',
                         settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                         $('#fk_id_proveedor').select2({
                             placeholder: "Proveedor no encontrado",
@@ -221,7 +221,7 @@ $(document).ready( function () {
     $('.imprimir').on('click',function (e) {
         if($('#productos > tbody') < 1 && $('.imprimir').length){
             e.preventDefault();
-            $.toaster({priority : 'danger',title : 'Â¡Espera!',message : 'Al parecer no cuentas con Productos para imprimir, requieres de mÃ­nimo un producto',
+            $.toaster({priority : 'danger',title : '¡Espera!',message : 'Al parecer no cuentas con Productos para imprimir, requieres de mí­nimo un producto',
             settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
         }
     });
@@ -242,6 +242,30 @@ $(document).ready( function () {
         if(!valid){
             return false;
         }
+    });
+
+    $('#fk_id_impuesto').on('change', function() {
+        $('#agregar').prop('disabled',true);
+        $('#loadingprecio').show();
+        var idimpuesto = $('#fk_id_impuesto option:selected').val();
+        var _url = $(this).data('url');
+        $.ajax({
+            async: true,
+            url: _url,
+            data: {'param_js':porcentaje_js,$id_impuesto:idimpuesto},
+            dataType: 'json',
+                success: function (data) {
+                  if(data[0].tasa_o_cuota == null)
+                    $('#impuesto').val('');
+                  else
+                    $('#impuesto').val(data[0].tasa_o_cuota);
+    
+                total_producto();
+                total_impuesto();
+                $('#loadingprecio').hide();
+                $('#agregar').prop('disabled',false);
+            }
+        });
     });
 
 }); //documentOnReady
@@ -267,7 +291,7 @@ function codigosbarras(){
                     });
                     $('#fk_id_upc').append(options.join(''));
                 } else{
-                    $.toaster({priority : 'warning',title : 'Â¡Lo sentimos!',message : 'Al parecer no hay UPCs en el SKU seleccionado, intente con otro',
+                    $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay UPCs en el SKU seleccionado, intente con otro',
                     settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                     $('#fk_id_upc').select2({
                         placeholder: "UPC no encontrado",
@@ -287,29 +311,6 @@ function codigosbarras(){
     }
 }
 
-$('#fk_id_impuesto').on('change', function() {
-    $('#agregar').prop('disabled',true);
-    $('#loadingprecio').show();
-    var idimpuesto = $('#fk_id_impuesto option:selected').val();
-    var _url = $(this).data('url');
-    $.ajax({
-        async: true,
-        url: _url,
-        data: {'param_js':porcentaje_js,$id_impuesto:idimpuesto},
-        dataType: 'json',
-            success: function (data) {
-              if(data[0].tasa_o_cuota == null)
-                $('#impuesto').val('');
-              else
-                $('#impuesto').val(data[0].tasa_o_cuota);
-
-            total_producto()
-            $('#loadingprecio').hide();
-            $('#agregar').prop('disabled',false);
-        }
-    });
-});
-
 function getImpuestos(el){
     $('.progress-button').prop('disabled',true);
     var loading = $(el).parent().parent().find('.loadingData');
@@ -327,39 +328,15 @@ function getImpuestos(el){
               else
                 $(el).parent().find('.rowImpuestos').val(data[0].tasa_o_cuota);
 
-            total_producto_row(el)
+            total_producto_row(el);
+            total_impuesto_row(el);
+            sumaImpuestosSolicitud()
+            sumaSubtotalSolicitud();
+            sumaImporteSolicitud();
             $(loading).hide();
             $('.progress-button').prop('disabled',false);
         }
     }); 
-}
-
-$('#cantidad').on('keyup', function () {
-    total_producto()
-});
-
-$('#precio_unitario').on('keyup', function () {
-    total_producto()
-});
-
-function total_producto() {
-    let impuesto = $('#impuesto').val();
-    let precio_unitario = $('#precio_unitario').val();
-    let cantidad = $('#cantidad').val();
-    let subtotal = (cantidad*precio_unitario)*impuesto;
-    //Calcular valores
-    return (subtotal+cantidad*precio_unitario).toFixed(2);
-}
-
-function total_producto_row(el) {
-    console.log(el);
-    let impuesto = $(el).parent().parent().find('.rowImpuestos').val();
-    let precio_unitario = $(el).parent().parent().find('.rowPrecioUnitario').val();
-    let cantidad = $(el).parent().parent().find('.rowCantidad').val();
-    let total = $(el).parent().parent().find('.rowTotal');
-    let subtotal = (cantidad*precio_unitario)*impuesto;
-    //Calcular valores
-    return $(total).val((subtotal+cantidad*precio_unitario).toFixed(2));
 }
 
 function agregarProducto() {
@@ -387,6 +364,7 @@ function agregarProducto() {
                 {impuestos += impuesto.outerHTML;}
         });
         let total = total_producto();
+        let totalImpuesto = total_impuesto();
         let id_upc = 0;
         let text_upc = 'UPC no seleccionado';
         let proveedor =  $('#fk_id_proveedor').select2('data')[0].text.replace(/,/g ,"");
@@ -405,30 +383,105 @@ function agregarProducto() {
             '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+ id_upc +'"/>'+
             '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />'+
             '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proveedor]" value="'+ $('#fk_id_proveedor').val() +'"/>'+
+            '<input class="totalImpuestoThisRow" type="hidden" name="relations[has][detalle]['+row_id+'][impuesto_total]" value="'+ totalImpuesto +'"/>'+
             '<input type="hidden" name="relations[has][detalle]['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val() +'"/></th>' +
         '<td>' + '<img style="max-height:40px" src="img/sku.png" alt="sku"/> ' + $('#fk_id_sku').select2('data')[0].text + '</td>' +
         '<td>' + '<img style="max-height:40px" src="img/upc.png" alt="upc"/> ' + text_upc + '</td>' +
         '<td>' + proveedor + '</td>' +
         '<td>' + '<i class="material-icons align-middle">today</i>' + $('#fecha_necesario').val() + '</td>' +
         '<td>' + '<select name="relations[has][detalle]['+row_id+'][fk_id_proyecto]" id="fk_id_proyecto'+row_id+'" style="width: 100%" class="select form-control">'+proyectos+'</select>' + '</td>' +
-        '<td>' + '<input type="number" name="relations[has][detalle]['+row_id+'][cantidad]" onkeyup="total_producto_row(this)" value="'+ $('#cantidad').val()+'" class="validate rowCantidad form-control" />' + '</td>' +
+        '<td>' + '<input type="number" name="relations[has][detalle]['+row_id+'][cantidad]" onkeyup="total_producto_row(this), total_impuesto_row(this)" value="'+ $('#cantidad').val()+'" class="validate rowCantidad form-control" />' + '</td>' +
         '<td>' + $('#fk_id_unidad_medida option:selected').html() + '</td>' +
         '<td>' + '<select name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" onchange="getImpuestos(this)" style="width: 100%" class="select form-control">'+impuestos+'</select>' +
             '<input type="hidden" class="rowImpuestos" value="'+ $('#impuesto').val() +'"/>' + '</td>' +
-        '<td>' + '<input type="number" name="relations[has][detalle]['+row_id+'][precio_unitario]"  onkeyup="total_producto_row(this)" value="'+ $('#precio_unitario').val()+'" class="rowPrecioUnitario form-control"/>' + '</td>' +
+        '<td>' + '<input type="number" name="relations[has][detalle]['+row_id+'][precio_unitario]"  onkeyup="total_producto_row(this), total_impuesto_row(this)" value="'+ $('#precio_unitario').val()+'" class="rowPrecioUnitario form-control"/>' + '</td>' +
         '<td class="position-relative">'+ '<div class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">Calculando el total... <i class="material-icons align-middle loading">cached</i></div>'+
                 '<input type="text" name="relations[has][detalle]['+row_id+'][importe]" class="form-control rowTotal" style="min-width: 100px" readonly value="'+ total +'" />' + '</td>' +
         '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
         );
         $('[data-toggle]').tooltip();
-            $.toaster({priority : 'success',title : 'Â¡Ã‰xito!',message : 'Producto agregado con Ã©xito',
+            $.toaster({priority : 'success',title : 'Â¡Ã‰xito!',message : 'Producto agregado con Éxito',
             settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}
         });
         limpiarFormulario();//Limpiar el formulario de algunos de los valores
+        sumaImpuestosSolicitud();
+        sumaSubtotalSolicitud();
+        sumaImporteSolicitud();
     }else {
-        $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Hay campos que requieren de tu atenciÃ³n',
+        $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     }
+}
+
+$('#cantidad').on('keyup', function () {
+    total_producto();
+    total_impuesto();
+});
+
+$('#precio_unitario').on('keyup', function () {
+    total_producto();
+    total_impuesto();
+});
+
+function total_producto() {
+    let precio_unitario = $('#precio_unitario').val();
+    let cantidad = $('#cantidad').val();
+    //Calcular valores
+    return (cantidad*precio_unitario).toFixed(2);
+}
+
+function total_impuesto() {
+    let impuesto = $('#impuesto').val();
+    let precio_unitario = $('#precio_unitario').val();
+    let cantidad = $('#cantidad').val();
+    let subtotal = (cantidad*precio_unitario)*impuesto;
+    //Calcular valores
+    return subtotal.toFixed(2);
+}
+
+function total_impuesto_row(el) {
+    let impuesto = $(el).parent().parent().find('.rowImpuestos').val();
+    let precio_unitario = $(el).parent().parent().find('.rowPrecioUnitario').val();
+    let cantidad = $(el).parent().parent().find('.rowCantidad').val();
+    let subtotal = (cantidad*precio_unitario)*impuesto;
+    let campoImpuestoRow = $(el).parent().parent().find('.totalImpuestoThisRow');
+    //Calcular valores
+    $(campoImpuestoRow).val(subtotal.toFixed(2));
+}
+
+function total_producto_row(el) {
+    let precio_unitario = $(el).parent().parent().find('.rowPrecioUnitario').val();
+    let cantidad = $(el).parent().parent().find('.rowCantidad').val();
+    let total = $(el).parent().parent().find('.rowTotal');
+    //Calcular valores
+    $(total).val((cantidad*precio_unitario).toFixed(2));
+    sumaImpuestosSolicitud();
+    sumaSubtotalSolicitud();
+    sumaImporteSolicitud();
+}
+
+function sumaImporteSolicitud() {
+    let impuestos = +$('#sumImpuestoSolicitud').val();
+    let subtotal = +$('#sumSubtotalSolicitud').val();
+    return $('#sumImporteSolicitud').val(subtotal+impuestos);
+}
+
+function sumaSubtotalSolicitud() {
+    let $rowTotal = $('#productos > tbody > tr').find('.rowTotal');
+    let total = 0;
+    for (let i = 0; i < $rowTotal.length; i++) {
+       total += +$($rowTotal[i]).val();
+    }
+    return $('#sumSubtotalSolicitud').val(total);
+}
+
+function sumaImpuestosSolicitud() {
+    let $rowImpuestos = $('#productos > tbody > tr').find('.totalImpuestoThisRow');
+    let impuestos = 0;
+    for (let i = 0; i < $rowImpuestos.length; i++) {
+        impuestos += +$($rowImpuestos[i]).val();
+    }
+    return $('#sumImpuestoSolicitud').val(impuestos);
 }
 
 function limpiarFormulario() {
@@ -470,7 +523,7 @@ function borrarFila(el) {
     tr.fadeOut(400, function(){
         tr.remove().stop();
     })
-    $.toaster({priority : 'success',title : 'Â¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
+    $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
         settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}});
 }
 
@@ -505,8 +558,8 @@ function validateDetail() {
         range: [1,9999],
         messages:{
             required: 'Ingresa una cantidad',
-            number: 'El campo debe ser un nÃºmero',
-            range: 'El nÃºmero debe ser entre 1 y 9999'
+            number: 'El campo debe ser un número',
+            range: 'El número debe ser entre 1 y 9999'
         }
     });
     $('#fk_id_unidad_medida').rules('add',{
@@ -523,16 +576,16 @@ function validateDetail() {
     });
     $.validator.addMethod('precio',function (value,element) {
         return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-    },'El precio no debe tener mÃ¡s de dos decimales');
+    },'El precio no debe tener más de dos decimales');
     $('#precio_unitario').rules('add',{
         required: true,
         number: true,
         precio:true,
         messages:{
             required: 'Ingresa un precio unitario',
-            number: 'El campo debe ser un nÃºmero',
-            greaterThan: 'El nÃºmero debe ser mayor a 0',
-            precio: 'El precio no debe tener mÃ¡s de dos decimales'
+            number: 'El campo debe ser un número',
+            greaterThan: 'El número debe ser mayor a 0',
+            precio: 'El precio no debe tener más de dos decimales'
         }
     });
 }

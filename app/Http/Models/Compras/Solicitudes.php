@@ -28,8 +28,19 @@ class Solicitudes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_sucursal','fk_id_departamento','fecha_creacion','fecha_necesidad',
-        'fecha_cancelacion','motivo_cancelacion','fk_id_estatus_solicitud','fk_id_solicitante'];
+    protected $fillable = [
+        'fk_id_sucursal',
+        'fk_id_departamento',
+        'fecha_creacion',
+        'fecha_necesidad',
+        'fecha_cancelacion',
+        'motivo_cancelacion',
+        'fk_id_estatus_solicitud',
+        'fk_id_solicitante',
+        'total_solicitud',
+        'total_impuesto',
+        'total_subtotal',
+    ];
 
     /**
      * Los atributos que seran visibles en index-datable
