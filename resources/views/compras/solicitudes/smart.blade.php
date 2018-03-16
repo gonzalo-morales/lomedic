@@ -182,6 +182,7 @@
 							@foreach($detalles_documento as $index => $detalle)
 								<tr>
 									<td>
+										{!! Form::hidden('',$detalle->id_documento_detalle,['id'=>'index']) !!}
 										{{Form::hidden('relations[has][detalle]['.$index.'][fk_id_documento_base]',$detalle->fk_id_documento)}}
 										{{$detalle->fk_id_documento}}
 									</td>
@@ -190,6 +191,7 @@
 										{{Form::hidden('relations[has][detalle]['.$index.'][fk_id_tipo_documento_base]',$detalle->fk_id_tipo_documento)}}
 										{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 										{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][impuesto_total]',$detalle->impuesto_total,['class'=>'totalImpuestoThisRow']) !!}
 										{{$detalle->sku->sku ?? ''}}
 									</td>
 									<td>
@@ -243,6 +245,7 @@
 										<td>
 											<img style="max-height:40px" src="img/sku.png" alt="sku"/>
 											{{$detalle->sku->sku}}
+											{!! Form::hidden('',$detalle->id_documento_detalle,['id'=>'index']) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle,['class'=>'id']) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_solicitud]',$detalle->fk_id_solicitud) !!}
@@ -253,6 +256,7 @@
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad) !!}
+											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][impuesto_total]',$detalle->impuesto_total,['class'=>'totalImpuestoThisRow']) !!}
 										</td>
 										<td>
 											<img style="max-height:40px" src="img/upc.png" alt="upc"/>
