@@ -35,14 +35,14 @@
 			<div id="loadingsucursales" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 				Ingresando sucursales... <i class="material-icons align-middle loading">cached</i>
 			</div>
-    		{!! Form::cSelect('* Sucursal','fk_id_sucursal',$sucursales ?? [],[
+    		{!! Form::cSelectWithDisabled('* Sucursal','fk_id_sucursal',$sucursales ?? [],[
 				'style' => 'width:100%;',
 				'data-url' => companyAction('HomeController@index').'/administracion.sucursales/api',
 				'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
 			]) !!}
     	</div>
     	<div class="form-group col-md-3 col-sm-6">
-    		{!! Form::cSelect('*Proveedor','fk_id_proveedor',$proveedores ?? [],[
+    		{!! Form::cSelectWithDisabled('*Proveedor','fk_id_proveedor',$proveedores ?? [],[
 				'style' => 'width:100%;',
 				'data-url'=>companyAction('Inventarios\ProductosController@obtenerSkus'),
 				'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
@@ -105,14 +105,14 @@
 									])!!}
 							</div>
     						<div class="form-group input-field col-md-3 col-sm-6">
-    							{!! Form::cSelect('Unidad medida','fk_id_unidad_medida',isset($unidadesmedidas)?$unidadesmedidas:[],['class'=>'select2']) !!}
+    							{!! Form::cSelectWithDisabled('Unidad medida','fk_id_unidad_medida',isset($unidadesmedidas)?$unidadesmedidas:[],['class'=>'select2']) !!}
     						</div>
     						<div class="form-group input-field col-md-2 col-sm-4">
     							{!! Form::cText('* Cantidad','cantidad',['autocomplete'=>'off','placeholder'=>'0'])!!}
     						</div>
     						<div class="form-group input-field col-md-2 col-sm-6">
     							{!! Form::cSelect('Tipo de impuesto','fk_id_impuesto',$impuestos ?? [],[
-									'data-url'=>companyAction('HomeController@index').'/administracion.impuestos/api'
+									'data-url'=>companyAction('Administracion\ImpuestosController@obtenerImpuestos')
 									])!!}
 								{{Form::hidden('',null,['id'=>'impuesto'])}}
     						</div>
@@ -129,8 +129,8 @@
     						<div class="form-group input-field col-md-2 col-sm-6">
 								{!! Form::label('descuento_detalle','Descuento producto') !!}
 								<div class="input-group">
-									{!! Form::text('descuento_detalle',0,['placeholder'=>'99.0000','class'=>'form-control']) !!}
-									<span class="input-group-addon">%</span>
+                                    <span class="input-group-addon">$</span>
+                                    {!! Form::text('descuento_detalle',0,['placeholder'=>'99.0000','class'=>'form-control']) !!}
 								</div>
 							</div>
     						<div class="col-sm-12 text-center">
@@ -148,7 +148,7 @@
     			@endif
     			<div class="card-body">
 					<div id="loadingRow" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">Cargando datos al detalle y calculando días de entrega, espere porfavor... <i class="material-icons align-middle loading">cached</i></div>
-    				<table id="productos" class=" table table-responsive-sm table-striped table-hover">
+    				<table id="productos" class=" table table-responsive-sm table-striped">
     					<thead>
 							<tr align="center">
 								<th>Solicitud</th>
@@ -162,14 +162,14 @@
 								<th>Cantidad</th>
 								<th>Tipo de impuesto</th>
 								<th>Precio unitario</th>
-								<th>Descuento (%)</th>
+								<th>Descuento ($)</th>
 								<th>Total</th>
 								@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('create')))
 									<th>Eliminar</th>
 								@endif
 							</tr>
     					</thead>
-    					<tbody>
+    					<tbody class="table-hover">
     					@if(isset($solicitud) && Route::currentRouteNamed(currentRouteName('create')))
 							@foreach( $solicitud->detalle->where('cerrado',false) as $detalle)
 							{{dump($detalle)}}
@@ -307,13 +307,30 @@
     					</tbody>
     					<tfoot class="table-dark">
     						<tr>
-    							<td colspan="5"></td>
+								<td colspan="3">
+									{!! Form::label('subtotal','Subtotal') !!}
+									<div class="form-group col-md-12">
+										<div class="input-group">
+											<span class="input-group-addon">$</span>
+											{!! Form::cText('','subtotal',['readonly']) !!}
+										</div>
+									</div>
+								</td>
+    							<td colspan="2">
+									{!! Form::label('descuento_oferta','Descuento Total') !!}
+									<div class="form-group col-md-12">
+										<div class="input-group">
+											<span class="input-group-addon">$</span>
+											{!! Form::cText('','descuento_oferta',['readonly']) !!}
+										</div>
+									</div>
+								</td>
     							<td colspan="3">
-    								{!! Form::label('descuento_oferta','Descuento General') !!}
+    								{!! Form::label('impuesto_oferta','Impuesto') !!}
     								<div class="form-group col-md-12">
     									<div class="input-group">
-    										{!! Form::cText('','descuento_oferta',['placeholder'=>'99.0000']) !!}
-    										<span class="input-group-addon">%</span>
+											<span class="input-group-addon">$</span>
+											{!! Form::cText('','impuesto_oferta',['readonly']) !!}
     									</div>
     								</div>
     							</td>

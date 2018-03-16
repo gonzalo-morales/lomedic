@@ -53,6 +53,11 @@
 
 @section('form-content')
 {{ Form::setModel($data) }}
+
+@crear
+	{{Form::hidden('fk_id_documento_padre',$data->fk_id_documento_padre ?? '')}}
+	{{Form::hidden('fk_id_tipo_documento_padre',$data->fk_id_tipo_documento_padre ?? '')}}
+@endif
 @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
 	<div class="row">
 		<div class="col-md-12 text-center text-success">
@@ -137,7 +142,6 @@
                                 ,null,['id'=>'fk_id_impuesto',
                                 'data-url'=>companyAction('Administracion\ImpuestosController@obtenerImpuestos'),
                                 'class'=>'form-control','style'=>'width:100%']) !!}
-							{{Form::hidden('impuesto',null,['id'=>'impuesto'])}}
 						</div>
 						<div class="form-group input-field col-md-2 col-sm-6">
 							{{Form::label('precio_unitario','* Precio unitario',['class'=>'validate'])}}
@@ -146,8 +150,8 @@
 						<div class="form-group input-field col-md-2 col-sm-6">
 							{{Form::label('descuento','* Descuento',['class'=>'validate'])}}
 							<div class="input-group">
-								{!! Form::text('descuento',null,['id'=>'descuento','placeholder'=>'00.0000','class'=>'form-control','autocomplete'=>'off']) !!}
-								{!! Form::label('','%',['class'=>'input-group-addon']) !!}
+								{!! Form::label('','$',['class'=>'input-group-addon']) !!}
+								{!! Form::text('descuento',null,['id'=>'descuento','placeholder'=>'0.00','class'=>'form-control','autocomplete'=>'off']) !!}
 							</div>
 						</div>
 						<div class="col-sm-12 text-center">
@@ -183,7 +187,7 @@
 						<th>Descuento</th>
 						<th>Tipo de impuesto</th>
 						<th>Precio unitario</th>
-						<th>Total</th>
+						<th>Importe</th>
 						<th></th>
 					</tr>
 					</thead>
@@ -192,17 +196,18 @@
 						@foreach($detalles_documento as $detalle)
 							<tr>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_tipo_documento_base]',$tipo_documento) !!}
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_linea]',$detalle->id_documento_detalle) !!}
+									{{Form::hidden('',$detalle->getKey(),['class'=>'index'])}}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_tipo_documento_base]',$tipo_documento) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_linea]',$detalle->id_documento_detalle) !!}
 									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_sku]',$detalle->fk_id_sku) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_sku]',$detalle->fk_id_sku) !!}
 									{{$detalle->sku->sku}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_upc]',$detalle->fk_id_upc) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_upc]',$detalle->fk_id_upc) !!}
 									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>
@@ -212,28 +217,28 @@
 									{{$detalle->sku->descripcion}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
 									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fecha_necesario]',$detalle->fecha_necesario) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fecha_necesario]',$detalle->fecha_necesario) !!}
 									{{$detalle->fecha_necesario??'Sin fecha'}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
 									{{$detalle->cantidad}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][descuento_detalle]',$detalle->descuento_detalle,['class'=>'descuento_row']) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][descuento_detalle]',$detalle->descuento_detalle,['class'=>'descuento_row']) !!}
 									{{$detalle->descuento_detalle??0}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
 									{!! Form::hidden('',$detalle->impuesto->porcentaje,['class'=>'porcentaje']) !!}
 									{{$detalle->impuesto->impuesto}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
 									{{number_format($detalle->precio_unitario,2,'.','')}}
 								</td>
 								<td>
@@ -248,19 +253,20 @@
 								</td>
 							</tr>
 						@endforeach
-					@elseif( isset( $detalles ) )
-						@foreach( $detalles as $detalle)
+					@elseif( isset( $data->detalle ) )
+						@foreach( $data->detalle as $index=>$detalle)
 							<tr>
 								<td>
+									{{Form::hidden('',$index,['class'=>'index'])}}
 									{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_tipo_documento_base.' - '.$detalle->fk_id_documento_base:'N/A'}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle) !!}
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle) !!}
+									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 									{{$detalle->sku->sku}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
 									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>
@@ -270,32 +276,33 @@
 									{{$detalle->sku->descripcion}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
+									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
 									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
+									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
 									{{$detalle->fecha_necesario}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
+									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
 									{{$detalle->cantidad}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->getKey().'][descuento_detalle]',$detalle->descuento_detalle,['class'=>'descuento_row']) !!}
-									{{$detalle->descuento_detalle??0}}
+									{!! Form::hidden('relations[has]['.$detalle->getKey().'][descuento_detalle]',number_format($detalle->descuento_detalle,2),['class'=>'descuento_row']) !!}
+									{{number_format($detalle->descuento_detalle,2,'.','')??0}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->impuesto->porcentaje,['class'=>'porcentaje']) !!}
+									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+									{!! Form::hidden('',$detalle->impuesto->porcentaje,['class'=>'porcentaje']) !!}
+									{!! Form::hidden('',$detalle->total_impuesto) !!}
 									{{$detalle->impuesto->impuesto}}
 								</td>
 								<td>
-									{!! Form::hidden('detalles['.$detalle->id_documento_detalle.'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
+									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
 									{{number_format($detalle->precio_unitario,2,'.','')}}
 								</td>
 								<td>
-									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'detalles['.$detalle->id_documento_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'relations[has]['.$detalle->id_documento_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
 								</td>
 								<td>
 									{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
@@ -313,26 +320,24 @@
 					</tbody>
 					<tfoot class="table-dark">
 					<tr>
-						<td colspan="1"></td>
-						<td colspan="3">
+						<td colspan="2">
 								{{ Form::label('subtotal_lbl', 'Subtotal',['class'=>'h5']) }}
 								<span class="">$</span>
 							{{ Form::label('subtotal_lbl', '0.00',['class'=>'h5','id'=>'subtotal_lbl']) }}
 							{{Form::hidden('subtotal',null,['id'=>'subtotal'])}}
 							{{--{!! Form::text('subtotal', null,['class'=>'form-control','disabled','placeholder'=>'0.00']) !!}--}}
 						</td>
-						<td colspan="3">
+						<td colspan="6">
 {{--							{{ Form::label('0','',['class'=>'h5','id'=>'descuento_porcentaje']) }}--}}
 							<div class="form-group col-sm-6">
 								{{ Form::label('', 'Descuento: ',['class'=>'h5']) }}
 								<div class="input-group">
-									{{Form::text('descuento_porcentaje',null,['class'=>'form-control','placeholder'=>'00.0000','id'=>'descuento_porcentaje'])}}
+									{{Form::text('descuento_porcentaje',null,['class'=>'form-control','readonly','placeholder'=>'00.0000','id'=>'descuento_porcentaje'])}}
 									<span class="input-group-addon">%</span>
 									<span class="input-group-addon">=</span>
 									<span class="input-group-addon">$</span>
 									{{--{{ Form::label('', '0.00',['class'=>'h5','id'=>'descuento_general']) }}--}}
-									{{Form::text('descuento_general',null,['class'=>'form-control','placeholder'=>'00000.00','id'=>'descuento_general'])}}
-									{{Form::hidden('descuento_total',null,['id'=>'descuento_total'])}}
+									{{Form::text('descuento_total',null,['class'=>'form-control','readonly','placeholder'=>'00000.00','id'=>'descuento_total'])}}
 								</div>
 							</div>
 						</td>
@@ -343,8 +348,8 @@
 								{{Form::hidden('impuesto',null,['id'=>'impuesto_total'])}}
 						</td>
 						<td colspan="3">
+							{{ Form::label('total_orden', 'Total',['class'=>'h5']) }}
 							<div class="input-group">
-								{{ Form::label('total_orden', 'Total',['class'=>'input-group-addon']) }}
 								<span class="input-group-addon">$</span>
 								{!! Form::text('total_orden', null,['class'=>'form-control','readonly','placeholder'=>'0.00']) !!}
 							</div>
@@ -373,11 +378,12 @@
 		<table class="table">
 			<thead>
 				<tr>
+					<th>ID</th>
 					<th>Condición</th>
 					<th>Fecha</th>
 					<th>Estatus</th>
 					<th>Fecha estatus</th>
-					<th>Autorizó</th>
+					<th>Usuario autorización</th>
 					<th>Observación</th>
 					<th></th>
 				</tr>
@@ -387,6 +393,7 @@
 					@foreach($condiciones as $condicion)
 						@if($autorizacion->fk_id_condicion == $condicion->id_condicion)
 							<tr>
+								<td>{{$autorizacion->id_autorizacion}}</td>
 								<td>{{$autorizacion->condicion->nombre}}{{Form::hidden('',$autorizacion->id_autorizacion)}}{{Form::hidden('',$autorizacion->observaciones)}}{{Form::hidden('',$autorizacion->fk_id_estatus)}}</td>
 								<td>{{$autorizacion->fecha_creacion}}</td>
 								@if($autorizacion->fk_id_estatus == 1)
@@ -399,19 +406,10 @@
 									<td class="text-success">{{$autorizacion->estatus->estatus}}</td>
 								@endif
 								<td>{{$autorizacion->fecha_autorizacion}}</td>
-								@if($autorizacion->fk_id_estatus == 4)
-									@if($autorizacion->usuario->nombre_corto <> '')
-										<td>{{$autorizacion->usuario->nombre_corto}}</td>
-									@else
-										<td>--</td>
-									@endif
-								@else
-									<td>--</td>
-								@endif
+								<td>{{$autorizacion->usuario->nombre_corto ?? '--'}}</td>
 								<td>{{$autorizacion->observaciones}}</td>
 								<td>
 									@if(Route::currentRouteNamed(currentRouteName('edit')))
-									 {{--Ventana de autorizaciones --}}
 									<button class="condicion text-primary btn btn_tables is-icon eliminar bg-white" type="button" data-toggle="modal" data-target="#autorizacion">
 									<i class="material-icons">feedback</i>
 									</button>
@@ -438,7 +436,10 @@
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					{{Form::hidden('',null,['id'=>'id_autorizacion','data-url'=>companyAction('Compras\AutorizacionesController@update',['id'=>'?id'])])}}
+					<div class="form-group text-center col-md-12 col-sm-6">
+						{{Form::label('','ID')}}
+						{{Form::text('',null,['id'=>'id_documento','disabled','data-url'=>companyAction('Compras\AutorizacionesController@update',['id'=>'?id']),'class'=>'form-control text-center'])}}
+					</div>
 					<div class="form-group col-md-12 col-sm-6">
 						{{Form::label('','Tipo de autorizacion')}}
 						{{Form::text('',null,['class'=>'form-control','readonly','id'=>'motivo_autorizacion'])}}
@@ -453,8 +454,8 @@
 			</div>
 			<div class="modal-footer">
 				@if(Route::currentRouteNamed(currentRouteName('edit')))
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-				<button id="guardar_autorizacion" type="button" class="btn btn-primary">Guardar</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+					<button id="guardar_autorizacion" type="button" class="btn btn-primary">Guardar</button>
 				@endif
 			</div>
 		</div>

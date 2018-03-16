@@ -17,7 +17,7 @@
     @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
     	<div class="row">
     		<div class="col-md-12 text-center text-success">
-    			<h1>Factura No. {{$data->id_documento}}</h1>
+    			<h1>Solicitud de pago No. {{$data->id_documento}}</h1>
     		</div>
     	</div>
     @endif
@@ -266,7 +266,7 @@
             if ( sessionStorage.reloadAfterPageLoad ) {
                 sessionStorage.clear();
                 $.toaster({
-                    priority: 'success', title: 'Exito', message: 'Factura cancelada',
+                    priority: 'success', title: 'Exito', message: 'Solicitud de pago cancelada',
                     settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
                 });
             }
@@ -326,7 +326,7 @@
                 e.preventDefault();
                 var modal = window['smart-modal'];
                 modal.view = rivets.bind(modal, {
-                    title: '¿Estas seguro que deseas cancelar la factura?',
+                    title: '¿Estas seguro que deseas cancelar la solicitud de pago?',
                     content: '<form  id="cancel-form">' +
                     '<div class="alert alert-warning text-center"><span class="text-danger">La cancelación de un documento es irreversible.</span><br>'+
                     'Para continuar, especifique el motivo y de click en cancelar.</div>'+

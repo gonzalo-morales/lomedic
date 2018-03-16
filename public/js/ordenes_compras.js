@@ -1,12 +1,9 @@
 var a=[];
-var subtotal_original = 0;
 
 $(document).ready(function(){
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
     totalOrden();
-    subtotal_original = $('#subtotal_lbl').text();
-    validateDetail();
     if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
     {
         initSelects();
@@ -72,17 +69,10 @@ $(document).ready(function(){
 
         $(document).on('submit',function (e) {
             // e.preventDefault();
-            if(dataTable.activeRows.length > 0){
-                if(a.length>0) {
-                    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-                    var url = $('#productos').data('delete');
-                    $.delete(url, {ids: a});
-                    a = [];
-                }
-            }else{
+            if($('#productos tbody tr').length > 1){
                 e.preventDefault();
                 $.toaster({
-                    priority: 'danger', title: '¡Advertencia!', message: 'La orden de compra debe tener al menos un detalle',
+                    priority: 'danger', title: '¡Advertencia!', message: 'La orden de compra debe tener al menos un producto',
                     settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
                 });
             }
@@ -96,60 +86,62 @@ $(document).ready(function(){
     $('input[type=radio][name=fk_id_estatus]').change(function () {
         if($(this).val() == 4){//Si es autorizada
             $('#observaciones').attr('readonly','readonly');
-            $('#observaciones').empty();
+            $('#observaciones').val("");
         }else{
             $('#observaciones').removeAttr('readonly');
         }
     });
     $('.condicion').click(function () {
-        $('#motivo_autorizacion').val($(this).parent().parent().find('td:first-child').text());
+        $('#motivo_autorizacion').val($(this).parent().parent().find('td:nth-child(2)').text());
         // $('#fk_id_estatus\\ ').prop('checked',true);
-        $('#id_autorizacion').val($(this).parent().parent().find('td input:first').val());
+        $('#id_documento').val($(this).parent().parent().find('td input:first').val());
         $('#observaciones').val($(this).parent().parent().find('td input:first').next('input').val());
         if($(this).parent().parent().find('td input:last').val() == 3){
             $('#fk_id_estatus\\ 3').prop('checked',true);
+            $('#observaciones').removeAttr('readonly');
         }else if($(this).parent().parent().find('td input:last').val() == 4){
             $('#fk_id_estatus\\ 4').prop('checked',true);
+            $('#observaciones').attr('readonly','readonly');
         }
     });
 
     $('#guardar_autorizacion').click(function (e) {
-       if($('input[type=radio][name=fk_id_estatus]:checked').val() == 3 && !$('#observaciones').val()) {
-           $.toaster({
-               priority: 'danger', title: 'Error', message: 'Por favor escribe un motivo de rechazo',
-               settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
-           });
-       }else if(!$('input[type=radio][name=fk_id_estatus]:checked').val()){
-           $.toaster({
-               priority: 'danger', title: 'Error', message: 'Por favor selecciona si se autoriza o no',
-               settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
-           });
+        if($('input[type=radio][name=fk_id_estatus]:checked').val() == 3 && !$('#observaciones').val()) {
+            $.toaster({
+                priority: 'danger', title: 'Error', message: 'Por favor escribe un motivo de rechazo',
+                settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }else if(!$('input[type=radio][name=fk_id_estatus]:checked').val()){
+            $.toaster({
+                priority: 'danger', title: 'Error', message: 'Por favor selecciona si se autoriza o no',
+                settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+            });
         }else{
-           $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-           var autorizar_url = $('#id_autorizacion').data('url').replace('?id',$('#id_autorizacion').val());
-           $.ajax({
-               url:autorizar_url,
-               type:'PUT',
-               data:{
-                   observaciones:$('#observaciones').val(),
-                   fk_id_estatus:$('input[type=radio][name=fk_id_estatus]:checked').val()
-               },
-               success:function (data) {
-                   if(data.status == 1){
-                       $('#autorizacion').modal('toggle');
-                       $.toaster({
-                           priority: 'success', title: 'Éxito', message: 'Se ha actualizado la información de la autorización',
-                           settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
-                       });
-                   }else{
-                       $.toaster({
-                           priority: 'danger', title: 'Error', message: 'Ha ocurrido un error',
-                           settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
-                       });
-                   }
-               }
-           });
-       }
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            var autorizar_url = $('#id_documento').data('url').replace('?id',$('#id_documento').val());//id_autorizacion
+            $.ajax({
+                url:autorizar_url,
+                type:'PUT',
+                data:{
+                    observaciones:$('#observaciones').val(),
+                    fk_id_estatus:$('input[type=radio][name=fk_id_estatus]:checked').val()
+                },
+                success:function (data) {
+                    if(data.status == 1){
+                        $('#autorizacion').modal('toggle');
+                        $.toaster({
+                            priority: 'success', title: 'Éxito', message: 'Se ha actualizado la información de la autorización. Recarga la página para ver los cambios.',
+                            settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+                        });
+                    }else{
+                        $.toaster({
+                            priority: 'danger', title: 'Error', message: 'Ha ocurrido un error',
+                            settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+                        });
+                    }
+                }
+            });
+        }
     });
 
     $('#reload').click(function (e) {
@@ -157,15 +149,6 @@ $(document).ready(function(){
         window.location.reload(true);
     })
     //Aquí termina la parte de las autorizaciones
-
-    $('#descuento_porcentaje').on('keyup',function () {
-        $('#descuento_general').val(((subtotal_original*$(this).val())/100).toFixed(2));
-        totalOrden();
-    });
-    $('#descuento_general').on('keyup',function () {
-        $('#descuento_porcentaje').val((($(this).val()/subtotal_original)*100).toFixed(4));
-        totalOrden();
-    });
 
     $('#fk_id_proyecto').select2({
         minimumResultsForSearch: Infinity,
@@ -272,25 +255,31 @@ function agregarProducto(tiempo_entrega) {
             var i = $('#productos tbody tr').length;
             var row_id = i > 0 ? +$('#productos tbody tr:last').find('.index').val() + 1 : 0;
             var total = totalProducto();
-            var id_proyecto = null;
+            var impuesto = impuestoProducto();
+            var id_proyecto = '';
             var proyecto = "Sin proyecto";
             if($('#fk_id_proyecto').select2('data').length){
                 id_proyecto = $('#fk_id_proyecto').select2('data')[0].id;
                 proyecto = $('#fk_id_proyecto').select2('data')[0].text;
             }
+            var id_upc = '';
+            if($('#fk_id_upc').val() > 0){
+                id_upc = $('#fk_id_upc').val();
+            }
+
             $('#productos').append(
                 '<tr>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento]"/>N/A<input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega"><input type="hidden" class="index" value="'+row_id+'"></td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="' + $('#fk_id_sku').select2('data')[0].id + '" />' + $('#fk_id_sku').select2('data')[0].text + '</td>'+
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="' + $('#fk_id_upc').select2('data')[0].id + '" />' + $('#fk_id_upc').select2('data')[0].text + '</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="' + id_upc + '" />' + $('#fk_id_upc').select2('data')[0].text + '</td>'+
                     '<td>'+$('#fk_id_sku').select2('data')[0].descripcion_corta + '</td>'+
                     '<td style="max-width: 500px">'+$('#fk_id_sku').select2('data')[0].descripcion + '</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proyecto]" value="' + id_proyecto + '" />'+ proyecto + '</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fecha_necesario]" value="' + $('#fecha_necesario').val() + '" />'+ $('#fecha_necesario').val()+'</td>'+
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][cantidad]" class="cantidad_row" value="' + $('#cantidad').val() + '" />' + $('#cantidad').val() + '</td>'+
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][cantidad]" class="cantidad_row" value="' + +$('#cantidad').val() + '" />' + +$('#cantidad').val() + '</td>'+
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descuento_detalle]" class="descuento_row" value="' + $('#descuento').val() + '" />' + $('#descuento').val() + '</td>'+
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="' + $('#fk_id_impuesto').select2('data')[0].id + '" />' + $('#fk_id_impuesto').select2('data')[0].text + '</td>'+'<input type="hidden" class="porcentaje" value="' + $('#fk_id_impuesto').select2('data')[0].porcentaje + '" />'+
-                    '<td><input type="hidden" class="precio_unitario_row" name="relations[has][detalle]['+row_id+'][precio_unitario]" value="' + $('#precio_unitario').val() + '" />'+$('#precio_unitario').val()+'</td>' +
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][total_impuesto]" value="'+impuesto+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="' + $('#fk_id_impuesto').select2('data')[0].id + '" />' + $('#fk_id_impuesto').select2('data')[0].text + '</td>'+'<input type="hidden" class="porcentaje" value="' + $('#fk_id_impuesto').select2('data')[0].porcentaje + '" />'+
+                    '<td><input type="hidden" class="precio_unitario_row" name="relations[has][detalle]['+row_id+'][precio_unitario]" value="' + +$('#precio_unitario').val() + '" />'+ +$('#precio_unitario').val()+'</td>' +
                     '<td><input type="text" value="'+ total +'" name="relations[has][detalle]['+row_id+'][total]" class="form-control total_row" readonly><input type="hidden" value="'+tiempo_entrega[0].tiempo_entrega+'" class="tiempo_entrega"></td>'+
                     '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>'+
                 '</tr>'
@@ -313,11 +302,17 @@ function totalProducto() {
     var cantidad = +$('#cantidad').val();
     var precio = +$('#precio_unitario').val();
     var subtotal =cantidad*precio;
-    subtotal = subtotal - (subtotal * (+$('#descuento').val()/100));
-    var impuesto = ($('#fk_id_impuesto').select2('data')[0].porcentaje * subtotal)/100;
-    subtotal_original = +subtotal_original + +subtotal;
-    subtotal_original = subtotal_original.toFixed(2);
-    return (subtotal + +impuesto).toFixed(2);
+    subtotal = subtotal - +$('#descuento').val();
+    return (subtotal).toFixed(2);
+}
+
+function impuestoProducto() {
+    var cantidad = +$('#cantidad').val();
+    var precio = +$('#precio_unitario').val();
+    var subtotal =cantidad*precio;
+    subtotal = subtotal - +$('#descuento').val();
+    var impuesto = ($('#fk_id_impuesto').select2('data')[0].porcentaje)/100 * subtotal;
+    return (impuesto).toFixed(2);
 }
 
 function totalOrden() {
@@ -329,45 +324,39 @@ function totalOrden() {
     if($('#productos tbody tr').length){
         $('#productos tbody tr').each(function () {
             //Del producto
-            var cantidad_row = $(this).find('.cantidad_row').val();
-            var precio_row = $(this).find('.precio_unitario_row').val();
-            var porcentaje_row = $(this).find('.porcentaje').val()/100;//Decimal
-            var descuento_row = $(this).find('.descuento_row').val();//Decimal
-            descuento_row = (descuento_row * precio_row)/100;
-            descuento_total += descuento_row;
-            var subtotal_row = (precio_row - descuento_row) * cantidad_row;
+            var cantidad_row = +$(this).find('.cantidad_row').val();//Decimal
+            var precio_row = +$(this).find('.precio_unitario_row').val();//Decimal
+            var porcentaje_row = +$(this).find('.porcentaje').val()/100;//Decimal
+            var descuento_row = +$(this).find('.descuento_row').val();
+            descuento_total += descuento_row;//Decimal
+            var subtotal_row = (cantidad_row * precio_row) - descuento_row;
             //Del total
-            subtotal += subtotal_row;
+            subtotal += cantidad_row*precio_row;
             impuesto += subtotal_row * porcentaje_row;
         });
-        subtotal = subtotal - $('#descuento_general').val();
-        descuento_total += +$('#descuento_general').val();
+        var descuento_porcentaje = ( descuento_total * 100)/ subtotal;
+        // subtotal = subtotal - descuento_total;
 
         var total = (subtotal)+impuesto;
-        $('#subtotal_lbl').text(subtotal.toFixed(2));
+        $('#subtotal_lbl').text((subtotal).toFixed(2));
         $('#subtotal').val(subtotal.toFixed(2));
         $('#impuesto_lbl').text(impuesto.toFixed(2));
-        $('#impuesto_total').val(impuesto.toFixed(2));
+        $('#impuesto').val(impuesto.toFixed(2));
         $('#total_orden').val(total.toFixed(2));
         $('#descuento_total').val(descuento_total.toFixed(2));
+        $('#descuento_porcentaje').val(descuento_porcentaje.toFixed(2));
     }else{
         $('#subtotal_lbl').text(0);
         $('#subtotal').val(0);
         $('#impuesto_lbl').text(0);
-        $('#impuesto_total').val(0);
+        $('#impuesto').val(0);
         $('#total_orden').val(0);
         $('#descuento_total').val(0);
+        $('#descuento_porcentaje').val(0);
     }
 }
 
 function borrarFila(el) {
-    var cantidad = $(el).find('.cantidad_row').val();
-    var precio = $(el).find('.precio_unitario_row').val();
-    var descuento = $(el).find('.descuento_row').val();
-    descuento = (descuento * precio)/100;
-    var subtotal = (precio-descuento)*cantidad;
-    subtotal_original -= subtotal;
-    subtotal_original = subtotal_original.toFixed(2);
     var tr = $(el).closest('tr');
     tr.fadeOut(400, function(){
         tr.remove().stop();
@@ -378,28 +367,19 @@ function borrarFila(el) {
 }
 
 function limpiarCampos() {
-    $('#fk_id_sku').val(0).trigger('change');
-    $('#fk_id_upc').val(0).trigger('change').prop('disabled',true);
+    $('#fk_id_sku').val(0).trigger('change').rules('remove');
+    $('#fk_id_upc').val(0).trigger('change').prop('disabled',true).rules('remove');
     $('#activo_upc').prop('checked',false);
-    $('#fk_id_proyecto').val(0).trigger('change');
-    $('#fk_id_impuesto').val('0').trigger('change');
-    $('#fecha_necesario').val('');
-    $('#cantidad').val('1');
-    $('#precio_unitario').val('');
-    //Eliminar reglas de validación detalle
-    if ($("#fk_id_sku").length > 0) {
-        $('#fk_id_sku').rules('remove');
-        $('#fk_id_upc').rules('remove');
-        $('#fk_id_proyecto').rules('remove');
-        $('#fecha_necesario').rules('remove');
-        $('#cantidad').rules('remove');
-        $('#fk_id_impuesto').rules('remove');
-        $('#precio_unitario').rules('remove');
-    }
+    $('#fk_id_proyecto').val(0).trigger('change').rules('remove');
+    $('#fk_id_impuesto').val('0').trigger('change').rules('remove');
+    $('#fecha_necesario').val('').rules('remove');
+    $('#cantidad').val('1').rules('remove');
+    $('#precio_unitario').val('').rules('remove');
+    $('#descuento').val(0).rules('remove');
 }
 
 function validateDetail() {
-    if ($("#fk_id_sku").length>0) {
+    if ($("#fk_id_sku").val() > 0) {
         $('#fk_id_sku').rules('add',{
             required: true,
             messages:{
@@ -409,11 +389,11 @@ function validateDetail() {
         $('#cantidad').rules('add',{
             required: true,
             number: true,
-            range: [1,9999],
+            range: [1,99999],
             messages:{
                 required: 'Ingresa una cantidad',
                 number: 'El campo debe ser un número',
-                range: 'El número debe ser entre 1 y 9999'
+                range: 'El número debe ser entre 1 y 99999'
             }
         });
         $('#fk_id_impuesto').rules('add',{
@@ -440,26 +420,17 @@ function validateDetail() {
                 precio: 'El precio no debe tener más de dos decimales'
             }
         });
-        $.validator.addMethod('porcentaje',function (value,element) {
-            return this.optional(element) || /^\d{0,2}(\.\d{0,4})?$/g.test(value);
-        },'El porcentaje tiene un formato incorrecto');
         $.validator.addMethod( "lessThan", function( value, element, param ) {
             return value <= param;
         }, "Please enter a greater value." );
-        $('#descuento_porcentaje').rules('add',{
-            porcentaje: true,
-            greaterThan: -1,
-            lessThan: 100,
+        $('#descuento').rules('add',{
+            number:true,
+            precio:true,
+            lessThan: +$('#precio_unitario').val(),
             messages:{
-                greaterThan: 'El número no debe ser menor a 0',
-                lessThan: 'El porcentaje debe ser menor a 100'
-            }
-        });
-        $('#descuento_general').rules('add',{
-            precio: true,
-            lessThan: subtotal_original,
-            messages: {
-                lessThan: 'El descuento no debe ser mayor al subtotal'
+                number:'El campo debe ser numérico',
+                lessThan:'El descuento debe ser menor al precio',
+                precio: 'El descuento no debe tener más de dos decimales'
             }
         });
     }

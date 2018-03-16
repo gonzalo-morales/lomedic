@@ -2,9 +2,14 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Administracion\Impuestos;
 use App\Http\Models\Inventarios\EntradaDetalle;
 use App\Http\Models\Inventarios\Entradas;
+use App\Http\Models\Inventarios\Productos;
+use App\Http\Models\Inventarios\Upcs;
 use App\Http\Models\ModelCompany;
+use App\Http\Models\Proyectos\Proyectos;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 use DB;
 
 class DetalleOrdenes extends ModelCompany
@@ -27,7 +32,7 @@ class DetalleOrdenes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_documento','fk_id_sku','fk_id_upc','cantidad',
+    protected $fillable = ['fk_id_documento','fk_id_sku','fk_id_upc','cantidad','total_impuesto',
         'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario','fk_id_solicitud',
         'descuento_detalle','cerrado','fk_id_tipo_documento','fk_id_documento','fk_id_linea'];
 
@@ -54,45 +59,44 @@ class DetalleOrdenes extends ModelCompany
 
     public function sku()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\Productos','id_sku','fk_id_sku');
+        return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
     }
 
     public function upc()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\Upcs','id_upc','fk_id_upc');
+        return $this->hasOne(Upcs::class,'id_upc','fk_id_upc');
     }
 
     public function impuesto()
     {
-        return $this->hasOne('App\Http\Models\Administracion\Impuestos','id_impuesto','fk_id_impuesto');
+        return $this->hasOne(Impuestos::class,'id_impuesto','fk_id_impuesto');
     }
 
     public function proyecto()
     {
-        return $this->hasOne('App\Http\Models\Proyectos\Proyectos','id_proyecto','fk_id_proyecto');
+        return $this->hasOne(Proyectos::class,'id_proyecto','fk_id_proyecto');
     }
 
     public function orden()
     {
-        return $this->belongsTo('App\Http\Models\Compras\Ordenes','fk_id_documento','id_documento');
+        return $this->belongsTo(Ordenes::class,'fk_id_documento','id_documento');
     }
 
     public function cliente()
     {
-        return $this->hasOne('App\Http\Models\SociosNegocio\SociosNegocio','id_socio_negocio','fk_id_cliente');
+        return $this->hasOne(SociosNegocio::class,'id_socio_negocio','fk_id_cliente');
     }
 
     public function solicitud()
     {
-        return $this->hasOne('App\Http\Models\Compras\Solicitudes','id_solicitud','fk_id_solicitud');
+        return $this->hasOne(Solicitudes::class,'id_solicitud','fk_id_solicitud');
     }
     public function entradaDetalle()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\EntradaDetalle','fk_id_detalle_documento','id_documento_detalle');
+        return $this->hasOne(EntradaDetalle::class,'fk_id_detalle_documento','id_documento_detalle');
     }
     public function sumatoriaCantidad($fk_id_documento,$numero_documento,$fk_id_sku,$fk_id_upc,$fk_id_detalle_documento)
     {
-
         if($fk_id_upc === null)
         {
             $fk_id_upc = 'null';
