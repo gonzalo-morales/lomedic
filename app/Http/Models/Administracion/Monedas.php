@@ -12,7 +12,7 @@ class Monedas extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.sat_cat_monedas';
+    protected $table = 'sat_cat_monedas';
 
     /**
      * The primary key of the table

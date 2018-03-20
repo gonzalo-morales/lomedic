@@ -18,7 +18,7 @@ class PerfilesUsuarios extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.adm_det_perfiles_usuarios';
+    protected $table = 'adm_det_perfiles_usuarios';
 
     /**
      * The primary key of the table

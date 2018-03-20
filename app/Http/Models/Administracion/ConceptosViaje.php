@@ -12,7 +12,7 @@ class ConceptosViaje extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.adm_cat_conceptos_viaje';
+	protected $table = 'adm_cat_conceptos_viaje';
 
 	/**
 	 * The primary key of the table

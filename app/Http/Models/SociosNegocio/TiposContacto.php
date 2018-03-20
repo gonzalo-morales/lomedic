@@ -10,7 +10,7 @@ class TiposContacto extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'maestro.sng_cat_tipos_contacto';
+    protected $table = 'sng_cat_tipos_contacto';
 
     /**
      * The primary key of the table

@@ -12,7 +12,7 @@ class FamiliasProductos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_familias_productos';
+	protected $table = 'gen_cat_familias_productos';
 
 	/**
 	 * The primary key of the table

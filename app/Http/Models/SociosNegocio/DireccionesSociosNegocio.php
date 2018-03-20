@@ -13,7 +13,7 @@ class DireccionesSociosNegocio extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'maestro.sng_det_direcciones';
+    protected $table = 'sng_det_direcciones';
 
     /**
      * The primary key of the table

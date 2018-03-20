@@ -397,7 +397,7 @@
     							@foreach($data->cuentas as $key=>$detalle)
 								<tr>
 									<td>
-										{{$detalle->banco->banco}}
+										{{$detalle->banco->banco ?? ''}}
 										{!! Form::hidden('cuentas['.$key.'][id_cuenta]',$detalle->id_cuenta,['class'=>'id_cuenta']) !!}
 										{!! Form::hidden('cuentas['.$key.'][fk_id_banco]',$detalle->fk_id_banco,['class'=>'fk_id_banco']) !!}
 										{!! Form::hidden('cuentas['.$key.'][fk_id_socio_negocio]',$detalle->fk_id_socio_negocio,['class'=>'fk_id_socio_negocio']) !!}
@@ -416,7 +416,7 @@
 										{{$detalle->clave_interbancaria}}
 										{!! Form::hidden('cuentas['.$key.'][clave_interbancaria]',$detalle->clave_interbancaria) !!} 
 									</td>
-									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCuenta(this)"> <i class="material-icons">delete</i></button></td>
+									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCuenta(this)"><i class="material-icons">delete</i></button></td>
 								</tr>
     							@endforeach
     						@endif

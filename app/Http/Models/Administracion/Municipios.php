@@ -11,7 +11,7 @@ class Municipios extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_municipios';
+	protected $table = 'gen_cat_municipios';
 
 	/**
 	 * The primary key of the table

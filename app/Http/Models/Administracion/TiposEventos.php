@@ -10,7 +10,7 @@ class TiposEventos extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.pry_cat_tipos_eventos';
+	protected $table = 'pry_cat_tipos_eventos';
 
 	/**
 	 * The primary key of the table

@@ -14,7 +14,7 @@ class Permisos extends Model
      *
      * @var string
      */
-    protected $table = 'maestro.ges_cat_permisos';
+    protected $table = 'ges_cat_permisos';
 
     /**
      * The primary key of the table

@@ -10,7 +10,7 @@ class Certificados extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_det_certificados';
+	protected $table = 'gen_det_certificados';
 
 	/**
 	 * The primary key of the table

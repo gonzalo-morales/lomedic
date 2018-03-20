@@ -13,7 +13,7 @@ class Acciones extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.sop_cat_acciones';
+	protected $table = 'sop_cat_acciones';
 
 	/**
 	 * The primary key of the table

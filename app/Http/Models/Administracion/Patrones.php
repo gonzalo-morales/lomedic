@@ -11,7 +11,7 @@ class Patrones extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.sat_cat_patrones';
+	protected $table = 'sat_cat_patrones';
 
 	/**
 	 * The primary key of the table

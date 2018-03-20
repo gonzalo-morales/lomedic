@@ -15,7 +15,7 @@ class Puestos extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.rh_cat_puestos';
+    protected $table = 'rh_cat_puestos';
 
     /**
      * The primary key of the table

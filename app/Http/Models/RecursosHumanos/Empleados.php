@@ -13,7 +13,7 @@ class Empleados extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.rh_cat_empleados';
+    protected $table = 'rh_cat_empleados';
 
     /**
      * The primary key of the table
@@ -88,7 +88,7 @@ class Empleados extends ModelBase
 
     public function sucursales()
     {
-        return $this->belongsToMany(Sucursales::class,'maestro.ges_det_empleado_sucursal','fk_id_empleado','fk_id_sucursal');
+        return $this->belongsToMany(Sucursales::class,$this->schema.'.ges_det_empleado_sucursal','fk_id_empleado','fk_id_sucursal');
     }
 
     public function departamento()

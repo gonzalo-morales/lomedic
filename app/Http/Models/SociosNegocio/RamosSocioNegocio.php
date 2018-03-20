@@ -10,7 +10,7 @@ class RamosSocioNegocio extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'maestro.sng_cat_ramos_socio';
+    protected $table = 'sng_cat_ramos_socio';
 
     /**
      * The primary key of the table

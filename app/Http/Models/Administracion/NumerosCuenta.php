@@ -11,7 +11,7 @@ class NumerosCuenta extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_numeros_cuenta';
+	protected $table = 'gen_cat_numeros_cuenta';
 
 	/**
 	 * The primary key of the table

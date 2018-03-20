@@ -11,7 +11,7 @@ class Cbn extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'maestro.inv_cat_cbn';
+    protected $table = 'inv_cat_cbn';
     
     /**
      * The primary key of the table

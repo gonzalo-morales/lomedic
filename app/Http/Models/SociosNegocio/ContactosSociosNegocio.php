@@ -10,7 +10,7 @@ class ContactosSociosNegocio extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'maestro.sng_det_contactos';
+    protected $table = 'sng_det_contactos';
 
     /**
      * The primary key of the table

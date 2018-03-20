@@ -13,7 +13,7 @@ class Categorias extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.sop_cat_categorias';
+	protected $table = 'sop_cat_categorias';
 
 	/**
 	 * The primary key of the table

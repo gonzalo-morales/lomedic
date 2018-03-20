@@ -12,7 +12,7 @@ class EstatusDocumentos extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.gen_cat_estatus_documentos';
+    protected $table = 'gen_cat_estatus_documentos';
 
     /**
      * The primary key of the table

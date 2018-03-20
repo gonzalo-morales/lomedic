@@ -13,6 +13,8 @@ class ModelCompany extends ModelBase
     function __construct(array $attributes = [])
     {
         $this->setConnection( request()->company );
+        $this->schema = getSchema(request()->company);
+        
         parent::__construct($attributes);
     }
 }

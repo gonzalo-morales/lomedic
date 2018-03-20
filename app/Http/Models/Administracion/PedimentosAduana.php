@@ -5,7 +5,7 @@ use App\Http\Models\ModelBase;
 
 class PedimentosAduana extends ModelBase
 {
-	protected $table = 'maestro.sat_cat_pedimentos_aduana';
+	protected $table = 'sat_cat_pedimentos_aduana';
 
 	/**
 	 * The primary key of the table

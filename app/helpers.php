@@ -22,6 +22,12 @@ function routeActionReplace($action = null)
 	}, explode('@', $current_action), array_pad(explode('@', $action, 2), -2, '') );
 }
 
+function getSchema($company = null)
+{
+    $conection = !empty($company) ? $company : config('database.default','corporativo');
+    return config('database.connections.'.$conection.'.schema','maestro');
+}
+
 function controllerByRoute()
 {
     $controller_by_route = [];

@@ -5,7 +5,7 @@ use App\Http\Models\ModelBase;
 
 class TiposDocumentos extends ModelBase
 {
-    protected $table = 'maestro.gen_cat_tipo_documento';
+    protected $table = 'gen_cat_tipo_documento';
 
 	/**
 	 * The primary key of the table

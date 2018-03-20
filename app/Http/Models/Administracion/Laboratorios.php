@@ -13,7 +13,7 @@ class Laboratorios extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_laboratorios';
+	protected $table = 'gen_cat_laboratorios';
 
 	/**
 	 * The primary key of the table

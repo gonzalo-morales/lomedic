@@ -10,7 +10,7 @@ class SeriesDocumentos extends ModelCompany
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_serie';
+	protected $table = 'gen_cat_serie';
 
 	/**
 	 * The primary key of the table

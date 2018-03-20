@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class ClavesProductosServicios extends ModelBase
 {
-	protected $table = 'maestro.sat_cat_claves_productos_servicios';
+	protected $table = 'sat_cat_claves_productos_servicios';
 
 	/**
 	 * The primary key of the table

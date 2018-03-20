@@ -11,7 +11,7 @@ class Impuestos extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.gen_cat_impuestos';
+    protected $table = 'gen_cat_impuestos';
 
     /**
      * The primary key of the table

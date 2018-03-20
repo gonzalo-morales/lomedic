@@ -10,7 +10,7 @@ class FormasAdjudicacion extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_formas_adjudicacion';
+	protected $table = 'gen_cat_formas_adjudicacion';
 
 	/**
 	 * The primary key of the table
