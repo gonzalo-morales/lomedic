@@ -11,7 +11,9 @@ use App\Http\Models\Administracion\Diagnosticos;
 use App\Http\Models\Servicios\Recetas;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\Inventarios\Productos;
+use App\Http\Models\Servicios\RecetasDetalle;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class RecetasController extends ControllerBase
 {
@@ -81,5 +83,30 @@ class RecetasController extends ControllerBase
     public function getProyectos($company, Request $request)
     {
         return Proyectos::select('proyecto','id_proyecto')->where('fk_id_sucursal',$request->fk_id_sucursal)->pluck('proyecto','id_proyecto')->toJson();
+    }
+
+    public function impress($company,$id)
+    {
+
+        $vale = Recetas::where('id_receta',$id)->first();
+        $receta = Recetas::where('id_receta',$vale->fk_id_receta)->first();
+
+        $pdf = PDF::loadView(currentRouteName('servicios.recetas.imprimir'),[
+            'vale' => $vale ,
+            'receta' => $receta ,
+            'edad' => 31,
+//            'edad' => self::edad($receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->fecha_nacimiento),
+        ]);
+
+        $pdf->setPaper('letter','landscape');
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->get_canvas();
+        $canvas->page_text(38,580,"Página {PAGE_NUM} de {PAGE_COUNT}",null,8,array(0,0,0));
+        $canvas->text(665,580,'PSAI-PN06-F01 Rev. 01',null,8);
+//        $canvas->image('data:image/png;charset=binary;base64,'.$barcode,355,580,100,16);
+
+        return $pdf->stream('solicitud')->header('Content-Type',"application/pdf");
+//        return view(currentRouteName('imprimir'));
     }
 }
