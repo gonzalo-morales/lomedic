@@ -2,9 +2,9 @@
 
 namespace App\Http\Models\Inventarios;
 
-use App\Http\Models\ModelCompany;
+use App\Http\Models\ModelBase;
 
-class Cbn extends ModelCompany
+class Cbn extends ModelBase
 {
     /**
      * The table associated with the model.

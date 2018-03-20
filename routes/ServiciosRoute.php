@@ -1,15 +1,13 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Servicios Routes
 |--------------------------------------------------------------------------
-|
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
-|
 */
+
 $Conecctions = implode('|',array_keys(config('database.connections')));
 
 Route::pattern('company', "($Conecctions)");
@@ -26,9 +24,13 @@ Route::prefix('{company}')->group(function () {
 	    Route::get('recetas/{id}/surtirReceta','Servicios\RecetasController@surtirReceta')->name('recetas.surtirReceta');
 	    Route::post('recetas/{id}/surtir','Servicios\RecetasController@surtir')->name('recetas.surtir');
 	    Route::get('recetas/{id}/imprimirReceta','Servicios\RecetasController@imprimirReceta')->name('recetas.imprimirReceta');
-        Route::resource('recetas', 'Servicios\RecetasController');
-        Route::resource('requisicioneshospitalarias', 'Servicios\RequisicionesHospitalariasController');
-        Route::resource('vales', 'Servicios\ValesController');
+        
+	    collect(\File::glob(app_path().'/Http/Controllers/Servicios/*Controller.php'))->map(function($file) {
+	        $name = strtolower(substr(basename($file),0,-14));
+	        $controller = basename(dirname($file)).'\\'.substr(basename($file),0,-4);
+	        Route::resource($name,$controller);
+	    });
+	    
         Route::post('verifyStock','Servicios\RecetasController@verifyStock')->name('recetas.verifyStock');
         Route::post('vales/getReceta','Servicios\ValesController@getReceta')->name('vales.getReceta');
         Route::post('vales/getRecetaDetalle','Servicios\ValesController@getRecetaDetalle')->name('vales.getRecetaDetalle');
