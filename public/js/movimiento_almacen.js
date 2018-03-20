@@ -89,14 +89,14 @@ $(document).ready(function () {
             $('#loadingskus').show();
             var idalmacen = $('#fk_id_almacen option:selected').val();
             //Obtenemos los datos del url de almacen para ubicaciones...
-            $.get($('#fk_id_almacen').data('url2'),{'param_js':js_ubicacion,$fk_id_almacen:idalmacen}, function(data){
+            $.get($(this).data('url'),{'param_js':js_ubicacion,$fk_id_almacen:idalmacen}, function(data){
                 $('.fk_id_ubicacion').html("");
                 var options = [];
                 /* Si hay resultados... */
                 if (data.length > 0) {
                   options.push('<option value="0" selected disabled>Selecciona la Ubicación...</option>'); 
-                  for (var i = 0; i < data.length; i++) {
-                    options.push('<option value="' + data[i].id_ubicacion + '">' + data[i].ubicacion + '</option>');
+                  for (var i = 0; i < data[0].ubicaciones.length; i++) {
+                    options.push('<option value="' + data[0].ubicaciones[i].id_ubicacion + '">' + data[0].ubicaciones[i].ubicacion + '</option>');
                   };
                 }
                 //Agregamos todo al select2
@@ -104,13 +104,14 @@ $(document).ready(function () {
           })
             //Obtenemos los datos del url del sku...
             $.get($('#fk_id_sku').data('url'), {'param_js':js_sku,$fk_id_almacen:idalmacen}, function(data){
+                console.log(data.stock)
                 $('#fk_id_sku').html("");
                 var options = [];
                 /* Si hay resultados... */
                 if (data.length > 0) {
                     options.push('<option value="0" selected disabled>Selecciona el SKU que requiera...</option>'); 
                     for (var i = 0; i < data.length; i++) {
-                        options.push('<option data-sku=\''+ JSON.stringify(data[i]) +'\' value="' + data[i].id_stock + '">' + data[i].sku.sku + '</option>');
+                        options.push('<option data-sku="'+ data[i].sku +'" data-sku-desc="'+ data[i].descripcion +'" data-stock=\''+ JSON.stringify(data[i].stock) +'\' value="' + data[i].stock.id_stock + '">' + data[i].sku + '</option>');
                     };
                 //Agregamos todo al select2
                 $('#fk_id_sku').append(options.join(''));
@@ -141,8 +142,8 @@ $(document).ready(function () {
                     if (data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             //Validamos que sea el mismo id del valor seleccionado ;)
-                            if($(this).val() == data[i].id_stock){
-                                options.push('<option data-upc-name="'+ data[i].upc.nombre_comercial +'" data-upc-desc="'+ data[i].upc.descripcion +'" value="' + data[i].upc.id_upc + '">' + data[i].upc.upc + '</option>');
+                            if($(this).val() == data[i].stock.id_stock){
+                                options.push('<option data-upc-name="'+ data[i].upcs.nombre_comercial +'" data-upc-desc="'+ data[i].upc.descripcion +'" value="' + data[i].upc.id_upc + '">' + data[i].upc.upc + '</option>');
                             }
                         };
                     }
@@ -170,7 +171,7 @@ $(document).ready(function () {
 
   // FUNCIONES PARA FORMATO DEL RESULTADO EN EL SELECT2 de SKU
     function formatSku (sku) {
-        if (sku.element && sku.element.dataset.sku) {
+        if (sku.element && sku.element.dataset.stock) {
             //Variable para fecha
             var fechaActual = new Date();
             var dd = fechaActual.getDate();
@@ -184,7 +185,8 @@ $(document).ready(function () {
             } 
             fechaActual = mm + '/' + dd + '/' + yyyy;
             // theme here ...
-            var data = JSON.parse(sku.element.dataset.sku)
+            var data = JSON.parse(sku.element.dataset.stock)
+            console.log(data)
             //Condicionamos la fecha para advertir al usuario de la caducidad
             if(fechaActual > data.fecha_caducidad){
                 var claseFecha = 'text-warning';

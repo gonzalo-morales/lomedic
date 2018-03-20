@@ -150,8 +150,30 @@ function limpiarCampos() {
 
 }
 
-function escaparID(myid){
-    return "#" + myid.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
+function validarSurtido()
+{
+    var correcto = 0;
+
+    $.each($('#detalle tr'),function(index,value) {
+
+        var cant_solicitada = parseInt($(value).find('td').eq(2).html());
+        var cant_surtida = parseInt($(value).find('td').eq(3).html());
+        var cant_a_surtir = parseInt($(value).find('.cantidad').val());
+
+        if(cant_solicitada < cant_surtida + cant_a_surtir)
+        {
+            $(value).css("background-color", "#F8D7DA");
+            correcto++;
+        }
+        else
+        {
+            $(value).css("background-color", "#FFFFFF");
+        }
+
+
+    });
+
+    return correcto;
 }
 
 function mensajeAlerta(mensaje,tipo){
