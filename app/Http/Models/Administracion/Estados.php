@@ -11,7 +11,7 @@ class Estados extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_estados';
+	protected $table = 'gen_cat_estados';
 
 	/**
 	 * The primary key of the table

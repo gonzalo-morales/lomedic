@@ -9,7 +9,7 @@ class MetodosValoracion extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.inv_cat_metodos_valoracion';
+	protected $table = 'inv_cat_metodos_valoracion';
 
 	/**
 	 * The primary key of the table

@@ -54,14 +54,14 @@ class OfertasController extends ControllerBase
 	        'unidadesmedidas'  => UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida')->prepend('Seleccione..',''),
             "solicitud"        => Solicitudes::find(\request()->id_solicitud),
             'impuestos'        => Impuestos::select('id_impuesto','impuesto')->where('activo',1)->orderBy('impuesto')->with('porcentaje')->pluck('impuesto','id_impuesto')->prepend('Seleccione...',''),
-	        "proveedores"      => SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->whereHas('empresas',function ($empresa){
+	        "proveedores"      => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')->whereHas('empresas',function ($empresa){
                 $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
             })->pluck('nombre_comercial','id_socio_negocio')->prepend('Seleccione el proveedor',''),
             'js_proyectos'=>Crypt::encryptString('
                 "select":["id_proyecto as id","proyecto as text"],
                 "whereHas": [{
                     "productos": {
-                        "whereHas": [{
+                        "cwhereHas": [{
                             "claveClienteProducto": [{
                                 "whereRaw": "($fk_id_sku = NULL OR fk_id_sku = $fk_id_sku) AND ($fk_id_upc = NULL OR fk_id_upc = $fk_id_upc)"
                             }]

@@ -13,7 +13,7 @@ class AgrupadoresCuentas extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.sat_cat_agrupadores_cuentas';
+	protected $table = 'sat_cat_agrupadores_cuentas';
 
 	/**
 	 * The primary key of the table

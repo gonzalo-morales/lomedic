@@ -11,7 +11,7 @@ class Paises extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_paises';
+	protected $table = 'gen_cat_paises';
 
 	/**
 	 * The primary key of the table

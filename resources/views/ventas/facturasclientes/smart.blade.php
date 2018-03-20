@@ -9,6 +9,7 @@
 		var cliente_js    = '{{ $js_cliente ?? '' }}';
 		var clientes_js   = '{{ $js_clientes ?? '' }}';
 		var series_js     = '{{ $js_series ?? '' }}';
+		var serie_js      = '{{ $js_serie ?? '' }}';
     	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
     	var contratos_js = '{{ $js_contratos ?? '' }}';
@@ -25,22 +26,22 @@
         	</div>
         	<div class="card-body row">
         		<div class="form-group col-md-8">
-        			{{Form::cSelect('* Empresa','fk_id_empresa', $empresas ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.empresas')])}}
+        			{{Form::cSelectWithDisabled('* Empresa','fk_id_empresa', $empresas ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.empresas')])}}
         		</div>
         		<div class="form-group col-md-4">
         			{{Form::cText('Rfc','rfc',['disabled'=>true])}}
         		</div>
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Regimen Fiscal','fk_id_regimen_fiscal', $regimens ?? [],['disabled'=>true])}}
+        			{{Form::cSelectWithDisabled('* Regimen Fiscal','fk_id_regimen_fiscal', $regimens ?? [],['class'=>'select2','disabled'=>true])}}
         		</div>
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Pais','fk_id_pais', $paises ?? [],['disabled'=>true])}}
+        			{{Form::cSelectWithDisabled('* Pais','fk_id_pais', $paises ?? [],['class'=>'select2','disabled'=>true])}}
         		</div>
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Estado','fk_id_estado', $estados ?? [],['disabled'=>true])}}
+        			{{Form::cSelectWithDisabled('* Estado','fk_id_estado', $estados ?? [],['class'=>'select2','disabled'=>true])}}
         		</div>
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Municipio','fk_id_municipio', $municipios ?? [],['disabled'=>true])}}
+        			{{Form::cSelectWithDisabled('* Municipio','fk_id_municipio', $municipios ?? [],['class'=>'select2','disabled'=>true])}}
         		</div>
         		<div class="form-group col-md-6">
         			{{Form::cText('Colonia','colonia',['disabled'=>true])}}
@@ -66,7 +67,7 @@
         	</div>
         	<div class="card-body row">
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Serie','fk_id_serie', $series ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.seriesdocumentos')])}}
+        			{{Form::cSelectWithDisabled('* Serie','fk_id_serie', $series ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.seriesdocumentos')])}}
         		</div>
         		<div class="form-group col-md-6">
         			{{Form::hidden('serie')}}
@@ -80,21 +81,21 @@
         		</div>
         	
         		<div class="form-group col-md-7">
-        			{{Form::cSelect('* Uso CFDI','fk_id_uso_cfdi', $usoscfdi ?? [],['class'=>'select2'])}}
+        			{{Form::cSelectWithDisabled('* Uso CFDI','fk_id_uso_cfdi', $usoscfdi ?? [],['class'=>'select2'])}}
         		</div>
         		<div class="form-group col-md-5">
-        			{{Form::cSelect('* Metodo Pago','fk_id_metodo_pago', $metodospago ?? [])}}
+        			{{Form::cSelectWithDisabled('* Metodo Pago','fk_id_metodo_pago', $metodospago ?? [],['class'=>'select2'])}}
         		</div>
         
         		<div class="form-group col-md-7">	
-        			{{Form::cSelect('* Forma Pago','fk_id_forma_pago', $formaspago ?? [], ['class'=>'select2'])}}
+        			{{Form::cSelectWithDisabled('* Forma Pago','fk_id_forma_pago', $formaspago ?? [], ['class'=>'select2'])}}
         		</div>
         		
         		<div class="form-group col-md-5">
-        			{{Form::cSelect('* Condicion Pago','fk_id_condicion_pago', $condicionespago ?? [], ['class'=>'select2'])}}
+        			{{Form::cSelectWithDisabled('* Condicion Pago','fk_id_condicion_pago', $condicionespago ?? [], ['class'=>'select2'])}}
         		</div>
         		<div class="form-group col-md-7">
-        			{{Form::cSelect('* Moneda','fk_id_moneda', $monedas ?? [], ['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create'))])}}
+        			{{Form::cSelectWithDisabled('* Moneda','fk_id_moneda', $monedas ?? [], ['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create'))])}}
         		</div>
         		<div class="form-group col-md-5">
         			{{Form::cText('* Tipo Cambio','tipo_cambio',['readonly'=>true])}}
@@ -110,19 +111,19 @@
         	</div>
         	<div class="card-body row">
         		<div class="form-group col-md-8">
-        			{{Form::cSelect('* Cliente','fk_id_socio_negocio', $clientes ?? [], ['class'=>'select2','data-url'=>ApiAction('sociosnegocio.sociosnegocio')])}}
+        			{{Form::cSelectWithDisabled('* Cliente','fk_id_socio_negocio', $clientes ?? [], ['class'=>'select2','data-url'=>ApiAction('sociosnegocio.sociosnegocio')])}}
         		</div>
         		<div class="form-group col-md-4">
         			{{Form::cText('Rfc','rfc_cliente',['disabled'=>true])}}
         		</div>
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Proyecto','fk_id_proyecto', $proyectos ?? [], ['class'=>'select2','data-url'=>ApiAction('proyectos.proyectos')])}}
+        			{{Form::cSelectWithDisabled('* Proyecto','fk_id_proyecto', $proyectos ?? [], ['class'=>'select2','data-url'=>ApiAction('proyectos.proyectos')])}}
         		</div>
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [], ['class'=>'select2','data-url'=>ApiAction('administracion.sucursales')])}}
+        			{{Form::cSelectWithDisabled('* Sucursal','fk_id_sucursal', $sucursales ?? [], ['class'=>'select2','data-url'=>ApiAction('administracion.sucursales')])}}
         		</div>
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('Contrato','fk_id_contrato', $contratos ?? [], ['data-url'=>ApiAction('proyectos.proyectos')])}}
+        			{{Form::cSelectWithDisabled('Contrato','fk_id_contrato', $contratos ?? [], ['class'=>'select2','data-url'=>ApiAction('proyectos.proyectos')])}}
         		</div>
         	</div>
     	</div>
@@ -131,10 +132,10 @@
 			<div class="card-header row">
 				<h5 class="col-md-12 text-center">CFDI Relacionados</h5>
     			<div class="form-group col-md-6">
-        			{{Form::cSelect('* Tipo Relacion','fk_id_tipo_relacion', $tiposrelacion ?? [])}}
+        			{{Form::cSelectWithDisabled('* Tipo Relacion','fk_id_tipo_relacion', $tiposrelacion ?? [],['class'=>'select2'])}}
         		</div>
         		<div class="form-group col-md-6">
-        			{{Form::cSelect('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2'])}}
+        			{{Form::cSelectWithDisabled('* Factura','fk_id_factura_relacion', $facturasrelacionadas ?? [],['class'=>'select2'])}}
         		</div>
         		@if(!Route::currentRouteNamed(currentRouteName('view')))
         		<div class="form-group col-md-12 my-2">
@@ -160,16 +161,16 @@
 							<td>
 								{{ Form::hidden('relations[has][relaciones]['.$row.'][index]',$row,['class'=>'index']) }}
 								{{ Form::hidden('relations[has][relaciones]['.$row.'][id_relacion_cfdi_cliente]',$detalle->id_relacion_cfdi_cliente,['class'=>'id_relacion_cfdi_cliente']) }}
-								{{ Form::hidden('relations[has][relaciones]['.$row.'][fk_id_tipo_relacion]',$detalle->fk_id_tipo_relacion,['class'=>'fk_id_tipo_relacion']) }}
 								{{$detalle->tiporelacion->tipo_relacion.' - '.$detalle->tiporelacion->descripcion}}
 							</td>
 							<td>
-								{{ Form::hidden('relations[has][relaciones]['.$row.'][fk_id_documento]',$detalle->fk_id_documento) }} 
+								{{ Form::hidden('relations[has][relaciones]['.$row.'][fk_id_documento_relacionado]',$detalle->fk_id_documento_relacionado,['class'=>'fk_id_documento_relacionado']) }}
+								{{ Form::hidden('relations[has][relaciones]['.$row.'][fk_id_tipo_documento_relacionado]',$detalle->fk_id_tipo_documento_relacionado,['class'=>'fk_id_tipo_documento_relacionado']) }}  
 								{{$detalle->documento->serie.' '.$detalle->documento->folio.' - '.$detalle->documento->uuid}}
 							</td>
 							<td>
     							@if(!Route::currentRouteNamed(currentRouteName('view')))
-    							<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button>
+    							<button class="btn is-icon text-primary bg-white" type="button" data-tooltip="documento relacionado" data-delay="50" onclick="borrarContacto(this)"><i class="material-icons">delete</i></button>
     							@endif
 							</td>
 						</tr>
@@ -195,10 +196,10 @@
     			<div  class="tab-pane active" id="concepto" role="tabpanel">
     				<div class="row py-2">
         				<div class="form-group col-md-6">
-                			{{Form::cSelect('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2','data-url'=>ApiAction('sociosnegocio.sociosnegocio')])}}
+                			{{Form::cSelectWithDisabled('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2','data-url'=>ApiAction('sociosnegocio.sociosnegocio')])}}
                 		</div>
                 		<div class="form-group col-md-6">
-                			{{Form::cSelect('* Descripcion','descripcion', $descripciones ?? [])}}
+                			{{Form::cSelectWithDisabled('* Descripcion','descripcion', $descripciones ?? [])}}
                 		</div>
                 		<div class="form-group col-md-3">
                 			{{Form::cNumber('* Cantidad','cantidad')}}
@@ -210,7 +211,7 @@
                 			{{Form::cNumber('* Descuento','descuento')}}
                 		</div>
                 		<div class="form-group col-md-3">
-                			{{Form::cSelect('* Impuesto','fk_id_impuesto', $impuestos ?? [], ['class'=>'select2'])}}
+                			{{Form::cSelectWithDisabled('* Impuesto','fk_id_impuesto', $impuestos ?? [], ['class'=>'select2'])}}
                 		</div>
                 		@if(!Route::currentRouteNamed(currentRouteName('view')))
                 		<div class="form-group col-md-12 my-2">

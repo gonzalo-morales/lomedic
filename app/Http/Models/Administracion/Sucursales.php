@@ -13,7 +13,7 @@ class Sucursales extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.ges_cat_sucursales';
+	protected $table = 'ges_cat_sucursales';
 
 	/**
 	 * The primary key of the table
@@ -116,7 +116,7 @@ class Sucursales extends ModelBase
 
 	public function empleados()
     {
-        return $this->belongsToMany(Empleados::class,'maestro.ges_det_empleado_sucursal','fk_id_sucursal','fk_id_empleado','id_sucursal','id_empleado');
+        return $this->belongsToMany(Empleados::class,$this->schema.'.ges_det_empleado_sucursal','fk_id_sucursal','fk_id_empleado','id_sucursal','id_empleado');
     }
 
     public function cliente()
@@ -125,18 +125,18 @@ class Sucursales extends ModelBase
 	}
 	public function empresas()
 	{
-		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal', 'fk_id_sucursal','fk_id_empresa');
+	    return $this->belongsToMany(Empresas::class,$this->schema.'.adm_det_empresa_sucursal', 'fk_id_sucursal','fk_id_empresa');
 	}
 	/*relación de tres*/
 	public function usuario_sucursales()
 	{
-		return $this->belongsToMany(Usuarios::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_usuario')
+	    return $this->belongsToMany(Usuarios::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_usuario')
 		->withPivot('fk_id_empresa')
         ->join(Empresas::class,'fk_id_empresa','=','id_empresa');
 	}
 	public function empresa_sucursales()
 	{
-		return $this->belongsToMany(Empresas::class,'maestro.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_empresa')
+	    return $this->belongsToMany(Empresas::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_empresa')
         ->withPivot('fk_id_usuario')
         ->join(Usuarios::class,'fk_id_usuario','=','id_usuario');
 	}

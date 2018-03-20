@@ -34,6 +34,18 @@ class AppServiceProvider extends ServiceProvider
 		    foreach($this->items as $k => $v) $acc = $callback($acc, $v, $k);
 			return $acc;
 		});
+		
+	    Collection::macro('utf8_encode', function() {
+	        return collect($this->items)->map(function($word) {
+	            return utf8_encode($word);
+	        });
+	    });
+	    
+        Collection::macro('utf8_decode', function() {
+            return collect($this->items)->map(function($word) {
+                return utf8_decode($word);
+            });
+        });
 
 		// HTML Components
 		require_once app_path().'/components.php';

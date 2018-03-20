@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class Ubicaciones extends ModelBase
 {
-    protected $table = 'maestro.inv_cat_ubicaciones';
+    protected $table = 'inv_cat_ubicaciones';
 
     /**
      * The primary key of the table

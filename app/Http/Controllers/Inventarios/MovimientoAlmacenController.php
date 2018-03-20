@@ -24,7 +24,9 @@ class MovimientoAlmacenController extends ControllerBase
 
     public function getDataView($entity = null)
     {
-
+        // dd(Productos::select('id_sku')->whereHas('stock',function($q){
+        //     $q->where('fk_id_almacen',50);
+        // })->get());
         $almacenes = [];
         $ubicaciones_det = [];
         // $skus_data = [];
@@ -64,14 +66,32 @@ class MovimientoAlmacenController extends ControllerBase
                 "with":["ubicaciones:fk_id_almacen,id_ubicacion,ubicacion"],
                 "conditions":[{"where":["fk_id_sucursal", "$fk_id_sucursal"]}]
             '),
+            // 'ubicacion_js' => Crypt::encryptString('
+            //     "select":["id_ubicacion","ubicacion"],
+            //     whereHas: [{"ubicaciones":{[{"where":["fk_id_almacen", $fk_id_almacen]}]}}]
+            //     "conditions":[{"where":["activo", "1"]}]
+            // '),
+
             'ubicacion_js' => Crypt::encryptString('
-                "select":["id_ubicacion","ubicacion"],
-                "conditions":[{"where":["fk_id_almacen", "$fk_id_almacen"]}]
+                "select":["id_almacen"],
+                "with":["ubicaciones:fk_id_almacen,id_ubicacion,ubicacion"],
+                "conditions":[
+                    {"where":["activo", "1"]},
+                    {"where":["id_almacen", "$fk_id_almacen"]}
+                ]
             '),
+            // 'sku_js'     => Crypt::encryptString('
+            //     "select":["id_stock","fk_id_sku","fk_id_upc","lote","fecha_caducidad","stock","fk_id_almacen","fk_id_ubicacion","fk_id_documento","costo"],
+            //     "with":["sku:id_sku,sku,descripcion","upc:id_upc,upc,nombre_comercial,descripcion","almacen:id_almacen,almacen","ubicacion:id_ubicacion,ubicacion"],
+            //     "conditions":[{"where":["fk_id_almacen", "$fk_id_almacen"]}]
+            // '),
+            // id_stock,fk_id_sku,fk_id_upc,lote,fecha_caducidad,stock,fk_id_almacen,fk_id_ubicacion,fk_id_documento,costo
+            // "with":["stock","upc:id_upc,upc,nombre_comercial,descripcion","almacen:id_almacen,almacen","ubicacion:id_ubicacion,ubicacion"],
             'sku_js'     => Crypt::encryptString('
-                "select":["id_stock","fk_id_sku","fk_id_upc","lote","fecha_caducidad","stock","fk_id_almacen","fk_id_ubicacion","fk_id_documento","costo"],
-                "with":["sku:id_sku,sku,descripcion","upc:id_upc,upc,nombre_comercial,descripcion","almacen:id_almacen,almacen","ubicacion:id_ubicacion,ubicacion"],
-                "conditions":[{"where":["fk_id_almacen", "$fk_id_almacen"]}]
+                "select":["id_sku","sku","descripcion"],
+                "conditions":[{"where":["activo", "1"]}],
+                "with":["stock","upcs:id_upc,upc,nombre_comercial,descripcion"],
+                "whereHas": [{"stock":{"where":["fk_id_almacen", "$fk_id_almacen"]}}]
             '),
         ];
 

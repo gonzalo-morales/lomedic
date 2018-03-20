@@ -1,6 +1,12 @@
 var a=[];
 var subtotal_original = 0;
-
+// Inicializar los datepicker para las fechas necesarias
+$('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 3, // Creates a dropdown of 3 years to control year
+    min: true,
+    format: 'yyyy/mm/dd'
+});
 $(document).ready(function(){
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
@@ -39,7 +45,7 @@ $(document).ready(function(){
                 }else{
                     $( this ).prop('checked',false);
                     $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-                    $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Selecciona antes un SKU',
+                    $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes un SKU',
                         settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 }
             }
@@ -76,7 +82,7 @@ $(document).ready(function(){
             }else{
                 e.preventDefault();
                 $.toaster({
-                    priority: 'danger', title: 'Â¡Advertencia!', message: 'La orden de compra debe tener al menos un detalle',
+                    priority: 'danger', title: '¡Advertencia!', message: 'La orden de compra debe tener al menos un detalle',
                     settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
                 });
             }
@@ -132,7 +138,7 @@ $(document).ready(function(){
                    if(data.status == 1){
                        $('#autorizacion').modal('toggle');
                        $.toaster({
-                           priority: 'success', title: 'Ã‰xito', message: 'Se ha actualizado la informaciÃ³n de la autorizaciÃ³n',
+                           priority: 'success', title: 'Éxito', message: 'Se ha actualizado la información de la autorización',
                            settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
                        });
                    }else{
@@ -150,7 +156,7 @@ $(document).ready(function(){
         e.preventDefault();
         window.location.reload(true);
     })
-    //AquÃ­ termina la parte de las autorizaciones
+    //Aquí termina la parte de las autorizaciones
 
     $('#descuento_porcentaje').on('keyup',function () {
         $('#descuento_general').val(((subtotal_original*$(this).val())/100).toFixed(2));
@@ -194,7 +200,7 @@ $(document).ready(function(){
                         })
                     }
                 }else{
-                    $.toaster({priority : 'warning',title : 'Â¡Oooops!',message : 'No se encontraron proyectos. Verifica que el SKU y el UPC coincidan con un proyecto',
+                    $.toaster({priority : 'warning',title : '¡Oooops!',message : 'No se encontraron proyectos. Verifica que el SKU y el UPC coincidan con un proyecto',
                         settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
                     });
                     return{
@@ -290,7 +296,7 @@ function agregarProducto(tiempo_entrega) {
                 '</tr>'
             );
 
-            $.toaster({priority : 'success',title : 'Â¡Ã‰xito!',message : 'Producto agregado con Ã©xito',
+            $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
                 settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
             });
             limpiarCampos();
@@ -298,7 +304,7 @@ function agregarProducto(tiempo_entrega) {
             tiemposentrega();
 
     }else{
-        $.toaster({priority : 'danger',title : 'Â¡Error!',message : 'Hay campos que requieren de tu atenciÃ³n',
+        $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     }
 }
@@ -371,7 +377,7 @@ function borrarFila(el) {
     subtotal_original -= subtotal;
     subtotal_original = subtotal_original.toFixed(2);
     dataTable.rows().remove([$(el).parents('tr').index()]);
-        $.toaster({priority : 'success',title : 'Â¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
+        $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 
     console.log('BORRAR. original: '+subtotal_original+' producto: '+subtotal);
@@ -387,7 +393,7 @@ function limpiarCampos() {
     $('#fecha_necesario').val('');
     $('#cantidad').val('1');
     $('#precio_unitario').val('');
-    //Eliminar reglas de validaciÃ³n detalle
+    //Eliminar reglas de validación detalle
     if ($("#fk_id_sku").length > 0) {
         $('#fk_id_sku').rules('remove');
         $('#fk_id_upc').rules('remove');
@@ -413,8 +419,8 @@ function validateDetail() {
             range: [1,9999],
             messages:{
                 required: 'Ingresa una cantidad',
-                number: 'El campo debe ser un nÃºmero',
-                range: 'El nÃºmero debe ser entre 1 y 9999'
+                number: 'El campo debe ser un número',
+                range: 'El número debe ser entre 1 y 9999'
             }
         });
         $('#fk_id_impuesto').rules('add',{
@@ -425,7 +431,7 @@ function validateDetail() {
         });
         $.validator.addMethod('precio',function (value,element) {
             return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-        },'El precio no debe tener mÃ¡s de dos decimales');
+        },'El precio no debe tener más de dos decimales');
         $.validator.addMethod( "greaterThan", function( value, element, param ) {
             return value > param;
         }, "Please enter a greater value." );
@@ -436,9 +442,9 @@ function validateDetail() {
             greaterThan:0,
             messages:{
                 required: 'Ingresa un precio unitario',
-                number: 'El campo debe ser un nÃºmero',
-                greaterThan: 'El nÃºmero debe ser mayor a 0',
-                precio: 'El precio no debe tener mÃ¡s de dos decimales'
+                number: 'El campo debe ser un número',
+                greaterThan: 'El número debe ser mayor a 0',
+                precio: 'El precio no debe tener más de dos decimales'
             }
         });
         $.validator.addMethod('porcentaje',function (value,element) {
@@ -452,7 +458,7 @@ function validateDetail() {
             greaterThan: -1,
             lessThan: 100,
             messages:{
-                greaterThan: 'El nÃºmero no debe ser menor a 0',
+                greaterThan: 'El número no debe ser menor a 0',
                 lessThan: 'El porcentaje debe ser menor a 100'
             }
         });

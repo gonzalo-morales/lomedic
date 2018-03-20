@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class UsosCfdis extends ModelBase
 {
-	protected $table = 'maestro.sat_cat_usos_cfdis';
+	protected $table = 'sat_cat_usos_cfdis';
 
 	/**
 	 * The primary key of the table

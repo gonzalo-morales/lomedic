@@ -11,7 +11,7 @@ class CuentasSociosNegocio extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'maestro.sng_det_cuentas_bancarias';
+    protected $table = 'sng_det_cuentas_bancarias';
 
     /**
      * The primary key of the table

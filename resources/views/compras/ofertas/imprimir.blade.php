@@ -83,7 +83,7 @@
                 <td>{{isset($detalle->upc) ? $detalle->upc->upc : 'UPC no seleccionado'}}</td>
                 <td>{{$detalle->sku->descripcion_corta}}</td>
                 <td>{{$detalle->sku->descripcion}}</td>
-                <td>{{isset($detalle->cliente) ? $detalle->cliente->nombre_comercial : 'Sin cliente'}}</td>
+                {{--  <td>{{isset($detalle->cliente) ? $detalle->cliente->nombre_comercial : 'Sin cliente'}}</td>  --}}
                 <td>{{isset($detalle->proyecto) ? $detalle->proyecto->proyecto : 'sin proyecto'}}</td>
                 <td>{{$detalle->cantidad}}</td>
                 <td>{{$detalle->impuesto->impuesto}}</td>

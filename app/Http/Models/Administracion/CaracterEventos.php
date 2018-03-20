@@ -10,7 +10,7 @@ class CaracterEventos extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_caracter_eventos';
+	protected $table = 'gen_cat_caracter_eventos';
 
 	/**
 	 * The primary key of the table

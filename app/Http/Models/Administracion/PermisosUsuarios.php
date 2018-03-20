@@ -18,7 +18,7 @@ class PermisosUsuarios extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.adm_det_permisos_usuarios';
+    protected $table = 'adm_det_permisos_usuarios';
 
     /**
      * The primary key of the table

@@ -174,7 +174,14 @@ class HandheldController extends Controller
 		return view('handheld.orden-compra', [
 			'orden' => $orden,
 			'almacenes' => Almacenes::where('activo',1)->where('fk_id_sucursal',$orden->fk_id_sucursal)->pluck('almacen','id_almacen')->prepend('Seleccione el almacén','0'),
-			'ubicaciones_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$almacen"]}], "select": ["id_ubicacion","ubicacion"]'),
+			// 'ubicaciones_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$almacen"]}], "select": ["id_ubicacion","ubicacion"]'),
+			'ubicaciones_js' => Crypt::encryptString('
+				"select":["id_almacen"],
+				"with":["ubicaciones:fk_id_almacen,id_ubicacion,ubicacion"],
+				"conditions":[
+					{"where":["activo", "1"]},
+					{"where":["id_almacen", "$almacen"]}
+			]'),
 			'fecha_entrada' => Carbon::now(),
 			'skus' => $skus->pluck('sku','id_sku'),
 			'codigo_barras_js' => Crypt::encryptString('"conditions": [{"where": ["fk_id_documento", "$orden"]},{"whereRaw":["cantidad - cantidad_recibida != 0"]},{"where": ["fk_id_sku","$id_sku"]}],"whereHas": [{"upc":{"where":["upc","ILIKE", "$upc"]}}], "select": ["fk_id_sku","fk_id_upc","cantidad","cantidad_recibida","id_documento_detalle,"fk_id_proyecto","precio_unitario","fk_id_tipo_documento","fk_id_proyecto"]'),

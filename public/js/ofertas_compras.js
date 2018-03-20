@@ -62,6 +62,17 @@ $(document).ready(function(){
 
     $('#fk_id_proveedor').on('change',function(){
         if($(this).val() > 0){
+            $('#fk_id_proyecto').val('');
+            $('#fk_id_proyecto').select2({
+                disabled:true,
+                placeholder: "Seleccione primero el proveedor..."
+            });
+            $('#fk_id_upc').val('');
+            $('#activo_upc').prop('checked',false);
+            $('#fk_id_upc').select2({
+                disabled:true,
+            });
+            $('#fk_id_sku').val('');
             $("#fk_id_sku").select2({
                 disabled:false,
                 minimumInputLength:3,
@@ -74,7 +85,6 @@ $(document).ready(function(){
                             term: params.term,fk_id_socio_negocio:$('#fk_id_proveedor').val()};
                     },
                     processResults: function (data) {
-                        console.log(data)
                         return {results: data}
                     },
                     error:function(){
@@ -87,6 +97,7 @@ $(document).ready(function(){
             $('#fk_id_sku').val('');
             $('#fk_id_sku').select2({
                 disabled:true,
+                placeholder: "Seleccione primero el proveedor..."
             });
             $('#fk_id_proyecto').val('');
             $('#fk_id_proyecto').select2({
@@ -97,59 +108,66 @@ $(document).ready(function(){
             $('#activo_upc').prop('checked',false);
             $('#fk_id_upc').select2({
                 disabled:true,
-                placeholder: "Seleccione primero el proveedor..."
             });
         }
     });
 
-    $('#fk_id_sku').on('change',function(){
-        $('#fk_id_proyecto').select2({
-            disabled: false,
-            minimumResultsForSearch: Infinity,
-            ajax:{
-                url: $('#fk_id_proyecto').data('url'),
-                dataType: 'json',
-                data: function(){
-                    var upc = 'NULL'
-                    if($('#fk_id_upc').val()){
-                        upc = $('#fk_id_upc').val();
-                    }
-    
-                    var sku = 'NULL'
-                    if($('#fk_id_sku').val()){
-                        sku = $('#fk_id_sku').val();
-                    }
-                    return{
-                        'param_js':proyectos_js,
-                        $fk_id_upc: upc,
-                        $fk_id_sku: sku
-                    }
-                },
-                cache:true,
-                processResults: function (data) {
-                    if(data.length > 0){
-                        return {
-                            results: $.map(data, function (value) {
-                                return {
-                                    id: value.id,
-                                    text: value.text
-                                }
-                            })
+    $('#fk_id_upc').on('change',function(){
+        if($(this).val() > 0){
+            $('#fk_id_proyecto').select2({
+                disabled: false,
+                minimumResultsForSearch: Infinity,
+                ajax:{
+                    url: $('#fk_id_proyecto').data('url'),
+                    dataType: 'json',
+                    data: function(){
+                        var upc = 'NULL'
+                        if($('#fk_id_upc').val()){
+                            upc = $('#fk_id_upc').val();
                         }
-                    }else{
-                        $.toaster({priority : 'warning',title : '¡Oooops!',message : 'No se encontraron proyectos. Verifica que el SKU y el UPC coincidan con un proyecto',
-                            settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
-                        });
+        
+                        var sku = 'NULL'
+                        if($('#fk_id_sku').val()){
+                            sku = $('#fk_id_sku').val();
+                        }
                         return{
-                            results:{
-                                id:0,
-                                text: 'Sin proyecto'
+                            'param_js':proyectos_js,
+                            $fk_id_upc: upc,
+                            $fk_id_sku: sku
+                        }
+                    },
+                    cache:true,
+                    processResults: function (data) {
+                        if(data.length > 0){
+                            return {
+                                results: $.map(data, function (value) {
+                                    return {
+                                        id: value.id,
+                                        text: value.text
+                                    }
+                                })
+                            }
+                        }else{
+                            $.toaster({priority : 'warning',title : '¡Oooops!',message : 'No se encontraron proyectos. Verifica que el SKU y el UPC coincidan con un proyecto',
+                                settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
+                            });
+                            return{
+                                results:{
+                                    id:0,
+                                    text: 'Sin proyecto'
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            $('#fk_id_proyecto').val('');
+            $('#fk_id_proyecto').select2({
+                disabled:true,
+                placeholder: "Seleccione primero el proveedor..."
+            });  
+        }
     });
 
     $('#descuento_oferta').on('keyup',function () {
@@ -189,16 +207,16 @@ function agregarProducto() {
                     '<input type="hidden" name="relations[has][detalle]['+row_id+'][descuento_detalle]" value="'+ $('#descuento_detalle').val() +'"/>'+
                     '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="'+ $('#fk_id_impuesto').val() +'"/>'+
                     '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').val() + '" />'+
-                    '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_cliente]" value="' + $('#fk_id_cliente').val() + '" />'+
+                    // '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_cliente]" value="' + $('#fk_id_cliente').val() + '" />'+
                     '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />'+
                     '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proveedor]" value="'+ $('#fk_id_proveedor').val() +'"/>'+
                     '<input type="hidden" name="relations[has][detalle]['+row_id+'][total_producto]" class="totalRow" value="'+ total +'"/>'+
                     '<input type="hidden" value="'+ tiempo_entrega[0].tiempo_entrega +'" class="tiempo_entrega">' +
                 '<td>' + '<img style="max-height:40px" src="img/sku.png" alt="sku"/> ' + $('#fk_id_sku option:selected').text() + '</td>' +
                 '<td>' + '<img style="max-height:40px" src="img/upc.png" alt="upc"/> ' + $('#fk_id_upc option:selected').text() + '</td>' +
-                '<td>' + $('#fk_id_upc option:selected').data('nc') + '</td>' +
-                '<td>' + $('#fk_id_upc option:selected').data('descripcion') + '</td>' +
-                '<td>' + $('#fk_id_cliente option:selected').html() + '</td>' +
+                '<td>'+$('#fk_id_sku').select2('data')[0].descripcion_corta + '</td>'+
+                '<td>'+$('#fk_id_sku').select2('data')[0].descripcion + '</td>'+
+                // '<td>' + $('#fk_id_cliente option:selected').html() + '</td>' +
                 '<td>' + $('#fk_id_proyecto option:selected').html() + '</td>' +
                 '<td>' + $('#fk_id_unidad_medida option:selected').html() + '</td>' +
                 '<td>' + $('#cantidad').val() + '</td>' +
@@ -209,7 +227,7 @@ function agregarProducto() {
                     total + '</td>' +
                 '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
                 );
-                $.toaster({priority : 'success',title : 'Â¡Ã‰xito!',message : 'Producto agregado con Ã©xito',
+                $.toaster({priority : 'success',title : '¡Éxito!',message : 'Producto agregado con éxito',
                     settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
                 });
                 limpiarCampos();
@@ -263,18 +281,14 @@ function totalOrden() {
 }
 
 function limpiarCampos() {
-    $('#fk_id_cliente').val('');
-    $('#fk_id_cliente').select2();
     $('#fk_id_proyecto').empty();
     $('#fk_id_proyecto').select2({
-        placeholder: "Seleccione el Cliente...",
+        placeholder: "Seleccione el Proveedor",
         disabled:true,
     });
-    $('#fk_id_sku').val('');
-    $('#fk_id_sku').select2();
-    $('#fk_id_upc').empty();
+    $('#fk_id_upc').val('');
+    $('#activo_upc').prop('checked',false);
     $('#fk_id_upc').select2({
-        placeholder: "Seleccione el SKU...",
         disabled:true,
     });
     $('#fk_id_unidad_medida').val('');
@@ -285,6 +299,7 @@ function limpiarCampos() {
     $('#descuento_detalle').val(0);
     //Eliminar reglas de validaciÃ³n detalle
     $('#fk_id_sku').rules('remove');
+    $('#fk_id_proyecto').rules('remove');
     $('#fk_id_upc').rules('remove');
     $('#cantidad').rules('remove');
     $('#fk_id_impuesto').rules('remove');
@@ -293,16 +308,22 @@ function limpiarCampos() {
 }
 
 function validateDetail() {
-    $('#fk_id_cliente').rules('add',{
+    $('#fk_id_sku').rules('add',{
         required: true,
         messages:{
             required: 'Selecciona un SKU'
         }
     });
-    $('#fk_id_sku').rules('add',{
+    $('#fk_id_proyecto').rules('add',{
         required: true,
         messages:{
             required: 'Selecciona un SKU'
+        }
+    });
+    $('#fk_id_upc').rules('add',{
+        required: true,
+        messages:{
+            required: 'Selecciona un UPC'
         }
     });
     $('#cantidad').rules('add',{

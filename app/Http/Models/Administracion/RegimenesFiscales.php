@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class RegimenesFiscales extends ModelBase
 {
-    protected $table = 'maestro.sat_cat_regimenes_fiscales';
+    protected $table = 'sat_cat_regimenes_fiscales';
 
     /**
      * The primary key of the table

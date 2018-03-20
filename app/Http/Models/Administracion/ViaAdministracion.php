@@ -11,7 +11,7 @@ class ViaAdministracion extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_via_administracion';
+	protected $table = 'gen_cat_via_administracion';
 
 	/**
 	 * The primary key of the table

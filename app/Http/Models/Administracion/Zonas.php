@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class Zonas extends ModelBase
 {
-    protected $table = 'maestro.gen_cat_zonas';
+    protected $table = 'gen_cat_zonas';
 
     /**
      * The primary key of the table

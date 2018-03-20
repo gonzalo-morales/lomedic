@@ -11,7 +11,7 @@ class MotivosAjustes extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_motivos_ajustes';
+	protected $table = 'gen_cat_motivos_ajustes';
 
 	/**
 	 * The primary key of the table

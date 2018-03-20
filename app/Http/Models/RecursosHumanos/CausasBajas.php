@@ -15,7 +15,7 @@ class CausasBajas extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.rh_cat_causas_bajas';
+    protected $table = 'rh_cat_causas_bajas';
 
     /**
      * The primary key of the table

@@ -10,7 +10,7 @@ class Dependencias extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_dependencias';
+	protected $table = 'gen_cat_dependencias';
 
 	/**
 	 * The primary key of the table

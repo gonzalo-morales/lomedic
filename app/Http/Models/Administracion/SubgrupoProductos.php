@@ -11,7 +11,7 @@ class SubgrupoProductos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_subgrupo_productos';
+	protected $table = 'gen_cat_subgrupo_productos';
 
 	/**
 	 * The primary key of the table
