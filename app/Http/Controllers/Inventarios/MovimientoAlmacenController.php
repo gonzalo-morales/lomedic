@@ -24,6 +24,9 @@ class MovimientoAlmacenController extends ControllerBase
 
     public function getDataView($entity = null)
     {
+        // dd(Productos::select('id_sku')->whereHas('stock',function($q){
+        //     $q->where('fk_id_almacen',50);
+        // })->get());
         $almacenes = [];
         $ubicaciones_det = [];
         // $skus_data = [];
@@ -77,24 +80,16 @@ class MovimientoAlmacenController extends ControllerBase
                     {"where":["id_almacen", "$fk_id_almacen"]}
                 ]
             '),
-
-            // 'ubicacion_js' => Crypt::encryptString('
-            // "withFunction": [{
-            //     "ubicaciones": {
-            //     "select": ["id_ubicacion","ubicacion"],
-            //     "whereRaw": ["fk_id_almacen", $fk_id_almacen]
-            //     }
-            // }]
+            // 'sku_js'     => Crypt::encryptString('
+            //     "select":["id_stock","fk_id_sku","fk_id_upc","lote","fecha_caducidad","stock","fk_id_almacen","fk_id_ubicacion","fk_id_documento","costo"],
+            //     "with":["sku:id_sku,sku,descripcion","upc:id_upc,upc,nombre_comercial,descripcion","almacen:id_almacen,almacen","ubicacion:id_ubicacion,ubicacion"],
+            //     "conditions":[{"where":["fk_id_almacen", "$fk_id_almacen"]}]
             // '),
-            'sku_js'     => Crypt::encryptString('
-                "select":["id_stock","fk_id_sku","fk_id_upc","lote","fecha_caducidad","stock","fk_id_almacen","fk_id_ubicacion","fk_id_documento","costo"],
-                "with":["sku:id_sku,sku,descripcion","upc:id_upc,upc,nombre_comercial,descripcion","almacen:id_almacen,almacen","ubicacion:id_ubicacion,ubicacion"],
-                "conditions":[{"where":["fk_id_almacen", "$fk_id_almacen"]}]
-            '),
             // id_stock,fk_id_sku,fk_id_upc,lote,fecha_caducidad,stock,fk_id_almacen,fk_id_ubicacion,fk_id_documento,costo
             // "with":["stock","upc:id_upc,upc,nombre_comercial,descripcion","almacen:id_almacen,almacen","ubicacion:id_ubicacion,ubicacion"],
             'sku_js'     => Crypt::encryptString('
                 "select":["id_sku","sku","descripcion"],
+                "conditions":[{"where":["activo", "1"]}],
                 "with":["stock","upcs:id_upc,upc,nombre_comercial,descripcion"],
                 "whereHas": [{"stock":{"where":["fk_id_almacen", "$fk_id_almacen"]}}]
             '),
