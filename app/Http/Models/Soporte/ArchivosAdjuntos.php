@@ -11,7 +11,7 @@ class ArchivosAdjuntos extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.sop_det_archivos_adjuntos';
+    protected $table = 'sop_det_archivos_adjuntos';
 
     /**
      * The primary key of the table

@@ -2,15 +2,15 @@
 
 namespace App\Http\Models\Administracion;
 
-use App\Http\Models\ModelCompany;
+use App\Http\Models\ModelBase;
 
-class SeriesDocumentos extends ModelCompany
+class SeriesDocumentos extends ModelBase
 {
 	/**
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_serie';
+	protected $table = 'gen_cat_serie';
 
 	/**
 	 * The primary key of the table

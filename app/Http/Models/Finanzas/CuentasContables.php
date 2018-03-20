@@ -2,17 +2,17 @@
 
 namespace App\Http\Models\Finanzas;
 
-use App\Http\Models\ModelCompany;
+use App\Http\Models\ModelBase;
 use App\Http\Models\Administracion\AgrupadoresCuentas;
 
-class CuentasContables extends ModelCompany
+class CuentasContables extends ModelBase
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'maestro.fnz_cat_cuentas_contables';
+    protected $table = 'fnz_cat_cuentas_contables';
 
     /**
      * The primary key of the table

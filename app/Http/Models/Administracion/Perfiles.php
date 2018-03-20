@@ -14,7 +14,7 @@ class Perfiles extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.adm_cat_perfiles';
+    protected $table = 'adm_cat_perfiles';
 
     /**
      * The primary key of the table

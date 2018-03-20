@@ -10,7 +10,7 @@ class AnexosSociosNegocio extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'maestro.sng_det_anexos';
+    protected $table = 'sng_det_anexos';
 
     /**
      * The primary key of the table

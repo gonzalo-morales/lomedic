@@ -11,7 +11,7 @@ class Tipocombustible extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_tipo_combustible';
+	protected $table = 'gen_cat_tipo_combustible';
 
 	/**
 	 * The primary key of the table

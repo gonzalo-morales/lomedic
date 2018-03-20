@@ -11,7 +11,7 @@ class IndicacionTerapeutica extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_indicacion_terapeutica';
+	protected $table = 'gen_cat_indicacion_terapeutica';
 
 	/**
 	 * The primary key of the table

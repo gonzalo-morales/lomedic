@@ -11,7 +11,7 @@ class Diagnosticos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_diagnosticos';
+	protected $table = 'gen_cat_diagnosticos';
 
 	/**
 	 * The primary key of the table

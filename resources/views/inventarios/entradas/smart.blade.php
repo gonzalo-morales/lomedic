@@ -7,6 +7,17 @@
 @endsection
 @section('content-width', 's12')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+@section('form-title', 'Requisiciónes hospitalarias')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+	@section('form-title', 'Nueva requisición hospitalaria')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+	@section('form-title', 'Editar requisición hospitalaria')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+	@section('form-title', 'Requisición hospitalaria')
+@endif
+
+
 @section('header-bottom')
 	@parent
 
@@ -32,13 +43,13 @@
 							<form href="javascript:void(0)" onsubmit="return agregarEntrada();">
 								<div class="col-12 col-md-6 col-lg-4">
 									<div class="form-group">
-										{{ Form::cSelect('* Tipo de documento', 'fk_id_tipo_documento', $tipo_documento ?? []) }}
+										{{ Form::cSelect('* Tipo de documento', 'fk_id_tipo_documento', $tipo_documento ?? [],['class'=>'select2','data-url'=>companyRoute('getDocumento')]) }}
 									</div>
 								</div>
 								<div class="col-12 col-md-6 col-lg-4">
 									@if(Route::currentRouteNamed(currentRouteName('create')))
 										<div class="form-group">
-											{!! Form::cText('* Entradas a escanear','entrada_escaner',['placeholder'=>'Codigo de la entrada a escanear.','data-url'=>companyRoute('getDetalleEntrada')]) !!}
+											{{ Form::cSelect('* Entradas a escanear','entrada_escaner',[],['class'=>'select2','data-url'=>companyRoute('getDetalleDocumento')]) }}
 										</div>
 									@endif
 								</div>
@@ -50,10 +61,11 @@
 					<ul class="nav nav-pills justify-content-center" role="tablist" id="lista_entradas"></ul>
 					<div class="tab-content mt-2" id="detalle_entrada"></div>
 				@endif
-				@if(Route::currentRouteNamed(currentRouteName('show')))
+				{{--@if(Route::currentRouteNamed(currentRouteName('show')))--}}
 					{{--{{dd($datos_documento)}}--}}
 					<div role="tabpanel" class="tab-pane " >
 						<div class="card z-depth-1-half">
+
 							<div class="card-body">
 								<h3 class="text-center">Entrada:</h3>
 								<div class="row">
@@ -80,16 +92,27 @@
 											{{ Form::cText('Documento de referencia', 'referencia_documento') }}
 										</div>
 									</div>
-									@if(Route::currentRouteNamed(currentRouteName('create')))
-										<div class="text-right d-flex ">
-											<button type="button" class="btn btn-primary" id="guardar_entrada"  >Guardar</button>
-										</div>
-									@endif
-									<div class="col-12">
-										<h4 class="text-center">Detalle de la entrada</h4>
+								</div>
 
-										<table class="table table-hover table-responsive-sm" name="table2">
-											<thead>
+								<div class="row justify-content-center">
+									<div class="col-md-2 col-sm-3 col-lg-2">
+										<div class="form-group">
+											{{ Form::cText('Lote', 'lote') }}
+										</div>
+									</div>
+									<div class="col-md-6 col-sm-6 col-lg-3">
+										{{Form::cDate('Fecha de nacimiento','fecha_nacimiento',['class'=>' datepicker'])}}
+									</div>
+									<div class="col-12 col-md-6 col-lg-4">
+										<div class="form-group">
+											{{ Form::cText('Codigo del producto', 'codigo_producto') }}
+										</div>
+									</div>
+								</div>
+								<div class="row justify-content-center">
+									<h4 class="text-center">Detalle de la entrada</h4>
+									<table class="table table-hover table-responsive-sm" name="table2">
+										<thead>
 											<tr>
 												<th>Sku</th>
 												<th>Upc</th>
@@ -100,36 +123,38 @@
 												<th>F. Caducidad</th>
 												<th>C. Entrada</th>
 												<th>C. Surtida</th>
-												<th></th>
+												<th>Ingreso</th>
+												<th>P. Unitario</th>
+												<th>Total</th>
+												{{--<th></th>--}}
 											</tr>
-											</thead>
-											<tbody>
+										</thead>
+										<tbody id="table_detalle">
 
-											{{--{{dump($detalle_entrada)}}--}}
-											{{--{{dd($productos_entrada)}}--}}
-											@foreach($detalle_entrada as $detalle_producto)
-												<tr>
-													<td>{{$detalle_producto['sku']}}</td>
-													<td>{{$detalle_producto['upc']}}</td>
-													<td>{{$detalle_producto['sku_descripcion']}}</td>
-													<td>{{$detalle_producto['nombre_cliente']}}</td>
-													<td>{{$detalle_producto['nombre_proyecto']}}</td>
-													<td>{{$detalle_producto['lote']}}</td>
-													<td>{{$detalle_producto['fecha_caducidad']}}</td>
-													<td>{{$detalle_producto['cantidad']}}</td>
-													<td>{{$detalle_producto['cantidad_surtida']}}</td>
-													<td></td>
-												</tr>
-											@endforeach
+										{{--{{dump($detalle_entrada)}}--}}
+										{{--{{dd($productos_entrada)}}--}}
+										{{--@foreach($detalle_entrada as $detalle_producto)--}}
+											{{--<tr>--}}
+												{{--<td>{{$detalle_producto['sku']}}</td>--}}
+												{{--<td>{{$detalle_producto['upc']}}</td>--}}
+												{{--<td>{{$detalle_producto['sku_descripcion']}}</td>--}}
+												{{--<td>{{$detalle_producto['nombre_cliente']}}</td>--}}
+												{{--<td>{{$detalle_producto['nombre_proyecto']}}</td>--}}
+												{{--<td>{{$detalle_producto['lote']}}</td>--}}
+												{{--<td>{{$detalle_producto['fecha_caducidad']}}</td>--}}
+												{{--<td>{{$detalle_producto['cantidad']}}</td>--}}
+												{{--<td>{{$detalle_producto['cantidad_surtida']}}</td>--}}
+												{{--<td></td>--}}
+											{{--</tr>--}}
+										{{--@endforeach--}}
 
-											</tbody>
-										</table>
-									</div>
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
 					</div>
-				@endif
+				{{--@endif--}}
 			</div>
 		</div>
 	@endif

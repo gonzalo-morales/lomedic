@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class DevolucionesMotivos extends ModelBase
 {
-	protected $table = 'maestro.gen_cat_devoluciones_motivos';
+	protected $table = 'gen_cat_devoluciones_motivos';
 
 	/**
 	 * The primary key of the table

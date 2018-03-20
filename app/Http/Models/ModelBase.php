@@ -10,6 +10,8 @@ use App\Notifications\Notificaciones;
 class ModelBase extends Model
 {
     use Notifiable;
+    
+    protected $schema = null;
 
     protected $fillable = [];
 
@@ -38,6 +40,9 @@ class ModelBase extends Model
 
 	public function __construct($attributes = [])
 	{
+	    $this->schema = !empty($this->schema) ? $this->schema : getSchema($this->connection);
+	    $this->table = $this->schema.'.'.$this->table;
+	        
 		$this->eagerLoaders = $this->getAutoEager();
 		$this->rules = $this->getRulesDefaults();
 		$this->addUniqueRules();
@@ -106,6 +111,7 @@ class ModelBase extends Model
 	    $controller = substr($route,0,strpos($route,'@'));
 
 	    if(in_array('activo',$this->getlistColumns()) && !empty($controller) && isset((new $controller)->entity) && get_class((new $controller)->entity) != get_class($this)) {
+	        $model = (new $controller)->entity;
 	        $parent->newQuery()->where($this->getTable().'.activo',1);
 	    }
 
@@ -218,7 +224,7 @@ class ModelBase extends Model
 	}
 
 	public function getlistColumns() {
-	    return $this->getConnection()->getSchemaBuilder()->getColumnListing(str_replace('maestro.','',$this->getTable()));
+	    return $this->getConnection()->getSchemaBuilder()->getColumnListing(str_replace($this->schema.'.','',$this->getTable()));
 	}
 
 	/**

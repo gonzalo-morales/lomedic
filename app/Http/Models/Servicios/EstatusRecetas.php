@@ -11,7 +11,7 @@ class EstatusRecetas extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.rec_cat_estatus_recetas';
+    protected $table = 'rec_cat_estatus_recetas';
 
     /**
      * The primary key of the table

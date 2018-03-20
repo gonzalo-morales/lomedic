@@ -17,7 +17,7 @@ class SociosNegocio extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'maestro.gen_cat_socios_negocio';
+    protected $table = 'gen_cat_socios_negocio';
 
     /**
      * The primary key of the table

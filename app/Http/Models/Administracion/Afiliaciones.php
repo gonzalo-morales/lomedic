@@ -8,7 +8,7 @@ use App\Http\Models\Servicios\Recetas;
 class Afiliaciones extends ModelBase
 {
 
-    protected $table = 'maestro.gen_cat_afiliados';
+    protected $table = 'gen_cat_afiliados';
 
     protected $primaryKey = 'id_afiliado';
 

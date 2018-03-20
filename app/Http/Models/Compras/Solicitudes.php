@@ -87,25 +87,6 @@ class Solicitudes extends ModelCompany
         return $this->fields;
     }
 
-    public function ColumnDefaultValues()
-    {
-        $schema = config('database.connections.'.$this->getConnection()->getName().'.schema');
-
-        $data = DB::table('information_schema.columns')
-            ->select('column_name', 'data_type', DB::Raw("replace(replace(column_default, concat('::',data_type), ''),'''','') as column_default"))
-            ->whereRaw('column_default is not null')
-            ->whereRaw("column_default not ilike '%nextval%'")
-            ->where('table_name','=',$this->table)
-            ->where('table_schema','=',$schema)
-            ->where('table_catalog','=',$this->getConnection()->getDatabaseName())->get();
-
-        foreach ($data as $value) {
-            $data->{$value->column_name} = $value->data_type == 'boolean' ? $value->column_default == 'true' : $value->column_default;
-        }
-
-        return $data;
-    }
-
     public function usuario()
     {
         return $this->belongsTo(Usuarios::class,'fk_id_solicitante','id_usuario');
@@ -132,5 +113,4 @@ class Solicitudes extends ModelCompany
     public function getSolicitanteFormatedAttribute() {
         return $this->empleado->nombre." ".$this->empleado->apellido_paterno." ".$this->empleado->apellido_materno;
     }
-
 }

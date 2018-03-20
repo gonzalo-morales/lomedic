@@ -12,7 +12,7 @@ class EstatusCfdi extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.gen_cat_estatus_cfdi';
+    protected $table = 'gen_cat_estatus_cfdi';
 
     /**
      * The primary key of the table

@@ -8,6 +8,12 @@
     @endif
 @endsection
 
+@if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('create')))
+@section('left-actions')
+    {!! HTML::decode(link_to(companyAction('Servicios\RecetasController@impress',['id'=>$data->id_receta]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) !!}
+@endsection
+@endif
+
 @section('form-content')
     {{ Form::setModel($data) }}
     @if (Route::currentRouteNamed(currentRouteName('create')) || Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))

@@ -86,6 +86,7 @@
               </div>
                 {{ Form::cSelect('* SKU','fk_id_sku', $skus ?? [],[
                   'data-url' => companyAction('HomeController@index').'/inventarios.productos/api',
+                  'data-almacenes'=> companyAction('HomeController@index').'/inventarios.almacenes/api', 
                   'style' => 'width:100%;',
                   'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
                 ]) }}
@@ -239,6 +240,7 @@
         var js_almacen = '{{ $almacen_js ?? '' }}'
         var js_ubicacion = '{{ $ubicacion_js ?? '' }}'
         var js_sku = '{{ $sku_js ?? '' }}'
+        var js_almacen_table = '{{ $almacen_table_js ?? ''}}'
   	</script>
 	<script src="{{ asset('js/movimiento_almacen.js') }}"></script>
 @endsection

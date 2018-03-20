@@ -2,21 +2,21 @@
 
 namespace App\Http\Models\Inventarios;
 
-use App\Http\Models\ModelCompany;
+use App\Http\Models\ModelBase;
 use App\Http\Models\Administracion\PresentacionVenta;
 use App\Http\Models\Administracion\Laboratorios;
 use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 
-class Upcs extends ModelCompany
+class Upcs extends ModelBase
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'maestro.inv_cat_upcs';
+    protected $table = 'inv_cat_upcs';
 
     /**
      * The primary key of the table

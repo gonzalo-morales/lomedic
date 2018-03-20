@@ -14,7 +14,7 @@ class DetalleGastosRelacionViajes extends ModelBase
      *
      * @var string
      */
-    protected $table = 'maestro.fin_det_opr_gastos';
+    protected $table = 'fin_det_opr_gastos';
 
     /**
      * The primary key of the table

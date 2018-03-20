@@ -10,7 +10,7 @@ class Subdependencias extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_subdependencias';
+	protected $table = 'gen_cat_subdependencias';
 
 	/**
 	 * The primary key of the table

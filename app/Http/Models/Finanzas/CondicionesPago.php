@@ -2,16 +2,16 @@
 
 namespace App\Http\Models\Finanzas;
 
-use App\Http\Models\ModelCompany;
+use App\Http\Models\ModelBase;
 
-class CondicionesPago extends ModelCompany
+class CondicionesPago extends ModelBase
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'maestro.fnz_cat_condiciones_pago';
+    protected $table = 'fnz_cat_condiciones_pago';
 
     /**
      * The primary key of the table

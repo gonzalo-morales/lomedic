@@ -11,7 +11,7 @@ class Bancos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_bancos';
+	protected $table = 'gen_cat_bancos';
 
 	/**
 	 * The primary key of the table

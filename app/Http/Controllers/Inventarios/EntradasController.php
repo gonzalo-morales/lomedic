@@ -11,9 +11,11 @@ namespace App\Http\Controllers\Inventarios;
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Administracion\TiposDocumentos;
+use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Inventarios\Entradas;
 use App\Http\Models\Inventarios\EntradaDetalle;
 use App\Http\Models\Compras\Ordenes;
+use App\Http\Models\ModelBase;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -168,4 +170,40 @@ class EntradasController extends ControllerBase
 
         return $data ;
     }
+
+    public function getDocumento($company,Request $request)
+    {
+        $documentos = Ordenes::where('fk_id_tipo_documento',$request->fk_id_tipo_documento)->pluck('id_documento');
+        return $documentos;
+    }
+    public function getDetalleDocumento($company,Request $request)
+    {
+        $documento = Ordenes::where('fk_id_tipo_documento',$request->fk_id_tipo_documento)
+            ->where('id_documento',$request->entrada_escaner)->first();
+
+        $detalles = DetalleOrdenes::where('fk_id_tipo_documento',$request->fk_id_tipo_documento)
+            ->where('fk_id_documento',$request->entrada_escaner)->get();
+
+
+        foreach ( $detalles as $id_row => $detalle){
+            $detalle_documento[$id_row] = [
+                'sku' => $detalle->sku->sku,
+                'upc' => $detalle->upc->upc,
+                'descripcion' => $detalle->sku->descripcion,
+                'cliente' => $detalle->cliente->nombre_comercial,
+                'proyecto' => $detalle->proyecto->proyecto,
+                'precio_unitario' => round($detalle->precio_unitario,2),
+                'total' => round($detalle->total,2),
+                'cantidad' => $detalle->cantidad,
+                'cantidad_surtida' => 0,
+                'sucursal' => $documento->sucursales->sucursal,
+            ];
+        }
+        return [
+            'sucursal' => $documento->sucursales->sucursal,
+            'detalle'=>$detalle_documento,
+            'proveedor' => $documento->proveedor->razon_social,
+        ];
+    }
+
 }

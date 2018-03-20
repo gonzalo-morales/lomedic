@@ -13,7 +13,7 @@ class EstatusTickets extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.sop_cat_estatus_tickets';
+	protected $table = 'sop_cat_estatus_tickets';
 
 	/**
 	 * The primary key of the table

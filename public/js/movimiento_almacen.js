@@ -104,14 +104,13 @@ $(document).ready(function () {
           })
             //Obtenemos los datos del url del sku...
             $.get($('#fk_id_sku').data('url'), {'param_js':js_sku,$fk_id_almacen:idalmacen}, function(data){
-                console.log(data.stock)
                 $('#fk_id_sku').html("");
                 var options = [];
                 /* Si hay resultados... */
                 if (data.length > 0) {
                     options.push('<option value="0" selected disabled>Selecciona el SKU que requiera...</option>'); 
                     for (var i = 0; i < data.length; i++) {
-                        options.push('<option data-sku="'+ data[i].sku +'" data-sku-desc="'+ data[i].descripcion +'" data-stock=\''+ JSON.stringify(data[i].stock) +'\' value="' + data[i].stock.id_stock + '">' + data[i].sku + '</option>');
+                        options.push('<option data-sku="'+ data[i].sku +'" data-stock-almacen="'+data[i].stock.fk_id_almacen+'" data-stock-ubicacion="'+data[i].stock.fk_id_ubicacion+'" data-sku-desc="'+ data[i].descripcion +'" data-stock=\''+ JSON.stringify(data[i].stock) +'\' value="' + data[i].stock.id_stock + '">' + data[i].sku + '</option>');
                     };
                 //Agregamos todo al select2
                 $('#fk_id_sku').append(options.join(''));
@@ -138,17 +137,25 @@ $(document).ready(function () {
                     $('#loadingupcs').show();
                     $('#fk_id_upc').empty();
                     var options = [];
+                    var nameUbication;
                     /* Si hay resultados */
+                    $.each($('.fk_id_ubicacion option').select2(),function(i,value){
+                        if($(value).val() == $('#fk_id_sku option:selected').data('stock-ubicacion')){
+                            nameUbication = $(value).html();
+                        }
+                    })
                     if (data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             //Validamos que sea el mismo id del valor seleccionado ;)
-                            if($(this).val() == data[i].stock.id_stock){
-                                options.push('<option data-upc-name="'+ data[i].upcs.nombre_comercial +'" data-upc-desc="'+ data[i].upc.descripcion +'" value="' + data[i].upc.id_upc + '">' + data[i].upc.upc + '</option>');
+                            if($('#fk_id_sku').val() == data[i].stock.id_stock){
+                                $.each(data[i].upcs, function (index, val) { 
+                                    options.push('<option  data-ubicacion-id="'+ $('#fk_id_sku option:selected').data('stock-ubicacion') +'" data-ubicacion-text="'+nameUbication+'" data-almacen-id="'+ $('#fk_id_almacen option:selected').val() +'" data-almacen-text="'+ $('#fk_id_almacen option:selected').html() +'" data-upc-name="'+ val.nombre_comercial +'" data-upc-desc="'+ val.descripcion +'" value="' + val.id_upc + '">' + val.upc + '</option>');
+                                });
                             }
                         };
                     }
-                  $('#fk_id_upc').append(options.join(''));
-                      $('#loadingupcs').hide();
+                    $('#fk_id_upc').append(options.join(''));
+                    $('#loadingupcs').hide();
                     $('#fk_id_upc').select2({
                         escapeMarkup: function (markup) { return markup; },
                         placeholder: 'Seleccione el SKU que requiera del inventario',
@@ -168,97 +175,6 @@ $(document).ready(function () {
         }
     }) // <-- Aquí termina el onChange de almacen
 
-
-  // FUNCIONES PARA FORMATO DEL RESULTADO EN EL SELECT2 de SKU
-    function formatSku (sku) {
-        if (sku.element && sku.element.dataset.stock) {
-            //Variable para fecha
-            var fechaActual = new Date();
-            var dd = fechaActual.getDate();
-            var mm = fechaActual.getMonth()+1; //January is 0!
-            var yyyy = fechaActual.getFullYear();
-            if(dd<10) {
-                dd = '0'+dd
-            } 
-            if(mm<10) {
-                mm = '0'+mm
-            } 
-            fechaActual = mm + '/' + dd + '/' + yyyy;
-            // theme here ...
-            var data = JSON.parse(sku.element.dataset.stock)
-            console.log(data)
-            //Condicionamos la fecha para advertir al usuario de la caducidad
-            if(fechaActual > data.fecha_caducidad){
-                var claseFecha = 'text-warning';
-                var mensaje = "¡Cuidado! verifica la caducidad del producto: " + data.fecha_caducidad;
-            } else{
-                var claseFecha = 'text-secondary';
-                var mensaje = data.fecha_caducidad;
-          }
-            //Generamos nuestro template
-            var markup = "<div class='select2-result-pers clearfix'>" +
-            "<div class='select2-result-pers__avatar'><img src='img/sku.png'/></div>" +
-            "<div class='select2-result-pers__meta'>" +
-            "<div class='select2-result-pers__text'>" + sku.text + "</div>";
-            //Condiciones para el caso de que exista el dato
-            if (data.sku.descripcion) {
-                markup += "<div class='select2-result-pers__descripcion'>" + data.sku.descripcion + "</div>";
-            }
-            if (!data.stock) {
-                markup += "<div class='select2-result-pers__statistics'>" +
-                "<div class='select2-result-pers__presentacion text-danger'><i class='material-icons align-middle'>label</i> No hay en stock, seleciona otro SKU</div>" +
-                "</div>" +
-                "</div></div>";
-            } else {
-                markup += "<div class='select2-result-pers__statistics'>" +
-                "<div class='select2-result-pers__presentacion text-success mr-3'><i class='material-icons align-middle'>shopping_basket</i> " + data.stock + "</div>" +
-                "<div data-position='bottom' data-delay='50' data-toggle='"+mensaje+"' title='"+mensaje+"' class='select2-result-pers__presentacion"+" "+claseFecha+" "+"mr-3'><i class='material-icons align-middle'>today</i> " + data.fecha_caducidad + "</div>" +
-                "<div class='select2-result-pers__presentacion'><i class='material-icons align-middle'>label</i> " + data.lote + "</div>" +
-                "</div>" +
-                "</div></div>";
-
-                return markup;
-            }
-        }
-        return sku.text;
-    }
-    function formatSkuSelection (sku) {
-        return sku.text;
-    }
-
-    // FUNCIONES PARA FORMATO DEL RESULTADO EN EL SELECT2 de UPC
-    function formatUpc (upc) {
-        if (upc.element && upc.element.dataset) {
-            // theme here ...
-            var data = upc.element.dataset
-            //Generamos nuestro template
-            var markup = "<div class='select2-result-pers clearfix'>" +
-            "<div class='select2-result-pers__avatar'><img src='img/upc.png'/></div>" +
-            "<div class='select2-result-pers__meta'>" +
-            "<div class='select2-result-pers__text'>" + upc.text + "</div>";
-            //Condiciones para el caso de que exista el dato
-            if (data.upcName) {
-                markup += "<div class='select2-result-pers__descripcion'>" + data.upcName + "</div>";
-            }
-            if (!data.upcDesc) {
-                markup += "<div class='select2-result-pers__statistics'>" +
-                "<div class='select2-result-pers__presentacion text-danger'><i class='material-icons align-middle'>label</i> ¡Lo siento! al parecer no existe una descripción del producto</div>" +
-                "</div>" +
-                "</div></div>";
-            } else {
-                markup += "<div class='select2-result-pers__statistics'>" +
-                "<div class='select2-result-pers__presentacion text-success mr-3'><i class='material-icons align-middle'>info</i> " + data.upcDesc + "</div>" +
-                "</div>" +
-                "</div></div>";
-                return markup;
-            }
-        }
-        return upc.text;
-  }
-    function formatUpcSelection (upc) {
-        return upc.text;
-    }
-
 /*
   --- FORMULARIO DE DETALLE PARA MOVIMIENTO ALMACEN ---
 */
@@ -276,79 +192,6 @@ $(document).ready(function () {
             settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}});
         }
     });
-
-    //FUNCIÓN PARA INGRESAR VALORES A LA TABLA
-    function agregarFilaDetalle(){
-        var tableData = $('table > tbody');
-        var i = $('#detalle-form-body > tr').length;
-        var row_id = i > 0 ? +$('#detalle-form-body > tr:last').find('#index').val()+1 : 0;
-        var sku = $('#fk_id_sku option:selected').text();
-        var upc = $('#fk_id_upc option:selected').text();
-        tableData.removeClass('no-data')
-        //$('#fk_id_sku option:selected').data('sku').sku -> accede a la info del sku
-        var $campoSkuData = $('#fk_id_sku option:selected').data('data');
-        var skuDataSet = JSON.parse($('#fk_id_sku option:selected').data('data').element.dataset.sku);
-        var skuData = $('#fk_id_sku option:selected').data('sku').sku;
-        var upcData = $('#fk_id_upc').select2('data');
-        var almacenData = $('#fk_id_sku option:selected').data('sku').almacen;
-        var ubicacionData = $('#fk_id_sku option:selected').data('sku').ubicacion;
-        //Imprimir cada upc agregado
-        if (upcData.length > 0) {
-        // console.log(upcData.length)
-        for (var i = 0; i < upcData.length; i++) {
-            tableData.append(
-            '<tr><th>'+ '<img style="max-height:40px" src="img/sku.png" alt="sku"/> ' + sku +
-                '<input type="hidden" id="index" value="'+row_id+'">'+
-                '<input class="ubicacion-unique" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_ubicacion_anterior]" value="'+skuDataSet.fk_id_ubicacion+'"/>'+
-                '<input class="element_stock" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_stock]" value="'+skuDataSet.id_stock+'"/>'+
-                '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_entrada]" value="'+skuDataSet.fk_id_documento+'"/>'+
-                '<input type="hidden" name="relations[has][detalle]['+row_id+'][costo]" value="'+skuDataSet.costo+'"/>'+
-                '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+skuDataSet.fk_id_sku+'"/></th>' +
-            '<td>'+ '<img style="max-height:40px" src="img/upc.png" alt="upc"/> ' + upcData[i].text + 
-                '<input class="upc-unique" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+upcData[i].id+'"/>'+'</td>' +
-            '<td class="align-middle">'+ '<i class="material-icons align-middle">today</i> ' +skuDataSet.fecha_caducidad +
-                '<input type="hidden" name="relations[has][detalle]['+row_id+'][fecha_caducidad]" value="'+skuDataSet.fecha_caducidad+'"/>' + '</td>' +
-            '<td class="align-middle">'+ '<i data-toggle="Lote" data-placement="top" title="Lote" data-original-title="Lote" class="material-icons align-middle">label</i> ' + skuDataSet.lote + '<br>' + almacenData.almacen +' / '+ ubicacionData.ubicacion +'<br>' + '<i data-toggle="Stock actual" data-placement="top" title="Stock actual" data-original-title="Stock actual" class="material-icons align-middle">shopping_basket</i> ' + skuDataSet.stock +'<input  type="hidden" value="'+skuDataSet.stock+'"/>' + '</td>' +
-            '<td>'+ $('#campo_ubicacion').html().replace('$row_id',row_id).replace('$row_id',row_id) +'</td>'+
-            '<td>'+ '<div class="input-group"><span class="input-group-addon">'+ '<i class="material-icons align-middle">label</i> ' +'</span><input style="min-width:60px" type="text" class="form-control nuevo_lote" name="relations[has][detalle]['+row_id+'][lote]" value="'+skuDataSet.lote+'"/></div>' + '</td>' +
-            '<td>'+ '<div class="input-group"><span class="input-group-addon">'+ '<i class="material-icons align-middle">shopping_basket</i> ' +'</span><input type="number" style="width: 80px" class="form-control cantidad_stock" name="relations[has][detalle]['+row_id+'][stock]" value="'+skuDataSet.stock+'"/></div>' + '</td>' +
-            '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
-            );
-        };
-    }
-        $('[data-toggle]').tooltip();
-            $.toaster({priority : 'success',title : '¡Éxito!',message : 'SKU/UPC(s) agregados con éxito, ahora puedes editar la nueva ubicación',
-            settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}
-        });
-    };
-
-    //FUNCIÓN PARA VALIDAR
-    function validateForm() {
-        $('#fk_id_sucursal').rules('add',{
-        required: true,
-        messages:{
-            required: 'Para iniciar es necesario ingresar la sucursal'
-            }
-        });
-        $('#fk_id_almacen').rules('add',{
-        required: true,
-        messages:{
-            required: 'Es necesario seleccionar el almacen para posteriormente agregar UPC y SKU'
-            }
-        });
-    $('#fk_id_sku').rules('add',{
-        required: true,
-        messages:{
-            required: 'Es necesario seleccionar el SKU para posteriormente agregar el UPC'
-            }
-        });
-        $('#fk_id_upc').rules('add',{
-        required: true,
-        messages:{
-            required: 'Es necesario seleccionar el UPC para posteriormente agregar a la tabla los datos'
-            }
-        });
-    };
 
     //cancelación para modal de sucursal
     $('#cancelarcambiosucursal').click(function () {
@@ -502,46 +345,116 @@ $(document).ready(function () {
         }) // <-- Aquí termina la función de petición ajax
     });
 
-    //FUNCIÓN PARA LIMPIAR LOS CAMPOS
-    function limpiarCampos() {
-        //Eliminar reglas de validación detalle
-        $('#fk_id_sucursal').rules('remove');
-        $('#fk_id_almacen').rules('remove');
-        $('#fk_id_sku').rules('remove');
-        $('#fk_id_upc').rules('remove');
-    };
+    /*------ DOCUMENT ON SUBMIT ------*/
+    $(document).on('submit', function(e){
+        $.validator.addMethod('minStrict', function (value, element, param) {
+            return value > param;
+        },'El numero debe ser mayor a {0}');
+        $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
+        $.validator.addMethod('cDigits',$.validator.methods.digits,'El campo debe ser entero');
+        $.validator.addClassRules('fk_id_ubicacion',{
+            cRequerido:true,
+        });
+        $.validator.addClassRules('cantidad_stock',{
+            cRequerido:true,
+            cDigits:true,
+            minStrict:0
+        });
+        $.validator.addClassRules('nuevo_lote',{
+            cRequerido:true,
+        });
+
+        if(!$('#form-model').valid() || !validateStock() || !sameUbicacion()){
+            e.preventDefault();
+            $('.fk_id_ubicacion').rules('remove');
+            $('.cantidad_stock').rules('remove');
+            $('.nuevo_lote').rules('remove');
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Te recomendamos verificar lo siguiente: <ul><li>No dejar campos vacíos cómo Ubicación.</li><li>Verificar que la cantidad de Stock a mover no sobrepase la original.</li><li>Verificar que no hayas seleccionado la misma Ubicación.</li></ul>',settings: {'timeout': 8000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }
+    })
 
 });// <-- Aquí termina el document.ready
 
-/*------ DOCUMENT ON SUBMIT ------*/
-$(document).on('submit', function(e){
-    $.validator.addMethod('minStrict', function (value, element, param) {
-        return value > param;
-    },'El numero debe ser mayor a {0}');
-    $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
-    $.validator.addMethod('cDigits',$.validator.methods.digits,'El campo debe ser entero');
-    $.validator.addClassRules('fk_id_ubicacion',{
-        cRequerido:true,
+//FUNCIÓN PARA VALIDAR
+function validateForm() {
+    $('#fk_id_sucursal').rules('add',{
+    required: true,
+    messages:{
+        required: 'Para iniciar es necesario ingresar la sucursal'
+        }
     });
-    $.validator.addClassRules('cantidad_stock',{
-        cRequerido:true,
-        cDigits:true,
-        minStrict:0
+    $('#fk_id_almacen').rules('add',{
+    required: true,
+    messages:{
+        required: 'Es necesario seleccionar el almacen para posteriormente agregar UPC y SKU'
+        }
     });
-    $.validator.addClassRules('nuevo_lote',{
-        cRequerido:true,
+$('#fk_id_sku').rules('add',{
+    required: true,
+    messages:{
+        required: 'Es necesario seleccionar el SKU para posteriormente agregar el UPC'
+        }
     });
+    $('#fk_id_upc').rules('add',{
+    required: true,
+    messages:{
+        required: 'Es necesario seleccionar el UPC para posteriormente agregar a la tabla los datos'
+        }
+    });
+};
 
-    if(!$('#form-model').valid() || !validateStock() || !sameUbicacion()){
-        e.preventDefault();
-        $('.fk_id_ubicacion').rules('remove');
-        $('.cantidad_stock').rules('remove');
-        $('.nuevo_lote').rules('remove');
-        $.toaster({
-            priority: 'danger', title: '¡Error!', message: 'Te recomendamos verificar lo siguiente: <ul><li>No dejar campos vacíos cómo Ubicación.</li><li>Verificar que la cantidad de Stock a mover no sobrepase la original.</li><li>Verificar que no hayas seleccionado la misma Ubicación.</li></ul>',settings: {'timeout': 8000, 'toaster': {'css': {'top': '5em'}}}
-        });
+//FUNCIÓN PARA INGRESAR VALORES A LA TABLA
+function agregarFilaDetalle(){
+    var tableData = $('table > tbody');
+    var i = $('#detalle-form-body > tr').length;
+    var row_id = i > 0 ? +$('#detalle-form-body > tr:last').find('#index').val()+1 : 0;
+    tableData.removeClass('no-data')
+    var sku = $('#fk_id_sku option:selected').text();
+    var upc = $('#fk_id_upc option:selected').text();
+    var $campoSkuData = $('#fk_id_sku option:selected').data('data');
+    var stockData = $('#fk_id_sku option:selected').data('stock');
+    var upcData = $('#fk_id_upc').select2('data');
+    //Imprimir cada upc agregado
+    if (upcData.length > 0) {
+        for (var i = 0; i < upcData.length; i++) {
+            var ubicacionActual = upcData[i].element.attributes['data-ubicacion-text'].value
+            var almacenActual = upcData[i].element.attributes['data-almacen-text'].value
+            tableData.append(
+            '<tr><th>'+ '<img style="max-height:40px" src="img/sku.png" alt="sku"/> ' + sku +
+                '<input type="hidden" id="index" value="'+row_id+'">'+
+                '<input class="ubicacion-unique" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_ubicacion_anterior]" value="'+stockData.fk_id_ubicacion+'"/>'+
+                '<input class="element_stock" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_stock]" value="'+stockData.id_stock+'"/>'+
+                '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_entrada]" value="'+stockData.fk_id_documento+'"/>'+
+                '<input type="hidden" name="relations[has][detalle]['+row_id+'][costo]" value="'+stockData.costo+'"/>'+
+                '<input type="hidden" name="relations[has][detalle]['+row_id+'][fecha_caducidad]" value="'+stockData.fecha_caducidad+'"/>'+
+                '<input class="upc-unique" type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+upcData[i].id+'"/>'+
+                '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+stockData.fk_id_sku+'"/></th>' +
+            '<td>'+ '<img style="max-height:40px" src="img/upc.png" alt="upc"/> ' + upcData[i].text +'</td>' +
+            '<td class="align-middle">'+ '<i class="material-icons align-middle">today</i> ' +stockData.fecha_caducidad + '</td>' +
+            '<td class="align-middle">'+ '<i data-toggle="Lote" data-placement="top" title="Lote" data-original-title="Lote" class="material-icons align-middle">label</i> ' + stockData.lote + '<br>' + almacenActual +' / '+ ubicacionActual +'<br>' + '<i data-toggle="Stock actual" data-placement="top" title="Stock actual" data-original-title="Stock actual" class="material-icons align-middle">shopping_basket</i> ' + stockData.stock +'<input  type="hidden" value="'+stockData.stock+'"/>' + '</td>' +
+            '<td>'+ $('#campo_ubicacion').html().replace('$row_id',row_id).replace('$row_id',row_id) +'</td>'+
+            '<td>'+ '<div class="input-group"><span class="input-group-addon">'+ '<i class="material-icons align-middle">label</i> ' +'</span><input style="min-width:60px" type="text" class="form-control nuevo_lote" name="relations[has][detalle]['+row_id+'][lote]" value="'+stockData.lote+'"/></div>' + '</td>' +
+            '<td>'+ '<div class="input-group"><span class="input-group-addon">'+ '<i class="material-icons align-middle">shopping_basket</i> ' +'</span><input type="number" style="width: 80px" class="form-control cantidad_stock" name="relations[has][detalle]['+row_id+'][stock]" value="'+stockData.stock+'"/></div>' + '</td>' +
+            '<td>'+ '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar" style="background:none;" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>'+'</td></tr>'
+            );
+        };
     }
-})
+    $('[data-toggle]').tooltip();
+        $.toaster({priority : 'success',title : '¡Éxito!',message : 'SKU/UPC(s) agregados con éxito, ahora puedes editar la nueva ubicación',
+        settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}
+    });
+};
+
+//FUNCIÓN PARA LIMPIAR LOS CAMPOS
+function limpiarCampos() {
+    //Eliminar reglas de validación detalle
+    $('#fk_id_sucursal').rules('remove');
+    $('#fk_id_almacen').rules('remove');
+    $('#fk_id_sku').rules('remove');
+    $('#fk_id_upc').rules('remove');
+};
 
 //FUNCIÓN PARA LIMPIAR LA FILA
 function borrarFila(el) {
@@ -587,24 +500,112 @@ function sameUbicacion(){
     }
 }
 
+// FUNCIONES PARA FORMATO DEL RESULTADO EN EL SELECT2 de SKU
+function formatSku (sku) {
+    if (sku.element && sku.element.dataset.stock) {
+        //Variable para fecha
+        var fechaActual = new Date();
+        var dd = fechaActual.getDate();
+        var mm = fechaActual.getMonth()+1; //January is 0!
+        var yyyy = fechaActual.getFullYear();
+        if(dd<10) {
+            dd = '0'+dd
+        } 
+        if(mm<10) {
+            mm = '0'+mm
+        } 
+        fechaActual = mm + '/' + dd + '/' + yyyy;
+        // theme here ...
+        var dataStock = JSON.parse(sku.element.dataset.stock)
+        //Condicionamos la fecha para advertir al usuario de la caducidad
+        if(fechaActual > dataStock.fecha_caducidad){
+            var claseFecha = 'text-warning';
+            var mensaje = "¡Cuidado! verifica la caducidad del producto: " + dataStock.fecha_caducidad;
+        } else{
+            var claseFecha = 'text-secondary';
+            var mensaje = dataStock.fecha_caducidad;
+        }
+        //Generamos nuestro template
+        var markup = "<div class='select2-result-pers clearfix'>" +
+        "<div class='select2-result-pers__avatar'><img src='img/sku.png'/></div>" +
+        "<div class='select2-result-pers__meta'>" +
+        "<div class='select2-result-pers__text'>" + sku.text + "</div>";
+        //Condiciones para el caso de que exista el dato
+        if (sku.descripcion) {
+            markup += "<div class='select2-result-pers__descripcion'>" + sku.descripcion + "</div>";
+        }
+        if (!dataStock) {
+            markup += "<div class='select2-result-pers__statistics'>" +
+            "<div class='select2-result-pers__presentacion text-danger'><i class='material-icons align-middle'>label</i> No hay en stock, seleciona otro SKU</div>" +
+            "</div>" +
+            "</div></div>";
+        } else {
+            markup += "<div class='select2-result-pers__statistics'>" +
+            "<div class='select2-result-pers__presentacion text-success mr-3'><i class='material-icons align-middle'>shopping_basket</i> " + dataStock.stock + "</div>" +
+            "<div data-position='bottom' data-delay='50' data-toggle='"+mensaje+"' title='"+mensaje+"' class='select2-result-pers__presentacion"+" "+claseFecha+" "+"mr-3'><i class='material-icons align-middle'>today</i> " + dataStock.fecha_caducidad + "</div>" +
+            "<div class='select2-result-pers__presentacion'><i class='material-icons align-middle'>label</i> " + dataStock.lote + "</div>" +
+            "</div>" +
+            "</div></div>";
+
+            return markup;
+        }
+    }
+    return sku.text;
+}
+function formatSkuSelection (sku) {
+    return sku.text;
+}
+
+// FUNCIONES PARA FORMATO DEL RESULTADO EN EL SELECT2 de UPC
+function formatUpc (upc) {
+    if (upc.element && upc.element.dataset) {
+        // theme here ...
+        var data = upc.element.dataset
+        //Generamos nuestro template
+        var markup = "<div class='select2-result-pers clearfix'>" +
+        "<div class='select2-result-pers__avatar'><img src='img/upc.png'/></div>" +
+        "<div class='select2-result-pers__meta'>" +
+        "<div class='select2-result-pers__text'>" + upc.text + "</div>";
+        //Condiciones para el caso de que exista el dato
+        if (data.upcName) {
+            markup += "<div class='select2-result-pers__descripcion'>" + data.upcName + "</div>";
+        }
+        if (!data.upcDesc) {
+            markup += "<div class='select2-result-pers__statistics'>" +
+            "<div class='select2-result-pers__presentacion text-danger'><i class='material-icons align-middle'>label</i> ¡Lo siento! al parecer no existe una descripción del producto</div>" +
+            "</div>" +
+            "</div></div>";
+        } else {
+            markup += "<div class='select2-result-pers__statistics'>" +
+            "<div class='select2-result-pers__presentacion text-success mr-3'><i class='material-icons align-middle'>info</i> " + data.upcDesc + "</div>" +
+            "</div>" +
+            "</div></div>";
+            return markup;
+        }
+    }
+    return upc.text;
+}
+function formatUpcSelection (upc) {
+    return upc.text;
+}
+
 //FUNCIÓN PARA VALIDAR LA CANTIDAD DE STOCK
 function validateStock(){
     var stock = []; //Arreglo para ingresar los valores originales del stock 
     var stock_actual = []; //Arreglo para ingresar los valores del usuario
     var verificarArreglos = false;
     var almacenOpcion = $('#fk_id_almacen option:selected').data('data').id;
+
     //Empezamos por obtener todos los valores originales
-    $('#fk_id_sku option').each(function(i,val){
-        if(val.dataset || val.val() > 0){
-            $.each(val.dataset,function(i2,json){
-                var arreglo = [];
-                // idStock.push(JSON.parse(json).id_stock)
-                arreglo.id_stock = JSON.parse(json).id_stock;
-                arreglo.stock = JSON.parse(json).stock;
-                stock.push(arreglo);
-            })
+    $('#fk_id_sku option').each(function(i,option){
+        var arreglo = [];
+        if(option.dataset.stock){
+            arreglo.id_stock = JSON.parse(option.dataset.stock).id_stock;
+            arreglo.stock = JSON.parse(option.dataset.stock).stock;
+            stock.push(arreglo);
         }
     });
+
     //Realizamos un each a cada row de la tabla para sumar y enviarlo a nuestro stock actual
     $('#detalle-form-body tr').each(function(index, row){
         var idStockRow =  +$(row).find('.element_stock').val();

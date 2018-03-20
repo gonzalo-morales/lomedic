@@ -11,7 +11,7 @@ class FormaFarmaceutica extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_forma_farmaceutica';
+	protected $table = 'gen_cat_forma_farmaceutica';
 
 	/**
 	 * The primary key of the table

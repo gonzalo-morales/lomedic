@@ -9,7 +9,7 @@ class Periodos extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_periodos';
+	protected $table = 'gen_cat_periodos';
 
 	/**
 	 * The primary key of the table

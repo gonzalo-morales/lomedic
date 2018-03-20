@@ -91,7 +91,7 @@ class Productos extends ModelCompany
     
     public function proveedores()
     {
-        return $this->belongsToMany(SociosNegocio::class,'maestro.sng_det_productos','fk_id_sku','fk_id_socio_negocio','id_sku','id_socio_negocio')->withPivot('tiempo_entrega');
+        return $this->belongsToMany(SociosNegocio::class,getSchema().'.sng_det_productos','fk_id_sku','fk_id_socio_negocio','id_sku','id_socio_negocio')->withPivot('tiempo_entrega');
     }
 
 }

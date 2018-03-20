@@ -6,7 +6,7 @@ use App\Http\Models\ModelBase;
 
 class TipoAlmacen extends ModelBase
 {
-    protected $table = 'maestro.gen_cat_tipo_almacen';
+    protected $table = 'gen_cat_tipo_almacen';
 
     /**
      * The primary key of the table

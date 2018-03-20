@@ -157,17 +157,17 @@
 			$('#fk_id_almacen').on('change',function(){
 				$('#loadingUbicaciones').show();
 				$('#fk_id_ubicacion').html('');
-				$.get('{{ companyRoute('api.index', ['entity' => 'inventarios.ubicaciones'], false) }}', {
+				$.get('{{ companyRoute('api.index', ['entity' => 'inventarios.almacenes'], false) }}', {
 					'param_js': '{{$ubicaciones_js ?? ''}}',
 					'$almacen': $(this).val()
 					// conditions: [{'where': ['upc', e.target.value]}],
 					// only: ['descripcion']
 				}, function(response){
 					var options = [];
-					if (response.length > 0) {
+					if (response[0].ubicaciones.length > 0) {
 						options.push('<option value="0" selected disabled>Selecciona la Ubicación...</option>'); 
-						for(var i = 0; i < response.length; i++){
-							options.push('<option value="' + response[i].id_ubicacion + '">' + response[i].ubicacion + '</option>');
+						for(var i = 0; i < response[0].ubicaciones.length; i++){
+							options.push('<option value="' + response[0].ubicaciones[i].id_ubicacion + '">' + response[0].ubicaciones[i].ubicacion + '</option>');
 						}
 						$('#fk_id_ubicacion').append(options.join(''));
 						$('#loadingUbicaciones').hide();

@@ -11,7 +11,7 @@ class TiposProductos extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_tipo_producto';
+	protected $table = 'gen_cat_tipo_producto';
 
 	/**
 	 * The primary key of the table

@@ -11,7 +11,7 @@ class PresentacionVenta extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_presentacion_venta';
+	protected $table = 'gen_cat_presentacion_venta';
 
 	/**
 	 * The primary key of the table

@@ -5,11 +5,11 @@
         <span style="text-align: left"><b>RECETA MÉDICA</b></span>
         <div class="float-right">
             <span>Folio:</span>
-            <span id="folio"><b>{{$receta->folio}}</b></span>
+            {{--<span id="folio"><b>{{$receta->folio}}</b></span>--}}
         </div>
     </div>
     <div class="panel-body">
-        <img src="data:image/png;charset=binary;base64,{{$qr}}" style="float:right;width: 70px;margin-bottom: 0.5em;" />
+        {{--<img src="data:image/png;charset=binary;base64,{{$qr}}" style="float:right;width: 70px;margin-bottom: 0.5em;" />--}}
 
         <div class="row margin-bottom">
             <div class="width-50 float-left text-center">
@@ -24,11 +24,11 @@
         <div class="row margin-bottom">
             <div class="width-25 float-left text-center">
                 <span>Médico:</span>
-                <br><b>{{$receta->medico->getNombreCompletoAttribute()}}</b>
+                {{--<br><b>{{$receta->medico->getNombreCompletoAttribute()}}</b>--}}
             </div>
             <div class="width-25 float-left text-center">
                 <span>No. expediente y de afiliación:</span>
-                <br><b>{{$receta->id_afiliacion}},{{$receta->id_dependiente}}</b>
+                {{--<br><b>{{$receta->id_afiliacion}},{{$receta->id_dependiente}}</b>--}}
             </div>
             <div class="width-25 float-left text-center">
                 <span>R.F.C.:</span>
@@ -46,7 +46,7 @@
             </div>
             <div class="width-25 float-left text-center">
                 <span>Nombre Paciente:</span>
-                <br><b>{{$receta->id_afiliacion != null ? $receta->afiliacion->getFullNameAttribute() : $receta->nombre_paciente_no_afiliado}}</b>
+                {{--<br><b>{{$receta->id_afiliacion != null ? $receta->afiliacion->getFullNameAttribute() : $receta->nombre_paciente_no_afiliado}}</b>--}}
             </div>
             <div class="width-25 float-left text-center">
                 <span>Edad:</span>
@@ -54,7 +54,7 @@
             </div>
             <div class="width-25 float-left text-center">
                 <span>Fecha y hora de elaboración:</span>
-                <br><b>{{$receta->fecha}}</b>
+                {{--<br><b>{{$receta->fecha}}</b>--}}
             </div>
         </div><br>
         <div class="row margin-bottom text-center">
@@ -72,17 +72,17 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($detalles as $detalle)
-                <tr>
-                    <th style="padding: 5px 10px;">{{$detalle->clave_cliente}}</th>
-                    <td>
-                        <p>{{$detalle->producto->descripcion}}</p>
-                        <p>{{$detalle->dosis}}</p>
-                        <p>{{isset($detalle->en_caso_presentar)?$detalle->en_caso_presentar:''}}</p>
-                        <p>{{isset($detalle->recurrente)?'Recoger '.$detalle->cantidad_pedida.' cada '.$detalle->recurrente/24 .' días':''}}</p>
-                    </td>
-                </tr>
-            @endforeach
+            {{--@foreach($detalles as $detalle)--}}
+                {{--<tr>--}}
+                    {{--<th style="padding: 5px 10px;">{{$detalle->clave_cliente}}</th>--}}
+                    {{--<td>--}}
+                        {{--<p>{{$detalle->producto->descripcion}}</p>--}}
+                        {{--<p>{{$detalle->dosis}}</p>--}}
+                        {{--<p>{{isset($detalle->en_caso_presentar)?$detalle->en_caso_presentar:''}}</p>--}}
+                        {{--<p>{{isset($detalle->recurrente)?'Recoger '.$detalle->cantidad_pedida.' cada '.$detalle->recurrente/24 .' días':''}}</p>--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
+            {{--@endforeach--}}
             </tbody>
         </table>
 

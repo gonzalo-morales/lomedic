@@ -10,7 +10,7 @@ class ModalidadesEntrega extends ModelBase
 	 * The table associated with the model.
 	 * @var string
 	 */
-	protected $table = 'maestro.pry_cat_modalidades_entrega';
+	protected $table = 'pry_cat_modalidades_entrega';
 
 	/**
 	 * The primary key of the table

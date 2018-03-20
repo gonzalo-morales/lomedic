@@ -12,7 +12,7 @@ class Almacenes extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.inv_cat_almacenes';
+	protected $table = 'inv_cat_almacenes';
 
 	/**
 	 * The primary key of the table

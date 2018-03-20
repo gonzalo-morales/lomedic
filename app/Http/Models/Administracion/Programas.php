@@ -10,7 +10,7 @@ class Programas extends ModelBase
      * The table associated with the model.
      * @var string
      */
-    protected $table = 'maestro.gen_cat_programa';
+    protected $table = 'gen_cat_programa';
 
     /**
      * The primary key of the table

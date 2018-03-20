@@ -11,7 +11,7 @@ class UnidadesMedicas extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'maestro.gen_cat_unidades_medicas';
+	protected $table = 'gen_cat_unidades_medicas';
 
 	/**
 	 * The primary key of the table
