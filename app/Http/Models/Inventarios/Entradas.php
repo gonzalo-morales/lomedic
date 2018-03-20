@@ -15,49 +15,25 @@ use App\Scopes\AgeScope;
 
 class Entradas extends ModelCompany
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
+
     protected $table = 'inv_opr_entrada_almacen';
 
-    /**
-     * The primary key of the table
-     * @var string
-     */
     protected $primaryKey = 'id_documento';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-    'fk_id_tipo_documento',
-    'numero_documento',
-    'referencia_documento',
-    'fecha_entrada',
-    'fk_id_estatus_entrada',
-    'fk_id_almacen',
-    'fk_id_ubicacion'
-];
+        'fk_id_tipo_documento',
+        'numero_documento',
+        'referencia_documento',
+        'fecha_entrada',
+        'fk_id_estatus_entrada',
+        'fk_id_almacen',
+        'fk_id_ubicacion'
+    ];
 
-//    public $niceNames =[
-//        'fk_id_socio_negocio'=>'proveedor'
-//    ];
-//
-//    protected $dataColumns = [
-//        'fk_id_estatus_orden'
-//    ];
-    /**
-     * Los atributos que seran visibles en index-datable
-     * @var array
-     */
     protected $fields = [
-        'id_entrada_almacen' => 'Número Entrada',
-        'fk_id_tipo_documento' => 'Tipo documento',
-        'numero_documento' => 'Numero de documento',
+        'id_documento' => 'Número Entrada',
+//        'tipoDocumento.nombre_documento' => 'Tipo documento',
+//        'numero_documento' => 'Numero de documento',
         'referencia_documento' => 'Referencia del documentos',
         'fecha_entrada' => 'Fecha de entrada',
         'fk_id_estatus_entrada' => 'Estatus de la entrada'
