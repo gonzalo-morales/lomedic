@@ -40,7 +40,7 @@ class ModelBase extends Model
 
 	public function __construct($attributes = [])
 	{
-	    $this->schema = !empty($this->schema) ? $this->schema : getSchema();
+	    $this->schema = !empty($this->schema) ? $this->schema : getSchema($this->connection);
 	    $this->table = $this->schema.'.'.$this->table;
 	        
 		$this->eagerLoaders = $this->getAutoEager();
@@ -111,6 +111,7 @@ class ModelBase extends Model
 	    $controller = substr($route,0,strpos($route,'@'));
 
 	    if(in_array('activo',$this->getlistColumns()) && !empty($controller) && isset((new $controller)->entity) && get_class((new $controller)->entity) != get_class($this)) {
+	        $model = (new $controller)->entity;
 	        $parent->newQuery()->where($this->getTable().'.activo',1);
 	    }
 

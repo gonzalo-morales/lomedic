@@ -29,6 +29,6 @@ class ContactosSociosNegocio extends ModelBase
     }
 
     public function tipocontacto(){
-        return $this->belongsTo(TiposContacto::class,'fk_id_tipo_contacto');
+        return $this->belongsTo(TiposContacto::class,'fk_id_tipo_contacto')->orWhere('eliminar',1);
     }
 }
