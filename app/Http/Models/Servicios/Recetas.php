@@ -169,6 +169,14 @@ class Recetas extends ModelCompany
     {
         return $this->hasMany(Proyectos::class,'fk_id_proyecto','id_proyecto');
     }
+
+    public function titular($fk_id_afiliado)
+    {
+        $titular = Afiliaciones::where('id_afiliado',$fk_id_afiliado)->pluck('id_dependiente');
+        return Afiliaciones::select(DB::raw("CONCAT(nombre,' ',paterno,' ',materno) AS nombre"))->where('id_afiliacion', $titular)->pluck('nombre');
+
+    }
+
     public function dependiente($fk_id_afiliacion,$id_dependiente)
     {
         return Afiliaciones::select(DB::raw("CONCAT(nombre,' ',paterno,' ',materno) AS nombre,genero,fecha_nacimiento"))->where('id_afiliacion',$fk_id_afiliacion)->where('id_dependiente',$id_dependiente)->first();
