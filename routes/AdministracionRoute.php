@@ -16,6 +16,7 @@ Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'administracion', 'as' => 'administracion.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
         Route::view("/","administracion.index");
         
+        
         collect(\File::glob(app_path().'/Http/Controllers/Administracion/*Controller.php'))->map(function($file) {
             $name = strtolower(substr(basename($file),0,-14));
             $controller = basename(dirname($file)).'\\'.substr(basename($file),0,-4);
@@ -29,6 +30,6 @@ Route::prefix('{company}')->group(function () {
 		Route::get('getSerie/{id}','Administracion\SeriesSkusController@getSerie');
 		Route::get('sucursalesautocomplete','Administracion\SucursalesController@obtenerSucursales');
 		Route::get('sucursalesempleado/{id}','Administracion\SucursalesController@sucursalesEmpleado');
-        Route::post('afiliados/getDependientes','Administracion\AfiliacionesController@getDependientes')->name('afiliados.getDependientes');
+        Route::post('afiliaciones/getDependientes','Administracion\AfiliacionesController@getDependientes')->name('afiliaciones.getDependientes');
 	});
 });
