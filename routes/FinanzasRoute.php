@@ -17,8 +17,11 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'finanzas', 'as' => 'finanzas.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
         Route::view("/","finanzas.index");
-        Route::resource('gastosviajes', 'Finanzas\GastosViajeController');
-        Route::resource('condicionespago', 'Finanzas\CondicionesPagoController');
-        Route::resource('cuentascontables', 'Finanzas\CuentasContablesController');
+        
+        collect(\File::glob(app_path().'/Http/Controllers/Finanzas/*Controller.php'))->map(function($file) {
+            $name = strtolower(substr(basename($file),0,-14));
+            $controller = basename(dirname($file)).'\\'.substr(basename($file),0,-4);
+            Route::resource($name,$controller);
+        });
     });
 });
