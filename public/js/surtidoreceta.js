@@ -130,14 +130,10 @@ function validarSurtido()
         if(cant_solicitada < cant_surtida + cant_a_surtir)
         {
             $(value).css("background-color", "#F8D7DA");
-            // $(value).find('.cantidad').val(cant_solicitada);
             correcto++;
         }
         else
         {
-            // alert(cant_solicitada);
-            // $(value).val();
-            // $(value).find('.cantidad').val(cant_solicitada);
             $(value).css("background-color", "#FFFFFF");
         }
 
