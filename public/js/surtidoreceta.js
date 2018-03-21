@@ -1,7 +1,3 @@
-/**
- * Created by ihernandezt on 9/1/2018.
- */
-
 
 $(document).ready(function () {
 
