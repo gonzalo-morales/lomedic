@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+use App\Http\Models\Administracion\Estados;
+use App\Http\Models\Administracion\Municipios;
 
 class EmpresasController extends ControllerBase
 {
@@ -30,7 +32,9 @@ class EmpresasController extends ControllerBase
 	{
 	    return [
 	        'regimens'         => RegimenFiscal::where('activo',1)->pluck('regimen_fiscal','id_regimen_fiscal')->sortBy('regimen_fiscal')->prepend('...',''),
-	        'paises'           => Paises::where('activo',1)->pluck('pais','id_pais')->sortBy('pais')->prepend('...',''),
+	        'paises'           => Paises::where('activo',1)->orderBy('pais')->pluck('pais','id_pais')->prepend('...',''),
+	        'estados'          => empty($entity) ? [] : Estados::where('activo',1)->where('fk_id_pais',$entity->fk_id_pais)->orderBy('estado')->pluck('estado','id_estado')->prepend('...',''),
+	        'municipios'       => empty($entity) ? [] : Municipios::where('activo',1)->where('fk_id_estado',$entity->fk_id_estado)->orderBy('municipio')->pluck('municipio','id_municipio')->prepend('...',''),
 	        'js_estados'       => Crypt::encryptString('"select": ["estado", "id_estado"], "conditions": [{"where": ["fk_id_pais","$fk_id_pais"]}], "orderBy": [["estado", "ASC"]]'),
 	        'js_municipios'    => Crypt::encryptString('"select": ["municipio", "id_municipio"], "conditions": [{"where": ["fk_id_estado","$fk_id_estado"]}], "orderBy": [["municipio", "ASC"]]'),
 	    ];
