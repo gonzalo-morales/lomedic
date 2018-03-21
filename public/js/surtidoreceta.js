@@ -83,6 +83,7 @@ $(document).ready(function () {
 });
 
 function calculatotal(el) {
+
     var cantidad = $(el).val();
     var precio = $(el).parent().parent().find('.precio').val();
     var cantidad_surtida = $(el).parent().parent().find('.cantidad_surtida').html();
@@ -95,9 +96,10 @@ function calculatotal(el) {
     }
     else if ((cantidad_disponible - cantidad) < 0) {
         var nueva_cantidad_diponible = 0;
-        cantidad_total = cantidad_total - 1;
-        $(el).val(cantidad - 1);
 
+        cantidad_total = cantidad_total - 1;
+        // $(el).val(cantidad);
+        // alert();
     }
     validarSurtido();
     $(el).parent().parent().find('.cantidad_disponible').html(nueva_cantidad_diponible);
@@ -128,10 +130,14 @@ function validarSurtido()
         if(cant_solicitada < cant_surtida + cant_a_surtir)
         {
             $(value).css("background-color", "#F8D7DA");
+            // $(value).find('.cantidad').val(cant_solicitada);
             correcto++;
         }
         else
         {
+            // alert(cant_solicitada);
+            // $(value).val();
+            // $(value).find('.cantidad').val(cant_solicitada);
             $(value).css("background-color", "#FFFFFF");
         }
 
