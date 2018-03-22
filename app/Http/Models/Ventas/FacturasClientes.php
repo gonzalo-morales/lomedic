@@ -48,6 +48,7 @@ class FacturasClientes extends ModelCompany
      * @var array
      */
     protected $fields = [
+        'empresa.razon_social' => 'Empresa',
         'serie' => 'Serie',
         'folio' => 'Folio',
         'cliente.nombre_comercial' => 'Cliente',
