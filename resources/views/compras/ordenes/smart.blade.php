@@ -528,6 +528,7 @@
 					});
 				}else{
 					var data = motivo;
+                    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 					$.delete(this.dataset.deleteUrl,data,function (response) {
 						if(response.success){
 							sessionStorage.reloadAfterPageLoad = true;
