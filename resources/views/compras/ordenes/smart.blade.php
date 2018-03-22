@@ -34,14 +34,12 @@
 	                   {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info progress-button']) }}
 	               @endif
 			   @endcan
+				   {!!isset($data->id_documento) ? HTML::decode(link_to(companyRoute('').'/impress', '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
 		   @endif
 		   @if(Route::currentRouteNamed(currentRouteName('edit')))
 				@if($data->fk_id_estatus_autorizacion == 1 || $data->fk_id_estatus_autorizacion == 3)
 					{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
 				@endif
-		   @endif
-		   @if(Route::currentRouteNamed(currentRouteName('update')))
-		   		{{ Form::button('Guardar', ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
 		   @endif
 		   {{-- @if(Route::currentRouteNamed(currentRouteName('index')))
 			   {{ link_to(companyRoute('edit'), 'Editar', ['class'=>'btn btn-info progress-button']) }}

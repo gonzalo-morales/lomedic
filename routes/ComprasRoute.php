@@ -35,7 +35,6 @@ Route::prefix('{company}')->group(function () {
         
         Route::get('ordenes/getProveedores', 'Compras\OrdenesController@getProveedores')->name('ordenes');
         Route::post('ordenes/destroyDetail', 'Compras\OrdenesController@destroyDetail')->name('ordenes');
-        Route::get('ordenes/{id}/impress', 'Compras\OrdenesController@impress')->name('ordenes');
         Route::get('ordenes/{id}/solicitudOrden','Compras\OrdenesController@createSolicitudOrden')->name('ordenes');
 
         collect(\File::glob(app_path().'/Http/Controllers/Compras/*Controller.php'))->map(function($file) {
@@ -43,7 +42,6 @@ Route::prefix('{company}')->group(function () {
             $controller = basename(dirname($file)).'\\'.substr(basename($file),0,-4);
             Route::resource($name,$controller);
         });
-        
         Route::post('getFacturaData','Compras\NotasCreditoProveedorController@parseXML');
         Route::get('ofertas/{id}/impress', 'Compras\OfertasController@impress')->name('ofertas');
         Route::post('getDetallesOrden','Compras\OrdenesController@getDetallesOrden');
@@ -55,5 +53,6 @@ Route::prefix('{company}')->group(function () {
         Route::post('actualizarEstatus','Compras\DetalleSeguimientoDesviacionController@actualizarEstatus');
         Route::get('pagos/{id}/download','Compras\PagosController@descargaComprobante');
         Route::get('solicitudes/{id}/impress', 'Compras\SolicitudesController@impress')->name('solicitudes');
+        Route::get('ordenes/{id}/impress', 'Compras\OrdenesController@impress')->name('ordenes');
     });
 });

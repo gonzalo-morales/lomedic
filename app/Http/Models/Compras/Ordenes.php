@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Administracion\Empresas;
 use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\ModelCompany;
 use DB;
@@ -96,7 +97,7 @@ class Ordenes extends ModelCompany
 
     public function empresa()
     {
-        return $this->belongsTo('App\Http\Models\Administracion\Empresas','fk_id_empresa','id_empresa');
+        return $this->belongsTo(Empresas::class,'fk_id_empresa','id_empresa');
     }
 
     public function tipoEntrega()

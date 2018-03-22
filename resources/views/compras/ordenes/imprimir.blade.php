@@ -2,8 +2,8 @@
 <body>
 <div style="">
     <div style="width: 100%">
-        <?php $logo = $orden->empresa->logotipo_completo?>
-            {!!HTML::image(asset("img/$logo"),'',['height'=>'56'])!!}
+        <?php $logo = $orden->empresa->logotipo?>
+            {!!HTML::image(asset("img/logotipos/$logo"),'',['height'=>'56'])!!}
             <div style="width: 60.5%; float: left">
                 <h4 align="center">Orden de compra</h4>
                 <h6 align="center">
@@ -63,8 +63,9 @@
             <tr>
                 <th><h5>SKU</h5></th>
                 <th><h5>UPC</h5></th>
+                <th><h5>Producto</h5></th>
+                <th width="30%"><h5>Descripción</h5></th>
                 <th><h5>Fecha límite</h5></th>
-                <th><h5>Cliente</h5></th>
                 <th><h5>Proyecto</h5></th>
                 <th width="6%"><h5>Cantidad</h5></th>
                 <th><h5>Precio unitario</h5></th>
@@ -75,9 +76,10 @@
             @foreach($orden->detalle()->where('cerrado','f')->get() as $detalle)
             <tr>
                 <td>{{$detalle->sku->sku}}</td>
-                <td>{{isset($detalle->upc) ? $detalle->upc->upc : 'UPC no seleccionado'}}</td>
+                <td>{{isset($detalle->upc) ? $detalle->upc->upc : 'Sin UPC'}}</td>
+                <td>{{$detalle->sku->descripcion_corta}}</td>
+                <td>{{$detalle->sku->descripcion}}</td>
                 <td>{{isset($detalle->fecha_necesario) ? $detalle->fecha_necesario : 's.f.'}}</td>
-                <td>{{isset($detalle->cliente) ? $detalle->cliente->nombre_corto : 'Sin cliente'}}</td>
                 <td>{{isset($detalle->proyecto) ? $detalle->proyecto->proyecto : 'sin proyecto'}}</td>
                 <td>{{$detalle->cantidad}}</td>
                 <td>${{number_format($detalle->precio_unitario,2,'.',',')}}</td>
@@ -95,10 +97,24 @@
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
                 <td>Subtotal:</td>
-                <td>${{$subtotal}}</td>
+                <td>${{number_format($orden->subtotal,2,'.',',')}}</td>
             </tr>
             <tr style="border: hidden">
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td>Descuento:</td>
+                <td>${{number_format($orden->descuento_total,2,'.',',')}}</td>
+            </tr>
+            <tr style="border: hidden">
+                <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
@@ -107,24 +123,15 @@
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td>IVA:</td>
-                <td>${{$iva}}</td>
+                <td>${{number_format($orden->impuesto,2,'.',',')}}</td>
             </tr>
             <tr style="border: hidden">
-                <td colspan="7"><h3>*** {{$total_letra}} ***</h3></td>
+                <td colspan="8"><h3>*** {{num2letras($orden->total_orden)}} ***</h3></td>
                 <td>Total</td>
-                <td>${{$total}}</td>
+                <td>${{number_format($orden->total_orden,2,'.',',')}}</td>
             </tr>
         </table>
     </div>
-    {{--<div style="width: 100%;clear: both">--}}
-        {{--<div style="float: left">--}}
-            {{--<p style="font-size: 12px; border-top:1px solid #000; margin-top: 80px; padding: 0px 10px;">--}}
-                {{--{{$orden->empleado->nombre--}}
-                {{--.' '.$orden->empleado->apellido_paterno--}}
-                {{--.' '.$orden->empleado->apellido_materno}}--}}
-            {{--</p>--}}
-        {{--</div>--}}
-    {{--</div>--}}
 </div>
 </body>
 </html>
