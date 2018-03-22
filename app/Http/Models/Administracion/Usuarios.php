@@ -74,10 +74,9 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         'fk_id_empresa_default' => 'required',
     ];
 
-	// protected $unique = [
-    //     'nombre_corto',
-    //     'usuario'
-	// ];
+	protected $unique = [
+        'usuario'
+	];
 
     public function sendPasswordResetNotification($token)
     {

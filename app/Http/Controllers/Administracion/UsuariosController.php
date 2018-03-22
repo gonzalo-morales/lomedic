@@ -26,13 +26,19 @@ use Illuminate\Support\Facades\Cache;
 
 class UsuariosController extends ControllerBase
 {
-    /**
-     * Create a new controller instance.
-     * @return void
-     */
     public function __construct()
     {
         $this->entity = new Usuarios;
+    }
+    
+    public function getDataView($entity = null)
+    {
+        $empresa = Empresas::select('nombre_comercial','id_empresa')->orderBy('nombre_comercial');
+        return [
+            'companys' => $empresa->get(),
+            'empresas' => $empresa->pluck('nombre_comercial','id_empresa'),
+            'profiles'=> Perfiles::select('nombre_perfil','id_perfil')->orderBy('nombre_perfil')->get(),
+        ];
     }
 
     /**
@@ -55,7 +61,7 @@ class UsuariosController extends ControllerBase
 
         $attributes['dataview'] =[
             'companies'=>$companies,
-            'profiles'=>$profiles,
+            //'profiles'=>$profiles,
             'profiles_permissions' => $profiles_permissions,
             'empleados'=>$empleados,
             'sucursales_js'=>$sucursales_js,

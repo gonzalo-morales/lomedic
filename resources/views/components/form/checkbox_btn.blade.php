@@ -1,7 +1,7 @@
+<div class="text-center" style="display:inline">
 @if(!empty($label))
 <label class="text-center mb-0 w-100">{{$label}}</label>
 @endif
-<div class="text-center">
 	{{ Form::hidden($name, 0) }}
     <label class="btn form-check-label {{ (old($name) ?? $value ) ? 'btn-success':'btn-secondary'}}"> 
         {{ Form::checkbox($name, 1, old($name), [

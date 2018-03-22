@@ -6,8 +6,8 @@
     	<script type="text/javascript">
         	var estados_js = '{{ $js_estados ?? '' }}';
         	var municipios_js = '{{ $js_municipios ?? '' }}';
-        	var id_estado = {{ $data->fk_id_estado ?? ''}}
-        	var id_municipio = {{ $data->fk_id_municipio ?? ''}}
+        	var id_estado = {!! $data->fk_id_estado ?? "''"!!};
+        	var id_municipio = {!! $data->fk_id_municipio ?? "''"!!};
         </script>
     	{{ HTML::script(asset('js/administracion/empresas.js')) }}
     @endif
