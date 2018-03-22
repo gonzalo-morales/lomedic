@@ -4,7 +4,7 @@ $(document).ready(function(){
     $('[data-toggle]').tooltip();
     
     initSelects();
-    totalOrden();
+    totalOferta();
 
     //Por si se selecciona un UPC
     $('#activo_upc').on('change',function () {
@@ -36,15 +36,34 @@ $(document).ready(function(){
             }
         }
     })//Fin UPC
-
     //Para obtener los IVAS con sus porcentajes y IDs
     $.ajax({
         url: $('#fk_id_impuesto').data('url'),
         dataType:'json',
         success:function (data) {
+            $('.idImpuestoRow').each(function (index,select) {
+                var id_default = $(select).data('default');
+                var data2 = [];
+                $.each(data,function (index,option) {
+                    var datadefault = false;
+                    if(id_default == option.id)
+                        datadefault = true;
+
+                    if(option.id != 0){
+                        if(datadefault)
+                            option.selected = true;
+                        data2.push(option);
+                    }
+                });
+                $(select).select2({
+                    minimumResultsForSearch:'Infinity',
+                    data:data2
+                })
+            });
+
             $('#fk_id_impuesto').select2({
                 minimumResultsForSearch:'Infinity',
-                data:data,
+                data:data
             });
         }
     });
@@ -147,6 +166,56 @@ $(document).ready(function(){
        agregarProducto();
     });
 
+    $(document).on('submit',function (e) {
+        if(!$('#productos tbody tr').length > 1){
+            e.preventDefault();
+            $.toaster({
+                priority: 'danger', title: '¡Advertencia!', message: 'La orden de compra debe tener al menos un producto',
+                settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }
+    });
+
+    $('.precioRow, .descuentoRow, .idImpuestoRow').on('change keyup',function (event) {//Para cuando se modifica una fila que le pertenece a una solicitud si se está en el create
+        var row = $(event.target).closest('tr');
+        var cantidad = +$(row).find('.cantidadRow').val();
+        var precio = +$(row).find('.precioUnitarioRow').val();
+        var descuento = +$(row).find('.descuentoRow').val();
+        $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
+        $.validator.addMethod('precio',function (value,element) {
+            return this.optional(element) || /^\d{0,6}(\.\d{0,2})?$/g.test(value);
+        },'Verifica la cantidad. Ej. 999999.00');
+        $.validator.addMethod("greaterThan", function( value, element, param ) {
+            return value > param;
+        }, "El campo debe ser mayor a {0}" );
+        $.validator.addMethod( "lessThan", function( value, element, param ) {
+            return value < param;
+        }, "Ingresa un valor menor a precio por cantidad ({0})" );
+
+        $.validator.addClassRules('descuentoRow',{
+            precio:true,
+            greaterThan:-1,
+            lessThan: precio * cantidad
+        });
+        $.validator.addClassRules('precioUnitarioRow',{
+            cRequerido:true,
+            precio:true,
+            greaterThan:0
+        });
+        $.validator.addClassRules('idImpuestoRow',{
+            cRequerido:true
+        });
+        if($('#form-model').valid()){
+            var subtotal = cantidad*precio;
+            subtotal = subtotal - descuento;
+            var impuesto = ($(row).find('.idImpuestoRow').select2('data')[0].porcentaje/100) * subtotal;
+            $(event.target).closest('tr').find('.totalRow').val((subtotal).toFixed(2));
+            $(event.target).closest('tr').find('.porcentajeRow').val($(row).find('.idImpuestoRow').select2('data')[0].porcentaje);
+            $(event.target).closest('tr').find('.impuestoRow').val(impuesto);
+        }
+        totalOferta();
+    });
+
 });//docReady
 
 function agregarProducto() {
@@ -179,32 +248,39 @@ function agregarProducto() {
             var total = totalProducto();
             var impuesto = impuestoProducto();
             var i = $('#productos > tbody > tr').length;
-            var row_id = i > 0 ? +$('#productos > tbody > tr:last').find('#index').val()+1 : 0;
+            var row_id = i > 0 ? +$('#productos > tbody > tr:last').find('.index').val()+1 : 0;
+            var id_proyecto = '';
+            if($('#fk_id_proyecto').val()){
+                id_proyecto = $('#fk_id_proyecto').val();
+            }
+            var id_upc = '';
+            if($('#fk_id_upc').val()){
+                id_upc = $('#fk_id_upc').val();
+            }
             tableData.append(
                 '<tr>' +
                     '<th>' + 'N/A' +
-                        '<input type="hidden" id="index" value="'+row_id+'">'+
+                        '<input type="hidden" class="index" value="'+row_id+'">'+
                         '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_base]" value=""/>'+
                         '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+ $('#fk_id_sku').val() +'"/>'+
-                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][cantidad]" value="'+ $('#cantidad').val() +'"/>'+
-                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+ $('#fk_id_upc').val() +'"/>'+
-                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][precio_unitario]" value="'+ $('#precio_unitario').val() +'"/>'+
-                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][descuento_detalle]" value="'+ $('#descuento_detalle').val() +'"/>'+
+                        '<input type="hidden" class="cantidadRow" name="relations[has][detalle]['+row_id+'][cantidad]" value="'+ $('#cantidad').val() +'"/>'+
+                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+ id_upc +'"/>'+
+                        '<input type="hidden" class="precioUnitarioRow" name="relations[has][detalle]['+row_id+'][precio_unitario]" value="'+ $('#precio_unitario').val() +'"/>'+
+                        '<input type="hidden" class="descuentoRow" name="relations[has][detalle]['+row_id+'][descuento_detalle]" value="'+ $('#descuento_detalle').val() +'"/>'+
                         '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="'+ $('#fk_id_impuesto').val() +'"/>'+
-                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proyecto]" value="' + $('#fk_id_proyecto').val() + '" />'+
-                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_cliente]" value="' + $('#fk_id_cliente').val() + '" />'+
+                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proyecto]" value="' + id_proyecto + '" />'+
                         '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />'+
                         '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proveedor]" value="'+ $('#fk_id_proveedor').val() +'"/>'+
                         '<input type="hidden" name="relations[has][detalle]['+row_id+'][total_producto]" class="totalRow" value="'+ total +'"/>'+
-                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][total_impuesto]" class="totalRow" value="'+ impuesto +'"/>'+
+                        '<input type="hidden" name="relations[has][detalle]['+row_id+'][total_impuesto]" class="impuestoRow" value="'+ impuesto +'"/>' +
+                        '<input type="hidden" class="porcentajeRow" value="'+$('#fk_id_impuesto').select2('data')[0].porcentaje+'">'+
                         '<input type="hidden" value="'+ tiempo_entrega[0].tiempo_entrega +'" class="tiempo_entrega">' +
                     '</th>' +
                     '<td>' + '<img style="max-height:40px" src="img/sku.png" alt="sku"/> ' + $('#fk_id_sku option:selected').text() + '</td>' +
                     '<td>' + '<img style="max-height:40px" src="img/upc.png" alt="upc"/> ' + $('#fk_id_upc option:selected').text() + '</td>' +
-                    '<td>' + $('#fk_id_upc option:selected').data('nc') + '</td>' +
-                    '<td>' + $('#fk_id_upc option:selected').data('descripcion') + '</td>' +
-                    '<td>' + $('#fk_id_cliente option:selected').html() + '</td>' +
-                    '<td>' + $('#fk_id_proyecto option:selected').html() + '</td>' +
+                    '<td>'+$('#fk_id_sku').select2('data')[0].descripcion_corta + '</td>'+
+                    '<td>'+$('#fk_id_sku').select2('data')[0].descripcion + '</td>'+
+                    '<td>' + $('#fk_id_proyecto option:selected').text() + '</td>' +
                     '<td>' + $('#fk_id_unidad_medida option:selected').html() + '</td>' +
                     '<td>' + $('#cantidad').val() + '</td>' +
                     '<td>' + $('#fk_id_impuesto option:selected').html() + '</td>' +
@@ -219,7 +295,7 @@ function agregarProducto() {
                     settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
                 });
                 limpiarCampos();
-                totalOrden();
+                totalOferta();
                 tiemposentrega();
             },
             error: function () {
@@ -245,14 +321,10 @@ function initSelects() {
 }
 
 function totalProducto() {
-    var cantidad = $('#cantidad').val();
-    var precio = $('#precio_unitario').val();
-    var descuento_porcentaje = $('#descuento_detalle').val()/100;
-    var descuento = precio*descuento_porcentaje;
-    precio = precio-descuento;
-    var subtotal = cantidad*precio;
-    // var impuesto = $('#impuesto').val()*subtotal;
-
+    var cantidad = +$('#cantidad').val();
+    var precio = +$('#precio_unitario').val();
+    var subtotal =cantidad*precio;
+    subtotal = subtotal - +$('#descuento_detalle').val();
     return (subtotal).toFixed(2);
 }
 
@@ -265,43 +337,60 @@ function impuestoProducto() {
     return (impuesto).toFixed(2);
 }
 
-function totalOrden() {
-    var $totalRows = $('#productos > tbody > tr').find('.totalRow');
-    var subTotal = 0;
-    for (var i = 0; i < $totalRows.length; i++) {
-       subTotal += +$($totalRows[i]).val();
+function totalOferta() {
+
+    var subtotal = 0;
+    var impuesto = 0;
+    var descuento_total = 0;
+
+    if($('#productos tbody tr').length){
+        $('#productos tbody tr').each(function (tr) {
+            //Del producto
+            var cantidad_row = +$(this).find('.cantidadRow').val();//Decimal
+            var precio_row = +$(this).find('.precioUnitarioRow').val();//Decimal
+            var porcentaje_row = +$(this).find('.porcentajeRow').val()/100;//Decimal
+            var descuento_row = +$(this).find('.descuentoRow').val();
+            descuento_total += descuento_row;//Decimal
+            var subtotal_row = (cantidad_row * precio_row) - descuento_row;
+            //Del total
+            subtotal += cantidad_row*precio_row;
+            impuesto += subtotal_row * porcentaje_row;
+        });
+
+        var total = subtotal + impuesto - descuento_total;
+        $('#subtotal').val(subtotal.toFixed(2));
+        $('#descuento_oferta').val(descuento_total.toFixed(2));
+        $('#impuesto_oferta').val(impuesto.toFixed(2));
+        $('#total_oferta').val(total.toFixed(2));
+    }else{
+        $('#subtotal').val(0);
+        $('#impuesto_oferta').val(0);
+        $('#total_oferta').val(0);
+        $('#descuento_oferta').val(0);
     }
-    var descuento_porcentaje = $('#descuento_oferta').val()/100;
-    var descuento = descuento_porcentaje*subTotal;
-    var total = subTotal-descuento;
-    $('#total_oferta').val(total.toFixed(2));
 }
 
 function limpiarCampos() {
-    $('#fk_id_cliente').val('');
-    $('#fk_id_cliente').select2();
-    $('#fk_id_proyecto').empty();
-    $('#fk_id_proyecto').select2({
+    $('#fk_id_cliente').val('').select2();
+    $('#fk_id_proyecto').empty().select2();
+    $('#fk_id_sku').val('').select2();
+    $('#fk_id_upc').empty().select2({
+        placeholder: "Seleccione el UPC...",
+        disabled:true
     });
-    $('#fk_id_sku').val('');
-    $('#fk_id_sku').select2();
-    $('#fk_id_upc').empty();
-    $('#fk_id_upc').select2({
-        placeholder: "Seleccione el SKU...",
-        disabled:true,
-    });
-    $('#fk_id_unidad_medida').val('');
-    $('#fk_id_unidad_medida').select2();
+    $('#activo_upc').prop('checked',false);
+    $('#fk_id_unidad_medida').val('').select2();
     $('#cantidad').val('');
-    $('#fk_id_impuesto').val('');
+    $('#fk_id_impuesto').val('').select2();
     $('#precio_unitario').val(0);
     $('#descuento_detalle').val(0);
-    //Eliminar reglas de validaciÃ³n detalle
+    //Eliminar reglas de validación detalle
     $('#fk_id_sku').rules('remove');
     $('#fk_id_upc').rules('remove');
     $('#cantidad').rules('remove');
     $('#fk_id_impuesto').rules('remove');
     $('#precio_unitario').rules('remove');
+    $('#descuento_detalle').rules('remove');
     $('#fk_id_unidad_medida').rules('remove');
 }
 
@@ -332,13 +421,11 @@ function validateDetail() {
         return this.optional(element) || /^\d{0,6}(\.\d{0,2})?$/g.test(value);
     },'El precio no tiene un formato válido');
     $.validator.addMethod( "greaterThan", function( value, element, param ) {
-
         if ( this.settings.onfocusout ) {
             $(element).addClass( "validate-greaterThan-blur" ).on( "blur.validate-greaterThan", function() {
                 $( element ).valid();
             } );
         }
-
         return value > param;
     }, "Please enter a greater value." );
     $('#precio_unitario').rules('add',{
@@ -352,16 +439,20 @@ function validateDetail() {
             greaterThan: 'El número debe ser mayor a 0',
         }
     });
+    $.validator.addMethod( "lessThan", function( value, element, param ) {
+        return value < param;
+    }, "Please enter a smaller value." );
     $('#descuento_detalle').rules('add',{
         number: true,
         precio:true,
         greaterThan:-1,
+        lessThan: +$('#precio_unitario').val() * +$('#cantidad').val(),
         messages:{
             number: 'El campo debe ser un número',
             greaterThan: 'El número debe ser positivo',
+            lessThan: 'El descuento debe ser menor al precio por la cantidad'
         }
     });
-
     $('#fk_id_unidad_medida').rules('add',{
         required:true,
         messages:{
@@ -378,7 +469,6 @@ function tiemposentrega() {
     });
     var fecha = new Date();
     fecha.setDate(fecha.getDate() + +mayor_tiempo);
-    // fecha.addDays(mayor_tiempo);
     $('#fecha_estimada_entrega').val(fecha.getFullYear()+'-'+(fecha.getMonth()+1)+'-'+fecha.getDate());
     $('#tiempo_entrega').val(mayor_tiempo);
 }
@@ -388,9 +478,9 @@ function borrarFila(el) {
     tr.remove().stop();
     $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
         settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}});
-    totalOrden();
+    totalOferta();
 }
-// Date.prototype.addDays = function(days) {
-//     this.setDate(this.getDate() + days);
-//     return this;
-// };
+
+function totalRow() {
+
+}

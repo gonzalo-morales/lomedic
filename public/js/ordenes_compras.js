@@ -68,8 +68,7 @@ $(document).ready(function(){
         });
 
         $(document).on('submit',function (e) {
-            // e.preventDefault();
-            if($('#productos tbody tr').length > 1){
+            if(!$('#productos tbody tr').length > 1){
                 e.preventDefault();
                 $.toaster({
                     priority: 'danger', title: '¡Advertencia!', message: 'La orden de compra debe tener al menos un producto',
@@ -93,7 +92,6 @@ $(document).ready(function(){
     });
     $('.condicion').click(function () {
         $('#motivo_autorizacion').val($(this).parent().parent().find('td:nth-child(2)').text());
-        // $('#fk_id_estatus\\ ').prop('checked',true);
         $('#id_documento').val($(this).parent().parent().find('td input:first').val());
         $('#observaciones').val($(this).parent().parent().find('td input:first').next('input').val());
         if($(this).parent().parent().find('td input:last').val() == 3){
@@ -147,7 +145,7 @@ $(document).ready(function(){
     $('#reload').click(function (e) {
         e.preventDefault();
         window.location.reload(true);
-    })
+    });
     //Aquí termina la parte de las autorizaciones
 
     $('#fk_id_proyecto').select2({
@@ -188,21 +186,6 @@ $(document).ready(function(){
 
 });
 
-function select2Placeholder(id_select,text,searchable = 1,selected = true, disabled = true,value = 0,select2=true){
-    var option = $('<option/>');
-    option.val(value);
-    option.attr('disabled',disabled);
-    option.attr('selected',selected);
-    option.text(text);
-    if(select2)
-        $('#'+id_select).prepend(option).select2({
-            minimumResultsForSearch:searchable,
-            theme: "bootstrap"
-        });
-    else
-        $('#'+id_select).prepend(option);
-}
-
 function initSelects() {
     $("#fk_id_sku").select2({
         minimumInputLength:3,
@@ -234,18 +217,82 @@ function initSelects() {
 
     totalOrden();
 
-    select2Placeholder('fk_id_upc','UPC no seleccionado',20,true,true,0,false);
-    $('#fk_id_upc').select2();
     //Para obtener los IVAS con sus porcentajes y IDs
     $.ajax({
         url: $('#fk_id_impuesto').data('url'),
         dataType:'json',
         success:function (data) {
+
+            $('.idImpuestoRow').each(function (index,select) {
+                var id_default = $(select).data('default');
+                var data2 = [];
+                $.each(data,function (index,option) {
+                    var datadefault = false;
+                    if(id_default == option.id)
+                        datadefault = true;
+
+                    if(option.id != 0){
+                        if(datadefault)
+                            option.selected = true;
+                        data2.push(option);
+                    }
+                });
+                $(select).select2({
+                    minimumResultsForSearch:'Infinity',
+                    data:data2
+                })
+            });
+
             $('#fk_id_impuesto').select2({
                 minimumResultsForSearch:'Infinity',
                 data:data,
             });
         }
+    });
+
+    $('.cantidad_row, .precio_unitario_row, .descuento_row, .idImpuestoRow').on('change keyup',function (event) {//Para cuando se modifica una fila que le pertenece a una solicitud si se está en el create
+        var row = $(event.target).closest('tr');
+        var cantidad = +$(row).find('.cantidad_row').val();
+        var precio = +$(row).find('.precio_unitario_row').val();
+        var descuento = +$(row).find('.descuento_row').val();
+        $.validator.addMethod('cRequerido',$.validator.methods.required,'Este campo es requerido');
+        $.validator.addMethod('precio',function (value,element) {
+            return this.optional(element) || /^\d{0,6}(\.\d{0,2})?$/g.test(value);
+        },'Verifica la cantidad. Ej. 999999.00');
+        $.validator.addMethod("greaterThan", function( value, element, param ) {
+            return value > param;
+        }, "El campo debe ser mayor a {0}" );
+        $.validator.addMethod( "lessThan", function( value, element, param ) {
+            return value < param;
+        }, "Ingresa un valor menor a precio por cantidad ({0})" );
+        $.validator.addMethod("cDigits",$.validator.methods.digits,'Este campo solo acepta enteros');
+        $.validator.addClassRules('descuento_row',{
+            precio:true,
+            greaterThan:-1,
+            lessThan: precio * cantidad
+        });
+        $.validator.addClassRules('precio_unitario_row',{
+            cRequerido:true,
+            precio:true,
+            greaterThan:0
+        });
+        $.validator.addClassRules('idImpuestoRow',{
+            cRequerido:true
+        });
+        $.validator.addClassRules('cantidad_row',{
+           cRequerido:true,
+           cDigits:true,
+           greaterThan:0
+        });
+        if($('#form-model').valid()){
+            var subtotal = cantidad*precio;
+            subtotal = subtotal - descuento;
+            var impuesto = ($(row).find('.idImpuestoRow').select2('data')[0].porcentaje/100) * subtotal;
+            $(event.target).closest('tr').find('.total_row').val((subtotal).toFixed(2));
+            $(event.target).closest('tr').find('.porcentaje').val($(row).find('.idImpuestoRow').select2('data')[0].porcentaje);
+            $(event.target).closest('tr').find('.impuesto_row').val(impuesto);
+        }
+        totalOrden();
     });
 }
 
@@ -335,9 +382,8 @@ function totalOrden() {
             impuesto += subtotal_row * porcentaje_row;
         });
         var descuento_porcentaje = ( descuento_total * 100)/ subtotal;
-        // subtotal = subtotal - descuento_total;
 
-        var total = (subtotal)+impuesto;
+        var total = subtotal + impuesto - descuento_total;
         $('#subtotal_lbl').text((subtotal).toFixed(2));
         $('#subtotal').val(subtotal.toFixed(2));
         $('#impuesto_lbl').text(impuesto.toFixed(2));

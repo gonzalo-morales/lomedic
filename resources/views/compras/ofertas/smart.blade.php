@@ -91,7 +91,7 @@
 									</span>
 									{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
 									'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
-									'class'=>'form-control','style'=>'width:100%',])!!}
+									'class'=>'form-control select2','style'=>'width:100%',])!!}
 								</div>
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
@@ -156,14 +156,13 @@
 								<th>UPC</th>
 								<th>Descripción</th>
 								<th>Producto</th>
-								<th>Cliente</th>
 								<th>Proyecto</th>
 								<th>Unidad de medida</th>
 								<th>Cantidad</th>
-								<th>Tipo de impuesto</th>
+								<th style="max-width: 125px">Tipo de impuesto</th>
 								<th>Precio unitario</th>
 								<th>Descuento ($)</th>
-								<th>Total</th>
+								<th>Importe</th>
 								@if(Route::currentRouteNamed(currentRouteName('edit')) || Route::currentRouteNamed(currentRouteName('create')))
 									<th>Eliminar</th>
 								@endif
@@ -171,21 +170,26 @@
     					</thead>
     					<tbody class="table-hover">
     					@if(isset($solicitud) && Route::currentRouteNamed(currentRouteName('create')))
-							@foreach( $solicitud->detalle->where('cerrado',false) as $detalle)
-							{{dump($detalle)}}
+							@foreach( $solicitud->detalle->where('cerrado',false) as $row => $detalle)
     							<tr class="list-left bg-light">
-    								<td>
+    								<th>
+										{{Form::hidden('',$row,['class'=>'index'])}}
     									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_linea]',$detalle->id_documento_detalle) !!}
-    								</td>
+    									{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_linea]',$detalle->id_documento_detalle) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_upc]',$detalle->fk_id_upc ?? '') !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_proyecto]',$detalle->fk_id_proyecto ?? '') !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][cantidad]', $detalle->cantidad,['class'=>'form-control cantidadRow']) !!}
+    								</th>
     								<td>
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+										<img style="max-height:40px" src="img/sku.png" alt="sku"/>
     									{{$detalle->sku->sku}}
     								</td>
     								<td>
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_upc]',isset($detalle->fk_id_upc)?$detalle->fk_id_upc:'') !!}
-    									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
+										<img style="max-height:40px" src="img/upc.png" alt="upc"/>
+    									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:''}}
     								</td>
     								<td>
     									{{str_limit($detalle->sku->descripcion_corta,250)}}
@@ -194,40 +198,31 @@
     									{{str_limit($detalle->sku->descripcion,250)}}
     								</td>
     								<td>
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
-    									{{isset($detalle->cliente->nombre_corto)?$detalle->cliente->nombre_corto:'Sin cliente'}}
+    									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:''}}
     								</td>
     								<td>
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
-    									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
-    								</td>
-    								<td>
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
     									{{$detalle->unidad_medida->nombre}}
     								</td>
     								<td>
-    									{!! Form::text('relations[has][detalle]['.$detalle->id_documento_detalle.'][cantidad]',
-    									$detalle->cantidad,
-    									['class'=>'form-control cantidad','id'=>'cantidad'.$detalle->id_documento_detalle,'style'=>'min-width:100px','placeholder'=>'0','onkeyup'=>'total_row('.$detalle->id_documento_detalle.')']) !!}
+    									{{$detalle->cantidad}}
     								</td>
     								<td>
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_impuesto]',
-    									$detalle->fk_id_impuesto,
-    									['data-porcentaje'=>$detalle->impuesto->porcentaje,'id'=>'fk_id_impuesto'.$detalle->id_documento_detalle]) !!}
-    									{{$detalle->impuesto->impuesto}}
+										{!! Form::cSelect('','relations[has][detalle]['.$row.'][fk_id_impuesto]',null,['class'=>'idImpuestoRow','data-default'=>$detalle->fk_id_impuesto]) !!}
+										{!! Form::hidden('',$detalle->impuesto->porcentaje,['class'=>'porcentajeRow']) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][total_impuesto]',$detalle->impuesto_total,['class'=>'impuestoRow']) !!}
     								</td>
     								<td>
-    									{!! Form::text('relations[has][detalle]['.$detalle->id_documento_detalle.'][precio_unitario]',
+    									{!! Form::text('relations[has][detalle]['.$row.'][precio_unitario]',
     									number_format($detalle->precio_unitario,2,'.',''),
-    									['class'=>'form-control precio','id'=>'precio_unitario'.$detalle->id_documento_detalle,'style'=>'min-width:100px','placeholder'=>'999999.00','onkeyup'=>'total_row('.$detalle->id_documento_detalle.')']) !!}
+    									['class'=>'form-control precioUnitarioRow','style'=>'min-width:100px','placeholder'=>'999999.00']) !!}
     								</td>
     								<td>
-    									{!! Form::text('relations[has][detalle]['.$detalle->id_documento_detalle.'][descuento_detalle]',
+    									{!! Form::text('relations[has][detalle]['.$row.'][descuento_detalle]',
     									null,
-    									['class'=>'form-control descuento','id'=>'descuento_detalle'.$detalle->id_documento_detalle,'style'=>'min-width:100px','placeholder'=>'99.0000','onkeyup'=>'total_row('.$detalle->id_documento_detalle.')']) !!}
+    									['class'=>'form-control descuentoRow','style'=>'min-width:100px','placeholder'=>'99.0000']) !!}
     								</td>
     								<td>
-    									<input type="text" class="form-control total" id="total{{$detalle->id_documento_detalle}}" style="min-width: 100px" name="{{'relations[has][detalle]['.$detalle->id_documento_detalle.'][total_producto]'}}" readonly value="{{number_format($detalle->importe,2,'.','')}}">
+    									<input type="text" class="form-control totalRow" style="min-width: 100px" name="{{'relations[has][detalle]['.$row.'][total_producto]'}}" readonly value="{{number_format($detalle->importe,2,'.','')}}">
     								</td>
     								<td>
     									<button class="btn is-icon text-primary bg-white"
@@ -240,21 +235,23 @@
     							</tr>
     						@endforeach
 						@elseif( isset( $data->detalle ) )
-    						@foreach( $data->detalle->where('cerrado',false) as $detalle)
+    						@foreach( $data->detalle->where('cerrado',false) as $row=>$detalle)
     							<tr class="{{isset($detalle->fk_id_documento_base)?'list-left bg-light':''}}">
     								<th>
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
-    									{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_cliente]',$detalle->fk_id_cliente) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][precio_unitario]',$detalle->precio_unitario) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][descuento_detalle]',$detalle->descuento_detalle) !!}
-										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][total_producto]',$detalle->total_producto,['class'=>'totalRow']) !!}
-										{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_documento_documento:'N/A'}}
+										{{Form::hidden('',$row,['class'=>'index'])}}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][id_documento_detalle]',$detalle->id_documento_detalle) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_upc]',$detalle->fk_id_upc ?? '') !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_proyecto]',$detalle->fk_id_proyecto ?? '') !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][cantidad]',$detalle->cantidad,['class'=>'cantidadRow']) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][precio_unitario]',$detalle->precio_unitario,['class'=>'precioUnitarioRow']) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][descuento_detalle]',$detalle->descuento_detalle,['class'=>'descuentoRow']) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][total_producto]',$detalle->total_producto,['class'=>'totalRow']) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][total_impuesto]',$detalle->total_impuesto,['class'=>'impuestoRow']) !!}
+										{!! Form::hidden('',$detalle->impuesto->porcentaje,['class'=>'porcentajeRow']) !!}
+										{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_documento_base:'N/A'}}
     								</th>
     								<td>
 										<img style="max-height:40px" src="img/sku.png" alt="sku"/>
@@ -269,9 +266,6 @@
     								</td>
     								<td>
     									{{$detalle->sku->descripcion}}
-    								</td>
-    								<td>
-    									{{isset($detalle->cliente->nombre_corto)?$detalle->cliente->nombre_corto:'Sin cliente'}}
     								</td>
     								<td>
     									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}

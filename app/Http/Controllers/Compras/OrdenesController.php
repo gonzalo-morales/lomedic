@@ -44,7 +44,7 @@ class OrdenesController extends ControllerBase
         switch (\request('tipo_documento')){
             case 1:
                 $documento = Solicitudes::find(\request('id'));
-                $detalles_documento = $documento->detalle()->where('cerrado',0)->select('*','fk_id_documento','importe as total_producto')->get();
+                $detalles_documento = $documento->detalle()->where('cerrado',0)->select('*','fk_id_documento','importe as total_producto','impuesto_total as total_impuesto')->get();
                 break;
             case 2:
                 $documento = Ofertas::find(\request('id'));
@@ -117,8 +117,6 @@ class OrdenesController extends ControllerBase
             $data['fk_id_empresa'] = $documento->fk_id_empresa;
             $data['fk_id_sucursal'] = $documento->fk_id_sucursal;
             $data['fk_id_socio_negocio'] = $documento->fk_id_proveedor;
-            $data['fk_id_tipo_documento_padre'] = $documento->fk_id_tipo_documento;
-            $data['fk_id_documento_padre'] = $documento->id_documento;
             $attributes['data'] = $data;
         }
         return parent::create($company,$attributes);
@@ -126,8 +124,6 @@ class OrdenesController extends ControllerBase
 
 	public function store(Request $request, $company, $compact = false)
 	{
-	    $tipo_documento = $request->fk_id_tipo_documento_padre ?? null;
-	    $id_documento_padre = $request->fk_id_documento_padre ?? null;
         $request->request->set('fecha_creacion',Carbon::now()->toDateString());
         $request->request->set('fk_id_estatus_orden',1);
         $request->request->set('fk_id_empresa',Empresas::where('conexion','LIKE',$company)->first()->id_empresa);
@@ -142,29 +138,8 @@ class OrdenesController extends ControllerBase
 
         $request->request->set('fecha_cancelacion',null);
         $request->request->set('motivo_cancelacion',null);
-            $compact = !empty($request->fk_id_tipo_documento_padre);
 
-	    $return = parent::store($request,$company,$compact);
-
-	    if(!is_array($return)){//Si no es arreglo, entonces es de tipo "redirect"
-            return $this->redirect('store');
-        }
-	    $datos = $return['entity'];
-	    if($datos){
-            switch ($tipo_documento){
-                case 1:
-                    $solicitud = Solicitudes::find($id_documento_padre);
-                    $solicitud->fk_id_estatus_solicitud = 2;
-                    $solicitud->save();
-                    break;
-                case 2:
-                    $oferta = Ofertas::find($id_documento_padre);
-                    $oferta->fk_id_estatus_oferta = 2;
-                    $oferta->save();
-                    break;
-            }
-            return $this->redirect('store');
-        }
+	    return parent::store($request,$company,$compact);
 	}
 
     public function impress($company,$id)

@@ -54,10 +54,6 @@
 @section('form-content')
 {{ Form::setModel($data) }}
 
-@crear
-	{{Form::hidden('fk_id_documento_padre',$data->fk_id_documento_padre ?? '')}}
-	{{Form::hidden('fk_id_tipo_documento_padre',$data->fk_id_tipo_documento_padre ?? '')}}
-@endif
 @if (Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
 	<div class="row">
 		<div class="col-md-12 text-center text-success">
@@ -118,7 +114,7 @@
 								<span class="input-group-addon">
 									<input type="checkbox" id="activo_upc">
 								</span>
-								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
+								{!! Form::select('fk_id_upc',collect([])->prepend('...',null),null,['id'=>'fk_id_upc','disabled',
 								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
 								'class'=>!Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '' . 'form-control','style'=>'width:100%',
 								'data-url-tiempo_entrega'=>ApiAction('sociosnegocio.sociosnegocio')]) !!}
@@ -185,7 +181,7 @@
 						<th>Fecha límite</th>
 						<th>Cantidad</th>
 						<th>Descuento</th>
-						<th>Tipo de impuesto</th>
+						<th style="max-width: 125px">Impuesto</th>
 						<th>Precio unitario</th>
 						<th>Importe</th>
 						<th></th>
@@ -193,21 +189,21 @@
 					</thead>
 					<tbody>
 					@if(!empty($documento))
-						@foreach($detalles_documento as $detalle)
-							<tr>
+						@foreach($detalles_documento as $index => $detalle)
+							<tr class="list-left bg-light">
 								<td>
-									{{Form::hidden('',$detalle->getKey(),['class'=>'index'])}}
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_tipo_documento_base]',$tipo_documento) !!}
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_linea]',$detalle->id_documento_detalle) !!}
+									{{Form::hidden('',$index,['class'=>'index'])}}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_tipo_documento_base]',$tipo_documento) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_linea]',$detalle->id_documento_detalle) !!}
 									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_sku]',$detalle->fk_id_sku) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 									{{$detalle->sku->sku}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_upc]',$detalle->fk_id_upc) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_upc]',$detalle->fk_id_upc) !!}
 									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>
@@ -217,37 +213,34 @@
 									{{$detalle->sku->descripcion}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
 									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fecha_necesario]',$detalle->fecha_necesario) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fecha_necesario]',$detalle->fecha_necesario) !!}
 									{{$detalle->fecha_necesario??'Sin fecha'}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
-									{{$detalle->cantidad}}
+									{!! Form::cText('','relations[has][detalle]['.$index.'][cantidad]',['class'=>'cantidad_row'],$detalle->cantidad) !!}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][descuento_detalle]',$detalle->descuento_detalle,['class'=>'descuento_row']) !!}
-									{{$detalle->descuento_detalle??0}}
+									{!! Form::cText('','relations[has][detalle]['.$index.'][descuento_detalle]',['class'=>'descuento_row','style'=>'min-width:100px','placeholder'=>'999999.00'],number_format($detalle->descuento_detalle,2,'.','') ?? 0) !!}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+									{!! Form::cSelect('','relations[has][detalle]['.$index.'][fk_id_impuesto]',null,['class'=>'idImpuestoRow','data-default'=>$detalle->fk_id_impuesto]) !!}
 									{!! Form::hidden('',$detalle->impuesto->porcentaje,['class'=>'porcentaje']) !!}
-									{{$detalle->impuesto->impuesto}}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][total_impuesto]',$detalle->impuesto_total,['class'=>'impuesto']) !!}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
-									{{number_format($detalle->precio_unitario,2,'.','')}}
+									{!! Form::cText('','relations[has][detalle]['.$index.'][precio_unitario]',['class'=>'precio_unitario_row','placeholder'=>'999999.00'],number_format($detalle->precio_unitario,2,'.','')) !!}
 								</td>
 								<td>
-									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'detalles['.$detalle->getKey().'][total]'}}" readonly value="{{number_format($detalle->total_producto,2,'.','')}}">
+									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'relations[has][detalle]['.$index.'][total]'}}" readonly value="{{number_format($detalle->total_producto,2,'.','')}}">
 								</td>
 								<td>
 										<button class="btn is-icon text-primary bg-white "
-												type="button" data-item-id="{{$detalle->getKey()}}"
-												id="{{$detalle->getKey()}}" data-delay="50"
+												type="button" data-item-id="{{$index}}"
+												id="{{$index}}" data-delay="50"
 												onclick="borrarFila(this)" data-delete-type="single">
 											<i class="material-icons">delete</i></button>
 								</td>
@@ -255,18 +248,18 @@
 						@endforeach
 					@elseif( isset( $data->detalle ) )
 						@foreach( $data->detalle as $index=>$detalle)
-							<tr>
+							<tr class="{{isset($detalle->fk_id_documento_base)?'list-left bg-light':''}}">
 								<td>
 									{{Form::hidden('',$index,['class'=>'index'])}}
 									{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_tipo_documento_base.' - '.$detalle->fk_id_documento_base:'N/A'}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle) !!}
-									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][id_documento_detalle]',$detalle->id_documento_detalle) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 									{{$detalle->sku->sku}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_upc]',$detalle->fk_id_upc) !!}
 									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>
@@ -276,33 +269,34 @@
 									{{$detalle->sku->descripcion}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
 									{{isset($detalle->proyecto->proyecto)?$detalle->proyecto->proyecto:'Sin proyecto'}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fecha_necesario]',$detalle->fecha_necesario) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fecha_necesario]',$detalle->fecha_necesario) !!}
 									{{$detalle->fecha_necesario}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][cantidad]',$detalle->cantidad,['class'=>'cantidad_row']) !!}
 									{{$detalle->cantidad}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->getKey().'][descuento_detalle]',number_format($detalle->descuento_detalle,2),['class'=>'descuento_row']) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][descuento_detalle]',number_format($detalle->descuento_detalle,2),['class'=>'descuento_row']) !!}
 									{{number_format($detalle->descuento_detalle,2,'.','')??0}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_impuesto]',$detalle->fk_id_impuesto) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][total_impuesto]',$detalle->total_impuesto) !!}
 									{!! Form::hidden('',$detalle->impuesto->porcentaje,['class'=>'porcentaje']) !!}
 									{!! Form::hidden('',$detalle->total_impuesto) !!}
 									{{$detalle->impuesto->impuesto}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has]['.$detalle->id_documento_detalle.'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][precio_unitario]',$detalle->precio_unitario,['class'=>'precio_unitario_row']) !!}
 									{{number_format($detalle->precio_unitario,2,'.','')}}
 								</td>
 								<td>
-									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'relations[has]['.$detalle->id_documento_detalle.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
+									<input type="text" class="form-control total_row" style="min-width: 100px" name="{{'relations[has][detalle]['.$index.'][total]'}}" readonly value="{{number_format($detalle->total,2,'.','')}}">
 								</td>
 								<td>
 									{{--Si se va a editar, agrega el botón para "eliminar" la fila--}}
