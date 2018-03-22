@@ -1,88 +1,76 @@
 <html>
 <body style="font-size: 12px">
-<div class="panel">
-    <div class="panel-heading" style="background-color: #f4f4f4;">
-        <span style="text-align: left"><b>RECETA MÉDICA</b></span>
-        <div class="float-right">
-            <span>Folio:</span>
-            {{--<span id="folio"><b>{{$receta->folio}}</b></span>--}}
+    <div class="panel">
+        <div class="panel-heading" style="background-color: #f4f4f4;">
+            <span style="text-align: left"><b>RECETA MÉDICA</b></span>
+            <div class="float-right">
+                <span>Folio:</span>
+                <span id="folio"><b>{{$receta->folio}}</b></span>
+            </div>
         </div>
-    </div>
     <div class="panel-body">
-        {{--<img src="data:image/png;charset=binary;base64,{{$qr}}" style="float:right;width: 70px;margin-bottom: 0.5em;" />--}}
-
+        {{-- {!!HTML::image(asset("img/logotipos/$logo"),'',['height'=>'56'])!!}  --}}
+        <img src="data:image/png;charset=binary;base64,{{$qr}}" style="float:right;width: 70px;margin-bottom: 0.5em;" />
         <div class="row margin-bottom">
             <div class="width-50 float-left text-center">
-                <span>Nombre y clave de la unidad Médica:</span>
-                <br><b>Servicios de Salud del Estado de Querétaro</b>
+                <span class="titles">Nombre y clave de la unidad Médica:</span>
+                <br><b>{{$receta->getUnidadMedicaAttribute()}}</b>
             </div>
             <div class="width-50 float-left text-center">
-                <span>Domicilio de la unidad Médica:</span>
-                <br><b>Col. C.P. 76156, SANTIAGO DE QUERÉTARO, QUERÉTARO</b>
+                <span class="titles">Médico:</span>
+                <br><b>{{$receta->medico->getNombreCompletoAttribute()}}</b>
             </div>
         </div><br>
         <div class="row margin-bottom">
             <div class="width-25 float-left text-center">
-                <span>Médico:</span>
-                {{--<br><b>{{$receta->medico->getNombreCompletoAttribute()}}</b>--}}
+                <span class="titles">Edad:</span>
+                <br><b>{{$edad}}</b>
             </div>
-            <div class="width-25 float-left text-center">
-                <span>No. expediente y de afiliación:</span>
-                {{--<br><b>{{$receta->id_afiliacion}},{{$receta->id_dependiente}}</b>--}}
-            </div>
-            <div class="width-25 float-left text-center">
-                <span>R.F.C.:</span>
-                <br><b>PUPP200101LUA</b>
-            </div>
-            <div class="width-25 float-left text-center">
-                <span>CÉDULA:</span>
-                <br><b>123456789</b>
-            </div>
-        </div><br>
-        <div class="row margin-bottom">
-            <div class="width-25 float-left text-center">
-                <span>Clave y nombre del servicio:</span>
-                <br><b>Farmacia</b>
-            </div>
-            <div class="width-25 float-left text-center">
-                <span>Nombre Paciente:</span>
-                {{--<br><b>{{$receta->id_afiliacion != null ? $receta->afiliacion->getFullNameAttribute() : $receta->nombre_paciente_no_afiliado}}</b>--}}
-            </div>
-            <div class="width-25 float-left text-center">
-                <span>Edad:</span>
-                <br><b>25 años</b>
-            </div>
-            <div class="width-25 float-left text-center">
-                <span>Fecha y hora de elaboración:</span>
-                {{--<br><b>{{$receta->fecha}}</b>--}}
-            </div>
-        </div><br>
-        <div class="row margin-bottom text-center">
             <div class="width-25 float-left">
-                <span>Género:</span>
-                <br><b>Masculino</b>
+                <span class="titles">Género:</span>
+                <br>{{$receta->afiliacion->genero}}</b>
+            </div>
+            <div class="width-25 float-left text-center">
+                <span class="titles">No. expediente y de afiliación:</span>
+                <br><b>{{$receta->afiliacion->id_afiliacion}}, {{$receta->afiliacion->id_dependiente}}</b>
+            </div>
+            <div class="width-25 float-left text-center">
+                <span class="titles">Nombre Paciente:</span>
+                <br><b>{{$receta->afiliacion->id_afiliacion != null ? $receta->afiliacion->getFullNameAttribute() : $receta->nombre_paciente_no_afiliado}}</b>
+            </div>
+        </div><br>
+        <div class="row margin-bottom">
+            <div class="width-50 float-left text-center">
+                <span class="titles">Fecha y hora de elaboración:</span>
+                <br><b>{{$receta->fecha}}</b>
+            </div>
+            <div class="width-50 float-left text-center">
+                <span class="titles">Clave y nombre del servicio:</span>
+                <br><b>{{$receta->programa->nombre_programa}}</b>
             </div>
         </div><br><br>
-        <hr style="color: #ccc; margin-top:15px; margin-bottom: 15px;">
+        <hr style="color:#d8d8d8; margin-top:15px; margin-bottom: 15px;">
         <table>
             <thead>
             <tr>
                 <th> </th>
-                <th>Medicamento recetado</th>
+                <th> </th>
             </tr>
             </thead>
             <tbody>
-            {{--@foreach($detalles as $detalle)--}}
-                {{--<tr>--}}
-                    {{--<th style="padding: 5px 10px;">{{$detalle->clave_cliente}}</th>--}}
-                    {{--<td>--}}
-                        {{--<p>{{$detalle->producto->descripcion}}</p>--}}
-                        {{--<p>{{$detalle->dosis}}</p>--}}
-                        {{--<p>{{isset($detalle->en_caso_presentar)?$detalle->en_caso_presentar:''}}</p>--}}
-                        {{--<p>{{isset($detalle->recurrente)?'Recoger '.$detalle->cantidad_pedida.' cada '.$detalle->recurrente/24 .' días':''}}</p>--}}
-                    {{--</td>--}}
-                {{--</tr>--}}
-            {{--@endforeach--}}
+                @foreach($receta->detalles()->where('eliminar',0)->get() as $detalle)--}}
+                <tr>
+                    <th style="padding: 5px 10px;">{{$detalle->claveClienteProducto->sku->sku}}</th>
+                    <td style="padding: 0px 5px;">
+                        <p>{{$detalle->claveClienteProducto->sku->descripcion}}</p>
+                        <ul>
+                            <li>{{$detalle->dosis}}</li>
+                            <li>{{isset($detalle->en_caso_presentar) ? $detalle->en_caso_presentar : '-----'}}</li>
+                            <li>{{isset($detalle->recurrente)?'Recoger '.$detalle->cantidad_pedida.' cada '.$detalle->recurrente/24 .' días':''}}</li>
+                        </ul>
+                    </td>
+                </tr>
+            @endforeach
             </tbody>
         </table>
 
@@ -117,23 +105,35 @@
         border-collapse: collapse;
     }
     table>tbody>tr>th{
-        border-right: 3px solid #a94442;
+        border-right: 3px solid #007bff;
         border-collapse: collapse;
+    }
+    ul li {
+    color: black;
+    list-style-type: none;
+    }
+    ul li::before{
+        content: '\2022 ';
+        color:#007bff;
     }
     .panel-heading {
         padding: 10px 15px;
-        border-bottom: 1px solid #919191;
+        border-bottom: 1px solid #d8d8d8;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
     }
     .panel {
         margin-bottom: 20px;
         background-color: #fff;
-        border: 1px solid #919191;
+        border: 1px solid #d8d8d8;
         border-radius: 4px;
     }
     .panel-body {
         padding: 8px 10px;
+    }
+    .titles{
+        color:#3f3f3f;
+        font-weight: 300;
     }
     .row {
         margin-right: -15px;

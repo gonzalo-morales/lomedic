@@ -18,7 +18,7 @@ $(document).ready(function () {
                     $.each(data, function(){
                     	estado.append('<option value="'+ this.id_estado +'">'+ this.estado +'</option>')
                     });
-            		estado.val('');
+            		estado.val(id_estado);
             		estado.prop('disabled', (data.length == 0)); 
     		    }
     		});
@@ -44,7 +44,7 @@ $(document).ready(function () {
                     $.each(data, function(){
                     	municipio.append('<option value="'+ this.id_municipio +'">'+ this.municipio +'</option>')
                     });
-                	municipio.val('');
+                	municipio.val(id_municipio);
                 	municipio.prop('disabled', (data.length == 0)); 
     		    }
     		});

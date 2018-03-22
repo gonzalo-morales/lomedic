@@ -31,9 +31,9 @@ Route::prefix('{company}')->group(function () {
         Route::post('getOrdenes','Inventarios\EntradasController@getOrdenes')->name('entradas.getOrdenes');
         Route::post('getDetalleOrden','Inventarios\EntradasController@getDetalleOrden')->name('entradas.getDetalleOrden');
         Route::get('salidas/{salida}/pendientes','Inventarios\SalidasController@pendings')->name('salidas.pendings');
-        Route::post('surtido-receta/getReceta','Inventarios\SurtidoRecetaController@getReceta')->name('surtido-receta.getReceta');
-        Route::post('surtido-receta/getRecetaDetalle','Inventarios\SurtidoRecetaController@getRecetaDetalle')->name('surtido-receta.getRecetaDetalle');
-        Route::post('surtido-requisicion/getRequisiciones','Inventarios\SurtidoRequisicionHospitalariaController@getRequisiciones')->name('surtido-requisicion.getRequisiciones');
-        Route::post('surtido-requisicion/getRequisicionDetalle','Inventarios\SurtidoRequisicionHospitalariaController@getRequisicionDetalle')->name('surtido-requisicion.getRequisicionDetalle');
+        Route::post('surtidoreceta/getReceta','Inventarios\SurtidoRecetaController@getReceta')->name('surtidoreceta.getReceta');
+        Route::post('surtidoreceta/getRecetaDetalle','Inventarios\SurtidoRecetaController@getRecetaDetalle')->name('surtidoreceta.getRecetaDetalle');
+        Route::post('surtidorequisicionhospitalaria/getRequisiciones','Inventarios\SurtidoRequisicionHospitalariaController@getRequisiciones')->name('surtidorequisicionhospitalaria.getRequisiciones');
+        Route::post('surtidorequisicionhospitalaria/getRequisicionDetalle','Inventarios\SurtidoRequisicionHospitalariaController@getRequisicionDetalle')->name('surtidorequisicionhospitalaria.getRequisicionDetalle');
     });
 });

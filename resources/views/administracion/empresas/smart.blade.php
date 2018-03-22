@@ -2,10 +2,12 @@
 @section('content-width', 's12')
 @section('header-bottom')
 	@parent
-	@index
+	@notroute(['index'])
     	<script type="text/javascript">
         	var estados_js = '{{ $js_estados ?? '' }}';
         	var municipios_js = '{{ $js_municipios ?? '' }}';
+        	var id_estado = {{ $data->fk_id_estado ?? ''}}
+        	var id_municipio = {{ $data->fk_id_municipio ?? ''}}
         </script>
     	{{ HTML::script(asset('js/administracion/empresas.js')) }}
     @endif
@@ -90,10 +92,10 @@
                 		{{ Form::cSelect('* País', 'fk_id_pais', $paises ?? []) }}
                 	</div>
                 	<div class="form-group col-md-4">
-                		{{ Form::cSelect('* Estado', 'fk_id_estado', [], ['data-url'=>companyAction('HomeController@index').'/administracion.estados/api']) }}
+                		{{ Form::cSelect('* Estado', 'fk_id_estado', $estados ?? [], ['data-url'=>companyAction('HomeController@index').'/administracion.estados/api']) }}
                 	</div>
                 	<div class="form-group col-md-4">
-                		{{ Form::cSelect('* Municipio', 'fk_id_municipio', [], ['data-url'=>companyAction('HomeController@index').'/administracion.municipios/api']) }}
+                		{{ Form::cSelect('* Municipio', 'fk_id_municipio', $municipios ?? [], ['data-url'=>companyAction('HomeController@index').'/administracion.municipios/api']) }}
                 	</div>
                 </div>
     		</div>

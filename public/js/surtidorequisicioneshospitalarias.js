@@ -82,22 +82,6 @@
             }
         });
 
-        // $("#form-model").submit(function(){
-        //     var cont = 0;
-        //     $.each($('.cantidad'),function (index,value) {
-        //         cont = cont + $(value).val();
-        //     });
-        //
-        //     if( cont == 0 )
-        //     {
-        //         mensajeAlerta('Favor de ingresar por lo menos un producto.','danger');
-        //         return false;
-        //     }
-        //     else
-        //     {
-        //         return true;
-        //     }
-        // });
     });
 function calculatotal(el) {
     var cantidad = $(el).val();
@@ -113,7 +97,7 @@ function calculatotal(el) {
     else if ((cantidad_disponible - cantidad) < 0) {
         var nueva_cantidad_diponible = 0;
         cantidad_total = cantidad_total - 1;
-        $(el).val(cantidad - 1);
+        // $(el).val(cantidad - 1);
 
     }
     validarSurtido();

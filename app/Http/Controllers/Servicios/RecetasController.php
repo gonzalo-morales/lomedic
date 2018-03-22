@@ -12,7 +12,10 @@ use App\Http\Models\Servicios\Recetas;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Servicios\RecetasDetalle;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Milon\Barcode\DNS2D;
+use Milon\Barcode\DNS1D;
 use Barryvdh\DomPDF\Facade as PDF;
 
 class RecetasController extends ControllerBase
@@ -88,13 +91,17 @@ class RecetasController extends ControllerBase
     public function impress($company,$id)
     {
 
-        $vale = Recetas::where('id_receta',$id)->first();
-        $receta = Recetas::where('id_receta',$vale->fk_id_receta)->first();
-
+        // $vale = Recetas::where('id_receta',$id)->first();
+        // $receta = Recetas::where('id_receta',$vale->fk_id_receta)->first();
+        $receta = Recetas::find($id);
+        $fecha_nacimiento = new Carbon($receta->afiliacion->fecha_nacimiento);
+        $ahora = Carbon::now();
+        $edad = ($fecha_nacimiento->diff($ahora)->y).' Años';
+        $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$receta->id_receta])), "QRCODE");
         $pdf = PDF::loadView(currentRouteName('servicios.recetas.imprimir'),[
-            'vale' => $vale ,
+            'edad'   => $edad ,
             'receta' => $receta ,
-            'edad' => 31,
+            'qr'     => $qr,
 //            'edad' => self::edad($receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->fecha_nacimiento),
         ]);
 

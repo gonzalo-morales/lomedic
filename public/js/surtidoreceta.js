@@ -1,7 +1,3 @@
-/**
- * Created by ihernandezt on 9/1/2018.
- */
-
 
 $(document).ready(function () {
 
@@ -87,6 +83,7 @@ $(document).ready(function () {
 });
 
 function calculatotal(el) {
+
     var cantidad = $(el).val();
     var precio = $(el).parent().parent().find('.precio').val();
     var cantidad_surtida = $(el).parent().parent().find('.cantidad_surtida').html();
@@ -99,9 +96,10 @@ function calculatotal(el) {
     }
     else if ((cantidad_disponible - cantidad) < 0) {
         var nueva_cantidad_diponible = 0;
-        cantidad_total = cantidad_total - 1;
-        $(el).val(cantidad - 1);
 
+        cantidad_total = cantidad_total - 1;
+        // $(el).val(cantidad);
+        // alert();
     }
     validarSurtido();
     $(el).parent().parent().find('.cantidad_disponible').html(nueva_cantidad_diponible);

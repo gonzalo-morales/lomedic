@@ -1,5 +1,5 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
 
 @section('header-bottom')
     @parent
@@ -20,102 +20,98 @@
         @if (Route::currentRouteNamed(currentRouteName('create')) || Route::currentRouteNamed(currentRouteName('show')))
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="card z-depth-1-half">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" role="tabpanel">
-                                            <div class="row">
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        {{ Form::cSelect('Sucursal', 'fk_id_sucursal', $localidades ?? [],['class'=>'select2','data-url'=>companyRoute('getProyectos')]) }}
-                                                    </div>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="tab-content">
+                                <div class="tab-pane active" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                {{ Form::cSelect('Sucursal', 'fk_id_sucursal', $localidades ?? [],['class'=>'select2','data-url'=>companyRoute('getProyectos')]) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                {{ Form::cSelect('Proyecto', 'fk_id_proyecto', $proyectos ?? [],['class'=>'select2']) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                {{ Form::cSelect('Medico', 'fk_id_medico', $medicos ?? [],['class'=>'select2']) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                {{ Form::cSelect('Programa', 'fk_id_programa', $programas ?? [],['class'=>'select2']) }}
+                                            </div>
+                                        </div>
+                                    </div><!--/row forms-->
+                                    <div class="row">
+                                        {{--<h5>hola</h5>--}}
+                                        <div class="col-sm-3">
+                                            <h6>Nombre paciente no afiliado</h6>
+                                            {{--<h4>¿Surtido recurrente?</h4>--}}
+                                            <div class="input-group my-group">
+                                                <div class="input-group-btn" role="group" aria-label="surtido" data-toggle="buttons">
+                                                    {{--<label class="btn btn-check btn-default">--}}
+                                                        {{Form::cCheckboxBtn(' ','Externo','tipo_servicio',(empty($data->fk_id_afiliacion) ? 0 : 1),'Afiliado')}}
+                                                    {{--</label>--}}
                                                 </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        {{ Form::cSelect('Proyecto', 'fk_id_proyecto', $proyectos ?? [],['class'=>'select2']) }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        {{ Form::cSelect('Medico', 'fk_id_medico', $medicos ?? [],['class'=>'select2']) }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        {{ Form::cSelect('Programa', 'fk_id_programa', $programas ?? [],['class'=>'select2']) }}
-                                                    </div>
-                                                </div>
-                                            </div><!--/row forms-->
-                                            <div class="row">
-                                                {{--<h5>hola</h5>--}}
-                                                <div class="col-sm-3">
-                                                    <h6>Nombre paciente no afiliado</h6>
-                                                    {{--<h4>¿Surtido recurrente?</h4>--}}
-                                                    <div class="input-group my-group">
-                                                        <div class="input-group-btn" role="group" aria-label="surtido" data-toggle="buttons">
-                                                            {{--<label class="btn btn-check btn-default">--}}
-                                                                {{Form::cCheckboxBtn(' ','Externo','tipo_servicio',(empty($data->fk_id_afiliacion) ? 0 : 1),'Afiliado')}}
-                                                            {{--</label>--}}
-                                                        </div>
-                                                        {{ Form::cText(' ', 'nombre_paciente_no_afiliado',['disabled'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        {{ Form::cSelect('Afiliación/Paciente', 'fk_id_afiliado', $afiliados ?? [] ,['class'=>'select2','data-url'=>companyRoute('getAfiliados')]) }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        {{ Form::cSelect('Área de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="form-group">
-                                                        {{ Form::cSelect('Diagnóstico', 'fk_id_diagnostico', $diagnosticos ?? [''=>''],['class'=>'select2','data-url'=>companyRoute('getDiagnosticos')]) }}
-
-                                                    </div>
-                                                </div>
+                                                {{ Form::cText(' ', 'nombre_paciente_no_afiliado',['disabled'])}}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                {{ Form::cSelect('Afiliación/Paciente', 'fk_id_afiliado', $afiliados ?? [] ,['class'=>'select2','data-url'=>companyRoute('getAfiliados')]) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                {{ Form::cSelect('Área de la consulta', 'fk_id_area', $areas ?? [],['class'=>'select2']) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                {{ Form::cSelect('Diagnóstico', 'fk_id_diagnostico', $diagnosticos ?? [''=>''],['class'=>'select2','data-url'=>companyRoute('getDiagnosticos')]) }}
 
                                             </div>
+                                        </div>
 
-                                            <div class="row">
+                                    </div>
 
-                                                <div class="col-sm-2 col-xs-6">
-                                                    <div class="form-group">
-                                                        {{ Form::cText('Peso:', 'peso',['class'=>'form-control peso'])}}
-                                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-sm-2 col-xs-6">
+                                            <div class="form-group">
+                                                {{ Form::cText('Peso:', 'peso',['class'=>'form-control peso'])}}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-6">
+                                            <div class="form-group">
+                                                {{ Form::cText('Altura:', 'altura',['class'=>'form-control peso'])}}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 col-xs-6">
+                                            <div class="form-group">
+                                                <label for="presion">Presión:</label>
+                                                <div class="input-group">
+                                                    {{ Form::cNumber(' ', 'presion_sistolica',['class'=>'form-control integer','placeholder'=>'Ej: 120'])}}
+                                                    <span class="input-group-addon" id="presion-addon">/</span>
+                                                    {{ Form::cNumber(' ', 'presion_diastolica',['class'=>'form-control integer','placeholder'=>'Ej: 80'])}}
                                                 </div>
-                                                <div class="col-sm-2 col-xs-6">
-                                                    <div class="form-group">
-                                                        {{ Form::cText('Altura:', 'altura',['class'=>'form-control peso'])}}
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4 col-xs-6">
-                                                    <div class="form-group">
-                                                        <label for="presion">Presión:</label>
-                                                        <div class="input-group">
-                                                            {{ Form::cNumber(' ', 'presion_sistolica',['class'=>'form-control integer','placeholder'=>'Ej: 120'])}}
-                                                            <span class="input-group-addon" id="presion-addon">/</span>
-                                                            {{ Form::cNumber(' ', 'presion_diastolica',['class'=>'form-control integer','placeholder'=>'Ej: 80'])}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div><!--/row-->
+                                            </div>
                                         </div>
                                     </div><!--/row-->
                                 </div>
-                            </div>
+                            </div><!--/row-->
                         </div>
                     </div>
                     @endif
                 {{--@if (!Route::currentRouteNamed(currentRouteName('show')))--}}
                     @if( $data['fk_id_estatus_receta'] == 1)
                         <div class="card z-depth-1-half">
+                            @if (!Route::currentRouteNamed(currentRouteName('show')))
                             <div class="card-header">
-                                @if (!Route::currentRouteNamed(currentRouteName('show')))
                                 <div class="row">
                                     <div class="col-12 mb-3">
                                         <div class="tab-content">
@@ -191,8 +187,8 @@
                                 </div>
                             </div>
                             @endif
-                            <div class="card-body row table-responsive">
-                                <table class="table highlight mt-3" id="tContactos">
+                            <div class="card-body">
+                                <table class="table table-responsive-sm table-hover table-striped mt-3" id="tContactos">
                                     <thead>
                                     <tr>
                                         <th>Codigo</th>
@@ -234,11 +230,17 @@
                     </div>
                     @else
                         @if($data->fk_id_estatus_receta == 2)
-                            <h1>Esta receta ya fue surtida en su totalidad y no se puede editar.</h1>
+                            <div class="alert alert-success text-center lead" role="alert">
+                                Esta receta ya fue <b>surtida en su totalidad</b> y no se puede editar.
+                            </div>
                         @elseif($data->fk_id_estatus_receta == 3)
-                            <h1>Esta receta esta siendo surtida parcialmente y no se puede editar.</h1>
+                            <div class="alert alert-warning text-center lead" role="alert">
+                                Esta receta esta siendo <b>surtida parcialmente</b> y no se puede editar.
+                            </div>
                         @elseif($data->fk_id_estatus_receta == 4)
-                            <h1>Esta receta esta cancelada y no se puede editar.</h1>
+                            <div class="alert alert-danger text-center lead" role="alert">
+                                Esta receta esta <b>cancelada</b> y no se puede editar.
+                            </div>
                         @endif
                     @endif
                 {{--@endif--}}
