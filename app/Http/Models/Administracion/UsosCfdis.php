@@ -25,9 +25,9 @@ class UsosCfdis extends ModelBase
 	 * The validation rules
 	 * @var array
 	 */
-	public $rules = [
-		'uso_cfdi' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|Max:3',
-		'descripcion' => 'required|max:255'
+	public $rules = [/*
+		'uso_cfdi' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
+		'descripcion' => 'required|max:255'*/
 	];
 
     protected $unique = ['uso_cfdi'];
@@ -38,7 +38,7 @@ class UsosCfdis extends ModelBase
 	 */
 	protected $fields = [
 		'uso_cfdi' => 'CFDI',
-		'descripcion' => 'DescripciÃ³n',
+		'descripcion' => 'Descripcion',
 		'activo_span' => 'Estatus'
 	];
 

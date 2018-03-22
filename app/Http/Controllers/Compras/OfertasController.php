@@ -197,26 +197,10 @@ class OfertasController extends ControllerBase
     {
         $oferta = Ofertas::find($id);
 
-        $subtotal = 0;
-        $total = 0;
-
-        foreach ($oferta->detalle()->where('cerrado',0)->get() as $detalle)
-        {
-            $impuesto = Impuestos::select('tasa_o_cuota')->where('id_impuesto',$detalle->fk_id_impuesto)->where('activo',1)->first()->tasa_o_cuota;
-            $subtotal += $detalle->precio_unitario*$detalle->cantidad;
-            $iva = $subtotal*$impuesto;
-            $total += $detalle->total_producto;
-        }
-        $total = number_format($total,2,'.',',');
-
         $barcode = DNS1D::getBarcodePNG($oferta->id_documento,'EAN8');
         $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$oferta->id_documento])), "QRCODE");
         $pdf = PDF::loadView(currentRouteName('compras.ofertas.imprimir'),[
             'oferta' => $oferta,
-            'subtotal' => $subtotal,
-            'iva' => $iva,
-            'total' => $total,
-            'total_letra' => num2letras($total),
             'barcode' => $barcode,
             'qr' => $qr
         ]);

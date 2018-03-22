@@ -146,27 +146,11 @@ class OrdenesController extends ControllerBase
     {
         $orden = Ordenes::find($id);
 
-        $subtotal = 0;
-        $iva = 0;
-        $total = 0;
-        foreach ($orden->detalle()->where('cerrado','f')->get() as $detalle)
-        {
-            $subtotal += $detalle->precio_unitario * $detalle->cantidad;
-            $iva += (($detalle->precio_unitario*$detalle->cantidad)*$detalle->impuesto->porcentaje)/100;
-            $total += $detalle->total;
-        }
-        $total = number_format($total,2,'.',',');
-
         $barcode = DNS1D::getBarcodePNG($orden->id_documento,'EAN8');
         $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$orden->id_documento])), "QRCODE");
 
         $pdf = PDF::loadView(currentRouteName('compras.ordenes.imprimir'),[
             'orden' => $orden,
-//            'detalles' => $detalles,
-            'subtotal' => $subtotal,
-            'iva' => $iva,
-            'total' => $total,
-            'total_letra' => num2letras($total),
             'barcode' => $barcode,
             'qr' => $qr
         ]);

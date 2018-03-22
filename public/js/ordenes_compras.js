@@ -6,6 +6,7 @@ $(document).ready(function(){
     totalOrden();
     if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
     {
+        limpiarCampos();
         initSelects();
         if(window.location.href.toString().indexOf('crear') > -1){
             validateDetail();
@@ -181,9 +182,6 @@ $(document).ready(function(){
             }
         }
     });
-
-    limpiarCampos();
-
 });
 
 function initSelects() {
@@ -387,7 +385,7 @@ function totalOrden() {
         $('#subtotal_lbl').text((subtotal).toFixed(2));
         $('#subtotal').val(subtotal.toFixed(2));
         $('#impuesto_lbl').text(impuesto.toFixed(2));
-        $('#impuesto').val(impuesto.toFixed(2));
+        $('#impuesto_total').val(impuesto.toFixed(2));
         $('#total_orden').val(total.toFixed(2));
         $('#descuento_total').val(descuento_total.toFixed(2));
         $('#descuento_porcentaje').val(descuento_porcentaje.toFixed(2));
@@ -395,7 +393,7 @@ function totalOrden() {
         $('#subtotal_lbl').text(0);
         $('#subtotal').val(0);
         $('#impuesto_lbl').text(0);
-        $('#impuesto').val(0);
+        $('#impuesto_total').val(0);
         $('#total_orden').val(0);
         $('#descuento_total').val(0);
         $('#descuento_porcentaje').val(0);

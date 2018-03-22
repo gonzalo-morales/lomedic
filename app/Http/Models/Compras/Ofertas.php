@@ -32,7 +32,7 @@ class Ofertas extends ModelCompany
      */
     protected $fillable = ['fk_id_sucursal','fk_id_estatus_oferta','fk_id_proveedor','vigencia','fecha_creacion',
         'condiciones_oferta','tiempo_entrega','fk_id_moneda','descuento_oferta','fk_id_empresa','total_oferta',
-        'fecha_estimada_entrega'];
+        'fecha_estimada_entrega','subtotal','impuesto_oferta'];
 
     public $niceNames =[
         'fk_id_sucursal'=>'sucursal',

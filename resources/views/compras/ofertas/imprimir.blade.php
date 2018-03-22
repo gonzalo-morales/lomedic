@@ -66,8 +66,7 @@
                 <th><h5>SKU</h5></th>
                 <th><h5>UPC</h5></th>
                 <th><h5>Producto</h5></th>
-                <th><h5>Descripción</h5></th>
-                <th><h5>Cliente</h5></th>
+                <th width="30%"><h5>Descripción</h5></th>
                 <th><h5>Proyecto</h5></th>
                 <th width="6%"><h5>Cantidad</h5></th>
                 <th><h5>Tipo de impuesto</h5></th>
@@ -80,7 +79,7 @@
             <tr align="center">
                 <td>{{isset($detalle->fk_id_documento_base)?$detalle->fk_id_documento_base:'N/A'}}</td>
                 <td>{{$detalle->sku->sku}}</td>
-                <td>{{isset($detalle->upc) ? $detalle->upc->upc : 'UPC no seleccionado'}}</td>
+                <td>{{isset($detalle->upc) ? $detalle->upc->upc : 'Sin UPC'}}</td>
                 <td>{{$detalle->sku->descripcion_corta}}</td>
                 <td>{{$detalle->sku->descripcion}}</td>
                 {{--  <td>{{isset($detalle->cliente) ? $detalle->cliente->nombre_comercial : 'Sin cliente'}}</td>  --}}
@@ -88,7 +87,7 @@
                 <td>{{$detalle->cantidad}}</td>
                 <td>{{$detalle->impuesto->impuesto}}</td>
                 <td>${{number_format($detalle->precio_unitario,2,'.',',')}}</td>
-                <td>{{number_format($detalle->descuento_detalle,4,'.',',')}}%</td>
+                <td>${{number_format($detalle->descuento_detalle,4,'.',',')}}</td>
                 <td>${{number_format($detalle->total_producto,2,'.',',')}}</td>
             </tr>
             @endforeach
@@ -104,12 +103,23 @@
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
-                <td style="border: hidden"></td>
                 <td>Subtotal:</td>
-                <td>${{$subtotal}}</td>
+                <td>${{number_format($oferta->subtotal,2,'.',',')}}</td>
             </tr>
             <tr style="border: hidden">
                 <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td style="border: hidden"></td>
+                <td>Descuento:</td>
+                <td>${{number_format($oferta->descuento_oferta,2,'.',',')}}</td>
+            </tr>
+            <tr style="border: hidden">
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
@@ -120,12 +130,12 @@
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td>IVA:</td>
-                <td>${{$iva}}</td>
+                <td>${{number_format($oferta->impuesto_oferta,2,'.',',')}}</td>
             </tr>
             <tr style="border: hidden">
-                <td colspan="10"><h3>*** {{$total_letra}} ***</h3></td>
+                <td colspan="9"><h3>*** {{num2letras($oferta->total_oferta)}} ***</h3></td>
                 <td>Total</td>
-                <td>${{$total}}</td>
+                <td>${{number_format($oferta->total_oferta,2,'.',',')}}</td>
             </tr>
         </table>
     </div>

@@ -213,7 +213,7 @@ function agregarCorreo()
         $.toaster({priority : 'success',title : '¡Éxito!',message : 'Correo agregado con éxito',
         settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
         $('#lista_correo').append('<tr id="'+id_correo+'">' +
-            '<th scope="row">'+empresa_correo+'</th> ' +
+            '<td scope="row">'+empresa_correo+'</td> ' +
             '<td>'+correo+'</td>' +
             '<td><button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="eliminarFila(\''+id_correo+'\')"><i class="material-icons">delete</i></button></td>   ' +
             '<input type="hidden" value="'+compania_id+'" name="correo_empresa['+cont_correo+'][id_empresa]">' +

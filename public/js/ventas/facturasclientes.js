@@ -6,7 +6,7 @@ $(document).ready(function () {
 		let series = $('#fk_id_serie');
 		let val = $('#fk_id_empresa option:selected').val();
 
-		if(!val) {
+		if(val <= 0) {
 			$("#fk_id_socio_negocio option").remove();
 			cliente.prop('disabled',true);
 			$("#fk_id_serie option").remove();
@@ -61,16 +61,17 @@ $(document).ready(function () {
 			    data: {'param_js':empresa_js,$id_empresa:$(this).val()},
 			    dataType: 'json',
 	            success: function (data) {
+	            	console.log(data);
 	            	$("#rfc").val(data[0].rfc);
-	            	$("#fk_id_regimen_fiscal").val(data[0].fk_id_regimen_fiscal);
+	            	$("#fk_id_regimen_fiscal").val(data[0].fk_id_regimen_fiscal).change();
 	            	$("#calle").val(data[0].calle);
 	            	$("#no_exterior").val(data[0].no_exterior);
 	            	$("#no_interior").val(data[0].no_interior);
 	            	$("#codigo_postal").val(data[0].codigo_postal);
 	            	$("#colonia").val(data[0].colonia);
-	            	$("#fk_id_municipio").val(data[0].fk_id_municipio);
-	            	$("#fk_id_estado").val(data[0].fk_id_estado);
-	            	$("#fk_id_pais").val(data[0].fk_id_pais);
+	            	$("#fk_id_municipio").val(data[0].fk_id_municipio).change();
+	            	$("#fk_id_estado").val(data[0].fk_id_estado).change();
+	            	$("#fk_id_pais").val(data[0].fk_id_pais).change();
 			    }
 			});
 		}

@@ -72,14 +72,14 @@
                     	<div class="text-center"><object id="front-page-logo" class="sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Su navegador no soporta imagenes SVG</object></div>
                         <a href="#" class="mt-3"><p class="mt-3 d-flex justify-content-center w-100"><small>{{ Auth::User()->nombre_corto }}</small></p></a>
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text w-100 text-uppercase">
-            				<i class="tiny material-icons">power_settings_new</i> {{cTrans('forms.logout','Cerrar Sesión')}}
+            				<i class="tiny material-icons">power_settings_new</i> {{cTrans('forms.logout','Cerrar Sesiï¿½n')}}
             			</a>
                     </div>
                     <strong>
                     	<a href="#" title="{{ Auth::User()->nombre_corto }}" data-toggle="tooltip" data-placement="right">
                     		<object id="front-page-logo" class="sim w-50" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Su navegador no soporta imagenes  SVG</object>
                     	</a>
-        				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center" title="{{cTrans('forms.logout','Cerrar Sesión')}}" data-toggle="tooltip" data-placement="right">
+        				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center" title="{{cTrans('forms.logout','Cerrar Sesiï¿½n')}}" data-toggle="tooltip" data-placement="right">
             				<i class="tiny material-icons">power_settings_new</i>
             			</a>
         			</strong>
@@ -88,7 +88,7 @@
                 </div>
 
                 <ul id="menu-conten" class="list-unstyled components text-center">
-                	{!! Form::cText(null,'filter-menu',['placeholder'=>cTrans('forms.menu_search','Buscar en menu'),'class'=>'mt-2 p-1']) !!}
+                	{!! Form::cText(null,'filter-menu',['placeholder'=>cTrans('forms.menu_search','Buscar en menu'),'class'=>'mt-2 p-1','autofocus']) !!}
                     @if(isset($menu))
         				@each('partials.menu', $menu, 'modulo')
         			@endif
@@ -150,6 +150,5 @@
 @endif
 
 @yield('header-bottom')
-
 </body>
 </html>
