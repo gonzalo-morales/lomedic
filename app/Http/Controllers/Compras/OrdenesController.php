@@ -187,4 +187,76 @@ class OrdenesController extends ControllerBase
 
         return $result;
     }
+
+    public function destroy(Request $request, $company, $idOrIds, $attributes = [])
+    {
+        if (!is_array($idOrIds)) {
+            $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
+                ->update(['fk_id_estatus_orden' => 3,
+                    'motivo_cancelacion'=>$request->motivo['motivo_cancelacion'],
+                    'fecha_cancelacion'=>DB::raw('now()')]);
+            if ($isSuccess) {
+
+                #$this->log('destroy', $idOrIds);
+
+                if ($request->ajax()) {
+                    # Respuesta Json
+                    return response()->json([
+                        'success' => true,
+                    ]);
+                } else {
+                    return $this->redirect('destroy');
+                }
+
+            } else {
+
+                #$this->log('error_destroy', $idOrIds);
+
+                if ($request->ajax()) {
+                    # Respuesta Json
+                    return response()->json([
+                        'success' => false,
+                    ]);
+                } else {
+                    return $this->redirect('error_destroy');
+                }
+            }
+
+            # Multiple
+        } else {
+
+            $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)
+                ->update(['fk_id_estatus_solicitud' => 3,
+                    'motivo_cancelacion'=>$request->motivo_cancelacion,
+                    'fecha_cancelacion'=>DB::raw('now()')]);
+            if ($isSuccess) {
+
+                # Shorthand
+                #foreach ($idOrIds as $id) $this->log('destroy', $id);
+
+                if ($request->ajax()) {
+                    # Respuesta Json
+                    return response()->json([
+                        'success' => true,
+                    ]);
+                } else {
+                    return $this->redirect('destroy');
+                }
+
+            } else {
+
+                # Shorthand
+                #foreach ($idOrIds as $id) $this->log('error_destroy', $id);
+
+                if ($request->ajax()) {
+                    # Respuesta Json
+                    return response()->json([
+                        'success' => false,
+                    ]);
+                } else {
+                    return $this->redirect('error_destroy');
+                }
+            }
+        }
+    }
 }
