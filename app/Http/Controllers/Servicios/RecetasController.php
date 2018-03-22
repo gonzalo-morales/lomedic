@@ -31,7 +31,6 @@ class RecetasController extends ControllerBase
 
     public function getDataView($entity = null)
     {
-//        dd($entity);
         return [
             'localidades' => Sucursales::select('sucursal', 'id_sucursal')->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
             'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('...', ''),

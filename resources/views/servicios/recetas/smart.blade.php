@@ -47,15 +47,11 @@
                                         </div>
                                     </div><!--/row forms-->
                                     <div class="row">
-                                        {{--<h5>hola</h5>--}}
                                         <div class="col-sm-3">
                                             <h6>Nombre paciente no afiliado</h6>
-                                            {{--<h4>¿Surtido recurrente?</h4>--}}
                                             <div class="input-group my-group">
                                                 <div class="input-group-btn" role="group" aria-label="surtido" data-toggle="buttons">
-                                                    {{--<label class="btn btn-check btn-default">--}}
-                                                        {{Form::cCheckboxBtn(' ','Externo','tipo_servicio',(empty($data->fk_id_afiliacion) ? 0 : 1),'Afiliado')}}
-                                                    {{--</label>--}}
+                                                    {{Form::cCheckboxBtn(' ','Externo','tipo_servicio',(empty($data->fk_id_afiliacion) ? 0 : 1),'Afiliado')}}
                                                 </div>
                                                 {{ Form::cText(' ', 'nombre_paciente_no_afiliado',['disabled'])}}
                                             </div>
@@ -73,10 +69,8 @@
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 {{ Form::cSelect('Diagnóstico', 'fk_id_diagnostico', $diagnosticos ?? [''=>''],['class'=>'select2','data-url'=>companyRoute('getDiagnosticos')]) }}
-
                                             </div>
                                         </div>
-
                                     </div>
 
                                     <div class="row">
