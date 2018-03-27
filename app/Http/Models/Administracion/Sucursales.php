@@ -2,10 +2,11 @@
 
 namespace App\Http\Models\Administracion;
 
-use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\ModelBase;
+use App\Http\Models\Inventarios\Almacenes;
 use App\Http\Models\RecursosHumanos\Empleados;
 use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\Soporte\Solicitudes;
 
 class Sucursales extends ModelBase
 {
@@ -106,7 +107,7 @@ class Sucursales extends ModelBase
 
 	public function solicitudes()
 	{
-		return $this->hasMany('app\Http\Models\Soporte\Solicitudes','fk_id_sucursal','id_sucursal');
+		return $this->hasMany(Solicitudes::class,'fk_id_sucursal','id_sucursal');
 	}
 
 	public function almacenes()
@@ -128,16 +129,16 @@ class Sucursales extends ModelBase
 	    return $this->belongsToMany(Empresas::class,$this->schema.'.adm_det_empresa_sucursal', 'fk_id_sucursal','fk_id_empresa');
 	}
 	/*relación de tres*/
-	public function usuario_sucursales()
+	public function usuario()
 	{
-	    return $this->belongsToMany(Usuarios::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_usuario')
-		->withPivot('fk_id_empresa')
-        ->join(Empresas::class,'fk_id_empresa','=','id_empresa');
+	    return $this->belongsToMany(Usuarios::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_usuario');
+		//->withPivot('fk_id_empresa')
+        //->join(Empresas::class,'fk_id_empresa','=','id_empresa');
 	}
-	public function empresa_sucursales()
+	public function empresa()
 	{
-	    return $this->belongsToMany(Empresas::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_empresa')
-        ->withPivot('fk_id_usuario')
-        ->join(Usuarios::class,'fk_id_usuario','=','id_usuario');
+	    return $this->belongsToMany(Empresas::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_sucursal','fk_id_empresa');
+        //->withPivot('fk_id_usuario')
+        //->join(Usuarios::class,'fk_id_usuario','=','id_usuario');
 	}
 }

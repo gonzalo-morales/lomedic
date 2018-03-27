@@ -289,7 +289,7 @@ function wsdlService($function = '',$params = [],$connections = null)
     return $response->return;
 }
 
-function num2letras($num, $fem = false, $dec = true,$moneda = 'pesos',$abreviaturaMoneda = 'M.N.') {
+function num2letras($num, $fem = false, $dec = true, $moneda = 'pesos', $abreviaturaMoneda = 'M.N.') {
 
 	//En caso de que no esté formateado
 	if(!strpos($num,',')){

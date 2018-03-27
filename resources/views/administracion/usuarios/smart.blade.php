@@ -469,8 +469,7 @@
 		{{ HTML::script(asset('js/administracion/usuarios.js')) }}
 		<script type="text/javascript">
 			var api_sucursales = '{{ $sucursales_js ?? '' }}';
-			var profiles_permissions = {!!$profiles_permissions!!};
-			console.info(profiles_permissions);
+			var profiles_permissions = {!! $profiles_permissions ?? '' !!};
             var cont_correo = $('#lista_correo tr').length;
 		</script>
 	@endif

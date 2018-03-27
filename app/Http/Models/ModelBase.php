@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\Notificaciones;
+use Illuminate\Support\Facades\Auth;
 
 class ModelBase extends Model
 {
@@ -107,16 +108,64 @@ class ModelBase extends Model
 	    if(in_array('eliminar',$this->getlistColumns())) {
 	        $parent->newQuery()->where($this->getTable().'.eliminar',0);
 	    }
+	    /*
 	    $route = \Route::getCurrentRoute()->getActionName();
 	    $controller = substr($route,0,strpos($route,'@'));
 
 	    if(in_array('activo',$this->getlistColumns()) && !empty($controller) && isset((new $controller)->entity) && get_class((new $controller)->entity) != get_class($this)) {
 	        $model = (new $controller)->entity;
 	        $parent->newQuery()->where($this->getTable().'.activo',1);
-	    }
+	    }*/
 
 	    return $parent;
 	}
+	
+	public function scopeIsActivo($query,$estatus=1) {
+	    if(in_array('activo',$this->getlistColumns()) && !empty($this->{$this->primaryKey}))
+	        $query->whereRaw("(activo = $estatus OR $this->primaryKey = $this->{$this->primaryKey})");
+        elseif(in_array('activo',$this->getlistColumns()))
+            $query->where('activo',$estatus);
+	}
+	
+	public function scopeHasEmpresa($query,$empresa=[]) {
+	    $id_empresa = !empty($empresa) ? $empresa : [dataCompany()->id_empresa];
+	    
+	    if(in_array('id_empresa',$this->getlistColumns()))
+	        $query->whereIn('id_empresa',$id_empresa);
+        
+        if(in_array('fk_id_empresa',$this->getlistColumns()))
+            $query->whereIn('fk_id_empresa',$id_empresa);
+        
+        if(isset($this->empresa))
+            $query->whereHas('empresa', function($q) use ($id_empresa) {
+                $q->whereIn('id_empresa', $id_empresa);
+            });
+        
+        if(isset($this->empresas))
+            $query->whereHas('empresas', function($q) use ($id_empresa) {
+                $q->whereIn('id_empresa', $id_empresa);
+            });
+	}
+	
+	public function scopeHasUsuario($query,$usuario=[]) {
+	    $id_usuario = !empty($usuario) ? $usuario : [Auth::Id()];
+	    
+	    if(in_array('id_usuario',$this->getlistColumns()))
+	        $query->whereIn('id_usuario',$id_usuario);
+	        
+        if(in_array('fk_id_usuario',$this->getlistColumns()))
+            $query->whereIn('fk_id_usuario',$id_usuario);
+            
+        if(isset($this->usuario))
+            $query->whereHas('usuario', function($q) use ($id_usuario) {
+                $q->whereIn('id_usuario', $id_usuario);
+            });
+                
+        if(isset($this->usuarios))
+            $query->whereHas('usuarios', function($q) use ($id_usuario) {
+                $q->whereIn('id_usuario', $id_usuario);
+            });
+    }
 
 	/**
 	 * Obtenemos atributos a incluir en append/appends()
@@ -205,7 +254,7 @@ class ModelBase extends Model
 	 */
 	public function getActivoTextAttribute()
 	{
-	    return isset($this->activo) && $this->activo === true ? 'Activo' : 'Inactivo';
+	    return isset($this->activo) && $this->activo == 1 ? 'Activo' : 'Inactivo';
 	}
 
 	/**
