@@ -41,7 +41,7 @@ class ProyectosController extends ControllerBase
     {
         $sucursales = null;
         if(!empty($entity)){
-            $sucursales = Sucursales::where('fk_id_cliente',$entity->fk_id_cliente)->where('fk_id_localidad',$entity->fk_id_localidad)->pluck('sucursal','id_sucursal');
+            $sucursales = Sucursales::where('fk_id_cliente',$entity->fk_id_cliente)->where('fk_id_localidad',$entity->fk_id_localidad)->whereHas("empresas",function ($q){$q->where('id_empresa',dataCompany()->id_empresa);})->pluck('sucursal','id_sucursal');
         }
         return [
             'clientes' => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->whereHas('empresas',function ($empresa){
