@@ -7,6 +7,7 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\Notificaciones;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Models\Administracion\Sucursales;
 
 class ModelBase extends Model
 {
@@ -164,6 +165,26 @@ class ModelBase extends Model
         if(isset($this->usuarios))
             $query->whereHas('usuarios', function($q) use ($id_usuario) {
                 $q->whereIn('id_usuario', $id_usuario);
+            });
+    }
+    
+    public function scopeHasSucursal($query,$sucursal=[]) {
+        $id_sucursal = !empty($sucursal) ? $sucursal : Sucursales::select('id_sucursal')->isActivo()->hasEmpresa()->hasUsuario()->pluck('id_sucursal'); 
+        
+        if(in_array('id_sucursal',$this->getlistColumns()))
+            $query->whereIn('id_sucursal',$id_sucursal);
+            
+        if(in_array('fk_id_sucursal',$this->getlistColumns()))
+            $query->whereIn('fk_id_sucursal',$id_sucursal);
+            
+        if(isset($this->sucursal))
+            $query->whereHas('sucursal', function($q) use ($id_sucursal) {
+                $q->whereIn('id_sucursal', $id_sucursal);
+            });
+                
+        if(isset($this->sucursales))
+            $query->whereHas('sucursales', function($q) use ($id_sucursal) {
+                $q->whereIn('id_sucursal', $id_sucursal);
             });
     }
 
