@@ -38,16 +38,8 @@ class OfertasController extends ControllerBase
 	
 	public function getDataView($entity = null)
 	{
-        $sucursales = [];
-        if($entity != null)
-        {
-            $sucursales = Sucursales::where('activo',1)->where('id_sucursal',$entity->fk_id_sucursal)->pluck('sucursal','id_sucursal');
-        }
 	    return [
-            'sucursales' 	   => Sucursales::whereHas('usuario_sucursales', function ($q){
-                    $q->where('id_usuario',Auth::id());})->whereHas('empresa_sucursales',function ($empresa){
-                    $empresa->where('id_empresa',dataCompany()->id_empresa);
-                })->pluck('sucursal','id_sucursal'),
+            'sucursales' 	   => Sucursales::hasEmpresa()->hasUsuario()->isActivo()->pluck('sucursal','id_sucursal'),
 	        // 'companies'        => Empresas::where('activo',1)->where('conexion','<>',request()->company)->where('conexion','<>','corporativo')->where('activo',1)->pluck('nombre_comercial','id_empresa'),
             // 'actual_company_id'=> Empresas::where('conexion','LIKE',request()->company)->first()->id_empresa,
 	        'monedas'          => Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),

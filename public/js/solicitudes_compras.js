@@ -100,9 +100,15 @@ $(document).ready( function () {
         $.validator.addClassRules('requerido',{
            cRequerido: true
         });
+
         if(!$('#form-model').valid()){
             $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren tu atención',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            e.preventDefault();
+        }
+        if($('#productos tbody tr').length < 1){
+            $.toaster({priority : 'danger',title : '¡Error!',message : 'Para guardar se requiere mínimo un producto. Idiota :)',
+                settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             e.preventDefault();
         }
     });

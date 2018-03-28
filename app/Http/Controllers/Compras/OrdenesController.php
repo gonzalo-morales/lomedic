@@ -63,12 +63,7 @@ class OrdenesController extends ControllerBase
             'documento' =>$documento,
             'detalles_documento'=>$detalles_documento,
             'tipo_documento' => \request('tipo_documento'),
-            'sucursales' 	=> Sucursales::whereHas('usuario_sucursales',
-                function ($q){
-                    $q->where('id_usuario',Auth::id());})
-                ->whereHas('empresa_sucursales',function ($empresa){
-                    $empresa->where('id_empresa',dataCompany()->id_empresa);
-                })->pluck('sucursal','id_sucursal'),
+            'sucursales' 	   => Sucursales::hasEmpresa()->hasUsuario()->isActivo()->pluck('sucursal','id_sucursal'),
             'proveedores' => $proveedores ?? '',
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
