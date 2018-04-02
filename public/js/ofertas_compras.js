@@ -167,10 +167,10 @@ $(document).ready(function(){
     });
 
     $(document).on('submit',function (e) {
-        if(!$('#productos tbody tr').length > 1){
+        if($('#productos tbody tr').length < 1){
             e.preventDefault();
             $.toaster({
-                priority: 'danger', title: '¡Advertencia!', message: 'La orden de compra debe tener al menos un producto',
+                priority: 'danger', title: '¡Advertencia!', message: 'La oferta de compra debe tener al menos un producto',
                 settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
@@ -309,7 +309,6 @@ function agregarProducto() {
 }
 
 function initSelects() {
-    $('#fk_id_proveedor').select2();
     $('#fk_id_proyecto').select2({
         disabled: true,
         placeholder: "Seleccione primero el proveedor y el SKU..."

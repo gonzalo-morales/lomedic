@@ -170,7 +170,7 @@
     					</thead>
     					<tbody class="table-hover">
     					@if(isset($solicitud) && Route::currentRouteNamed(currentRouteName('create')))
-							@foreach( $solicitud->detalle->where('cerrado',false) as $row => $detalle)
+							@foreach( $solicitud->detalle->where('eliminar',false) as $row => $detalle)
     							<tr class="list-left bg-light">
     								<th>
 										{{Form::hidden('',$row,['class'=>'index'])}}
@@ -235,7 +235,7 @@
     							</tr>
     						@endforeach
 						@elseif( isset( $data->detalle ) )
-    						@foreach( $data->detalle->where('cerrado',false) as $row=>$detalle)
+    						@foreach( $data->detalle->where('eliminar',false) as $row=>$detalle)
     							<tr class="{{isset($detalle->fk_id_documento_base)?'list-left bg-light':''}}">
     								<th>
 										{{Form::hidden('',$row,['class'=>'index'])}}
