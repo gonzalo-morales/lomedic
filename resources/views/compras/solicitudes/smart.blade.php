@@ -236,7 +236,7 @@
 								</tr>
 							@endforeach
 							@elseif( isset( $data->detalle ) )
-							@foreach( $data->detalle as $detalle)
+							@foreach( $data->detalle->where('eliminar',0) as $detalle)
 							{{--  {{dump($detalle)}}  --}}
 									<tr>
 										<th>

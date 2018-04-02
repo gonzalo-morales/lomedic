@@ -179,19 +179,6 @@ class SolicitudesController extends ControllerBase
     public function impress($company,$id)
     {
         $solicitud = Solicitudes::where('id_documento',$id)->first();
-//        $detalles = DetalleSolicitudes::where('fk_id_documento',$id)
-//            ->where('cerrado','f')->get();
-        $subtotal = 0;
-        $total = 0;
-        foreach ($solicitud->detalle as $detalle)
-        {
-            $impuesto = Impuestos::select('tasa_o_cuota')->where('id_impuesto',$detalle->fk_id_impuesto)->where('activo',1)->first()->tasa_o_cuota;
-            $subtotal = $detalle->precio_unitario*$detalle->cantidad;
-            $iva = $subtotal*$impuesto;
-            // dd($iva);
-            $total = $detalle->importe;
-        }
-        $total = number_format($total,2,'.',',');
 
         $barcode = DNS1D::getBarcodePNG($solicitud->id_documento,'EAN8');
         $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$solicitud->id_documento])), "QRCODE");
@@ -199,22 +186,16 @@ class SolicitudesController extends ControllerBase
         $empresa = Empresas::where('conexion','LIKE',$company)->first();
         $pdf = PDF::loadView(currentRouteName('compras.solicitudes.imprimir'),[
             'solicitud' => $solicitud,
-            //            'detalles' => $detalles,
-            'subtotal' => $subtotal,
-            'iva' => $iva,
-            'importe' => $total,
-            'total_letra' => num2letras($total),
+            'empresa' => $empresa,
             'barcode' => $barcode,
             'qr' => $qr,
-            'empresa' => $empresa,
-            'total' => $total
             ]);
             $pdf->setPaper('letter','landscape');
             $pdf->output();
             $dom_pdf = $pdf->getDomPDF();
             $canvas = $dom_pdf->get_canvas();
             $canvas->page_text(38,580,"Página {PAGE_NUM} de {PAGE_COUNT}",null,8,array(0,0,0));
-            $canvas->text(665,580,'PSAI-PN06-F01 Rev. 01',null,8);
+//            $canvas->text(665,580,'PSAI-PN06-F01 Rev. 01',null,8);
 //        $canvas->image('data:image/png;charset=binary;base64,'.$barcode,355,580,100,16);
         return $pdf->stream('solicitud')->header('Content-Type',"application/pdf");
 //        return view(currentRouteName('imprimir'));
