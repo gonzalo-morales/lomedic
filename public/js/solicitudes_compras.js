@@ -157,8 +157,9 @@ $(document).ready( function () {
                     if (data.length > 0) {
                         options.push('<option value="0" selected disabled>Seleccione el Proveedor...</option>'); 
                         for (var i = 0; i < data.length; i++) {
-                            options.push('<option value="' + data[i].id + '">' + data[i].text + '</option>');
+                            options.push('<option value='+data[i].id+'>'+data[i].text+'</option>');
                         };
+                        console.log(options)
                         $('#fk_id_proveedor').append(options);
                         $('#fk_id_proveedor').select2({
                             disabled: false,
