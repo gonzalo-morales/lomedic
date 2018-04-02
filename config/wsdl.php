@@ -52,6 +52,26 @@ return [
 	            'usuario' => 'testing-cfdi33@lom990211kq2.sf',
 	            'password' => '7qEgq6mVYyeTI7Jj8WA1rWXq',
 	        ],
+		],
+		
+		'ipejal' => [
+	        'url' => 'https://pensiones.jalisco.gob.mx/Farmacia/wsFarmacia.asmx?wsdl',
+	        'options'  => [
+				'encoding' => 'UTF-8',
+				'verifypeer' => false,
+				'verifyhost' => false,
+				'soap_version' => SOAP_1_1,
+				'trace' => 1,
+				'exceptions' => 1,
+				"connection_timeout" => 180,
+				'stream_context' => stream_context_create([
+					'ssl' => ['ciphers'=>'RC4-SHA', 'verify_peer'=>false, 'verify_peer_name'=>false]
+				]),
+	        ],
+	        'parameters' => [
+	            'Usr' => 'ABISALUD',
+	            'Pwd' => 'TB-x23-G3',
+	        ],
 	    ],
 	    
 	    

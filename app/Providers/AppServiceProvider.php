@@ -90,6 +90,7 @@ class AppServiceProvider extends ServiceProvider
 	public function register()
 	{
 	    require_once app_path().'/helpers.php';
-	    require_once app_path().'/cfdi.php';
+		require_once app_path().'/cfdi.php';
+		require_once app_path().'/ipejal.php';
 	}
 }

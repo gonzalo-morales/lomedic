@@ -286,7 +286,7 @@ function wsdlService($function = '',$params = [],$connections = null)
         return collect(['status'=>$f->faultcode,'mensaje'=>"SOAPFault: ".$f->faultcode." - ".$f->faultstring]);
     }
     
-    return $response->return;
+    return $response;
 }
 
 function num2letras($num, $fem = false, $dec = true, $moneda = 'pesos', $abreviaturaMoneda = 'M.N.') {

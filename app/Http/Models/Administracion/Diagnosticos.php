@@ -3,6 +3,7 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 
 class Diagnosticos extends ModelBase
 {
@@ -24,7 +25,13 @@ class Diagnosticos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['clave_diagnostico', 'diagnostico', 'medicamento_sugerido','activo'];
+	protected $fillable = [
+		'clave_diagnostico',
+		'fk_id_cliente',
+		'diagnostico',
+		'medicamento_sugerido',
+		'activo'
+	];
 
 	/**
 	 * The validation rules
@@ -34,6 +41,7 @@ class Diagnosticos extends ModelBase
 		'clave_diagnostico' => 'required|max:10',
 		'diagnostico' => 'required|max:200',
 		'medicamento_sugerido' => 'required',
+		'fk_id_cliente' => 'required'
 	];
 
 	protected $unique = ['clave_diagnostico','diagnostico'];
@@ -47,5 +55,10 @@ class Diagnosticos extends ModelBase
 		'diagnostico' => 'Diagnostico',
 		'medicamento_sugerido' => 'Medicamento Sugerido'
 	];
+
+	public function socio_cliente()
+	{
+		return $this->hasOne(SociosNegocio::class, 'fk_id_cliente','id_diagnostico');
+	}
 
 }

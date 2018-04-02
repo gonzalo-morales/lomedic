@@ -3,6 +3,7 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Servicios\Recetas;
 
 class Afiliaciones extends ModelBase
@@ -26,6 +27,7 @@ class Afiliaciones extends ModelBase
         'edad_tiempo',
         'fecha_nacimiento',
         'fk_id_parentesco',
+        'fk_id_cliente'
     ];
 
    /**
@@ -55,6 +57,10 @@ class Afiliaciones extends ModelBase
     public function parentesco()
     {
         return $this->hasOne(Parentescos::class,'id_parentesco','fk_id_parentesco');
+    }
+    public function socio_cliente()
+    {
+        return $this->hasOne(SociosNegocio::class, 'fk_id_cliente', 'id_afiliacion');
     }
 //    public function getCodigoPacieteAttribute()
 //    {

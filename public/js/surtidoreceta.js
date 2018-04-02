@@ -1,22 +1,115 @@
 
 $(document).ready(function () {
 
-
+    $('#folio').prop('disabled',true);
+    $('#fk_id_receta').prop('disabled',true);
+    $('#sufijo').prop('disabled',true);
     $('#fk_id_sucursal').select2();
+
+    var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+          clearTimeout (timer);
+          timer = setTimeout(callback, ms);
+        };
+    })();
+
+    $('#folio').keyup(function() {
+        delay(function(){
+            if($('#fk_id_sucursal').val() != '' && $('#folio').val() != '' && $('#sufijo').val() != '')
+            {
+                showLoaders();
+                id_sucursal = $('#fk_id_sucursal').val();
+                folio = $('#folio').val();
+                sufijo = $('#sufijo').val();
+                $.ajax({
+                    type: "GET",
+                    url: $('#fk_id_receta').data('consultafolio'),
+                    data: {
+                        'id_sucursal':id_sucursal,
+                        'folio':folio,
+                        'sufijo':sufijo,
+                    },
+                    dataType: "json",
+                    success:function(data) {
+                        console.log(data);
+                        // if()
+                        // if(data.id_receta)
+                        //     $('#fk_id_receta').val(data.id_receta).trigger('change');
+                        // else
+                        // console.log(data.estatus);
+                    hideLoaders();
+                    },
+                    error:function(){
+                        $.toaster({priority : 'danger',title : '¡Lo sentimos!',message : 'No hay comunicación con el servidor de IPEJAL en éste momento, te recomendamos intentar más tarde.',
+                        settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
+                        hideLoaders();
+                    }
+                });
+            }
+        }, 2000 );
+    });
+
+    $('#sufijo').keyup(function(){
+        if($(this).val().length > 0)
+        {
+            $('#folio').prop('disabled',false);
+        }
+        else
+        {
+            $('#folio').prop('disabled',true);
+        }
+    });
+    // $('#folio').on('change', function() {
+    //     if($('#fk_id_sucursal').val() != '' && $('#folio').val() != '' && $('#sufijo').val() != '')
+    //     {
+    //         id_sucursal = $('#fk_id_sucursal').val();
+    //         $.ajax({
+    //             type: "POST",
+    //             url: 'http://127.0.0.1:8000/abisa/inventarios/consultafolio',
+    //             data: {'id_sucursal':id_sucursal,'_token':token},
+    //             dataType: "json",
+    //             success:function(data) {
+    //                 console.log(data);
+    //                 // if(data.id_receta)
+    //                 //     $('#fk_id_receta').val(data.id_receta).trigger('change');
+    //                 // else
+    //                 // console.log(data.estatus);
+    //             }
+    //         });
+    //     }
+    // });
+
+    $('#sufijo').on('change', function() {
+        $('#folio').trigger('change');
+    });
     // $('#id_receta').select2();
     let token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
     $('#fk_id_sucursal').on('change', function() {
+        showLoaders();
+        $('#sufijo').prop('disabled',false);
         $.ajax({
             type: "POST",
             url: $(this).data('url'),
             data: {'fk_id_sucursal':$(this).val(),'_token':token},
             dataType: "json",
             success:function(data) {
-                $('#fk_id_receta').empty();
-                $.each(data, function(key, value) {
-                    $('#fk_id_receta').append('<option value="'+ key +'">'+ value +'</option>');
-                });
-                $('#fk_id_receta').val('');
+                if(data.length > 0)
+                {
+                    $('#fk_id_receta').empty();
+                    $.each(data, function(key, value) {
+                        $('#fk_id_receta').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                    $('#fk_id_receta').val('');
+                    $('#fk_id_receta').prop('disabled',false);
+                    hideLoaders();
+                }
+                else
+                {
+                    $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'No hay números de receta en la sucursal, pruebe buscando por sufijo y folio.',
+                    settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
+                    hideLoaders();
+                }
             }
         });
     });
@@ -156,4 +249,18 @@ function mensajeAlerta(mensaje,tipo){
                 'toaster':{'css':{'top':'5em'}}}
         }
     );
+}
+
+function showLoaders(){
+    $('#loadingsufijo').show();
+    $('#loadinginvoices').show();
+    $('#loadingsucursales').show();
+    $('#loadingfolio').show();
+}
+
+function hideLoaders(){
+    $('#loadingsufijo').hide();
+    $('#loadinginvoices').hide();
+    $('#loadingsucursales').hide();
+    $('#loadingfolio').hide();
 }

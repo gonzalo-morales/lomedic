@@ -1,52 +1,13 @@
 $(document).ready( function () {
 
-    // function dataUsers($usuarios){
-    //     $.map($usuarios, function (obj) {
-    //         obj.id = obj.id || obj.text.id_usuario; // replace pk with your identifier
-    //         return obj;
-    //     });
-    //     return $usuarios
-    // }
-        
+    sumaImpuestosSolicitud()
+    sumaSubtotalSolicitud();
+    sumaImporteSolicitud();
+    
     $('#fk_id_solicitante.select2').select2({
         placeholder: "Para iniciar es necesario indicar el Solicitante",
-        // data:function($usuarios){
-        //     $.map($usuarios, function (obj) {
-        //         obj.text = 'obj.text.usuario';
-        //         return obj; 
-        //     });
-        // },
-        // data:function($usuarios){
-        //     return {
-        //         id = $usuarios.id_usuario,
-        //         text = $usuarios.usuario,
-        //     };
-        // },
-        // escapeMarkup: function (markup) { return markup; },
-        // templateResult:formatUsers,
-        // templateSelection:formatUsersSelection,
         disabled: false
     });
-    // function formatUsers($usuarios){
-    //     console.log($usuarios)
-    //     var markup = "<div class='select2-result-pers clearfix'>" +
-    //     "<div class='select2-result-pers__avatar'><img src='img/sku.png'/></div>" +
-    //     "<div class='select2-result-pers__meta'>" +
-    //     "<div class='select2-result-pers__text'>" + $usuarios.text.usuario + "</div>";
-
-    //     // markup += "<div class='select2-result-pers__statistics'>" +
-    //     // "<div class='select2-result-pers__presentacion text-success mr-3'><i class='material-icons align-middle'>shopping_basket</i> " + data.stock + "</div>" +
-    //     // "<div data-position='bottom' data-delay='50' data-toggle='"+mensaje+"' title='"+mensaje+"' class='select2-result-pers__presentacion"+" "+claseFecha+" "+"mr-3'><i class='material-icons align-middle'>today</i> " + data.fecha_caducidad + "</div>" +
-    //     // "<div class='select2-result-pers__presentacion'><i class='material-icons align-middle'>label</i> " + data.lote + "</div>" +
-    //     "</div>" +
-    //     "</div></div>";
-
-    //         return markup;
-    // }
-    // function formatUsersSelection ($usuarios) {
-    //     return $usuarios.usuario;
-    // }
-
     
     $('#fk_id_sucursal.select2').select2({
         placeholder: "Para iniciar es necesario indicar el Solicitante",
