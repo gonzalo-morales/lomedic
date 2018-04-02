@@ -198,10 +198,10 @@ $(document).ready( function () {
                         for (var i = 0; i < data.length; i++) {
                             options.push('<option value="' + data[i].id + '">' + data[i].text + '</option>');
                         };
+                        $('#fk_id_proveedor').append(options.join(''));
                         $('#fk_id_proveedor').select2({
                             disabled: false,
                         });
-                        $('#fk_id_proveedor').append(options.join(''));
                     } else{
                         $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay Proveedores con este SKU, intente con otro',
                         settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
