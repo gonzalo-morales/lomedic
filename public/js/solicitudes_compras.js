@@ -107,7 +107,7 @@ $(document).ready( function () {
             e.preventDefault();
         }
         if($('#productos tbody tr').length < 1){
-            $.toaster({priority : 'danger',title : '¡Error!',message : 'Para guardar se requiere mínimo un producto. Idiota :)',
+            $.toaster({priority : 'danger',title : '¡Error!',message : 'Para guardar se requiere mínimo un producto.',
                 settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             e.preventDefault();
         }
@@ -198,7 +198,7 @@ $(document).ready( function () {
                         for (var i = 0; i < data.length; i++) {
                             options.push('<option value="' + data[i].id + '">' + data[i].text + '</option>');
                         };
-                        $('#fk_id_proveedor').append(options.join(''));
+                        $('#fk_id_proveedor').append(options);
                         $('#fk_id_proveedor').select2({
                             disabled: false,
                         });
