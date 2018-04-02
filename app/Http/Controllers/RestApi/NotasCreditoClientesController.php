@@ -46,8 +46,6 @@ class NotasCreditoClientesController extends Controller
             $nota = NotasCreditoClientes::find($movimiento['id_documento']);
             $nota->no_poliza = $request->poliza['id_poliza'];
             $nota->no_movimiento = $movimiento['id_movimiento'];//Número de movimiento en la póliza
-            $nota->ejercicio = $request->poliza['ejercicio'];
-            $nota->periodo = $request->poliza['periodo'];
             $nota->guid_movimiento = $movimiento['guid'];
             $nota->save();
         }

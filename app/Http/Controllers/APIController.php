@@ -124,9 +124,14 @@ class APIController extends Controller
 			# Limite
 			$entity->limit($request['limit'] ?? null);
 
+		    if(isset($request['hasUsuario']))
+                $entity->hasUsuario();
+		    if(isset($request['hasEmpresa']))
+                $entity->hasEmpresa();
+		    if(isset($request['isActivo']))
+		        $entity->isActivo();
 
 			$collections = $entity->get();
-
 
 			# Pluck collection
 			if (isset($request['pluck'])) {
