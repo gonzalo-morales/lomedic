@@ -75,8 +75,17 @@ class SolicitudesController extends ControllerBase
             'skus'              => Productos::where('activo',1)->where('articulo_compra',1)->orderBy('sku')->pluck('sku','id_sku'),
             'usuarios'          => Usuarios::where('activo',1)->orderBy('usuario')->pluck('usuario','id_usuario')->prepend('Seleccione un usuario','')->put($user,'Yo'.' ('.$userName.')'),
             // 'usuarios'       => Usuarios::where('activo',1)->orderBy('usuario')->get()->put($user,'Yo'.' ('.$userName.')'),
-            'js_sucursales'     => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"hasUsuario":[],"hasEmpresa":[],"isActivo":[]'),
-            // 'js_sucursales'     => Crypt::encryptString('"conditions":[ {"where":["activo","1"]}],"whereHas": [{"usuario_sucursales":{"where":["fk_id_usuario", "$usuario"]}}]'),
+//            'js_sucursales'     => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"hasEmpresa":[],"isActivo":[]'),
+             'js_sucursales'     => Crypt::encryptString('
+                "select": ["id_sucursal as id","sucursal as text"],
+                "isActivo": [],
+                "hasEmpresa": [],
+                "whereHas": [{
+                    "usuario": {
+                        "where": ["fk_id_usuario", "$usuario"]
+                    }
+                }]
+                '),
             'js_usuarios'       => Crypt::encryptString('"conditions":[ {"where":["activo","1"]}, {"where":["id_usuario",$usuario]}],"with": ["empleado"]'),
             'js_proveedores'    => Crypt::encryptString('"select":["id_socio_negocio as id","nombre_comercial as text"],"whereHas":[{"productos":{"where":["fk_id_sku",$id_sku]}}]'),
             'js_porcentaje'     => Crypt::encryptString('"select": ["tasa_o_cuota"], "conditions": [{"where":["id_impuesto", "$id_impuesto"]}], "limit": "1"'),
