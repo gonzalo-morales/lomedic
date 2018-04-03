@@ -36,12 +36,7 @@ class FacturasProveedoresController extends ControllerBase
 
         return [
             'proveedores' 	=> $proveedores,
-            'sucursales' 	=> Sucursales::whereHas('usuario_sucursales',
-                function ($q){
-                $q->where('id_usuario',Auth::id());})
-                ->whereHas('empresa_sucursales',function ($empresa){
-                $empresa->where('id_empresa',dataCompany()->id_empresa);
-                })->pluck('sucursal','id_sucursal'),
+            'sucursales' 	=> Sucursales::hasSucursal()->pluck('sucursal','id_sucursal'),
             'js_comprador' => Crypt::encryptString('"select": ["nombre","apellido_paterno","apellido_materno"], "conditions": [{"where": ["activo","1"]}], "whereHas": [{"ejecutivocompra":{"where":["id_socio_negocio","$id_socio_negocio"]}}]')
         ];
     }

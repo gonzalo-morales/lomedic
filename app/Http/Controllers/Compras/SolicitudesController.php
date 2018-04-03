@@ -58,13 +58,10 @@ class SolicitudesController extends ControllerBase
         $proveedores = [];
         if($entity != null)
         {
-            // dd(Sucursales::select('id_sucursal','sucursal')->where('activo',1)
-            // ->whereHas('usuario_sucursales',function($q) use ($entity){ $q->where('fk_id_usuario',$entity->fk_id_solicitante); })
-            // ->whereHas('empresa_sucursales',function($q) use ($entity){ $q->where('fk_id_empresa',dataCompany()->id_empresa); }));
             $proveedores = SociosNegocio::where('activo',1)->whereHas('empresas',function ($q) use ($entity){
                 $q->where('fk_id_socio_negocio',$entity->fk_id_socio_negocio);
             })->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio')->prepend('Seleccione el proveedor','');
-            $sucursales = Sucursales::where('activo',1)->where('id_sucursal',$entity->fk_id_sucursal)->pluck('sucursal','id_sucursal');
+            $sucursales = Sucursales::hasSucursal()->where('id_sucursal',$entity->fk_id_sucursal)->pluck('sucursal','id_sucursal');
         }
         return [
             'proyectos'         => Proyectos::where('fk_id_estatus',1)->orderBy('proyecto')->pluck('proyecto','id_proyecto')->prepend('Seleccione el proyecto',''),

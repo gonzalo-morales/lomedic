@@ -33,10 +33,7 @@ class SolicitudesPagosController extends ControllerBase
             'ordenes'=>Ordenes::select('id_documento')->where('fk_id_estatus_orden',1)->where('total_orden','>',0)->whereHas('detalle')->pluck('id_documento','id_documento'),
             'js_sucursales'=> Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"hasUsuario":[],"hasEmpresa":[],"isActivo":[]'),
             'js_orden'=>Crypt::encryptString('"conditions":[{"where":["id_documento",$fk_id_orden]}]'),
-            'sucursales' => empty($entity) ? [] : Sucursales::where('activo',1)
-                ->whereHas('usuario_sucursales', function ($query) use ($entity) { $query->where('fk_id_empleado', $entity->fk_id_solicitante); })
-                ->whereHas('empresa_sucursales', function ($query) use ($entity) { $query->where('fk_id_empresa', dataCompany()->id_empresa); })
-                ->pluck('sucursal','id_sucursal'),
+            'sucursales' => empty($entity) ? [] : Sucursales::hasSucursal()->pluck('sucursal','id_sucursal'),
             'condiciones'=>Usuarios::find(Auth::id())->condiciones->where('fk_id_tipo_documento',10)->where('activo',1),
         ];
     }

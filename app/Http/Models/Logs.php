@@ -5,8 +5,6 @@ namespace App\Http\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Http\Models\Administracion\Empresas;
-use App\Http\Models\AccionLog;
 
 class Logs extends Model
 {

@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Middleware;
 
-use App\Http\Models\Administracion\Empresas;
 use Illuminate\Support\Facades\View;
 use Carbon\Carbon;
 use Closure;
