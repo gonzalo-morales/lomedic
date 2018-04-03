@@ -77,7 +77,7 @@ class Upcs extends ModelBase
 
     public function skus()
     {
-        return $this->belongsToMany('App\Http\Models\Inventarios\Productos','inv_det_sku_upc','fk_id_upc','fk_id_sku','id_upc','id_sku')->withPivot('fk_id_upc','fk_id_sku','cantidad');
+        return $this->belongsToMany(Productos::class,getSchema(request()->company).'.inv_det_sku_upc','fk_id_upc','fk_id_sku','id_upc','id_sku')->withPivot('fk_id_upc','fk_id_sku','cantidad');
     }
 
     public function clavesclientes()
