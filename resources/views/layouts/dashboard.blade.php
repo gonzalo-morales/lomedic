@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
+	@php($menuempresa = dataCompany())
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,7 +10,7 @@
 	<title>{{ config('app.name', '') }} - @yield('title')</title>
 	{{ HTML::meta('viewport', 'width=device-width, initial-scale=1') }}
 	{{ HTML::meta('csrf-token', csrf_token()) }}
-	{{ HTML::favicon(asset("img/logotipos/$menuempresa->icono")) }}
+	{{ HTML::favicon(asset("img/logotipos/".(!empty($menuempresa) ? $menuempresa->icono : ""))) }}
 	<!-- Bootstrap CSS local fallback -->
 	{{ HTML::style(asset('css/bootstrap/dist/css/bootstrap.min.css')) }}
 	<!-- Select2 CSS local -->
@@ -41,9 +42,11 @@
                 <button type="button" id="sidebarCollapse" class="btn-warning navbar-btn d-flex align-items-center" title="Menu" onclick="menu()"><i class="material-icons">menu</i></button>
                 <div class="btn-group">
                     <a href="#!" class="navbar-btn nav-link dropdown-toggle d-flex align-items-center dropdown-toggle" title="{{cTrans('messages.company','Empresa')}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            			{{ HTML::image(asset("img/logotipos/$menuempresa->icono"), null, ['width'=>'25px','class'=>'mr-2']) }} {{ $menuempresa->nombre_comercial }}
+            			{{ HTML::image(asset("img/logotipos/".(!empty($menuempresa) ? $menuempresa->icono : "")), null, ['width'=>'25px','class'=>'mr-2']) }} {{ !empty($menuempresa) ? $menuempresa->nombre_comercial : "" }}
             		</a>
                     <ul id='enteDrop' class="dropdown-menu z-depth-2" aria-labelledby="dropdownMenu2">
+                    @php($menuempresas = empresa_menu())
+                    @if(isset($menuempresas))
                 		@foreach($menuempresas as $_empresa)
                 		<li class="dropdown-item">
                 			<a target="_blank" href="{{ companyAction('HomeController@index',['company' => $_empresa->conexion]) }}">
@@ -51,6 +54,7 @@
                 			</a>
                 		</li>
                 		@endforeach
+                	@endif
                 	</ul>
                 </div>
             </div>
@@ -89,6 +93,7 @@
 
                 <ul id="menu-conten" class="list-unstyled components text-center">
                 	{!! Form::cText(null,'filter-menu',['placeholder'=>cTrans('forms.menu_search','Buscar en menu'),'class'=>'mt-2 p-1','autofocus']) !!}
+                	@php($menu = main_menu())
                     @if(isset($menu))
         				@each('partials.menu', $menu, 'modulo')
         			@endif
@@ -101,7 +106,7 @@
             <div id="onload"></div>
             <div class="pl-2">
             	<!-- <ol class="col-sm-12 breadcrumb bg-light p-1 m-0">
-            		<li class="breadcrumb-item" id="bread-home">{{ HTML::link(companyAction('HomeController@index', ['company' => $menuempresa->conexion]), 'inicio') }}</li>
+            		<li class="breadcrumb-item" id="bread-home">{{-- HTML::link(companyAction('HomeController@index', ['company' => $menuempresa->conexion]), 'inicio') --}}</li>
             		foreach(routeNameReplace() as $key=>$item)
             			if($item !== 'index' && !empty($item))
             				<li class="breadcrumb-item active">{{-- HTML::link($key == 1 ? companyRoute('index') : '#', $item) --}}</li>

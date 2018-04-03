@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Http\Models\Administracion\Usuarios;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PolicyBase
@@ -16,10 +15,10 @@ class PolicyBase
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function view(Usuarios $usuario)
+    public function view()
     {
         return true;
-        return $usuario->checkAuthorization(currentRouteAction('view'));
+        return \Auth::User()->checkAuthorization(currentRouteAction('view'));
     }
 
     /**
@@ -28,10 +27,10 @@ class PolicyBase
      * @param  \App\User  $user
      * @return mixed
      */
-    public function create(Usuarios $usuario)
+    public function create()
     {
         return true;
-        return $usuario->checkAuthorization(currentRouteAction('create'));
+        return \Auth::User()->checkAuthorization(currentRouteAction('create'));
     }
 
     /**
@@ -41,10 +40,10 @@ class PolicyBase
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function update(Usuarios $usuario)
+    public function update()
     {
         return true;
-        return $usuario->checkAuthorization(currentRouteAction('update'));
+        return \Auth::User()->checkAuthorization(currentRouteAction('update'));
     }
 
     /**
@@ -54,10 +53,10 @@ class PolicyBase
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function delete(Usuarios $usuario)
+    public function delete()
     {
         return true;
-        return $usuario->checkAuthorization(currentRouteAction('delete'));
+        return \Auth::User()->checkAuthorization(currentRouteAction('delete'));
     }
 
     /**
@@ -67,9 +66,9 @@ class PolicyBase
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function export(Usuarios $usuario)
+    public function export()
     {
         return true;
-        return $usuario->checkAuthorization(currentRouteAction('export'));
+        return \Auth::User()->checkAuthorization(currentRouteAction('export'));
     }
 }

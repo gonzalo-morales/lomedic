@@ -24,7 +24,7 @@ class ControllerBase extends Controller
     public function index($company, $attributes = [])
     {
         # ¿Usuario tiene permiso para ver?
-        //$this->authorize('view', $this->entity);
+        $this->authorize('view', $this->entity);
 
         # Log
         event(new LogModulos($this->entity, $company, 'index' , null));
@@ -86,7 +86,7 @@ class ControllerBase extends Controller
     public function create($company, $attributes =[])
     {
         # ¿Usuario tiene permiso para crear?
-        //$this->authorize('create', $this->entity);
+        $this->authorize('create', $this->entity);
         
         # Log
         event(new LogModulos($this->entity, $company, __FUNCTION__ , 'Antes de crear el registro'));
@@ -108,7 +108,7 @@ class ControllerBase extends Controller
     public function store(Request $request, $company, $compact = false)
     {
         # ¿Usuario tiene permiso para crear?
-        //$this->authorize('create', $this->entity);
+        $this->authorize('create', $this->entity);
 
         $request->request->set('activo',!empty($request->request->get('activo')));
 
@@ -174,7 +174,7 @@ class ControllerBase extends Controller
     public function show($company, $id, $attributes =[])
     {
         # ¿Usuario tiene permiso para ver?
-        //$this->authorize('view', $this->entity);
+        $this->authorize('view', $this->entity);
         
         try {
             $data = $this->entity->findOrFail($id);
@@ -208,7 +208,7 @@ class ControllerBase extends Controller
     public function edit($company, $id, $attributes =[])
     {
         # ¿Usuario tiene permiso para actualizar?
-        //$this->authorize('update', $this->entity);
+        $this->authorize('update', $this->entity);
 
         $validator = \JsValidator::make(($this->entity->rules ?? []) + $this->entity->getRulesDefaults(), [], $this->entity->niceNames, '#form-model');
 
@@ -233,7 +233,7 @@ class ControllerBase extends Controller
     public function update(Request $request, $company, $id, $compact = false)
     {
         # ¿Usuario tiene permiso para actualizar?
-        //$this->authorize('update', $this->entity);
+        $this->authorize('update', $this->entity);
 
         $request->request->set('activo',!empty($request->request->get('activo')));
 
@@ -306,7 +306,7 @@ class ControllerBase extends Controller
     public function destroy(Request $request, $company, $idOrIds, $attributes = ['eliminar'=>1])
     {
         # ¿Usuario tiene permiso para eliminar?
-        //$this->authorize('delete', $this->entity);
+        $this->authorize('delete', $this->entity);
 
         $ids = !is_array($idOrIds) ? [$idOrIds] : $idOrIds;
 
@@ -357,7 +357,7 @@ class ControllerBase extends Controller
     public function destroyMultiple(Request $request, $company)
     {
         # ¿Usuario tiene permiso para eliminar?
-        //$this->authorize('delete', $this->entity);
+        $this->authorize('delete', $this->entity);
 
         # Shorthand
         if ($request->ids)
@@ -374,7 +374,7 @@ class ControllerBase extends Controller
     public function export(Request $request, $company)
     {
         # ¿Usuario tiene permiso para exportar?
-        //$this->authorize('export', $this->entity);
+        $this->authorize('export', $this->entity);
 
         $colums = $this->entity->getlistColumns();
 
