@@ -74,13 +74,13 @@
                 <div class="sidebar-header text-center" style="position: relative;">
                     <div class="title">
                     	<div class="text-center"><object id="front-page-logo" class="sim" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Su navegador no soporta imagenes SVG</object></div>
-                        <a href="#" class="mt-3"><p class="mt-3 d-flex justify-content-center w-100"><small>{{ Auth::User()->nombre_corto }}</small></p></a>
+                        <a href="#" class="mt-3"><p class="mt-3 d-flex justify-content-center w-100"><small>{{ Auth::check() ? Auth::User()->nombre_corto : ''}}</small></p></a>
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="white-text w-100 text-uppercase">
             				<i class="tiny material-icons">power_settings_new</i> {{cTrans('forms.logout','Cerrar Sesi�n')}}
             			</a>
                     </div>
                     <strong>
-                    	<a href="#" title="{{ Auth::User()->nombre_corto }}" data-toggle="tooltip" data-placement="right">
+                    	<a href="#" title="{{ Auth::check() ?  Auth::User()->nombre_corto : ''}}" data-toggle="tooltip" data-placement="right">
                     		<object id="front-page-logo" class="sim w-50" type="image/svg+xml" data="{{asset('img/sim2.svg')}}" name="SIM">Su navegador no soporta imagenes  SVG</object>
                     	</a>
         				<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="d-flex justify-content-center" title="{{cTrans('forms.logout','Cerrar Sesi�n')}}" data-toggle="tooltip" data-placement="right">

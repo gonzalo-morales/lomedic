@@ -4,7 +4,7 @@ use App\Http\Models\Soporte\Solicitudes;
 
 function main_menu()
 {
-    return \Auth::user()->modulos_anidados(dataCompany());
+    return \Auth::check() ? \Auth::user()->modulos_anidados(dataCompany()) : [];
 }
 
 function empresa_menu()
