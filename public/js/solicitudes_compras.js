@@ -144,36 +144,25 @@ $(document).ready( function () {
             codigosbarras();//Carga los nuevos datos del producto
 
             $.ajax({
-                 url: $('#fk_id_proveedor').data('url'),
-                 data: {
-                     'param_js': proveedores_js,
-                     $id_sku: $('#fk_id_sku').val()
-                 },
-                 dataType: 'JSON',
-
-                 success: function (data) {
-                    var options = [];
-                    /* Si hay resultados */
-                    if (data.length > 0) {
-                        options.push('<option value="0" selected disabled>Seleccione el Proveedor...</option>'); 
-                        for (var i = 0; i < data.length; i++) {
-                            options.push('<option value="'+data[i].id+'">'+data[i].text+'</option>');
-                        };
-                        $('#fk_id_proveedor').select2({
-                            disabled: false,
-                        });
-                        console.log(options)
-                        $('#fk_id_proveedor').append(options);
-                    } else{
-                        $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay Proveedores con este SKU, intente con otro',
-                        settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
-                        $('#fk_id_proveedor').select2({
-                            placeholder: "Proveedor no encontrado",
-                            disabled: true,
-                        });
-                    }
-                    $('#loadingproveedor').hide();
+                url: $('#fk_id_proveedor').data('url'),
+                data: {
+                    'param_js': proveedores_js,
+                    $id_sku: $('#fk_id_sku').val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    data = $.map(data, function (obj) {
+                        return{
+                            text: obj.text,
+                            id: obj.id,
+                        }
+                    });
+                    $('#fk_id_proveedor').select2({
+                        data: data,
+                        disabled: false
+                    })
                     $('#whaitplease').hide();
+                    $('#loadingproveedor').hide();
                 },
                 error: function () {
                     $('#loadingproveedor').hide();
