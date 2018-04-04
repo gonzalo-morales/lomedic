@@ -83,7 +83,7 @@
                 <td>{{$detalle->sku->descripcion_corta}}</td>
                 <td>{{$detalle->proveedor->nombre_comercial ?? ''}}</td>
                 <td>{{$detalle->fecha_necesario}}</td>
-                <td>{{isset($detalle->fk_id_proyecto) ? $detalle->proyecto->id_proyecto.' - '.$detalle->proyecto->proyecto : ''}}</td>
+                <td>{{isset($detalle->fk_id_proyecto) ? $detalle->proyecto->proyecto : ''}}</td>
                 <td>{{$detalle->cantidad}}</td>
                 <td>{{$detalle->unidad_medida->nombre}}</td>
                 <td>{{$detalle->impuesto->impuesto}}</td>
