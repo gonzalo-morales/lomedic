@@ -4,6 +4,7 @@
 @section('form-title', currentEntityBaseName())
 
 @section('content')
+@php($menuempresa = dataCompany())
 <table class="smart-table striped col">
 	<thead style="text-align: center;">
 		<tr style="padding: 10px 0; text-transform: uppercase;">

@@ -1,5 +1,6 @@
 @extends(smart())
 @section('form-title', 'Solicitudes de Compra')
+@php($menuempresa = dataCompany())
 
 {{--  @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
