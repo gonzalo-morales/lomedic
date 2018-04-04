@@ -53,7 +53,6 @@ class SolicitudesController extends ControllerBase
             $user = Auth::id();
             $userName = Auth::user()->usuario;
         }
-
         $sucursales = [];
         $proveedores = [];
         if($entity != null)
@@ -86,12 +85,16 @@ class SolicitudesController extends ControllerBase
             'js_usuarios'       => Crypt::encryptString('"conditions":[ {"where":["activo","1"]}, {"where":["id_usuario",$usuario]}],"with": ["empleado"]'),
             'js_proveedores'    => Crypt::encryptString('
                 "select":["id_socio_negocio as id","nombre_comercial as text"],
-                "isActivo": [],
-                "hasEmpresa": [],
                 "conditions":[{
-                    "whereRaw":["(fk_id_tipo_socio_compra IS NOT NULL)"]
+                    "whereNotNull":["fk_id_tipo_socio_compra"],
+                    "where":["activo",1]
                 }],
                 "whereHas":[{
+                    "empresas":{
+                        "where":["fk_id_empresa","'.dataCompany()->id_empresa.'"]
+                    }
+                },
+                {
                     "productos":{
                         "where":["fk_id_sku",$id_sku]
                     }
