@@ -137,8 +137,8 @@ $(document).ready( function () {
     $('#fk_id_sku').on('change',function () {
         $('#whaitplease').show();
         if($('#fk_id_sku').val() ) {
-            $('#fk_id_proveedor').empty();
             $('#fk_id_upc').empty();
+            $('#fk_id_proveedor').empty();
             $('#loadingUPC').show();
             $('#loadingproveedor').show();
             codigosbarras();//Carga los nuevos datos del producto
@@ -151,18 +151,29 @@ $(document).ready( function () {
                 },
                 dataType: 'JSON',
                 success: function (data) {
-                    data = $.map(data, function (obj) {
-                        return{
-                            text: obj.text,
-                            id: obj.id,
-                        }
-                    });
-                    $('#fk_id_proveedor').select2({
-                        data: data,
-                        disabled: false
-                    })
-                    $('#whaitplease').hide();
-                    $('#loadingproveedor').hide();
+                    if(data.length > 0){
+                        data = $.map(data, function (obj, i) {
+                            return{
+                                text: obj.text,
+                                id: obj.id,
+                            }
+                        });
+                        $('#fk_id_proveedor').select2({
+                            data: data,
+                            disabled: false
+                        })
+                        $('#whaitplease').hide();
+                        $('#loadingproveedor').hide();
+                    } else{
+                        $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay UPCs en el SKU seleccionado, intente con otro',
+                        settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
+                        $('#fk_id_proveedor').select2({
+                            placeholder: "Proveedor no encontrado",
+                            disabled: true
+                        })
+                        $('#whaitplease').hide();
+                        $('#loadingproveedor').hide();
+                    }
                 },
                 error: function () {
                     $('#loadingproveedor').hide();
@@ -235,7 +246,6 @@ function codigosbarras(){
             url: _url,
             dataType: 'json',
             success: function (data) {
-                $('#fk_id_proveedor').empty();
                 var options = [];
                 /* Si hay resultados */
                 if (data.length > 0) {
