@@ -84,7 +84,19 @@ class SolicitudesController extends ControllerBase
                 }]
                 '),
             'js_usuarios'       => Crypt::encryptString('"conditions":[ {"where":["activo","1"]}, {"where":["id_usuario",$usuario]}],"with": ["empleado"]'),
-            'js_proveedores'    => Crypt::encryptString('"select":["id_socio_negocio as id","nombre_comercial as text"],"whereHas":[{"productos":{"where":["fk_id_sku",$id_sku]}}]'),
+            'js_proveedores'    => Crypt::encryptString('
+                "select":["id_socio_negocio as id","nombre_comercial as text"],
+                "isActivo": [],
+                "hasEmpresa": [],
+                "conditions":[{
+                    "whereRaw":["(fk_id_tipo_socio_compra IS NOT NULL)"]
+                }],
+                "whereHas":[{
+                    "productos":{
+                        "where":["fk_id_sku",$id_sku]
+                    }
+                }]
+            '),
             'js_porcentaje'     => Crypt::encryptString('"select": ["tasa_o_cuota"], "conditions": [{"where":["id_impuesto", "$id_impuesto"]}], "limit": "1"'),
             'detalles_documento'=> $detalles_documento,
         ];
