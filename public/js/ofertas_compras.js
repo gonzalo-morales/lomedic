@@ -370,17 +370,17 @@ function totalOferta() {
 }
 
 function limpiarCampos() {
-    $('#fk_id_cliente').val('').select2();
+    // $('#fk_id_cliente').val('').select2();
     $('#fk_id_proyecto').empty().select2();
-    $('#fk_id_sku').val('').select2();
+    $('#fk_id_sku').val('').trigger('change');
     $('#fk_id_upc').empty().select2({
         placeholder: "Seleccione el UPC...",
         disabled:true
     });
     $('#activo_upc').prop('checked',false);
-    $('#fk_id_unidad_medida').val('').select2();
+    $('#fk_id_unidad_medida').val(0).trigger('change');
     $('#cantidad').val('');
-    $('#fk_id_impuesto').val('').select2();
+    $('#fk_id_impuesto').val(0).trigger('change');
     $('#precio_unitario').val(0);
     $('#descuento_detalle').val(0);
     //Eliminar reglas de validación detalle
