@@ -16,6 +16,13 @@
     </script>
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
 	@endif
+	@if(Route::currentRouteNamed(currentRouteName('show')) && $data->fk_id_estatus_solicitud == 3 || Route::currentRouteNamed(currentRouteName('show')) && $data->fk_id_estatus_solicitud == 2)
+		<script type="text/javascript">
+			$(function () {
+				$('a[data-finished="Editar"]').hide();
+			});
+		</script>
+	@endif
 @endsection
 
 @section('form-content')
@@ -365,7 +372,6 @@
          	bind: function (el) {
          		if(el.dataset.fk_id_estatus_solicitud != 1)
          		{
-             		console.log(el);
          			$(el).hide();
          		}
          	}
