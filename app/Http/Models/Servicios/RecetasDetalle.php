@@ -26,7 +26,7 @@ class RecetasDetalle extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_receta','fk_id_cuadro','cantidad_pedida','cantidad_surtida','dosis',
+    protected $fillable = ['fk_id_receta','fk_id_proyecto','fk_id_cuadro','cantidad_pedida','cantidad_surtida','dosis',
         'en_caso_presentar','recurrente','fecha_surtido','veces_surtir','veces_surtidas','eliminar','fk_id_clave_cliente_producto'];
 
     /**

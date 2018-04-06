@@ -34,7 +34,7 @@
     <div class="row">
     	<div class="col-md-12 col-sm-12 mb-3">
     		<div id="app" class="card z-depth-1-half" data-api-endpoint="{{ companyRoute('api.index', ['entity' => '#ENTITY#'], false) }}">
-    			@if (!Route::currentRouteNamed(currentRouteName('showdd')))
+    			@if (!Route::currentRouteNamed(currentRouteName('show')))
     			<div v-if="tipo_captura == 1" class="card-header text-center">
     				<div class="row">
     					<div class="col-sm-12">
@@ -774,11 +774,6 @@
     						}.bind(this),
     					});
     
-    					this.tipo_captura = $('#tipo_captura').val();
-    					$('#tipo_captura').on('change', function(){
-    						vm.tipo_captura = this.value;
-    					});
-    
     					function getAlmacenesUbicaciones(el) {
     						$.get(vm.$root.$el.dataset.apiEndpoint.replace('#ENTITY#', 'inventarios.almacenes'), {
     							param_js: '{{$api_almacenes_ubicaciones ?? ''}}', $fk_id_sucursal: el.value
@@ -844,8 +839,6 @@
     							/* Si detalle y formulario estan validados */
     							if (areValids && $(form).validate().form()) {
     								form.submit()
-    							} else {
-    								console.log('nada aun ...')
     							}
     						})
     					});

@@ -58,8 +58,8 @@ class SurtidoRecetaController extends ControllerBase
         $recetas = Recetas::whereIn('fk_id_estatus_receta',[1,3])
             ->where('fk_id_sucursal',$request->fk_id_sucursal)
             ->orderBy('folio', 'desc')
-            ->pluck('folio','id_receta')
-            ->prepend('...','')
+            ->pluck('serie','id_receta')
+            ->prepend('Seleccione el número de receta','')
             ->toJson();
         return $recetas;
     }
@@ -102,150 +102,157 @@ class SurtidoRecetaController extends ControllerBase
         $farmacia = $sucursal_with_cliente->sucursal;
         $proyecto = Proyectos::whereHas('cliente',function($q) use ($sucursal_with_cliente){
             $q->where('fk_id_cliente', $sucursal_with_cliente->cliente->id_socio_negocio);
-        })->get();
-
+        })->first();
         $receta_ipejal = consulta_folio($farmacia,$folio,$sufijo);
-        
-        if($receta_ipejal->consulta_folioResult->Estatus->Estado->NumeroEstatus == 1)
+
+        if(isset($receta_ipejal->consulta_folioResult) && $receta_ipejal->consulta_folioResult->Estatus->Estado->NumeroEstatus == 1)
         {
             $json_datos_receta = $receta_ipejal->consulta_folioResult->Recetas->Receta;
 
             #DATOS MÉDICO
-            /*$medico = [
-                'cedula'  =>  $json_datos_receta->Cedula,
-                'nombre'  =>  $json_datos_receta->Medicos->Medico->Nombre,
-                'paterno' =>  $json_datos_receta->Medicos->Medico->ApellidoPaterno,
-                'materno' =>  $json_datos_receta->Medicos->Medico->ApellidoMaterno,
-                'fk_id_cliente' => $sucursal_with_cliente->cliente->id_socio_negocio,
-            ];
-
-            $DB_medico = Medicos::where('nombre','ILIKE','%'.$medico['nombre'].'%')
-                                ->where('paterno','ILIKE','%'.$medico['paterno'].'%')
-                                ->where('materno','ILIKE','%'.$medico['materno'].'%')
-                                ->where('cedula','ILIKE','%'.$medico['cedula'].'%')
-                                ->first();
-                             
-            if(!$DB_medico)
+            if(isset($json_datos_receta->Medicos->Medico))
             {
-                $medico_nuevo = Medicos::create($medico);
-            }*/
-
-            #DATOS AFILIADO
-            /*$fecha_nacimiento = new Carbon($json_datos_receta->Afiliados->Afiliado->FechaNacimiento);
-            $ahora = Carbon::now();
-            $edad = ($fecha_nacimiento->diff($ahora)->y);
-
-            $DB_parentesco = Parentescos::where('nombre','ILIKE','%'.$json_datos_receta->Pacientes->Paciente->Parentesco.'%')->where('activo',1)->select('id_parentesco')->first();
-            if(!$DB_parentesco)
-            {
-                $parentesco_nuevo = Parentescos::create(['nombre' => $json_datos_receta->Pacientes->Paciente->Parentesco]);
+                $medico = [
+                    'cedula'  =>  $json_datos_receta->Cedula,
+                    'nombre'  =>  $json_datos_receta->Medicos->Medico->Nombre,
+                    'paterno' =>  $json_datos_receta->Medicos->Medico->ApellidoPaterno,
+                    'materno' =>  $json_datos_receta->Medicos->Medico->ApellidoMaterno,
+                    'fk_id_cliente' => $sucursal_with_cliente->cliente->id_socio_negocio,
+                ];
+    
+                $DB_medico = Medicos::where('nombre','ILIKE','%'.$medico['nombre'].'%')
+                                    ->where('paterno','ILIKE','%'.$medico['paterno'].'%')
+                                    ->where('materno','ILIKE','%'.$medico['materno'].'%')
+                                    ->where('cedula','ILIKE','%'.$medico['cedula'].'%')
+                                    ->first();
+                                 
+                if(!$DB_medico)
+                {
+                    $medico_nuevo = Medicos::create($medico);
+                }
             }
 
-            $afiliado = [
-                'nombre'            =>  $json_datos_receta->Afiliados->Afiliado->Nombre,
-                'paterno'           =>  $json_datos_receta->Afiliados->Afiliado->ApellidoPaterno,
-                'materno'           =>  $json_datos_receta->Afiliados->Afiliado->ApellidoMaterno,
-                'fecha_nacimiento'  =>  $json_datos_receta->Afiliados->Afiliado->FechaNacimiento,
-                'genero'            =>  ($json_datos_receta->Afiliados->Afiliado->Sexo == 0) ? "F" : "M",
-                'edad_tiempo'       =>  $edad,
-                'fk_id_parentesco'  =>  $DB_parentesco->id_parentesco ?? $parentesco_nuevo->id_parentesco,
-                'id_afiliacion'     =>  $json_datos_receta->Patente,
-            ];
-
-            $DB_afiliado = Afiliaciones::where('nombre','ILIKE','%'.$afiliado['nombre'].'%')
-                                        ->where('paterno','ILIKE','%'.$afiliado['paterno'].'%')
-                                        ->where('materno','ILIKE','%'.$afiliado['materno'].'%')
-                                        ->where('fecha_nacimiento','=',$afiliado['fecha_nacimiento'])
-                                        ->where('id_afiliacion','=',$afiliado['id_afiliacion'])
-                                        ->first();
-                             
-            if(!$DB_afiliado)
+            #DATOS AFILIADO
+            if(isset($json_datos_receta->Afiliados->Afiliado))
             {
-                $afiliado_nuevo = Afiliaciones::create($afiliado);
-            }*/
+                $fecha_nacimiento = new Carbon($json_datos_receta->Afiliados->Afiliado->FechaNacimiento);
+                $ahora = Carbon::now();
+                $edad = ($fecha_nacimiento->diff($ahora)->y);
+    
+                $DB_parentesco = Parentescos::where('nombre','ILIKE','%'.$json_datos_receta->Pacientes->Paciente->Parentesco.'%')->where('activo',1)->select('id_parentesco')->first();
+                if(!$DB_parentesco)
+                {
+                    $parentesco_nuevo = Parentescos::create(['nombre' => $json_datos_receta->Pacientes->Paciente->Parentesco]);
+                }
+    
+                $afiliado = [
+                    'id_dependiente'    => $DB_parentesco->id_parentesco ?? $parentesco_nuevo->id_parentesco,
+                    'nombre'            => $json_datos_receta->Afiliados->Afiliado->Nombre,
+                    'paterno'           => $json_datos_receta->Afiliados->Afiliado->ApellidoPaterno,
+                    'materno'           => $json_datos_receta->Afiliados->Afiliado->ApellidoMaterno,
+                    'fecha_nacimiento'  => $json_datos_receta->Afiliados->Afiliado->FechaNacimiento,
+                    'genero'            => ($json_datos_receta->Afiliados->Afiliado->Sexo == 0) ? "F" : "M",
+                    'edad_tiempo'       => $edad,
+                    'fk_id_parentesco'  => $DB_parentesco->id_parentesco ?? $parentesco_nuevo->id_parentesco,
+                    'id_afiliacion'     => $json_datos_receta->Patente,
+                    'fk_id_cliente'     => $sucursal_with_cliente->cliente->id_socio_negocio,
+                ];
+    
+                $DB_afiliado = Afiliaciones::where('nombre','ILIKE','%'.$afiliado['nombre'].'%')
+                                            ->where('paterno','ILIKE','%'.$afiliado['paterno'].'%')
+                                            ->where('materno','ILIKE','%'.$afiliado['materno'].'%')
+                                            ->where('fecha_nacimiento','=',$afiliado['fecha_nacimiento'])
+                                            ->where('id_afiliacion',$afiliado['id_afiliacion'])
+                                            ->first();
+                                 
+                if(!$DB_afiliado)
+                {
+                    $afiliado_nuevo = Afiliaciones::create($afiliado);
+                }
+            }
 
             #DATOS DIAGNOSTICO
-            /*$diagnostico = [
-                'clave_diagnostico' => $json_datos_receta->Diagnosticos->Diagnostico->Clave,
-                'diagnostico'       => $json_datos_receta->Diagnosticos->Diagnostico->Descripcion,
-                'fk_id_cliente'     => $sucursal_with_cliente->cliente->id_socio_negocio,
-            ];
-
-            $DB_diagnostico = Diagnosticos::where('diagnostico','ILIKE','%'.$diagnostico['diagnostico'].'%')
-                                          ->where('clave_diagnostico','ILIKE','%'.$diagnostico['clave_diagnostico'].'%')
-                                          ->where('fk_id_cliente',$sucursal_with_cliente->cliente->id_socio_negocio)
-                                          ->first();
-
-            if(!$DB_diagnostico)
+            if(isset($json_datos_receta->Diagnosticos->Diagnostico))
             {
-                $diagnostico_nuevo = Diagnosticos::create($diagnostico);
-            }*/
+                $diagnostico = [
+                    'clave_diagnostico' => $json_datos_receta->Diagnosticos->Diagnostico->Clave,
+                    'diagnostico'       => $json_datos_receta->Diagnosticos->Diagnostico->Descripcion,
+                    'fk_id_cliente'     => $sucursal_with_cliente->cliente->id_socio_negocio,
+                ];
+    
+                $DB_diagnostico = Diagnosticos::where('diagnostico','ILIKE','%'.$diagnostico['diagnostico'].'%')
+                                              ->where('clave_diagnostico','ILIKE','%'.$diagnostico['clave_diagnostico'].'%')
+                                              ->where('fk_id_cliente',$sucursal_with_cliente->cliente->id_socio_negocio)
+                                              ->first();
+    
+                if(!$DB_diagnostico)
+                {
+                    $diagnostico_nuevo = Diagnosticos::create($diagnostico);
+                }
+            }
+            else
+            {
+                $no_diagnostico = 0;
+            }
 
             #DATOS RECETA
-            /*$datos_receta =[
-                'folio'                 => $json_datos_receta->FolioReceta,
+            $datos_receta =[
+                'serie'                 => intval($folio),
                 'fk_id_sucursal'        => $id_sucursal,
                 'fecha'                 => $json_datos_receta->FechaReceta,
-                'fk_id_afiliacion'      => $DB_afiliado->id_afiliado ?? $afiliado_nuevo->id_afiliado,
+                'fk_id_afiliacion'      => $DB_afiliado->id_afiliacion ?? $afiliado_nuevo->id_afiliacion,
                 'fk_id_dependiente'     => $DB_afiliado->id_dependiente ?? $afiliado_nuevo->id_dependiente,
                 'fk_id_medico'          => $DB_medico->id_medico ?? $medico_nuevo->id_medico,
-                'fk_id_diagnostico'     => $DB_diagnostico->id_diagnostico ?? $diagnostico_nuevo->id_diagnostico,
+                'fk_id_diagnostico'     => isset($json_datos_receta->Diagnosticos->Diagnostico) ? $DB_diagnostico->id_diagnostico ?? $diagnostico_nuevo->id_diagnostico : $no_diagnostico,
                 'fk_id_programa'        => 1,
                 'fk_id_estatus_receta'  => $json_datos_receta->EstatusReceta,
                 'fk_id_area'            => 172,
                 'fk_id_parentesco'      => $DB_parentesco->id_parentesco ?? $parentesco_nuevo->id_parentesco,
                 'fk_id_proyecto'        => $proyecto->id_proyecto,
+                'fk_id_afiliado'        => $DB_afiliado->id_afiliado ?? $afiliado_nuevo->id_afiliado
             ];
 
-            $DB_receta = Recetas::where('folio', 'ILIKE', '%'.$datos_receta['folio'].'%')
+            $DB_receta = Recetas::where('serie',$datos_receta['serie'])
                                 ->where('fk_id_sucursal',$id_sucursal)
-                                ->where('fk_id_afiliacion', $DB_afiliado->id_afiliado ?? $afiliado_nuevo->id_afiliado)
+                                ->where('fk_id_afiliado', $DB_afiliado->id_afiliado ?? $afiliado_nuevo->id_afiliado)
                                 ->where('fk_id_medico', $DB_medico->id_medico ?? $medico_nuevo->id_medico)
-                                -first();
-            
+                                ->first();
+
             if(!$DB_receta)
             {
-                $receta_nueva = Receta::create($datos_receta);
-            }*/
+                $receta_opr_nueva = Recetas::create($datos_receta);
 
-            #DATOS_RECETA_DETALLE            
-            if(isset($json_datos_receta->ClavesReceta->ClaveReceta))
-            {
-                $DB_unidad_medida = UnidadesMedidas::select('nombre','id_unidad_medida')->pluck('nombre','id_unidad_medida');
-                $id_unidad_medida = 0;
-
-                $datos_receta_detalle = [];
-                foreach ($json_datos_receta->ClavesReceta->ClaveReceta as $detalle)
+                #DATOS_RECETA_DETALLE            
+                if(isset($json_datos_receta->ClavesReceta->ClaveReceta))
                 {
-                    // $str_detalle_descripcion = explode(',',$detalle->Descripcion);
-                    // $datos_receta_detalle[]= 
-                    // [
-                    //     'fk_id_cliente' => $sucursal_with_cliente->cliente->id_socio_negocio,
-                    //     'sku' =>  $detalle->ClaveMedicamento,
-                    //     'descripcion' =>  $str_detalle_descripcion[0],
-                    //     'cantidad_pedida' =>  $detalle->CantidadPedida,
-                    //     'cantidad_surtida' =>  $detalle->CantidadSurtida,
-                    // ];
-
-                    foreach ($DB_unidad_medida as $key => $value) {
-                        if(strpos($detalle->Descripcion, $value) !== false)
+                    $datos_clave_cliente_producto = [];
+                    $datos_receta_detalle = [];
+                    foreach ($json_datos_receta->ClavesReceta->ClaveReceta as $detalle)
+                    {
+                        if($detalle)
                         {
-                            $id_unidad_medida = $key;
+                            $clave_cliente_producto = ClaveClienteProductos::where('clave_producto_cliente', $detalle->ClaveMedicamento)->first();
+                            $str_detalle_descripcion = explode(',',$detalle->Descripcion);
+                            $datos_receta_detalle[]= 
+                            [
+                                'fk_id_receta'                 => $DB_receta->id_receta ?? $receta_opr_nueva->id_receta,
+                                'fk_id_proyecto'               => $proyecto->id_proyecto,
+                                'cantidad_pedida'              => $detalle->CantidadPedida,
+                                'cantidad_surtida'             => $detalle->CantidadSurtida,
+                                'fk_id_clave_cliente_producto' => $clave_cliente_producto->id_clave_cliente_producto,
+                            ];
                         }
                     }
-
-                    // $DB_receta_detalle = Recetas::where('clave_producto_cliente', 'ILIKE', '%'.$datos_receta_detalle['sku'].'%')
-                    //                             ->where('fk_id_cliente', $sucursal_with_cliente->cliente->id_socio_negocio)
-                    //                             ->where('descripcion', 'ILIKE', '%'.$datos_receta_detalle['descripcion'].'%')
-                    //                             ->first();
-                    // $DB_ClaveClienteProductos = ClaveClienteProductos::where('');
+                    $receta_det_nueva = isset($DB_receta) ? $DB_receta->detalles()->insert($datos_receta_detalle) : $receta_opr_nueva->detalles()->insert($datos_receta_detalle);
                 }
-                return $id_unidad_medida;
+                return $receta_opr_nueva;
             }
-
+            return $DB_receta;
         }
-    
-        return json_encode(['id_receta'=>null,'estatus'=>$receta_ipejal->consulta_folioResult->Estatus->Estado->Mensaje]);
+        else
+        {
+            return json_encode(['id_receta'=>null,'estatus'=>$receta_ipejal->mensaje]);
+        }
 
     }
 
