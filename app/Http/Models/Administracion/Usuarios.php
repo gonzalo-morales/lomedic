@@ -158,7 +158,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 
     public function modulos_anidados($empresa = null, $idmenu = null)
     {
-        $empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
+        $empresa = $empresa ?: dataCompany();
         $this->modulos_menu = $this->modulos_menu ?: $this->getmenu($empresa);
 
         $menu = $this->modulos_menu->where('fk_id_modulo_hijo','=',$idmenu);
@@ -171,7 +171,7 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
 
     public function getmenu($empresa = null)
     {
-        $empresa = $empresa ?: Empresas::where('conexion', request()->company)->first();
+        $empresa = $empresa ?: dataCompany();
         $id_empresa = isset($empresa->id_empresa) ? $empresa->id_empresa : 0;
 
         $modulos = Modulos::where('activo',1)->where('accion_menu','=',1)
@@ -194,17 +194,17 @@ class Usuarios extends ModelBase implements AuthenticatableContract, Authorizabl
         return $this->belongsToMany(CondicionesAutorizacion::class,'com_det_usuarios_autorizados','fk_id_usuario','fk_id_condicion');
     }
 	/*relación de tres*/
-	public function usuario_sucursales()
+	public function sucursales()
 	{
-	    return $this->belongsToMany(Sucursales::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_sucursal')
-        ->withPivot('fk_id_empresa')
-        ->join(Empresas::class,'fk_id_empresa','=','id_empresa');
+	    return $this->belongsToMany(Sucursales::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_sucursal');
+        /*->withPivot('fk_id_empresa')
+        ->join(Empresas::class,'fk_id_empresa','=','id_empresa');*/
     }
-	public function usuario_empresa()
+	public function empresa()
 	{
-	    return $this->belongsToMany(Empresas::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_empresa')
-        ->withPivot('fk_id_sucursal')
-        ->join(Sucursales::class,'fk_id_sucursal','=','id_sucursal');
+	    return $this->belongsToMany(Empresas::class,$this->schema.'.adm_det_empresa_sucursal_usuario','fk_id_usuario','fk_id_empresa');
+        /*->withPivot('fk_id_sucursal')
+        ->join(Sucursales::class,'fk_id_sucursal','=','id_sucursal');*/
     }
     public function solicitudes()
     {

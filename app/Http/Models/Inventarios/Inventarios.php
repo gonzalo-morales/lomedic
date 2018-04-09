@@ -61,7 +61,8 @@ class Inventarios extends ModelCompany
 		'fk_id_almacen' => 'Almacén',
 	];
 
-	public function getTipoCapturaTextAttribute() {
+	public function getTipoCapturaTextAttribute()
+	{
 		return $this->tipo_captura == 2 ? 'HandHeld' : 'Manual';
 	}
 

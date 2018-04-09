@@ -1,5 +1,6 @@
 @extends(smart())
 @section('form-title', 'Solicitudes de Compra')
+@php($menuempresa = dataCompany())
 
 {{--  @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
@@ -14,6 +15,13 @@
 		var porcentaje_js = '{{ $js_porcentaje ?? '' }}';
     </script>
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
+	@endif
+	@if(Route::currentRouteNamed(currentRouteName('show')) && $data->fk_id_estatus_solicitud == 3 || Route::currentRouteNamed(currentRouteName('show')) && $data->fk_id_estatus_solicitud == 2)
+		<script type="text/javascript">
+			$(function () {
+				$('a[data-finished="Editar"]').hide();
+			});
+		</script>
 	@endif
 @endsection
 
@@ -236,7 +244,7 @@
 								</tr>
 							@endforeach
 							@elseif( isset( $data->detalle ) )
-							@foreach( $data->detalle as $detalle)
+							@foreach( $data->detalle->where('eliminar',0) as $detalle)
 							{{--  {{dump($detalle)}}  --}}
 									<tr>
 										<th>
@@ -364,7 +372,6 @@
          	bind: function (el) {
          		if(el.dataset.fk_id_estatus_solicitud != 1)
          		{
-             		console.log(el);
          			$(el).hide();
          		}
          	}

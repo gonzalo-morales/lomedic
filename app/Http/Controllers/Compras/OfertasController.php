@@ -38,16 +38,8 @@ class OfertasController extends ControllerBase
 	
 	public function getDataView($entity = null)
 	{
-        $sucursales = [];
-        if($entity != null)
-        {
-            $sucursales = Sucursales::where('activo',1)->where('id_sucursal',$entity->fk_id_sucursal)->pluck('sucursal','id_sucursal');
-        }
 	    return [
-            'sucursales' 	   => Sucursales::whereHas('usuario_sucursales', function ($q){
-                    $q->where('id_usuario',Auth::id());})->whereHas('empresa_sucursales',function ($empresa){
-                    $empresa->where('id_empresa',dataCompany()->id_empresa);
-                })->pluck('sucursal','id_sucursal'),
+            'sucursales' 	   => Sucursales::hasEmpresa()->hasUsuario()->isActivo()->pluck('sucursal','id_sucursal'),
 	        // 'companies'        => Empresas::where('activo',1)->where('conexion','<>',request()->company)->where('conexion','<>','corporativo')->where('activo',1)->pluck('nombre_comercial','id_empresa'),
             // 'actual_company_id'=> Empresas::where('conexion','LIKE',request()->company)->first()->id_empresa,
 	        'monedas'          => Monedas::where('activo',1)->select('id_moneda',DB::raw("concat(descripcion,' (',moneda,')') as moneda"))->pluck('moneda','id_moneda'),
@@ -121,75 +113,70 @@ class OfertasController extends ControllerBase
 
 	public function destroy(Request $request, $company, $idOrIds, $attributes = [])
 	{
-        if(!isset($request->ids)){
-            if (!is_array($idOrIds)) {
+        if (!is_array($idOrIds)) {
 
-                $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
-                    ->update(['fk_id_estatus_oferta' => 3]);
-                if ($isSuccess) {
+            $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
+                ->update(['fk_id_estatus_oferta' => 3]);
+            if ($isSuccess) {
 
-                    #$this->log('destroy', $idOrIds);
+                #$this->log('destroy', $idOrIds);
 
-                    if ($request->ajax()) {
-                        # Respuesta Json
-                        return response()->json([
-                            'success' => true,
-                        ]);
-                    } else {
-                        return $this->redirect('destroy');
-                    }
-
+                if ($request->ajax()) {
+                    # Respuesta Json
+                    return response()->json([
+                        'success' => true,
+                    ]);
                 } else {
-
-                    #$this->log('error_destroy', $idOrIds);
-
-                    if ($request->ajax()) {
-                        # Respuesta Json
-                        return response()->json([
-                            'success' => false,
-                        ]);
-                    } else {
-                        return $this->redirect('error_destroy');
-                    }
+                    return $this->redirect('destroy');
                 }
 
-                # Multiple
             } else {
 
-                $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)
-                    ->update(['fk_id_estatus_oferta' => 3]);
-                if ($isSuccess) {
+                #$this->log('error_destroy', $idOrIds);
 
-                    # Shorthand
-                    #foreach ($idOrIds as $id) $this->log('destroy', $id);
-
-                    if ($request->ajax()) {
-                        # Respuesta Json
-                        return response()->json([
-                            'success' => true,
-                        ]);
-                    } else {
-                        return $this->redirect('destroy');
-                    }
-
+                if ($request->ajax()) {
+                    # Respuesta Json
+                    return response()->json([
+                        'success' => false,
+                    ]);
                 } else {
-
-                    # Shorthand
-                    #foreach ($idOrIds as $id) $this->log('error_destroy', $id);
-
-                    if ($request->ajax()) {
-                        # Respuesta Json
-                        return response()->json([
-                            'success' => false,
-                        ]);
-                    } else {
-                        return $this->redirect('error_destroy');
-                    }
+                    return $this->redirect('error_destroy');
                 }
             }
-        }else{
-            DetalleOfertas::whereIn('id_documento_detalle', $request->ids)->update(['cerrado' => 't']);
-            return 'Eliminado con éxito';
+
+            # Multiple
+        } else {
+
+            $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)
+                ->update(['fk_id_estatus_oferta' => 3]);
+            if ($isSuccess) {
+
+                # Shorthand
+                #foreach ($idOrIds as $id) $this->log('destroy', $id);
+
+                if ($request->ajax()) {
+                    # Respuesta Json
+                    return response()->json([
+                        'success' => true,
+                    ]);
+                } else {
+                    return $this->redirect('destroy');
+                }
+
+            } else {
+
+                # Shorthand
+                #foreach ($idOrIds as $id) $this->log('error_destroy', $id);
+
+                if ($request->ajax()) {
+                    # Respuesta Json
+                    return response()->json([
+                        'success' => false,
+                    ]);
+                } else {
+                    return $this->redirect('error_destroy');
+                }
+            }
         }
 	}
 

@@ -10,6 +10,9 @@ use App\Http\Models\Finanzas\CuentasContables;
 use App\Http\Models\ModelBase;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\RecursosHumanos\Empleados;
+use App\Http\Models\Administracion\Afiliaciones;
+use App\Http\Models\Administracion\Diagnosticos;
+use App\Http\Models\Administracion\Medicos;
 
 class SociosNegocio extends ModelBase
 {
@@ -125,4 +128,17 @@ class SociosNegocio extends ModelBase
         return $this->hasOne(CuentasContables::class,'id_cuenta_contable','fk_id_cuenta_cliente');
     }
 
+    public function afiliados()
+    {
+        return $this->hasMany(Afiliaciones::class, 'fk_id_cliente','id_socio_negocio');
+    }
+
+    public function diagnosticos()
+    {
+        return $this->hasMany(Diagnosticos::class,'fk_id_cliente','id_socio_negocio');
+    }
+
+    public function medico(){
+        return $this->belongsToMany(Medicos::class,'gen_det_medico_cliente','fk_id_medico','fk_id_cliente');
+    }
 }

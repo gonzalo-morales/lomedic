@@ -69,6 +69,8 @@ class InventariosController extends ControllerBase
 	public function store(Request $request, $company, $compact = false)
 	{
 		$request->request->add(['fecha_creacion' => Carbon::now()]);
+        # Validamos request, si falla regresamos pagina
+        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 		return parent::store($request, $company, $compact);
 	}
 }

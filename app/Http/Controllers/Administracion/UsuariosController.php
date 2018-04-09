@@ -133,8 +133,8 @@ class UsuariosController extends ControllerBase
                         ];
                     }
                 }
-                $entity->usuario_sucursales()->sync($sync);
-                $entity->usuario_empresa()->sync($sync);
+                $entity->sucursales()->sync($sync);
+                $entity->empresa()->sync($sync);
                 DB::commit();
                 # Eliminamos cache
                 Cache::tags(getCacheTag('index'))->flush();
@@ -161,7 +161,7 @@ class UsuariosController extends ControllerBase
         $correos = Correos::join('gen_cat_empresas','adm_det_correos.fk_id_empresa','=','gen_cat_empresas.id_empresa')
             ->where('fk_id_usuario','=',$id)
             ->get();
-        $sucursales = Sucursales::whereHas('usuario_sucursales',function($q)use ($id){
+        $sucursales = Sucursales::whereHas('usuario',function($q)use ($id){
             $q->where('fk_id_usuario','=',$id);
         })->get();
         $perfiles = Perfiles::join('adm_det_perfiles_usuarios','adm_cat_perfiles.id_perfil','=','adm_det_perfiles_usuarios.fk_id_perfil')
@@ -219,7 +219,7 @@ class UsuariosController extends ControllerBase
             ->join('adm_det_modulo_accion','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_perfiles.fk_id_modulo_accion')
             ->select('adm_det_modulo_accion.*','adm_det_permisos_perfiles.fk_id_perfil')
             ->get();
-        $sucursalesAnteriores = Sucursales::whereHas('usuario_sucursales',function($q)use ($id){
+        $sucursalesAnteriores = Sucursales::whereHas('sucursales',function($q)use ($id){
             $q->where('fk_id_usuario','=',$id);
         })->get();
         $correos_user = Correos::join('gen_cat_empresas','adm_det_correos.fk_id_empresa','=','gen_cat_empresas.id_empresa')
@@ -372,8 +372,8 @@ class UsuariosController extends ControllerBase
                         ];
                     }
                 }
-                $entity->usuario_sucursales()->sync($sync);
-                $entity->usuario_empresa()->sync($sync);
+                $entity->sucursales()->sync($sync);
+                $entity->empresa()->sync($sync);
                 DB::commit();
                 # Eliminamos cache
                 Cache::tags(getCacheTag('index'))->flush();

@@ -76,14 +76,14 @@
                 <th><h5>Total</h5></th>
             </tr>
             {{--For each detalle--}}
-            @foreach($solicitud->detalle->where('cerrado',0) as $detalle)
+            @foreach($solicitud->detalle->where('eliminar',0) as $detalle)
             <tr>
                 <td>{{$detalle->sku->sku}}</td>
                 <td>{{$detalle->upc->upc ?? ''}}</td>
                 <td>{{$detalle->sku->descripcion_corta}}</td>
                 <td>{{$detalle->proveedor->nombre_comercial ?? ''}}</td>
                 <td>{{$detalle->fecha_necesario}}</td>
-                <td>{{isset($detalle->fk_id_proyecto) ? $detalle->proyecto->id_proyecto.' - '.$detalle->proyecto->proyecto : ''}}</td>
+                <td>{{isset($detalle->fk_id_proyecto) ? $detalle->proyecto->proyecto : ''}}</td>
                 <td>{{$detalle->cantidad}}</td>
                 <td>{{$detalle->unidad_medida->nombre}}</td>
                 <td>{{$detalle->impuesto->impuesto}}</td>
@@ -104,7 +104,7 @@
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td>Subtotal:</td>
-                <td>${{$subtotal}}</td>
+                <td>${{number_format($solicitud->total_subtotal,2,'.',',')}}</td>
             </tr>
             <tr style="border: hidden">
                 <td style="border: hidden"></td>
@@ -117,12 +117,12 @@
                 <td style="border: hidden"></td>
                 <td style="border: hidden"></td>
                 <td>IVA:</td>
-                <td>${{$iva}}</td>
+                <td>${{number_format($solicitud->total_impuesto,2,'.',',')}}</td>
             </tr>
             <tr style="border: hidden">
-                <td colspan="9"><h3>*** {{$total_letra}} ***</h3></td>
+                <td colspan="9"><h3>*** {{num2letras($solicitud->total_solicitud)}} ***</h3></td>
                 <td>Total</td>
-                <td>${{$total}}</td>
+                <td>${{number_format($solicitud->total_solicitud,2,'.',',')}}</td>
             </tr>
         </table>
     </div>

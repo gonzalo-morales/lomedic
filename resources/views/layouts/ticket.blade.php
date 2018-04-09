@@ -4,7 +4,7 @@
         <img class="background" src="{{asset('img/helpBG2.png')}}">
     	<div class="h-content">
             <span><i class="material-icons medium white-text">live_help</i></span>
-            <a class="white-text" href="#"><span class="name">{{cTrans('messages.help_section','Sección de Ayuda')}}</span></a>
+            <a class="white-text" href="#"><span class="name">{{cTrans('messages.help_section','Secciï¿½n de Ayuda')}}</span></a>
             <a href="{{companyAction("Soporte\SolicitudesController@create")}}" class="white-text dismiss"><span class='window'>Crear ticket/solicitud</span></a>
         </div>
     </div>
@@ -16,7 +16,8 @@
             	<i class="material-icons float-right grey-text">expand_more</i>
             </a>
             <ul id="tickets" class="list-unstyled collapse" aria-expanded="false">
-            	@if(!$ultimos_tickets->count())
+            	@php($ultimos_tickets = ticket_menu())
+            	@if(!isset($ultimos_tickets) & !$ultimos_tickets->count())
             		<li>Â </li>
             	@endif
                 @foreach($ultimos_tickets as $ticket)

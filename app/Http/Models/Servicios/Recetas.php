@@ -54,6 +54,7 @@ class Recetas extends ModelCompany
         'fk_id_proyecto',
         'fk_id_parentesco',
         'fk_id_afiliado',
+        'serie'
     ];
 
     /**

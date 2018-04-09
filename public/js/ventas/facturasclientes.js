@@ -35,8 +35,8 @@ $(document).ready(function () {
                     $.each(data, function(){
                     	cliente.append('<option value="'+this.id_socio_negocio+'">'+this.razon_social+'</option>')
                     });
-                	cliente.val('');
-                	cliente.prop('disabled', (data.length == 0)); 
+                	cliente.val(id_socio);
+                	cliente.prop('disabled', (data.length == 0 | ver)); 
     		    }
     		});
     		
@@ -51,7 +51,8 @@ $(document).ready(function () {
                     $.each(data, function(){
                     	series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
                     });
-                	series.prop('disabled', (data.length == 0)); 
+            		series.val(id_serie);
+                	series.prop('disabled', (data.length == 0 | ver)); 
     		    }
     		});
     		
@@ -61,7 +62,6 @@ $(document).ready(function () {
 			    data: {'param_js':empresa_js,$id_empresa:$(this).val()},
 			    dataType: 'json',
 	            success: function (data) {
-	            	console.log(data);
 	            	$("#rfc").val(data[0].rfc);
 	            	$("#fk_id_regimen_fiscal").val(data[0].fk_id_regimen_fiscal).change();
 	            	$("#calle").val(data[0].calle);
@@ -124,8 +124,8 @@ $(document).ready(function () {
                     $.each(data, function(){
                     	proyecto.append('<option value="'+ this.id_proyecto +'">'+ this.proyecto +'</option>')
                     });
-                	proyecto.val('');
-                	proyecto.prop('disabled', (data.length == 0));
+                	proyecto.val(id_proyecto);
+                	proyecto.prop('disabled', (data.length == 0 | ver));
     		    }
     		});
     		
@@ -140,8 +140,8 @@ $(document).ready(function () {
                     $.each(data, function(){
                     	sucursal.append('<option value="'+this.id_sucursal+'">'+this.sucursal+'</option>')
                     });
-                	sucursal.val('');
-                	sucursal.prop('disabled', (data.length == 0)); 
+                	sucursal.val(id_sucursal);
+                	sucursal.prop('disabled', (data.length == 0 | ver)); 
     		    }
     		});
 		}
@@ -167,8 +167,8 @@ $(document).ready(function () {
                     $.each(data[0].contratos, function(){ 
                     	contrato.append('<option value="'+this.id_contrato+'">'+this.num_contrato+'</option>')
                     });
-                	contrato.val('');
-                	contrato.prop('disabled', (data.length == 0)); 
+                	contrato.val(id_contrato);
+                	contrato.prop('disabled', (data.length == 0 | ver)); 
     		    }
     		});
 		}

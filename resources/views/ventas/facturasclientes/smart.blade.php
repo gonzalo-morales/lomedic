@@ -13,6 +13,12 @@
     	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
     	var contratos_js = '{{ $js_contratos ?? '' }}';
+    	var id_serie = {!! !isset($data->fk_id_serie) ? "''" : $data->fk_id_serie ?? "''"!!};
+    	var id_socio = {!! !isset($data->fk_id_socio_negocio) ? "''" : $data->fk_id_socio_negocio ?? "''"!!};
+    	var id_proyecto = {!! !isset($data->fk_id_proyecto) ? "''" : $data->fk_id_proyecto ?? "''"!!};
+    	var id_sucursal = {!! !isset($data->fk_id_sucursal) ? "''" : $data->fk_id_sucursal ?? "''"!!};
+    	var id_contrato = {!! !isset($data->fk_id_contrato) ? "''" : $data->fk_id_contrato ?? "''"!!};
+    	var ver = @ver true; @else false; @endif
     </script>
 	{{ HTML::script(asset('js/ventas/facturasclientes.js')) }}
 @endsection

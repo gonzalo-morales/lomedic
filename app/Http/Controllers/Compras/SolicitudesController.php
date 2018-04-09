@@ -53,18 +53,16 @@ class SolicitudesController extends ControllerBase
             $user = Auth::id();
             $userName = Auth::user()->usuario;
         }
-
         $sucursales = [];
         $proveedores = [];
         if($entity != null)
         {
-            // dd(Sucursales::select('id_sucursal','sucursal')->where('activo',1)
-            // ->whereHas('usuario_sucursales',function($q) use ($entity){ $q->where('fk_id_usuario',$entity->fk_id_solicitante); })
-            // ->whereHas('empresa_sucursales',function($q) use ($entity){ $q->where('fk_id_empresa',dataCompany()->id_empresa); }));
             $proveedores = SociosNegocio::where('activo',1)->whereHas('empresas',function ($q) use ($entity){
                 $q->where('fk_id_socio_negocio',$entity->fk_id_socio_negocio);
             })->whereNotNull('fk_id_tipo_socio_compra')->pluck('nombre_comercial','id_socio_negocio')->prepend('Seleccione el proveedor','');
-            $sucursales = Sucursales::where('activo',1)->where('id_sucursal',$entity->fk_id_sucursal)->pluck('sucursal','id_sucursal');
+            $sucursales = Sucursales::whereHas("usuario", function($q) use ($entity){
+                $q->where('fk_id_usuario', $entity->fk_id_solicitante);
+            })->pluck('sucursal','id_sucursal');
         }
         return [
             'proyectos'         => Proyectos::where('fk_id_estatus',1)->orderBy('proyecto')->pluck('proyecto','id_proyecto')->prepend('Seleccione el proyecto',''),
@@ -75,10 +73,35 @@ class SolicitudesController extends ControllerBase
             'skus'              => Productos::where('activo',1)->where('articulo_compra',1)->orderBy('sku')->pluck('sku','id_sku'),
             'usuarios'          => Usuarios::where('activo',1)->orderBy('usuario')->pluck('usuario','id_usuario')->prepend('Seleccione un usuario','')->put($user,'Yo'.' ('.$userName.')'),
             // 'usuarios'       => Usuarios::where('activo',1)->orderBy('usuario')->get()->put($user,'Yo'.' ('.$userName.')'),
-            'js_sucursales'     => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"], "conditions":[{"where":["activo",1]}],"whereHas":[{"empresa_sucursales":{"where":["fk_id_empresa","'.dataCompany()->id_empresa.'"]}}],"whereHas":[{"usuario_sucursales":{"where":["fk_id_usuario","$usuario"]}}]'),
-            // 'js_sucursales'     => Crypt::encryptString('"conditions":[ {"where":["activo","1"]}],"whereHas": [{"usuario_sucursales":{"where":["fk_id_usuario", "$usuario"]}}]'),
+//            'js_sucursales'     => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"hasEmpresa":[],"isActivo":[]'),
+             'js_sucursales'     => Crypt::encryptString('
+                "select": ["id_sucursal as id","sucursal as text"],
+                "isActivo": [],
+                "hasEmpresa": [],
+                "whereHas": [{
+                    "usuario": {
+                        "where": ["fk_id_usuario", "$usuario"]
+                    }
+                }]
+                '),
             'js_usuarios'       => Crypt::encryptString('"conditions":[ {"where":["activo","1"]}, {"where":["id_usuario",$usuario]}],"with": ["empleado"]'),
-            'js_proveedores'    => Crypt::encryptString('"select":["id_socio_negocio as id","nombre_comercial as text"],"whereHas":[{"productos":{"where":["fk_id_sku",$id_sku]}}]'),
+            'js_proveedores'    => Crypt::encryptString('
+                "select":["id_socio_negocio as id","nombre_comercial as text"],
+                "conditions":[{
+                    "whereNotNull":["fk_id_tipo_socio_compra"],
+                    "where":["activo",1]
+                }],
+                "whereHas":[{
+                    "empresas":{
+                        "where":["fk_id_empresa","'.dataCompany()->id_empresa.'"]
+                    }
+                },
+                {
+                    "productos":{
+                        "where":["fk_id_sku",$id_sku]
+                    }
+                }]
+            '),
             'js_porcentaje'     => Crypt::encryptString('"select": ["tasa_o_cuota"], "conditions": [{"where":["id_impuesto", "$id_impuesto"]}], "limit": "1"'),
             'detalles_documento'=> $detalles_documento,
         ];
@@ -179,19 +202,6 @@ class SolicitudesController extends ControllerBase
     public function impress($company,$id)
     {
         $solicitud = Solicitudes::where('id_documento',$id)->first();
-//        $detalles = DetalleSolicitudes::where('fk_id_documento',$id)
-//            ->where('cerrado','f')->get();
-        $subtotal = 0;
-        $total = 0;
-        foreach ($solicitud->detalle as $detalle)
-        {
-            $impuesto = Impuestos::select('tasa_o_cuota')->where('id_impuesto',$detalle->fk_id_impuesto)->where('activo',1)->first()->tasa_o_cuota;
-            $subtotal = $detalle->precio_unitario*$detalle->cantidad;
-            $iva = $subtotal*$impuesto;
-            // dd($iva);
-            $total = $detalle->importe;
-        }
-        $total = number_format($total,2,'.',',');
 
         $barcode = DNS1D::getBarcodePNG($solicitud->id_documento,'EAN8');
         $qr = DNS2D::getBarcodePNG(asset(companyAction('show',['id'=>$solicitud->id_documento])), "QRCODE");
@@ -199,22 +209,16 @@ class SolicitudesController extends ControllerBase
         $empresa = Empresas::where('conexion','LIKE',$company)->first();
         $pdf = PDF::loadView(currentRouteName('compras.solicitudes.imprimir'),[
             'solicitud' => $solicitud,
-            //            'detalles' => $detalles,
-            'subtotal' => $subtotal,
-            'iva' => $iva,
-            'importe' => $total,
-            'total_letra' => num2letras($total),
+            'empresa' => $empresa,
             'barcode' => $barcode,
             'qr' => $qr,
-            'empresa' => $empresa,
-            'total' => $total
             ]);
             $pdf->setPaper('letter','landscape');
             $pdf->output();
             $dom_pdf = $pdf->getDomPDF();
             $canvas = $dom_pdf->get_canvas();
             $canvas->page_text(38,580,"Página {PAGE_NUM} de {PAGE_COUNT}",null,8,array(0,0,0));
-            $canvas->text(665,580,'PSAI-PN06-F01 Rev. 01',null,8);
+//            $canvas->text(665,580,'PSAI-PN06-F01 Rev. 01',null,8);
 //        $canvas->image('data:image/png;charset=binary;base64,'.$barcode,355,580,100,16);
         return $pdf->stream('solicitud')->header('Content-Type',"application/pdf");
 //        return view(currentRouteName('imprimir'));

@@ -43,14 +43,14 @@ class PedidosController extends ControllerBase
         $empresa_actual = Empresas::where('activo',1)->where('conexion',request()->company)->first();
         return [
             'localidades' => Localidades::where('activo',1)->pluck('localidad','id_localidad'),
-            'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')
+            'clientes' => SociosNegocio::select('nombre_comercial','id_socio_negocio')->hasEmpresa()->whereNotNull('fk_id_tipo_socio_venta')
                 ->whereHas('empresas', function($q) use($empresa_actual) {
                     $q->where('id_empresa','=',$empresa_actual->id_empresa);
                 })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
             'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto','id_proyecto')->where('fk_id_estatus',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('proyecto','id_proyecto'),
             'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "sortBy":["proyecto"]'),
-            'sucursales' => empty($entity) ? [] : Sucursales::select('sucursal','id_sucursal')->where('activo',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('sucursal','id_sucursal'),
-            'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "conditions": [{"where": ["activo",1]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}, {"where": ["fk_id_localidad","$fk_id_localidad"]}], "orderBy": [["sucursal", "ASC"]]'),
+            'sucursales' => /*empty($entity) ? [] :*/ Sucursales::select('sucursal','id_sucursal')->hasSucursal()/*->where('fk_id_cliente', $entity->fk_id_socio_negocio)*/->pluck('sucursal','id_sucursal'),
+            'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "hasSucursal":[], "conditions": [{"where": ["fk_id_cliente","$fk_id_cliente"]}, {"where": ["fk_id_localidad","$fk_id_localidad"]}], "orderBy": [["sucursal", "ASC"]]'),
             'contratos' => empty($entity) ? [] : ContratosProyectos::select('num_contrato','id_contrato')->where('fk_id_proyecto', $entity->fk_id_proyecto)->pluck('num_contrato','id_contrato'),
             'js_contratos' => Crypt::encryptString('"select":["id_proyecto"], "conditions":[{"where":["id_proyecto","$id_proyecto"]}], "with":["contratos:id_contrato,num_contrato,fk_id_proyecto"]'),
             'ejecutivos' => Empleados::selectRaw("CONCAT(nombre,' ',apellido_paterno,' ',apellido_materno)nombre_empleado, id_empleado")->where('activo',1)->where('fk_id_departamento',19)->orderBy('nombre_empleado')->pluck('nombre_empleado','id_empleado'),

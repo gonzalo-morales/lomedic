@@ -39,9 +39,12 @@ class APIController extends Controller
 		$str_json = '{'.Crypt::decryptString(request()->param_js).'}';
 		$param_array = request()->all();
 		$json = str_replace(array_keys($param_array),$param_array,$str_json);
+
+
         $request = json_decode($json,true);
+
         // dd($request);
-		# Obtenemos entidad
+        # Obtenemos entidad
         $controllers = controllerByRoute();
         $controllerName = substr($controllers[$entity.'.index'],0,-6);
         
@@ -124,9 +127,7 @@ class APIController extends Controller
 			# Limite
 			$entity->limit($request['limit'] ?? null);
 
-
 			$collections = $entity->get();
-
 
 			# Pluck collection
 			if (isset($request['pluck'])) {

@@ -1,52 +1,13 @@
 $(document).ready( function () {
 
-    // function dataUsers($usuarios){
-    //     $.map($usuarios, function (obj) {
-    //         obj.id = obj.id || obj.text.id_usuario; // replace pk with your identifier
-    //         return obj;
-    //     });
-    //     return $usuarios
-    // }
-        
+    sumaImpuestosSolicitud()
+    sumaSubtotalSolicitud();
+    sumaImporteSolicitud();
+    
     $('#fk_id_solicitante.select2').select2({
         placeholder: "Para iniciar es necesario indicar el Solicitante",
-        // data:function($usuarios){
-        //     $.map($usuarios, function (obj) {
-        //         obj.text = 'obj.text.usuario';
-        //         return obj; 
-        //     });
-        // },
-        // data:function($usuarios){
-        //     return {
-        //         id = $usuarios.id_usuario,
-        //         text = $usuarios.usuario,
-        //     };
-        // },
-        // escapeMarkup: function (markup) { return markup; },
-        // templateResult:formatUsers,
-        // templateSelection:formatUsersSelection,
         disabled: false
     });
-    // function formatUsers($usuarios){
-    //     console.log($usuarios)
-    //     var markup = "<div class='select2-result-pers clearfix'>" +
-    //     "<div class='select2-result-pers__avatar'><img src='img/sku.png'/></div>" +
-    //     "<div class='select2-result-pers__meta'>" +
-    //     "<div class='select2-result-pers__text'>" + $usuarios.text.usuario + "</div>";
-
-    //     // markup += "<div class='select2-result-pers__statistics'>" +
-    //     // "<div class='select2-result-pers__presentacion text-success mr-3'><i class='material-icons align-middle'>shopping_basket</i> " + data.stock + "</div>" +
-    //     // "<div data-position='bottom' data-delay='50' data-toggle='"+mensaje+"' title='"+mensaje+"' class='select2-result-pers__presentacion"+" "+claseFecha+" "+"mr-3'><i class='material-icons align-middle'>today</i> " + data.fecha_caducidad + "</div>" +
-    //     // "<div class='select2-result-pers__presentacion'><i class='material-icons align-middle'>label</i> " + data.lote + "</div>" +
-    //     "</div>" +
-    //     "</div></div>";
-
-    //         return markup;
-    // }
-    // function formatUsersSelection ($usuarios) {
-    //     return $usuarios.usuario;
-    // }
-
     
     $('#fk_id_sucursal.select2').select2({
         placeholder: "Para iniciar es necesario indicar el Solicitante",
@@ -100,9 +61,15 @@ $(document).ready( function () {
         $.validator.addClassRules('requerido',{
            cRequerido: true
         });
+
         if(!$('#form-model').valid()){
             $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren tu atención',
             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            e.preventDefault();
+        }
+        if($('#productos tbody tr').length < 1){
+            $.toaster({priority : 'danger',title : '¡Error!',message : 'Para guardar se requiere mínimo un producto.',
+                settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             e.preventDefault();
         }
     });
@@ -170,42 +137,43 @@ $(document).ready( function () {
     $('#fk_id_sku').on('change',function () {
         $('#whaitplease').show();
         if($('#fk_id_sku').val() ) {
-            $('#fk_id_proveedor').empty();
             $('#fk_id_upc').empty();
+            $('#fk_id_proveedor').empty();
             $('#loadingUPC').show();
             $('#loadingproveedor').show();
             codigosbarras();//Carga los nuevos datos del producto
 
             $.ajax({
-                 url: $('#fk_id_proveedor').data('url'),
-                 data: {
-                     'param_js': proveedores_js,
-                     $id_sku: $('#fk_id_sku').val()
-                 },
-                 dataType: 'JSON',
-
-                 success: function (data) {
-                    var options = [];
-                    /* Si hay resultados */
-                    if (data.length > 0) {
-                        options.push('<option value="0" selected disabled>Seleccione el Proveedor...</option>'); 
-                        for (var i = 0; i < data.length; i++) {
-                            options.push('<option value="' + data[i].id + '">' + data[i].text + '</option>');
-                        };
-                        $('#fk_id_proveedor').select2({
-                            disabled: false,
+                url: $('#fk_id_proveedor').data('url'),
+                data: {
+                    'param_js': proveedores_js,
+                    $id_sku: $('#fk_id_sku').val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    if(data.length > 0){
+                        data = $.map(data, function (obj, i) {
+                            return{
+                                text: obj.text,
+                                id: obj.id,
+                            }
                         });
-                        $('#fk_id_proveedor').append(options.join(''));
+                        $('#fk_id_proveedor').select2({
+                            data: data,
+                            disabled: false
+                        })
+                        $('#whaitplease').hide();
+                        $('#loadingproveedor').hide();
                     } else{
-                        $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay Proveedores con este SKU, intente con otro',
+                        $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay UPCs en el SKU seleccionado, intente con otro',
                         settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                         $('#fk_id_proveedor').select2({
                             placeholder: "Proveedor no encontrado",
-                            disabled: true,
-                        });
+                            disabled: true
+                        })
+                        $('#whaitplease').hide();
+                        $('#loadingproveedor').hide();
                     }
-                    $('#loadingproveedor').hide();
-                    $('#whaitplease').hide();
                 },
                 error: function () {
                     $('#loadingproveedor').hide();
@@ -278,7 +246,6 @@ function codigosbarras(){
             url: _url,
             dataType: 'json',
             success: function (data) {
-                $('#fk_id_proveedor').empty();
                 var options = [];
                 /* Si hay resultados */
                 if (data.length > 0) {

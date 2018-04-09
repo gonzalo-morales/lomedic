@@ -61,7 +61,7 @@ class Productos extends ModelCompany
      */
     public function upcs()
     {
-        return $this->belongsToMany(Upcs::class,'inv_det_sku_upc','fk_id_sku','fk_id_upc')->withPivot('cantidad');
+        return $this->belongsToMany(Upcs::class,$this->schema.'.inv_det_sku_upc','fk_id_sku','fk_id_upc')->withPivot('cantidad');
     }
 
     public function serie()

@@ -6,6 +6,7 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Afiliaciones;
 use Illuminate\Http\Request;
 use App\Http\Models\Administracion\Parentescos;
+use App\Http\Models\SociosNegocio\SociosNegocio;
 use DB;
 
 
@@ -26,8 +27,10 @@ class AfiliacionesController extends ControllerBase
                 ->pluck('nombre_afiliado', 'id_afiliacion')
                 ->prepend('Nuevo paciente', '0'),
             'parentescos' => Parentescos::where('activo',1)->where('eliminar',0)->pluck('nombre','id_parentesco'),
+            'clientes' => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->whereHas('empresas',function ($empresa){
+                $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
+            })->pluck('nombre_comercial','id_socio_negocio'),
         ];
-
     }
 
     public function getDependientes($company, Request $request)

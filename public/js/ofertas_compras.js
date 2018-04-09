@@ -167,10 +167,10 @@ $(document).ready(function(){
     });
 
     $(document).on('submit',function (e) {
-        if(!$('#productos tbody tr').length > 1){
+        if($('#productos tbody tr').length < 1){
             e.preventDefault();
             $.toaster({
-                priority: 'danger', title: '¡Advertencia!', message: 'La orden de compra debe tener al menos un producto',
+                priority: 'danger', title: '¡Advertencia!', message: 'La oferta de compra debe tener al menos un producto',
                 settings: {'timeout': 5000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
@@ -309,7 +309,6 @@ function agregarProducto() {
 }
 
 function initSelects() {
-    $('#fk_id_proveedor').select2();
     $('#fk_id_proyecto').select2({
         disabled: true,
         placeholder: "Seleccione primero el proveedor y el SKU..."
@@ -371,17 +370,17 @@ function totalOferta() {
 }
 
 function limpiarCampos() {
-    $('#fk_id_cliente').val('').select2();
+    // $('#fk_id_cliente').val('').select2();
     $('#fk_id_proyecto').empty().select2();
-    $('#fk_id_sku').val('').select2();
+    $('#fk_id_sku').val('').trigger('change');
     $('#fk_id_upc').empty().select2({
         placeholder: "Seleccione el UPC...",
         disabled:true
     });
     $('#activo_upc').prop('checked',false);
-    $('#fk_id_unidad_medida').val('').select2();
+    $('#fk_id_unidad_medida').val(0).trigger('change');
     $('#cantidad').val('');
-    $('#fk_id_impuesto').val('').select2();
+    $('#fk_id_impuesto').val(0).trigger('change');
     $('#precio_unitario').val(0);
     $('#descuento_detalle').val(0);
     //Eliminar reglas de validación detalle

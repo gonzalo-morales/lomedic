@@ -48,7 +48,7 @@ Route::get('token', function () {
 
 Route::prefix('{company}')->group(function () {
     Route::get('/phpinfo', function () { phpinfo(); });
-    Route::resource('/', 'HomeController', ['middleware' => ['share','csrf','password_expired']]);
+    Route::resource('/', 'HomeController', ['middleware' => ['auth','share','csrf','password_expired']]);
     Route::get('lang/{locale}', function ($locale) {
         Session::put('locale', $locale);
         return redirect()->back();
