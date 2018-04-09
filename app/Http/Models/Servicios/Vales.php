@@ -45,6 +45,7 @@ class Vales extends ModelCompany
     protected $fields = [
         'id_vale' => '#',
         'fk_id_receta'=>'Receta',
+        'receta.nombre_completo_paciente'=>'Paciente',
         'fecha_surtido'=>'Fecha de surtido',
         'sucursal.sucursal'=>'Sucursal',
     ];
@@ -123,6 +124,7 @@ class Vales extends ModelCompany
     }
     public function receta()
     {
-        return $this->hasMany( Recetas::class,'fk_id_receta','id_receta');
+        return $this->hasOne( Recetas::class,'id_receta','fk_id_receta');
     }
+
 }

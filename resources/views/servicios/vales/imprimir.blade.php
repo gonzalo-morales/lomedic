@@ -240,7 +240,7 @@
                         <div class="text-center input-group-addon" style="width:148px;">Nombre del paciente</div>
                     </td>
                     <td style="padding: 5px 10px;" id="paciente">
-                        {{$receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->nombre}}
+                        {{$paciente}}
                     </td>
                 </tr>
                 <tr>
@@ -248,7 +248,11 @@
                         <div class="text-center input-group-addon" style="width:148px;">Nombre del titular</div>
                     </td>
                     <td style="padding: 5px 10px;" id="titular">
-                        {{$receta->dependiente($receta->fk_id_afiliacion,1)->nombre}}
+                        @if( $titular != '')
+                            {{$titular}}
+                        @else
+                            &nbsp;
+                        @endif
                     </td>
                 </tr>
                 <tr>
@@ -276,7 +280,12 @@
                         <div class="align-center" style="background-color: #eb742f;">
                             <span style="color:white;"><b>Edad:</b></span>
                         </div>
-                        {{$edad}}
+                        @if( $edad != '')
+                            {{$edad}}
+                        @else
+                            &nbsp;
+                        @endif
+
                     </td>
                     <td>
                         <div class="align-center" style="background-color: #eb742f;">
@@ -295,13 +304,23 @@
                         <div class="align-center" style="background-color: #eb742f;">
                             <span style="color:white;"><b>Sexo:</b></span>
                         </div>
-                        {{$receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->genero}}
+                        @if( $genero != '')
+                            {{$genero}}
+                        @else
+                            &nbsp;
+                        @endif
+
                     </td>
                     <td>
                         <div class="align-center" style="background-color: #eb742f;">
                             <span style="color:white;"><b>Tipo de usuario:</b></span>
                         </div>
-                        {{$receta->parentesco['nombre']}}
+                        @if( $parentesco != '')
+                            {{$parentesco}}
+                        @else
+                            &nbsp;
+                        @endif
+
                     </td>
                 </tr>
             </tbody>
@@ -313,8 +332,8 @@
                <thead>
                <tr>
                    <th class="align-center">Código</th>
-                   <th class="align-center">Cantidad</th>
                    <th class="align-center">Descripción</th>
+                   <th class="align-center">Cantidad</th>
                </tr>
                </thead>
                <tbody>
@@ -322,13 +341,11 @@
                     @foreach(@$vale->detalles as $detalle)
                         <tr>
                             <th>{{$detalle->claveClienteProducto->clave_producto_cliente}}</th>
+                            <td>{{$detalle->claveClienteProducto->sku['descripcion']}}</td>
                             <td>{{$detalle->cantidad_surtida}}</td>
-                            <td>{{$detalle->claveClienteProducto->producto($detalle->claveClienteProducto->fk_id_sku,$detalle->claveClienteProducto->fk_id_upc)}}</td>
                         </tr>
-
                     @endforeach
-
-                   <tr>
+                    <tr>
                        <th style="border:none;"></th>
                        <td style="border:none;"></td>
                        <td>

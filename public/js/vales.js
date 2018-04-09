@@ -20,7 +20,7 @@ $(document).ready(function () {
     });
     $('#fk_id_receta').on('change', function() {
         if (!$(this).is(":empty")) {
-            $('#detalle tbody tr').remove();
+            $('#detalle').empty();
             $.ajax({
                 type: "POST",
                 url: $('#fk_id_receta').data('url'),
@@ -38,8 +38,7 @@ $(document).ready(function () {
                     $('#parentesco').val(data.receta.parentesco);
 
                     $.each(data.detalle, function(key,values) {
-                        // if(values.cantidad_solicitada != values.cantidad_surtida && values.cantidad_disponible == 0)
-                        // {
+                        if(values.cantidad_disponible == 0 ){
                             $('#detalle').append(
                                 '<tr>' +
                                 '<td>'+values.sku+'</td>'+
@@ -59,7 +58,8 @@ $(document).ready(function () {
                                 '<input type="hidden" name="relations[has][detalles]['+ key +'][importe]" class="importe" value="'+ values.precio_unitario +'">'+
                                 '</tr>'
                             );
-                        // }
+                        }
+
                     });
                 }
             });
@@ -77,11 +77,33 @@ $(document).ready(function () {
             mensajeAlerta('Favor de ingresar por lo menos un producto.','danger');
             return false;
         }
+        else if(validarSurtido() != 0 )
+        {
+            mensajeAlerta('Se esta excediendo la cantidad solicita.','danger');
+            return false;
+        }
         else
         {
             return true;
         }
     });
+
+    // $("#form-model").submit(function(){
+    //     var cont = 0;
+    //     $.each($('.cantidad'),function (index,value) {
+    //         cont = cont + $(value).val();
+    //     });
+    //
+    //     if( cont == 0 )
+    //     {
+    //         mensajeAlerta('Favor de ingresar por lo menos un producto.','danger');
+    //         return false;
+    //     }
+    //     else
+    //     {
+    //         return true;
+    //     }
+    // });
 
 });
 function calculatotal(el) {
@@ -108,6 +130,32 @@ function calculatotal(el) {
 
     $('#total').html('$ '+parseFloat(total, 10).toFixed(2));
 };
+
+function validarSurtido()
+{
+    var correcto = 0;
+
+    $.each($('#detalle tr'),function(index,value) {
+
+        var cant_solicitada = parseInt($(value).find('td').eq(2).html());
+        var cant_surtida = parseInt($(value).find('td').eq(3).html());
+        var cant_a_surtir = parseInt($(value).find('.cantidad').val());
+
+        if(cant_solicitada < cant_surtida + cant_a_surtir)
+        {
+            $(value).css("background-color", "#F8D7DA");
+            correcto++;
+        }
+        else
+        {
+            $(value).css("background-color", "#FFFFFF");
+        }
+
+
+    });
+
+    return correcto;
+}
 
 function mensajeAlerta(mensaje,tipo){
 

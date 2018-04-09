@@ -173,11 +173,11 @@ class Recetas extends ModelCompany
     public function titular($fk_id_afiliado)
     {
         $titular = Afiliaciones::where('id_afiliado',$fk_id_afiliado)->pluck('id_dependiente');
-        return Afiliaciones::select(DB::raw("CONCAT(nombre,' ',paterno,' ',materno) AS nombre"))->where('id_afiliacion', $titular)->pluck('nombre');
+        return Afiliaciones::select(DB::raw("CONCAT(nombre,' ',paterno,' ',materno) AS nombre"))->where('id_afiliacion', $titular)->pluck('nombre')->first();
     }
     public function dependiente($fk_id_afiliado)
     {
-        return Afiliaciones::select(DB::raw("CONCAT(nombre,' ',paterno,' ',materno) AS nombre,genero,fecha_nacimiento"))->where('id_afiliado',$fk_id_afiliado)->first();
+        return Afiliaciones::select(DB::raw("CONCAT(nombre,' ',paterno,' ',materno) AS nombre,genero,fecha_nacimiento,fk_id_parentesco"))->where('id_afiliado',$fk_id_afiliado)->first();
     }
     public function parentesco()
     {

@@ -30,18 +30,18 @@ class ValesController extends ControllerBase
 
     public function getDataView($entity = null)
     {
-
         if(!empty($entity)){
+
             $receta = Recetas::where('eliminar',false)->where('id_receta',$entity->fk_id_receta)->first();
-            $entity['titular'] = empty($entity) ? [] : $receta->dependiente($receta->fk_id_afiliacion,1)->nombre;
-            $entity['paciente'] = empty($entity) ? [] : $receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->nombre;
-            $entity['medico'] = empty($entity) ? [] : $receta->medico->NombreCompleto;
-            $entity['diagnostico'] = empty($entity) ? [] : $receta->diagnostico->diagnostico;
-//            $entity['edad'] = self::edad($receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->fecha_nacimiento);
-            $entity['edad'] = self::edad($receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->fecha_nacimiento);
-            $entity['patente'] = $receta->pantente;
-            $entity['genero'] = empty($entity) ? [] : $receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->genero;
-            $entity['parentesco'] = empty($entity) ? [] : $receta->parentesco['nombre'];
+
+            $entity['titular'] = !empty($receta->nombre_paciente_no_afiliado) ? '' : $receta->titular($receta->fk_id_afiliado);
+            $entity['paciente'] = !empty($receta->nombre_paciente_no_afiliado) ? $receta->nombre_paciente_no_afiliado  : $receta->NombreCompletoPaciente;
+            $entity['medico'] =  $receta->medico->NombreCompleto;
+            $entity['diagnostico'] = $receta->diagnostico->diagnostico;
+            $entity['edad'] = !empty($receta->nombre_paciente_no_afiliado) ? '' : self::edad($receta->dependiente($receta->fk_id_afiliado)->fecha_nacimiento);
+            $entity['genero'] = !empty($receta->nombre_paciente_no_afiliado) ? '' : $receta->afiliacion->genero;
+            $entity['parentesco'] = !empty($receta->nombre_paciente_no_afiliado) ?  '' : $receta->dependiente($receta->fk_id_afiliado)->parentesco->nombre;
+
         }
 
         return [
@@ -82,25 +82,24 @@ class ValesController extends ControllerBase
             }
             else
             {
-                $titular = $receta->afiliacion->FullName;
-                $paciente = Afiliaciones::where('id_afiliacion',$receta->fk_id_afiliacion)
-                    ->where('id_dependiente',$receta->fk_id_dependiente)
-                    ->first()->FullName;
-                $edad = self::edad(Afiliaciones::where('id_afiliacion',$receta->fk_id_afiliacion)
-                    ->where('id_dependiente',$receta->fk_id_dependiente)
-                    ->first()->fecha_nacimiento);
-                $genero = $receta->afiliacion->genero;
+//                $titular = '';
+                $titular = !empty($receta->nombre_paciente_no_afiliado) ? '' : $receta->titular($receta->fk_id_afiliado) ;
+                $paciente = !empty($receta->nombre_paciente_no_afiliado) ? $receta->nombre_paciente_no_afiliado : $receta->NombreCompletoPaciente;
+                $edad = !empty($receta->nombre_paciente_no_afiliado) ? '' : self::edad($receta->dependiente($receta->fk_id_afiliado)->fecha_nacimiento);
+                $genero = !empty($receta->nombre_paciente_no_afiliado) ?  '' : $receta->afiliacion->genero ;
+
             }
         }
 
 
         $json_receta = [
+
             'id_receta' => $receta->id_receta,
             'folio' => $receta->folio,
             'titular' => $titular,
             'paciente' => $paciente,
             'fk_id_dependiente' => $receta->fk_id_dependiente,
-            'parentesco' => $receta->parentesco['nombre'],
+            'parentesco' => !empty($receta->nombre_paciente_no_afiliado) ?  '' : $receta->dependiente($receta->fk_id_afiliado)->parentesco->nombre,
             'medico' => $receta->medico->NombreCompleto,
             'diagnostico' => $receta->diagnostico->diagnostico,
             'edad' => $edad,
@@ -131,7 +130,6 @@ class ValesController extends ControllerBase
         }
 
         return $json =[
-//            '$detalle_receta' => $detalle_receta,
             'receta' => $json_receta,
             'detalle' => $json_detalle,
         ];
@@ -146,14 +144,42 @@ class ValesController extends ControllerBase
     public function impress($company,$id)
     {
 
+        $vale = '';
+        $receta = '';
+
         $vale = Vales::where('id_vale',$id)->first();
         $receta = Recetas::where('id_receta',$vale->fk_id_receta)->first();
+
+
+        if($receta->fk_id_parentesco == 1) {
+            $titular = $receta->afiliacion->FullName;
+            $paciente = $receta->afiliacion->FullName;
+            $edad = self::edad($receta->afiliacion->fecha_nacimiento);
+            $genero = $receta->afiliacion->genero;
+            $parentesco = $receta->dependiente($receta->fk_id_afiliado)->parentesco->nombre;
+        }
+        else
+        {
+            $titular = !empty($receta->nombre_paciente_no_afiliado) ? '' : $receta->titular($receta->fk_id_afiliado) ;
+            $paciente = !empty($receta->nombre_paciente_no_afiliado) ? $receta->nombre_paciente_no_afiliado : $receta->NombreCompletoPaciente;
+            $edad = !empty($receta->nombre_paciente_no_afiliado) ? '' : self::edad($receta->dependiente($receta->fk_id_afiliado)->fecha_nacimiento);
+            $genero = !empty($receta->nombre_paciente_no_afiliado) ?  '' : $receta->afiliacion->genero ;
+            $parentesco = !empty($receta->nombre_paciente_no_afiliado) ?  '' : $receta->dependiente($receta->fk_id_afiliado)->parentesco->nombre;
+        }
+
+
+
 
         $pdf = PDF::loadView(currentRouteName('servicios.vales.imprimir'),[
             'vale' => $vale ,
             'receta' => $receta ,
-            'edad' => self::edad($receta->dependiente($receta->fk_id_afiliacion,$receta->fk_id_dependiente)->fecha_nacimiento),
+            'titular' => $titular ,
+            'paciente' => $paciente ,
+            'parentesco' => $parentesco,
+            'genero' => $genero,
+            'edad' => $edad,
         ]);
+
 
         $pdf->setPaper('letter','landscape');
         $pdf->output();
