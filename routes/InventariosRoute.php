@@ -34,6 +34,7 @@ Route::prefix('{company}')->group(function () {
         Route::post('surtidoreceta/getReceta','Inventarios\SurtidoRecetaController@getReceta')->name('surtidoreceta.getReceta');
         Route::post('surtidoreceta/getRecetaDetalle','Inventarios\SurtidoRecetaController@getRecetaDetalle')->name('surtidoreceta.getRecetaDetalle');
         Route::get('consultaFolio','Inventarios\SurtidoRecetaController@consultaFolio')->name('surtidoreceta.consultaFolio');
+        Route::post('surtidoClave','Inventarios\SurtidoRecetaController@consultaFolio')->name('surtidoreceta.surtidoClave');
         Route::post('surtidorequisicionhospitalaria/getRequisiciones','Inventarios\SurtidoRequisicionHospitalariaController@getRequisiciones')->name('surtidorequisicionhospitalaria.getRequisiciones');
         Route::post('surtidorequisicionhospitalaria/getRequisicionDetalle','Inventarios\SurtidoRequisicionHospitalariaController@getRequisicionDetalle')->name('surtidorequisicionhospitalaria.getRequisicionDetalle');
     });

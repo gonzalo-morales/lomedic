@@ -30,6 +30,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use DB;
+use Spatie\ArrayToXml\ArrayToXml;
+use App\ipejal;
 
 class SurtidoRecetaController extends ControllerBase
 {
@@ -52,6 +54,61 @@ class SurtidoRecetaController extends ControllerBase
         ];
 
     }
+
+    // public function store(Request $request, $company, $compact = true)
+    // {
+    //     $parent = parent::store($request, $company, $compact);
+    //     if($parent)
+    //     {
+
+    //         // <root> 
+    //         //     <row>
+    //         //         <clave>010-218-01</clave>
+    //         //         <nombre>FLUOXETINA CAPSULAS 20 MG. 14</nombre>
+    //         //         <pedida>5</pedida>
+    //         //         <surtida>2</surtida>
+    //         //         <surtida_ipejal>2</surtida_ipejal>
+    //         //         <tipo_negacion>0</tipo_negacion>
+    //         //         <vale />
+    //         //     </row>
+    //         // </root>
+
+    //         $id_sucursal = $request->fk_id_sucursal;
+    //         $id_receta = $request->fk_id_receta;
+    //         $receta = Recetas::where('id_receta', $id_receta)->first();
+    //         $sucursal = Sucursales::where('id_sucursal', $id_sucursal)->first();
+
+    //         $datos_detalle_receta = [];
+    //         foreach ($request->relations['has']['detalles'] as $key => $detalle) {
+    //             if($detalle)
+    //             {
+    //                 $clave_cliente_producto = ClaveClienteProductos::where('id_clave_cliente_producto', $detalle['fk_id_clave_cliente_producto'])->first();
+    //                 $datos_detalle_receta['row'.$key]=
+    //                 [
+    //                     'clave' => $clave_cliente_producto->clave_producto_cliente,
+    //                     'nombre' => $clave_cliente_producto->descripcion.''.$clave_cliente_producto->presentacion,
+    //                     'pedida' => $detalle['cantidad_solicitada'],
+    //                     'surtida' => $detalle['cantidad_surtida'],
+    //                     'surtida_ipejal' => $detalle['cantidad_surtida'],
+    //                     'tipo_negacion' => 0
+    //                 ];
+    //             }
+    //         }
+    //         $xml = ArrayToXml::convert($datos_detalle_receta);
+
+    //         $Accion = 'Surtido';
+    //         $FolioReceta = $receta->serie;
+    //         $Sufijo = $request->sufijo ?? 'A';
+    //         $Farmacia = $sucursal->sucursal;
+    //         $FechaSurtido = Carbon::now();
+    //         $FolioSalida = $receta->serie;
+    //         $xmlClaveReceta = $xml;
+
+    //         $surtido_clave_IPEJAL = surtido_clave($Accion, $FolioReceta, $Sufijo, $Farmacia, $FechaSurtido, $FolioSalida, $xmlClaveReceta);
+    //         dd($surtido_clave_IPEJAL);
+    //         return $this->redirect('store');
+    //     }
+    // }
 
     public function getReceta($company,Request $request)
     {

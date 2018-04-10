@@ -254,7 +254,6 @@ function validarSurtido()
 function mensajeAlerta(mensaje,tipo){
 
     var titulo = '';
-
     if(tipo == 'danger'){ titulo = '¡Error!'}
     else if(tipo == 'success'){titulo = '¡Correcto!' }
     $.toaster({priority:tipo,
