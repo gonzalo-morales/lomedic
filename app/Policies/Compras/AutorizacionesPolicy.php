@@ -7,7 +7,7 @@ use App\Http\Models\Administracion\Usuarios;
 
 class AutorizacionesPolicy extends PolicyBase
 {
-    public function create(Usuarios $usuario)
+    public function create()
     {
         return false;
     }

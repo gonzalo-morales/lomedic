@@ -83,10 +83,27 @@ class SalidasController extends ControllerBase
 			'skus_data' => $skus_data,
 			'upcs' => $upcs,
 			'api_proyectos' => Crypt::encryptString('"select": ["id_proyecto", "proyecto"], "conditions": [{"where":["fk_id_cliente", "$fk_id_cliente"]}]'),
-			'api_direcciones' => Crypt::encryptString('"select": ["calle", "num_exterior", "num_interior", "codigo_postal", "id_direccion", "fk_id_estado","fk_id_municipio"], "conditions": [{"where":["fk_id_socio_negocio", "$fk_id_socio_negocio"]},{"where":["fk_id_tipo_direccion", "2"]}], "append": ["direccion_concat"]'),
+			'api_direcciones' => Crypt::encryptString('
+			"select": ["id_socio_negocio"],
+			"with":["direcciones"],
+			"conditions": [{"where":["id_socio_negocio", "$id_socio_negocio"]}],
+			"whereHas": [{
+				"direcciones":{
+					"where":["fk_id_tipo_direccion", 2]
+				}
+			}]
+			'),//"append": ["direccion_concat"] - {"where":["fk_id_tipo_direccion", "2"]}
 			'api_sku' => Crypt::encryptString('"select": ["id_sku","sku","descripcion"], "conditions": [{"where": ["id_sku", "$fk_id_sku"]}], "with": ["upcs:id_upc,descripcion,marca,upc"]'),
 			'api_verify_stock' => Crypt::encryptString('"conditions": [{"where": ["fk_id_almacen", "$fk_id_almacen"]},{"where": ["fk_id_ubicacion", "$fk_id_ubicacion"]},{"where": ["fk_id_sku", "$fk_id_sku"]}, {"where": ["fk_id_upc", "$fk_id_upc"]}]'),
-			'api_ubicaciones' => Crypt::encryptString('"select":["lote","stock","fk_id_ubicacion"],"with": ["ubicacion:id_ubicacion,nivel,posicion,rack,ubicacion,fk_id_almacen", "ubicacion.almacen:id_almacen,almacen,fk_id_sucursal", "ubicacion.almacen.sucursal:id_sucursal,sucursal"], "conditions": [{"where": ["fk_id_sku", "$fk_id_sku"]}, {"where": ["fk_id_upc", "$fk_id_upc"]}]'),
+			// 'api_ubicaciones' => Crypt::encryptString('"select":["lote","stock","fk_id_ubicacion"],"with": ["ubicacion:id_ubicacion,nivel,posicion,rack,ubicacion,fk_id_almacen", "ubicacion.almacen:id_almacen,almacen,fk_id_sucursal", "ubicacion.almacen.sucursal:id_sucursal,sucursal"], "conditions": [{"where": ["fk_id_sku", "$fk_id_sku"]}, {"where": ["fk_id_upc", "$fk_id_upc"]}]'),
+            'api_ubicaciones' => Crypt::encryptString('
+			"select": ["id_sku"],
+			"with": ["stock.ubicacion"],
+            "whereHas": [{
+            "stock": {
+				"whereRaw": ["(fk_id_sku = $fk_id_sku) AND (fk_id_upc = $fk_id_upc) AND (activo IS true)"]
+                }
+			}]'),
 		];
 	}
 

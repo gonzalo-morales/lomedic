@@ -50,8 +50,6 @@ $(document).ready(function () {
 	});
 	
 	$('#fk_id_serie_sku').on('change', function() {
-		$('#sku').prop('disabled', ($(this).val() != 1));
-
 		if($(this).val() == 1 || $(this).val() == '') {
 			$('#sku').val('');
 		}
@@ -67,7 +65,8 @@ $(document).ready(function () {
     				if(data.sufijo != null)
     				{	serie = serie+'-'+data.sufijo; }
 
-    				$('#sku').val(serie);
+					$('#sku').val(serie);
+					
     		    },
     		    error: function(){
     		    	$('#sku').val('');
@@ -81,7 +80,7 @@ $(document).ready(function () {
 		var oldvalue = this.old;
 		var newvalue = this.value;
 		
-		console.log(oldvalue+ ' '+newvalue);
+		// console.log(oldvalue+ ' '+newvalue);
 	});
 
     $('#agrega-detalle').on('click', function() {
@@ -98,13 +97,13 @@ $(document).ready(function () {
         
         
         if(id_upc == '' ){
-        	$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe seleccionar un upc.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un upc.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else if(cantidad == '' | Number.isInteger(cantidad) != false) {
-        	$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'Debe seleccionar la cantidad, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar la cantidad, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else if(upcs_ids.indexOf(id_upc) !== -1) {
-        	$.toaster({priority:'danger',title:'Ã‚Â¡Error!',message:'El upc seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'¡Error!',message:'El upc seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else {
 	        var url = $('#fk_id_upc').data('url');
@@ -118,7 +117,7 @@ $(document).ready(function () {
 	            		 data:[
 	            			 '<input type="hidden" class="id_upc" name="detalles['+row_id+'][fk_id_upc]" value="' + id_upc + '" /> '+text_upc,
 	                         data[0].nombre_comercial,
-	                         data[0].descripcion,
+	                         (data[0].descripcion) ? data[0].descripcion : '<span class="text-secondary">Sin descripción</span>',
 	                         data[0].laboratorio.laboratorio,
 	                         '<input type="hidden" name="detalles['+row_id+'][cantidad]" value="' + cantidad + '" /> '+cantidad,
 	                         '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
@@ -132,10 +131,42 @@ $(document).ready(function () {
 	        });
         }
 	});
+	$(document).on('submit',function (e) {
+		if($('#upcs tbody tr').length == 0)
+		{
+			e.preventDefault();
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Para guardar se requiere que mínimo agregues un UPC, puedes agregarlos en la pestaña <b>Upcs</b>',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+		}
+		validateDetail();
+		if(!$('#form-model').valid())
+		{
+			e.preventDefault();
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Para guardar se requiere que mínimo indiques el Impuesto y Subgrupo al producto, puedes agregarlos en la pestaña <b>General</b>',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+		}
+	});
 });
     
 function borrarFila(el) {
     let fila = dataTable.data[$(el).parents('tr').index()];
     dataTable.rows().remove([$(el).parents('tr').index()]);
         $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la fila correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+}
+
+function validateDetail() {
+    $('#fk_id_impuesto').rules('add',{
+		required:true,
+		messages:{
+			required: 'Seleccione un impuesto'
+		}
+	});
+	$('#fk_id_subgrupo').rules('add',{
+		required:true,
+		messages:{
+			required: 'Seleccione un subgrupo'
+		}
+	})
 }

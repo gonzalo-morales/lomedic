@@ -23,7 +23,7 @@
         	<div class="col-sm-6 col-md-8 col-lg-9 row">
             	<div class="col-sm-12 col-md-6 col-lg-2">
             		<div class="form-group">
-            			{{ Form::cSelect('* Serie Sku', 'fk_id_serie_sku', $seriesku ?? [], !Route::currentRouteNamed(currentRouteName('create')) ? ['disabled'=>true] : ['data-url'=>companyAction('Administracion\SeriesSkusController@getSerie',['id'=>'?id'])]) }}
+            			{{ Form::cSelect('* Serie Sku', 'fk_id_serie_sku', $seriesku ?? [], !Route::currentRouteNamed(currentRouteName('create')) ? ['readonly'=>true] : ['data-url'=>companyAction('Administracion\SeriesSkusController@getSerie',['id'=>'?id'])]) }}
             		</div>
             	</div>
             	<div class="col-sm-12 col-md-6 col-lg-3">
@@ -31,7 +31,7 @@
             			@if (Route::currentRouteNamed(currentRouteName('create')))
             			<i class="material-icons text-danger float-left" data-toggle="tooltip" data-placement="top" title="El numero de serie puede cambiar si otro usuario genero un sku antes de que se guardara este. Verificalo despues de guardarlo.">warning</i>
             			@endif
-            			{{ Form::cText('* Sku', 'sku', ['placeholder'=>'Ejemplo: SO-01922-09','disabled'=>true]) }}
+            			{{ Form::cText('* Sku', 'sku', ['placeholder'=>'Ejemplo: SO-01922-09','readonly'=>true]) }}
             		</div>
             	</div>
             	<div class="col-sm-12 col-md-12 col-lg-7">

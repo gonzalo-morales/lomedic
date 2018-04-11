@@ -121,7 +121,7 @@
     				</transition>
     			</div>
     		</div>
-    		<div class="col-sm-6 col-lg-4">
+    		<div class="col-md-3">
     			<div class="form-group" v-cloak>
     				{{ Form::cSelectWithDisabled('Tipo de entrega', 'fk_tipo_entrega', $tipos_entrega ?? [], [
     					!isCurrentRouteName('show') ? 'v-select2' : 'dummy' => 'main.fk_tipo_entrega',
@@ -135,7 +135,7 @@
     				<span v-show="errors.has('main.fk_tipo_entrega')" class="help-block help-block-error small">@{{ errors.first('main.fk_tipo_entrega') }}</span>
     			</div>
     		</div>
-    		<div class="col-sm-6 col-lg-4">
+    		<div class="col-md-7">
     			<div class="form-group" v-cloak>
     				{{ Form::cSelectWithDisabled('Sucursal de entrega', 'fk_id_direccion_entrega', $sucursales_entrega ?? [], [
     					'ref' => 'fk_id_direccion_entrega',
@@ -151,7 +151,7 @@
     				<span v-show="errors.has('main.fk_id_direccion_entrega')" class="help-block help-block-error small">@{{ errors.first('main.fk_id_direccion_entrega') }}</span>
     			</div>
     		</div>
-    		<div class="col-sm-6 col-lg-4">
+    		<div class="col-md-2">
     			<div class="form-group" v-cloak>
     				{{ Form::cText('Fecha de entrega', 'fecha_entrega', [
     					'v-model' => 'main.fecha_entrega',
@@ -647,27 +647,33 @@
     					$(this).append(options.join());
     				})
     				// Sucursales de entrega
-    				this.selectCascade(this.$refs.fk_id_direccion_entrega, 'sociosnegocio.direccionessociosnegocio', {
-    					param_js: '{{$api_direcciones ?? ''}}', $fk_id_socio_negocio: e.target.value
+    				this.selectCascade(this.$refs.fk_id_direccion_entrega, 'sociosnegocio.sociosnegocio', {
+    					param_js: '{{$api_direcciones ?? ''}}', $id_socio_negocio: e.target.value
     				}, function(response) {
     					var options = [], i;
     					$(this).empty();
-    					/* Si hay resultados */
-    					if (response.length > 0) {
-    						options.push('<option value="0" selected disabled>Selecciona ...</option>');
-    						for (i in response) {
-    							options.push('<option has-data data-calle="{c} #{n}" data-ext="CP.{cp} {m}, {e}" value="{v}">{dc}</option>'.supplant({
-    								c: response[i].calle,
-    								n: response[i].num_exterior + (response[i].num_interior != '' ? '-' + response[i].num_interior : ''),
-    								cp: response[i].codigo_postal,
-    								m: response[i].municipio.municipio,
-    								e: response[i].estado.estado,
-    								dc: response[i].direccion_concat,
-    								v: response[i].id_direccion
-    							}))
-    						}
-    					} else {
-    						options.push('<option value="0" selected disabled>Sin resultados ...</option>');
+						/* Si hay resultados */
+						if(response.length > 0){
+							if (response[0].direcciones.length > 0) {
+								options.push('<option value="0" selected disabled>Selecciona ...</option>');
+								for (i in response[0].direcciones) {
+									options.push('<option has-data data-calle="{c} #{n}" data-ext="CP.{cp} {m}, {e}" value="{v}">{dc}</option>'.supplant({
+										c: response[0].direcciones[i].calle,
+										n: response[0].direcciones[i].num_exterior + (response[0].direcciones[i].num_interior != '' ? '-' + response[0].direcciones[i].num_interior : ''),
+										cp: response[0].direcciones[i].codigo_postal,
+										m: response[0].direcciones[i].fk_id_municipio,
+										e: response[0].direcciones[i].fk_id_estado,
+										dc: response[0].direcciones[i].calle + ' /Ext:' + response[0].direcciones[i].num_exterior + ' /Int:' + response[0].direcciones[i].num_interior + ' /C.P.:' + response[0].direcciones[i].codigo_postal,
+										v: response[0].direcciones[i].id_direccion
+									}))
+								}
+							} else {
+								options.push('<option value="0" selected disabled>Sin resultados ...</option>');
+							}
+						} else {
+							$.toaster({priority : 'danger',title : '¡Error!',message : 'Al parecer el cliente no cuenta con Sucursales registrados, intenta antes ingresar sucursales al cliente.',
+            					settings:{'timeout':8000,'toaster':{'css':{'top':'5em'}}}});
+    						options.push('<option value="0" selected disabled>No cuenta con Sucursales registrados.</option>');
     					}
     					$(this).append(options.join());
     				})
@@ -706,7 +712,7 @@
     								options.push('<option data-upc="'+response[0].upcs[i].upc+'" data-marca="'+response[0].upcs[i].marca+'" data-descripcion="'+response[0].upcs[i].descripcion+'" value="' + response[0].upcs[i].id_upc + '">' + response[0].upcs[i].upc + ' - ' + response[0].upcs[i].descripcion + '</option>');
     							}
     						} else {
-    							options.push('<option value="0" selected disabled>Sin resultados ...</option>');
+								options.push('<option value="0" selected disabled>Sin resultados ...</option>');
     						}
     					}
     					$(this).append(options.join(''));
@@ -725,23 +731,23 @@
     					this.nuffer.descripcion = data.descripcion;
     					this.nuffer.upc = data.upc;
     					// Almacenes de salida
-    					this.selectCascade(this.$refs.fk_id_ubicacion, 'inventarios.stock', {
+    					this.selectCascade(this.$refs.fk_id_ubicacion, 'inventarios.productos', {
     						param_js: '{{$api_ubicaciones ?? ''}}', $fk_id_sku: this.nuffer.fk_id_sku, $fk_id_upc: this.nuffer.fk_id_upc
     					}, function(response) {
     						var options = [], i;
     						$(this).empty();
-    						/* Si hay resultados */
+							/* Si hay resultados */
     						if (response.length > 0) {
     							options.push('<option value="0" selected disabled>Selecciona ...</option>');
     							for (i in response) {
-    								options.push('<option data-lote="{l}" data-stock="{st}" data-nomenclatura="{n}" data-fk_id_almacen="{ia}" data-almacen="{a}" data-sucursal="{s}" value="{v}">{n} ({st}) - {a}</option>'.supplant({
-    									l: response[i].lote,
-    									st: response[i].stock,
-    									n: response[i].ubicacion.nomenclatura,
-    									ia: response[i].ubicacion.fk_id_almacen,
-    									a: response[i].ubicacion.almacen.almacen,
-    									s: response[i].ubicacion.almacen.sucursal.sucursal,
-    									v: response[i].fk_id_ubicacion
+									console.log(response[i].stock.ubicacion);
+    								options.push('<option data-lote="{l}" data-stock="{st}" data-nomenclatura="{n}" data-fk_id_almacen="{ia}" data-fk_id_sucursal="{s}" value="{v}">{n} - (En stock: {st})</option>'.supplant({
+    									l: response[i].stock.lote,
+    									st: response[i].stock.stock,
+    									n: response[i].stock.ubicacion.nomenclatura,
+    									ia: response[i].stock.ubicacion.fk_id_almacen,
+    									s: response[i].stock.ubicacion.fk_id_sucursal,
+    									v: response[i].stock.ubicacion.id_ubicacion
     								}))
     							}
     						} else {
@@ -753,11 +759,9 @@
     			},
     			s2ThemeUbicacion: function(option) {
     				if (option.element && option.element.dataset.almacen) {
-    					return '<div>{n} ({st}) <br /> <small>{a} / {s}</small></div>'.supplant({
+    					return '<div>{n} ({st}) </div>'.supplant({
     						n: option.element.dataset.nomenclatura,
     						st: option.element.dataset.stock,
-    						a: option.element.dataset.almacen,
-    						s: option.element.dataset.sucursal
     					});
     				}
     				return option.text;
