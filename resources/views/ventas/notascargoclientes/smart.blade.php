@@ -12,9 +12,12 @@
         var serie_js      = '{{ $js_serie ?? '' }}';
         var proyectos_js  = '{{ $js_proyectos ?? '' }}';
         var sucursales_js = '{{ $js_sucursales ?? '' }}';
-        var impuestos_js  = '{{ $js_impuestos ?? '' }}';
+		var impuestos_js  = '{{ $js_impuestos ?? '' }}';
+		var certificado_js  = '{{ $js_certificado ?? '' }}';
 	</script>
-	{{ HTML::script(asset('js/ventas/notascargoclientes.js')) }}
+	@notroute(['index','show'])
+		{{ HTML::script(asset('js/ventas/notascargoclientes.js')) }}
+	@endif
 @endsection
 
 @section('form-content')
@@ -27,6 +30,7 @@
 			<div class="card-body row">
 				<div class="form-group col-md-8">
 					{{Form::cSelect('* Empresa','fk_id_empresa', $empresas ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.empresas')])}}
+					{{Form::hidden('fk_id_certificado',isset($entity) ? $entity->fk_id_certificado : 0,['id'=>'certificado'])}}
 				</div>
 				<div class="form-group col-md-4">
 					{{Form::cText('Rfc','rfc',['disabled'=>true])}}
@@ -66,7 +70,7 @@
 				<h5 class="col-md-12 text-center">Informacion del CFDI</h5>
 			</div>
 			<div class="card-body row">
-				<div class="form-group col-md-4">
+				<div class="form-group col-md-9">
 					{{Form::cSelect('* Serie','fk_id_serie', $series ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.seriesdocumentos')])}}
 				</div>
 				<div class="form-group col-md-3">
@@ -74,10 +78,12 @@
 					{{Form::hidden('serie',null,['id'=>'serie'])}}
 					{{Form::cText('* Folio','folio',['readonly'=>true])}}
 				</div>
-				<div class="form-group col-md-5">
-					{{Form::cText('* Fecha','fecha_creacion',['readonly'=>true])}}
+				<div class="form-group col-md-6">
+					{{Form::cText('* Fecha creación','fecha_creacion',['readonly'=>true])}}
 				</div>
-
+				<div class="form-group col-md-6">
+					{{Form::cText('* Fecha vencimiento','fecha_vencimiento', ['class' => 'datepicker'])}}
+				</div>
 				<div class="form-group col-md-7">
 					{{Form::cSelect('* Uso CFDI','fk_id_uso_cfdi', $usoscfdi ?? [],['class'=>'select2'])}}
 				</div>

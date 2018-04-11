@@ -53,6 +53,20 @@ $(document).ready(function () {
             });
 
             $.ajax({
+                async:true,
+                url: $(this).data('url'),
+                data: {'param_js':certificado_js,$id_empresa:val},
+                dataType: "json",
+                success: function (response) {
+                    if(response[0].certificados.length > 0){
+                        $('#certificado').val(response[0].certificados[0].id_certificado)
+                    } else{
+                        $('#certificado').val(0);
+                    }
+                }
+            });
+
+            $.ajax({
                 async: true,
                 url: series.data('url'),
                 data: {'param_js':series_js,$id_empresa:val},
@@ -64,6 +78,7 @@ $(document).ready(function () {
                     });
                     series.prop('disabled', (data.length == 0));
                     series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
+                    series.val(0)
                 }
             });
 
@@ -283,14 +298,22 @@ $(document).ready(function () {
             $('.pedimento').rules('remove');
             $('.cuenta_predial').rules('remove');
             $.toaster({
-                priority: 'danger', title: 'Ã‚Â¡Error!', message: 'Hay campos que requieren de tu atencion',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atencion',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
 
         if(+$('#descuento').val() > +$('#subtotal').val()){
             e.preventDefault();
             $.toaster({
-                priority: 'danger', title: 'Ã‚Â¡Error!', message: 'El descuento general no puede ser mayor al subtotal',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: '¡Error!', message: 'El descuento general no puede ser mayor al subtotal',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }
+
+        if($('#tConceptos tbody tr').length == 0)
+        {
+            e.preventDefault();
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Para guardar se requiere mínimo de un producto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
     });

@@ -34,10 +34,36 @@ class NotasCargoClientes extends ModelCompany
      * @var array
      */
     protected $fillable = [
-        'fk_id_socio_negocio', 'fk_id_proyecto', 'fk_id_empresa', 'fk_id_sucursal', 'fk_id_certificado', 'fk_id_tipo_comprobante',
-        'fk_id_tipo_relacion', 'fk_id_foma_pago', 'fk_id_metodo_pago', 'fk_id_uso_cfdi', 'fk_id_moneda', 'tipo_cambio', 'descuento',
-        'subtotal', 'impuestos', 'total', 'serie', 'folio', 'fecha_creacion', 'fecha_vencimiento', 'fecha_timbrado', 'fk_id_estatus',
-        'version_cdfi', 'no_certificado_sat', 'sello_sat', 'sello_cdfi', 'uuid', 'observaciones', 'fk_id_condicion_pago', 'total_pagado'
+        'fk_id_socio_negocio',
+        'fk_id_proyecto',
+        'fk_id_empresa',
+        'fk_id_sucursal',
+        'fk_id_certificado',
+        'fk_id_tipo_comprobante',
+        'fk_id_tipo_relacion',
+        'fk_id_forma_pago',
+        'fk_id_metodo_pago',
+        'fk_id_uso_cfdi',
+        'fk_id_moneda',
+        'tipo_cambio',
+        'descuento',
+        'subtotal',
+        'impuestos',
+        'total',
+        'serie',
+        'folio',
+        'fecha_creacion',
+        'fecha_vencimiento',
+        'fecha_timbrado',
+        'fk_id_estatus',
+        'version_cdfi',
+        'no_certificado_sat',
+        'sello_sat',
+        'sello_cdfi',
+        'uuid',
+        'observaciones',
+        'fk_id_condicion_pago',
+        'total_pagado'
     ];
 
     public $niceNames =[];

@@ -33,6 +33,7 @@ use Charles\CFDI\Node\Receptor;
 use Charles\CFDI\Node\Concepto;
 use Charles\CFDI\Node\Impuesto\Retencion;
 use App\Http\Models\Ventas\NotasCreditoClientes;
+use Illuminate\Support\Carbon;
 
 class NotasCargoClientesController extends ControllerBase
 {
@@ -48,6 +49,16 @@ class NotasCargoClientesController extends ControllerBase
         return [
             'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('...',''),
             'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa",$id_empresa]}], "limit": "1"'),
+            'js_certificado' => Crypt::encryptString('
+            "select": ["id_empresa"],
+            "conditions": [{"where": ["id_empresa",$id_empresa]}],
+            "with": ["certificados"],
+            "withFunction": [{
+            "certificados": {
+                "selectRaw": ["id_certificado"],
+                "whereRaw": ["('.Carbon::now().' > fecha_expedicion) AND ('.Carbon::now().' < fecha_vencimiento) AND (activo = 1)"]
+                }
+            }]'),
             'regimens' => RegimenesFiscales::select('regimen_fiscal','id_regimen_fiscal')->where('activo',1)->orderBy('regimen_fiscal')->pluck('regimen_fiscal','id_regimen_fiscal')->prepend('...',''),
             'series' => SeriesDocumentos::select('prefijo','id_serie')->where('activo',1)->where('fk_id_tipo_documento',5)->pluck('prefijo','id_serie'),
             'js_series' => Crypt::encryptString('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["activo",1]},{"where":["fk_id_tipo_documento",6]}]'),
