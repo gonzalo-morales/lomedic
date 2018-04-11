@@ -41,6 +41,11 @@ class OrdenesController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
+        if (Auth::check())
+        {
+            // The user is logged in...
+            $user = Auth::id();
+        }
         switch (\request('tipo_documento')){
             case 1:
                 $documento = Solicitudes::find(\request('id'));
@@ -63,7 +68,11 @@ class OrdenesController extends ControllerBase
             'documento' =>$documento,
             'detalles_documento'=>$detalles_documento,
             'tipo_documento' => \request('tipo_documento'),
-            'sucursales' 	   => Sucursales::hasEmpresa()->hasUsuario()->isActivo()->pluck('sucursal','id_sucursal'),
+            'sucursales' 	 => Sucursales::isActivo()->whereHas('usuario', function($u) use ($user){
+                $u->where('fk_id_usuario', $user);
+            })->whereHas('empresas',function($e){
+                $e->where('fk_id_empresa',dataCompany()->id_empresa);
+            })->pluck('sucursal','id_sucursal'),
             'proveedores' => $proveedores ?? '',
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),
             'condicionesPago' => CondicionesPago::where('activo',1)->pluck('condicion_pago','id_condicion_pago'),
