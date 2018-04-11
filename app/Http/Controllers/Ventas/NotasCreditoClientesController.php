@@ -79,7 +79,7 @@ class NotasCreditoClientesController extends ControllerBase
             $arreglo['has']['relaciones'][$row]['fk_id_tipo_documento'] = 5;
             $request->merge(['relations'=>$arreglo]);
         }
-
+        dd($request->relations);
         $return = parent::store($request, $company, true);
 
         $datos = $return["entity"];

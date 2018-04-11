@@ -30,9 +30,23 @@ class Pedidos extends ModelCompany
      * @var array
      */
     protected $fillable = [
-        'fk_id_socio_negocio', 'fk_id_proyecto', 'fk_id_localidad', 'fk_id_sucursal', 'fk_id_condicion_pago', 'fecha_necesaria', 'fecha_cancelacion',
-        'motivo_cancelacion', 'fk_id_estatus', 'impuesto', 'subtotal', 'total', 'descuento_general', 'descuento_total', 'fk_id_moneda',
-        'fecha_limite','fecha_pedido'
+        'fk_id_socio_negocio', 
+        'fk_id_proyecto', 
+        'fk_id_localidad', 
+        'fk_id_sucursal', 
+        'fk_id_condicion_pago',
+        'fecha_necesaria', 
+        'fecha_cancelacion',
+        'motivo_cancelacion', 
+        'fk_id_estatus', 
+        'impuesto',
+        'subtotal', 
+        'total', 
+        'descuento_general', 
+        'descuento_total', 
+        'fk_id_moneda',
+        'fecha_limite',
+        'fecha_pedido'
     ];
 
     public $niceNames =[];

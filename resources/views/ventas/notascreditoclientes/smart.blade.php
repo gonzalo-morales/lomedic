@@ -13,8 +13,10 @@
         var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
     	var impuestos_js  = '{{ $js_impuestos ?? '' }}';
-    </script>
-	{{ HTML::script(asset('js/ventas/notascreditoclientes.js')) }}
+	</script>
+	@notroute(['index','show'])
+		{{ HTML::script(asset('js/ventas/notascreditoclientes.js')) }}
+	@endif
 @endsection
 
 @section('form-content')

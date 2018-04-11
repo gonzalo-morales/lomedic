@@ -47,9 +47,11 @@ class PedidosController extends ControllerBase
                 ->whereHas('empresas', function($q) use($empresa_actual) {
                     $q->where('id_empresa','=',$empresa_actual->id_empresa);
                 })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
-            'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto','id_proyecto')->where('fk_id_estatus',1)->where('fk_id_cliente', $entity->fk_id_socio_negocio)->pluck('proyecto','id_proyecto'),
+            'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto','id_proyecto')->where('fk_id_estatus',1)->whereHas('cliente',function($q) use ($entity){
+                $q->where('fk_id_cliente',$entity->fk_id_socio_negocio);
+            })->pluck('proyecto','id_proyecto'),
             'js_proyectos' => Crypt::encryptString('"select": ["proyecto", "id_proyecto"], "conditions": [{"where": ["fk_id_estatus",1]}, {"where": ["fk_id_cliente","$fk_id_cliente"]}], "sortBy":["proyecto"]'),
-            'sucursales' => /*empty($entity) ? [] :*/ Sucursales::select('sucursal','id_sucursal')->hasSucursal()/*->where('fk_id_cliente', $entity->fk_id_socio_negocio)*/->pluck('sucursal','id_sucursal'),
+            'sucursales' => empty($entity) ? [] : Sucursales::select('sucursal','id_sucursal')->hasSucursal()->pluck('sucursal','id_sucursal'),
             'js_sucursales' => Crypt::encryptString('"select": ["sucursal", "id_sucursal"], "hasSucursal":[], "conditions": [{"where": ["fk_id_cliente","$fk_id_cliente"]}, {"where": ["fk_id_localidad","$fk_id_localidad"]}], "orderBy": [["sucursal", "ASC"]]'),
             'contratos' => empty($entity) ? [] : ContratosProyectos::select('num_contrato','id_contrato')->where('fk_id_proyecto', $entity->fk_id_proyecto)->pluck('num_contrato','id_contrato'),
             'js_contratos' => Crypt::encryptString('"select":["id_proyecto"], "conditions":[{"where":["id_proyecto","$id_proyecto"]}], "with":["contratos:id_contrato,num_contrato,fk_id_proyecto"]'),
@@ -82,7 +84,19 @@ class PedidosController extends ControllerBase
                 }
             }
         }
-        
+
+        $subtotal = 0;
+        $total = 0;
+        $descuento_total = 0;
+        foreach ($request->relations['has']['detalle'] as $detalle) {
+            $subtotal += $detalle->precio_unitario;
+            $total += $detalle->importe;
+            $descuento_total += $detalle->descuento;
+        }
+
+        $request->request->set('subtotal',$subtotal);
+        $request->request->set('total',$total);
+        $request->request->set('descuento_total',$descuento_total);
         #dd($request->all());
         
         return parent::store($request, $company, $compact);
@@ -105,7 +119,20 @@ class PedidosController extends ControllerBase
                 }
             }
         }
-        
+
+        $subtotal = 0;
+        $total = 0;
+        $descuento_total = 0;
+        foreach ($request->relations['has']['detalle'] as $detalle) {
+            $subtotal += $detalle['precio_unitario'];
+            $total += $detalle['importe'];
+            $descuento_total += $detalle['descuento'];
+        }
+
+        $request->request->set('subtotal',$subtotal);
+        $request->request->set('total',$total);
+        $request->request->set('descuento_total',$descuento_total);
+
         return parent::update($request, $company, $id, $compact);
     }
     
@@ -113,7 +140,7 @@ class PedidosController extends ControllerBase
     {
         Excel::create('producto_layout', function($excel){
             $excel->sheet(currentEntityBaseName(), function($sheet){
-                $sheet->fromArray(['* Cantidad','* Clave cliente producto','UPC']);
+                $sheet->fromArray(['* Cantidad','* Clave cliente producto','UPC','descuento']);
             });
         })->download('xlsx');
     }
@@ -141,6 +168,9 @@ class PedidosController extends ControllerBase
             }else{
                 $row['id_clave_cliente_producto'] = $ClaveCliente->id_clave_cliente_producto;
                 $row['descripcion_clave'] = $ClaveCliente->descripcion;
+                $row['fk_id_impuesto'] = $ClaveCliente->fk_id_impuesto;
+                $row['precio'] = $ClaveCliente->precio;
+                $row['fk_id_sku'] = $ClaveCliente->fk_id_sku;
             }
 
             if(!empty($row['upc']) && !empty($ClaveCliente)){

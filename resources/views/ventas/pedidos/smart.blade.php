@@ -8,9 +8,9 @@
     	var proyectos_js =  "{{ $js_proyectos ?? '' }}";
     	var sucursales_js = "{{ $js_sucursales ?? '' }}";
     	var contratos_js =  "{{ $js_contratos ?? '' }}";
-    	var modeldata =     "{!! $data->toJson() ?? '' }}";
+    	var modeldata =     "{{ json_encode($data) ?? '' }}";
     </script>
-    @notroute(['index'])
+    @notroute(['index','show'])
     	{{ HTML::script(asset('js/ventas/pedidos.js')) }}
     @endif
 @endsection
@@ -20,24 +20,24 @@
 	<div class="row">
 		<div class="col-lg-8 row">
     		<div class="form-group col-md-6 col-xs-12">
-    			{{Form::cSelectWithDisabled('* Localidad','fk_id_localidad',$localidades ?? [],['class'=>'select2'])}}
+    			{{Form::cSelectWithDisabled('* Localidad','fk_id_localidad',$localidades ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''])}}
     		</div>
     		<div class="form-group col-md-6">
-    			{{Form::cSelect('* Cliente','fk_id_socio_negocio', $clientes ?? [], ['class'=>'select2'])}}
-    		</div>
-    		
-    		<div class="form-group col-md-6">
-    			{{Form::cSelect('* Proyecto','fk_id_proyecto', $proyectos ?? [], ['class'=>'select2','data-url'=>companyAction('HomeController@index').'/proyectos.proyectos/api'])}}
-    		</div>
-    		<div class="form-group col-md-6">
-    			{{Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [], ['class'=>'select2','data-url'=>companyAction('HomeController@index').'/administracion.sucursales/api'])}}
+    			{{Form::cSelect('* Cliente','fk_id_socio_negocio', $clientes ?? [], ['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''])}}
     		</div>
     		
     		<div class="form-group col-md-6">
-    			{{Form::cSelect('Contrato','fk_id_contrato', $contratos ?? [], ['class'=>'select2','data-url'=>companyAction('HomeController@index').'/proyectos.proyectos/api'])}}
+    			{{Form::cSelect('* Proyecto','fk_id_proyecto', $proyectos ?? [], ['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '','data-url'=>companyAction('HomeController@index').'/proyectos.proyectos/api'])}}
     		</div>
     		<div class="form-group col-md-6">
-    			{{Form::cSelect('Ejecutivo de ventas','fk_id_ejecutivo_venta', $ejecutivos ?? [], ['class'=>'select2'])}}
+    			{{Form::cSelect('* Sucursal','fk_id_sucursal', $sucursales ?? [], ['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '','data-url'=>companyAction('HomeController@index').'/administracion.sucursales/api'])}}
+    		</div>
+    		
+    		<div class="form-group col-md-6">
+    			{{Form::cSelect('Contrato','fk_id_contrato', $contratos ?? [], ['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '','data-url'=>companyAction('HomeController@index').'/proyectos.proyectos/api'])}}
+    		</div>
+    		<div class="form-group col-md-6">
+    			{{Form::cSelect('Ejecutivo de ventas','fk_id_ejecutivo_venta', $ejecutivos ?? [], ['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''])}}
     		</div>
     		<div class="form-group col-md-12">
     			{{Form::cTextArea('Observaciones','observaciones',['rows'=>2])}}
@@ -59,7 +59,7 @@
         			{{Form::cText('* Fecha Limite','fecha_limite',['class'=>' datepicker '])}}
         		</div>
         		<div class="form-group col-md-12 col-xs-12">
-        			{{Form::cSelectWithDisabled('* Moneda','fk_id_moneda',$monedas ?? [],['class'=>'select2'])}}
+        			{{Form::cSelectWithDisabled('* Moneda','fk_id_moneda',$monedas ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''])}}
         		</div>
 				<div class="form-group col-md-12 col-xs-12">
         			{{Form::cSelectWithDisabled('* Estatus','fk_id_estatus',$estatus ?? [],['disabled'=>true])}}
@@ -85,16 +85,16 @@
     						<div class="card-header">
     							<fieldset name="detalle-form" id="detalle-form">
     								<div class="row">
-    									<div class="form-group col-md-2 col-xs-12">
+    									<div class="form-group col-md-2 col-sm-6">
                                 			{{Form::cNumber('* Cantidad','cantidad',['min'=>1])}}
                                 		</div>
-    									<div class="form-group input-field col-md-5 col-sm-6">
+    									<div class="form-group input-field col-md-4 col-sm-6">
                                             <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                                 Cargando datos... <i class="material-icons align-middle loading">cached</i>
                                             </div>
     										{{Form::cSelectWithDisabled('* Clave producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])}}
     									</div>
-    									<div class="form-group input-field col-md-5 col-sm-6">
+    									<div class="form-group input-field col-md-4 col-sm-6">
                                             <div id="loadingfk_id_upc" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                                 Cargando datos... <i class="material-icons align-middle loading">cached</i>
                                             </div>
@@ -105,7 +105,14 @@
     											</span>
     											{{Form::cSelect(null,'fk_id_upc',$upcs ?? [],['class'=>'index','disabled'=>true,'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id'])])}}
     										</div>
-    									</div>
+										</div>
+										<div class="form-group input-field col-md-2 col-sm-6">
+											{!! Form::label('descuento_detalle','Descuento producto') !!}
+											<div class="input-group">
+												<span class="input-group-addon">%</span>
+												{!! Form::text('descuento_detalle',0,['placeholder'=>'99.0000','class'=>'form-control']) !!}
+											</div>
+										</div>
     									<div class="col-sm-12 text-center border">
     										<div class="sep">
     											<div class="sepText bg-light">ó</div>
@@ -123,7 +130,7 @@
         											<div style="display:none;" id="campo_moneda">
         												{{ Form::cSelectWithDisabled(null,'relations[has][productos][$row_id][fk_id_moneda]', $monedas ?? [],['class'=>'fk_id_moneda']) }}
         											</div>
-        										</div>
+												</div>
         									</div>
     									</div>
     									<div class="col-sm-12 text-center mb-2">
@@ -149,40 +156,55 @@
     							<th>UPC</th>
     							<th>Descripción UPC</th>
     							<th>Precio Unitario</th>
-    							<th>Importe</th>
+								<th>Descuento(%)</th>
+								<th>Importe</th>
     							<th></th>
     						</tr>
     						</thead>
     						<tbody id="tbodyproductosproyectos">
                             <div class="w-100 h-100 text-center text-white align-middle loadingData loadingtabla" style="display: none;">
                                 Cargando datos... <i class="material-icons align-middle loading">cached</i>
-                            </div>
+							</div>
+
     						@if(isset($data->detalle))
     							@foreach( $data->detalle->where('eliminar',0) as $row=>$detalle)
     								<tr id="{{$detalle->id_proyecto_producto}}">
     									<td>
     										{{ Form::hidden('relations[has][detalle]['.$row.'][index]',$row,['class'=>'index']) }}
-    										{{ Form::hidden('relations[has][detalle]['.$row.'][id_pedido_detalle]',$detalle->id_pedido_detalle) }}
+											{{ Form::hidden('relations[has][detalle]['.$row.'][id_documento_detalle]',$detalle->id_documento_detalle) }}
+											{{ Form::hidden('relations[has][detalle]['.$row.'][cantidad]',$detalle->cantidad) }}
     										{{ $detalle->cantidad }}
     									</td>
     									<td>
+											{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_clave_cliente_producto]',$detalle->fk_id_clave_cliente_producto) }}
     										{{ $detalle->clavecliente->clave_producto_cliente }}
     									</td>
     									<td>
+											{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_sku]',$detalle->fk_id_sku) }}
     										{{ $detalle->clavecliente->descripcion }}
     									</td>
     									<td>
+											{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_upc]',$detalle->fk_id_upc) }}
     										{{$detalle->upc->upc ?? ''}}
     									</td>
     									<td>
     										{{$detalle->upc->descripcion ?? ''}}
     									</td>
     									<td>
+											{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_impuesto]',$detalle->fk_id_impuesto) }}
     										{{ number_format($detalle->precio_unitario,2) }}
+										</td>
+    									<td>
+											{{ Form::hidden('relations[has][detalle]['.$row.'][precio_unitario]',$detalle->precio_unitario) }}
+
+											{!! Form::text('relations[has][detalle]['.$row.'][descuento]',
+											number_format($detalle->descuento,2,'.',''),
+											['class'=>'form-control text-center','style'=>'width:80px','readonly' => true]) !!}
     									</td>
     									<td>
+											{{ Form::hidden('relations[has][detalle]['.$row.'][importe]',$detalle->importe) }}
     										{{ number_format($detalle->importe,2) }}
-    									</td>
+										</td>
     									<td>
     									@if(Route::currentRouteNamed(currentRouteName('edit')))
     										<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Producto"><i class="material-icons">delete</i></button>

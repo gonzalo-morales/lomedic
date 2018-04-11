@@ -43,7 +43,7 @@ $(document).ready(function () {
     		    dataType: 'json',
                 success: function (data) {
                 	$("#fk_id_socio_negocio option").remove();
-                	cliente.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                	cliente.append('<option value="" disabled>Selecciona una Opción...</option>')
                     $.each(data, function(){
                     	cliente.append('<option value="'+this.id_socio_negocio+'">'+this.razon_social+'</option>')
                     });
@@ -63,7 +63,8 @@ $(document).ready(function () {
                     	series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
                     });
                 	series.prop('disabled', (data.length == 0));
-                    series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
+					series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
+					series.val(0);
     		    }
     		});
     		
