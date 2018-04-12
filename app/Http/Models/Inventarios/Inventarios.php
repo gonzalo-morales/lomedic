@@ -48,17 +48,7 @@ class Inventarios extends ModelCompany
 	public $rules = [
 		'fk_tipo_inventario' => 'required',
 		'fk_id_sucursal' => 'required',
-		'fk_id_almacen' => 'required',
-	];
-
-	/**
-	 * Nice names to validator
-	 * @var array
-	 */
-	public $niceNames = [
-		'fk_tipo_inventario' => 'Tipo de inventario',
-		'fk_id_sucursal' => 'Sucursal',
-		'fk_id_almacen' => 'Almacén',
+		'fk_id_almacen' => 'required'
 	];
 
 	public function getTipoCapturaTextAttribute()

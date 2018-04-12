@@ -61,16 +61,10 @@ class InventariosController extends ControllerBase
 		];
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
 	public function store(Request $request, $company, $compact = false)
 	{
-		$request->request->add(['fecha_creacion' => Carbon::now()]);
         # Validamos request, si falla regresamos pagina
-        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
+		$request->request->add(['fecha_creacion' => Carbon::now()]);
 		return parent::store($request, $company, $compact);
 	}
 }
