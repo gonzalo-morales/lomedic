@@ -2,7 +2,9 @@
 
 namespace App\Policies;
 
+use App\Http\Models\Administracion\Usuarios;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Http\Models\Ventas\NotasCreditoClientes;
 
 class PolicyBase
 {
@@ -15,7 +17,7 @@ class PolicyBase
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function view()
+    public function view($usuario,$entity = null)
     {
         return true;
         return \Auth::User()->checkAuthorization(currentRouteAction('view'));
@@ -27,7 +29,7 @@ class PolicyBase
      * @param  \App\User  $user
      * @return mixed
      */
-    public function create()
+    public function create($usuario,$entity = null)
     {
         return true;
         return \Auth::User()->checkAuthorization(currentRouteAction('create'));
@@ -40,8 +42,18 @@ class PolicyBase
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function update()
+    public function update($user,$entity = null)
     {
+        if(in_array('fk_id_estatus',$entity->getlistColumns())){
+            if($entity->fk_id_estatus == 3)
+                return false;
+        }
+
+        if(in_array('fk_id_estatus_cfdi',$entity->getlistColumns())){
+            if($entity->fk_id_estatus_cfdi != 1)
+                return false;
+        }
+
         return true;
         return \Auth::User()->checkAuthorization(currentRouteAction('update'));
     }
@@ -53,7 +65,7 @@ class PolicyBase
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function delete()
+    public function delete($usuario,$entity = null)
     {
         return true;
         return \Auth::User()->checkAuthorization(currentRouteAction('delete'));
@@ -66,7 +78,7 @@ class PolicyBase
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function export()
+    public function export($usuario,$entity = null)
     {
         return true;
         return \Auth::User()->checkAuthorization(currentRouteAction('export'));

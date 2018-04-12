@@ -22,7 +22,7 @@
             @can('create', currentEntity())
                 {{ link_to(companyRoute('create'), cTrans('forms.create','Nuevo'), ['class'=>'btn btn-primary progress-button']) }}
             @endcan
-            @can('update', currentEntity())
+            @can('update', [$data])
             {{ link_to(companyRoute('edit'), cTrans('forms.edit','Editar'), ['class'=>'btn btn-info progress-button']) }}
             @endcan
             @yield('extraButtons')

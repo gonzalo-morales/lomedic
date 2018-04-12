@@ -366,9 +366,9 @@ class ModelBase extends Model
                     }
                 }
 
-                if(!empty($prop['comment'])) {
-                    array_push($rules[$col],$prop['comment']);
-                }
+//                if(!empty($prop['comment'])) {
+//                    array_push($rules[$col],$prop['comment']);
+//                }
             }
         }
         foreach($rules as $col=>$rule) {
