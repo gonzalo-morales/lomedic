@@ -1,4 +1,4 @@
-var subtotal_original = 0;
+var carga = true;
 $(document).ready(function () {
 	$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 	$.ajax({
@@ -16,13 +16,14 @@ $(document).ready(function () {
 	$('#fk_id_empresa').on('change', function() {
 		let cliente = $('#fk_id_socio_negocio');
 		let series = $('#fk_id_serie');
-		let val = $('#fk_id_empresa option:selected').val();
+		let val = $('#fk_id_empresa').val();
 
 		if(!val) {
 			$("#fk_id_socio_negocio option").remove();
 			cliente.prop('disabled',true);
-			$("#fk_id_serie option").remove();
-			series.prop('disabled',true);
+			if(action != 'show' && carga == false)
+				$("#fk_id_serie option").remove();
+				series.prop('disabled',true);
 			
 			$("#rfc").val('');
 			$("#fk_id_regimen_fiscal").val();
@@ -36,38 +37,40 @@ $(document).ready(function () {
 			$("#fk_id_pais").val();
 		}
 		else {
-    		$.ajax({
-    		    async: true,
-    		    url: cliente.data('url'),
-    		    data: {'param_js':clientes_js,$id_empresa:val},
-    		    dataType: 'json',
-                success: function (data) {
-                	$("#fk_id_socio_negocio option").remove();
-                	cliente.append('<option value="" disabled>Selecciona una Opción...</option>')
-                    $.each(data, function(){
-                    	cliente.append('<option value="'+this.id_socio_negocio+'">'+this.razon_social+'</option>')
-                    });
-                	cliente.val('');
-                	cliente.prop('disabled', (data.length == 0)); 
-    		    }
-    		});
-    		
-    		$.ajax({
-    		    async: true,
-    		    url: series.data('url'),
-    		    data: {'param_js':series_js,$id_empresa:val},
-    		    dataType: 'json',
-                success: function (data) {
-                	$("#fk_id_serie option").remove();
-                    $.each(data, function(){
-                    	series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
-                    });
-                	series.prop('disabled', (data.length == 0));
-					series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
-					series.val(0);
-    		    }
-    		});
-    		
+            if(action != 'show' && carga == false) {
+                $.ajax({
+                    async: true,
+                    url: cliente.data('url'),
+                    data: {'param_js': clientes_js, $id_empresa: val},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#fk_id_socio_negocio option").remove();
+                        cliente.append('<option value="" disabled>Selecciona una Opción...</option>')
+                        $.each(data, function () {
+                            cliente.append('<option value="' + this.id_socio_negocio + '">' + this.razon_social + '</option>')
+                        });
+                        cliente.val('');
+                        cliente.prop('disabled', (data.length == 0));
+                    }
+                });
+            }
+    		if(action != 'show' && carga == false)
+				$.ajax({
+					async: true,
+					url: series.data('url'),
+					data: {'param_js':series_js,$id_empresa:val},
+					dataType: 'json',
+					success: function (data) {
+						$("#fk_id_serie option").remove();
+						$.each(data, function(){
+							series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
+						});
+						series.prop('disabled', (data.length == 0));
+						series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
+						series.val(0);
+					}
+				});
+
     		$.ajax({
 			    url: $(this).data('url'),
 			    data: {'param_js':empresa_js,$id_empresa:$(this).val()},
@@ -88,11 +91,11 @@ $(document).ready(function () {
 
 		$('#fk_id_socio_negocio').trigger('change');
 	}).trigger('change');
-	
+
 	$('#fk_id_socio_negocio').on('change', function() {
 		let proyecto = $('#fk_id_proyecto');
 		let sucursal = $('#fk_id_sucursal');
-		let val = $('#fk_id_socio_negocio option:selected').val()
+		let val = $('#fk_id_socio_negocio').val();
 
 		if(!val) {
 			$("#fk_id_proyecto option").remove();
@@ -109,38 +112,39 @@ $(document).ready(function () {
 	            	$("#rfc_cliente").val(data[0].rfc);
 			    }
 			});
-			
-    		$.ajax({
-    		    async: true,
-    		    url: proyecto.data('url'),
-    		    data: {'param_js':proyectos_js,$fk_id_cliente:val},
-    		    dataType: 'json',
-                success: function (data) {
-                	$("#fk_id_proyecto option").remove();
-                	proyecto.append('<option value="" disabled>Selecciona una Opcion...</option>')
-                    $.each(data, function(){
-                    	proyecto.append('<option value="'+ this.id_proyecto +'">'+ this.proyecto +'</option>')
-                    });
-                	proyecto.val('');
-                	proyecto.prop('disabled', (data.length == 0));
-    		    }
-    		});
-    		
-    		$.ajax({
-    		    async: true,
-    		    url: sucursal.data('url'),
-    		    data: {'param_js':sucursales_js,$fk_id_cliente:val},
-    		    dataType: 'json',
-                success: function (data) {
-                	$("#fk_id_sucursal option").remove();
-                	sucursal.append('<option value="" disabled>Selecciona una Opcion...</option>')
-                    $.each(data, function(){
-                    	sucursal.append('<option value="'+this.id_sucursal+'">'+this.sucursal+'</option>')
-                    });
-                	sucursal.val('');
-                	sucursal.prop('disabled', (data.length == 0)); 
-    		    }
-    		});
+            if(action != "show" && carga == false) {
+                $.ajax({
+                    async: true,
+                    url: proyecto.data('url'),
+                    data: {'param_js': proyectos_js, $fk_id_cliente: val},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#fk_id_proyecto option").remove();
+                        proyecto.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                        $.each(data, function () {
+                            proyecto.append('<option value="' + this.id_proyecto + '">' + this.proyecto + '</option>')
+                        });
+                        proyecto.val('');
+                        proyecto.prop('disabled', (data.length == 0));
+                    }
+                });
+
+                $.ajax({
+                    async: true,
+                    url: sucursal.data('url'),
+                    data: {'param_js': sucursales_js, $fk_id_cliente: val},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#fk_id_sucursal option").remove();
+                        sucursal.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                        $.each(data, function () {
+                            sucursal.append('<option value="' + this.id_sucursal + '">' + this.sucursal + '</option>')
+                        });
+                        sucursal.val('');
+                        sucursal.prop('disabled', (data.length == 0));
+                    }
+                });
+            }
 		}
 	}).trigger('change');
 	
@@ -203,7 +207,7 @@ $(document).ready(function () {
         $('#loadingfk_id_producto').hide();
     });
 
-	$('#agregar-concepto').click(function () {
+	$('#agregar-concepto').on('click',function () {
 		validateDetail();
 		if($('#form-model').valid()){
 			var existe = false;
@@ -230,15 +234,20 @@ $(document).ready(function () {
 
                 $('#tConceptos tbody').append(
                     '<tr>' +
-                    '<td><input type="hidden" class="index" value="'+row_id+'"><input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_base]" class="factura" value="'+producto.fk_id_documento+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_base]" class="tipo_documento" value="'+producto.fk_id_tipo_documento+'">'+producto.serie+'-'+producto.folio+'</td>' +
+                    '<td><input type="hidden" class="index" value="'+row_id+'">' +
+						'<input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'">' +
+						'<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_base]" class="factura" value="'+producto.fk_id_documento+'">' +
+						'<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_base]" class="tipo_documento" value="'+producto.fk_id_tipo_documento+'">' +
+						producto.serie+'-'+producto.folio +
+					'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_producto_servicio]" value="'+producto.fk_id_clave_producto_servicio+'">'+producto.clave_producto_servicio+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_cliente]" value="'+producto.fk_id_clave_cliente+'">'+producto.clave_producto_cliente+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+producto.fk_id_sku+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][descripcion]" value="'+producto.descripcion+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+producto.fk_id_upc+'">'+producto.descripcion+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_unidad_medida]" value="'+producto.fk_id_unidad_medida+'">'+producto.unidad_medida+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][cantidad]" class="cantidad" value="'+cantidad+'">'+cantidad+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][precio_unitario]" class="precio_unitario" value="'+precio_unitario+'">$'+precio_unitario+'</td>' +
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descuento]" class="descuento" value="'+descuento+'">'+descuento+'</td>' +
-                    '<td><input type="hidden" value="'+data_impuesto.descripcion+'" class="tipo_impuesto"><input type="hidden" class="porcentaje" value="'+data_impuesto.porcentaje+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="'+$('#fk_id_impuesto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][impuesto]" class="impuesto" value="'+impuesto_producto.toFixed(2	)+'"><span>'+$('#fk_id_impuesto option:selected').text()+'</span><br><span style="font-size: 11px"><b>$'+impuesto_producto.toFixed(2)+'<b/></span></td>' +
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descuento]" class="descuento" value="'+descuento+'">$'+descuento+'</td>' +
+                    '<td><input type="hidden" value="'+data_impuesto.descripcion+'" class="tipo_impuesto"><input type="hidden" class="porcentaje" value="'+data_impuesto.porcentaje+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="'+$('#fk_id_impuesto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][impuesto]" class="impuesto" value="'+impuesto_producto.toFixed(2)+'"><span>'+$('#fk_id_impuesto option:selected').text()+'</span><br><span style="font-size: 11px"><b>$'+impuesto_producto.toFixed(2)+'<b/></span></td>' +
                     '<td><input type="text" name="relations[has][detalle]['+row_id+'][pedimento]" class="form-control pedimento"></td>' +
                     '<td><input type="text" name="relations[has][detalle]['+row_id+'][cuenta_predial]" class="form-control cuenta_predial"></td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][importe]" class="total" value="'+total+'">$'+total+'</td>' +
@@ -283,14 +292,21 @@ $(document).ready(function () {
 			$('.pedimento').rules('remove');
 			$('.cuenta_predial').rules('remove');
             $.toaster({
-                priority: 'danger', title: 'Â¡Error!', message: 'Hay campos que requieren de tu atencion',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atencion',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+		}
+
+		if($('#tConceptos tbody tr').length < 1){
+			e.preventDefault();
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Por favor agrega al menos un producto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
 		}
 
 		if(+$('#descuento').val() > +$('#subtotal').val()){
 			e.preventDefault();
             $.toaster({
-                priority: 'danger', title: 'Â¡Error!', message: 'El descuento general no puede ser mayor al subtotal',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: '¡Error!', message: 'El descuento general no puede ser mayor al subtotal',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
 		}
     });
@@ -320,7 +336,12 @@ $(document).ready(function () {
             	$('#folio').val(folio);
             }
         });
-    })
+    });
+    if(action == "edit"){
+    	total_factura();
+        cargar_productos();
+    }
+	carga = false;
 });
 
 function borrarFila(el,tipo = null) {
@@ -362,7 +383,7 @@ function total_factura() {
 		var porcentaje = +$(row).find('.porcentaje').val();
 		var impuesto_temporal = [];
 		total += +$(row).find('.total').val();
-        subtotal_factura += cantidad*precio_unitario;
+        subtotal_factura += (cantidad*precio_unitario)-descuento;
         descuento_factura += descuento;
         
         //Para impuestos dependiendo del tipo
@@ -385,13 +406,13 @@ function total_factura() {
             })
 		}
     });
-	descuento_factura += +$('#descuento').val();//Total Descuentos
 	//Subtotal
 	$('#subtotal').val(subtotal_factura);
 	$('#subtotal_span').text('$'+subtotal_factura);
 
 	//Descuentos
-    $('#descuento_span').text('$'+descuento_factura);
+    $('#descuento_span').text('$'+descuento_factura.toFixed(2));
+    $('#descuento').val(descuento_factura.toFixed(2));
 
     var impuestos_html = '';
     var impuesto = 0;
@@ -409,12 +430,12 @@ function total_factura() {
 	$('#impuestos').val(impuesto);
 	$('#impuesto_label').text('$'+impuesto);
 
-	total = total - +$('#descuento').val();
-	total = total.toFixed(2);
+	// total = total - +$('#descuento').val();
+	// total = total.toFixed(2);
 
 	//Total
-	$('#total').val(total);
-	$('#total_span').text('$'+total);
+	$('#total').val((+total + +impuesto).toFixed(2));
+	$('#total_span').text('$'+(+total + +impuesto).toFixed(2));
 }
 
 function cargar_productos() {
@@ -532,15 +553,6 @@ function validateDetail() {
             greaterThan: 'El número no debe ser menor a 0',
             lessThan: 'El descuento debe ser menor al precio por la cantidad',
             precio: 'El precio no debe tener más de dos decimales y diez enteros'
-        }
-    });
-
-    $('#descuento').rules('add',{
-        precio: true,
-        greaterThan: -1,
-        messages: {
-            precio: 'El formato es inválido',
-			greaterThan: 'El valor no puede ser negativo'
         }
     });
 }

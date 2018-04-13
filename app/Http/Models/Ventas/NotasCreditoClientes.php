@@ -57,8 +57,9 @@ class NotasCreditoClientes extends ModelCompany
         'fecha_creacion'=>'Fecha creación',
         'moneda.descripcion' => 'Moneda',
         'total' => 'Total',
-        'total_pagado' => 'Total Pagado',
-        'estatus.estatus' => 'Estatus'
+//        'total_pagado' => 'Total Pagado',
+        'estatus_documento_span' => 'Estatus',
+        'estatuscfdi_span' => 'Estatus CFDI'
     ];
 
     public function empresa()
@@ -125,6 +126,6 @@ class NotasCreditoClientes extends ModelCompany
     }
 
     public function estatuscfdi(){
-        return $this->hasOne(EstatusCfdi::class,'id_estatus','fk_id_estatus_cfdi');
+        return $this->hasOne(EstatusCfdi::class,'id_estatus_cfdi','fk_id_estatus_cfdi');
     }
 }

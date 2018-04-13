@@ -52,7 +52,7 @@ class Ofertas extends ModelCompany
         'proveedor.nombre_comercial' => 'Proveedor',
         'sucursal.sucursal' => 'Sucursal entrega',
         'vigencia' => 'Vigencia',
-        'estatus.estatus' => 'Estatus'
+        'estatus_documento_span' => 'Estatus'
     ];
 
     /**

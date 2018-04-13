@@ -154,7 +154,7 @@ class ControllerBase extends Controller
 
             # Log
             event(new LogModulos($entity, $company, 'crear' , 'Registro creado'));
-            
+
             $redirect = $this->redirect('store');
         } else {
             #DB::rollBack();
@@ -286,8 +286,12 @@ class ControllerBase extends Controller
 
             # Log
             event(new LogModulos($entity, $company, 'editar', 'Registro actualizado'));
-            
-            $redirect = $this->redirect('update');
+
+            //Si un documento se timbra
+            if(isset($request->fk_id_estatus_cfdi) && $request->fk_id_estatus_cfdi == 2)
+                $redirect = $this->redirect('timbre');
+            else
+                $redirect = $this->redirect('update');
         } else {
             DB::rollBack();
             # Log
@@ -417,22 +421,28 @@ class ControllerBase extends Controller
     {
         switch ($type) {
             case 'store':
-                $message = ['type'=> 'toast_success', 'text' => 'Registro creado correctamente.'];
+                $message = ['type'=> 'success', 'text' => 'Registro creado correctamente.', 'title' => '¡Éxito!'];
                 break;
             case 'error_store':
-                $message = ['type'=> 'toast_error', 'text' => 'No fue posible crear registro.'];
+                $message = ['type'=> 'danger', 'text' => 'No fue posible crear registro.', 'title' => '¡Error!'];
                 break;
             case 'update':
-                $message = ['type'=> 'toast_success', 'text' => 'Registro actualizado correctamente.'];
+                $message = ['type'=> 'success', 'text' => 'Registro actualizado correctamente.', 'title' => '¡Éxito!'];
                 break;
             case 'error_update':
-                $message = ['type'=> 'toast_error', 'text' => 'No fue posible actualizar registro.'];
+                $message = ['type'=> 'danger', 'text' => 'No fue posible actualizar registro.', 'title' => '¡Error!'];
                 break;
             case 'destroy':
-                $message = ['type'=> 'toast_success', 'text' => 'Registro (s) eliminado correctamente.'];
+                $message = ['type'=> 'success', 'text' => 'Registro (s) eliminado correctamente.', 'title' => '¡Éxito!'];
                 break;
             case 'error_destroy':
-                $message = ['type'=> 'toast_error', 'text' => 'No fue posible eliminar registro (s).'];
+                $message = ['type'=> 'danger', 'text' => 'No fue posible eliminar registro (s).', 'title' => '¡Error!'];
+                break;
+            case 'timbre':
+                $message = ['type'=> 'success', 'text' => 'Timbrado correctamente.','title' => '¡Éxito!'];
+                break;
+            case 'error_timbre':
+                $message = ['type'=> 'danger', 'text' => 'Error al timbrar el documento.', 'title' => '¡Error!'];
                 break;
             default:
                 break;

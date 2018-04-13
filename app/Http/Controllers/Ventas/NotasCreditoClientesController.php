@@ -22,6 +22,7 @@ use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Ventas\NotasCargoClientes;
 use App\Http\Models\Ventas\NotasCargoClientesDetalle;
 use App\Http\Models\Ventas\NotasCreditoClientes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
 use XmlParser;
@@ -37,11 +38,16 @@ class NotasCreditoClientesController extends ControllerBase
 
 	public function getDataView($entity = null)
     {
+        $series = null;
+        if(!empty($entity)){
+            $series = SeriesDocumentos::selectRaw('CONCAT(prefijo,\'-\',sufijo) as serie, id_serie as id_serie')->where('activo',1)->where('fk_id_tipo_documento',5)->where('fk_id_empresa',$entity->fk_id_empresa)->pluck('serie','id_serie');
+        }
+
         return [
             'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('...',''),
             'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa",$id_empresa]}], "limit": "1"'),
             'regimens' => RegimenesFiscales::select('regimen_fiscal','id_regimen_fiscal')->where('activo',1)->orderBy('regimen_fiscal')->pluck('regimen_fiscal','id_regimen_fiscal')->prepend('...',''),
-            'series' => SeriesDocumentos::select('prefijo','id_serie')->where('activo',1)->where('fk_id_tipo_documento',5)->pluck('prefijo','id_serie'),
+            'series' => $series,
             'js_series' => Crypt::encryptString('"conditions": [{"where": ["fk_id_empresa",$id_empresa]}, {"where": ["activo",1]},{"where":["fk_id_tipo_documento",5]},{"whereRaw":["(siguiente_numero <= coalesce(ultimo_numero,0) OR ultimo_numero IS NULL)"]}]'),
             'js_serie'=> Crypt::encryptString('"select":["prefijo","sufijo","siguiente_numero"],"conditions":[{"where":["id_serie",$id_serie]},{"whereRaw":["(siguiente_numero <= coalesce(ultimo_numero,0) OR ultimo_numero IS NULL)"]}]'),
             'municipios' => Municipios::select('municipio','id_municipio')->where('activo',1)->pluck('municipio','id_municipio')->prepend('...',''),
@@ -79,13 +85,11 @@ class NotasCreditoClientesController extends ControllerBase
             $arreglo['has']['relaciones'][$row]['fk_id_tipo_documento'] = 5;
             $request->merge(['relations'=>$arreglo]);
         }
-        dd($request->relations);
         $return = parent::store($request, $company, true);
 
         $datos = $return["entity"];
 
         if($datos) {
-
             $xml = generarXml($this->datos_cfdi($datos->id_documento));
 
             if(!empty($xml)) {
@@ -95,21 +99,28 @@ class NotasCreditoClientesController extends ControllerBase
             if($request->timbrar == true && !empty($xml))
                 $timbrado = timbrar($xml);
 
-            if(isset($timbrado) && $timbrado->status == '200') {
-                if(in_array($timbrado->resultados->status,['200','307'])) {
+            if(isset($timbrado) && $timbrado->return->status == '200') {
+                if(in_array($timbrado->return->resultados->status,['200','307'])) {
                     $request->request->add([
-                        'cadena_original'=>$timbrado->resultados->cadenaOriginal,
-                        'certificado_sat'=>$timbrado->resultados->certificadoSAT,
-                        'xml_timbrado'=>$timbrado->resultados->cfdiTimbrado,
-                        'fecha_timbrado'=>str_replace('T',' ',substr($timbrado->resultados->fechaTimbrado,0,19)),
-                        'sello_sat'=>$timbrado->resultados->selloSAT,
-                        'uuid'=>$timbrado->resultados->uuid,
-                        'version_tfd'=>$timbrado->resultados->versionTFD,
-                        'codigo_qr'=>base64_encode($timbrado->resultados->qrCode),
-                        'fk_id_estatus_cfdi' => 1
+                        'cadena_original'=>$timbrado->return->resultados->cadenaOriginal,
+                        'certificado_sat'=>$timbrado->return->resultados->certificadoSAT,
+                        'xml_timbrado'=>$timbrado->return->resultados->cfdiTimbrado,
+                        'fecha_timbrado'=>str_replace('T',' ',substr($timbrado->return->resultados->fechaTimbrado,0,19)),
+                        'sello_sat'=>$timbrado->return->resultados->selloSAT,
+                        'uuid'=>$timbrado->return->resultados->uuid,
+                        'version_tfd'=>$timbrado->return->resultados->versionTFD,
+                        'codigo_qr'=>base64_encode($timbrado->return->resultados->qrCode),
+                        'fk_id_estatus_cfdi' => 2
                     ]);
                 }
+                else
+                    return parent::redirect('error_timbre');
             }
+            else
+                return parent::redirect('error_timbre');
+            if(isset($request->relations))
+                unset($request['relations']);
+
             $request->request->set('save',true);
             $id = $datos->id_documento;
             $return = parent::update($request, $company, $id, true);
@@ -136,25 +147,25 @@ class NotasCreditoClientesController extends ControllerBase
             if($request->timbrar == true && !empty($xml))
                 $timbrado = timbrar($xml);
 
-            if(isset($timbrado) && $timbrado->status == '200') {
-                if(in_array($timbrado->resultados->status,['200','307'])) {
+            if(isset($timbrado) && $timbrado->return->status == '200') {
+                if(in_array($timbrado->return->resultados->status,['200','307'])) {
                     $request->request->add([
-                        'cadena_original'=>$timbrado->resultados->cadenaOriginal,
-                        'certificado_sat'=>$timbrado->resultados->certificadoSAT,
-                        'xml_timbrado'=>$timbrado->resultados->cfdiTimbrado,
+                        'cadena_original'=>$timbrado->return->resultados->cadenaOriginal,
+                        'certificado_sat'=>$timbrado->return->resultados->certificadoSAT,
+                        'xml_timbrado'=>$timbrado->return->resultados->cfdiTimbrado,
                         'fecha_timbrado'=>str_replace('T',' ',substr($timbrado->resultados->fechaTimbrado,0,19)),
-                        'sello_sat'=>$timbrado->resultados->selloSAT,
-                        'uuid'=>$timbrado->resultados->uuid,
-                        'version_tfd'=>$timbrado->resultados->versionTFD,
-                        'codigo_qr'=>base64_encode($timbrado->resultados->qrCode),
-                        'fk_id_estatus_cfdi' => 1
+                        'sello_sat'=>$timbrado->return->resultados->selloSAT,
+                        'uuid'=>$timbrado->return->resultados->uuid,
+                        'version_tfd'=>$timbrado->return->resultados->versionTFD,
+                        'codigo_qr'=>base64_encode($timbrado->return->resultados->qrCode),
+                        'fk_id_estatus_cfdi' => 2
                     ]);
                 }
                 else
-                    dd($timbrado);
+                    return parent::redirect('error_timbre');
             }
             else{
-                dd($timbrado);
+                return parent::redirect('error_timbre');
             }
             $request->request->set('save',true);
             $return = parent::update($request, $company, $id, $compact);

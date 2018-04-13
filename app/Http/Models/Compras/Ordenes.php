@@ -52,7 +52,7 @@ class Ordenes extends ModelCompany
         'sucursales.sucursal' => 'Sucursal entrega',
         'fecha_creacion' => 'Fecha del pedido',
         'fecha_estimada_entrega' => 'Fecha de entrega',
-        'estatus.estatus' => 'Estatus de la orden',
+        'estatus_documento_span' => 'Estatus de la orden',
         'estatusautorizacion.estatus' => 'Estatus autorización',
         'empresa.nombre_comercial' => 'Empresa'
     ];

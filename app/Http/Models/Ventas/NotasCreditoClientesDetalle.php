@@ -32,7 +32,7 @@ class NotasCreditoClientesDetalle extends ModelCompany
     protected $fillable = [
         'fk_id_documento','fk_id_clave_producto_servicio','fk_id_sku','fk_id_upc','fk_id_clave_cliente','descripcion',
         'fk_id_unidad_medida','unidad','cantidad','precio_unitario','importe','fk_id_moneda','fk_id_impuesto',
-        'descuento','pedimento','cuenta_predial','impuesto','fk_id_documento_relacionado','fk_id_tipo_documento_relacionado'
+        'descuento','pedimento','cuenta_predial','impuesto','fk_id_documento_base','fk_id_tipo_documento_base'
     ];
 
     public $niceNames =[];

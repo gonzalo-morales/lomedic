@@ -157,7 +157,7 @@
     @if (session('message'))
         <script type="text/javascript">
         	$.toaster({
-        		priority: 'success', title: 'Exito', message: '{{session('message.text')}}',
+        		priority: '{{session('message.type')}}', title: '{{session('message.title')}}', message: '{{session('message.text')}}',
         		settings:{'timeout': 5000, 'toaster':{'css':{'top':'5em'}}}
         	});
         </script>

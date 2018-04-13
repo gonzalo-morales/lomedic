@@ -278,6 +278,38 @@ class ModelBase extends Model
 	    return isset($this->activo) && $this->activo == 1 ? 'Activo' : 'Inactivo';
 	}
 
+	public function getEstatuscfdiSpanAttribute()
+    {
+        $format = new HtmlString('<span class="'. ($this->fk_id_estatus_cfdi == 1 ? 'text-danger' : 'text-success').'">&nbsp;'.$this->estatuscfdi->estatus.'&nbsp;</span>');
+        if(request()->ajax()){
+            return $format->toHtml();
+        }
+        return $format;
+    }
+
+    public function getEstatusDocumentoSpanAttribute()
+    {
+        switch ($this->estatus->id_estatus){
+            case 1://Abierto
+                $color = 'text-success';
+                break;
+            case 2://Cerrado
+                $color = 'text-secondary';
+                break;
+            case 3://Cancelado
+                $color = 'text-danger';
+                break;
+            default:
+                $color = '';
+                break;
+        }
+        $format = new HtmlString('<span class="'.$color.'">&nbsp;'.$this->estatus->estatus.'&nbsp;</span>');
+        if(request()->ajax()){
+            return $format->toHtml();
+        }
+        return $format;
+    }
+
 	/**
 	 * Accessor - Obtenemos columna 'activo' formateado en HTML
 	 * @return string
