@@ -1,6 +1,16 @@
 @extends(smart())
 @section('content-width')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Pedimentos de aduana')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo pedimento de aduana')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar pedimento de aduana')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Pedimento de aduana')
+@endif
+
 @section('form-content')
     {{ Form::setModel($data) }}
     <div class="row">

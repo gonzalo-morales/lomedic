@@ -1,6 +1,16 @@
 @extends(smart())
 @section('content-width')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Cadenas de pagos')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo cadena de pago')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar cadena de pago')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Cadena de pago')
+@endif
+
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">

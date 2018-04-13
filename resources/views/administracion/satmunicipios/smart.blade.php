@@ -1,6 +1,16 @@
 @extends(smart())
 @section('content-width', 's12')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'SAT municipios')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo SAT municipio')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar SAT municipio')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'SAT municipio')
+@endif
+
 @section('form-content')
     {{ Form::setModel($data) }}
     <div class="row">

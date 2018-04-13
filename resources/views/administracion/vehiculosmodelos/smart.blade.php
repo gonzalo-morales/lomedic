@@ -1,6 +1,16 @@
 @extends(smart())
 @section('content-width', 's12')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Modelos de vehículos')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo modelo de vehículo')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar modelo de vehículo')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Modelo de vehículo')
+@endif
+
 @section('form-content')
 {{ Form::setModel($data) }}
 <div class="row">

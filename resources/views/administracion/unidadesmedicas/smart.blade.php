@@ -1,5 +1,15 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
+
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Unidades médicas')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nueva unidad médica')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar unidad médica')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Unidad médica')
+@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

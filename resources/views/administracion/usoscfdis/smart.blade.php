@@ -1,5 +1,15 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
+
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Usos CFDIS')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo uso CFDIS')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar uso CFDIS')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Uso CFDIS')
+@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

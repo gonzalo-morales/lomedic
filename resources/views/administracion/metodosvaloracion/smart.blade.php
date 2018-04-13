@@ -1,6 +1,16 @@
 @extends(smart())
 @section('content-width', 's12')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Métodos de valoración')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo método de valoración')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar método de valoración')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Método de valoración')
+@endif
+
 @section('form-content')
     {{ Form::setModel($data) }}
     <div class="row">

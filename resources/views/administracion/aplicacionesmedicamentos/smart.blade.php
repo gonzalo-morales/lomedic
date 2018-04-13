@@ -1,5 +1,15 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
+
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Aplicaciones de medicamento')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nueva aplicación de medicamento')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar aplicación de medicamento')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Aplicación de medicamento')
+@endif
 
 @section('form-content')
 	{{ Form::setModel($data) }}

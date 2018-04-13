@@ -2,6 +2,14 @@
 @section('content-width', 's12')
 @section('form-title', 'Series de Documentos')
 
+@if(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo serie de documento')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar serie de documento')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Serie de documento')
+@endif
+
 @section('header-bottom')
     @parent
     <script type="text/javascript">

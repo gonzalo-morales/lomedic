@@ -1,6 +1,16 @@
 @extends(smart())
 @section('content-width', 's12')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Formas de adjudicaciones')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nueva forma de adjudicación')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar forma de adjudicación')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Forma de adjudicación')
+@endif
+
 @section('form-content')
 	{{ Form::setModel($data) }}
     <div class="row">
