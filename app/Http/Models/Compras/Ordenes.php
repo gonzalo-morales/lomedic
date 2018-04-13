@@ -53,7 +53,7 @@ class Ordenes extends ModelCompany
         'fecha_creacion' => 'Fecha del pedido',
         'fecha_estimada_entrega' => 'Fecha de entrega',
         'estatus_documento_span' => 'Estatus de la orden',
-        'estatusautorizacion.estatus' => 'Estatus autorización',
+        'estatus_autorizacion_span' => 'Estatus autorización',
         'empresa.nombre_comercial' => 'Empresa'
     ];
 

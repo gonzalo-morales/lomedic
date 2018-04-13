@@ -41,8 +41,8 @@ class SolicitudesPagos extends ModelCompany
         'sucursales.sucursal' => 'Sucursal',
         'fecha_solicitud_formated' => 'Fecha de solicitud',
         'fecha_necesaria' => 'Fecha necesidad',
-        'estatus.estatus' => 'Estatus',
-        'estatusautorizacion.estatus' => 'Estatus Autorización'
+        'estatus_documento_span' => 'Estatus',
+        'estatus_autorizacion_span' => 'Estatus Autorización'
     ];
 
     protected $dataColumns = [
