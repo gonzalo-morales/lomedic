@@ -3,6 +3,7 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
+use Illuminate\Support\Facades\Validator;
 
 class Dependencias extends ModelBase
 {
@@ -29,7 +30,7 @@ class Dependencias extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-        'dependencia' => 'required|max:40|regex:/^[a-zA-Z\s]+/',
+        'dependencia' => ['required','max:40','regex:/^[a-z\d\s]*$/'],
 	];
 
 	protected $unique = ['dependencia'];

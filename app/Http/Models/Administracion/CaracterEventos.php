@@ -18,7 +18,7 @@ class CaracterEventos extends ModelBase
 	 */
 	protected $primaryKey = 'id_caracter_evento';
 
-	protected $fields = ['id_caracter_evento'=>'#','caracter_evento'=>'Caracter Evento','activo_span'=>'Estatus'];
+	protected $fields = ['id_caracter_evento'=>'#','caracter_evento'=>'Carácter Evento','activo_span'=>'Estatus'];
 
 	protected $unique = ['caracter_evento'];
 	

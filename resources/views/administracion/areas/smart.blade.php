@@ -5,7 +5,7 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-6 col-xs-12">
-    		{{ Form::cText('* Area','area') }}
+    		{{ Form::cText('* Área','area') }}
     	</div>
     	<div class="form-group col-md-5 col-xs-12">
     		{{ Form::cText('* Clave','clave_area') }}

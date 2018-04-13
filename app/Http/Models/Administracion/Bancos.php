@@ -43,7 +43,7 @@ class Bancos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'razon_social' => 'required|regex:/^[a-zA-Z\s]+/|max:200',
+		'razon_social' => 'required|regex:/^[a-zA-Z\s]+/|max:150',
 		'banco' => 'required|regex:/^[a-zA-Z\s]+/|max:25',
 		'rfc' => 'required|max:13',
 	];

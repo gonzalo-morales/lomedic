@@ -32,7 +32,7 @@ class ConceptosViaje extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'tipo_concepto'	=> 'required|max:50'
+		'tipo_concepto'	=> 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:50'
 	];
 
 	protected $unique = ['tipo_concepto'];
@@ -42,7 +42,7 @@ class ConceptosViaje extends ModelBase
      * @var array
      */
     protected $fields = [
-        'tipo_concepto' => 'Metodo de pago',
+        'tipo_concepto' => 'Nombre del concepto',
         'activo_span' => 'Estatus'
     ];
 }

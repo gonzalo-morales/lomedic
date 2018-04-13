@@ -39,4 +39,13 @@ class Areas extends ModelBase
 		'clave_area' => 'Clave',
 	    'activo_span' => 'Estatus'
 	];
+
+	/**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'area' => 'required|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/|max:90',
+		'clave_area' => 'required',
+	];
 }

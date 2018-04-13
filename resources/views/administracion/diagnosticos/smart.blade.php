@@ -5,10 +5,10 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-2 col-xs-12">
-    		{{ Form::cText('Clave','clave_diagnostico') }}
+    		{{ Form::cText('* Clave','clave_diagnostico') }}
     	</div>
     	<div class="form-group col-md-4 col-xs-12">
-    		{{ Form::cText('Diagnostico','diagnostico') }}
+    		{{ Form::cText('* Diagnostico','diagnostico') }}
     	</div>
     	<div class="form-group col-md-3 col-xs-12">
     		{{ Form::cText('Medicamento Sugerido','medicamento_sugerido') }}

@@ -8,7 +8,7 @@ use App\Http\Models\Administracion\Usuarios;
 class MovimientoAlmacenPolicy extends PolicyBase
 {
 
-	public function update()
+	public function update($user,$entity = null)
     {
         return false;
     }

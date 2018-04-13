@@ -31,7 +31,7 @@ class Estados extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'estado' => 'required|max:255|regex:/^[a-zA-Z\s]+/',
+		'estado' => 'required|max:50|regex:/^[a-zA-Z\s]+/',
 		'fk_id_pais' => 'required',
 	];
 
@@ -42,7 +42,7 @@ class Estados extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'estado' => 'Entidad',
+		'estado' => 'Estado',
 		'pais.pais' => 'País',
 		'activo_span' => 'Estatus',
 	];

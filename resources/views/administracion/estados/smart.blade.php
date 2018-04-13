@@ -5,10 +5,10 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-6 col-xs-12">
-    		{{ Form::cText('Estado:','estado') }}
+    		{{ Form::cText('* Estado:','estado') }}
     	</div>
     	<div class="form-group col-md-6 col-xs-12 ">
-    		{{ Form::cSelect('País:','fk_id_pais',$paises ?? []) }}
+    		{{ Form::cSelect('* País:','fk_id_pais',$paises ?? []) }}
     	</div>
     	<div  class="col-md-12 text-center mt-2">
     		<div class="alert alert-warning" role="alert">

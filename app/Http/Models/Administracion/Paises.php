@@ -31,7 +31,7 @@ class Paises extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'pais'		=> 'required|max:150|regex:/^[a-zA-Z\s]+/',
+		'pais'		=> 'required|max:50|regex:/^[a-zA-Z\s]+/',
 	];
 
     protected $unique = ['pais'];
