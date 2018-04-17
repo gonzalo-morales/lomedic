@@ -65,7 +65,7 @@ class PolicyBase
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function delete($usuario,$entity = null)
+    public function delete($usuario,$entity = null,$idOrIds = [])
     {
         return true;
         return \Auth::User()->checkAuthorization(currentRouteAction('delete'));

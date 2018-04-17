@@ -312,7 +312,7 @@ class ControllerBase extends Controller
         $ids = !is_array($idOrIds) ? [$idOrIds] : $idOrIds;
 
         # ¿Usuario tiene permiso para eliminar?
-        $this->authorize('delete', [$this->entity->whereIn($this->entity->getKeyName(),$ids)->get()]);
+        $this->authorize('delete', [$this->entity,$idOrIds]);
 
         DB::beginTransaction();
         foreach ($ids as $id) {
