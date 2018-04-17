@@ -24,7 +24,7 @@ class TiposDocumentos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'nombre_documento' => 'required|max:255'
+		'nombre_documento' => 'required|max:150'
 	];
 
     protected $unique = ['nombre_documento'];
@@ -34,7 +34,7 @@ class TiposDocumentos extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'nombre_documento' => 'Documento',
+		'nombre_documento' => 'Nombre documento',
 		'activo_span' => 'Estatus'
 	];
 }

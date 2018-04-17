@@ -1,6 +1,16 @@
 @extends(smart())
 @section('content-width', 's12')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Tipos de anexo')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo tipo de anexo')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar tipo de anexo')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Tipo de anexo')
+@endif
+
 @section('form-content')
     {{ Form::setModel($data) }}
     <div class="row">

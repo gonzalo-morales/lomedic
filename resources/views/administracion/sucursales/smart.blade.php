@@ -1,6 +1,16 @@
 @extends(smart())
 @section('content-width')
 
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Sucursales')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nueva sucursal')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar sucursal')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Sucursal')
+@endif
+
 @section('form-content')
     {{ Form::setModel($data) }}
     <div class="row">
@@ -27,7 +37,7 @@
     				{{ Form::cSelect('* Cliente', 'fk_id_cliente', $clientes ?? []) }}
     			</div>
     			<div class="form-group col-md-4">
-    				{{ Form::cText('Teléfono', 'telefono_1') }}
+    				{{ Form::cText('* Teléfono', 'telefono_1') }}
     			</div>
     			<div class="form-group col-md-4">
     				{{ Form::cText('Teléfono alternativo', 'telefono_2') }}

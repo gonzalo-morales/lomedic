@@ -18,10 +18,10 @@ class LaboratoriosController extends ControllerBase
 	    $this->entity = new Laboratorios;
 	}
 
-	public function getDataView($entity = null)
-	{
-		return [
-		    'companies' => Empresas::where('activo',1)->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
-		];
-	}
+	// public function getDataView($entity = null)
+	// {
+	// 	return [
+	// 	    'companies' => Empresas::where('activo',1)->select(['nombre_comercial','id_empresa'])->pluck('nombre_comercial','id_empresa'),
+	// 	];
+	// }
 }

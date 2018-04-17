@@ -26,15 +26,14 @@ class Parentescos extends ModelBase
 	 */
 	protected $fillable = ['nombre', 'activo'];
 
+	protected $unique = ['nombre'];
 	/**
 	 * The validation rules
 	 * @var array
 	 */
 	public $rules = [
-		'nombre'	=> 'required|regex:/^[a-zA-Z\s]+/|max:255',
+		'nombre'=> ['required','regex:/^[a-zA-Z\s]+/','max:60']
 	];
-
-    protected $unique = ['nombre'];
 
 	/**
 	 * Los atributos que seran visibles en index-datable

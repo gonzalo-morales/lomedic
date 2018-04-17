@@ -24,10 +24,20 @@ class RamosSocioNegocio extends ModelBase
      */
     protected $fillable = ['ramo', 'activo'];
 
+	/**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'ramo' => ['required','max:50','regex:/^[a-zA-Z\s]+/']
+	];
+
     protected $fields = [
         'ramo' => 'Ramo',
         'activo_text' => 'Estatus'
     ];
+
+    protected $unique = ['ramo'];
 
     public function socionegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');

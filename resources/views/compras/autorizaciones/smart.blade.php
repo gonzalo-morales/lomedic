@@ -1,5 +1,15 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
+
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Autorizaciones')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nueva autorización')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar autorización')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Autorización')
+@endif
 
 @section('header-bottom')
 	@parent

@@ -24,7 +24,7 @@ class UnidadesMedidas extends ModelBase
      *
      * @var array
      */
-    protected $fillable = ['nombre', 'activo'];
+    protected $fillable = ['nombre', 'activo', 'clave'];
 
     /**
      * The validation rules
@@ -32,17 +32,19 @@ class UnidadesMedidas extends ModelBase
      */
     public $rules = [
 
-        'nombre' => 'required|max:255|regex:/^[a-zA-Z\s]+/',
+        'nombre' => 'required|max:150|regex:/^[a-zA-Z\s]+/',
+        'clave' => 'max:5'
     ];
 
-    protected $unique = ['nombre'];
+    protected $unique = ['nombre','clave'];
 
     /**
      * Los atributos que seran visibles en index-datable
      * @var null|array
      */
     protected $fields = [
-        'nombre' => 'Descripcion',
+        'nombre' => 'Unidad',
+        'clave' => 'Clave',
         'activo_span' => 'Estatus'
     ];
 

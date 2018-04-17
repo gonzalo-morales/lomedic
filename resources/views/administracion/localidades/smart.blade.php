@@ -1,11 +1,21 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
+
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Localidades')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nueva localidad')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar localidad')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Localidad')
+@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col">
-    		{{ Form::cText('Localidad', 'localidad') }}
+    		{{ Form::cText('* Localidad', 'localidad') }}
     	</div>
     	<div  class="col-md-12 text-center mt-4">
     		<div class="alert alert-warning" role="alert">

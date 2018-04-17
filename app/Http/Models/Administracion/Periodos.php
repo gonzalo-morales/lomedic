@@ -28,7 +28,7 @@ class Periodos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'periodo' => 'Required|max:80|regex:/^[a-zA-Z\s]+/',
+		'periodo' => ['required','max:80','regex:/^[a-zA-Z\s]+/']
 	];
 
     protected $unique = ['periodo'];

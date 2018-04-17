@@ -41,7 +41,7 @@ class Paises extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'pais' => 'Pais',
+		'pais' => 'País',
 		'activo_span' => 'Estatus'
 	];
 

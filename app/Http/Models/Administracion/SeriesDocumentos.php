@@ -48,8 +48,7 @@ class SeriesDocumentos extends ModelBase
 		'ultimo_numero' => 'max:32|numeric|required',
 		'fk_id_empresa' => 'required',
 		'fk_id_tipo_documento' => 'required',
-		'descripcion' => 'max:255|regex:/^[a-zA-Z\s]+/',
-		'activo'
+		'descripcion' => 'max:150|regex:/^[a-zA-Z\s]+/'
 	];
 
     protected $unique = [
