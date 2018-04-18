@@ -72,7 +72,7 @@
 <script type="text/javascript">
 	$(document).ready(function () {	
         $('#scan').focus();
-        
+        $('#submit').attr('disabled',true);
 		//Con esto evitamos que haga submit
 		$(document).on("keypress", "#form", function(event) {
 		    return event.keyCode != 13;
@@ -115,6 +115,7 @@
 							$('#upc').attr('style','color:black');
 							// alert('ya acabe')
 							$('#loading').hide();
+							$('#submit').attr('disabled',false);
 							$('#scan').val('').attr('disabled', false).focus();
 						}
 					} else {
@@ -126,14 +127,6 @@
 		    }
 
 		});
-
-        $('#form').on('submit', function(e){
-			if (num == 0) {
-				e.preventDefault();
-				alert('Para guardar es necesario que mínimo agregues un UPC');
-			}
-        });
-
 	});
 </script>
 @endsection
