@@ -17,7 +17,7 @@
 @endsection
 
 @section('form-content')
-    {{ Form::setModel($data) }}
+	{{ Form::setModel($data) }}
     <div class="p-3 my-2">
         <div class="row">
         	<div class="col-sm-6 col-md-8 col-lg-9 row">

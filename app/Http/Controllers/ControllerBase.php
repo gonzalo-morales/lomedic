@@ -124,10 +124,9 @@ class ControllerBase extends Controller
 //                unset($this->entity->rules[$index]);
 //            }
 //        }
-
+        // dd($this->entity->rules, $request);
         # Validamos request, si falla regresamos pagina
         $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-
         #DB::beginTransaction();
         $entity = $this->entity->create($request->all());
         if ($entity) {

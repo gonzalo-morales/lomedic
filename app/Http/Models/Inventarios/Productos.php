@@ -31,9 +31,36 @@ class Productos extends ModelCompany
      * @var array
      */
     protected $fillable = [
-        "sku","activo","descripcion_corta","descripcion","presentacion","fk_id_unidad_medida","articulo_venta","articulo_compra","articulo_inventario","maneja_lote","fk_id_subgrupo",
-        "fk_id_serie_sku","fk_id_impuesto","fk_id_familia","activo_desde","activo_hasta","fk_id_unidad_medida_venta","fk_id_presentacion_venta","fk_id_proveedor_predeterminado",
-        "fk_id_unidad_medida_compra","necesario","maximo","minimo","punto_reorden","fk_id_metodo_valoracion","fk_id_clave_medida"
+        "sku",
+        "activo",
+        "descripcion_corta",
+        "descripcion",
+        "presentacion",
+        "fk_id_unidad_medida",
+        "articulo_venta",
+        "articulo_compra",
+        "articulo_inventario",
+        "maneja_lote",
+        "fk_id_subgrupo",
+        "fk_id_serie_sku",
+        "fk_id_impuesto",
+        "fk_id_familia",
+        "activo_desde",
+        "activo_hasta",
+        "fk_id_unidad_medida_venta",
+        "fk_id_presentacion_venta",
+        "fk_id_proveedor",
+        "fk_id_unidad_medida_compra",
+        "necesario",
+        "maximo",
+        "minimo",
+        "punto_reorden",
+        "fk_id_metodo_valoracion",
+        "fk_id_intervalo",
+        "minima_periodo",
+        "tiempo_lead",
+        "dias_tolerancia",
+        "fk_id_clave_medida"
     ];
 
     /**

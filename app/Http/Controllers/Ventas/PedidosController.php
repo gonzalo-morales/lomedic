@@ -97,7 +97,7 @@ class PedidosController extends ControllerBase
         $request->request->set('subtotal',$subtotal);
         $request->request->set('total',$total);
         $request->request->set('descuento_total',$descuento_total);
-        #dd($request->all());
+        // dd($request->all());
         
         return parent::store($request, $company, $compact);
     }
