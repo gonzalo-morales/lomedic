@@ -94,4 +94,8 @@ class Productos extends ModelCompany
         return $this->belongsToMany(SociosNegocio::class,getSchema().'.sng_det_productos','fk_id_sku','fk_id_socio_negocio','id_sku','id_socio_negocio')->withPivot('tiempo_entrega');
     }
 
+    public function cbn()
+    {
+        return $this->belongsto(Cbn::class,'id_cbn','fk_id_cbn');
+    }
 }

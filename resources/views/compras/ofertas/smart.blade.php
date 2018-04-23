@@ -178,11 +178,13 @@
     									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
     									{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
 										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_linea]',$detalle->id_documento_detalle) !!}
-										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_sku]',$detalle->fk_id_sku) !!}
-										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_upc]',$detalle->fk_id_upc ?? '') !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_sku]',$detalle->fk_id_sku,['class'=>'fk_id_sku']) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_upc]',$detalle->fk_id_upc ?? '',['class'=>'fk_id_upc']) !!}
 										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_proyecto]',$detalle->fk_id_proyecto ?? '') !!}
 										{!! Form::hidden('relations[has][detalle]['.$row.'][fk_id_unidad_medida]',$detalle->fk_id_unidad_medida) !!}
-										{!! Form::hidden('relations[has][detalle]['.$row.'][cantidad]', $detalle->cantidad,['class'=>'form-control cantidadRow']) !!}
+										{!! Form::hidden('relations[has][detalle]['.$row.'][cantidad]', $detalle->cantidad,['class'=>'cantidadRow']) !!}
+										{!! Form::hidden('',null,['class'=>'tiempo_entrega']) !!}
+										{{--@dd($detalle)--}}
     								</th>
     								<td>
 										<img style="max-height:40px" src="img/sku.png" alt="sku"/>

@@ -82,7 +82,7 @@ class OrdenesController extends ControllerBase
                 "withFunction": [{
                 "productos": {
                     "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],
-                    "whereRaw": ["($fk_id_socio_negocio = NULL OR fk_id_socio_negocio = $fk_id_socio_negocio) AND fk_id_sku = $fk_id_sku AND ($fk_id_upc = NULL OR fk_id_upc = $fk_id_upc)"],
+                    "whereRaw": ["($fk_id_socio_negocio = NULL OR fk_id_socio_negocio = $fk_id_socio_negocio) AND fk_id_sku IN ($fk_id_sku) AND (($fk_id_upc) = NULL OR fk_id_upc IN ($fk_id_upc))"],
                     "groupBy": ["fk_id_socio_negocio","fk_id_sku","fk_id_upc"]
                 }
                 }],

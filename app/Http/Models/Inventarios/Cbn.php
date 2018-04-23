@@ -38,4 +38,9 @@ class Cbn extends ModelBase
         'precio_imss' => 'Precio Imss',
         'activo_span'=> 'Estatus',
     ];
+
+    public function skus()
+    {
+        return $this->hasMany(Productos::class,'fk_id_cbn','id_cbn');
+    }
 }

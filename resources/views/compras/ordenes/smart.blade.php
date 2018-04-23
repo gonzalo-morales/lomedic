@@ -194,14 +194,15 @@
 									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_tipo_documento_base]',$tipo_documento) !!}
 									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_documento_base]',$detalle->fk_id_documento) !!}
 									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_linea]',$detalle->id_documento_detalle) !!}
+									{!! Form::hidden('',null,['class'=>'tiempo_entrega']) !!}
 									{{isset($detalle->fk_id_documento)?$detalle->fk_id_documento:'N/A'}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_sku]',$detalle->fk_id_sku) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_sku]',$detalle->fk_id_sku,['class'=>'fk_id_sku']) !!}
 									{{$detalle->sku->sku}}
 								</td>
 								<td>
-									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+									{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_upc]',$detalle->fk_id_upc,['class'=>'fk_id_upc']) !!}
 									{{isset($detalle->fk_id_upc)?$detalle->upc->upc:'UPC no seleccionado'}}
 								</td>
 								<td>

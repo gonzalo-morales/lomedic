@@ -1,8 +1,12 @@
 var a=[];
-
+var primeracarga = true;
 $(document).ready(function(){
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-
+    $('#fk_id_socio_negocio').on('change',function () {
+        tiempos_productos();
+    });
+    if($('#fk_id_socio_negocio').val() > 0)
+        $('#fk_id_socio_negocio').trigger('change');
     totalOrden();
     if(window.location.href.toString().indexOf('editar') > -1 || window.location.href.toString().indexOf('crear') > -1 || window.location.href.toString().indexOf('solicitudOrden') > -1)
     {
@@ -496,3 +500,35 @@ Date.prototype.addDays = function(days) {
     this.setDate(this.getDate() + +days);
     return this;
 };
+
+function tiempos_productos() {
+    if(primeracarga && $('#productos tbody tr').length > 0) {
+        var skus = [];
+        var upcs = [];
+        $('#productos tbody tr').each(function () {
+            var sku = $(this).find('.fk_id_sku').val();
+            if($.inArray(sku,skus) == -1)
+                skus.push(sku);
+            var upc = $(this).find('.fk_id_upc').val();
+            if($.inArray(upc,upcs) == -1)
+                upcs.push(upc);
+        });
+        $.ajax({
+            url: $('#fk_id_upc').data('url-tiempo_entrega'),
+            data: {
+                'param_js': tiempo_entrega_js,
+                $fk_id_sku: skus.toString(),
+                $fk_id_socio_negocio: $('#fk_id_socio_negocio').val(),
+                $fk_id_upc: upcs.toString()
+            },
+            dataType: 'JSON',
+            success: function (tiempo_entrega) {
+                $('.tiempo_entrega').val(tiempo_entrega[0].tiempo_entrega);
+                tiemposentrega();
+            }
+        });
+        primeracarga = false;
+    }else{
+        primeracarga = false;
+    }
+}

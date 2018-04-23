@@ -1,4 +1,4 @@
-// Inicializar los datepicker para las fechas necesarias
+var primeracarga = true;
 $(document).ready(function(){
 
     $('[data-toggle]').tooltip();
@@ -107,6 +107,36 @@ $(document).ready(function(){
                 disabled:true,
                 placeholder: "Seleccione primero el proveedor..."
             });
+        }
+
+        if(primeracarga && $('#productos tbody tr').length > 0) {
+            var skus = [];
+            var upcs = [];
+            $('#productos tbody tr').each(function () {
+                var sku = $(this).find('.fk_id_sku').val();
+                if($.inArray(sku,skus) == -1)
+                    skus.push(sku);
+                var upc = $(this).find('.fk_id_upc').val();
+                if($.inArray(upc,upcs) == -1)
+                    upcs.push(upc);
+            });
+            $.ajax({
+                url: $('#fk_id_sku').data('url-tiempo_entrega'),
+                data: {
+                    'param_js': tiempo_entrega_js,
+                    $fk_id_sku: skus.toString(),
+                    $fk_id_socio_negocio: $(this).val(),
+                    $fk_id_upc: upcs.toString()
+                },
+                dataType: 'JSON',
+                success: function (tiempo_entrega) {
+                    $('.tiempo_entrega').val(tiempo_entrega[0].tiempo_entrega);
+                    tiemposentrega();
+                }
+            });
+            primeracarga = false;
+        }else{
+            primeracarga = false;
         }
     });
 
