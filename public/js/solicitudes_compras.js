@@ -334,7 +334,12 @@ function agregarProducto() {
         let totalImpuesto = total_impuesto();
         let id_upc = 0;
         let text_upc = 'UPC no seleccionado';
-        let proveedor =  $('#fk_id_proveedor').select2('data')[0].text.replace(/,/g ,"");
+        let proveedor = '';
+        let id_proveedor = '';
+        if($('#fk_id_proveedor option').lenght > 0) {
+            proveedor = $('#fk_id_proveedor').select2('data')[0].text.replace(/,/g, "");
+            id_proveedor = $('#fk_id_proveedor').val();
+        }
         if ($('#fk_id_upc').val()) {
             id_upc = $('#fk_id_upc').val();
             text_upc = $('#fk_id_upc').select2('data')[0].text;
@@ -349,7 +354,7 @@ function agregarProducto() {
             '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+ $('#fk_id_sku').val() +'"/>'+
             '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+ id_upc +'"/>'+
             '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_unidad_medida]" value="' + $('#fk_id_unidad_medida').val() + '" />'+
-            '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proveedor]" value="'+ $('#fk_id_proveedor').val() +'"/>'+
+            '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_proveedor]" value="'+ id_proveedor +'"/>'+
             '<input class="totalImpuestoThisRow" type="hidden" name="relations[has][detalle]['+row_id+'][impuesto_total]" value="'+ totalImpuesto +'"/>'+
             '<input type="hidden" name="relations[has][detalle]['+row_id+'][fecha_necesario]" value="'+ $('#fecha_necesario').val() +'"/></th>' +
         '<td>' + '<img style="max-height:40px" src="img/sku.png" alt="sku"/> ' + $('#fk_id_sku').select2('data')[0].text + '</td>' +
@@ -504,7 +509,7 @@ function validateDetail() {
     $('#fk_id_upc').rules('add',{
         required: true,
         messages:{
-            required: 'Selecciona un SKU'
+            required: 'Selecciona un UPC'
         }
     });
     $('#fk_id_proveedor').rules('add',{
