@@ -156,4 +156,5 @@ class RecetasController extends ControllerBase
             ->get()->pluck('localidad','id_localidad')->prepend('TODOS LOS CENTROS DE SALUD','-999');
 	    return json_encode($localidades->toJson());
 	}
+
 }

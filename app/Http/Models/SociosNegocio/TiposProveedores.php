@@ -28,7 +28,17 @@ class TiposProveedores extends ModelBase
         'tipo_proveedor' => 'Tipo Proveedor',
         'activo_text' => 'Estatus'
     ];
-   
+
+    /**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'tipo_proveedor' => ['required','max:50','regex:/^[a-zA-Z\s]+/']
+	];
+
+    protected $unique = ['tipo_proveedor'];
+
     public function socionegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_tipo_socio');
     }

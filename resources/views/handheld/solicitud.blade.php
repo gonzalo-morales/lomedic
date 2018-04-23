@@ -38,7 +38,7 @@
 					<label>Cantidad solicitada</label>
 				</td>
 				<td class="column left">
-					<input class="form-control readonly total_db" name="cantidad_solicitada_salida" type="text" value="{{ $solicitud->cantidad_solicitada_salida }}" readonly>
+					<input id="total_db" class="form-control readonly total_db" name="cantidad_solicitada_salida" type="text" value="{{ $solicitud->cantidad_solicitada_salida }}" readonly>
 				</td>
 			</tr>
 			<tr>
@@ -46,7 +46,7 @@
 					<label for="cantidad_escaneada">Cantidad escaneada</label>
 				</td>
 				<td class="column left">
-					<input class="form-control readonly" style="font-weight: 600;" id="cantidad_escaneada" name="cantidad_escaneada" type="text" value="{{ $solicitud->cantidad_escaneada }}" readonly>
+					<input class="form-control readonly" style="font-weight: 600;" id="cantidad_escaneada" name="cantidad_escaneada" type="text" value="{{ $solicitud->cantidad_escaneada ?? 0 }}" readonly>
 				</td>
 			</tr>
 			<tr>
@@ -70,10 +70,9 @@
 {!! Form::close() !!}
 
 <script type="text/javascript">
-	$(function(){
-		// Init
+	$(document).ready(function () {	
         $('#scan').focus();
-        
+        $('#submit').attr('disabled',true);
 		//Con esto evitamos que haga submit
 		$(document).on("keypress", "#form", function(event) {
 		    return event.keyCode != 13;
@@ -106,7 +105,7 @@
 							event.preventDefault();
 							$('#scan').val('').attr('disabled', true);
 						} else{
-							$('#scan').val('');		
+							$('#scan').val('');
 							$('#scan').focus();
 							//access `event.code` - barcode data
 							num = num + 1;
@@ -116,6 +115,7 @@
 							$('#upc').attr('style','color:black');
 							// alert('ya acabe')
 							$('#loading').hide();
+							$('#submit').attr('disabled',false);
 							$('#scan').val('').attr('disabled', false).focus();
 						}
 					} else {
@@ -127,14 +127,6 @@
 		    }
 
 		});
-
-        $('#form').on('submit', function(e){
-			if (num == 0) {
-				e.preventDefault();
-				alert('Para guardar es necesario que mínimo agregues un UPC');
-			}
-        });
-
 	});
 </script>
 @endsection

@@ -17,7 +17,7 @@
 @endsection
 
 @section('form-content')
-    {{ Form::setModel($data) }}
+	{{ Form::setModel($data) }}
     <div class="p-3 my-2">
         <div class="row">
         	<div class="col-sm-6 col-md-8 col-lg-9 row">
@@ -39,14 +39,20 @@
             			{{ Form::cText('* Descripcion Corta', 'descripcion_corta') }}
             		</div>
             	</div>
-            	<div class="col-sm-12 col-md-6 col-lg-2">
-            		{{ Form::cText('* Presentacion', 'presentacion') }}
+            	<div class="col-sm-12 col-md-6 col-lg-4">
+					<label>* Unidad Medida</label>
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							{{ Form::Number('presentacion', null,['class' => 'form-control input-group-text w-100', 'placeholder' => 'Ej: 100']) }}
+						</div>
+						{{ Form::cSelect('','fk_id_clave_medida', $clavemedida ?? [''], ['style' => 'min-width:100px;']) }}
+					</div>
             	</div>
-            	<div class="col-sm-12 col-md-6 col-lg-3">
+            	<div class="col-sm-12 col-md-6 col-lg-4">
             		<div class="form-group">
-            			{{ Form::cSelect('* Unidad Medida', 'fk_id_unidad_medida', $unidadmedida ?? [],['class'=>'select2']) }}
+            			{{ Form::cSelect('* Presentación', 'fk_id_unidad_medida', $unidadmedida ?? [],['class'=>'select2']) }}
             		</div>
-            	</div>
+				</div>
         	</div>
         	<div class="col-sm-6 col-md-4 col-lg-3 row">
             	<div class="col-sm-12">

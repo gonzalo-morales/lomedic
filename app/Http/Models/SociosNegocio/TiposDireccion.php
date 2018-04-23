@@ -29,6 +29,16 @@ class TiposDireccion extends ModelBase
         'activo_text' => 'Estatus'
     ];
 
+    /**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'tipo_direccion' => ['required','max:60','regex:/^[a-zA-Z\s]+/']
+	];
+
+    protected $unique = ['tipo_direccion'];
+
     public function direcciones(){
         return $this->hasOne(DireccionesSociosNegocio::class);
     }

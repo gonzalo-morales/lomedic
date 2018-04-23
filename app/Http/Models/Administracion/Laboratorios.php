@@ -35,7 +35,7 @@ class Laboratorios extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'laboratorio' => 'required|regex:/^[a-zA-Z\s]+/|max:255',
+		'laboratorio' => ['required','regex:/^[a-zA-Z\s]+/','max:150']
 	];
 
 	/**

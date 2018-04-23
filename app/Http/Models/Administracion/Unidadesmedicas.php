@@ -31,7 +31,7 @@ class UnidadesMedicas extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'nombre' => 'required|max:255|regex:/^[a-zA-Z\s]+/',
+		'nombre' => 'required|max:100|regex:/^[a-zA-Z\s]+/',
 	];
 
     protected $unique = ['nombre'];

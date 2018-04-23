@@ -163,7 +163,7 @@ class HandheldController extends Controller
 	{
 		return view('handheld.ordenes', [
 			'ordenes' => Ordenes::whereHas('detalle',function ($q){$q->whereRaw('cantidad - cantidad_recibida != 0');})->with('detalle')->where('fk_id_estatus_orden', 1)->get(),
-		]);
+			]);
 	}
 	public function orden(Request $request, $company, ordenes $orden)
 	{

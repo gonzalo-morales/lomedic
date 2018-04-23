@@ -377,7 +377,7 @@ class ModelBase extends Model
 	 */
 	public function getRulesDefaults()
 	{
-	    $types = ['Integer'=>'Integer','Numeric'=>'Digits','Date'=>'Date','Time'=>'Sometimes'];
+	    $types = ['Integer'=>'Integer','String'=>'String','Numeric'=>'Digits','Date'=>'Date','Time'=>'Sometimes'];
 	    $columns = $this->getConnection()->getDoctrineSchemaManager()->listTableDetails($this->getTable())->getColumns();
 
 	    $propertys = array_map(function($column) {
@@ -386,7 +386,8 @@ class ModelBase extends Model
 	            'type' => $column->getType(),
 	            'length' => !empty($column->getLength()) ? $column->getLength() : $column->getPrecision(),
 	            'decimal' => $column->getScale(),
-	            'comment'  => $column->getComment(),
+				'comment'  => $column->getComment(),
+				'pattern' => '[a-zA-ZñÑáéíóúÁÉÍÓÚ{0-9}\-\_\d\s]',
 	        ];
 	    }, $columns );
 
@@ -413,15 +414,18 @@ class ModelBase extends Model
                 }
                 elseif(in_array($type,['Decimal'])){
                     array_push($rules[$col],'regex:/^(\d{0,'.$prop['length'].'}(\.\d{0,'.$prop['decimal'].'})?)$/');
-                }
+				}
+				elseif(in_array($type,['String'])){
+					array_push($rules[$col],'regex:/^'.$prop['pattern'].'*$/');
+				}
                 elseif(!in_array($type,['Text','Date','DateTime'])) {
-                    array_push($rules[$col],'max:'.$prop['length']);
-                }
+					array_push($rules[$col],'max:'.$prop['length']);
+				}
 
                 if(isset($types[$type])) {
                     if($types[$type] == 'Digits') {
                         array_push($rules[$col],$types[$type].':'.$prop['decimal']);
-                    }
+					}
                     else {
                         array_push($rules[$col],$types[$type]);
                     }

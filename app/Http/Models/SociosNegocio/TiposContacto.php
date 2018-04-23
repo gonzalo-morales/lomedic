@@ -29,6 +29,16 @@ class TiposContacto extends ModelBase
         'activo_text' => 'Estatus'
     ];
 
+    /**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'tipo_contacto' => ['required','max:60','regex:/^[a-zA-Z\s]+/']
+	];
+
+    protected $unique = ['tipo_contacto'];
+
     public function contactos(){
         return $this->hasOne(ContactosSociosNegocio::class);
     }

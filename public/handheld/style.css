@@ -15,7 +15,7 @@ body{font-family: 'Arial, Helvetica, sans-serif';font-size: 14px;margin:5px;}
 .text-red{color:#dc3545;}
 .text-description{font-size:12px; font-style: italic; color:#3a3a3a;}
 /* Lista almacen */
-#navigation{display: block; width:100%;}
+#navigation{display: block; width:95%;}
 .list-item{display: block;width: 100%;margin: 0.2%;min-height: 34px;text-align: center;color: #111;overflow: hidden;z-index: 0;word-wrap: break-word;border:1px solid #f4f4f4;text-decoration: none;font-size: 14px;font-family: 'Arial, Helvetica, sans-serif';line-height: 30px;background-color: #007bff;color:#fff;}
 .list-item:active{background-color:#ccc;line-height: 30px;}
 .loadingData {position: absolute;z-index: 999;background: #000;top: 0;left: 0;}

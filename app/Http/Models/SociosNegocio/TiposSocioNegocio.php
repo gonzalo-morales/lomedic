@@ -29,6 +29,17 @@ class TiposSocioNegocio extends ModelBase
         'activo_text' => 'Estatus'
     ];
 
+    /**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+        'tipo_socio' => ['required','max:50','regex:/^[a-zA-Z\s]+/'],
+        'tipo' => ['required']
+	];
+
+    protected $unique = ['tipo_socio'];
+    
     public function socionegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');
     }

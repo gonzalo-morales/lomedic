@@ -89,15 +89,15 @@ class PedidosController extends ControllerBase
         $total = 0;
         $descuento_total = 0;
         foreach ($request->relations['has']['detalle'] as $detalle) {
-            $subtotal += $detalle->precio_unitario;
-            $total += $detalle->importe;
-            $descuento_total += $detalle->descuento;
+            $subtotal += $detalle['precio_unitario'];
+            $total += $detalle['importe'];
+            $descuento_total += $detalle['descuento'];
         }
 
         $request->request->set('subtotal',$subtotal);
         $request->request->set('total',$total);
         $request->request->set('descuento_total',$descuento_total);
-        #dd($request->all());
+        // dd($request->all());
         
         return parent::store($request, $company, $compact);
     }

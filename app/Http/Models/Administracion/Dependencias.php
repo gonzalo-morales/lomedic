@@ -30,7 +30,7 @@ class Dependencias extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-        'dependencia' => ['required','max:40','regex:/^[a-zA-Z\d\s]*$/'],
+        'dependencia' => ['required','max:40','regex:/^[a-zA-Z\d\s{0-9}]*$/'],
 	];
 
 	protected $unique = ['dependencia'];

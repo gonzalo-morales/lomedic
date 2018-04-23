@@ -52,8 +52,10 @@ $(document).ready(function () {
 	$('#fk_id_serie_sku').on('change', function() {
 		if($(this).val() == 1 || $(this).val() == '') {
 			$('#sku').val('');
+			$('#sku').attr('readonly',false)
 		}
 		else {
+			$('#sku').attr('readonly',true)
     		let url = $(this).data('url');
     
     		$.ajax({

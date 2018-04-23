@@ -30,7 +30,7 @@ class ModalidadesEntrega extends ModelBase
 	protected $fillable = ['modalidad_entrega','activo'];
 
     public $rules = [
-        'modalidad_entrega' => 'required|max:255'
+        'modalidad_entrega' => 'required|max:80'
     ];
 
 	public $niceNames = [

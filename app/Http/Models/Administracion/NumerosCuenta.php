@@ -31,7 +31,7 @@ class NumerosCuenta extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'numero_cuenta' => 'required|numeric|max:255',
+		'numero_cuenta' => 'required|numeric|max:60',
 		'fk_id_banco' => 'required|numeric',
 		'fk_id_empresa' => 'required|numeric',
 		'fk_id_sat_moneda' => 'required|numeric'
@@ -48,6 +48,7 @@ class NumerosCuenta extends ModelBase
 		'banco.razon_social' => 'Banco',
 		'moneda.descripcion' => 'Moneda',
 		'empresa.razon_social' => 'Empresa',
+		'activo_span' => 'Estatus'
 	];
 
 	/**

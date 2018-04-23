@@ -72,6 +72,7 @@ class ProductosController extends ControllerBase
         }
 
         return [
+            'clavemedida' => UnidadesMedidas::where('activo',1)->whereNotNull('clave')->pluck('clave','id_unidad_medida')->sortBy('clave'),
             'seriesku' => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('...',''),
             'unidadmedida' => UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida')->sortBy('nombre')->prepend('...',''),
             'subgrupo' => collect($subgrupos ?? [])->prepend('...','')->toArray(),

@@ -80,7 +80,7 @@ class RequisicionesHospitalarias extends ModelCompany
         'captura.nombre_corto' => 'Captura',
         'fecha_captura' => 'Fecha captura',
         'fecha_requerimiento' => 'Fecha requerimiento',
-        'estatus.estatus_requisicion_hospitalaria' => 'Estatus',
+        'activo_span' => 'Estatus',
     ];
 
     public function estatus()

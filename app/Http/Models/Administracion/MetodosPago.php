@@ -32,7 +32,7 @@ class MetodosPago extends ModelBase
 	 */
 	public $rules = [
 		'metodo_pago'	=> 'required|max:3',
-		'descripcion'	=> 'required|max:255',
+		'descripcion'	=> 'required|max:150',
 	];
 
     /**

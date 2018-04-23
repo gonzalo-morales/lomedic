@@ -1,11 +1,21 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
+
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Condiciones de pago')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nueva condición de pago')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar condición de pago')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'Condición de pago')
+@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-4 col-xs-12">
-    		{{ Form::cText('* Condicion Pago','condicion_pago') }}
+    		{{ Form::cText('* Condición pago','condicion_pago') }}
     	</div>
     	<div  class="col-md-8 text-center mt-4">
     		<div class="alert alert-warning" role="alert">

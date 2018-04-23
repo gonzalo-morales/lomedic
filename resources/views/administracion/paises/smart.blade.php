@@ -1,5 +1,15 @@
 @extends(smart())
-@section('content-width', 's12')
+@section('content-width')
+
+@if (Route::currentRouteNamed(currentRouteName('index')))
+    @section('form-title', 'Países')
+@elseif(Route::currentRouteNamed(currentRouteName('create')))
+    @section('form-title', 'Nuevo país')
+@elseif(Route::currentRouteNamed(currentRouteName('edit')))
+    @section('form-title', 'Editar país')
+@elseif(Route::currentRouteNamed(currentRouteName('show')))
+    @section('form-title', 'País')
+@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

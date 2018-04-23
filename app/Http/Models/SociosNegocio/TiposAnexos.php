@@ -29,6 +29,16 @@ class TiposAnexos extends ModelBase
         'activo_text' => 'Estatus'
     ];
 
+    /**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'tipo_anexo' => ['required','max:60','regex:/^[a-zA-Z\s]+/']
+	];
+
+    protected $unique = ['tipo_anexo'];
+
     public function anexos(){
         return $this->hasOne(AnexosSociosNegocio::class);
     }
