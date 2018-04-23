@@ -11,4 +11,10 @@ class AutorizacionesPolicy extends PolicyBase
     {
         return false;
     }
+
+    public function delete($usuario,$entity = null,$idOrIds = [])
+    {
+        return false;
+    }
+
 }

@@ -110,14 +110,14 @@
                                 <div id="loadingproveedor" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                     Cargando datos... <i class="material-icons align-middle loading">cached</i>
 								</div>
-                                {{Form::cSelect('* Proveedor','fk_id_proveedor',$proveedores ?? [],[
+                                {{Form::cSelect('Proveedor','fk_id_proveedor',$proveedores ?? [],[
 									'style' => 'width:100%;',
 									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
 									'data-url'=>companyAction('HomeController@index').'/sociosnegocio.sociosnegocio/api',
 								])}}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{{Form::cSelect('* Proyecto','fk_id_proyecto',$proyectos ?? [],[
+								{{Form::cSelect('Proyecto','fk_id_proyecto',$proyectos ?? [],[
 									'style' => 'width:100%;',
 									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
 									'data-url'=>companyAction('HomeController@index').'/sociosnegocio.sociosnegocio/api',

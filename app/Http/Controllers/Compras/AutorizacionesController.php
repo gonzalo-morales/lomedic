@@ -28,33 +28,7 @@ class AutorizacionesController extends ControllerBase
         $request->request->set('fk_id_documento',$entity->fk_id_documento);
         $request->request->set('fk_id_condicion',$entity->fk_id_condicion);
         $request->request->set('fk_id_tipo_documento',$entity->fk_id_tipo_documento);
-        # ¿Usuario tiene permiso para actualizar?
-        $this->authorize('update', $this->entity);
-
-        # Validamos request, si falla regresamos atras
-        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
-        DB::beginTransaction();
-        $entity->fill($request->all());
-        if ($entity->save()) {
-            DB::commit();
-            # Eliminamos cache
-            Cache::tags(getCacheTag('index'))->flush();
-
-            # Log
-            event(new LogModulos($entity, $company, 'editar', 'Registro actualizado'));
-
-            return \response()->json([
-                'status'=>'1'
-            ]);
-        } else {
-            DB::rollBack();
-
-            # Log
-            event(new LogModulos($entity, $company, 'editar', 'Error al actualizar el registro'));
-            return \response()->json([
-                'status'=>'0'
-            ]);
-        }
+        return parent::update($request,$company,$id,$compact);
     }
     
     public function destroy(Request $request, $company, $idOrIds, $attributes = ['fk_id_estatus'=>5])
