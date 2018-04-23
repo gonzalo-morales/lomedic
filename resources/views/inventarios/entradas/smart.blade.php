@@ -7,17 +7,6 @@
 @endsection
 @section('content-width', 's12')
 
-@if (Route::currentRouteNamed(currentRouteName('index')))
-@section('form-title', 'Requisiciónes hospitalarias')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-	@section('form-title', 'Nueva requisición hospitalaria')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-	@section('form-title', 'Editar requisición hospitalaria')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-	@section('form-title', 'Requisición hospitalaria')
-@endif
-
-
 @section('header-bottom')
 	@parent
 

@@ -15,7 +15,7 @@
 {{ Form::setModel($data) }}
 <div class="row">
 	<div class="form-group col-md-8 col-xs-12">
-		{{ Form::cText('* Nombre','nombre') }}
+		{{ Form::cText('* Unidad','nombre') }}
     </div>
 	<div class="form-group col-md-4 col-xs-12">
         {{ Form::cText('* Clave','clave') }}

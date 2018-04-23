@@ -35,7 +35,7 @@ class Impuestos extends ModelBase
     ];
 
     public $rules = [
-        'porcentaje'=> 'numeric',
+        'porcentaje'=> 'numeric|max:50',
         'impuesto' => 'required'
     ];
 

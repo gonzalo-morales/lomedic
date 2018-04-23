@@ -34,7 +34,7 @@ class FamiliasProductos extends ModelBase
 	public $rules = [
 		'descripcion' => 'required|max:100',
 //		'tipo_presentacion' => 'required',
-		'nomenclatura' => 'required|max:3',
+		'nomenclatura' => 'required|max:3'
 //		'fk_id_tipo_producto' => 'required',
 	];
 

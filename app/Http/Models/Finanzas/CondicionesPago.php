@@ -27,7 +27,7 @@ class CondicionesPago extends ModelBase
     protected $fillable = ['condicion_pago','activo'];
     
     protected $fields = [
-        'condicion_pago' => 'Condicion Pago',
+        'condicion_pago' => 'Condición pago',
         'activo_span' => 'Estatus'
     ];
 
