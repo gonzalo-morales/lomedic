@@ -37,7 +37,21 @@ class FacturasClientesDetalle extends ModelCompany
      * @var array
      */
     protected $fillable = [
-        
+        'fk_id_clave_producto_servicio',
+        'fk_id_clave_cliente',
+        'fk_id_sku',
+        'descripcion',
+        'fk_id_upc',
+        'fk_id_unidad_medida',
+        'cantidad',
+        'precio_unitario',
+        'descuento',
+        'fk_id_impuesto',
+        'impuesto',
+        'pedimento',
+        'cuenta_predial',
+        'importe',
+        'fk_id_moneda'
     ];
 
     public $niceNames =[];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ventas;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Administracion\Certificados;
 use App\Http\Models\Ventas\FacturasClientes;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\Sucursales;
@@ -22,6 +23,8 @@ use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Ventas\NotasCargoClientes;
 use App\Http\Models\Ventas\NotasCargoClientesDetalle;
 use App\Http\Models\Ventas\NotasCreditoClientes;
+use Carbon\Carbon;
+use function foo\func;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
@@ -43,6 +46,7 @@ class NotasCreditoClientesController extends ControllerBase
             $series = SeriesDocumentos::selectRaw('CONCAT(prefijo,\'-\',sufijo) as serie, id_serie as id_serie')->where('activo',1)->where('fk_id_tipo_documento',5)->where('fk_id_empresa',$entity->fk_id_empresa)->pluck('serie','id_serie');
         }
 
+//        dd(Certificados::whereRaw('\''.Carbon::now()->toDateTimeString().'\' >= fecha_expedicion AND \''.Carbon::now()->toDateTimeString().'\' <= fecha_vencimiento')->get());
         return [
             'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('...',''),
             'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa",$id_empresa]}], "limit": "1"'),
@@ -74,7 +78,17 @@ class NotasCreditoClientesController extends ControllerBase
             'js_impuestos' => Crypt::encryptString('
             "select":["id_impuesto","impuesto","tasa_o_cuota","porcentaje","descripcion"],
             "conditions":[{"where":["activo",1]},
-            {"whereNotNull":["tasa_o_cuota"]}]')
+            {"whereNotNull":["tasa_o_cuota"]}]'),
+            'js_certificados' => Crypt::encryptString('
+                "select": ["id_empresa"],
+                "conditions": [{"where": ["id_empresa",$id_empresa]}],
+                "with": ["certificados"],
+                "withFunction": [{
+                "certificados": {
+                    "selectRaw": ["id_certificado, no_certificado"],
+                    "whereRaw": ["('.Carbon::now().' > fecha_expedicion) AND ('.Carbon::now().' < fecha_vencimiento) AND (activo = 1)"]
+                    }
+            }]'),
         ];
     }
     

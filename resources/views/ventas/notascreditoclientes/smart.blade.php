@@ -17,6 +17,7 @@
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
     	var impuestos_js  = '{{ $js_impuestos ?? '' }}';
     	var action = '{{ $this_action }}';
+    	var certificados_js = '{{$js_certificados ?? ''}}';
 	</script>
 	@notroute(['index'])
 		{{ HTML::script(asset('js/ventas/notascreditoclientes.js')) }}
@@ -31,9 +32,12 @@
     			<h5 class="col-md-12 text-center">Emisor</h5>
         	</div>
         	<div class="card-body row">
-        		<div class="form-group col-md-8">
+        		<div class="form-group col-md-4">
         			{{Form::cSelect('* Empresa','fk_id_empresa', $empresas ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.empresas')])}}
         		</div>
+				<div class="form-group col-md-4">
+					{{Form::cSelect('* Certificado','fk_id_certificado',$certificados ?? [],['class'=>'select2','disabled','data-url'=>ApiAction('administracion.empresas')])}}
+				</div>
         		<div class="form-group col-md-4">
         			{{Form::cText('Rfc','rfc',['disabled'=>true])}}
         		</div>
@@ -317,7 +321,7 @@
 					<tr>
 						<th>TOTAL DESCUENTOS</th>
 						<td>
-							{{Form::hidden('descuento',number_format($data->descuento ?? null,2,'.',''))}}
+							{{Form::hidden('descuento',number_format($data->descuento ?? null,2,'.',''),['id'=>'descuento'])}}
 							<span id="descuento_span">{!! number_format($data->descuento ?? null,2,'.','')!!}</span>
 						</td>
 						<td>&nbsp;</td>

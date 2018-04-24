@@ -14,7 +14,7 @@ class FacturasProveedoresController extends Controller
 
     public function index()
     {
-        $facturas = FacturasProveedores::whereNull('no_poliza')->whereNotNull('uuid')->orderBy('id_factura_proveedor')->get();
+        $facturas = FacturasProveedores::whereNull('no_poliza')->whereNotNull('uuid')->orderBy('id_documento')->get();
         $facturas->map(function($factura){
             return $factura->notas;
         });
@@ -29,11 +29,11 @@ class FacturasProveedoresController extends Controller
                 $return->agrupadorsat = $factura->proveedor->cuentaproveedor->agrupadorcuenta;
             return $return;
         });
-//        foreach ($facturas as $factura){
-//            $factura->relaciones->map(function ($relacion){
-//                return $relacion->documento;
-//            });
-//        }
+        foreach ($facturas as $factura){
+            $factura->notas->map(function ($nota){
+                return $nota->documento;
+            });
+        }
         return response()->json(['status'=>200,'data'=>$facturas], 200);
     }
 }

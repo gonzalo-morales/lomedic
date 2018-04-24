@@ -13,13 +13,17 @@
     	var proyectos_js  = '{{ $js_proyectos ?? '' }}';
     	var sucursales_js = '{{ $js_sucursales ?? '' }}';
     	var contratos_js = '{{ $js_contratos ?? '' }}';
-    	var id_serie = {!! !isset($data->fk_id_serie) ? "''" : $data->fk_id_serie ?? "''"!!};
-    	var id_socio = {!! !isset($data->fk_id_socio_negocio) ? "''" : $data->fk_id_socio_negocio ?? "''"!!};
-    	var id_proyecto = {!! !isset($data->fk_id_proyecto) ? "''" : $data->fk_id_proyecto ?? "''"!!};
-    	var id_sucursal = {!! !isset($data->fk_id_sucursal) ? "''" : $data->fk_id_sucursal ?? "''"!!};
-    	var id_contrato = {!! !isset($data->fk_id_contrato) ? "''" : $data->fk_id_contrato ?? "''"!!};
+        var impuestos_js  = '{{ $js_impuestos ?? '' }}';
+    	var id_serie = '{!! !isset($data->fk_id_serie) ? "" : $data->fk_id_serie ?? ""!!}';
+    	var id_socio = '{!! !isset($data->fk_id_socio_negocio) ? "" : $data->fk_id_socio_negocio ?? ""!!}';
+    	var id_proyecto = '{!! !isset($data->fk_id_proyecto) ? "" : $data->fk_id_proyecto ?? ""!!}';
+    	var id_sucursal = '{!! !isset($data->fk_id_sucursal) ? "" : $data->fk_id_sucursal ?? ""!!}';
+    	var id_contrato = '{!! !isset($data->fk_id_contrato) ? "" : $data->fk_id_contrato ?? ""!!}';
     	var ver = @ver true; @else false; @endif
-    </script>
+        var certificados_js = '{{$js_certificados ?? ''}}';
+        var productos_js = '{{$js_productos ?? ''}}';
+
+	</script>
 	{{ HTML::script(asset('js/ventas/facturasclientes.js')) }}
 @endsection
 
@@ -31,9 +35,12 @@
     			<h5 class="col-md-12 text-center">Emisor</h5>
         	</div>
         	<div class="card-body row">
-        		<div class="form-group col-md-8">
-        			{{Form::cSelectWithDisabled('* Empresa','fk_id_empresa', $empresas ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.empresas')])}}
-        		</div>
+				<div class="form-group col-md-4">
+					{{Form::cSelect('* Empresa','fk_id_empresa', $empresas ?? [],['class'=>'select2','disabled'=>!Route::currentRouteNamed(currentRouteName('create')),'data-url'=>ApiAction('administracion.empresas')])}}
+				</div>
+				<div class="form-group col-md-4">
+					{{Form::cSelect('* Certificado','fk_id_certificado',$certificados ?? [],['class'=>'select2','disabled','data-url'=>ApiAction('administracion.empresas')])}}
+				</div>
         		<div class="form-group col-md-4">
         			{{Form::cText('Rfc','rfc',['disabled'=>true])}}
         		</div>
@@ -176,7 +183,7 @@
 							</td>
 							<td>
     							@if(!Route::currentRouteNamed(currentRouteName('view')))
-    							<button class="btn is-icon text-primary bg-white" type="button" data-tooltip="documento relacionado" data-delay="50" onclick="borrarContacto(this)"><i class="material-icons">delete</i></button>
+    							<button class="btn is-icon text-primary bg-white" type="button" data-tooltip="documento relacionado" data-delay="50" onclick="borrarFila(this,'cfdi')"><i class="material-icons">delete</i></button>
     							@endif
 							</td>
 						</tr>
@@ -202,10 +209,10 @@
     			<div  class="tab-pane active" id="concepto" role="tabpanel">
     				<div class="row py-2">
         				<div class="form-group col-md-6">
-                			{{Form::cSelectWithDisabled('* Producto','fk_id_producto', $productos ?? [], ['class'=>'select2','data-url'=>ApiAction('sociosnegocio.sociosnegocio')])}}
+                			{{Form::cSelectWithDisabled('* Producto','fk_id_producto', $productos ?? [], ['disabled','class'=>'select2','data-url'=>ApiAction('proyectos.claveclienteproductos')])}}
                 		</div>
                 		<div class="form-group col-md-6">
-                			{{Form::cSelectWithDisabled('* Descripcion','descripcion', $descripciones ?? [])}}
+                			{{Form::cSelectWithDisabled('* Descripcion','descripcion', $descripciones ?? [],['disabled','class'=>'select2','data-url'=>companyAction('descripciones')])}}
                 		</div>
                 		<div class="form-group col-md-3">
                 			{{Form::cNumber('* Cantidad','cantidad')}}
@@ -214,10 +221,10 @@
                 			{{Form::cNumber('* Precio Unitario','precio_unitario')}}
                 		</div>
                 		<div class="form-group col-md-3">
-                			{{Form::cNumber('* Descuento','descuento')}}
+                			{{Form::cNumber('* Descuento','descuento_producto')}}
                 		</div>
                 		<div class="form-group col-md-3">
-                			{{Form::cSelectWithDisabled('* Impuesto','fk_id_impuesto', $impuestos ?? [], ['class'=>'select2'])}}
+                			{{Form::cSelect('* Impuesto','fk_id_impuesto', $impuestos ?? [], ['class'=>'select2','data-url'=>ApiAction('administracion.impuestos')])}}
                 		</div>
                 		@if(!Route::currentRouteNamed(currentRouteName('view')))
                 		<div class="form-group col-md-12 my-2">
@@ -228,7 +235,6 @@
                 		@endif
                 	</div>
     			</div><!-- Fin TAB -->
-    			
     			<div  class="tab-pane" id="entrega" role="tabpanel">
     				<div class="row py-2">
                 		<div class="form-group col-md-3">
@@ -276,13 +282,14 @@
     		</div>
     	</div>
     	<div class="card-body row table-responsive">
-    		<table class="table highlight mt-3" id="tContactos">
+    		<table class="table highlight mt-3" id="tConceptos">
         		<thead>
     				<tr>
-    					<th>Clave Producto</th>
+						<th>Clave Producto</th>
     					<th>Codigo</th>
     					<th>Concepto</th>
     					<th>Unidad Medida</th>
+						<th>Moneda</th>
     					<th>Cantidad</th>
     					<th>Precio Unitario</th>
     					<th>Descuento</th>
@@ -298,13 +305,13 @@
     				@foreach($data->detalle->where('eliminar',0) as $key=>$detalle)
     				<tr>
     					<td>
-    						{!! Form::hidden('contactos['.$key.'][id_documento_detalle]',$detalle->id_documento_detalle,['class'=>'id_documento_detalle']) !!}
+    						{!! Form::hidden('relations[has][detalle]['.$key.'][id_documento_detalle]',$detalle->id_documento_detalle,['class'=>'id_documento_detalle']) !!}
     						{{$detalle->claveproducto->clave_producto_servicio}}
-    						{!! Form::hidden('contactos['.$key.'][fk_id_clave_producto_servicio]',$detalle->fk_id_clave_producto_servicio,['class'=>'fk_id_clave_producto_servicio']) !!}
+    						{!! Form::hidden('relations[has][detalle]['.$key.'][fk_id_clave_producto_servicio]',$detalle->fk_id_clave_producto_servicio,['class'=>'fk_id_clave_producto_servicio']) !!}
     					</td>
     					<td>
     						{{$detalle->productos->sku}}
-    						{!! Form::hidden('contactos['.$key.'][fk_id_sku]',$detalle->fk_id_sku) !!} 
+    						{!! Form::hidden('relations[has][detalle]['.$key.'][fk_id_sku]',$detalle->fk_id_sku) !!}
     					</td>
     					<td>
     						{{$detalle->upc->descripcion}}<br>
@@ -313,6 +320,9 @@
     					<td>
     						{{$detalle->unidadmedida->clave_unidad.' - '.$detalle->unidadmedida->descripcion}}
     					</td>
+						<td>
+							{{$detalle->moneda->moneda}}
+						</td>
     					<td>
     						{{$detalle->cantidad}}
     					</td>
@@ -336,7 +346,7 @@
     					</td>
     					<td>
         					@if(!Route::currentRouteNamed(currentRouteName('view')))
-        					<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarContacto(this)"> <i class="material-icons">delete</i></button>
+        					<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this,'total')"> <i class="material-icons">delete</i></button>
         					@endif
         				</td>
     				</tr>
@@ -345,48 +355,47 @@
     			</tbody>
     		</table>
     	</div>
-    	<div class="card-footer">
-    		<table class="table highlight mt-3 float-right w-25 text-right" id="tContactos">
-    			<tbody>
-    				
-    				<tr>
-    					<th>SUBTOTAL</th>
-    					<td>$ 11,000.00</td>
-    					<td>&nbsp;</td>
-    				</tr>
-    				<tr>
-    					<th>DESCUENTO GENERAL</th>
-    					<td>{{Form::cNumber('','descuento')}}</td>
-    					<td>&nbsp;</td>
-    				</tr>
-    				<tr>
-    					<th>TOTAL DESCUENTOS</th>
-    					<td>$ 1,000.00</td>
-    					<td>&nbsp;</td>
-    				</tr>
-    				<tr>
-    					<th>IMPUESTOS</th>
-    					<td>&nbsp;</td>
-    					<td>&nbsp;</td>
-    				</tr>
-    				<tr>
-    					<th class="pl-4">IVA 16%</th>
-    					<td>$ 1,600.00</td>
-    					<td>&nbsp;</td>
-    				</tr>
-    				<tr>
-    					<th class="pl-4">IEPS</th>
-    					<td>$ 1,000.00</td>
-    					<td>&nbsp;</td>
-    				</tr>
-    				<tr>
-    					<th>TOTAL</th>
-    					<td>$ 12,600.00</td>
-    					<td>&nbsp;</td>
-    				</tr>
-    			</tbody>
-    		</table>
-    	</div>
+		<div class="card-footer">
+			<table class="table highlight mt-3 float-right w-25 text-right" id="tContactos">
+				<tbody>
+				@notroute(['index'])
+				<tr>
+					<th>TOTAL DESCUENTOS</th>
+					<td>
+						{{Form::hidden('descuento',number_format($data->descuento ?? null,2,'.',''),['id'=>'descuento'])}}
+						<span id="descuento_span">{!! number_format($data->descuento ?? null,2,'.','')!!}</span>
+					</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<th>SUBTOTAL</th>
+					<td>{{Form::hidden('subtotal',number_format($data->subtotal ?? null,2,'.',''),['id'=>'subtotal'])}}<span id="subtotal_span">{{number_format($data->subtotal ?? null,2,'.','')}}</span></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr id="impuestos_factura" data-toggle="collapse" data-target="#impuestos_accordion" class="clickable">
+					<th><button type="button" data-tooltip="Ver descripción de impuestos" data-toggle="tooltip" title="Ver descripción de impuestos" class="btn btn-secondary is-icon"><i class="material-icons add">add</i></button> IMPUESTOS</th>
+					<td>{{Form::hidden('impuestos',null,['id'=>'impuestos'])}}<span id="impuesto_label">{{number_format($data->impuestos ?? null,2,'.','')}}</span></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<div id="impuestos_accordion" class="collapse">
+							<table id="impuestos_descripcion" class="w-100 text-right">
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>TOTAL</th>
+					<td>{{Form::hidden('total',null,['id'=>'total'])}}<span id="total_span">{{number_format($data->total ?? null,2,'.','')}}</span></td>
+					<td>&nbsp;</td>
+				</tr>
+				</tbody>
+				@endif
+			</table>
+		</div>
 	</div>
 @endsection
 

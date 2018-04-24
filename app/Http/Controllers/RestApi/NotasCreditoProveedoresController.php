@@ -16,7 +16,7 @@ class NotasCreditoProveedoresController extends Controller
 
     public function index()
     {
-        $notas = NotasCreditoProveedor::whereNull('no_poliza')->whereNotNull('uuid')->orderBy('id_nota_credito_proveedor')->get();
+        $notas = NotasCreditoProveedor::whereNull('no_poliza')->whereNotNull('uuid')->orderBy('id_documento')->get();
         $notas->map(function($nota){
            return $nota->detalle;
         });

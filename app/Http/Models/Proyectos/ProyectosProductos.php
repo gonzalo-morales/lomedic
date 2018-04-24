@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Proyectos;
 
+use App\Http\Models\Administracion\Monedas;
 use App\Http\Models\Inventarios\Upcs;
 use App\Http\Models\ModelCompany;
 use DB;
@@ -50,5 +51,10 @@ class ProyectosProductos extends ModelCompany
     function upc()
     {
         return $this->hasOne(Upcs::class,'id_upc','fk_id_upc');
+    }
+
+    function moneda()
+    {
+        return $this->hasOne(Monedas::class,'id_moneda','fk_id_moneda');
     }
 }

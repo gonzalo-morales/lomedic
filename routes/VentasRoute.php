@@ -15,13 +15,14 @@ Route::pattern('company', "($Conecctions)");
 Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'ventas', 'as' => 'ventas.', 'middleware' => ['auth','share','csrf','password_expired']], function() {
         Route::view("/","ventas.index");
-        
+
+        Route::post('descripciones','Ventas\FacturasClientesController@descripciones');
         Route::get('getProductosRelacionadosCredito','Ventas\NotasCreditoClientesController@getProductosRelacionados');
         Route::get('getProductosRelacionadosCargo','Ventas\NotasCargoClientesController@getProductosRelacionados');
         Route::get('pedidos/{id}/descargaranexo', 'Ventas\PedidosController@descargaranexo');
         Route::get('LayoutProductosPedidos','Ventas\PedidosController@layoutProductos');
         Route::post('ImportarProductosPedido','Ventas\PedidosController@importarProductos');
-        
+
         collect(\File::glob(app_path().'/Http/Controllers/Ventas/*Controller.php'))->map(function($file) {
             $name = strtolower(substr(basename($file),0,-14));
             $controller = basename(dirname($file)).'\\'.substr(basename($file),0,-4);

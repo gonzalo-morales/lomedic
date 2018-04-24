@@ -1,4 +1,4 @@
-var subtotal_original = 0;
+var carga = true;
 $(document).ready(function () {
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     $.ajax({
@@ -16,12 +16,14 @@ $(document).ready(function () {
     $('#fk_id_empresa').on('change', function() {
         let cliente = $('#fk_id_socio_negocio');
         let series = $('#fk_id_serie');
-        let val = $('#fk_id_empresa option:selected').val();
+        let certificado = $('#fk_id_certificado');
+        let val = $('#fk_id_empresa').val();
 
         if(!val) {
             $("#fk_id_socio_negocio option").remove();
             cliente.prop('disabled',true);
-            $("#fk_id_serie option").remove();
+            if(action != 'show' && carga == false)
+                $("#fk_id_serie option").remove();
             series.prop('disabled',true);
 
             $("#rfc").val('');
@@ -36,52 +38,57 @@ $(document).ready(function () {
             $("#fk_id_pais").val();
         }
         else {
-            $.ajax({
-                async: true,
-                url: cliente.data('url'),
-                data: {'param_js':clientes_js,$id_empresa:val},
-                dataType: 'json',
-                success: function (data) {
-                    $("#fk_id_socio_negocio option").remove();
-                    cliente.append('<option value="" disabled>Selecciona una Opcion...</option>')
-                    $.each(data, function(){
-                        cliente.append('<option value="'+this.id_socio_negocio+'">'+this.razon_social+'</option>')
-                    });
-                    cliente.val('');
-                    cliente.prop('disabled', (data.length == 0));
-                }
-            });
-
-            $.ajax({
-                async:true,
-                url: $(this).data('url'),
-                data: {'param_js':certificado_js,$id_empresa:val},
-                dataType: "json",
-                success: function (response) {
-                    if(response[0].certificados.length > 0){
-                        $('#certificado').val(response[0].certificados[0].id_certificado)
-                    } else{
-                        $('#certificado').val(0);
+            if(action != 'show' && carga == false) {
+                $.ajax({
+                    async: true,
+                    url: cliente.data('url'),
+                    data: {'param_js': clientes_js, $id_empresa: val},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#fk_id_socio_negocio option").remove();
+                        cliente.append('<option value="" disabled>Selecciona una Opción...</option>')
+                        $.each(data, function () {
+                            cliente.append('<option value="' + this.id_socio_negocio + '">' + this.razon_social + '</option>')
+                        });
+                        cliente.val('');
+                        cliente.prop('disabled', (data.length == 0));
                     }
-                }
-            });
-
-            $.ajax({
-                async: true,
-                url: series.data('url'),
-                data: {'param_js':series_js,$id_empresa:val},
-                dataType: 'json',
-                success: function (data) {
-                    $("#fk_id_serie option").remove();
-                    $.each(data, function(){
-                        series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
-                    });
-                    series.prop('disabled', (data.length == 0));
-                    series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
-                    series.val(0)
-                }
-            });
-
+                });
+                $.ajax({
+                    async: true,
+                    url: series.data('url'),
+                    data: {'param_js':series_js,$id_empresa:val},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#fk_id_serie option").remove();
+                        $.each(data, function(){
+                            series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
+                        });
+                        series.prop('disabled', (data.length == 0));
+                        series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
+                        series.val(0);
+                    }
+                });
+                $.ajax({
+                    async: true,
+                    url: certificado.data('url'),
+                    data: {'param_js': certificados_js, $id_empresa: val},
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data[0].certificados.length > 0) {
+                            $("#fk_id_certificado").empty().attr('disabled', false);
+                            certificado.append('<option value="" disabled>Selecciona una Opción...</option>')
+                            $.each(data[0].certificados, function (index, value) {
+                                certificado.append('<option value="' + value.id_certificado + '">' + value.no_certificado + '</option>')
+                            });
+                            certificado.val('');
+                            certificado.prop('disabled', (data.length == 0));
+                        }else{
+                            $.toaster({priority:'warning',title:'¡Oooops!',message:'No se encontraron certificados.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                        }
+                    }
+                });
+            }
             $.ajax({
                 url: $(this).data('url'),
                 data: {'param_js':empresa_js,$id_empresa:$(this).val()},
@@ -106,7 +113,7 @@ $(document).ready(function () {
     $('#fk_id_socio_negocio').on('change', function() {
         let proyecto = $('#fk_id_proyecto');
         let sucursal = $('#fk_id_sucursal');
-        let val = $('#fk_id_socio_negocio option:selected').val()
+        let val = $('#fk_id_socio_negocio').val();
 
         if(!val) {
             $("#fk_id_proyecto option").remove();
@@ -123,38 +130,39 @@ $(document).ready(function () {
                     $("#rfc_cliente").val(data[0].rfc);
                 }
             });
+            if(action != "show" && carga == false) {
+                $.ajax({
+                    async: true,
+                    url: proyecto.data('url'),
+                    data: {'param_js': proyectos_js, $fk_id_cliente: val},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#fk_id_proyecto option").remove();
+                        proyecto.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                        $.each(data, function () {
+                            proyecto.append('<option value="' + this.id_proyecto + '">' + this.proyecto + '</option>')
+                        });
+                        proyecto.val('');
+                        proyecto.prop('disabled', (data.length == 0));
+                    }
+                });
 
-            $.ajax({
-                async: true,
-                url: proyecto.data('url'),
-                data: {'param_js':proyectos_js,$fk_id_cliente:val},
-                dataType: 'json',
-                success: function (data) {
-                    $("#fk_id_proyecto option").remove();
-                    proyecto.append('<option value="" disabled>Selecciona una Opcion...</option>')
-                    $.each(data, function(){
-                        proyecto.append('<option value="'+ this.id_proyecto +'">'+ this.proyecto +'</option>')
-                    });
-                    proyecto.val('');
-                    proyecto.prop('disabled', (data.length == 0));
-                }
-            });
-
-            $.ajax({
-                async: true,
-                url: sucursal.data('url'),
-                data: {'param_js':sucursales_js,$fk_id_cliente:val},
-                dataType: 'json',
-                success: function (data) {
-                    $("#fk_id_sucursal option").remove();
-                    sucursal.append('<option value="" disabled>Selecciona una Opcion...</option>')
-                    $.each(data, function(){
-                        sucursal.append('<option value="'+this.id_sucursal+'">'+this.sucursal+'</option>')
-                    });
-                    sucursal.val('');
-                    sucursal.prop('disabled', (data.length == 0));
-                }
-            });
+                $.ajax({
+                    async: true,
+                    url: sucursal.data('url'),
+                    data: {'param_js': sucursales_js, $fk_id_cliente: val},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#fk_id_sucursal option").remove();
+                        sucursal.append('<option value="" disabled>Selecciona una Opcion...</option>')
+                        $.each(data, function () {
+                            sucursal.append('<option value="' + this.id_sucursal + '">' + this.sucursal + '</option>')
+                        });
+                        sucursal.val('');
+                        sucursal.prop('disabled', (data.length == 0));
+                    }
+                });
+            }
         }
     }).trigger('change');
 
@@ -172,18 +180,17 @@ $(document).ready(function () {
         $('#loadingfk_id_producto').show();
         var i = $('#detalleRelaciones tbody tr').length;
         var row_id = i > 0 ? +$('#detalleRelaciones tr:last').find('.index').val()+1 : 0;
-
         var id_tipo = $('#fk_id_tipo_relacion option:selected').val();
         var tipo_relacion = $('#fk_id_tipo_relacion option:selected').text();
         var tipo_documento = 0;
         var id_documento = 0;
         var documento = '';
-        if($('#fk_id_factura_relacion').val()){
+        if($('#fk_id_factura_relacion').val() > 0){
             tipo_documento = 4;
             id_documento = $('#fk_id_factura_relacion').val();
             documento = $('#fk_id_factura_relacion option:selected').text();
-        }else if($('#fk_id_nota_credito_relacion').val()){
-            tipo_documento = 6;
+        }else if($('#fk_id_nota_credito_relacion').val() > 0){
+            tipo_documento = 5;
             id_documento = $('#fk_id_nota_credito_relacion').val();
             documento = $('#fk_id_nota_credito_relacion option:selected').text();
         }
@@ -196,9 +203,9 @@ $(document).ready(function () {
         });
 
         if(!id_tipo || !id_documento) {
-            $.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el tipo de relacion y el documento a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            $.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el tipo de relacion y el documento a relacionar.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }else if(existe){
-            $.toaster({priority:'danger',title:'Â¡Error!',message:'Documento ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            $.toaster({priority:'danger',title:'¡Error!',message:'Documento ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
         else {
             $('#detalleRelaciones').append('<tr>'+
@@ -212,13 +219,13 @@ $(document).ready(function () {
                 '</td>'+
                 '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this,\'cfdi\')" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
                 '</tr>');
-            $.toaster({priority:'success',title:'Â¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+            $.toaster({priority:'success',title:'¡Correcto!',message:'La relacion se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             cargar_productos();
         }
         $('#loadingfk_id_producto').hide();
     });
 
-    $('#agregar-concepto').click(function () {
+    $('#agregar-concepto').on('click',function () {
         validateDetail();
         if($('#form-model').valid()){
             var existe = false;
@@ -245,15 +252,20 @@ $(document).ready(function () {
 
                 $('#tConceptos tbody').append(
                     '<tr>' +
-                    '<td><input type="hidden" class="index" value="'+row_id+'"><input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_base]" class="factura" value="'+producto.fk_id_documento+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_base]" class="tipo_documento" value="'+producto.fk_id_tipo_documento+'">'+producto.serie+'-'+producto.folio+'</td>' +
+                    '<td><input type="hidden" class="index" value="'+row_id+'">' +
+                    '<input type="hidden" class="detalle" value="'+$('#fk_id_producto').val()+'">' +
+                    '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_documento_base]" class="factura" value="'+producto.fk_id_documento+'">' +
+                    '<input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_tipo_documento_base]" class="tipo_documento" value="'+producto.fk_id_tipo_documento+'">' +
+                    producto.serie+'-'+producto.folio +
+                    '</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_producto_servicio]" value="'+producto.fk_id_clave_producto_servicio+'">'+producto.clave_producto_servicio+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_clave_cliente]" value="'+producto.fk_id_clave_cliente+'">'+producto.clave_producto_cliente+'</td>' +
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descripcion]" value="'+producto.descripcion+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+producto.id_upc+'">'+producto.descripcion+'</td>' +
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_sku]" value="'+producto.fk_id_sku+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][descripcion]" value="'+producto.descripcion+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_upc]" value="'+producto.fk_id_upc+'">'+producto.descripcion+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_unidad_medida]" value="'+producto.fk_id_unidad_medida+'">'+producto.unidad_medida+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][cantidad]" class="cantidad" value="'+cantidad+'">'+cantidad+'</td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][precio_unitario]" class="precio_unitario" value="'+precio_unitario+'">$'+precio_unitario+'</td>' +
-                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descuento]" class="descuento" value="'+descuento+'">'+descuento+'</td>' +
-                    '<td><input type="hidden" value="'+data_impuesto.descripcion+'" class="tipo_impuesto"><input type="hidden" class="porcentaje" value="'+data_impuesto.porcentaje+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="'+$('#fk_id_impuesto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][impuesto]" class="impuesto" value="'+impuesto_producto.toFixed(2	)+'"><span>'+$('#fk_id_impuesto option:selected').text()+'</span><br><span style="font-size: 11px"><b>$'+impuesto_producto.toFixed(2)+'<b/></span></td>' +
+                    '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][descuento]" class="descuento" value="'+descuento+'">$'+descuento+'</td>' +
+                    '<td><input type="hidden" value="'+data_impuesto.descripcion+'" class="tipo_impuesto"><input type="hidden" class="porcentaje" value="'+data_impuesto.porcentaje+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][fk_id_impuesto]" value="'+$('#fk_id_impuesto').val()+'"><input type="hidden" name="relations[has][detalle]['+row_id+'][impuesto]" class="impuesto" value="'+impuesto_producto.toFixed(2)+'"><span>'+$('#fk_id_impuesto option:selected').text()+'</span><br><span style="font-size: 11px"><b>$'+impuesto_producto.toFixed(2)+'<b/></span></td>' +
                     '<td><input type="text" name="relations[has][detalle]['+row_id+'][pedimento]" class="form-control pedimento"></td>' +
                     '<td><input type="text" name="relations[has][detalle]['+row_id+'][cuenta_predial]" class="form-control cuenta_predial"></td>' +
                     '<td><input type="hidden" name="relations[has][detalle]['+row_id+'][importe]" class="total" value="'+total+'">$'+total+'</td>' +
@@ -263,7 +275,7 @@ $(document).ready(function () {
                 total_factura();
                 limpiarCampos();
             }else{
-                $.toaster({priority:'danger',title:'Â¡Error!',message:'Producto ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                $.toaster({priority:'danger',title:'¡Error!',message:'Producto ya agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
                 limpiarCampos();
             }
         }
@@ -282,7 +294,7 @@ $(document).ready(function () {
     $(document).on('submit',function (e) {
         $.validator.addMethod('cuenta_predial',function (value,element) {
             return this.optional(element) || /^\d{1,150}$/g.test(value);
-        },'Verifica el formato de la cuenta predial (dÃ­gitos entre 1 y 150 caracteres)');
+        },'Verifica el formato de la cuenta predial (dígitos entre 1 y 150 caracteres)');
         $.validator.addMethod('pedimento',function (value,element) {
             return this.optional(element) || /^(\d{2}  \d{2}  \d{4}  \d{7})$/g.test(value);
         },'Verifica el formato del pedimento (XX  XX  XXXX  XXXXXXX). Recuerda que son dos espacios');
@@ -302,18 +314,32 @@ $(document).ready(function () {
             });
         }
 
+        if($('#tConceptos tbody tr').length < 1){
+            e.preventDefault();
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Por favor agrega al menos un producto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }
+        let factura = false;
+        let nota = false;
+        $('#tConceptos tbody tr').each(function (index,row) {
+            if($(row).find('.tipo_documento').val() == 4){//Si es factura
+                factura = true;
+            }else if($(row).find('.tipo_documento').val() == 5){
+                nota = true;
+            }
+        });
+        if(!factura || !nota){
+            e.preventDefault();
+            $.toaster({
+                priority: 'danger', title: '¡Error!', message: 'Por favor agrega al menos un producto de cada relación',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+            });
+        }
+
         if(+$('#descuento').val() > +$('#subtotal').val()){
             e.preventDefault();
             $.toaster({
                 priority: 'danger', title: '¡Error!', message: 'El descuento general no puede ser mayor al subtotal',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
-            });
-        }
-
-        if($('#tConceptos tbody tr').length == 0)
-        {
-            e.preventDefault();
-            $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Para guardar se requiere mínimo de un producto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
         }
     });
@@ -344,6 +370,11 @@ $(document).ready(function () {
             }
         });
     });
+    if(action == "edit"){
+        total_factura();
+        cargar_productos();
+    }
+    carga = false;
 });
 
 function borrarFila(el,tipo = null) {
@@ -365,7 +396,7 @@ function borrarFila(el,tipo = null) {
         default:
             break;
     }
-    $.toaster({priority:'success',title:'Â¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }
 
 function total_factura() {
@@ -385,7 +416,7 @@ function total_factura() {
         var porcentaje = +$(row).find('.porcentaje').val();
         var impuesto_temporal = [];
         total += +$(row).find('.total').val();
-        subtotal_factura += cantidad*precio_unitario;
+        subtotal_factura += (cantidad*precio_unitario)-descuento;
         descuento_factura += descuento;
 
         //Para impuestos dependiendo del tipo
@@ -408,13 +439,13 @@ function total_factura() {
             })
         }
     });
-    descuento_factura += +$('#descuento').val();//Total Descuentos
     //Subtotal
     $('#subtotal').val(subtotal_factura);
     $('#subtotal_span').text('$'+subtotal_factura);
 
     //Descuentos
-    $('#descuento_span').text('$'+descuento_factura);
+    $('#descuento_span').text('$'+descuento_factura.toFixed(2));
+    $('#descuento').val(descuento_factura.toFixed(2));
 
     var impuestos_html = '';
     var impuesto = 0;
@@ -432,12 +463,12 @@ function total_factura() {
     $('#impuestos').val(impuesto);
     $('#impuesto_label').text('$'+impuesto);
 
-    total = total - +$('#descuento').val();
-    total = total.toFixed(2);
+    // total = total - +$('#descuento').val();
+    // total = total.toFixed(2);
 
     //Total
-    $('#total').val(total);
-    $('#total_span').text('$'+total);
+    $('#total').val((+total + +impuesto).toFixed(2));
+    $('#total_span').text('$'+(+total + +impuesto).toFixed(2));
 }
 
 function cargar_productos() {
@@ -448,7 +479,7 @@ function cargar_productos() {
     $('#detalleRelaciones > tbody > tr').each(function (index,row) {
         if($(row).find('.tipo_documento').val() == 4){//Si es factura
             facturas.push(+$(this).find('input:last').val());
-        }else if($(row).find('.tipo_documento').val() == 6){//Si es nota de crÃ©dito
+        }else if($(row).find('.tipo_documento').val() == 5){//Si es nota de crédito
             notascredito.push(+$(this).find('input:last').val());
         }
 
@@ -490,7 +521,7 @@ function formatProducto (producto) {
         var tipo_documento = '';
         if(producto.fk_id_tipo_documento == 4){
             tipo_documento = "factura";
-        }else if(producto.fk_id_tipo_documento == 6){
+        }else if(producto.fk_id_tipo_documento == 5){
             tipo_documento = "nota de credito";
         }
 
@@ -521,13 +552,13 @@ function validateDetail() {
         range: [1,9999],
         messages:{
             required: 'Ingresa una cantidad',
-            number: 'El campo debe ser un nÃºmero',
-            range: 'El nÃºmero debe ser entre 1 y 9999'
+            number: 'El campo debe ser un número',
+            range: 'El número debe ser entre 1 y 9999'
         }
     });
     $.validator.addMethod('precio',function (value,element) {
         return this.optional(element) || /^\d{0,10}(\.\d{0,2})?$/g.test(value);
-    },'El precio no debe tener mÃ¡s de dos decimales');
+    },'El precio no debe tener más de dos decimales');
     $.validator.addMethod( "greaterThan", function( value, element, param ) {
         return value > param;
     }, "Please enter a greater value." );
@@ -538,9 +569,9 @@ function validateDetail() {
         greaterThan:0,
         messages:{
             required: 'Ingresa un precio unitario',
-            number: 'El campo debe ser un nÃºmero',
-            greaterThan: 'El nÃºmero debe ser mayor a 0',
-            precio: 'El precio no debe tener mÃ¡s de dos decimales'
+            number: 'El campo debe ser un número',
+            greaterThan: 'El número debe ser mayor a 0',
+            precio: 'El precio no debe tener más de dos decimales'
         }
     });
     $.validator.addMethod( "lessThan", function( value, element, param ) {
@@ -552,18 +583,9 @@ function validateDetail() {
         precio: true,
         lessThan: menorque,
         messages:{
-            greaterThan: 'El nÃºmero no debe ser menor a 0',
+            greaterThan: 'El número no debe ser menor a 0',
             lessThan: 'El descuento debe ser menor al precio por la cantidad',
-            precio: 'El precio no debe tener mÃ¡s de dos decimales y diez enteros'
-        }
-    });
-
-    $('#descuento').rules('add',{
-        precio: true,
-        greaterThan: -1,
-        messages: {
-            precio: 'El formato es invÃ¡lido',
-            greaterThan: 'El valor no puede ser negativo'
+            precio: 'El precio no debe tener más de dos decimales y diez enteros'
         }
     });
 }

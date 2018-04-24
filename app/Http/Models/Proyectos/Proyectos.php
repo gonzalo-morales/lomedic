@@ -62,13 +62,13 @@ class Proyectos extends ModelCompany
      * @var array
      */
     public $rules = [
-        'proyecto' => 'required|max:50',
-        'fk_id_cliente' => 'required',
-        'fecha_inicio' => 'required',
-        'fecha_terminacion' => 'required',
-        'fk_id_clasificacion_proyecto'=>'required',
-        'fk_id_estatus' => 'required',
-        'fk_id_localidad' => 'required'
+//        'proyecto' => 'required|max:50',
+//        'fk_id_cliente' => 'required',
+//        'fecha_inicio' => 'required',
+//        'fecha_terminacion' => 'required',
+//        'fk_id_clasificacion_proyecto'=>'required',
+//        'fk_id_estatus' => 'required',
+//        'fk_id_localidad' => 'required'
     ];
 
     public $fields = [

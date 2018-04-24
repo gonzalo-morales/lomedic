@@ -2,6 +2,11 @@
 namespace App\Http\Controllers\Ventas;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Inventarios\Cbn;
+use App\Http\Models\Inventarios\Productos;
+use App\Http\Models\Inventarios\Upcs;
+use App\Http\Models\Proyectos\ClaveClienteProductos;
+use App\Http\Models\Proyectos\ProyectosProductos;
 use App\Http\Models\Ventas\FacturasClientes;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\Sucursales;
@@ -18,12 +23,13 @@ use App\Http\Models\Administracion\SeriesDocumentos;
 use App\Http\Models\Administracion\Municipios;
 use App\Http\Models\Administracion\Estados;
 use App\Http\Models\Administracion\Paises;
-use App\Http\Models\Ventas\FacturasClientesDetalle;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use File;
 use App\Http\Models\Proyectos\ContratosProyectos;
+use App\Http\Models\Administracion\Impuestos;
 
 class FacturasClientesController extends ControllerBase
 {
@@ -35,7 +41,9 @@ class FacturasClientesController extends ControllerBase
 	public function getDataView($entity = null)
 	{
         return [
-            'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa'),
+            'empresas' => Empresas::where('activo',1)->orderBy('razon_social')->pluck('razon_social','id_empresa')->prepend('...',''),
+            'js_impuestos' => Crypt::encryptString('"select":["id_impuesto","impuesto","tasa_o_cuota","porcentaje","descripcion"],"conditions":[{"where":["activo",1]},{"whereNotNull":["tasa_o_cuota"]}]'),
+            'js_productos' => Crypt::encryptString('"select":["id_clave_cliente_producto as id","clave_producto_cliente as text","*"],"withFunction":[{"proyectoproducto":{"where":{["fk_id_proyecto",$id_proyecto]},"with":["moneda:id_moneda,moneda"]}}],"with":["impuesto:id_impuesto,impuesto","claveproductoservicio:id_clave_producto_servicio,clave_producto_servicio","claveunidad:id_clave_unidad,descripcion,clave_unidad"],"whereHas":[{"proyectos":{"where":["id_proyecto",$id_proyecto]}}]'),
             'js_empresa' => Crypt::encryptString('"conditions": [{"where": ["id_empresa","$id_empresa"]}]'),
             'regimens' => RegimenesFiscales::where('activo',1)->select('regimen_fiscal','id_regimen_fiscal')->orderBy('regimen_fiscal')->pluck('regimen_fiscal','id_regimen_fiscal'),
             'series' => SeriesDocumentos::select('prefijo','id_serie')->where('activo',1)->where('fk_id_tipo_documento',4)->pluck('prefijo','id_serie'),
@@ -62,6 +70,16 @@ class FacturasClientesController extends ControllerBase
             'usoscfdi' => UsosCfdis::where('activo',1)->selectRaw("CONCAT(uso_cfdi,' - ',descripcion) as uso_cfdi, id_uso_cfdi")->orderBy('uso_cfdi')->pluck('uso_cfdi','id_uso_cfdi'),
             'tiposrelacion' => TiposRelacionesCfdi::where('activo',1)->selectRaw("CONCAT(tipo_relacion,' - ',descripcion) as tipo_relacion, id_sat_tipo_relacion")->where('factura',1)->orderBy('tipo_relacion')->pluck('tipo_relacion','id_sat_tipo_relacion'),
             'facturasrelacionadas' =>FacturasClientes::selectRaw("CONCAT(serie,'-',folio,'  [',uuid,']') as factura, id_documento")->where('fk_id_estatus',3)->whereNotNull('uuid')->orderBy('factura')->pluck('factura','id_documento'),
+            'js_certificados' => Crypt::encryptString('
+                "select": ["id_empresa"],
+                "conditions": [{"where": ["id_empresa",$id_empresa]}],
+                "with": ["certificados"],
+                "withFunction": [{
+                "certificados": {
+                    "selectRaw": ["id_certificado, no_certificado"],
+                    "whereRaw": ["('.Carbon::now().' > fecha_expedicion) AND ('.Carbon::now().' < fecha_vencimiento) AND (activo = 1)"]
+                    }
+            }]'),
         ];
     }
     
@@ -70,35 +88,42 @@ class FacturasClientesController extends ControllerBase
         $return = parent::store($request, $company, $compact);
         
         $datos = $return["entity"];
-        
+
         if($datos) {
-            $id = $datos->id_documento;
-            $xml = generarXml($this->datos_cfdi($id));
-            
+            $xml = generarXml($this->datos_cfdi($datos->id_documento));
+
             if(!empty($xml)) {
                 $request->request->add(['xml_original'=>$xml]);
             }
-            
+
             if($request->timbrar == true && !empty($xml))
                 $timbrado = timbrar($xml);
-                
-            if(isset($timbrado) && $timbrado->status == '200') {
-                if(in_array($timbrado->resultados->status,['200','307'])) {
+
+            if(isset($timbrado) && $timbrado->return->status == '200') {
+                if(in_array($timbrado->return->resultados->status,['200','307'])) {
                     $request->request->add([
-                        'cadena_original'=>$timbrado->resultados->cadenaOriginal,
-                        'certificado_sat'=>$timbrado->resultados->certificadoSAT,
-                        'xml_timbrado'=>$timbrado->resultados->cfdiTimbrado,
-                        'fecha_timbrado'=>str_replace('T',' ',substr($timbrado->resultados->fechaTimbrado,0,19)),
-                        'sello_sat'=>$timbrado->resultados->selloSAT,
-                        'uuid'=>$timbrado->resultados->uuid,
-                        'version_tfd'=>$timbrado->resultados->versionTFD,
-                        'codigo_qr'=>base64_encode($timbrado->resultados->qrCode),
+                        'cadena_original'=>$timbrado->return->resultados->cadenaOriginal,
+                        'certificado_sat'=>$timbrado->return->resultados->certificadoSAT,
+                        'xml_timbrado'=>$timbrado->return->resultados->cfdiTimbrado,
+                        'fecha_timbrado'=>str_replace('T',' ',substr($timbrado->return->resultados->fechaTimbrado,0,19)),
+                        'sello_sat'=>$timbrado->return->resultados->selloSAT,
+                        'uuid'=>$timbrado->return->resultados->uuid,
+                        'version_tfd'=>$timbrado->return->resultados->versionTFD,
+                        'codigo_qr'=>base64_encode($timbrado->return->resultados->qrCode),
+                        'fk_id_estatus_cfdi' => 2
                     ]);
                 }
+                else
+                    return parent::redirect('error_timbre');
             }
+            else
+                return parent::redirect('error_timbre');
+            if(isset($request->relations))
+                unset($request['relations']);
+
             $request->request->set('save',true);
-            
-            $return = parent::update($request, $company, $id, $compact);
+            $id = $datos->id_documento;
+            $return = parent::update($request, $company, $id, true);
         }
         return $return["redirect"];
     }
@@ -108,35 +133,39 @@ class FacturasClientesController extends ControllerBase
         $return = parent::update($request, $company, $id, $compact);
         
         $datos = $return["entity"];
-        
+
         if($datos && $request->save !== true)
         {
-            $xml = generarXml($this->datos_cfdi($id));
-            
+            $xml = generarXml($this->datos_cfdi($datos->id_documento));
+
             if(!empty($xml)) {
                 $request->request->add(['xml_original'=>$xml]);
             }
 
             #dd($xml['xml']);
-            
+            $timbrado = null;
             if($request->timbrar == true && !empty($xml))
                 $timbrado = timbrar($xml);
-            
-            if(isset($timbrado) && $timbrado->status == '200') {
-                if(in_array($timbrado->resultados->status,['200','307'])) {
+
+            if(isset($timbrado) && $timbrado->return->status == '200') {
+                if(in_array($timbrado->return->resultados->status,['200','307'])) {
                     $request->request->add([
-                        'cadena_original'=>$timbrado->resultados->cadenaOriginal,
-                        'certificado_sat'=>$timbrado->resultados->certificadoSAT,
-                        'xml_timbrado'=>$timbrado->resultados->cfdiTimbrado,
+                        'cadena_original'=>$timbrado->return->resultados->cadenaOriginal,
+                        'certificado_sat'=>$timbrado->return->resultados->certificadoSAT,
+                        'xml_timbrado'=>$timbrado->return->resultados->cfdiTimbrado,
                         'fecha_timbrado'=>str_replace('T',' ',substr($timbrado->resultados->fechaTimbrado,0,19)),
-                        'sello_sat'=>$timbrado->resultados->selloSAT,
-                        'uuid'=>$timbrado->resultados->uuid,
-                        'version_tfd'=>$timbrado->resultados->versionTFD,
-                        'codigo_qr'=>base64_encode($timbrado->resultados->qrCode),
+                        'sello_sat'=>$timbrado->return->resultados->selloSAT,
+                        'uuid'=>$timbrado->return->resultados->uuid,
+                        'version_tfd'=>$timbrado->return->resultados->versionTFD,
+                        'codigo_qr'=>base64_encode($timbrado->return->resultados->qrCode),
+                        'fk_id_estatus_cfdi' => 2
                     ]);
                 }
                 else
-                    dd($timbrado);
+                    return parent::redirect('error_timbre');
+            }
+            else{
+                return parent::redirect('error_timbre');
             }
             $request->request->set('save',true);
             $return = parent::update($request, $company, $id, $compact);
@@ -282,5 +311,38 @@ class FacturasClientesController extends ControllerBase
             }
         }
         return $return;
+    }
+
+    public function descripciones()
+    {
+        $fk_id_cliente = \request()->fk_id_cliente;
+        $id_clave_cliente_producto = \request()->id_clave_cliente_producto;
+
+        $fk_id_sku = ClaveClienteProductos::find($id_clave_cliente_producto)->fk_id_sku;
+
+        $sku_descripcion = Productos::select('descripcion')->where('id_sku',$fk_id_sku)->whereNotNull('descripcion');
+        $sku_descripcion_cenefas = Productos::select('descripcion_cenefas')->where('id_sku',$fk_id_sku)->whereNotNull('descripcion_cenefas');
+        $sku_descripcion_ticket = Productos::select('descripcion_ticket')->where('id_sku',$fk_id_sku)->whereNotNull('descripcion_ticket');
+        $sku_descripcion_rack = Productos::select('descripcion_rack')->where('id_sku',$fk_id_sku)->whereNotNull('descripcion_rack');
+        $sku_descripcion_cbn = Productos::select('descripcion_cbn')->where('id_sku',$fk_id_sku)->whereNotNull('descripcion_cbn');
+        $upc_descripcion = Upcs::select('descripcion')->whereHas('skus',function ($query) use($fk_id_sku){
+            $query->where('id_sku',$fk_id_sku);
+        })->whereNotNull('descripcion');
+        $cbn_descripcion = Cbn::select('descripcion')->whereHas('skus',function ($query) use ($fk_id_sku){
+            $query->where('id_sku',$fk_id_sku);
+        })->whereNotNull('descripcion');
+        $clave_cliente = ClaveClienteProductos::
+        select('descripcion')
+            ->where('fk_id_cliente',$fk_id_cliente)
+            ->where('fk_id_sku',$fk_id_sku)
+            ->union($sku_descripcion)
+            ->union($sku_descripcion_cenefas)
+            ->union($sku_descripcion_ticket)
+            ->union($sku_descripcion_rack)
+            ->union($sku_descripcion_cbn)
+            ->union($upc_descripcion)
+            ->union($cbn_descripcion)
+            ->get();
+        return $clave_cliente;
     }
 }

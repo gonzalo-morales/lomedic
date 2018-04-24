@@ -16,6 +16,7 @@ $(document).ready(function () {
 	$('#fk_id_empresa').on('change', function() {
 		let cliente = $('#fk_id_socio_negocio');
 		let series = $('#fk_id_serie');
+		let certificado = $('#fk_id_certificado');
 		let val = $('#fk_id_empresa').val();
 
 		if(!val) {
@@ -53,24 +54,41 @@ $(document).ready(function () {
                         cliente.prop('disabled', (data.length == 0));
                     }
                 });
+                $.ajax({
+                    async: true,
+                    url: series.data('url'),
+                    data: {'param_js':series_js,$id_empresa:val},
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#fk_id_serie option").remove();
+                        $.each(data, function(){
+                            series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
+                        });
+                        series.prop('disabled', (data.length == 0));
+                        series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
+                        series.val(0);
+                    }
+                });
+                $.ajax({
+                    async: true,
+                    url: certificado.data('url'),
+                    data: {'param_js': certificados_js, $id_empresa: val},
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data[0].certificados.length > 0) {
+                            $("#fk_id_certificado").empty().attr('disabled', false);
+                            certificado.append('<option value="" disabled>Selecciona una Opción...</option>')
+                            $.each(data[0].certificados, function (index, value) {
+                                certificado.append('<option value="' + value.id_certificado + '">' + value.no_certificado + '</option>')
+                            });
+                            certificado.val('');
+                            certificado.prop('disabled', (data.length == 0));
+                        }else{
+                            $.toaster({priority:'warning',title:'¡Oooops!',message:'No se encontraron certificados.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+                        }
+                    }
+                });
             }
-    		if(action != 'show' && carga == false)
-				$.ajax({
-					async: true,
-					url: series.data('url'),
-					data: {'param_js':series_js,$id_empresa:val},
-					dataType: 'json',
-					success: function (data) {
-						$("#fk_id_serie option").remove();
-						$.each(data, function(){
-							series.append('<option value="'+this.id_serie+'">'+this.prefijo+(this.sufijo ? ' - '+this.sufijo :'')+'</option>')
-						});
-						series.prop('disabled', (data.length == 0));
-						series.prepend('<option value="0" disabled selected>Seleccione una serie...</option>')
-						series.val(0);
-					}
-				});
-
     		$.ajax({
 			    url: $(this).data('url'),
 			    data: {'param_js':empresa_js,$id_empresa:$(this).val()},
@@ -303,12 +321,21 @@ $(document).ready(function () {
             });
 		}
 
-		if(+$('#descuento').val() > +$('#subtotal').val()){
-			e.preventDefault();
+        let factura = false;
+        let nota = false;
+        $('#tConceptos tbody tr').each(function (index,row) {
+            if(row.find('.tipo_documento').val() == 4){//Si es factura
+                factura = true;
+            }else if(row.find('.tipo_documento').val() == 6){
+                nota = true;
+            }
+        });
+        if(!factura || !nota){
+            e.preventDefault();
             $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'El descuento general no puede ser mayor al subtotal',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: '¡Error!', message: 'Por favor agrega al menos un producto de cada relación',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
-		}
+        }
     });
     $("#fk_id_factura_relacion").on('select2:selecting',function() {
     	$('#fk_id_nota_cargo_relacion').val(0).trigger('change');
