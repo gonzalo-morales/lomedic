@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Agrupadores de cuentas')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo agrupador de cuenta')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar agrupador de cuenta')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Agrupador de cuenta')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

@@ -5,7 +5,6 @@
 	<link rel="stylesheet" href="{{ asset('css/pickadate/default.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/pickadate/default.date.css') }}">
 @endsection
-@section('content-width', 's12')
 
 @section('header-bottom')
 	@parent

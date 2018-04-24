@@ -6,14 +6,6 @@
 	<script type="text/javascript" src="{{ asset('js/seguimiento.js') }}"></script>
 @endsection
 
-@section('form-title')
-	@if(Route::currentRouteNamed(currentRouteName('create')))
-		{{ HTML::tag('h4', 'Nueva Solicitud',['class'=>'display-4']) }}
-	@else
-    	{{ HTML::tag('h4', 'Datos de la Solicitud',['class'=>'display-4']) }}
-    @endif
-@endsection
-
 @section('form-header')
 @if(Route::currentRouteNamed(currentRouteName('show')))
     {!! Form::open(['method'=>'put', 'url' => companyRoute('update'), 'id' => 'form-model', 'class' => 'mb-3']) !!}

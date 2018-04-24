@@ -1,14 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-@section('form-title', 'Series para Skus')
-
-@if(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo serie para Skus')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar serie para Skus')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Serie para Skus')
-@endif
 
 @section('header-bottom')
     @parent

@@ -9,7 +9,6 @@
 	@endif
 @endsection
 
-@section('content-width', 's12')
 
 @section('form-content')
 {{ Form::setModel($data) }}
@@ -213,13 +212,6 @@
 {{-- DONT DELETE --}}
 
 @if (currentRouteName('solicitudOrden'))
-@section('form-title')
-	<h1 class="display-4">Agregar Orden de Compra</h1>
-@endsection
+	@section('form-title','Agregar Orden de Compra')
 	@include('layouts.smart.create')
 @endif
-
-
-{{--@if (currentRouteName('createSolicitudOrden'))--}}
-	{{--@include('layouts.smart.create')--}}
-{{--@endif--}}

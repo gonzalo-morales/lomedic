@@ -1,15 +1,11 @@
 
-@section('content-width', 's12 m7 xl8 offset-xl2')
 
 @section('header-bottom')
     @parent
     <script type="text/javascript" src="{{asset('js/surtirReceta.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/toaster.js')}}"></script>
 @endsection
-    @section('title', currentEntityBaseName() . '@Surtir')
 
-    @section('form-title', 'Surtir
-     '. str_singular(currentEntityBaseName()))
 
     @section('form-content')
         {{ Form::setModel($receta) }}

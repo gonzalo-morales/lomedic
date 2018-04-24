@@ -1,6 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-@section('form-title', 'Ordenes de Compra')
 
 @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
@@ -592,24 +590,9 @@
 	@endsection
 @endif
 
-@if (Route::currentRouteNamed(currentRouteName('create')))
-@section('form-title')
-	<h1 class="display-4">Agregar Orden de Compra</h1>
-@endsection
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@section('form-title')
-		<h1 class="display-4">Editar Orden de Compra</h1>
-	@endsection
-@endif
-
 @if (Route::currentRouteNamed(currentRouteName('show')))
 	@section('extraButtons')
 		@parent
 		{!!isset($data->id_documento) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_documento]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
-	@endsection
-	@section('form-title')
-		<h1 class="display-4">Datos de la Orden de Compra</h1>
 	@endsection
 @endif

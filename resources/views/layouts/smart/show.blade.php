@@ -1,6 +1,6 @@
 @extends('layouts.smart.create')
 
-@section('title', currentEntityBaseName().' '.cTrans('titles.show','Ver'))
+@section('title', cTrans('titles.show','Ver').' '.str_singular(cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName()))))
 
 @section('fieldset', 'disabled')
 
@@ -33,5 +33,5 @@
 @endsection
 
 @section('form-title')
-    {{ HTML::tag('h1',cTrans('titles.show','Ver').' '.str_singular(currentEntityBaseName()),['class' => 'display-4']) }}
+    {{ HTML::tag('h1',cTrans('titles.show','Nuevo').' '.str_singular(cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName()))),['class' => 'display-4']) }}
 @endsection

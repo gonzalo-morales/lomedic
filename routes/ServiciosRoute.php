@@ -13,7 +13,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::group(['prefix' => 'servicios', 'as' => 'servicios.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
+    Route::group(['prefix' => 'servicios', 'as' => 'servicios.', 'middleware' => ['auth','csrf','password_expired'] ], function() {
         Route::view("/","servicios.index");
 	    Route::post('getAfiliados','Servicios\RecetasController@getAfiliados')->name('recetas.getAfiliados');
         Route::post('getProyectos','Servicios\RecetasController@getProyectos')->name('recetas.getProyectos');

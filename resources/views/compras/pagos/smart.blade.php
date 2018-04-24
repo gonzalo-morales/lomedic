@@ -1,5 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
 
 @section('header-bottom')
 	@parent
@@ -138,19 +137,3 @@
     	</div>
     </div>
 @endsection
-
-@index
-	@section('form-title','Pagos')
-@endif
-
-@crear
-	@section('form-title','Agregar Pago')
-@endif
-
-@editar
-	@section('form-title','Editar Pago')
-@endif
-
-@ver
-	@section('form-title','Pago')
-@endif

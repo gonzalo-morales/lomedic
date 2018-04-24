@@ -1,5 +1,4 @@
 @extends(smart())
-@section('content-width')
 
 @section('form-content')
 	{{ Form::setModel($data) }}

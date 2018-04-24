@@ -1,6 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-@section('form-title', 'Facturas de Clientes')
 
 @section('header-bottom')
 	@parent

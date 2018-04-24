@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Conceptos viaje')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo concepto viaje')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar concepto viaje')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Concepto viaje')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

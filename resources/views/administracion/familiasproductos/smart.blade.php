@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Familias de productos')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nueva familia del producto')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar familia del producto')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Familia del producto')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

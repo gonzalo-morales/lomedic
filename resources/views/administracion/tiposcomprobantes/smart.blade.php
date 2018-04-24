@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Tipos de comprobantes')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo tipo de comprobantes')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar tipo de comprobantes')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Tipo de comprobantes')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

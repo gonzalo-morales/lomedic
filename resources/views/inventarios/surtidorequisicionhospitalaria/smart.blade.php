@@ -1,16 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Surtidos de requisiciónes hospitalarias')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo surtido de requisición hospitalaria')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar surtido de requisición hospitalaria')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Surtido de equisición hospitalaria')
-@endif
-
 
 @section('header-bottom')
     @parent

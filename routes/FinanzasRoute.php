@@ -15,7 +15,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::group(['prefix' => 'finanzas', 'as' => 'finanzas.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
+    Route::group(['prefix' => 'finanzas', 'as' => 'finanzas.', 'middleware' => ['auth','csrf','password_expired'] ], function() {
         Route::view("/","finanzas.index");
         
         collect(\File::glob(app_path().'/Http/Controllers/Finanzas/*Controller.php'))->map(function($file) {

@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Métodos de pago')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo método de pago')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar método de pago')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Método de pago')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

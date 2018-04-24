@@ -1,9 +1,10 @@
 @extends('layouts.dashboard')
 
-@section('title', currentEntityBaseName().' '.cTrans('titles.create','Nuevo'))
+@section('title', cTrans('titles.create','Nuevo').' '.str_singular(cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName()))))
+@section('content-width', 'col-md-12')
 
 @section('form-header')
-	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col-md-12 col-xs-12', 'enctype' => 'multipart/form-data']) !!}
+	{!! Form::open(['url' => companyRoute('index'), 'id' => 'form-model', 'class' => 'col-md-12', 'enctype' => 'multipart/form-data']) !!}
 @endsection
 
 @section('header-bottom')
@@ -14,7 +15,7 @@
 @endsection
 
 @section('form-actions')
-	<div class="col-12">
+	<div class="col-md-12">
 		<div class="text-right">
 			@yield('left-actions')
 			{{ Form::button(cTrans('forms.save','Guardar'), ['type' =>'submit', 'class'=>'btn btn-primary progress-button']) }}
@@ -25,7 +26,7 @@
 @endsection
 
 @section('form-title')
-	{{ HTML::tag('h1',cTrans('titles.create','Nuevo').' '.str_singular(currentEntityBaseName()),['class' => 'display-4']) }}
+	{{ HTML::tag('h1',cTrans('titles.create','Nuevo').' '.str_singular(cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName()))),['class' => 'display-4']) }}
 @endsection
 
 @section('content')
@@ -40,7 +41,7 @@
     	@endif
     		<div class="row">
     			@yield('form-actions')
-				<div class="col-12">
+				<div class="col-md-12">
 					<fieldset @yield('fieldset')>
 						{{ Form::hidden(array_keys(is_array($data) ? $data : $data->toarray())[0]) }}
 						@yield('form-content')

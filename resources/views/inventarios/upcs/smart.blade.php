@@ -1,5 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
 
 @section('header-bottom')
     @parent

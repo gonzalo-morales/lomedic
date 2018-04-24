@@ -13,7 +13,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::group(['prefix' => 'handheld', 'as' => 'handheld.', 'middleware' => ['auth','share','csrf','password_expired'] ], function() {
+    Route::group(['prefix' => 'handheld', 'as' => 'handheld.', 'middleware' => ['auth','csrf','password_expired'] ], function() {
         Route::view("/","handheld.home");
         
 		Route::post('inventarios/{inventario}/detalle', 'HandheldController@inventario_detalle')->name('inventarios-inventario-detalle');

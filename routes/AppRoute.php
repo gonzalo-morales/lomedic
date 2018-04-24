@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,21 +47,21 @@ Route::get('token', function () {
 
 Route::prefix('{company}')->group(function () {
     Route::get('/phpinfo', function () { phpinfo(); });
-    Route::resource('/', 'HomeController', ['middleware' => ['auth','share','csrf','password_expired']]);
+    Route::resource('/', 'HomeController', ['middleware' => ['auth','csrf','password_expired']]);
     Route::get('lang/{locale}', function ($locale) {
         Session::put('locale', $locale);
         return redirect()->back();
     });
-    Route::get('/password/expired', 'Auth\ExpiredPasswordController@expired')->name('password.expired')->middleware(['share','csrf']);
-    Route::post('password/reset', 'Auth\ExpiredPasswordController@reset')->name('password.reset')->middleware(['share','csrf']);
+        Route::get('/password/expired', 'Auth\ExpiredPasswordController@expired')->name('password.expired')->middleware(['auth','csrf']);
+        Route::post('password/reset', 'Auth\ExpiredPasswordController@reset')->name('password.reset')->middleware(['auth','csrf']);
 });
 
-Route::group(['prefix' => '{company}/{entity}', 'middleware' => ['auth','share','password_expired']], function($co) {
+Route::group(['prefix' => '{company}/{entity}', 'middleware' => ['auth','password_expired']], function($co) {
 	Route::resource('api', 'APIController');
 });
 
 
-Route::group(['prefix' => '{company}/wsdl/{service}', 'middleware' => ['auth','share','password_expired']], function($co) {
+Route::group(['prefix' => '{company}/wsdl/{service}', 'middleware' => ['auth','password_expired']], function($co) {
     $uri = request()->path();
     $service = substr($uri,strripos($uri,'/')+1);
 
@@ -81,5 +80,4 @@ Route::group(['prefix' => '{company}/wsdl/{service}', 'middleware' => ['auth','s
         }
         $server->handle();
     }
-    
 });

@@ -1,5 +1,5 @@
 @extends(smart())
-@section('form-title', 'Solicitudes de Compra')
+
 @php($menuempresa = dataCompany())
 
 {{--  @section('header-top')
@@ -533,14 +533,6 @@
 	@endsection
 @endif
 
-@crear
-	@section('form-title','Agregar Solicitud')
-@endif
-
-@editar
-	@section('form-title','Editar Solicitud')
-@endif
-
 @ver
 	@section('extraButtons')
 		@parent
@@ -550,5 +542,4 @@
 			{!! HTML::decode(link_to(url($menuempresa->conexion.'/compras/solicitudes/'.$data->id_documento.'/ofertas/crear'),'<i class="material-icons align-middle">attach_money</i> Oferta',['class'=>'btn btn-info'])) !!}
 		@endif
 	@endsection
-	@section('form-title','Datos de la Solicitud')
 @endif

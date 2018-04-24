@@ -1,5 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
 
 @index
 	@section('title', 'Cuadro Basico Nacional')

@@ -21,4 +21,6 @@ return [
     'reset_password' => 'Reset Password',
     'change_password' => 'You must change your password',
     'svg' => 'Your browser does not support SVG',
+    'load' => 'Loading  information!',
+    'wait' => 'Please Wait...',
 ];

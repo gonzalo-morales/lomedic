@@ -13,7 +13,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::group(['prefix' => 'soporte', 'as' => 'soporte.', 'middleware' => ['auth','share','csrf','password_expired']], function(){
+    Route::group(['prefix' => 'soporte', 'as' => 'soporte.', 'middleware' => ['auth','csrf','password_expired']], function(){
         Route::get('solicitudes/asignadas', 'Soporte\SolicitudesController@index_tecnico')->name('solicitudes.index_tecnico');
         Route::get('solicitudes/disponibles', 'Soporte\SolicitudesController@index_tecnicos')->name('solicitudes.index_tecnicos');
         Route::get('solicitudes/{id}/acciones', 'Soporte\SolicitudesController@obtenerAcciones');

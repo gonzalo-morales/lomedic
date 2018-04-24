@@ -1,6 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-@section('form-title', 'Notas de Cargo de Clientes')
 
 @section('header-bottom')
     @php

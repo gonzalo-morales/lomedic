@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Indicaciones terapéuticas')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nueva indicación terapéutica')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar indicación terapéutica')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Indicación terapéutica')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}
