@@ -13,7 +13,7 @@ $Conecctions = implode('|',array_keys(config('database.connections')));
 Route::pattern('company', "($Conecctions)");
 
 Route::prefix('{company}')->group(function () {
-    Route::group(['prefix' => 'compras', 'as' => 'compras.', 'middleware' => ['auth','share','csrf','password_expired']], function(){
+    Route::group(['prefix' => 'compras', 'as' => 'compras.', 'middleware' => ['auth','csrf','password_expired']], function(){
         Route::group(['prefix'=>'{id}/{tipo_documento}'], function (){
             Route::resource('solicitudes','Compras\SolicitudesController',['only'=>['create']]);
         });
