@@ -73,7 +73,7 @@
     				</div>
     				<div class="row">
     					<div class="form-group col-md-3">
-                			{{Form::cText('No. Evento','num_evento')}}
+                			{{Form::cText('No. Evento','num_evento',['maxlength' => '30'])}}
                 		</div>
                 		<div class="form-group col-md-3">
                 			{{Form::cSelectWithDisabled('Tipo Evento','fk_id_tipo_evento', $tiposeventos ?? [],['class'=>'select2'])}}
@@ -99,9 +99,9 @@
     							<label for="tope_pena_convencional" class="float-right">Tope Pena Convencional</label>
     						</div>
     						<div class="input-group">
-    							<input name="pena_convencional" id="pena_convencional" type="number" class="form-control">
+    							<input name="pena_convencional" id="pena_convencional" type="number" class="form-control" max="100">
     							<span class="input-group-addon">%</span>
-    							<input name="tope_pena_convencional" id="tope_pena_convencional" type="number" class="form-control">
+    							<input name="tope_pena_convencional" id="tope_pena_convencional" type="number" class="form-control" max="100">
     							<span class="input-group-addon">%</span>
     						</div>
     					</div>

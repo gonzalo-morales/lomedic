@@ -33,9 +33,9 @@ class ClasificacionesProyectos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-        'clasificacion' => 'required',
-        'nomenclatura' => 'required|alpha',
-        'fk_id_tipo_proyecto' => 'required',
+        'clasificacion' => 'required|max:80',
+        'nomenclatura' => 'required|alpha|max:15',
+        'fk_id_tipo_proyecto' => 'required'
 	];
 
 	/**
@@ -43,7 +43,7 @@ class ClasificacionesProyectos extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-        'clasificacion' => 'Aplicación',
+        'clasificacion' => 'Clasificación',
         'nomenclatura' => 'Nomenclatura',
         'activo_span' => 'Estatus'
 	];

@@ -34,7 +34,7 @@ class Proyectos extends ModelCompany
      */
     protected $fillable = ['proyecto','fk_id_cliente','fecha_inicio','fecha_terminacion','fk_id_clasificacion_proyecto',
         'fk_id_estatus','fk_id_localidad','num_evento','fk_id_tipo_evento','fk_id_dependencia','fk_id_subdependencia',
-        'fk_id_sucursal','fk_id_caracter_evento','fk_id_forma_adjudicacion','fk_id_modalidad_entrega'];
+        'fk_id_sucursal','fk_id_caracter_evento','fk_id_forma_adjudicacion','fk_id_modalidad_entrega','pena_convencional','tope_pena_convencional'];
 
     public $niceNames =[
         'fk_id_cliente'=>'cliente',
@@ -68,7 +68,7 @@ class Proyectos extends ModelCompany
         'fecha_terminacion' => 'required',
         'fk_id_clasificacion_proyecto'=>'required',
         'fk_id_estatus' => 'required',
-        'fk_id_localidad' => 'required',
+        'fk_id_localidad' => 'required'
     ];
 
     public $fields = [
