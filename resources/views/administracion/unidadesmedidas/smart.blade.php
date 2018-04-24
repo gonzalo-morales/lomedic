@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Unidades de medida')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nueva unidad de medida')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar unidad de medida')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Unidad de medida')
-@endif
 
 @section('form-content')
 {{ Form::setModel($data) }}

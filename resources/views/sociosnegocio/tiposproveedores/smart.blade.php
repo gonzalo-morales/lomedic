@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Tipos de proveedor')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo tipo de proveedor')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar tipo de proveedor')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Tipo de proveedor')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

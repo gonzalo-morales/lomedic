@@ -1,5 +1,5 @@
 @extends(smart())
-@section('content-width', 's12')
+
 @section('header-bottom')
 	@parent
 	{{ HTML::script(asset('js/clave_cliente_producto.js')) }}
@@ -10,6 +10,7 @@
         var clave_unidad_js = '{{$js_clave_unidad ?? ''}}';
 	</script>
 @endsection
+
 @section('form-content')
 	{{ Form::setModel($data) }}
     <div class="row">

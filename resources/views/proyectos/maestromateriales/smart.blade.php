@@ -1,5 +1,4 @@
 @extends(smart())
-@section('content-width', 'w-100')
 
 @section('header-top')
 	{{ HTML::style(asset('vendor/vanilla-dataTables/vanilla-dataTables.css')) }}

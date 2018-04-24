@@ -1,13 +1,11 @@
+@extends(smart())
+
 @section('header-bottom')
     @parent
-
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
         <script type="text/javascript" src="{{ asset('js/vales.js') }}"></script>
     @endif
-
 @endsection
-
-@section('content-width', 's12')
 
 @if(!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('create')))
     @section('left-actions')
@@ -159,27 +157,3 @@
 
 @endsection
 @endif
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('create')))
-    @include('layouts.smart.create')
-@endif
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-    @include('layouts.smart.edit')
-@endif
-@if (Route::currentRouteNamed(currentRouteName('surtir')))
-    @include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-    @include('layouts.smart.show')
-@endif
-@if (Route::currentRouteNamed(currentRouteName('export')))
-    @include('layouts.smart.export')
-@endif
-
-
-

@@ -1,5 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
 
 @section('header-bottom')
 	@parent
@@ -260,7 +259,6 @@
 @endsection
 
 @index
-	@section('form-title','Solicitudes pagos')
 	@section('smart-js')
     	<script type="text/javascript">
             if ( sessionStorage.reloadAfterPageLoad ) {
@@ -382,14 +380,6 @@
 	@endsection
 @endif
 
-@crear
-	@section('form-title','Agregar Solicitud Pago')
-@endif
-
-@editar
-	@section('form-title','Editar Solicitud Pago')
-@endif
-
 @ver
 	@section('form-actions')
 		@if($data->fk_id_estatus_solicitud_pago == 1)
@@ -399,5 +389,4 @@
 
 		@endif
 	@endsection
-	@section('form-title','Solicitud Pago')
 @endif

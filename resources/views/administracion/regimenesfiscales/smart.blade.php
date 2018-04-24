@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Regímenes fiscales')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo regímen fiscal')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar regímen fiscal')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Regímen fiscal')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

@@ -5,7 +5,6 @@
 	{{-- @endif --}}
 @endsection
 
-@section('content-width', 's12')
 
 @section('form-content')
 {{-- {{ Form::setModel($data) }} --}}

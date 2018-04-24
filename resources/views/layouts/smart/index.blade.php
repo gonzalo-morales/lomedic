@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
 
-@section('title', currentEntityBaseName())
+@section('title', cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName())))
 
-@section('form-title', str_singular(currentEntityBaseName()))
+@section('form-title', cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName())))
 
 
 @section('header-top')
@@ -171,8 +171,8 @@
     		<div class="col-sm-12">
     			@if(config('view.load_data'))
     			<div id="loadingActions" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-            		<h4 style="margin-top:5%">Cargando informacion!</h4>
-            		<h5>Espere... <i class="material-icons align-middle loading">cached</i></h5>
+            		<h4 style="margin-top:5%">{!! cTrans('messages.load','Cargando informacion!') !!}</h4>
+            		<h5>{!! cTrans('messages.wait','Espere...') !!} <i class="material-icons align-middle loading">cached</i></h5>
             	</div>
             	@endif
     			<section id="smart-view" class="row" data-primary-key="{{ currentEntity()->getKeyName() }}" data-columns="{{ json_encode(array_keys($fields)) }}" data-item-create-url="{{ companyRoute('create') }}" data-item-show-or-delete-url="{{ companyRoute('show', ['id' => '#ID#']) }}" data-item-update-url="{{ companyRoute('edit', ['id' => '#ID#']) }}" data-item-export-url="{{companyRoute('export', ['type' => '_ID_'])}}">

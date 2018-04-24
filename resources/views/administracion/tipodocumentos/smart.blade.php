@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Tipos de documento')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo tipo de documento')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar tipo de documento')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Tipo de documento')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

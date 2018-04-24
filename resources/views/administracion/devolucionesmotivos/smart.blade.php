@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Motivos de devoluciones')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo motivo de devolución')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar motivo de devolución')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Motivo de devolución')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

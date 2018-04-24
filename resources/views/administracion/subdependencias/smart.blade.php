@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Subdependencias')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo subdependencia')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar subdependencia')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Subdependencia')
-@endif
 
 @section('form-content')
 	{{ Form::setModel($data) }}

@@ -1,6 +1,6 @@
 @extends('layouts.smart.create')
 
-@section('title', currentEntityBaseName().' '.cTrans('titles.edit','Editar'))
+@section('title', cTrans('titles.edit','Editar').' '.str_singular(cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName()))))
 
 @section('form-header')
     {!! Form::open(['method'=>'put', 'url' => companyRoute('update'), 'id' => 'form-model', 'class' => 'col-md-12', 'enctype' => 'multipart/form-data']) !!}
@@ -18,5 +18,5 @@
 @endsection
 
 @section('form-title')
-    {{ HTML::tag('h1',cTrans('titles.edit','Editar').' '.str_singular(currentEntityBaseName()),['class' => 'display-4']) }}
+    {{ HTML::tag('h1',cTrans('titles.edit','Editar').' '.str_singular(cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName()))),['class' => 'display-4']) }}
 @endsection

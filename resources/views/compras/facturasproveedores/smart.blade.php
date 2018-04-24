@@ -1,5 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
 
 @section('header-bottom')
 	@parent
@@ -434,7 +433,6 @@
 
 {{-- DONT DELETE --}}
 @index
-	@section('form-title','Facturas de Proveedores')
     @section('smart-js')
     	<script type="text/javascript">
             if ( sessionStorage.reloadAfterPageLoad ) {
@@ -554,16 +552,4 @@
             };
     	</script>
     @endsection
-@endif
-
-@crear
-	@section('form-title','Agregar Factura de Proveedor')
-@endif
-
-@editar
-	@section('form-title','Editar Factura de Proveedor')
-@endif
-
-@ver
-	@section('form-title','Factura de Proveedor')
 @endif

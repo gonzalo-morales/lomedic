@@ -1,22 +1,11 @@
+@extends(smart())
+
 @section('header-bottom')
     @parent
-
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
         <script type="text/javascript" src="{{ asset('js/surtidoreceta.js') }}"></script>
     @endif
-
 @endsection
-@section('content-width', 's12')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Surtidos de recetas')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo surtido de receta')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar surtido de receta')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Surtido de receta')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}
@@ -145,36 +134,4 @@
                     {{--</div>--}}
                 {{--</div>--}}
             </div>
-
-
 @endsection
-{{-- DONT DELETE --}}
-@if (Route::currentRouteNamed(currentRouteName('create')))
-    @include('layouts.smart.create')
-@endif
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    {{--@section('title', 'Requisiciones Hospitalarias')--}}
-@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-    @include('layouts.smart.edit')
-@endif
-@if (Route::currentRouteNamed(currentRouteName('surtir')))
-    @include('layouts.smart.edit')
-    {{--<script>--}}
-        {{--var detalle_requisicion = {!!json_encode($detalle_requisicion)!!};--}}
-    {{--</script>--}}
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', ' Datos de las Requisiciones Hospitalarias')
-@include('layouts.smart.show')
-
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('export')))
-    @include('layouts.smart.export')
-@endif
-
-

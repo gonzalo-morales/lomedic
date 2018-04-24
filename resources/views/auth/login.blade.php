@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', cTrans('titles.login','Iniciar Sessión'))
+@section('title', cTrans('titles.login','Iniciar Sessiï¿½n'))
 
 @section('content')
 <div class="container">
@@ -12,7 +12,7 @@
     		@endforeach
     	</div>
 		<div class="card card-block text-center" style="background: rgba(0,0,0,0.3);">
-        	<h4 class="mt-3 text-white">{{ cTrans('messages.welcome','¡Bienvenido!') }}</h4>
+        	<h4 class="mt-3 text-white">{{ cTrans('messages.welcome','ï¿½Bienvenido!') }}</h4>
 			{!! Form::open(['route' => 'login', 'id' => 'form-login', 'class' => 'card-body center']) !!}
     			<div class="container-fluid">
     				<div class="form-group">
@@ -32,7 +32,7 @@
     						<span class="input-group-addon" id="username">
         						<i class="material-icons prefix">vpn_key</i>
                             </span>
-    						{{ Form::password('password', ['id'=>'password','class'=>'validate form-control','placeholder'=>'* '.cTrans('forms.password','Contraseña')]) }}
+    						{{ Form::password('password', ['id'=>'password','class'=>'validate form-control','placeholder'=>'* '.cTrans('forms.password','Contraseï¿½a')]) }}
     					</div>
                             {{ $errors->has('password') ? HTML::tag('span', $errors->first('password'), ['class'=>'form-text text-white bg-danger p-1 m-0 rounded-bottom']) : '' }}
     				</div>
@@ -47,7 +47,7 @@
     					</div>
     				</div>
     				<div class="form-group">
-    					<small><a class='card-link text-white' href="{{ route('password.request') }}"><b>{{ cTrans('forms.fgpassword','¿Olvidaste contraseña?') }}</b></a></small>
+    					<small><a class='card-link text-white' href="{{ route('password.request') }}"><b>{{ cTrans('forms.fgpassword','ï¿½Olvidaste contraseï¿½a?') }}</b></a></small>
     				</div>
     			</div>
 			{!! Form::close() !!}

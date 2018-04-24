@@ -1,16 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Afliados')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nuevo afiliado')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar afiliado')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Afiliado')
-@endif
 
 @section('header-bottom')
     @parent

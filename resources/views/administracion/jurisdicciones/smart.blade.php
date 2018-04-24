@@ -1,15 +1,4 @@
 @extends(smart())
-@section('content-width', 's12')
-
-@if (Route::currentRouteNamed(currentRouteName('index')))
-    @section('form-title', 'Jurisdicciones')
-@elseif(Route::currentRouteNamed(currentRouteName('create')))
-    @section('form-title', 'Nueva jurisdicción')
-@elseif(Route::currentRouteNamed(currentRouteName('edit')))
-    @section('form-title', 'Editar jurisdicción')
-@elseif(Route::currentRouteNamed(currentRouteName('show')))
-    @section('form-title', 'Jurisdicción')
-@endif
 
 @section('form-content')
     {{ Form::setModel($data) }}

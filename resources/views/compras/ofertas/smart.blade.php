@@ -1,5 +1,4 @@
 @extends(smart())
-@section('form-title', 'Ofertas de Compra')
 @php($menuempresa = dataCompany())
 
 @section('header-top')
@@ -20,7 +19,6 @@
 	@endif
 @endsection
 
-@section('content-width', 's12')
 
 @section('form-content')
     {{ Form::setModel($data) }}
@@ -488,19 +486,10 @@
     @endsection
 @endif
 
-@crear
-	@section('form-title','Agregar Oferta de Compra')
-@endif
-
-@editar
-	@section('form-title','Editar Oferta de Compra')
-@endif
-
 @ver
 	@section('extraButtons')
 		@parent
 		{!!isset($data->id_documento) ? HTML::decode(link_to(companyAction('impress',['id'=>$data->id_documento]), '<i class="material-icons align-middle">print</i> Imprimir', ['class'=>'btn btn-info imprimir'])) : ''!!}
 		{!! $data->fk_id_estatus_oferta == 1 ? HTML::decode(link_to(url($menuempresa->conexion.'/compras/'.$data->id_documento.'/2/ordenes/crear'), '<i class="material-icons align-middle">shopping_cart</i> Ordenar', ['class'=>'btn btn-info imprimir'])) : '' !!}
 	@endsection
-@section('form-title','Datos de la Oferta de Compra')
 @endif

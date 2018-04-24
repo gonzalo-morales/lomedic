@@ -1,3 +1,5 @@
+{{ @extends(smart()) }}
+
 {{-- @section('header-bottom')
 	@parent
 	@if (!Route::currentRouteNamed(currentRouteName('index')))
@@ -5,11 +7,6 @@
 	@endif
 @endsection
 
-@section('content-width', 's12') --}}
-
-{{-- @extends(smart()) --}}
-@section('content-width', 's12')
-@section('form-title', 'Seguimiento Desviación')
 
 {{-- @section('header-top')
 	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
@@ -234,31 +231,4 @@
 			@endcan
 		</script>
 	@endsection
-
-
-	@section('form-title')
-		<h1 class="display-4">Seguimiento Desviación</h1>
-	@endsection
-	@include('layouts.smart.index')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('create')))
-	@section('form-title')
-		<h1 class="display-4">Seguimiento Desviación</h1>
-	@endsection
-	@include('layouts.smart.create')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('edit')))
-	@section('form-title')
-		<h1 class="display-4">Seguimiento Desviación</h1>
-	@endsection
-	@include('layouts.smart.edit')
-@endif
-
-@if (Route::currentRouteNamed(currentRouteName('show')))
-	@section('form-title')
-		<h1 class="display-4">Seguimiento Desviación</h1>
-	@endsection
-	@include('layouts.smart.show')
 @endif
