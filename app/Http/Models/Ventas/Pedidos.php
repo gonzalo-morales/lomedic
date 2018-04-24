@@ -46,7 +46,8 @@ class Pedidos extends ModelCompany
         'descuento_total', 
         'fk_id_moneda',
         'fecha_limite',
-        'fecha_pedido'
+        'fecha_pedido',
+        'no_pedido'
     ];
 
     public $niceNames =[];

@@ -88,7 +88,7 @@ $(document).ready(function () {
 				}
     		});
 		}
-	}).trigger('change');
+	});
 
 	$('#activo_upc').on('change',function () {
         if( !this.checked ){

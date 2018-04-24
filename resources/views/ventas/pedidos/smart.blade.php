@@ -46,7 +46,8 @@
 		
 		<div class="card col-lg-4 row ml-3 mt-3">
 			<div class="card-header row">
-				<h3 class="col-sm-12 text-center">{{ isset($data->id_pedido) ? 'No. Pedido '.$data->id_pedido : ''}}</h3>
+				<h3 class="col-sm-12 text-center">{{ isset($data->id_documento) ? 'No. Pedido '.$data->id_documento : ''}}</h3>
+				{{-- {{dump($data)}} --}}
         	</div>
         	<div class="card-body row">
         		<div class="form-group col-md-12 col-xs-12">
