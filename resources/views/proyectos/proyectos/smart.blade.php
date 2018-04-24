@@ -125,10 +125,10 @@
                 			<div class="card-header">
         						<div class="row">
         							<div class="form-group col-lg-3 col-md-6">
-                            			{{Form::cText('* Representante legal','representante_legal',['maxlength'=>'200'])}}
+                            			{{Form::cText('* Representante legal','representante_legal',['maxlength'=>'90'])}}
                             		</div>
         							<div class="form-group col-lg-3 col-md-6">
-        								{{ Form::cText('* No. Contrato', 'num_contrato') }}
+        								{{ Form::cText('* No. Contrato', 'num_contrato',['maxlength'=>'30']) }}
         							</div>
         							<div class="form-group col-lg-2 col-md-4">
                             			{{Form::cText('* Fecha inicio','fecha_inicio_contrato',['class'=>' datepicker'])}}
@@ -338,7 +338,7 @@
                 			<div class="card-header">
         						<div class="row">
         							<div class="form-group col-md-6">
-        								{{ Form::cText('* Nombre', 'nombre_archivo') }}
+        								{{ Form::cText('* Nombre', 'nombre_archivo',['maxlength'=>'100']) }}
         							</div>
         							<div class="form-group col-md-6">
         								{{ Form::cFile('* Archivo', 'archivo',['accept'=>'.xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf']) }}
