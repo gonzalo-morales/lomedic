@@ -179,7 +179,7 @@
     						<td>{{$detalle->cantidad}}</td>
     						<td>{{number_format($detalle->impuesto,2)}}</td>
     						<td>{{number_format($detalle->precio_unitario,2)}}</td>
-    						<td>{{number_format($detalle->importe,2)}}<input type="hidden" class="importe" name="relations[has][detalle][{{$row}}][importe]" value="{{number_format($detalle->importe,2)}}"></td>
+    						<td>{{number_format($detalle->importe,2)}}<input type="hidden" class="importe" name="relations[has][detalle][{{$row}}][importe]" value="{{number_format($detalle->importe,2,'.','')}}"></td>
     						<td>
     							@if(Route::currentRouteNamed(currentRouteName('edit')))
     							<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>

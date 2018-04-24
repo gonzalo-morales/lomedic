@@ -45,7 +45,7 @@ class Autorizaciones extends ModelCompany
          'tipodocumento.nombre_documento' => 'Tipo Documento',
          'fk_id_documento' => 'No. Documento',
          'fecha_creacion' => 'Fecha',
-         'estatus.estatus'=>'Estatus'
+         'estatus_autorizacion_span'=>'Estatus'
      ];
 
     function setEstatusAttribute(){
@@ -80,6 +80,11 @@ class Autorizaciones extends ModelCompany
     }
 
     public function estatus()
+    {
+        return $this->hasOne(EstatusAutorizaciones::class,'id_estatus','fk_id_estatus');
+    }
+
+    public function estatusautorizacion()
     {
         return $this->hasOne(EstatusAutorizaciones::class,'id_estatus','fk_id_estatus');
     }

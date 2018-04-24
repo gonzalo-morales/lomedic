@@ -46,7 +46,7 @@ class ModelBase extends Model
 	    $this->table = $this->schema.'.'.$this->table;
 	        
 		$this->eagerLoaders = $this->getAutoEager();
-		$this->rules = $this->getRulesDefaults();
+		$this->rules = array_merge($this->getRulesDefaults(),$this->rules);
 		$this->addUniqueRules();
 		return parent::__construct($attributes);
 	}
@@ -416,7 +416,7 @@ class ModelBase extends Model
                     array_push($rules[$col],'regex:/^(\d{0,'.$prop['length'].'}(\.\d{0,'.$prop['decimal'].'})?)$/');
 				}
 				elseif(in_array($type,['String'])){
-					array_push($rules[$col],'regex:/^'.$prop['pattern'].'*$/');
+					array_push($rules[$col],'max:'.$prop['length'].'|regex:/^'.$prop['pattern'].'*$/');
 				}
                 elseif(!in_array($type,['Text','Date','DateTime'])) {
 					array_push($rules[$col],'max:'.$prop['length']);
