@@ -222,11 +222,11 @@ class ModelBase extends Model
 	    $id = !empty(request()->{$key}) ? request()->{$key} : 'null';
 	    
 	    foreach ($this->unique as $col) {
-	        if(in_array('eliminar',$this->getlistColumns())) {
-	            $this->rules[$col] = (isset($this->rules[$col]) ? $this->rules[$col].'|' : ''). "unique:$table,$col,$id,$key,eliminar,0";
+	        if(in_array('eliminar',$this->getlistColumns())) { 
+	            $this->rules[$col] = (isset($this->rules[$col]) ? (is_array($this->rules[$col]) ? implode('|',$this->rules[$col]) : $this->rules[$col]).'|' : ''). "unique:$table,$col,$id,$key,eliminar,0";
 	        }
 	        else {
-	            $this->rules[$col] = (isset($this->rules[$col]) ? $this->rules[$col].'|' : '')."unique:$table,$col,$id,$key";
+	            $this->rules[$col] = (isset($this->rules[$col]) ? (is_array($this->rules[$col]) ? implode('|',$this->rules[$col]) : $this->rules[$col]).'|' : '')."unique:$table,$col,$id,$key";
 	        }
 	    }
 	}
