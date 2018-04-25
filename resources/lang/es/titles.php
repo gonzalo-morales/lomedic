@@ -7,7 +7,7 @@ return [
     'create' => 'Agregar',
     'show' => 'Ver',
     'administracion' => 'Administracion',
-    'administracionproyectos' => 'Administracion de Proyectos',
+    'administracionproyectos' => 'Gestion de Proyectos',
     'ventas' => 'Ventas',
     'compras' => 'Compras',
     'sociosnegocio' => 'Socios de Negocio',
