@@ -32,7 +32,9 @@ class RecetasController extends ControllerBase
     public function getDataView($entity = null)
     {
         return [
-            'localidades' => Sucursales::select('sucursal', 'id_sucursal')->where('activo',1)->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
+            'localidades' => Sucursales::select('sucursal', 'id_sucursal')->where('activo',1)->whereHas('empresas',function($e){
+                $e->where('fk_id_empresa',dataCompany()->id_empresa);
+            })->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
             'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
             'programas' => Programas::select('nombre_programa', 'id_programa')->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'areas' => Areas::select('area', 'id_area')->pluck('area', 'id_area')->prepend('...', ''),
