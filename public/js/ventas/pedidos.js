@@ -293,11 +293,11 @@ function borrarFila(el) {
 function validateDetail() {
     $('#cantidad').rules('add',{
         required: true,
-        number: true,
+        digits: true,
         range: [1,9999],
         messages:{
             required: 'Ingresa una cantidad',
-            number: 'El campo debe ser un número',
+            digits: 'El valor debe ser un entero',
             range: 'El número debe ser entre 1 y 9999'
         }
 	});

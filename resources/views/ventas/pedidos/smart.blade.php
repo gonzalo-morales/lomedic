@@ -85,7 +85,7 @@
     							<fieldset name="detalle-form" id="detalle-form">
     								<div class="row">
     									<div class="form-group col-md-2 col-sm-6">
-                                			{{Form::cNumber('* Cantidad','cantidad',['min'=>1])}}
+                                			{{Form::cNumber('* Cantidad','cantidad',['min'=>1,'step'=>1])}}
                                 		</div>
     									<div class="form-group input-field col-md-4 col-sm-6">
                                             <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
@@ -223,7 +223,7 @@
                 			<div class="card-header">
         						<div class="row">
         							<div class="form-group col-md-6">
-        								{{ Form::cText('* Nombre', 'nombre_archivo') }}
+        								{{ Form::cText('* Nombre', 'nombre_archivo',['maxlength'=>'60']) }}
         							</div>
         							<div class="form-group col-md-6">
         								{{ Form::cFile('* Archivo', 'archivo',['accept'=>'.xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf']) }}
