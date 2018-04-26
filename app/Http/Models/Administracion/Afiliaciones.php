@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
@@ -8,7 +7,6 @@ use App\Http\Models\Servicios\Recetas;
 
 class Afiliaciones extends ModelBase
 {
-
     protected $table = 'gen_cat_afiliados';
 
     protected $primaryKey = 'id_afiliado';
@@ -27,15 +25,15 @@ class Afiliaciones extends ModelBase
         'edad_tiempo',
         'fecha_nacimiento',
         'fk_id_parentesco',
-        'fk_id_cliente'
+        'fk_id_cliente',
+        'activo',
     ];
 
    /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
-    protected $unique = ['id_afiliacion'];
+    //protected $unique = ['id_afiliacion'];
 
     protected $fields = [
         'id_afiliado' => '#',
@@ -55,17 +53,14 @@ class Afiliaciones extends ModelBase
     {
         return $this->hasMany(Recetas::class,'fk_id_afiliacion','id_afiliacion');
     }
+    
     public function parentesco()
     {
         return $this->hasOne(Parentescos::class,'id_parentesco','fk_id_parentesco');
     }
+ 
     public function socio_cliente()
     {
         return $this->hasOne(SociosNegocio::class, 'fk_id_cliente', 'id_afiliacion');
     }
-//    public function getCodigoPacieteAttribute()
-//    {
-//        return $this->selectRAW("id_afiliacion as codigo")->first();
-//    }
-
 }
