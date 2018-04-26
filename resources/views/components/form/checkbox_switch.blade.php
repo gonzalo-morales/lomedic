@@ -1,5 +1,5 @@
 @if(!empty($label))
-<label class="w-100">{{$label}}</label>
+	{{ Form::label($name, ucwords(cTrans('forms.'.$name,$text)),['class'=>'w-100']) }}
 @endif
 <label class="switch">
 	{{ Form::checkbox($name, 1, old($name), ['id' => $name,'class' => 'inputSlider']) }}

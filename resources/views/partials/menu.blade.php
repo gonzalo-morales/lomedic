@@ -2,7 +2,7 @@
     @if(!$modulo->submodulos->count())
     <a class="w-100" href="{{ !empty($modulo->url) ? companyAction($modulo->url) : '#' }}" title="{!! cTrans('titles.'.strtolower($modulo->nombre),$modulo->descripcion) !!}" data-toggle="tooltip" data-placement="right">
         <i class='material-icons'>{{ $modulo->icono }}</i>
-        <span> {!! cTrans('titles.'.strtolower($modulo->nombre),$modulo->descripcion) !!} </span>
+        <span> {!! ucwords(cTrans('titles.'.strtolower($modulo->nombre),$modulo->descripcion)) !!} </span>
         <span class="tag-menu">{{ $modulo->descripcion }}</span>
         {!! !empty($modulo->url) ? "<i class='material-icons window p-2'>open_in_browser</i>" : '' !!}
     </a>

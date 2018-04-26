@@ -4,7 +4,7 @@
         {{ Form::checkbox($name, 1, $value ?? old($name), [
             'id' => $name,
             'class' => 'form-check-input custom-control-input',
-        ] + ($attributes ?? [])) }} {{$text}}
+        ] + ($attributes ?? [])) }} {!! ucwords(cTrans('forms.'.$name,$text)) !!}
         <span class="custom-control-indicator"></span>
     </label>
 </div>

@@ -23,5 +23,18 @@ return [
     'cpassword' => 'Current password',
     'npasswword' => 'New password',
     'opassword' => 'Confirm password',
-    'save_stamp' =>'Save & Stamp'
+    'save_stamp' =>'Save & Stamp',
+    
+    'razon_social' => 'Business name',
+    'rfc' => 'RFC',
+    'nombre_comercial' => 'Tradename',
+    'ramo.ramo' => 'Bouquet',
+    'fk_id_ramo' => 'Bouquet',
+    'tipos_socios' => 'Partner Type',
+    'activo_text' => 'Status',
+    'activo_span' => 'Status',
+    'fk_id_tipo_socio_venta' => 'Type Partner For Sale',
+    'activo' => 'Status',
+    'empresa' => 'Is Company',
+    'fk_id_pais' => 'Country',
 ];

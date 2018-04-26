@@ -1,5 +1,5 @@
 @if(!empty($text))
-	{{ Form::label($name, $text) }}
+	{{ Form::label($name, ucwords(cTrans('forms.'.$name,$text))) }}
 @endif
 {{ Form::text($name, $value ?? null, collect($attributes ?? [])->reduceWithKeys(function($acc, $item, $key) {
     if (isset($acc['class']) && $key == 'class') $item = "{$acc['class']} $item";

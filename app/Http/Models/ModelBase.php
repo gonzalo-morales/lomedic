@@ -275,7 +275,7 @@ class ModelBase extends Model
 	 */
 	public function getActivoTextAttribute()
 	{
-	    return isset($this->activo) && $this->activo == 1 ? 'Activo' : 'Inactivo';
+	    return isset($this->activo) && $this->activo == 1 ? cTrans('data.activo','Activo') : cTrans('data.inactivo','Inactivo');
 	}
 
 	public function getEstatuscfdiSpanAttribute()
