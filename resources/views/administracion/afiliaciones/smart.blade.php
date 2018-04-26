@@ -63,6 +63,12 @@
                                     {{ Form::cSelect('* Empresa cliente', 'fk_id_cliente', $clientes ?? [],['class'=>'select2']) }}
                                 </div>
                             </div>
+                            <div  class="col-md-12 text-center mt-4">
+                                <div class="alert alert-warning" role="alert">
+                                    Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.
+                                </div>
+                                {{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
+                            </div>
                             <input type="hidden" name="id_dependiente" id="id_dependiente" value="0">
                         </div>
                     </div>
@@ -70,4 +76,3 @@
             </div><!--/row-->
         </div>
 @endsection
-

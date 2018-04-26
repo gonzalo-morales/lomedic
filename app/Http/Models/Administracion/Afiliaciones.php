@@ -42,7 +42,8 @@ class Afiliaciones extends ModelBase
         'id_afiliacion' => 'Numero de paciente',
         'FullName' => 'Nombre',
         'genero'=> 'Genero',
-        'parentesco.nombre' => 'Parentesco'
+        'parentesco.nombre' => 'Parentesco',
+        'activo_span' => 'Estatus',
     ];
 
     public function getFullNameAttribute()
