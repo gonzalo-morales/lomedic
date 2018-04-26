@@ -12,7 +12,9 @@ use App\Http\Models\Servicios\Recetas;
 use App\Http\Models\Proyectos\Proyectos;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Servicios\RecetasDetalle;
+use App\Http\Models\Administracion\UnidadesMedidas;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
@@ -35,13 +37,14 @@ class RecetasController extends ControllerBase
             'localidades' => Sucursales::select('sucursal', 'id_sucursal')->where('activo',1)->whereHas('empresas',function($e){
                 $e->where('fk_id_empresa',dataCompany()->id_empresa);
             })->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
-            'medicos' => Medicos::get()->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
+            'medicos' => Medicos::where('activo',1)->get()->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
             'programas' => Programas::select('nombre_programa', 'id_programa')->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
             'areas' => Areas::select('area', 'id_area')->pluck('area', 'id_area')->prepend('...', ''),
             'tipo_servicio' => [0 => 'afiliado', 1 => 'externo'],
             'afiliados' => empty($entity) ? [] : Afiliaciones::selectRAW("CONCAT(paterno,' ',materno,' ',nombre) as nombre_afiliado, id_afiliado")->where('id_afiliado', $entity->fk_id_afiliado)->pluck('nombre_afiliado', 'id_afiliado'),
             'diagnosticos' => empty($entity) ? [] : Diagnosticos::select('diagnostico', 'id_diagnostico')->where('id_diagnostico', $entity->fk_id_diagnostico)->where('activo',1)->pluck('diagnostico', 'id_diagnostico'),
             'proyectos' => empty($entity) ? [] : Proyectos::select('proyecto', 'id_proyecto')->where('id_proyecto', $entity->fk_id_proyecto)->where('fk_id_estatus',1)->pluck('proyecto', 'id_proyecto'),
+            'js_familia' => Crypt::encryptString('"select":["id_familia", "descripcion"],"conditions":[{"where":["activo", "1"]},{"where":["id_familia", "$fk_id_familia"]}]')
         ];
     }
 
@@ -86,7 +89,7 @@ class RecetasController extends ControllerBase
     
     public function getProyectos($company, Request $request)
     {
-        return Proyectos::select('proyecto','id_proyecto')->where('fk_id_sucursal',$request->fk_id_sucursal)->pluck('proyecto','id_proyecto')->toJson();
+        return Proyectos::select('proyecto','id_proyecto')->where('fk_id_sucursal',$request->fk_id_sucursal)->where('fk_id_estatus',1)->pluck('proyecto','id_proyecto')->toJson();
     }
 
     public function impress($company,$id)

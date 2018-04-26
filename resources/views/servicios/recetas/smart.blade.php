@@ -4,6 +4,9 @@
     @parent
     @if (!Route::currentRouteNamed(currentRouteName('index')) && !Route::currentRouteNamed(currentRouteName('show')) )
         <script type="text/javascript" src="{{ asset('js/recetas.js') }}"></script>
+        <script type="text/javascript"> 
+            var js_familia = '{{ $js_familia ?? ''}}' 
+        </script>
     @endif
 @endsection
 
@@ -30,6 +33,9 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
+                                            <div id="loadingproyectos" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+                                                Cargando proyectos... <i class="material-icons align-middle loading">cached</i>
+                                            </div>
                                             <div class="form-group">
                                                 {{ Form::cSelect('Proyecto', 'fk_id_proyecto', $proyectos ?? [],['class'=>'select2']) }}
                                             </div>
@@ -50,7 +56,7 @@
                                             <h6>Nombre paciente no afiliado</h6>
                                             <div class="input-group my-group">
                                                 <div class="input-group-btn" role="group" aria-label="surtido" data-toggle="buttons">
-                                                    {{Form::cCheckboxBtn(' ','Externo','tipo_servicio',(empty($data->fk_id_afiliacion) ? 0 : 1),'Afiliado')}}
+                                                    {{Form::cCheckboxBtn('','Externo','tipo_servicio',(empty($data->fk_id_afiliacion) ? 0 : 1),'Afiliado')}}
                                                 </div>
                                                 {{ Form::cText(' ', 'nombre_paciente_no_afiliado',['disabled'])}}
                                             </div>
@@ -159,12 +165,12 @@
                                                         <h4>¿Surtido recurrente?</h4>
                                                         <div class="input-group my-group">
                                                             <div class="input-group-btn" role="group" aria-label="surtido" data-toggle="buttons">
-                                                                <label class="btn btn-check btn-default">
-                                                                    <input type="checkbox" name="surtido_recurrente" id="surtido_recurrente" autocomplete="off" class="btn btn-default checkbox_surtido" onchange="resurtir();">Recurrente
+                                                                <label class="btn btn-check btn-secondary">
+                                                                    <input type="checkbox" name="surtido_recurrente" id="surtido_recurrente" autocomplete="off" class="btn btn-secondary checkbox_surtido" onchange="resurtir();">Recurrente
                                                                 </label>
                                                             </div>
                                                             {{Form::number('surtido_numero',null,['id'=>'surtido_numero','min'=>1,'placeholder'=>'Ej: 6','class'=>'integer form-control','disabled'])}}
-                                                            {{Form::select('surtido_tiempo',['24'=>'DÃ­a(s)','168'=>'Semana(s)','720'=>'Mes(es)'],null,['id'=>'surtido_tiempo','class'=>'form-control','disabled'])}}
+                                                            {{Form::select('surtido_tiempo',['24'=>'Día(s)','168'=>'Semana(s)','720'=>'Mes(es)'],null,['id'=>'surtido_tiempo','class'=>'form-control','disabled'])}}
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-md-12 my-2">
@@ -181,7 +187,7 @@
                             </div>
                             @endif
                             <div class="card-body">
-                                <table class="table table-responsive-sm table-hover table-striped mt-3" id="tContactos">
+                                <table class="table table-responsive-sm table-hover table-striped mt-3" id="tContactos" data-url="{{companyAction('HomeController@index').'/administracion.familiasproductos/api'}}" >
                                     <thead>
                                     <tr>
                                         <th>Codigo</th>

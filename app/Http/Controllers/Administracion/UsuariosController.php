@@ -219,7 +219,7 @@ class UsuariosController extends ControllerBase
             ->join('adm_det_modulo_accion','adm_det_modulo_accion.id_modulo_accion','=','adm_det_permisos_perfiles.fk_id_modulo_accion')
             ->select('adm_det_modulo_accion.*','adm_det_permisos_perfiles.fk_id_perfil')
             ->get();
-        $sucursalesAnteriores = Sucursales::whereHas('sucursales',function($q)use ($id){
+        $sucursalesAnteriores = Sucursales::whereHas('usuario',function($q)use ($id){
             $q->where('fk_id_usuario','=',$id);
         })->get();
         $correos_user = Correos::join('gen_cat_empresas','adm_det_correos.fk_id_empresa','=','gen_cat_empresas.id_empresa')
