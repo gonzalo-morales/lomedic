@@ -3,6 +3,7 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
+use App\Http\Models\Administracion\Presentaciones;
 
 class UnidadesMedidas extends ModelBase
 {
@@ -56,5 +57,9 @@ class UnidadesMedidas extends ModelBase
     public function empresa()
     {
         $this->$this->hasOne('app\Http\Models\Administracion\Empresas');
+    }
+	public function presentacion()
+    {
+        return $this->belongsTo(Presentaciones::class,'fk_id_unidad_medida');
     }
 }
