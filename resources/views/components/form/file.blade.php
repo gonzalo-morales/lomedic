@@ -1,5 +1,5 @@
 @if(!empty($text))
-	{{ Form::label($name, $text,['class'=>'w-100']) }}
+	{{ Form::label($name, ucwords(cTrans('forms.'.$name,$text)),['class'=>'w-100']) }}
 @endif
 <label class="custom-file w-100">
     {{ Form::file($name, collect($attributes ?? [])->reduceWithKeys(function($acc, $item, $key) {

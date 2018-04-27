@@ -2,7 +2,7 @@
 
 @section('title', cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName())))
 
-@section('form-title', cTrans('titles.'.strtolower(currentEntityBaseName()),ucwords(currentEntityBaseName())))
+@section('form-title', ucwords(cTrans('titles.'.strtolower(currentEntityBaseName()),currentEntityBaseName())))
 
 
 @section('header-top')
@@ -198,8 +198,8 @@
     						<thead>
     							<tr>
     								<th class="width-auto"><input type="checkbox" id="check-all" rv-on-click="actions.checkAll" rv-literal:checked="status.isAllChecked | call < collections.items"></th>
-    								@foreach ($fields as $label)
-    								<th> {{ $label }} </th>
+    								@foreach ($fields as $col=>$label)
+    								<th>{!! ucwords(cTrans('forms.'.$col,$label)) !!}</th>
     								@endforeach
     								<th></th>
     							</tr>

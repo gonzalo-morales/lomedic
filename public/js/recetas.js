@@ -6,6 +6,7 @@ $(document).ready(function () {
 
     var token = document.querySelector("meta[name='csrf-token']").getAttribute("content");
     $('#fk_id_sucursal').on('change', function() {
+        $('#loadingproyectos').show();
         $.ajax({
             type: "POST",
             url: $(this).data('url'),
@@ -17,6 +18,7 @@ $(document).ready(function () {
                     $('#fk_id_proyecto').append('<option value="'+ key +'">'+ value +'</option>');
                 });
                 $('#fk_id_proyecto').val('');
+                $('#loadingproyectos').hide();
             }
         });
     });
@@ -144,21 +146,25 @@ function agregar_medicamento() {
 
     var medicamento = $('#medicamento').select2('data');
     var campos = '';
-    if ($('#medicamento').select2('data').length == 0) {
-        campos += '<br><br>Medicamento: ¿Seleccionaste un medicamento?';
-    }
+    var objects = [];
+    if ($('#medicamento').select2('data').length == 0)
+        campos += '<br>• ¿Seleccionaste un <b>medicamento</b>.?';
+        objects.push($('#medicamento'));
     if (!parseInt($('#dosis').val()) > 0)
-        campos += '<br><br>Necesito que me indiques la <b>dosis</b> del medicamento';
+        campos += '<br>• Necesito que me indiques la <b>dosis</b> del medicamento.';
+        objects.push($('#dosis'));
     if (!parseInt($('#cada').val()) > 0)
-        campos += '<br><br>Necesito que me indiques <b>cada</b> cuando tomar el medicamento';
+        campos += '<br>• Necesito que me indiques <b>cada</b> cuando tomar el medicamento.';
+        objects.push($('#cada'));
     if (!parseInt($('#por').val()) > 0)
-        campos += '<br><br>Necesito que me indiques <b>la duracion</b> del medicamento';
+        campos += '<br>• Necesito que me indiques <b>la duracion</b> del medicamento.';
+        objects.push($('#por'));
     if (parseInt($('#cada').val()) * parseInt($('#_cada option:selected').val()) > parseInt($('#por').val()) * parseInt($('#_por option:selected').val()))
-        campos += '<br><br>Verifica que el campo<b> cada </b> no sea mayor al campo <b>por</b>';
+        campos += '<br>• Verifica que el campo<b> cada </b> no sea mayor al campo <b>por</b>.';
 
     if (campos != '') {
-
-        mensajeAlerta('Verifica los siguientes campos', 'danger');
+        mensajeAlerta(`Verifica lo siguiente: ${campos}`, 'danger');
+        borderCampos(objects);
         return
     }
     var filas = $('.medicine_detail tr').length;
@@ -207,7 +213,7 @@ function agregar_medicamento() {
 
     } else {//Si no es recurrente
         var cantidad_medicamento_necesaria = (($('#_por option:selected').val() * $('#por').val()) / ($('#_cada option:selected').val() * ($('#cada').val()))) * dosis_hidden;
-        if (medicamento[0].cantidad_presentacion > 1) {
+        if (medicamento[0].cantidad_presentacion >= 1) {
             while (medicamento[0].cantidad_presentacion * cantidad_final < cantidad_medicamento_necesaria) {
                 cantidad_final++;
             }
@@ -216,15 +222,13 @@ function agregar_medicamento() {
                 return
             }
         } else {
-            mensajeAlerta('Este medicamento no cuenta con la informaciÃ³n necesaria. Te recomendamos seleccionar otro.', 'danger');
+            mensajeAlerta('Este <b>medicamento</b> no cuenta con la información necesaria. Te recomendamos seleccionar otro.', 'danger');
             return
         }
     }
 
     if (veces_surtir < 1 || veces_surtir == null)
         veces_surtir = 1;
-    dosis_hidden += ' ' + medicamento[0].familia;
-    dosis_text += medicamento[0].familia + '</b>';
 
     var tiempo_text = '<b>' + $('#cada').val();
     tiempo_text += ' ' + $('#_cada option:selected').text() + '</b>';
@@ -247,30 +251,38 @@ function agregar_medicamento() {
     }
 
     if (agregar) {
-        $('.medicine_detail').append('' +
-            '<tr id="' + medicamento[0].id + '">' +
-            '<th scope="row">' + medicamento[0].sku + '</th>' +
-            '<td>' +
-            '<p><input name="relations[has][detalles][' + filas + '][id_receta_detalle]" type="hidden" value=""/></p>' +
-            '<p><input id="clave_cliente' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][fk_id_clave_cliente_producto]" type="hidden" value="' + medicamento[0].fk_id_clave_cliente_producto + '"/>' + medicamento[0].text + '</p>' +
-            '<p><input id="tbdosis' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][dosis]" type="hidden" value="' + dosis_hidden + ' cada ' + tiempo_hidden + ' por ' + duracion_hidden + '" />' + dosis_text + ' cada ' + tiempo_text + ' por ' + duracion_text + '</p>' +
-            '<p><input id="tbcantidad_pedida' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][cantidad_pedida]" type="hidden" value="' + cantidad_final + '" />Recoger hoy: ' + cantidad_final + '</p>' +
-            '<p><input id="tben_caso_presentar' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][en_caso_presentar]" type="hidden" value="' + nota_medicamento + '" />' + nota_medicamento + '</p>' +
-            '<p><input id="tbpor[' + medicamento[0].id + ']" name="relations[has][detalles][' + filas + '][por]" type="hidden" value="' + $('#por').val() * $('#_por option:selected').val() + '"/>' +
-            '<input id="_detalle[' + medicamento[0].id + '][recurrente]" name="relations[has][detalles][' + filas + '][recurrente]" type="hidden" value="' + recurrencia_hidden + '"/>' + recurrencia_text + '</p>' +
-            // '<input id="_detalle[' + medicamento[0].id + '][fk_id_cuadro]" name="relations[has][detalles][' + filas + '][fk_id_cuadro]" type="hidden" value="' + medicamento[0].fk_id_cuadro + '"/>' +
-            '<input id="tbveces_surtir' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][veces_surtir]" type="hidden" value="' + Math.ceil(veces_surtir) + '"/>' +
-            '<input id="tbcatidad_surtida' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][cantidad_surtida]" type="hidden" value="0"/>' +
-            // '<input id="tbrecurrente' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][recurrente]" type="hidden" value="0"/>' +
-            '</td>' +
-            '<td>' +
-            '<a onclick="eliminarFila(this)" data-delete-type="single"  data-toggle="tooltip" data-placement="top" title="Borrar"  id="' + filas + '" aria-describedby="tooltip687783"><i class="material-icons text-primary">delete</i></a> ' +
-            '</td>' +
-            '</tr>');
-        $('#guardar').prop('disabled', filas = 0);
-        limpiarCampos();
-        mensajeAlerta('Medicamento agregado exitosamente', 'success');
-
+        let idfamilia = medicamento[0].familia;
+        $.ajax({
+            url: $('#tContactos').data('url'),
+            data:{'param_js':js_familia,$fk_id_familia:idfamilia},
+            dataType: "json",
+            success: function (response) {
+                let descFamilia = response[0].descripcion;
+                $('.medicine_detail').append('' +
+                    '<tr id="' + medicamento[0].id + '">' +
+                    '<th scope="row">' + medicamento[0].sku + '</th>' +
+                    '<td>' +
+                    '<p><input name="relations[has][detalles][' + filas + '][id_receta_detalle]" type="hidden" value=""/></p>' +
+                    '<p><input id="clave_cliente' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][fk_id_clave_cliente_producto]" type="hidden" value="' + medicamento[0].fk_id_clave_cliente_producto + '"/>' + medicamento[0].text + '</p>' +
+                    '<p><input id="tbdosis' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][dosis]" type="hidden" value="' + dosis_hidden + descFamilia + ' cada ' + tiempo_hidden + ' por ' + duracion_hidden + '" />' + dosis_text + descFamilia + ' cada ' + tiempo_text + ' por ' + duracion_text + '</p>' +
+                    '<p><input id="tbcantidad_pedida' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][cantidad_pedida]" type="hidden" value="' + cantidad_final + '" />Recoger hoy: ' + cantidad_final + '</p>' +
+                    '<p><input id="tben_caso_presentar' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][en_caso_presentar]" type="hidden" value="' + nota_medicamento + '" />' + nota_medicamento + '</p>' +
+                    '<p><input id="tbpor[' + medicamento[0].id + ']" name="relations[has][detalles][' + filas + '][por]" type="hidden" value="' + $('#por').val() * $('#_por option:selected').val() + '"/>' +
+                    '<input id="_detalle[' + medicamento[0].id + '][recurrente]" name="relations[has][detalles][' + filas + '][recurrente]" type="hidden" value="' + recurrencia_hidden + '"/>' + recurrencia_text + '</p>' +
+                    // '<input id="_detalle[' + medicamento[0].id + '][fk_id_cuadro]" name="relations[has][detalles][' + filas + '][fk_id_cuadro]" type="hidden" value="' + medicamento[0].fk_id_cuadro + '"/>' +
+                    '<input id="tbveces_surtir' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][veces_surtir]" type="hidden" value="' + Math.ceil(veces_surtir) + '"/>' +
+                    '<input id="tbcatidad_surtida' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][cantidad_surtida]" type="hidden" value="0"/>' +
+                    // '<input id="tbrecurrente' + medicamento[0].id + '" name="relations[has][detalles][' + filas + '][recurrente]" type="hidden" value="0"/>' +
+                    '</td>' +
+                    '<td>' +
+                    '<a onclick="eliminarFila(this)" data-delete-type="single"  data-toggle="tooltip" data-placement="top" title="Borrar"  id="' + filas + '" aria-describedby="tooltip687783"><i class="material-icons text-primary">delete</i></a> ' +
+                    '</td>' +
+                    '</tr>');
+                $('#guardar').prop('disabled', filas = 0);
+                limpiarCampos();
+                mensajeAlerta('Medicamento agregado exitosamente', 'success');
+            }
+        });
     }
 }
 
@@ -403,5 +415,10 @@ function mensajeAlerta(mensaje,tipo){
     );
 }
 
+function borderCampos(objects){
+    objects.forEach(campo => {
+        campo.addClass('border-danger');
+    });
+}
 
 

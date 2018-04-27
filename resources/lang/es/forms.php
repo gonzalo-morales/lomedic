@@ -2,7 +2,7 @@
 
 return [
 	'login' => 'Entrar',
-    'logout' => 'Cerrar Sesión',
+    'logout' => 'Cerrar Sesiï¿½n',
     'save' => 'Guardar',
     'create' => 'Nuevo',
     'show' => 'Ver',
@@ -12,16 +12,26 @@ return [
     'send' => 'Enviar',
     'back' => 'Regresar',
     'change' => 'Cambiar',
-	'fgpassword' => '¿Olvidaste contraseña?',
+	'fgpassword' => 'ï¿½Olvidaste contraseï¿½a?',
     'user' => 'Usuario',
-    'password' => 'Contraseña',
+    'password' => 'Contraseï¿½a',
     'deselected' => 'Deseleccionar',
     'delete' => 'Eliminar',
     'file' => 'Archivo',
     'menu_search' => 'Buscar en menu',
-    'email' => 'Dirección Correo Electronico',
-    'cpassword' => 'Contraseña actual',
-    'npasswword' => 'Nueva contraseña',
-    'opassword' => 'Confirmar contraseña',
-    'save_stamp' =>'Guardar y Timbrar'
+    'email' => 'Direcciï¿½n Correo Electronico',
+    'cpassword' => 'Contraseï¿½a actual',
+    'npasswword' => 'Nueva contraseï¿½a',
+    'opassword' => 'Confirmar contraseï¿½a',
+    'save_stamp' =>'Guardar y Timbrar',
+    
+    
+    'razon_social' => 'Razon Social',
+    'rfc' => 'RFC',
+    'nombre_comercial' => 'Nombre Comercial',
+    'ramo.ramo' => 'Ramo',
+    'tipos_socios' => 'Tipo Socio',
+    'activo_text' => 'Estatus',
+    'activo_span' => 'Estatus',
+    'empresa' => 'Es Empresa',
 ];

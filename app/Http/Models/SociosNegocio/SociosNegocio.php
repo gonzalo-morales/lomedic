@@ -44,7 +44,7 @@ class SociosNegocio extends ModelBase
         'nombre_comercial' => 'Nombre Comercial',
         'ramo.ramo' => 'Ramo',
         'tipos_socios' => 'Tipo Socio',
-        'activo_text' => 'Estatus'
+        'activo_span' => 'Estatus'
     ];
 
     public $niceNames = [];

@@ -1,4 +1,6 @@
-{{ Form::label($name, $text) }}
+@if(!empty($text))
+	{{ Form::label($name, ucwords(cTrans('forms.'.$name,$text))) }}
+@endif
 @foreach($options as $key=>$value)
 	<label class="custom-control custom-radio w-100">
     	{{ Form::radio($name,$key,Null, collect($attributes ?? [])->reduceWithKeys(function($acc, $item, $key) {

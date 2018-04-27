@@ -48,7 +48,7 @@ function cTrans($key, $dafault = null, $replace = [], $locale = null)
     if($line != $key)
         return utf8_encode($line);
     
-    $line = !empty($dafault) ? utf8_encode($dafault) : $key;
+    $line = !empty($dafault) ? $dafault : $key;
     
     if (empty($replace))
         return $line;
