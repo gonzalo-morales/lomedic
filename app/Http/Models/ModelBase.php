@@ -278,61 +278,27 @@ class ModelBase extends Model
 	    return isset($this->activo) && $this->activo == 1 ? 'Activo' : 'Inactivo';
 	}
 
-	public function getEstatuscfdiSpanAttribute()
-    {
-        $format = new HtmlString('<span class="p-1 '. ($this->estatuscfdi->id_estatus_cfdi == 1 ? 'alert alert-danger' : 'alert alert-success').'">&nbsp;'.$this->estatuscfdi->estatus.'&nbsp;</span>');
-        if(request()->ajax()){
-            return $format->toHtml();
-        }
-        return $format;
-    }
-
-    public function getEstatusAutorizacionSpanAttribute()
-    {
-        switch ($this->estatusautorizacion->id_estatus){
-            case 1://Sin autorizacion
-                $color = 'alert alert-light';
-                break;
-            case 2://Pendiente
-                $color = 'alert alert-warning';
-                break;
-            case 3://Rechazada
-                $color = 'alert alert-danger';
-                break;
-            case 4://Autorizada
-                $color = 'alert alert-success';
-                break;
-            case 5://Cancelada
-                $color = 'alert alert-danger';
-                break;
-            default:
-                $color = '';
-                break;
-        }
-        $format = new HtmlString('<span class="p-1 '.$color.'">&nbsp;'.$this->estatusautorizacion->estatus.'&nbsp;</span>');
-        if(request()->ajax()){
-            return $format->toHtml();
-        }
-        return $format;
-    }
-
     public function getEstatusDocumentoSpanAttribute()
     {
-        switch ($this->estatus->id_estatus){
-            case 1://Abierto
-                $color = 'alert alert-success';
-                break;
-            case 2://Cerrado
-                $color = 'alert alert-secondary';
-                break;
-            case 3://Cancelado
-                $color = 'alert alert-danger';
-                break;
-            default:
-                $color = '';
-                break;
+        $format = new HtmlString('<span class="p-1 '.$this->estatus->class.'">&nbsp;'.$this->estatus->estatus.'&nbsp;</span>');
+        if(request()->ajax()){
+            return $format->toHtml();
         }
-        $format = new HtmlString('<span class="p-1 '.$color.'">&nbsp;'.$this->estatus->estatus.'&nbsp;</span>');
+        return $format;
+    }
+
+    public function getEstatusDocumentoCfdiSpanAttribute()
+    {
+        $format = new HtmlString('<span class="p-1 '.$this->estatuscfdi->class.'">&nbsp;'.$this->estatuscfdi->estatus.'&nbsp;</span>');
+        if(request()->ajax()){
+            return $format->toHtml();
+        }
+        return $format;
+    }
+
+    public function getEstatusDocumentoAutorizacionSpanAttribute()
+    {
+        $format = new HtmlString('<span class="p-1 '.$this->estatusautorizacion->class.'">&nbsp;'.$this->estatusautorizacion->estatus.'&nbsp;</span>');
         if(request()->ajax()){
             return $format->toHtml();
         }
