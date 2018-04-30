@@ -237,19 +237,21 @@ function map_tipos_documentos()
     
     foreach(File::allFiles(app_path().'/Http/Models') as $route) {
         if(preg_match("/^.*.php$/", $route->getPathname())){
+
             $smodel = substr(str_replace([base_path().'\a','/'],['A','\\'],$route->getPathname()),0,-4);
-            
-            $tipo = TiposDocumentos::where('tabla',(new $smodel)->getTable())->first();
-            
-            
-            
-            if(!empty($tipo)) {
+
+            $tabla = strpos((new $smodel)->getTable(),'.') === false ? [(new $smodel)->getTable()] : explode('.',(new $smodel)->getTable());
+            $tabla = array_pop($tabla);
+
+            $tipo = empty($tabla) ? null : TiposDocumentos::where('tabla',$tabla)->first();
+
+            if(isset($tipo->id_tipo_documento)) {
                 $tipos_documentos[$tipo->id_tipo_documento] = $smodel;
             }
-            
-            
+
         }
     }
+
     return $tipos_documentos;
 }
 
