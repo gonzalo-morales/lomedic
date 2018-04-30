@@ -48,7 +48,7 @@ class ProyectosController extends ControllerBase
                 $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
             })->pluck('nombre_comercial','id_socio_negocio'),
             'localidades' => Localidades::where('activo',1)->pluck('localidad','id_localidad'),
-            'estatus' => EstatusDocumentos::select('estatus','id_estatus')->pluck('estatus','id_estatus'),
+            'estatus' => EstatusDocumentos::select('estatus','id_estatus')->whereHas('tiposdocumentos',function ($q){$q->where('id_tipo_documento',9);})->pluck('estatus','id_estatus'),//Estatus asignados a proyectos
             'clasificaciones' => ClasificacionesProyectos::where('activo',1)->pluck('clasificacion','id_clasificacion_proyecto'),
             'monedas' => Monedas::where('activo',1)->selectRaw("CONCAT(descripcion,' (',moneda,')') as moneda, id_moneda")->orderBy('moneda')->pluck('moneda','id_moneda'),
             'tiposeventos' => TiposEventos::where('activo',1)->orderBy('tipo_evento')->pluck('tipo_evento','id_tipo_evento'),

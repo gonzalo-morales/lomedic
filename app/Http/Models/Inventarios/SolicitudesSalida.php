@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Inventarios;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Inventarios\SolicitudesSalidaDetalle;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Proyectos\Proyectos;
@@ -15,7 +16,7 @@ class SolicitudesSalida extends ModelCompany
      *
      * @var string
      */
-    protected $table = 'inv_solicitudes_salida';
+    protected $table = 'inv_opr_solicitudes_salida';
 
     /**
      * The primary key of the table
@@ -28,7 +29,7 @@ class SolicitudesSalida extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_socio_negocio', 'fk_id_proyecto', 'fk_id_direccion_entrega', 'fecha_entrega', 'fecha_solicitud'];
+    protected $fillable = ['fk_id_socio_negocio', 'fk_id_proyecto', 'fk_id_direccion_entrega', 'fecha_entrega', 'fecha_solicitud','fk_id_estatus'];
 
     /**
      * Los atributos que seran visibles en index-datable
@@ -39,7 +40,7 @@ class SolicitudesSalida extends ModelCompany
         'proyecto.proyecto' => 'Proyecto',
         'sucursal_entrega.direccion_concat' => 'Sucursal de entrega',
         'fecha_entrega' => 'Fecha de entrega',
-        'estatus_text' => 'Estatus',
+        'estatus_documento_span' => 'Estatus',
     ];
 
     /**
@@ -69,16 +70,16 @@ class SolicitudesSalida extends ModelCompany
      * @return string
      */
     public function getEstatusTextAttribute() {
-        switch ($this->estatus) {
-            case 0:
+        switch ($this->fk_id_estatus) {
+            case 1:
                 $estatus = 'Abierto';
                 break;
 
-            case 1:
+            case 2:
                 $estatus = 'Cerrado';
                 break;
 
-            case 2:
+            case 3:
                 $estatus = 'Cancelado';
                 break;
 
@@ -123,6 +124,11 @@ class SolicitudesSalida extends ModelCompany
     public function detalle()
     {
         return $this->hasMany(SolicitudesSalidaDetalle::class, 'fk_id_solicitud', 'id_solicitud');
+    }
+
+    public function estatus()
+    {
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus');
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Inventarios;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Inventarios\SalidasDetalle;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Proyectos\Proyectos;
@@ -11,11 +12,11 @@ use App\Http\Models\SociosNegocio\SociosNegocio;
 class Salidas extends ModelCompany
 {
     # Estatus
-    public const ABIERTO = 0;
-    public const CERRADO = 1;
-    public const CANCELADO = 2;
-    public const SURTIDO_PARCIAL = 3;
-    public const SURTIDO = 4;
+    public const ABIERTO = 1;
+    public const CERRADO = 2;
+    public const CANCELADO = 3;
+    public const SURTIDO_PARCIAL = 7;
+    public const SURTIDO = 8;
 
     /**
      * The table associated with the model.
@@ -35,7 +36,7 @@ class Salidas extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_tipo_salida', 'fk_id_socio_negocio', 'fk_id_proyecto', 'entrega_por', 'nombre_conductor', 'placas_vehiculo', 'paqueteria', 'fk_tipo_entrega', 'fk_id_direccion_entrega', 'fecha_entrega', 'fecha_salida', 'estatus', 'id_salida_pendiente', 'motivo_cancelacion'];
+    protected $fillable = ['fk_tipo_salida', 'fk_id_socio_negocio', 'fk_id_proyecto', 'entrega_por', 'nombre_conductor', 'placas_vehiculo', 'paqueteria', 'fk_tipo_entrega', 'fk_id_direccion_entrega', 'fecha_entrega', 'fecha_salida', 'fk_id_estatus', 'id_salida_pendiente', 'motivo_cancelacion'];
 
     /**
      * Los atributos que seran visibles en index-datable
@@ -46,7 +47,7 @@ class Salidas extends ModelCompany
         'proyecto.proyecto' => 'Proyecto',
         'sucursal_entrega.direccion_concat' => 'Sucursal de entrega',
         'fecha_entrega' => 'Fecha de entrega',
-        'estatus_text' => 'Estatus',
+        'estatus_documento_span' => 'Estatus',
     ];
 
     /**
@@ -54,7 +55,7 @@ class Salidas extends ModelCompany
      * @var array
      */
     protected $dataColumns = [
-        'estatus_text'
+        'fk_id_estatus'
     ];
 
     /**
@@ -90,7 +91,7 @@ class Salidas extends ModelCompany
      * @return string
      */
     public function getEstatusTextAttribute() {
-        switch ($this->estatus) {
+        switch ($this->fk_id_estatus) {
             case self::ABIERTO:
                 $estatus = 'Abierto';
                 break;
@@ -152,5 +153,10 @@ class Salidas extends ModelCompany
     public function detalle()
     {
         return $this->hasMany(SalidasDetalle::class, 'fk_id_salida', 'id_salida');
+    }
+
+    public function estatus()
+    {
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus');
     }
 }

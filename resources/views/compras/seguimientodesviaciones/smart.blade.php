@@ -168,7 +168,7 @@
 						{{Form::text('',null,['class'=>'form-control','readonly','id'=>'motivo_autorizacion'])}}
 					</div> --}}
 					<div class="form-group text-center col-md-12 col-sm-6">
-						{{Form::cRadio('Estatus','fk_id_estatus',[4=>'Autorizar',3=>'Rechazar'])}}
+						{{Form::cRadio('Estatus','fk_id_estatus',[17=>'Autorizar',16=>'Rechazar'])}}
 					</div>
 					<div class="form-group col-md-12 col-sm-12">
 						{{Form::cTextArea('Motivo','observaciones',['readonly','style'=>'resize:none;'])}}

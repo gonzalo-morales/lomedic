@@ -52,7 +52,7 @@ class Solicitudes extends ModelCompany
         'nombre_sucursal' => 'Sucursal',
         'fecha_creacion' => 'Fecha de solicitud',
         'fecha_necesidad' => 'Fecha necesidad',
-        'estatus_solicitud' => 'Estatus',
+        'estatus_documento_span' => 'Estatus',
     ];
 
     protected $dataColumns = [

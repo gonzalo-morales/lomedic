@@ -8,6 +8,7 @@
 
 namespace App\Http\Models\Servicios;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Servicios\RequisicionesHospitalariasDetalle;
 use App\Http\Models\Administracion\Sucursales;
@@ -43,7 +44,7 @@ class RequisicionesHospitalarias extends ModelCompany
         'fk_id_usuario_captura',
         'fk_id_usuario_modifica',
         'fecha_modifica',
-        'fk_id_estatus_requisicion_hospitalaria',
+        'fk_id_estatus',
         'fk_id_solicitante',
         'fk_id_programa',
     ];
@@ -80,12 +81,13 @@ class RequisicionesHospitalarias extends ModelCompany
         'captura.nombre_corto' => 'Captura',
         'fecha_captura' => 'Fecha captura',
         'fecha_requerimiento' => 'Fecha requerimiento',
-        'activo_span' => 'Estatus',
+        'estatus_documento_span'=>'Estatus',
+        'activo_span' => '',
     ];
 
     public function estatus()
     {
-        return $this->hasOne(EstatusRequisicionesHospitalarias::class,'id_estatus_requisicion_hospitalaria','fk_id_estatus_requisicion_hospitalaria');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus');
     }
 
     public function sucursal()

@@ -60,6 +60,6 @@ class UnidadesMedidas extends ModelBase
     }
 	public function presentacion()
     {
-        return $this->belongsTo(Presentaciones::class,'fk_id_unidad_medida');
+        return $this->hasOne(Presentaciones::class,'fk_id_unidad_medida','id_unidad_medida');
     }
 }

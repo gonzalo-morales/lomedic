@@ -45,7 +45,7 @@ class SurtidoRequisicionHospitalariaController extends ControllerBase
 
     public function getRequisiciones($company,Request $request)
     {
-        $requisiciones = RequisicionesHospitalarias::whereIn('fk_id_estatus_requisicion_hospitalaria',[1])
+        $requisiciones = RequisicionesHospitalarias::whereIn('fk_id_estatus',[19])
             ->where('fk_id_sucursal',$request->fk_id_sucursal)
             ->pluck('folio','id_requisicion')
             ->prepend('...','')

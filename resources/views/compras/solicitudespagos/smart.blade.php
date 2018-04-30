@@ -199,7 +199,7 @@
     		</div>
     	</div>
     </div>
-    @if(!empty($data->autorizaciones) && $data->fk_id_estatus_autorizacion != 1)
+    @if(!empty($data->autorizaciones) && $data->fk_id_estatus != 1)
     <div id="autorizaciones" class="row card z-depth-1-half">
     	<div class="card-header">
     		<div class="col-md-12 col-sm-12">

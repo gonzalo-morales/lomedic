@@ -83,7 +83,8 @@ class NotasCargoClientes extends ModelCompany
         'moneda.descripcion' => 'Moneda',
         'total' => 'Total',
         'total_pagado' => 'Total Pagado',
-        'estatus.estatus' => 'Estatus'
+        'estatus_documento_span' => 'Estatus',
+        'estatus_cfdi_span' => 'Estatus CFDI'
     ];
     
     public function empresa()
@@ -109,6 +110,11 @@ class NotasCargoClientes extends ModelCompany
     public function estatus()
     {
         return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus');
+    }
+
+    public function estatuscfdi()
+    {
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_cfdi');
     }
 
     public function cliente()

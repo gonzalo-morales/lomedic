@@ -336,7 +336,7 @@
     if (window['smart-model']) {
     	rivets.binders['get-pending-url'] = {
     		bind: function (el) {
-    			if (el.dataset.estatus_text.toLowerCase() !== 'surtido parcial') {
+    			if (el.dataset.fk_id_estatus != 7) {
     				$(el).hide();
     			} else {
     				el.href = '{{ companyRoute('pendings', ['salida' => '#ID#' ]) }}'.replace('#ID#', el.dataset.itemId);
@@ -345,7 +345,7 @@
     	};
     	rivets.binders['hide-update-or-delete'] = {
     		bind: function (el) {
-    			if (el.dataset.estatus_text.toLowerCase() !== 'abierto') {
+    			if (el.dataset.fk_id_estatus != 1) {
     				$(el).hide();
     			}
     		}

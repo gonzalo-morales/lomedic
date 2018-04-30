@@ -9,7 +9,7 @@ use App\Http\Models\Soporte\ArchivosAdjuntos;
 use App\Http\Models\Soporte\Categorias;
 use App\Http\Models\Soporte\Subcategorias;
 use App\Http\Models\Soporte\Acciones;
-use App\Http\Models\Soporte\EstatusTickets;
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Soporte\Impactos;
 use App\Http\Models\Soporte\Solicitudes;
 use App\Http\Models\Soporte\Urgencias;
@@ -72,7 +72,7 @@ class SolicitudesController extends ControllerBase
         $request->request->set('fk_id_empleado_solicitud', $id_solicitante);
         $request->request->set('fk_id_departamento', Empleados::find($id_solicitante)->first()->fk_id_departamento); //Busca departamento del empleado
         $request->request->set('fk_id_empresa_empleado_solicitud', Empresas::where('conexion', $company)->first()->id_empresa); // Empresa del empleado que solicitÃ³ el ticket
-        $request->request->set('fk_id_estatus_ticket', 2); // Estatus "Abierto"
+        $request->request->set('fk_id_estatus', 2); // Estatus "Abierto"
         $request->request->set('fk_id_modo_contacto', 1); // Se contacÃ³ por medio del sistema de tickets
                                                                                                                                 
         $this->validate($request, $this->entity->rules);
@@ -111,7 +111,7 @@ class SolicitudesController extends ControllerBase
             'conversations' => SeguimientoSolicitudes::where('fk_id_solicitud',$id)->where('activo',1)->orderBy('fecha_hora')->get(),
             'attachments' => ArchivosAdjuntos::where('fk_id_solicitud',$id)->where('activo',1)->where(DB::RAW('fk_id_mensaje'))->get(),
             'employees' => Empleados::selectRaw("id_empleado, concat(nombre,' ',apellido_paterno,' ',apellido_materno) AS empleado")->where('activo',1)->where('fk_id_departamento',18)->pluck('empleado','id_empleado'),
-            'status' => EstatusTickets::where('activo',1)->get(),
+            'status' => EstatusDocumentos::where('activo',1)->get(),
             'impacts' => Impactos::select('id_impacto','impacto')->where('activo',1)->pluck('impacto','id_impacto'),
             'urgencies' => Urgencias::select('id_urgencia','urgencia')->where('activo',1)->pluck('urgencia','id_urgencia'),
             'categorys' => Categorias::select('id_categoria', 'categoria')->where('activo',1)->pluck('categoria', 'id_categoria'),

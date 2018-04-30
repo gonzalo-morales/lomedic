@@ -55,7 +55,7 @@ class ValesController extends ControllerBase
 
     public function getReceta($company,Request $request)
     {
-        $recetas = Recetas::whereIn('fk_id_estatus_receta',[1,3])
+        $recetas = Recetas::whereIn('fk_id_estatus_receta',[19,20])
             ->where('fk_id_sucursal',$request->fk_id_sucursal)
             ->orderBy('folio', 'desc')
             ->pluck('folio','id_receta')

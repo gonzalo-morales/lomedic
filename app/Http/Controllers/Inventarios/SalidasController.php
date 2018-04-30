@@ -151,7 +151,7 @@ class SalidasController extends ControllerBase
 	{
 		return parent::destroy($request, $company, $idOrIds, [
 			'motivo_cancelacion' => $request->motivo_cancelacion ?? '',
-			'estatus' => Salidas::CANCELADO
+			'fk_id_estatus' => Salidas::CANCELADO
 		]);
 	}
 }

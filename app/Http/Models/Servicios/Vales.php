@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Servicios;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Administracion\Afiliaciones;
 use App\Http\Models\Administracion\Diagnosticos;
@@ -48,6 +49,7 @@ class Vales extends ModelCompany
         'receta.nombre_completo_paciente'=>'Paciente',
         'fecha_surtido'=>'Fecha de surtido',
         'sucursal.sucursal'=>'Sucursal',
+        'estatus_documento_span'=>'Estatus'
     ];
 
     public function getNombreMedicoAttribute()
@@ -112,7 +114,7 @@ class Vales extends ModelCompany
 
     public function estatus()
     {
-        return $this->belongsTo(EstatusRecetas::class,'fk_id_estatus_receta','id_estatus_receta');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_receta');
     }
     public function proyecto()
     {

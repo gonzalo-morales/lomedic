@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\ModelCompany;
@@ -40,7 +41,7 @@ class SeguimientoDesviacion extends ModelCompany
         'usuarios.nombre_corto'             => 'Usuario Captura',
         'serie_factura'                     => 'Serie Factura',
         'folio_factura'                     => 'Folio Factura',
-        'estatus.estatus'                   => 'Estatus',
+        'estatus_documento_span'            => 'Estatus',
         'tipo'                              => 'Tipo',
     ];
 
@@ -58,7 +59,7 @@ class SeguimientoDesviacion extends ModelCompany
     }
     public function estatus()
     {
-        return $this->belongsTo('App\Http\Models\Compras\EstatusAutorizaciones','fk_id_estatus','id_estatus');
+        return $this->hasOne(EstatusDocumentos::class,'fk_id_estatus','id_estatus');
     }
     // public function tipoDocumento()
     // {
