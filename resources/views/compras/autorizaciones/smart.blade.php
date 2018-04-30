@@ -20,7 +20,7 @@
         		{{Form::cText('* Tipo de autorizacion','',['disabled'],$data->condicion->nombre)}}
         	</div>
         	<div class="form-group col-md-8 col-sm-6">
-				{{Form::cRadio('* ¿Autorizado?','fk_id_estatus',[4=>'Autorizado',3=>'No Autorizado'])}}
+				{{Form::cRadio('* ¿Autorizado?','fk_id_estatus',[17=>'Autorizado',16=>'No Autorizado'])}}
         	</div>
         	<div class="form-group col-md-12 col-sm-12">
         		{{Form::cTextArea('Motivo','observaciones',['readonly','style'=>'resize:none;'])}}

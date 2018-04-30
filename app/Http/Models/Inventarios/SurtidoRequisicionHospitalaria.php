@@ -8,6 +8,7 @@
 
 namespace App\Http\Models\Inventarios;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Inventarios\SurtidoRequisicionHospitalariaDetalle;
 use App\Http\Models\ModelCompany;
 use Illuminate\Support\Facades\Auth;
@@ -63,7 +64,7 @@ class SurtidoRequisicionHospitalaria extends ModelCompany
         'id_surtido_requisicion' => '#',
         'observaciones' => 'observaciones',
         'fecha_surtido' => 'Fecha surtido',
-        'estatus.estatus_surtido' => 'Estatus'
+        'estatus_documento_span' => 'Estatus'
     ];
 
     function getNombreCompletoAttribute() {
@@ -85,7 +86,7 @@ class SurtidoRequisicionHospitalaria extends ModelCompany
 //
     public function estatus()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\EstatusSurtido','id_estatus_surtido','fk_id_estatus_surtido');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_surtido');
     }
 //
 //

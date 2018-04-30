@@ -8,6 +8,7 @@
 
 namespace App\Http\Models\Inventarios;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Inventarios\SurtidoRequisicionHospitalariaDetalle;
 use App\Http\Models\ModelCompany;
@@ -53,7 +54,7 @@ class SurtidoReceta extends ModelCompany
         'sucursal.sucursal' => 'Sucursal',
         'fk_id_receta' => 'Receta',
         'fecha_surtido' => 'Fecha surtido',
-        'estatus.estatus_surtido' => 'Estatus',
+        'estatus_documento_span' => 'Estatus',
         'observaciones' => 'observaciones',
     ];
 
@@ -76,7 +77,7 @@ class SurtidoReceta extends ModelCompany
 
     public function estatus()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\EstatusSurtido','id_estatus_surtido','fk_id_estatus_surtido');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_surtido');
     }
 
     public function detalles()

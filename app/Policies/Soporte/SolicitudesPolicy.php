@@ -7,12 +7,12 @@ use App\Http\Models\Administracion\Usuarios;
 
 class SolicitudesPolicy extends PolicyBase
 {
-    public function update(Usuarios $usuario)
+    public function update($usuario, $entity = null)
     {
         return false;
     }
-    
-    public function delete(Usuarios $usuario)
+
+    public function delete($usuario, $entity = null,$idOrIds = [])
     {
         return false;
     }

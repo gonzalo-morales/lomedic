@@ -37,4 +37,9 @@ class TiposDocumentos extends ModelBase
 		'nombre_documento' => 'Nombre documento',
 		'activo_span' => 'Estatus'
 	];
+
+    public function estatus()
+    {
+        return $this->belongsToMany(EstatusDocumentos::class,'gen_det_estatus_tipo_documento','fk_id_tipo_documento','fk_id_estatus','id_tipo_documento','id_estatus');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\ModelCompany;
 use DB;
 
@@ -57,15 +58,15 @@ class DetalleSeguimientoDesviacion extends ModelCompany
     // }
     public function detalleOrden()
     {
-        return $this->belongsTo('App\Http\Models\Compras\DetalleOrdenes','fk_id_detalle_orden_compra', 'id_orden_detalle');
+        return $this->belongsTo('App\Http\Models\Compras\DetalleOrdenes','fk_id_detalle_orden_compra', 'id_documento_detalle');
     }
     public function facturaProveedor()
     {
-        return $this->belongsTo('App\Http\Models\Compras\FacturasProveedores','fk_id_factura_proveedor','id_factura_proveedor');
+        return $this->belongsTo('App\Http\Models\Compras\FacturasProveedores','fk_id_factura_proveedor','id_documento');
     }
     public function estatus()
     {
-        return $this->hasOne(EstatusAutorizaciones::class,'id_estatus','fk_id_estatus');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus');
     }
 
 }

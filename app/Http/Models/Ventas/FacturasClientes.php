@@ -58,7 +58,8 @@ class FacturasClientes extends ModelCompany
         'moneda.descripcion' => 'Moneda',
         'total' => 'Total',
         'total_pagado' => 'Total Pagado',
-        'estatus.estatus' => 'Estatus'
+        'estatus_documento_span' => 'Estatus',
+        'estatus_cfdi_span' => 'Estatus CFDI'
     ];
     
     public function empresa()

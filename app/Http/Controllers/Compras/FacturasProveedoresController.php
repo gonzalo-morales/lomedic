@@ -75,7 +75,7 @@ class FacturasProveedoresController extends ControllerBase
             $request->request->set('fk_id_forma_pago',FormasPago::whereRaw('to_ascii(forma_pago) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->orWhereRaw('to_ascii(descripcion) ILIKE to_ascii(\''.$arrayData['Comprobante']['@metodoDePago'].'\')')->first()->id_forma_pago ?? 20);
             $request->request->set('folio_factura',isset($arrayData['Comprobante']['@folio']) ? $arrayData['Comprobante']['@folio'] : null);
         }
-        $request->request->set('fk_id_estatus_factura',1);
+        $request->request->set('fk_id_estatus',1);
         return parent::store($request,$company,$compact);
     }
 
@@ -83,7 +83,7 @@ class FacturasProveedoresController extends ControllerBase
     {
         if (!is_array($idOrIds)) {
             $isSuccess = $this->entity->where($this->entity->getKeyName(), $idOrIds)
-                ->update(['fk_id_estatus_factura' => 3,
+                ->update(['fk_id_estatus' => 3,
                     'motivo_cancelacion'=>$request->motivo['motivo_cancelacion'],
                     'fecha_cancelacion'=>DB::raw('now()')]);
             if ($isSuccess) {
@@ -117,7 +117,7 @@ class FacturasProveedoresController extends ControllerBase
         } else {
 
             $isSuccess = $this->entity->whereIn($this->entity->getKeyName(), $idOrIds)
-                ->update(['fk_id_estatus_factura' => 3,
+                ->update(['fk_id_estatus' => 3,
                     'motivo_cancelacion'=>$request->motivo_cancelacion,
                     'fecha_cancelacion'=>DB::raw('now()')]);
             if ($isSuccess) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Administracion\TiposDocumentos;
 use App\Http\Models\Administracion\Usuarios;
 use App\Http\Models\ModelCompany;
@@ -81,7 +82,7 @@ class Autorizaciones extends ModelCompany
 
     public function estatus()
     {
-        return $this->hasOne(EstatusAutorizaciones::class,'id_estatus','fk_id_estatus');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus');
     }
 
     public function estatusautorizacion()

@@ -53,7 +53,7 @@ class Ordenes extends ModelCompany
         'fecha_creacion' => 'Fecha del pedido',
         'fecha_estimada_entrega' => 'Fecha de entrega',
         'estatus_documento_span' => 'Estatus de la orden',
-        'estatus_autorizacion_span' => 'Estatus autorización',
+        'estatus_documento_autorizacion_span' => 'Estatus autorización',
         'empresa.nombre_comercial' => 'Empresa'
     ];
 
@@ -136,6 +136,6 @@ class Ordenes extends ModelCompany
 
     public function estatusautorizacion()
     {
-        return $this->hasOne(EstatusAutorizaciones::class,'id_estatus','fk_id_estatus_autorizacion');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_autorizacion');
     }
 }

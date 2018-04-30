@@ -16,7 +16,7 @@
 @if(Route::currentRouteNamed(currentRouteName('show')))
 	<div class="col-12 text-right">
 			{{ link_to(companyRoute('index'), 'Cerrar', ['class'=>'btn btn-default']) }}
-			@if(!in_array($data->fk_id_estatus_ticket, [3,4]) && $data->fk_id_empleado_tecnico == Auth::id() || $data->fk_id_empleado_tecnico == null)
+			@if(!in_array($data->fk_id_estatus, [3,4]) && $data->fk_id_empleado_tecnico == Auth::id() || $data->fk_id_empleado_tecnico == null)
         		{{ Form::button('Actualizar', ['type' =>'submit', 'class'=>'btn btn-primary']) }}
             @endif
 	</div>
@@ -37,8 +37,8 @@
                 <i class="material-icons align-middle">today</i> {{isset($data->fecha_hora_creacion) ? $data->fecha_hora_creacion : ''}}
             </small>
             <h5>
-            <span class="{{isset($data->estatusTickets->color) ? 'text-'.$data->estatusTickets->color : ''}}">
-                {{isset($data->estatusTickets->estatus) ? $data->estatusTickets->estatus : '?'}}
+            <span class="{{isset($data->estatus->class) ? 'text-'.$data->estatus->class : ''}}">
+                {{isset($data->estatus->estatus) ? $data->estatus->estatus : '?'}}
             </span>
             </h5>
         </div>
@@ -46,7 +46,7 @@
 	<div class="card my-2 z-depth-1-half">
         <div class="card-header">
     		<h5 class="text-center">
-    			<span class="{{isset($data->prioridad->color) ? 'text-'.$data->prioridad->color : ''}}">
+    			<span class="{{isset($data->prioridad->class) ? 'text-'.$data->prioridad->class : ''}}">
         			{{isset($data->prioridad->prioridad) ? $data->prioridad->prioridad : ''}}
         			<i class="material-icons align-middle">{{isset($data->prioridad->icono) ? $data->prioridad->icono : ''}}</i>
 				</span>
@@ -88,25 +88,12 @@
                     	<div class="row">
                             <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
-                        			{{ Form::cSelect('* Tecnico Asignado','fk_id_empleado_tecnico',$employees ?? [],['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
+                        			{{ Form::cSelect('* Tecnico Asignado','fk_id_empleado_tecnico',$employees ?? [],['disabled'=>in_array($data->fk_id_estatus, [3,4])]) }}
                         		</div>
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
-                        			{{ Form::cSelect('* Urgencia','fk_id_urgencia',$urgencies ?? [],['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
-                        		</div>
-                            </div>
-                    	</div>
-                    	
-                    	<div class="row">
-                            <div class="col-sm-12 col-md-6 col-lg-4">
-                        		<div class="form-group">
-                        			{{ Form::cSelect('* Impacto','fk_id_impacto',$impacts ?? [], ['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
-                        		</div>
-                            </div>
-                            <div class="col-sm-12 col-md-6 col-lg-4">
-                        		<div class="form-group">
-                        			{{ Form::cSelect('* Categoria','fk_id_categoria',$categorys ?? [], ['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4]),'data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])]) }}
+                        			{{ Form::cSelect('* Urgencia','fk_id_urgencia',$urgencies ?? [],['disabled'=>in_array($data->fk_id_estatus, [3,4])]) }}
                         		</div>
                             </div>
                     	</div>
@@ -114,12 +101,25 @@
                     	<div class="row">
                             <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
-                        			{{ Form::cSelect('* Subcategoria','fk_id_subcategoria',$subcategorys ?? [], ['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4]),'data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) }}
+                        			{{ Form::cSelect('* Impacto','fk_id_impacto',$impacts ?? [], ['disabled'=>in_array($data->fk_id_estatus, [3,4])]) }}
                         		</div>
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-4">
                         		<div class="form-group">
-                        			{{ Form::cSelect('* Accion','fk_id_accion', $acctions ?? [], ['disabled'=>in_array($data->fk_id_estatus_ticket, [3,4])]) }}
+                        			{{ Form::cSelect('* Categoria','fk_id_categoria',$categorys ?? [], ['disabled'=>in_array($data->fk_id_estatus, [3,4]),'data-url' => companyAction('Soporte\SolicitudesController@obtenerSubcategorias',['id' => '?id'])]) }}
+                        		</div>
+                            </div>
+                    	</div>
+                    	
+                    	<div class="row">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                        		<div class="form-group">
+                        			{{ Form::cSelect('* Subcategoria','fk_id_subcategoria',$subcategorys ?? [], ['disabled'=>in_array($data->fk_id_estatus, [3,4]),'data-url' => companyAction('Soporte\SolicitudesController@obtenerAcciones',['id' => '?id'])]) }}
+                        		</div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                        		<div class="form-group">
+                        			{{ Form::cSelect('* Accion','fk_id_accion', $acctions ?? [], ['disabled'=>in_array($data->fk_id_estatus, [3,4])]) }}
                         		</div>
                             </div>
                     	</div>
@@ -324,19 +324,19 @@
                                     	{!! Form::file('archivo[]',['id'=>'archivo','class'=>'form-control-file','multiple'=>'multiple']) !!}
                                     </label>
                         		</div>
-                        		@if($data->fk_id_empleado_tecnico == Auth::id() && !in_array($data->fk_id_estatus_ticket, [3,4]))
+                        		@if($data->fk_id_empleado_tecnico == Auth::id() && !in_array($data->fk_id_estatus, [3,4]))
                         		<div class="form-group col-sm-12">
                             		<span>Estatus: </span>
                                 	<div data-toggle="buttons" id="estatus">
                             			<label class="btn btn-primary active" data-url="btn-primary">
-                        					<input name="fk_id_estatus_ticket" value="" type="radio" checked>
+                        					<input name="fk_id_estatus" value="" type="radio" checked>
                         					No cambiar estatus
                                         </label>
                                 		@foreach($status as $row)
-                                			@if($row->id_estatus_ticket != 1 && $row->id_estatus_ticket != $data->fk_id_estatus_ticket)
-                            				<label class="btn btn-secondary" data-url="btn-{{$row->color}}">
+                                			@if($row->id_estatus != 1 && $row->id_estatus != $data->fk_id_estatus)
+                            				<label class="btn btn-secondary" data-url="btn-{{$row->class}}">
                             					{{$row->estatus}}
-                            					{{ Form::radio('fk_id_estatus_ticket', $row->id_estatus_ticket,['id'=>$row->id_estatus_ticket,'autocomplete'=>'off']) }}
+                            					{{ Form::radio('fk_id_estatus', $row->id_estatus,['id'=>$row->id_estatus,'autocomplete'=>'off']) }}
                                             </label>
                                 			@endif
                                 		@endforeach
@@ -344,15 +344,15 @@
                                 </div>
                         		@endif
                         		
-                        		@if(in_array($data->fk_id_estatus_ticket, [3,4]))
+                        		@if(in_array($data->fk_id_estatus, [3,4]))
 								<div class="text-center">
-									<h3>{{isset($data->estatusTickets->estatus) ? $data->estatusTickets->estatus : ''}}</h3>
+									<h3>{{isset($data->estatus->estatus) ? $data->estatus->estatus : ''}}</h3>
 								</div>
 								<div class="form-group text-center" data-toggle="buttons" id="id_estatus">
                                     ¿Deseas abrirlo de nuevo?
                     				<label class="btn btn-secondary" data-url="btn-danger">
                     					<span>No</span>
-                    					{{ Form::checkbox('fk_id_estatus_ticket', 1, false) }}
+                    					{{ Form::checkbox('fk_id_estatus', 1, false) }}
                                     </label>
                                 </div>	
                         		@endif

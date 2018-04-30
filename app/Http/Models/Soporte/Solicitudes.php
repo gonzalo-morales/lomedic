@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Soporte;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\ModelBase;
 use Illuminate\Support\HtmlString;
 
@@ -33,7 +34,7 @@ class Solicitudes extends ModelBase
 		'fk_id_empleado_solicitud',
 		'fk_id_empresa_empleado_solicitud',
 		'fk_id_sucursal',
-		'fk_id_estatus_ticket',
+		'fk_id_estatus',
 		'fk_id_categoria',
 		'fk_id_subcategoria',
 		'fk_id_accion',
@@ -61,7 +62,7 @@ class Solicitudes extends ModelBase
 	    'a_tecnico' => 'Tecnico Asignado',
 	    'a_categoria' => 'Categoria',
 	    'prioridad_span' => 'Prioridad',
-	    'a_estatus'=> 'Estatus',
+	    'estatus_documento_span'=> 'Estatus',
 	];
 	
 	/**
@@ -69,18 +70,12 @@ class Solicitudes extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $appends = ['a_solicitante','a_estatus','a_tecnico','a_prioridad','a_categoria'];
+	protected $appends = ['a_solicitante','estatus_documento_span','a_tecnico','a_prioridad','a_categoria'];
 	
 	
 	public function getASolicitanteAttribute()
 	{
 	    return $this->empleado->nombre.' '.$this->empleado->apellido_paterno.' '.$this->empleado->apellido_materno;
-	}
-	
-	public function getAEstatusAttribute()
-	{
-	    $format = new HtmlString("<span class=".(!empty($this->estatusTickets->color) ? "text-".$this->estatusTickets->color : "").">".$this->estatusTickets->estatus."&nbsp;</span>");
-	    return $format; //$this->estatusTickets->estatus;
 	}
 	
 	public function getAPrioridadAttribute()
@@ -139,9 +134,9 @@ class Solicitudes extends ModelBase
         return $this->belongsTo('App\Http\Models\Administracion\Sucursales','fk_id_sucursal','id_sucursal');
     }
 
-    public function estatusTickets()
+    public function estatus()
     {
-        return $this->hasOne('App\Http\Models\Soporte\EstatusTickets','id_estatus_ticket','fk_id_estatus_ticket');
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus');
     }
 
     public function categoria()

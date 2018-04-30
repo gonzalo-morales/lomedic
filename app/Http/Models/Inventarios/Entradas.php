@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Inventarios;
 
+use App\Http\Models\Administracion\EstatusDocumentos;
 use App\Http\Models\Compras\Ordenes;
 use App\Http\Models\Compras\SeguimientoDesviacion;
 use App\Http\Models\Compras\DetalleSeguimientoDesviacion;
@@ -36,7 +37,7 @@ class Entradas extends ModelCompany
 //        'numero_documento' => 'Numero de documento',
         'referencia_documento' => 'Referencia del documentos',
         'fecha_entrada' => 'Fecha de entrada',
-        'fk_id_estatus_entrada' => 'Estatus de la entrada'
+        'estatus_documento_span' => 'Estatus de la entrada'
     ];
 
     /*public static function boot()
@@ -143,6 +144,11 @@ class Entradas extends ModelCompany
     public function facturaProveedor()
     {
         return $this->belongsTo('App\Http\Models\Compras\FacturasProveedores','referencia_documento', 'id_factura_proveedor');
+    }
+
+    public function estatus()
+    {
+        return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_entrada');
     }
 
 }
