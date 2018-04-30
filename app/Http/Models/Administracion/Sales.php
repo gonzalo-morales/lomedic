@@ -4,6 +4,7 @@ namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 use Illuminate\Support\HtmlString;
+use App\Http\Models\Inventarios\DetallePresentaciones;
 
 class Sales extends ModelBase
 {
@@ -43,5 +44,8 @@ class Sales extends ModelBase
 		'nombre' => 'Nombre',
         'activo_span' => 'Estatus'
 	];
-
+	public function presentacion()
+	{
+		return $this->hasOne(DetallePresentaciones::class,'fk_id_sal','id_sal');
+	}
 }

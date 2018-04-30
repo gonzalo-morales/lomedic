@@ -1,4 +1,4 @@
-$(document).ready(function () {    
+$(document).ready(function () {  
     $('#addIndication').on('click', function () {
         addIndication();
     });
@@ -14,7 +14,6 @@ $(document).ready(function () {
     });
     $('[data-toggle]').tooltip();
     $('.nav-link').on('click', function (e) {
-        console.log(e)
         e.preventDefault();
         $('#clothing-nav li').each(function () {
             $(this).children().removeClass('active');

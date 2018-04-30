@@ -2,7 +2,7 @@
 
 @section('header-bottom')
 	@parent
-	@notroute(['index', 'show'])
+	@notroute(['index'])
 		<script src="{{ asset('js/inventarios/upc.js') }}"></script>
 	@endif
 @endsection
@@ -150,7 +150,19 @@
 										</tr>
 									</thead>
 									<tbody id="tbodyIndication">
-									{{-- Si está en edit o show por cada registro $data->detalle as $detalle--}}
+										@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
+											@foreach($data->indicaciones as $row => $detalle)
+												<tr>
+													<td><input type="hidden" value="{{$detalle->id_detalle}}" name="relations[has][detalle][{{$row}}][id_detalle]">{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_upc]',$detalle->fk_id_upc) }}{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_indicacion_terapeutica]',$detalle->fk_id_indicacion_terapeutica) }}{{ $detalle->indicacion->indicacion_terapeutica }}</td>
+														@if(Route::currentRouteNamed(currentRouteName('show')))
+														@else
+													<td>
+														<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
+													</td>
+														@endif
+												</tr>
+											@endforeach
+										@endif
 									</tbody>
 								</table>
 							</div>
@@ -200,7 +212,28 @@
 										</tr>
 									</thead>
 									<tbody id="tbodyPresentation">
-									{{-- Si está en edit o show por cada registro $data->detalle as $detalle--}}
+										@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
+											@foreach($data->presentaciones as $row => $detalle)
+												<tr>
+													<td>
+														<input type="hidden" value="{{$detalle->id_detalle}}" name="relations[has][detalle][{{$row}}][id_detalle]">
+														{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_upc]',$detalle->fk_id_upc) }}
+														{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_presentaciones]',$detalle->fk_id_presentaciones) }}
+														{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_sal]',$detalle->fk_id_sal) }}
+														{{ $detalle->sal->nombre }}
+													</td>
+													<td>
+														{{ $detalle->presentacion->cantidad.' '.$detalle->presentacion->unidad->clave }}
+													</td>
+														@if(Route::currentRouteNamed(currentRouteName('show')))
+														@else
+													<td>
+														<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
+													</td>
+														@endif
+												</tr>
+											@endforeach
+										@endif
 									</tbody>
 								</table>
 							</div>

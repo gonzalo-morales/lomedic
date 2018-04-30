@@ -3,6 +3,7 @@
 namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
+use App\Http\Models\Inventarios\DetalleIndicaciones;
 
 class IndicacionTerapeutica extends ModelBase
 {
@@ -45,4 +46,7 @@ class IndicacionTerapeutica extends ModelBase
 	    'descripcion' => 'Descripcion',
 		'activo_span' => 'Estatus',
 	];
+	public function detalleIndicacion(){
+		return $this->hasOne(DetalleIndicaciones::class,'fk_id_indicacion_terapeutica','id_indicacion_terapeutica');
+	}
 }

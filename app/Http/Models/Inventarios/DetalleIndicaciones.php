@@ -3,6 +3,7 @@
 namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\Inventarios\Upcs;
+use App\Http\Models\Administracion\IndicacionTerapeutica;
 use App\Http\Models\ModelCompany;
 
 class DetalleIndicaciones extends ModelCompany
@@ -36,5 +37,8 @@ class DetalleIndicaciones extends ModelCompany
 	public function upc()
 	{
 		return $this->belongsTo(Upcs::class, 'fk_id_upc');
+	}
+	public function indicacion(){
+		return $this->belongsTo(IndicacionTerapeutica::class, 'fk_id_indicacion_terapeutica');
 	}
 }

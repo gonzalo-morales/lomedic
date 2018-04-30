@@ -3,6 +3,8 @@
 namespace App\Http\Models\Inventarios;
 
 use App\Http\Models\Inventarios\Upcs;
+use App\Http\Models\Administracion\Presentaciones;
+use App\Http\Models\Administracion\Sales;
 use App\Http\Models\ModelCompany;
 
 class DetallePresentaciones extends ModelCompany
@@ -37,5 +39,11 @@ class DetallePresentaciones extends ModelCompany
 	public function upc()
 	{
 		return $this->belongsTo(Upcs::class, 'fk_id_upc');
+	}
+	public function presentacion(){
+		return $this->belongsTo(Presentaciones::class, 'fk_id_presentaciones');
+	}
+	public function sal(){
+		return $this->belongsTo(Sales::class, 'fk_id_sal');
 	}
 }
