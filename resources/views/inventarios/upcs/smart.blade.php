@@ -256,13 +256,6 @@
 								]) }}
 							</div>
 						</div>
-						<div class="col-sm-12 col-md-4">
-							<div class="form-group">
-								{{ Form::cSelect('* Clave CBN','fk_id_cbn',$cbn ?? [],[
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
-								]) }}
-							</div>
-						</div>
 						<div class="col-sm-6 col-md-4">
 							<div class="form-group">
 								{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],[
