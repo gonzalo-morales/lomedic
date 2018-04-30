@@ -353,7 +353,7 @@ class ModelBase extends Model
 	            'length' => !empty($column->getLength()) ? $column->getLength() : $column->getPrecision(),
 	            'decimal' => $column->getScale(),
 				'comment'  => $column->getComment(),
-				'pattern' => '[a-zA-ZñÑáéíóúÁÉÍÓÚ{0-9}\-\_\d\s]',
+				'pattern' => '[a-zA-ZñÑáéíóúÁÉÍÓÚ{0-9}\-\_\,\d\s]',
 	        ];
 	    }, $columns );
 

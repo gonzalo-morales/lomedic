@@ -6,7 +6,7 @@
     	<div class="form-group col-md-6">
     		{{ Form::cNumber('* Cantidad:','cantidad') }}
         </div>
-        <div class="from-group-col-md-6">
+        <div class="from-group col-md-6">
             {{ Form::cSelect('* Unidad medida', 'fk_id_unidad_medida',$unidadesmedidas ?? [],['class' => 'select2']) }}
         </div>
     	<div  class="col-md-12 text-center mt-2">
