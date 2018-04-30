@@ -8,6 +8,8 @@ use App\Http\Models\Administracion\Laboratorios;
 use App\Http\Models\Administracion\Paises;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
+use App\Http\Models\Inventarios\DetalleIndicaciones;
+use App\Http\Models\Inventarios\DetallePresentaciones;
 
 class Upcs extends ModelBase
 {
@@ -30,7 +32,29 @@ class Upcs extends ModelBase
      * @var array
      */
     protected $fillable = [
-        'upc','registro_sanitario','nombre_comercial','marca','fk_id_presentacion_venta','fk_id_laboratorio','peso','longitud','ancho','altura','descontinuado','fk_id_pais_origen','activo','descripcion'
+        'upc',
+        'registro_sanitario',
+        'nombre_comercial',
+        'descripcion',
+        'marca',
+        'peso',
+        'longitud',
+        'fk_id_pais_origen',
+        'fk_id_laboratorio',
+        'ancho',
+        'altura',
+        'descontinuado',
+        'activo',
+        'fk_id_presentacion_venta',
+        'fk_id_tipo_producto',
+        'fk_id_cbn',
+        'fk_id_forma_farmaceutica',
+        'fk_id_via_administracion',
+        'costo_base',
+        'fk_id_moneda',
+        'fk_id_tipo_familia',
+        'fk_id_subgrupo_producto',
+        'fk_id_presentaciones'
     ];
 
     /**
@@ -53,12 +77,26 @@ class Upcs extends ModelBase
      * @var array
      */
     public $rules = [
-        'upc' => 'max:25|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
-        'descripcion' => 'max:255|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
-        'nombre_comercial' => 'max:255|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
-        'registro_sanitario' => 'max:255|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
-        'marca' => 'max:255|regex:/^([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-])+((\s*)+([0-9a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃ�Ã‰Ã�Ã“Ãš_-]*)*)+$/',
+        'upc' => 'max:50|required',
+        'descripcion' => 'max:200|required',
+        'nombre_comercial' => 'max:150',
+        'registro_sanitario' => 'max:50|required',
+        'marca' => 'max:150|required',
+        'fk_id_laboratorio' => 'required',
+        'fk_id_pais_origen' => 'required',
+        'fk_id_presentacion_venta' => 'required',
+        'fk_id_tipo_producto' => 'required',
+        'fk_id_cbn' => 'required',
+        'fk_id_forma_farmaceutica' => 'required',
+        'fk_id_via_administracion' => 'required',
+        'costo_base' => 'required|numeric',
+        'fk_id_moneda' => 'required',
+        'fk_id_tipo_familia' => 'required',
+        'fk_id_subgrupo_producto' => 'required',
+        'fk_id_presentaciones' => 'required'
     ];
+
+    protected $unique = ['upc'];
 
     public function presentacion()
     {
@@ -88,5 +126,15 @@ class Upcs extends ModelBase
     public function clientes()
     {
         return $this->hasManyThrough(SociosNegocio::class,ClaveClienteProductos::class,'fk_id_upc','id_socio_negocio','id_upc','fk_id_cliente');
+    }
+
+    public function presentaciones()
+    {
+        return $this->hasMany(DetallePresentaciones::class, 'fk_id_upc','id_upc');
+    }
+
+    public function indicaciones()
+    {
+        return $this->hasMany(DetalleIndicaciones::class, 'fk_id_upc','id_upc');
     }
 }

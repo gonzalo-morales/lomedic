@@ -4,7 +4,7 @@ namespace App\Http\Models\Administracion;
 
 use App\Http\Models\ModelBase;
 use Illuminate\Support\HtmlString;
-use App\Http\Controllers\Administracion\UnidadesMedidas;
+use App\Http\Models\Administracion\UnidadesMedidas;
 
 class Presentaciones extends ModelBase
 {
@@ -43,12 +43,12 @@ class Presentaciones extends ModelBase
      */
     protected $fields = [
 		'cantidad' => 'Cantidad',
-		'unidad.unidad' => 'Unidad de Medida',
+		'unidad.clave' => 'Unidad de Medida',
         'activo_span' => 'Estatus'
 	];
 
 	public function unidad()
     {
-        return $this->hasOne(UnidadesMedidas::class,'fk_id_unidad_medida','id_unidad_medida');
+        return $this->hasOne(UnidadesMedidas::class,'id_unidad_medida');
     }
 }

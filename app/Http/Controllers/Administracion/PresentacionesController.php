@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Administracion;
 
 use App\Http\Controllers\ControllerBase;
 use App\Http\Models\Administracion\Presentaciones;
-use App\Http\Controllers\Administracion\UnidadesMedidas;
+use App\Http\Models\Administracion\UnidadesMedidas;
 
 class PresentacionesController extends ControllerBase
 {
@@ -21,7 +21,7 @@ class PresentacionesController extends ControllerBase
 	public function getDataView($entity = null)
 	{
 		return [
-		    'unidadesmedidas' => UnidadesMedidas::where('activo',1)->select('nombre','clave','id_unidad_medida')->pluck('nombre','id_unidad_medida'),
+		    'unidadesmedidas' => UnidadesMedidas::where('activo',1)->whereNotNull('clave')->select('clave','id_unidad_medida')->pluck('clave','id_unidad_medida'),
 		];
 	}
 }

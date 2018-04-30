@@ -27,7 +27,7 @@ $(document).ready(function () {
 		  }
 	});
 	
-    $(".nav-link").click(function (e) {
+    $(".nav-pills").click(function (e) {
         e.preventDefault();
         $('#clothing-nav li').each(function () {
             $(this).children().removeClass('active');
