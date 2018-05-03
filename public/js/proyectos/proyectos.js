@@ -50,7 +50,7 @@ $(document).ready(function () {
 		archivo = $("#contrato").prop('files');
 		
 		if(representante == '' || contrato == '' || fechainicio == '' || fechafin == '' || !$("#contrato").val()) {
-			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleContratos').append('<tr>'+
@@ -358,7 +358,7 @@ $(document).ready(function () {
     });
 
     $('#fk_id_cliente').change(function () {
-        $('#confirmacion').modal('show');
+        $('#confirmacion').modal({backdrop:'static',keyboard:false});
     });
 
     $('#confirmar').click(function () {//Confirmar cambio de cliente

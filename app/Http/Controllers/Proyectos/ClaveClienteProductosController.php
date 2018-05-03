@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Proyectos;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Administracion\FormaFarmaceutica;
+use App\Http\Models\Administracion\Presentaciones;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\UnidadesMedidas;
 use App\Http\Models\Administracion\ClavesProductosServicios;
 use App\Http\Models\Administracion\ClavesUnidades;
 use App\Http\Models\Administracion\Impuestos;
-use App\Http\Models\Inventarios\Productos;
+use App\Http\Models\Administracion\Sales;
 use App\Http\Models\Inventarios\Upcs;
 use Illuminate\Support\Facades\Crypt;
 
@@ -23,24 +25,8 @@ class ClaveClienteProductosController extends ControllerBase
     public function getDataView($entity = null)
     {
 
-        $upcs = Upcs::select("id_upc")->get();
 
-//        $datos = $upcs->map( function ($key, $upc) {
-//           $upc->skus->map( function ($key, $sku) use($upc) {
-//              return $sku->pivot;
-//           });
-//        }
 
-////        );
-//        $datos = null;
-//        foreach ($upcs as $upc){
-//            $datos = $upc->skus->map( function ($sku) use($upc) {
-//                return $sku->pivot;
-//            });
-//        }
-//        dd($datos);
-//
-//        exit();
         $claveproductoservicio = null;
         $upcs = null;
         if($entity){
@@ -56,8 +42,12 @@ class ClaveClienteProductosController extends ControllerBase
             'clavesunidades' => ClavesUnidades::selectRaw("id_clave_unidad, CONCAT(clave_unidad,' - ',descripcion) as descripcion")->where('activo',1)->orderBy('descripcion')
                 ->pluck('descripcion','id_clave_unidad'),
             'impuestos' => Impuestos::where('activo',1)->orderBy('impuesto')->pluck('impuesto','id_impuesto'),
-            'skus' => Productos::selectRaw("id_sku, CONCAT(sku,' - ',descripcion_corta) as descripcion")->where('activo',1)->orderBy('descripcion')->pluck('descripcion','id_sku'),
-            'upcs' => $upcs,
+//            'skus' => Productos::selectRaw("id_sku, CONCAT(sku,' - ',descripcion_corta) as descripcion")->where('activo',1)->orderBy('descripcion')->pluck('descripcion','id_sku'),
+//            'upcs' => $upcs,
+            'formafarmaceutica' => FormaFarmaceutica::where('activo',1)->where('eliminar',0)->pluck('forma_farmaceutica','id_forma_farmaceutica'),
+            'presentaciones' => Presentaciones::join('gen_cat_unidades_medidas', 'gen_cat_unidades_medidas.id_unidad_medida', '=', 'adm_cat_presentaciones.fk_id_unidad_medida')
+                ->whereNotNull('clave')->selectRaw("Concat(cantidad,' ',clave) as text, id_presentacion as id")->pluck('text','id'),
+            'sales' => Sales::where('activo',1)->pluck('nombre','id_sal')->sortBy('nombre'),
             'js_upcs' => Crypt::encryptString('"selectRaw":["id_upc as id, CONCAT(upc,\' - \',nombre_comercial) as text"],"whereHas":[{"skus":{"where":["fk_id_sku",$fk_id_sku]}}]'),
             'js_cantidad_upc' => Crypt::encryptString('"conditions":[{"where":["id_upc","$fk_id_upc"]}],"whereHas":[{"skus": {"where": ["fk_id_sku", "$fk_id_sku"]}}],"pivot":["skus"]'),
             'js_clave_producto_servicio' => Crypt::encryptString('"selectRaw":["id_clave_producto_servicio as id, CONCAT(clave_producto_servicio,\' - \',descripcion) as text"],"conditions":[{"where":["clave_producto_servicio","ILIKE","%$term%"]},{"orWhere":["descripcion","ILIKE","%$term%"]}]'),
