@@ -132,29 +132,26 @@ class ProductosController extends ControllerBase
         $id_forma_farmaceutica = request()->id_forma;
         $id_presentaciones = request()->id_presentaciones;
         $sales = json_decode(request()->arr_sales);
-        $presentaciones = json_decode(request()->arr_presentaciones);
-        $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->get();
+        // $sales = json_decode(request()->arr_sales);
+        // $presentaciones = json_decode(request()->arr_presentaciones);
+        $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->with('laboratorio')->get();
 
-        $upcs->map(function($upc) use ($sales, $presentaciones){
-            $upc->presentaciones->filter(function($upc_detalle) use ($sales, $presentaciones){
-                return $upc_detalle->whereIn('fk_id_presentaciones',$presentaciones)->whereIn('fk_id_sal',$sales);
+        $upcs->map(function($upc) use ($sales){
+            $upc->presentaciones->filter(function($upc_detalle) use ($sales){
+                // return $upc_detalle->whereIn('fk_id_presentaciones',$presentaciones)->whereIn('fk_id_sal',$sales);
+                foreach ($sales as $sal) {
+                    if($upc_detalle->fk_id_presentaciones != $sal->id_concentracion && $upc_detalle->fk_id_sal != $sal->id_sal)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return $upc_detalle;
+                    }
+                }
             });
             return $upc;  
         });
-        // foreach ($upcs as $upc) {
-        //     foreach ($sales as $sal) {
-        //         foreach ($upc->presentaciones as $detalle_upc) {
-        //             if($detalle_upc->fk_id_presentaciones != $sal->id_presentacion && $detalle_upc->fk_id_sal != $sal->sal_id)
-        //             {
-        //                 $loop_validator = false;
-        //             }
-        //             if($loop_validator = false)
-        //             {
-        //                 return false;
-        //             }
-        //         }
-        //     }
-        // }
         return json_encode($upcs);
     }
     // public function obtenerUpcs($company, $id, Request $request)
