@@ -243,9 +243,9 @@ class ModelBase extends Model
 	 */
 	public function getFields()
 	{
-		if (!$this->fields) {
+		/*if (!$this->fields) {
 			throw new \Exception('Undefined $fields in ' . class_basename($this) . ' model.');
-		}
+		}*/
 		return $this->fields;
 	}
 
