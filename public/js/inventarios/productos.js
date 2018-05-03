@@ -1,14 +1,4 @@
 $(document).ready(function () {
-	//Inicializar tabla
-    window.dataTable = new DataTable('#upcs', {
-    	header: true,
-        fixedHeight: true,
-        fixedColumns: false,
-        searchable: false,
-        perPageSelect: false,
-        labels:{info:""},
-    });
-    
 	var from_picker = $('#activo_desde').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	var to_picker = $('#activo_hasta').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 
@@ -44,11 +34,6 @@ $(document).ready(function () {
 		  }
 	});
 	
-	$('#detallesku a[data-toggle="tab"]').click(function (e) {
-		e.preventDefault()
-	  	$(this).tab('show')
-	});
-	
 	$('#fk_id_serie_sku').on('change', function() {
 		if($(this).val() == 1 || $(this).val() == '') {
 			$('#sku').val('');
@@ -77,7 +62,7 @@ $(document).ready(function () {
     		});
 		}
 	});
-	
+
 	$('#cantidad').on('change', function() {
 		var oldvalue = this.old;
 		var newvalue = this.value;
@@ -85,71 +70,37 @@ $(document).ready(function () {
 		// console.log(oldvalue+ ' '+newvalue);
 	});
 
-    $('#agrega-detalle').on('click', function() {
-    	var upcs_ids = [];
-    	$('.id_upc').each(function (i) {
-    		upcs_ids.push($('.id_upc')[i].value); 
-		});
-    	
-    	let row_id = dataTable.activeRows.length + 1;
-		
-    	id_upc = $('#fk_id_upc option:selected').val();
-    	cantidad = $('#cantidad').val();
-        text_upc = $('#fk_id_upc option:selected').text();
-        
-        
-        if(id_upc == '' ){
-        	$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un upc.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-        }
-        else if(cantidad == '' | Number.isInteger(cantidad) != false) {
-        	$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar la cantidad, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-        }
-        else if(upcs_ids.indexOf(id_upc) !== -1) {
-        	$.toaster({priority:'danger',title:'¡Error!',message:'El upc seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-        }
-        else {
-	        var url = $('#fk_id_upc').data('url');
-	        $.ajax({
-	            type: "GET",
-	            url: url,
-	            data: {param_js,$id_upc:id_upc},
-	            dataType: "json",
-	            success: function (data) {
-	            	 dataTable.insert( {
-	            		 data:[
-	            			 '<input type="hidden" class="id_upc" name="detalles['+row_id+'][fk_id_upc]" value="' + id_upc + '" /> '+text_upc,
-	                         data[0].nombre_comercial,
-	                         (data[0].descripcion) ? data[0].descripcion : '<span class="text-secondary">Sin descripción</span>',
-	                         data[0].laboratorio.laboratorio,
-	                         '<input type="hidden" name="detalles['+row_id+'][cantidad]" value="' + cantidad + '" /> '+cantidad,
-	                         '<button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button>'
-	            		 ]
-	            	 }),
-	            	 $.toaster({priority:'success',title:'¡Correcto!',message:'El Upc se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-	            },
-	            error: function () {
-	            	$.toaster({priority:'danger',title:'¡Error!',message:'Algo salio mal :( Revisa que los datos sean correctos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-	            }
-	        });
-        }
+    $('#addPresentation').on('click', function () {
+        addSalt();
 	});
+	
+    $('[data-toggle]').tooltip();
+    $('.nav-link').on('click', function (e) {
+        e.preventDefault();
+        $('#clothing-nav li').each(function () {
+            $(this).children().removeClass('active');
+        });
+        $('.tab-pane').removeClass('active').removeClass('show');
+        $(this).addClass('active');
+        let tab = $(this).prop('href');
+        tab = tab.split('#');
+        $('#' + tab[1]).addClass('active').addClass('show');
+	});
+	
 	$(document).on('submit',function (e) {
 		if($('#upcs tbody tr').length == 0)
 		{
 			e.preventDefault();
-            $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Para guardar se requiere que mínimo agregues un UPC, puedes agregarlos en la pestaña <b>Upcs</b>',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
-            });
+			mensajeAlerta("Para guardar se requiere que mínimo agregues un UPC, puedes agregarlos en la pestaña <b>Upcs</b>","danger");
 		}
 		validateDetail();
 		if(!$('#form-model').valid())
 		{
 			e.preventDefault();
-            $.toaster({
-                priority: 'danger', title: '¡Error!', message: 'Para guardar se requiere que mínimo indiques el Impuesto y Subgrupo al producto, puedes agregarlos en la pestaña <b>General</b>',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
-            });
+			mensajeAlerta("Para guardar se requiere que mínimo indiques el Impuesto y Subgrupo al producto, puedes agregarlos en la pestaña <b>General</b>","error");
 		}
 	});
+
 });
     
 function borrarFila(el) {
@@ -171,4 +122,71 @@ function validateDetail() {
 			required: 'Seleccione un subgrupo'
 		}
 	})
+}
+
+function addSalt(){
+    let salId = $('#sal option:selected').val();
+    let salText = $('#sal option:selected').text();
+    let concentrationId = $('#concentracion option:selected').val();
+    let concentrationText = $('#concentracion option:selected').text();
+    let $tbody = $('#tbodyPresentation');
+
+    $tbody.append(
+        '<tr>'+
+        '<td>' + '<input type="hidden" name="sal" class="id_sal" data-name="'+ salText +'" value="'+salId+'">' + salText + '</td>' +
+        '<td>' + '<input type="hidden" name="concentracion" class="id_concentracion" data-name="'+ concentrationText +'" value="'+concentrationId+'">' + concentrationText + '</td>' +
+        '<td>' + '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>' + '</td>' +
+         +'</tr>'
+    );
+    mensajeAlerta("Elemento agregado con éxito","success");
+    $('[data-toggle]').tooltip();
+}
+
+function mensajeAlerta(mensaje,tipo){
+    var titulo = '';
+    if(tipo == 'danger'){ titulo = '¡Error!'}
+	else if(tipo == 'success'){titulo = '¡Correcto!' }
+	else if(tipo == 'warning'){titulo = '¡Advertencia!' }
+    $.toaster({priority:tipo,
+            title: titulo,
+            message:mensaje,
+            settings:{'timeout':8000,
+                'toaster':{'css':{'top':'5em'}}}
+        }
+    );
+}
+
+$('#fk_id_forma_farmaceutica').on('change',function(){
+	if( $(this).val() != '' || $('#tbodyPresentation tr').length > 0 ){
+		getUpcs();
+	}
+})
+
+function getUpcs(){
+	let idForma = $('#fk_id_forma_farmaceutica').val();
+	let	idPresentaciones = $('#fk_id_presentaciones').val();
+	let sales = [];
+	let presentaciones = [];
+	for (const row of $('#tbodyPresentation tr')) {
+		let sal =  +$(row).find('.id_sal').val();
+		let concentracion =  +$(row).find('.id_concentracion').val();
+		sales.push(sal)
+		presentaciones.push(concentracion);
+	}
+	$.ajax({
+		url: $('#fk_id_forma_farmaceutica').data('url'),
+		data: {
+			'id_forma':idForma,
+			'id_presentaciones':idPresentaciones,
+			'arr_sales':JSON.stringify(sales),
+			'arr_presentaciones':JSON.stringify(presentaciones),
+		},
+		dataType: "json",
+		success: function (response) {
+			if(response)
+			{
+				
+			}
+		}
+	});
 }

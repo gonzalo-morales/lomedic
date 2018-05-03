@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\Response;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Administracion\GrupoProductos;
 use App\Http\Models\Administracion\SubgrupoProductos;
-use App\Http\Models\Administracion\UnidadesMedidas;
 use App\Http\Models\Administracion\SeriesSkus;
 use App\Http\Models\Administracion\Impuestos;
 use App\Http\Models\Administracion\FamiliasProductos;
-use App\Http\Models\Administracion\PresentacionVenta;
+use App\Http\Models\Administracion\Presentaciones;
+use App\Http\Models\Administracion\Sales;
+use App\Http\Models\Administracion\FormaFarmaceutica;
 use App\Http\Models\SociosNegocio\TiposSocioNegocio;
+use App\Http\Models\Inventarios\Cbn;
 use App\Http\Models\Inventarios\Upcs;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
@@ -72,19 +74,26 @@ class ProductosController extends ControllerBase
         }
 
         return [
-            'clavemedida' => UnidadesMedidas::where('activo',1)->whereNotNull('clave')->pluck('clave','id_unidad_medida')->sortBy('clave'),
-            'seriesku' => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('...',''),
-            'unidadmedida' => UnidadesMedidas::where('activo',1)->pluck('nombre','id_unidad_medida')->sortBy('nombre')->prepend('...',''),
-            'subgrupo' => collect($subgrupos ?? [])->prepend('...','')->toArray(),
-            'impuesto' => Impuestos::where('activo',1)->pluck('impuesto','id_impuesto')->sortBy('impuesto')->prepend('...',''),
-            'familia' => FamiliasProductos::where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('...',''),
-            'presentacionventa' => PresentacionVenta::where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('...',''),
+            'seriesku'         => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('...',''),
+            'subgrupo'         => collect($subgrupos ?? [])->prepend('...','')->toArray(),
+            'formafarmaceutica'=> FormaFarmaceutica::where('activo',1)->pluck('forma_farmaceutica','id_forma_farmaceutica')->sortBy('forma_farmaceutica')->prepend('...',''),
+            'cbn'              => Cbn::where('activo',1)->selectRaw("Concat(clave_cbn,'-',descripcion) as text,id_cbn as id")->pluck('text','id')->prepend('...',''),
+            'impuesto'         => Impuestos::where('activo',1)->pluck('impuesto','id_impuesto')->sortBy('impuesto')->prepend('...',''),
+            'familia'          => FamiliasProductos::where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('...',''),
             'metodovaloracion' => MetodosValoracion::where('activo',1)->pluck('metodo_valoracion','id_metodo_valoracion')->sortBy('metodo_valoracion')->prepend('...',''),
-            'periodos' => Periodos::where('activo',1)->pluck('periodo','id_periodo')->sortBy('periodo')->prepend('...',''),
-            'sociosnegocio' => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')
-                ->pluck('nombre_comercial','id_socio_negocio')->sortBy('nombre_comercial')->prepend('...',''),
-            'upcs' => Upcs::where('activo',1)->select('id_upc','upc')->pluck('upc','id_upc')->sortBy('upc')->prepend('...',''),
-            'api_js'=>Crypt::encryptString('"select": ["nombre_comercial", "descripcion","fk_id_laboratorio"], "conditions": [{"where": ["id_upc","$id_upc"]}], "with": ["laboratorio"]')
+            'periodos'         => Periodos::where('activo',1)->pluck('periodo','id_periodo')->sortBy('periodo')->prepend('...',''),
+            'sociosnegocio'    => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_compra')
+                                                ->pluck('nombre_comercial','id_socio_negocio')->sortBy('nombre_comercial')->prepend('...',''),
+            'presentaciones'   => Presentaciones::join('gen_cat_unidades_medidas', 'gen_cat_unidades_medidas.id_unidad_medida', '=', 'adm_cat_presentaciones.fk_id_unidad_medida')
+                                                ->whereNotNull('clave')->selectRaw("Concat(cantidad,' ',clave) as text, id_presentacion as id")->pluck('text','id'),
+            'sales'            => Sales::where('activo',1)->pluck('nombre','id_sal')->sortBy('nombre'),
+            'api_js'           => Crypt::encryptString('"select": ["nombre_comercial", "descripcion","fk_id_laboratorio"], "conditions": [{"where": ["id_upc","$id_upc"]}], "with": ["laboratorio"]'),
+            // 'upcs_js'          => Crypt::encryptString('
+            // "select":["id_upc","upc","descripcion","marca","nombre_comercial"],
+            // "conditions":
+            //     [{"where":["fk_id_forma_farmaceutica",$fk_id_forma_farmaceutica],["fk_id_presentaciones", $fk_id_presentaciones]}],
+            // "whereHas": [{"presentaciones":{"where":["fk_id_presentaciones", "$fk_id_presentaciones"],["fk_id_sal", "$fk_id_sal"]}}]
+            // ')
         ];
     }
 
@@ -118,8 +127,38 @@ class ProductosController extends ControllerBase
         return Response::json($skus_set);
     }
 
-    public function obtenerUpcs($company, $id)
+    public function getUpcs()
     {
-        return $this->entity->find($id)->upcs()->select('id_upc as id','upc as text','descripcion')->get();
+        $id_forma_farmaceutica = request()->id_forma;
+        $id_presentaciones = request()->id_presentaciones;
+        $sales = json_decode(request()->arr_sales);
+        $presentaciones = json_decode(request()->arr_presentaciones);
+        $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->get();
+
+        $upcs->map(function($upc) use ($sales, $presentaciones){
+            $upc->presentaciones->filter(function($upc_detalle) use ($sales, $presentaciones){
+                return $upc_detalle->whereIn('fk_id_presentaciones',$presentaciones)->whereIn('fk_id_sal',$sales);
+            });
+            return $upc;  
+        });
+        // foreach ($upcs as $upc) {
+        //     foreach ($sales as $sal) {
+        //         foreach ($upc->presentaciones as $detalle_upc) {
+        //             if($detalle_upc->fk_id_presentaciones != $sal->id_presentacion && $detalle_upc->fk_id_sal != $sal->sal_id)
+        //             {
+        //                 $loop_validator = false;
+        //             }
+        //             if($loop_validator = false)
+        //             {
+        //                 return false;
+        //             }
+        //         }
+        //     }
+        // }
+        return json_encode($upcs);
     }
+    // public function obtenerUpcs($company, $id, Request $request)
+    // {
+    //     return $this->entity->find($id)->upcs()->select('id_upc as id','upc as text','descripcion')->get();
+    // }
 }

@@ -20,16 +20,16 @@ $(document).ready(function () {
         });
         $('.tab-pane').removeClass('active').removeClass('show');
         $(this).addClass('active');
-        var tab = $(this).prop('href');
+        let tab = $(this).prop('href');
         tab = tab.split('#');
         $('#' + tab[1]).addClass('active').addClass('show');
     });
 });
 
 function addIndication(){
-    const indicationId = $('#indicacion option:selected').val();
-    const indicationText = $('#indicacion option:selected').text();
-    const $tbody = $('#tbodyIndication');
+    let indicationId = $('#indicacion option:selected').val();
+    let indicationText = $('#indicacion option:selected').text();
+    let $tbody = $('#tbodyIndication');
     let i = $('#tbodyIndication > tr').length;
     let row_id = i > 0 ? +$('#tbodyIndication > tr:last').find('#index').val()+1 : 0;
 
@@ -44,11 +44,11 @@ function addIndication(){
 }
 
 function addSalt(){
-    const salId = $('#sal option:selected').val();
-    const salText = $('#sal option:selected').text();
-    const concentrationId = $('#concentracion option:selected').val();
-    const concentrationText = $('#concentracion option:selected').text();
-    const $tbody = $('#tbodyPresentation');
+    let salId = $('#sal option:selected').val();
+    let salText = $('#sal option:selected').text();
+    let concentrationId = $('#concentracion option:selected').val();
+    let concentrationText = $('#concentracion option:selected').text();
+    let $tbody = $('#tbodyPresentation');
     let i = $('#tbodyPresentation > tr').length;
     let row_id = i > 0 ? +$('#tbodyPresentation > tr:last').find('#index').val()+1 : 0;
 

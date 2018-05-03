@@ -51,8 +51,8 @@ class UpcsController extends ControllerBase
         ];
     }
     
-    public function obtenerUpcs($company,$id)
-    {
-        return Upcs::where('fk_id_sku',$id)->select('id_upc as id','upc as text')->get();
-    }
+    // public function obtenerUpcs($company,$id,Request $request)
+    // {
+    //     return Upcs::where('fk_id_forma_farmaceutica',$id)->select('id_upc as id','upc as text')->get();
+    // }
 }

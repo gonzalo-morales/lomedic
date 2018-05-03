@@ -87,7 +87,7 @@ class Upcs extends ModelBase
         'fk_id_tipo_producto' => 'required',
         'fk_id_forma_farmaceutica' => 'required',
         'fk_id_via_administracion' => 'required',
-        'costo_base' => 'required|numeric',
+        'costo_base' => 'required',
         'fk_id_moneda' => 'required',
         'fk_id_tipo_familia' => 'required',
         'fk_id_subgrupo_producto' => 'required',
