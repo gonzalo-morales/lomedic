@@ -1,7 +1,7 @@
 $(document).ready(function () {
 	var from_picker = $('#activo_desde').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	var to_picker = $('#activo_hasta').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
-
+	
 	if(!$('#activo').prop('checked')) {
 		from_picker.clear().stop();
 		to_picker.clear().stop();
@@ -108,6 +108,9 @@ $(document).ready(function () {
 	$('#fk_id_presentaciones').on('change',function(){
 		return validateFieldsforUPC();
 	})
+	if($('#fk_id_forma_farmaceutica').val() > 0 && $('#fk_id_presentaciones').val() > 0 && $('#tbodyPresentation tr').length > 0){
+		getUpcs();
+	}
 });
 
 function validateFieldsforUPC(){
@@ -125,7 +128,7 @@ function borrarFila(el) {
     tr.fadeOut(400, function(){
 		tr.remove().stop();
 	})
-	mensajeAlerta("Elemento eliminado con éxito","warning");
+	mensajeAlerta("Fila eliminada con éxito","warning");
 	validateFieldsforUPC();
 }
 
@@ -217,6 +220,7 @@ function getUpcs(){
 		dataType: "json",
 		success: function (response) {
 			if(response.length > 0){
+				$('#current_upcs').text(response.length)
 				addUpcs(response);
 			}else{
 				mensajeAlerta("Al parecer no hay UPC's con las características indicadas, verifica que la presentación, forma farmacéutica y sales sean los adecuados.","danger");
@@ -228,7 +232,6 @@ function getUpcs(){
 function addUpcs(response){
 	let $tbody = $('#upcs > tbody');
 	$tbody.empty();
-	$('#current_upcs').text(response.length)
 	for (const key in response) {
 		$tbody.append(
 			'<tr>'+
@@ -240,6 +243,6 @@ function addUpcs(response){
 			 +'</tr>'
 		);
 	}
-    mensajeAlerta("UPC(s) agregados con éxito.","success");
+    mensajeAlerta("UPC(s) obtenidos con éxito.","success");
     $('[data-toggle]').tooltip();
 }

@@ -1,9 +1,5 @@
 @extends(smart())
 
-@section('header-top')
-	@parent
-	<link rel="stylesheet" href="{{ asset('vendor/vanilla-datatables/vanilla-dataTables.css') }}">
-@endsection
 @section('header-bottom')
     @parent
     @if(!Route::currentRouteNamed(currentRouteName('index')))
