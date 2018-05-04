@@ -235,7 +235,7 @@
 										<th>Nombre Comercial</th>
 										<th>Descripcion</th>
 										<th>Laboratorio</th>
-										<th>Cantidad</th>
+										<th>Precio</th>
 										<th></th>
 									</tr>
 								</thead>

@@ -71,7 +71,7 @@ $(document).ready(function () {
 	});
 
     $('#addPresentation').on('click', function () {
-        addSalt();
+        return addSalt();
 	});
 	
     $('[data-toggle]').tooltip();
@@ -97,16 +97,36 @@ $(document).ready(function () {
 		if(!$('#form-model').valid())
 		{
 			e.preventDefault();
-			mensajeAlerta("Para guardar se requiere que mínimo indiques el Impuesto y Subgrupo al producto, puedes agregarlos en la pestaña <b>General</b>","error");
+			mensajeAlerta("Para guardar se requiere que mínimo indiques el Impuesto y Subgrupo al producto, puedes agregarlos en la pestaña <b>General</b>","danger");
 		}
 	});
 
+	$('#fk_id_forma_farmaceutica').on('change',function(){
+		return validateFieldsforUPC();
+	})
+
+	$('#fk_id_presentaciones').on('change',function(){
+		return validateFieldsforUPC();
+	})
 });
-    
+
+function validateFieldsforUPC(){
+	let $tableLength = $('#tbodyPresentation tr').length;
+	let formaFarma = $('#fk_id_forma_farmaceutica').val();
+	if( $tableLength > 0 && formaFarma != '' ){
+		return getUpcs();
+	} else{
+		return mensajeAlerta("Necesito de mínimo una sal, concentración, presentación y forma farmacéutica para poder mostrar los UPCs relacionados.","warning",10000);
+	}
+}
+
 function borrarFila(el) {
-    let fila = dataTable.data[$(el).parents('tr').index()];
-    dataTable.rows().remove([$(el).parents('tr').index()]);
-        $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado la fila correctamente',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    var tr = $(el).closest('tr');
+    tr.fadeOut(400, function(){
+		tr.remove().stop();
+	})
+	mensajeAlerta("Elemento eliminado con éxito","warning");
+	validateFieldsforUPC();
 }
 
 function validateDetail() {
@@ -129,20 +149,35 @@ function addSalt(){
     let salText = $('#sal option:selected').text();
     let concentrationId = $('#concentracion option:selected').val();
     let concentrationText = $('#concentracion option:selected').text();
-    let $tbody = $('#tbodyPresentation');
+	let $tbody = $('#tbodyPresentation');
+    let i = $('#tbodyPresentation > tr').length;
+    let row_id = i > 0 ? +$('#tbodyPresentation > tr:last').find('#index').val()+1 : 0;
+	let existe = false;
+	
+    $('#tbodyPresentation tr').each(function () {
+       let sal = $(this).find('.id_sal').val();
+       let concentracion = $(this).find('.id_concentracion').val();
+       if(sal === salId && concentracion === concentrationId)
+           existe = true;
+    });
 
-    $tbody.append(
-        '<tr>'+
-        '<td>' + '<input type="hidden" name="sal" class="id_sal" data-name="'+ salText +'" value="'+salId+'">' + salText + '</td>' +
-        '<td>' + '<input type="hidden" name="concentracion" class="id_concentracion" data-name="'+ concentrationText +'" value="'+concentrationId+'">' + concentrationText + '</td>' +
-        '<td>' + '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>' + '</td>' +
-         +'</tr>'
-    );
-    mensajeAlerta("Elemento agregado con éxito","success");
-    $('[data-toggle]').tooltip();
+    if(!existe){
+		$tbody.append(
+			'<tr>'+
+			'<td>' + '<input type="hidden" id="index" value="'+row_id+'"><input type="hidden" name="relations[has][presentaciones]['+row_id+'][fk_id_sal]" class="id_sal" data-name="'+ salText +'" value="'+salId+'">' + salText + '</td>' +
+			'<td>' + '<input type="hidden" name="relations[has][presentaciones]['+row_id+'][fk_id_presentaciones]" class="id_concentracion" data-name="'+ concentrationText +'" value="'+concentrationId+'">' + concentrationText + '</td>' +
+			'<td>' + '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>' + '</td>' +
+			+'</tr>'
+		);
+		mensajeAlerta("Elemento agregado con éxito","success");
+		$('[data-toggle]').tooltip();
+		validateFieldsforUPC();
+	} else {
+		mensajeAlerta(`La sal: <b>${salText}</b> y la cantidad: <b>${concentrationText}</b> ya existe, prueba con otra concentración.`,"warning");
+	}
 }
 
-function mensajeAlerta(mensaje,tipo){
+function mensajeAlerta(mensaje,tipo,tiempo){
     var titulo = '';
     if(tipo == 'danger'){ titulo = '¡Error!'}
 	else if(tipo == 'success'){titulo = '¡Correcto!' }
@@ -150,17 +185,11 @@ function mensajeAlerta(mensaje,tipo){
     $.toaster({priority:tipo,
             title: titulo,
             message:mensaje,
-            settings:{'timeout':8000,
+            settings:{'timeout':(tiempo) ? tiempo : 8000,
                 'toaster':{'css':{'top':'5em'}}}
         }
     );
 }
-
-$('#fk_id_forma_farmaceutica').on('change',function(){
-	if( $(this).val() != '' || $('#tbodyPresentation tr').length > 0 ){
-		getUpcs();
-	}
-})
 
 function getUpcs(){
 	let idForma = $('#fk_id_forma_farmaceutica').val();
@@ -170,8 +199,12 @@ function getUpcs(){
 	for (const row of $('#tbodyPresentation tr')) {
 		let sal =  +$(row).find('.id_sal').val();
 		let concentracion =  +$(row).find('.id_concentracion').val();
-		sales.push(sal)
+		sales.push(sal);
 		presentaciones.push(concentracion);
+		// let obj = {};
+		// obj.id_sal = sal;
+		// obj.id_concentracion = concentracion;
+		// sales.push(obj);
 	}
 	$.ajax({
 		url: $('#fk_id_forma_farmaceutica').data('url'),
@@ -183,10 +216,30 @@ function getUpcs(){
 		},
 		dataType: "json",
 		success: function (response) {
-			if(response)
-			{
-				
+			if(response.length > 0){
+				addUpcs(response);
+			}else{
+				mensajeAlerta("Al parecer no hay UPC's con las características indicadas, verifica que la presentación, forma farmacéutica y sales sean los adecuados.","danger");
 			}
 		}
 	});
+}
+
+function addUpcs(response){
+	let $tbody = $('#upcs > tbody');
+	$tbody.empty();
+	$('#current_upcs').text(response.length)
+	for (const key in response) {
+		$tbody.append(
+			'<tr>'+
+			'<td>' + response[key].upc + '</td>' +
+			'<td>' + response[key].nombre_comercial + '</td>' +
+			'<td>' + response[key].descripcion + '</td>' +
+			'<td>' + response[key].laboratorio.laboratorio + '</td>' +
+			'<td>' + '$' + response[key].costo_base + '</td>' +
+			 +'</tr>'
+		);
+	}
+    mensajeAlerta("UPC(s) agregados con éxito.","success");
+    $('[data-toggle]').tooltip();
 }

@@ -32,31 +32,45 @@ class Productos extends ModelCompany
      */
     protected $fillable = [
         "sku",
-        "activo",
+        "fk_id_cbn",
+        "fk_id_serie_sku",
+        "fk_id_forma_farmaceutica",
+        "fk_id_presentaciones",
         "descripcion_corta",
-        "descripcion",
-        "presentacion",
-        "fk_id_unidad_medida",
         "articulo_venta",
         "articulo_compra",
         "articulo_inventario",
         "maneja_lote",
         "fk_id_subgrupo",
-        "fk_id_serie_sku",
         "fk_id_impuesto",
         "fk_id_familia",
+        "activo",
         "activo_desde",
         "activo_hasta",
         "necesario",
         "maximo",
         "minimo",
-        "punto_reorden",
         "fk_id_metodo_valoracion",
+        "punto_reorden",
         "fk_id_intervalo",
         "minima_periodo",
         "tiempo_lead",
         "dias_tolerancia",
-        "fk_id_clave_medida"
+        "descripcion",
+        "descripcion_cenefas",
+        "descripcion_ticket",
+        "descripcion_rack",
+        "descripcion_cbn"
+    ];
+
+    public $rules = [
+        'fk_id_serie_sku' => 'required',
+        'sku' => 'required',
+        'fk_id_forma_farmaceutica' => 'required',
+        'fk_id_presentaciones' => 'required',
+        'descripcion_corta' => 'required|max:200',
+        'fk_id_impuesto' => 'required',
+        'fk_id_subgrupo' => 'required'
     ];
 
     /**
@@ -121,4 +135,10 @@ class Productos extends ModelCompany
     {
         return $this->belongsto(Cbn::class,'id_cbn','fk_id_cbn');
     }
+
+    public function presentaciones()
+    {
+        return $this->hasMany(DetallePresentacionesSku::class, 'fk_id_sku','id_sku');
+    }
+
 }
