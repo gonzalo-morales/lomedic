@@ -2,7 +2,7 @@
 
 return [
     'home' => 'Inicio',
-    'login' => 'Iniciar Sessi�n',
+    'login' => 'Iniciar Sessión',
     'edit' => 'Editar',
     'create' => 'Agregar',
     'show' => 'Ver',

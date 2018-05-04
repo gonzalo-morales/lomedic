@@ -93,7 +93,7 @@ class SolicitudesController extends ControllerBase
                 }],
                 "whereHas":[{
                     "empresas":{
-                        "where":["fk_id_empresa","'.dataCompany()->id_empresa.'"]
+                        "where":["fk_id_empresa","'.request()->empresa->id_empresa.'"]
                     }
                 },
                 {

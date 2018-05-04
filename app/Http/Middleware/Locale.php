@@ -4,10 +4,9 @@ namespace App\Http\Middleware;
 use Closure;
 use App;
 use Config;
-use Session;
 use Cookie;
 
-class locale
+class Locale
 {
     /**
      * Handle an incoming request.

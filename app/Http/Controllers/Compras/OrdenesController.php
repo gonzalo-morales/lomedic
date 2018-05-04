@@ -61,7 +61,7 @@ class OrdenesController extends ControllerBase
                 break;
         }
         $proveedores = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->whereHas('empresas',function ($empresa){
-            $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
+            $empresa->where('id_empresa',request()->empresa->id_empresa)->where('eliminar','f');
         })->pluck('nombre_comercial','id_socio_negocio');
         return [
             'companies' => Empresas::where('activo',1)->where('conexion','<>',\request()->company)->where('conexion','<>','corporativo')->pluck('nombre_comercial','id_empresa'),
@@ -71,7 +71,7 @@ class OrdenesController extends ControllerBase
             'sucursales' 	 => Sucursales::isActivo()->whereHas('usuario', function($u) use ($user){
                 $u->where('fk_id_usuario', $user);
             })->whereHas('empresas',function($e){
-                $e->where('fk_id_empresa',dataCompany()->id_empresa);
+                $e->where('fk_id_empresa',request()->empresa->id_empresa);
             })->pluck('sucursal','id_sucursal'),
             'proveedores' => $proveedores ?? '',
             'tiposEntrega' => TiposEntrega::where('activo',1)->pluck('tipo_entrega','id_tipo_entrega'),

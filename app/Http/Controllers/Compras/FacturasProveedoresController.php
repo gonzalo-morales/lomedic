@@ -31,7 +31,7 @@ class FacturasProveedoresController extends ControllerBase
 	public function getDataView($entity = null)
     {
         $proveedores = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->whereHas('empresas',function ($empresa){
-            $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
+            $empresa->where('id_empresa',request()->empresa->id_empresa)->where('eliminar','f');
         })->pluck('nombre_comercial','id_socio_negocio');
 
         return [

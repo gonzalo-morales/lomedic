@@ -22,7 +22,7 @@ class DiagnosticosController extends ControllerBase
     {
         return [
             'clientes' => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->whereHas('empresas',function ($empresa){
-                $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
+                $empresa->where('id_empresa',request()->empresa->id_empresa)->where('eliminar','f');
             })->pluck('nombre_comercial','id_socio_negocio'),
         ];
 

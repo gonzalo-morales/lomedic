@@ -34,7 +34,7 @@ class NotasCreditoProveedorController extends ControllerBase
             $facturas = FacturasProveedores::select('id_documento as id',db::raw("concat(serie_factura,folio_factura) as text"))->where('version_sat','3.2')->where('fk_id_socio_negocio',$entity->fk_id_socio_negocio)->pluck('text','id')->prepend('...',0);
         }
         $proveedores = SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_compra',3)->whereHas('empresas',function ($empresa){
-            $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
+            $empresa->where('id_empresa',request()->empresa->id_empresa)->where('eliminar','f');
         })->pluck('nombre_comercial','id_socio_negocio');
         return [
             'proveedores' => $proveedores,

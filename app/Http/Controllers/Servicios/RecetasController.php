@@ -35,7 +35,7 @@ class RecetasController extends ControllerBase
     {
         return [
             'localidades' => Sucursales::select('sucursal', 'id_sucursal')->where('activo',1)->whereHas('empresas',function($e){
-                $e->where('fk_id_empresa',dataCompany()->id_empresa);
+            $e->where('fk_id_empresa',request()->empresa->id_empresa);
             })->pluck('sucursal', 'id_sucursal')->prepend('...', ''),
             'medicos' => Medicos::where('activo',1)->get()->pluck('nombre_completo', 'id_medico')->prepend('...', ''),
             'programas' => Programas::select('nombre_programa', 'id_programa')->pluck('nombre_programa', 'id_programa')->prepend('Sin programa', ''),
