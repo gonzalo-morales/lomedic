@@ -103,7 +103,7 @@
 									Cargando datos... <i class="material-icons align-middle loading">cached</i>
 								</div>
 								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
-								'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
+								'data-url'=>companyAction('Inventarios\ProductosController@getThisSkus',['id'=>'?id']),
 								'class'=>'form-control','style'=>'width:100%']) !!}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">

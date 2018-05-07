@@ -17,7 +17,7 @@ Route::prefix('{company}')->group(function () {
         Route::view("/","inventarios.index");
         
         Route::get('getSkus','Inventarios\ProductosController@obtenerSkus');
-        // Route::get('getUpcs/{id}','Inventarios\ProductosController@obtenerUpcs');
+        Route::get('getThisSkus/{id}','Inventarios\ProductosController@getThisSkus');
         Route::get('getUpcs','Inventarios\ProductosController@getUpcs')->name('productos.getUpcs');
         
         collect(\File::glob(app_path().'/Http/Controllers/Inventarios/*Controller.php'))->map(function($file) {

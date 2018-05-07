@@ -132,22 +132,36 @@ class ProductosController extends ControllerBase
         $id_forma_farmaceutica = request()->id_forma;
         $id_presentaciones = request()->id_presentaciones;
         $sales = json_decode(request()->arr_sales);
-        $presentaciones = json_decode(request()->arr_presentaciones);
-        $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->with('laboratorio')->get();
+        $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->where('activo',1)->with('laboratorio')->get();
 
-        $upcs->map(function($upc) use ($sales, $presentaciones){
-            $upc->presentaciones->filter(function($upc_detalle) use ($sales, $presentaciones){
-                return $upc_detalle->whereIn('fk_id_presentaciones',$presentaciones)->whereIn('fk_id_sal',$sales);
-                // foreach ($sales as $sal) {
-                //     if($upc_detalle->fk_id_presentaciones == $sal->id_concentracion && $upc_detalle->fk_id_sal == $sal->id_sal)
-                //     {
-                //         return $upc_detalle;
-                //     }
-                // }
-                // return false;
-            });
-            return $upc;
+        $upcFiltered = $upcs->filter(function($upc) use ($sales){
+            foreach ($upc->presentaciones as $upc_detalle) {
+                foreach ($sales as $sal) {
+                    if($upc_detalle->fk_id_presentaciones == $sal->id_concentracion && $upc_detalle->fk_id_sal == $sal->id_sal)
+                    {
+                        return $upc;
+                    }
+                }
+            }
         });
-        return json_encode($upcs);
+        return json_encode($upcFiltered);
+    }
+
+    public function getThisSkus($company, $id, Request $request)
+    {
+        $sku_data = $this->entity->find($id)->presentaciones()->get();
+
+        $upcs = Upcs::where('activo',1)->with('presentaciones')->get();
+        $upcFiltered = $upcs->filter(function($upc) use ($sku_data){
+            foreach ($upc->presentaciones as $detalle) {
+                foreach ($sku_data as $sku_detalle) {
+                    if($detalle->fk_id_presentaciones == $sku_detalle->fk_id_presentaciones && $detalle->fk_id_sal == $sku_detalle->fk_id_sal)
+                    {
+                        return $upc;
+                    }
+                }
+            }
+        });
+        return json_encode($upcFiltered);
     }
 }
