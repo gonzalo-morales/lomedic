@@ -5,6 +5,19 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
+    $('#fraccionado').on('change',function () {
+        if($(this).is(":checked")) {
+            $('#fk_id_presentacion').attr('disabled', true).val('').trigger('change');
+            $('#addSal').attr('disabled',true);
+            $('#tbodySales tbody').empty();
+            $('#skus,#upcs').empty();
+        }
+        else{
+            $('#addSal').attr('disabled',false);
+            $('#fk_id_presentacion').attr('disabled',false);
+        }
+    });
+
     $('[data-toggle]').tooltip();
 
     $("#fk_id_clave_producto_servicio").select2({
@@ -131,7 +144,7 @@ $(document).ready(function () {
                             contenido_tab +=
                                 '<tr>' +
                                     '<td>' +
-                                        '<div class="form-check text-center">' +
+                                        '<div class="form-check">' +
                                             '<input name="productos['+index+'][fk_id_upc]" type="hidden" value="0">' +
                                             '<label class="form-check-label custom-control custom-checkbox">' +
                                                 '<input  class="form-check-input custom-control-input" name="productos['+index+'][fk_id_upc]" type="checkbox" value="'+upc.id_upc+'">' +

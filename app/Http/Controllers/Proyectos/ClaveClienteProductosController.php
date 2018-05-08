@@ -111,4 +111,24 @@ class ClaveClienteProductosController extends ControllerBase
             return $this->redirect('error_store');
         }
     }
+
+    public function update(Request $request, $company, $id, $compact = false)
+    {
+        $return = parent::update($request, $company, $id, true);
+        if(is_array($return)){
+            $entity = $return['entity'];
+            $sync = [];
+            foreach ($request->productos as $producto){
+                $sync[]=['fk_id_upc'=>$producto['fk_id_upc']];
+            }
+            $insert = $entity->productos()->sync($sync);
+            if($insert){
+                return $return['redirect'];
+            }else{
+                return $this->redirect('error_store');
+            }
+        }else{
+            return $this->redirect('error_store');
+        }
+    }
 }

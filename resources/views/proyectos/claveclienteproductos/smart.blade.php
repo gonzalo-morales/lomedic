@@ -64,10 +64,10 @@
 						{{ Form::cCheckboxBtn('Fraccionado','Si','fraccionado', $data['fraccionado'] ?? null, 'No') }}
 					</div>
 					<div class="col-sm-6 col-md-4">
-						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '','data-old'=>'']) }}
+						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '','data-old'=>$data->fk_id_forma_farmaceutica ?? '']) }}
 					</div>
 					<div class="col-sm-6 col-md-4">
-						{{ Form::cSelect('* Presentación','fk_id_presentacion', $presentaciones ?? [],['style' => 'width:100%;','class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '','data-old'=>'']) }}
+						{{ Form::cSelect('* Presentación','fk_id_presentacion', $presentaciones ?? [],['style' => 'width:100%;','class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '','data-old'=>$data->fk_id_presentacion ?? '',Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : '' ]) }}
 					</div>
 					<div class="form-group col-md-4">
 						{{Form::cSelectWithDisabled('* Unidad Medida','fk_id_unidad_medida',$unidadesmedidas ?? [],['class'=>''])}}
@@ -124,7 +124,7 @@
 								<div class="col-sm-12 text-center my-3">
 									<div class="sep">
 										<div class="sepBtn">
-											<button id="addSal" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+											<button id="addSal" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" {{Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : '' }} data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
 										</div>
 									</div>
 								</div>
@@ -213,13 +213,13 @@
 											<tbody>
 												<tr>
 													<td>
-														{{--<div class="form-check text-center">--}}
-															{{--<input name="productos[{{$indice}}][fk_id_upc]" type="hidden" value="0">--}}
-															{{--<label class="form-check-label custom-control custom-checkbox">--}}
-																{{--<input class="form-check-input custom-control-input" name="productos[{{$indice}}][fk_id_upc]" type="checkbox" value="{{$upc->id_upc}}">--}}
-																{{--<span class="custom-control-indicator"></span>--}}
-															{{--</label>--}}
-														{{--</div>--}}
+														<div class="form-check">
+															<input name="productos[{{$indice}}][fk_id_upc]" type="hidden" value="0">
+															<label class="form-check-label custom-control custom-checkbox">
+																<input class="form-check-input custom-control-input" name="productos[{{$indice}}][fk_id_upc]" type="checkbox" value="{{$upc->id_upc}}" {{in_array(24,$data->productos->pluck('id_upc')->toArray()) ? 'checked' : ''}}>
+																<span class="custom-control-indicator"></span>
+															</label>
+														</div>
 													</td>
 													<td>{{$upc->upc}}</td>
 													<td>{{$upc->nombre_comercial}}</td>
