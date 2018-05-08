@@ -31,9 +31,9 @@ class TiposProductos extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'tipo_producto' => 'required|max:100|regex:/^[a-zA-Z\s]+/',
-		'nomenclatura' => 'required|max:5|regex:/^[a-zA-Z\s]+/',
-		'prioridad' => 'required|max:16|numeric'
+		'tipo_producto' => ['required','max:100','regex:/^[a-zA-Z\s]+/'],
+		'nomenclatura' => ['required','max:5','regex:/^[a-zA-Z\s]+/'],
+		'prioridad' => ['required','numeric','max:100']
 	];
 
     protected $unique = ['tipo_producto'];

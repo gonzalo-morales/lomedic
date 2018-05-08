@@ -26,7 +26,7 @@ class SustanciasActivas extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'sustancia_activa' => 'required',
+		'sustancia_activa' => 'required|max:255|regex:/^[a-zA-Z\s]+/',
 	];
 
 	protected $unique = ['sustancia_activa'];

@@ -29,11 +29,24 @@ class Afiliaciones extends ModelBase
         'activo',
     ];
 
+	/**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+        'id_afiliacion' => ['required','max:12'],
+        'nombre' => ['required','max:35','regex:/^[a-zA-Z\s]+/'],
+        'paterno' => ['required','max:30','regex:/^[a-zA-Z\s]+/'],
+        'materno' => ['required','max:30','regex:/^[a-zA-Z\s]+/'],
+        'fk_id_parentesco' => ['required'],
+		'id_dependiente' => ['max:32','numeric']
+	];
+
+    // protected $unique = ['id_afiliacion'];
    /**
      * The attributes that are mass assignable.
      * @var array
      */
-    //protected $unique = ['id_afiliacion'];
 
     protected $fields = [
         'id_afiliado' => '#',

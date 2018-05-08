@@ -4,10 +4,10 @@
     {{ Form::setModel($data) }}
     <div class="row">
         <div class="form-group col-md-6 col-xs-12">
-            {{ Form::cText('* Forma Farmaceutica','forma_farmaceutica') }}
+            {{ Form::cText('* Forma Farmacéutica','forma_farmaceutica') }}
         </div>
         <div class="form-group col-md-6 col-xs-12">
-            {{ Form::cText('Descripcion','descripcion') }}
+            {{ Form::cText('Descripción','descripcion') }}
         </div>
         <div  class="col-md-12 text-center mt-2">
             <div class="alert alert-warning" role="alert">
