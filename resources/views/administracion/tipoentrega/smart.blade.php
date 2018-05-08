@@ -4,7 +4,7 @@
     {{ Form::setModel($data) }}
     <div class="row">
     	<div class="form-group col-md-12 col-lg-6">
-    		{{ Form::cText('Tipos de Entrega','tipo_entrega') }}
+    		{{ Form::cText('* Tipos de Entrega','tipo_entrega') }}
     	</div>
     	<div class="form-group col-md-12 col-lg-6 text-center mt-2">
     		<div class="alert alert-warning" role="alert">

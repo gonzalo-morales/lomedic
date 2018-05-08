@@ -32,7 +32,7 @@ class IndicacionTerapeutica extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'indicacion_terapeutica' => 'required|max:100',
+		'indicacion_terapeutica' => 'required|max:100|regex:/^[a-zA-Z\s]+/',
 		'descripcion' => 'max:255|regex:/^[a-zA-Z\s]+/'
 	];
 	protected $unique = ['indicacion_terapeutica'];
@@ -42,8 +42,8 @@ class IndicacionTerapeutica extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'indicacion_terapeutica' => 'Indicacion Terapeutica',
-	    'descripcion' => 'Descripcion',
+		'indicacion_terapeutica' => 'Indicación Terapéutica',
+	    'descripcion' => 'Descripción',
 		'activo_span' => 'Estatus',
 	];
 	public function detalleIndicacion(){

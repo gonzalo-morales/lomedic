@@ -42,7 +42,7 @@ class MotivosDesviaciones extends ModelBase
 	 * @var array
 	 */
 	protected $fields = [
-		'descripcion' => 'Laboratorio',
+		'descripcion' => 'Descripción',
 		'activo_span' => 'Estatus',
 	];
 }

@@ -27,7 +27,6 @@ class GastosViajeController extends ControllerBase
 
 
         return [
-            'fechaActual' => Carbon::now(),
             #Variable(s) para el select2
             'empleados' => Empleados::selectRaw("Concat(nombre,' ',apellido_paterno,' ',apellido_materno) as empleado, id_empleado")->where('activo',1)->pluck('empleado','id_empleado'),
             'conceptos' => ConceptosViaje::selectRaw("tipo_concepto as concepto, id_concepto")->where('activo',1)->pluck('concepto','id_concepto')->prepend('seleccione...',''),
@@ -44,6 +43,40 @@ class GastosViajeController extends ControllerBase
         ];
     }
 
-    //"select "departamento" from "rh_cat_departamentos" where "rh_cat_departamentos"."id_departamento" in (18))"
+    public function store(Request $request, $company, $compact = false)
+    {
+        $subtotal = 0;
+        $total = 0;
+        $descuento_total = 0;
+        foreach ($request->relations['has']['detalle'] as $detalle) {
+            $subtotal += $detalle['subtotal'];
+            $total += $detalle['total'];
+        }
+
+        $request->request->set('subtotal_detalles',$subtotal);
+        $request->request->set('total_detalles',$total);
+        $request->request->set('fecha',Carbon::now());
+        // dd($request->all());
+        
+        return parent::store($request, $company, $compact);
+    }
+
+    public function update(Request $request, $company, $id, $compact = false)
+    {
+        $subtotal = 0;
+        $total = 0;
+        $descuento_total = 0;
+        foreach ($request->relations['has']['detalle'] as $detalle) {
+            $subtotal += $detalle['subtotal'];
+            $total += $detalle['total'];
+        }
+
+        $request->request->set('subtotal_detalles',$subtotal);
+        $request->request->set('total_detalles',$total);
+        $request->request->set('fecha',Carbon::now());
+        // dd($request->all());
+        
+        return parent::store($request, $company, $compact);
+    }
 
 }

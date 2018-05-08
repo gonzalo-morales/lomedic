@@ -5,21 +5,21 @@
     <div class="row">
     	<div class="col-md-4 col-sm-4">
     		<div class="form-group">
-    			{{ Form::cSelectWithDisabled('Sucursal', 'fk_id_sucursal', $sucursales ?? []) }}
+    			{{ Form::cSelectWithDisabled('* Sucursal', 'fk_id_sucursal', $sucursales ?? []) }}
     		</div>
     	</div>
     	<div class="col-md-4 col-sm-4">
     		<div class="form-group">
-    			{{ Form::cText('Almacén', 'almacen', ['placeholder' => 'Ejemplo: Curación']) }}
+    			{{ Form::cText('* Almacén', 'almacen', ['placeholder' => 'Ejemplo: Curación']) }}
     		</div>
     	</div>
     	<div class="col-md-4 col-sm-4">
     		<div class="form-group">
-    			{{ Form::cSelectWithDisabled('Tipo almacén', 'fk_id_tipo_almacen', $tipos ?? []) }}
+    			{{ Form::cSelectWithDisabled('* Tipo almacén', 'fk_id_tipo_almacen', $tipos ?? []) }}
     		</div>
     	</div>
     	<div class="col-md-12 col-sm-12 text-center">
-    		{{ Form::cCheckbox('Almacén con Inventario (Podrás darlo de alta después)', 'inventario') }}
+    		{{ Form::cCheckbox('* Almacén con Inventario (Podrás darlo de alta después)', 'inventario') }}
     	</div>
     </div>
     <div class="row">
@@ -32,22 +32,22 @@
     				<div class="row">
     					<div class="col-md-2 col-sm-2 col-3">
     						<div class="form-group">
-    							{{ Form::cText('Rack', 'rack', ['ref' => 'rack']) }}
+    							{{ Form::cText('* Rack', 'rack', ['ref' => 'rack']) }}
     						</div>
     					</div>
     					<div class="col-md-2 col-sm-2 col-3">
     						<div class="form-group">
-    							{{ Form::cText('Ubicación', 'ubicacion', ['ref' => 'ubicacion']) }}
+    							{{ Form::cText('* Ubicación', 'ubicacion', ['ref' => 'ubicacion']) }}
     						</div>
     					</div>
     					<div class="col-md-2 col-sm-2 col-3">
     						<div class="form-group">
-    							{{ Form::cText('Posición', 'posicion', ['ref' => 'posicion']) }}
+    							{{ Form::cText('* Posición', 'posicion', ['ref' => 'posicion']) }}
     						</div>
     					</div>
     					<div class="col-md-2 col-sm-2 col-3">
     						<div class="form-group">
-    							{{ Form::cText('Nivel', 'nivel', ['ref' => 'nivel']) }}
+    							{{ Form::cText('* Nivel', 'nivel', ['ref' => 'nivel']) }}
     						</div>
     					</div>
     					<div class="col-md-4 col-sm-4 col-12 text-center">
@@ -180,28 +180,44 @@
         });
         jQuery(document).ready(function(){
         	function addRules() {
+			$.validator.addMethod("regex", function(value, element, regexp) {
+				var re = new RegExp(regexp);
+            	return this.optional(element) || re.test(value);
+        	},"No puedes usar este tipo de caractéres especiales.");
         		$('#rack').rules('add',{
-        			required: true,
+					required: true,
+					maxlength:5,
+					regex:'^[a-zA-Z{0-9}]$',
         			messages:{
-        				required: 'El campo rack es requerido.'
+						required: 'El campo rack es requerido.',
+						maxlength: 'El campo rack no puede contener más de 5 caractéres.',
         			}
         		});
         		$('#ubicacion').rules('add',{
-        			required: true,
+					required: true,
+					maxlength:5,
+					regex:'^[a-zA-Z{0-9}]$',
         			messages:{
-        				required: 'El campo ubicacion es requerido.'
+						required: 'El campo ubicación es requerido.',
+						maxlength: 'El campo ubicación no puede contener más de 5 caractéres.'
         			}
         		});
         		$('#posicion').rules('add',{
-        			required: true,
+					required: true,
+					maxlength:5,
+					regex:'^[a-zA-Z{0-9}]$',
         			messages:{
-        				required: 'El campo posicion es requerido.'
+						required: 'El campo posición es requerido.',
+						maxlength: 'El campo posición no puede contener más de 5 caractéres.'
         			}
         		});
         		$('#nivel').rules('add',{
-        			required: true,
+					required: true,
+					maxlength:5,
+					regex:'^[a-zA-Z{0-9}]$',
         			messages:{
-        				required: 'El campo nivel es requerido.'
+						required: 'El campo nivel es requerido.',
+						maxlength: 'El campo nivel no puede contener más de 5 caractéres.'
         			}
         		});
         	}

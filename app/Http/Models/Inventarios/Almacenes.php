@@ -44,7 +44,7 @@ class Almacenes extends ModelBase
 	 */
 	public $rules = [
 		'fk_id_sucursal' => 'required',
-		'almacen' => 'required',
+		'almacen' => ['required','max:50'],
 		'fk_id_tipo_almacen' => 'required',
 	];
 

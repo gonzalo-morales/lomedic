@@ -33,7 +33,7 @@ class MotivosAjustes extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'descripcion'	=> 'required|max:255|regex:/^[a-zA-Z\s]+/',
+		'descripcion'	=> 'required|max:100',
 	];
 
 	/**
@@ -41,7 +41,7 @@ class MotivosAjustes extends ModelBase
 	 * @var array
 	 */
 	protected $fields = [
-		'descripcion' => 'Laboratorio',
+		'descripcion' => 'Descripción',
 		'activo_span' => 'Estatus',
 	];
 }
