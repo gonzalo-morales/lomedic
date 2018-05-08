@@ -223,5 +223,6 @@ class SolicitudesController extends ControllerBase
         return $pdf->stream('solicitud')->header('Content-Type',"application/pdf");
 //        return view(currentRouteName('imprimir'));
     }
+
 }
 

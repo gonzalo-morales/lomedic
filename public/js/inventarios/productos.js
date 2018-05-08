@@ -198,16 +198,13 @@ function getUpcs(){
 	let idForma = $('#fk_id_forma_farmaceutica').val();
 	let	idPresentaciones = $('#fk_id_presentaciones').val();
 	let sales = [];
-	let presentaciones = [];
 	for (const row of $('#tbodyPresentation tr')) {
 		let sal =  +$(row).find('.id_sal').val();
 		let concentracion =  +$(row).find('.id_concentracion').val();
-		sales.push(sal);
-		presentaciones.push(concentracion);
-		// let obj = {};
-		// obj.id_sal = sal;
-		// obj.id_concentracion = concentracion;
-		// sales.push(obj);
+		let obj = {};
+		obj.id_sal = sal;
+		obj.id_concentracion = concentracion;
+		sales.push(obj);
 	}
 	$.ajax({
 		url: $('#fk_id_forma_farmaceutica').data('url'),
@@ -215,7 +212,6 @@ function getUpcs(){
 			'id_forma':idForma,
 			'id_presentaciones':idPresentaciones,
 			'arr_sales':JSON.stringify(sales),
-			'arr_presentaciones':JSON.stringify(presentaciones),
 		},
 		dataType: "json",
 		success: function (response) {
@@ -233,15 +229,17 @@ function addUpcs(response){
 	let $tbody = $('#upcs > tbody');
 	$tbody.empty();
 	for (const key in response) {
-		$tbody.append(
-			'<tr>'+
-			'<td>' + response[key].upc + '</td>' +
-			'<td>' + response[key].nombre_comercial + '</td>' +
-			'<td>' + response[key].descripcion + '</td>' +
-			'<td>' + response[key].laboratorio.laboratorio + '</td>' +
-			'<td>' + '$' + response[key].costo_base + '</td>' +
-			 +'</tr>'
-		);
+		if (response.hasOwnProperty(key)) {
+			$tbody.append(
+				'<tr>'+
+				'<td>' + response[key].upc + '</td>' +
+				'<td>' + response[key].nombre_comercial + '</td>' +
+				'<td>' + response[key].descripcion + '</td>' +
+				'<td>' + response[key].laboratorio.laboratorio + '</td>' +
+				'<td>' + '$' + response[key].costo_base + '</td>' +
+				+'</tr>'
+			);
+		}
 	}
     mensajeAlerta("UPC(s) obtenidos con éxito.","success");
     $('[data-toggle]').tooltip();

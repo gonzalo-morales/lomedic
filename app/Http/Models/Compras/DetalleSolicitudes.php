@@ -26,9 +26,23 @@ class DetalleSolicitudes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_sku','fk_id_upc','fk_id_proveedor','cantidad',
-        'fk_id_unidad_medida','fk_id_impuesto','precio_unitario','importe','fk_id_proyecto','fecha_necesario',
-        'fk_id_documento','fk_id_documento_base','fk_id_tipo_documento_base','fk_id_linea','impuesto_total'];
+    protected $fillable = [
+        'fk_id_sku',
+        'fk_id_upc',
+        'fk_id_proveedor',
+        'cantidad',
+        'fk_id_unidad_medida',
+        'fk_id_impuesto',
+        'precio_unitario',
+        'importe',
+        'fk_id_proyecto',
+        'fecha_necesario',
+        'fk_id_documento',
+        'fk_id_documento_base',
+        'fk_id_tipo_documento_base',
+        'fk_id_linea',
+        'impuesto_total'
+    ];
 
     public function getFields()
     {

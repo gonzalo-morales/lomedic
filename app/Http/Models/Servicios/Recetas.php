@@ -93,7 +93,7 @@ class Recetas extends ModelCompany
         'numero_afiliado' => 'N. de afiliacion',
         'nombre_completo_paciente' => 'Paciente',
         'fecha_formated' => 'Fecha Captura',
-        'estatus_documento_span' => 'Estatus de la receta'
+        'estatus_formated' => 'Estatus de la receta'
     ];
 
     public function getNombreCompletoMedicoAttribute()
@@ -164,7 +164,7 @@ class Recetas extends ModelCompany
 
     public function estatus()
     {
-        return $this->hasOne(EstatusRecetas::class,'id_estatus','fk_id_estatus_receta');
+        return $this->hasOne(EstatusRecetas::class,'id_estatus_receta','fk_id_estatus_receta');
     }
     public function proyecto()
     {

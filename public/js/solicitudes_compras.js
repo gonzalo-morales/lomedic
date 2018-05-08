@@ -247,23 +247,26 @@ function codigosbarras(){
             dataType: 'json',
             success: function (data) {
                 var options = [];
+                var count = Object.keys(data).length;
                 /* Si hay resultados */
-                if (data.length > 0) {
-                    options.push('<option value="0" selected disabled>Seleccione el UPC...</option>'); 
-                    for (var i = 0; i < data.length; i++) {
-                        options.push('<option value="' + data[i].id + '">' + data[i].text + '</option>');
-                    };
-                    $('#fk_id_upc').select2({
-                        disabled: false,
-                    });
-                    $('#fk_id_upc').append(options.join(''));
-                } else{
+                if (count == 0) {
                     $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay UPCs en el SKU seleccionado, intente con otro',
                     settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
                     $('#fk_id_upc').select2({
                         placeholder: "UPC no encontrado",
                         disabled: true,
                     });
+                } else{
+                    options.push('<option value="0" selected disabled>Seleccione el UPC...</option>');
+                    for (const key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            options.push('<option value="' + data[key].id_upc + '">' + data[key].upc + '</option>');
+                        }
+                    }
+                    $('#fk_id_upc').select2({
+                        disabled: false,
+                    });
+                    $('#fk_id_upc').append(options.join(''));
                 }
                 $('#loadingUPC').hide();
             },
