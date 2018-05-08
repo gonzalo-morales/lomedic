@@ -150,4 +150,45 @@ class ProductosController extends ControllerBase
         });
         return json_encode($upcs);
     }
+
+    public function getRelatedSkus()
+    {
+        $id_forma_farmaceutica = request()->id_forma;
+        $id_presentaciones = request()->id_presentaciones;
+        $sales = json_decode(request()->sales);
+        // $sales = json_decode(request()->arr_sales);
+        // $presentaciones = json_decode(request()->arr_presentaciones);
+        $skus = Productos::select('id_sku','sku')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->whereRaw($id_presentaciones.' = 0'.' or fk_id_presentaciones = '.$id_presentaciones)->get();
+        $upcs = Upcs::select('id_upc','upc','nombre_comercial','marca','descripcion','fk_id_laboratorio')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->whereRaw($id_presentaciones.' = 0'.' or fk_id_presentaciones = '.$id_presentaciones)->with('laboratorio:id_laboratorio,laboratorio')->get();
+
+        $skus = $skus->filter(function ($sku) use ($sales){//Para obtener los SKUS que coinciden
+            $presentacion = $sku->presentaciones->filter(function ($presentacion) use ($sales){
+                $bool = false;
+                foreach ($sales as $sal){
+                    if($sal->id_sal == $presentacion->fk_id_sal && $sal->id_concentraciones == $presentacion->fk_id_presentaciones)
+                        $bool = true;
+                }
+                return $bool;
+            });
+            return $presentacion->count() == count($sales) ? true : false;
+        })->filter(function ($sku) use ($sales,$upcs){//Agrega los UPCS que coinciden con el SKU
+            $newcollection = [];
+            foreach ($upcs as $upc)
+            {
+                $presentacion = $upc->presentaciones->filter(function ($presentacion) use ($sales){
+                    $bool = false;
+                    foreach ($sales as $sal){
+                        if($sal->id_sal == $presentacion->fk_id_sal && $sal->id_concentraciones == $presentacion->fk_id_presentaciones)
+                            $bool = true;
+                    }
+                    return $bool;
+                });
+                $presentacion->count() == count($sales) ? $newcollection[] = $upc : false;
+            }
+            return $sku->upcs = $newcollection;
+        });
+
+        return json_encode($skus);
+    }
+
 }

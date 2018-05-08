@@ -118,7 +118,8 @@ class Upcs extends ModelBase
 
     public function clavesclientes()
     {
-        return $this->hasMany(ClaveClienteProductos::class,'fk_id_upc','id_upc');
+        return $this->belongsToMany(ClaveClienteProductos::class,'inv_det_upc_clave_cliente','fk_id_upc','fk_id_clave_cliente','id_upc','id_clave_cliente_producto');
+//        return $this->hasMany(ClaveClienteProductos::class,'fk_id_upc','id_upc');
     }
 
     public function clientes()

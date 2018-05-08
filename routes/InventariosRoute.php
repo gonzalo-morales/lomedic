@@ -17,6 +17,7 @@ Route::prefix('{company}')->group(function () {
         Route::view("/","inventarios.index");
         
         Route::get('getSkus','Inventarios\ProductosController@obtenerSkus');
+        Route::get('getRelatedSkus','Inventarios\ProductosController@getRelatedSkus');
         // Route::get('getUpcs/{id}','Inventarios\ProductosController@obtenerUpcs');
         Route::get('getUpcs','Inventarios\ProductosController@getUpcs')->name('productos.getUpcs');
         

@@ -148,4 +148,9 @@ class Productos extends ModelCompany
         return $this->hasMany(DetallePresentacionesSku::class, 'fk_id_sku','id_sku');
     }
 
+    public function setUpcsAttribute($upc)
+    {
+        $this->attributes['upcs'] = $upc;
+    }
+
 }

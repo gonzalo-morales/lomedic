@@ -114,4 +114,9 @@ class ClaveClienteProductos extends ModelCompany
             return '';
     }
 
+    public function productos()
+    {
+        return $this->belongsToMany(Upcs::class,'inv_det_upc_clave_cliente','fk_id_clave_cliente','fk_id_upc','id_clave_cliente_producto','id_upc');
+    }
+
 }
