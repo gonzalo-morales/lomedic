@@ -542,7 +542,7 @@ $(document).ready(function(){
 
 	//Cambio de text para checkbox toggeable
     $('.toggeable').bind('click', function () {
-    	$(this).attr('checked',!$(this).is(':checked'));
+    	$(this).attr('checked',$(this).is(':checked'));
     }).trigger('change');
 
     $('.toggeable').bind('change', function () {
