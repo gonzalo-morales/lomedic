@@ -115,7 +115,11 @@
 				</div>
 				<div role="tabpanel" class="tab-pane fade" id="tab-upcs" aria-labelledby="upcs-tab">
 					<div class="row">
-						<div class="col-sm-12 col-md-6">
+						<div class="form-group col-sm-12 text-center">
+							{{ Form::cCheckboxBtn('Tipo de medicamento','Material Curación','material_curacion', $data['activo'] ?? null, 'Otro') }}
+						</div>
+
+						<div id="tableIndicacion" class="col-sm-12 col-md-6">
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -166,9 +170,9 @@
 									</tbody>
 								</table>
 							</div>
-						</div><!--/detalle-->
-				
-						<div class="col-sm-12 col-md-6">
+						</div>
+						
+						<div id="tableSal" class="col-sm-12 col-md-6">
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -237,7 +241,65 @@
 									</tbody>
 								</table>
 							</div>
-						</div><!--/detalle-->		
+						</div><!--/table-->
+
+						<div id="tableMaterial" class="col-md-12" style="display:none">
+							@if(!Route::currentRouteNamed(currentRouteName('show')))
+								<div class="card-header">
+									<form id="overallForm">
+										<fieldset id="detalle-form">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="from-group">
+														{{ Form::cSelect('* Especificaciones','especificacion', $especificaciones ?? [],[
+															'style' => 'width:100%;',
+															'class' => 'select2',
+															]) }}
+													</div>
+												</div>
+											</div><!--/row-->
+										<div class="col-sm-12 text-center my-3">
+											<div class="sep">
+												<div class="sepBtn">
+													<button id="addMaterial" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+												</div>
+											</div>
+										</div>
+										</fieldset>
+									</form>
+								</div><!--/card-header-->
+							@endif
+							<div class="card-body">
+								<table class="table table-responsive-sm table-striped table-hover">
+									<thead>
+										<tr>
+											<th>Especificación</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody id="tbodyMaterials">
+										@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
+											@foreach($data->especificaciones as $row => $detalle)
+												<tr>
+													<td>
+														<input type="hidden" value="{{$detalle->id_detalle}}" name="relations[has][detalle][{{$row}}][id_detalle]">
+														{{ Form::hidden('especificaciones['.$row.'][fk_id_especificacion]',$detalle->fk_id_especificacion) }}
+														{{ $detalle->especificaciones->especificacion }}
+													</td>
+														@if(Route::currentRouteNamed(currentRouteName('show')))
+														@else
+													<td>
+														<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
+													</td>
+														@endif
+												</tr>
+											@endforeach
+										@endif
+									</tbody>
+								</table>
+							</div>
+						</div><!--/detalle-->
+
 					</div>
 				</div>
 				<div role="tabpanel" class="tab-pane fade" id="tab-compra" aria-labelledby="compra-tab">

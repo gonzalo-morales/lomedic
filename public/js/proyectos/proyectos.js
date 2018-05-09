@@ -27,17 +27,17 @@ $(document).ready(function () {
 		  }
 	});
 	
-    $(".nav-pills").click(function (e) {
+    $('.nav-link').on('click', function (e) {
         e.preventDefault();
         $('#clothing-nav li').each(function () {
             $(this).children().removeClass('active');
         });
         $('.tab-pane').removeClass('active').removeClass('show');
         $(this).addClass('active');
-        var tab = $(this).prop('href');
+        let tab = $(this).prop('href');
         tab = tab.split('#');
         $('#' + tab[1]).addClass('active').addClass('show');
-    });
+	});
     
     $('#agregarContrato').on('click', function() {
     	var i = $('#detalleContratos tbody tr').length;
@@ -71,7 +71,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileContrato-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
     
@@ -83,10 +83,10 @@ $(document).ready(function () {
 		archivo = $("#archivo").prop('files');
 		
 		if(nombre == '') {
-			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(!$("#archivo").val()) {
-			$.toaster({priority:'danger',title:'Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleAnexos').append('<tr>'+
@@ -96,7 +96,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileAnexo-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 
@@ -226,16 +226,16 @@ $(document).ready(function () {
                     });
 
 					if(repetidos.length){
-                        $.toaster({priority:'danger',title:'Â¡Error!',message:'Algunos contratos ya se encuentran en la tabla: '+repetidos.toString(),
+                        $.toaster({priority:'danger',title:'¡Error!',message:'Algunos contratos ya se encuentran en la tabla: '+repetidos.toString(),
                             settings:{'donotdismiss':['danger'],'toaster':{'css':{'top':'5em'}}}});
 					}else{
-                        $.toaster({priority:'success',title:'Â¡Ã‰xito!',message:'Se han agregado los contratos relacionados de LICIPLUS',
+                        $.toaster({priority:'success',title:'¡Éxito!',message:'Se han agregado los contratos relacionados de LICIPLUS',
                             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 					}
 				}
             },
 			error: function () {
-				$.toaster({priority:'danger',title:'Â¡Error!',message:'OcurriÃ³ un error al obtener los contratos',
+				$.toaster({priority:'danger',title:'¡Error!',message:'OcurriÃ³ un error al obtener los contratos',
 					settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             }
 		});
@@ -243,7 +243,7 @@ $(document).ready(function () {
 
     $('#importar_productos').click(function () {
     	if(!$('#fk_id_cliente').val()){
-            $.toaster({priority:'danger',title:'Â¡Error!',message:'Por favor selecciona un cliente',
+            $.toaster({priority:'danger',title:'¡Error!',message:'Por favor selecciona un cliente',
                 settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}else{
 			$.ajax({
@@ -336,7 +336,7 @@ $(document).ready(function () {
                                 }
                             });
                             if(repetidos.length){
-                                $.toaster({priority:'info',title:'Â¡Error!',message:'Algunos productos ya se encuentran en la tabla: '+repetidos.toString(),
+                                $.toaster({priority:'info',title:'¡Error!',message:'Algunos productos ya se encuentran en la tabla: '+repetidos.toString(),
                                     settings:{'donotdismiss':['danger'],'toaster':{'css':{'top':'5em'}}}});
                             }else{
                                 $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
@@ -479,7 +479,7 @@ $(document).ready(function () {
                 $('.archivo').rules('remove');
             }
             $.toaster({
-                priority: 'danger', title: 'Ã‚Â¡Error!', message: 'Hay campos que requieren de tu atencion. Revisa todas las pestaÃ±as.',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atencion. Revisa todas las pestaÃ±as.',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
 
         }

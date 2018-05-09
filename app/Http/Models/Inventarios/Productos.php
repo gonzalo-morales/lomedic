@@ -85,7 +85,7 @@ class Productos extends ModelCompany
         'presentacion_text' => 'Presentacion',
         'subgrupo.grupo.grupo' => 'Grupo',
         'subgrupo.subgrupo' => 'Subgrupo',
-        'activo_span' => 'Estatus',
+        'activo_span' => 'Estatus'
     ];
 
     public function getSkuDescripcionAttribute() {

@@ -69,7 +69,11 @@
             		<div class="form-group">
             			{{ Form::cCheckbox('Articulo de Inventario', 'articulo_inventario') }}
             		</div>
-            	</div>
+				</div>
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="customCheck1">
+					<label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
+				  </div>
             	<div class="col-sm-12">
             		<div class="form-group">
             			{{ Form::cCheckbox('Maneja Lote', 'maneja_lote') }}

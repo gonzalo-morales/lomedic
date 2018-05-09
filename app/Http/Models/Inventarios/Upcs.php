@@ -53,7 +53,8 @@ class Upcs extends ModelBase
         'fk_id_moneda',
         'fk_id_tipo_familia',
         'fk_id_subgrupo_producto',
-        'fk_id_presentaciones'
+        'fk_id_presentaciones',
+        'material_curacion'
     ];
 
     /**
@@ -69,6 +70,7 @@ class Upcs extends ModelBase
         'presentacion.presentacion_venta' => 'Presentacion',
         'laboratorio.laboratorio' => 'Laboratorio',
         'pais.pais' => 'Pais Origen',
+        'activo_span' => 'Estatus'
     ];
 
     /**
@@ -135,5 +137,10 @@ class Upcs extends ModelBase
     public function indicaciones()
     {
         return $this->hasMany(DetalleIndicaciones::class, 'fk_id_upc','id_upc');
+    }
+
+    public function especificaciones()
+    {
+        return $this->belongsToMany('inv_det_especificaciones_upc','fk_id_upc','id_upc');
     }
 }

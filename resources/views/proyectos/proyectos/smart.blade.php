@@ -121,7 +121,7 @@
     			</div>
     			<div role="tabpanel" class="tab-pane fade" id="tab-contratos" aria-labelledby="contratos-tab">
     				<div class="col-sm-12">
-                		<div class="card z-depth-1-half">
+                		<div class="card">
                 			<div class="card-header">
         						<div class="row">
         							<div class="form-group col-lg-3 col-md-6">

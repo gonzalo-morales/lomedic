@@ -17,6 +17,8 @@ use App\Http\Models\Administracion\FamiliasProductos;
 use App\Http\Models\Administracion\GrupoProductos;
 use App\Http\Models\Administracion\SubgrupoProductos;
 use App\Http\Models\Administracion\Sales;
+use Illuminate\Http\Request;
+use App\Http\Models\Administracion\Especificaciones;
 
 class UpcsController extends ControllerBase
 {
@@ -35,6 +37,7 @@ class UpcsController extends ControllerBase
             { $subgrupos[$grupo] = $subgrupo; }
         }
         return [
+            'especificaciones'  => Especificaciones::where('activo',1)->pluck('especificacion','id_especificacion')->sortBy('especificacion'),
             'laboratorios'      => Laboratorios::select('laboratorio','id_laboratorio')->where('activo',1)->pluck('laboratorio','id_laboratorio')->sortBy('laboratorio')->prepend('...',''),
             'paises'            => Paises::select('pais','id_pais')->where('activo',1)->pluck('pais','id_pais')->sortBy('pais')->prepend('...',''),
             'indicaciones'      => IndicacionTerapeutica::select('indicacion_terapeutica','id_indicacion_terapeutica')->where('activo',1)->pluck('indicacion_terapeutica','id_indicacion_terapeutica'),
@@ -49,6 +52,63 @@ class UpcsController extends ControllerBase
             'sales'             => Sales::where('activo',1)->pluck('nombre','id_sal')->sortBy('nombre'),
             'subgrupo'          => collect($subgrupos ?? [])->prepend('...','')->toArray(),
         ];
+    }
+
+    public function store(Request $request, $company, $compact = false)
+    {
+        $return = parent::store($request, $company, true);
+
+        if(is_array($return))
+        {
+            $entity = $return['entity'];
+            $sync = [];
+            foreach ($request->especificaciones as $especificacion){
+                $sync[]=['fk_id_especificacion'=>$especificacion['fk_id_especificacion']];
+            }
+            $insert = $entity->especificaciones()->sync($sync);
+
+            if($insert)
+            {
+                return $return['redirect'];
+            }
+            else
+            {
+                return $this->redirect('error_store');
+            }
+            
+        }
+        else
+        {
+            return $this->redirect('error_store');
+        }
+    }
+
+    public function update(Request $request, $company, $id, $compact = false)
+    {
+        $return = parent::update($request, $company, $id, true);
+        if(is_array($return))
+        {
+            $entity = $return['entity'];
+            $sync = [];
+            foreach ($request->especificaciones as $especificacion){
+                $sync[]=['fk_id_especificacion'=>$especificacion['fk_id_especificacion']];
+            }
+            $insert = $entity->especificaciones()->sync($sync);
+
+            if($insert)
+            {
+                return $return['redirect'];
+            }
+            else
+            {
+                return $this->redirect('error_store');
+            }
+            
+        }
+        else
+        {
+            return $this->redirect('error_store');
+        }
     }
     
 }
