@@ -106,31 +106,72 @@ $(document).ready(function () {
     		});
 		}
 	});
-	
-	$('#sku').on('change', function() {
+
+	$('#sku').on('change', function () {
 		let upc = $('#upc');
 
-		if($(this).val() == '') {
+		if($(this).val() == ''){
 			upc.val('');
 		}
-		else {
-    		$.ajax({
-    		    async: true,
-    		    url: upc.data('url'),
-    		    data: {'param_js':upcs_js,$fk_id_sku:$(this).val()},
-    		    dataType: 'json',
-                success: function (data) {
-                	$("#upc option").remove();
-                	upc.append('<option value="" disabled>Selecciona una Opcion...</option>')
-                    $.each(data, function(){
-                    	upc.append('<option value="'+ this.id_upc +'">'+ this.upc +'</option>')
-                    });
-                	upc.val('');
-                	upc.prop('disabled', (data.length == 0)); 
-    		    }
-    		});
+		if($('#sku').val() != 0) {
+			let data_codigo = $('#upc').data('url');
+			var _url = data_codigo.replace('?id', $('#sku').val());
+			$.ajax({
+				url: _url,
+				dataType: 'json',
+				success: function (data) {
+					console.table(data);
+					var options = [];
+					var count = Object.keys(data).length;
+					/* Si hay resultados */
+					if (count == 0) {
+						$.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer no hay UPCs en el SKU seleccionado, intente con otro',
+						settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
+						$('#upc').select2({
+							placeholder: "UPC no encontrado",
+							disabled: true,
+						});
+					} else{
+						options.push('<option value="0" selected disabled>Seleccione el UPC...</option>');
+						for (const key in data) {
+							if (data.hasOwnProperty(key)) {
+								options.push('<option value="' + data[key].id_upc + '">' + data[key].upc + '</option>');
+							}
+						}
+						$('#upc').select2({
+							disabled: false,
+						});
+						$('#upc').append(options.join(''));
+					}
+				},
+			});
 		}
 	});
+
+	// $('#sku').on('change', function() {
+	// 	let upc = $('#upc');
+
+	// 	if($(this).val() == '') {
+	// 		upc.val('');
+	// 	}
+	// 	else {
+    // 		$.ajax({
+    // 		    async: true,
+    // 		    url: upc.data('url'),
+    // 		    data: {'param_js':upcs_js,$fk_id_sku:$(this).val()},
+    // 		    dataType: 'json',
+    //             success: function (data) {
+    //             	$("#upc option").remove();
+    //             	upc.append('<option value="" disabled>Selecciona una Opcion...</option>')
+    //                 $.each(data, function(){
+    //                 	upc.append('<option value="'+ this.id_upc +'">'+ this.upc +'</option>')
+    //                 });
+    //             	upc.val('');
+    //             	upc.prop('disabled', (data.length == 0)); 
+    // 		    }
+    // 		});
+	// 	}
+	// });
 	
 	$('#agregar-contacto').on('click', function() {
 		var i = $('#tContactos tbody tr').length;
@@ -220,13 +261,13 @@ $(document).ready(function () {
 		clave_int = $('#clave_interbancaria').val();
 		
 		if(no_cuenta == '' | Number.isInteger(no_cuenta) != false) {
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el numero de cuenta, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el numero de cuenta, esta debe ser numero entero.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(id_banco == '' ){
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Debe seleccionar un banco.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un banco.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(cuentas.indexOf(id_banco+'-'+no_cuenta) !== -1) {
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'La cuenta que trata de agregar ya existe.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'La cuenta que trata de agregar ya existe.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#tCuentas').append('<tr>'+
@@ -239,7 +280,7 @@ $(document).ready(function () {
 				'<td>' + clave_int + ' <input name="cuentas['+row_id+'][clave_interbancaria]" type="hidden" value="'+clave_int+'"></td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCuenta(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
-			$.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'La cuenta se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'¡Correcto!',message:'La cuenta se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 
@@ -252,13 +293,13 @@ $(document).ready(function () {
 		archivo = $("#archivo").prop('files');
 		
 		if(id_tipo == '' ){
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Debe seleccionar un tipo de documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe seleccionar un tipo de documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(nombre == '') {
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if($("#archivo").length == 0) {
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#tAnexos').append('<tr>'+
@@ -268,7 +309,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#anexos-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 
@@ -295,10 +336,10 @@ $(document).ready(function () {
 		precio_hasta = $("#precio_hasta").val();
 		
 		if(id_sku == '' | tiempo_entrega == '' | precio == '' | precio_de == '' | precio_hasta == ''){
-			$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'Los campos, Sku, Tiempo Entrega, Precio, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Los campos, Sku, Tiempo Entrega, Precio, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(skus_ids.indexOf(id_sku + id_upc) !== -1) {
-        	$.toaster({priority:'danger',title:'Ãƒâ€šÃ‚Â¡Error!',message:'El producto seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        	$.toaster({priority:'danger',title:'¡Error!',message:'El producto seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
         }
 		else {
 			if(id_upc != '') {
@@ -329,7 +370,7 @@ $(document).ready(function () {
         				'<td>' + precio_hasta + ' <input name="productos['+row_id+'][precio_hasta]" type="hidden" value="'+precio_hasta+'"></td>'+
         				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarProducto(this)"> <i class="material-icons">delete</i></button></td>'+
         			'</tr>');
-        			$.toaster({priority:'success',title:'Ãƒâ€šÃ‚Â¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+        			$.toaster({priority:'success',title:'¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     		    }
     		});
 		}

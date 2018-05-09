@@ -498,7 +498,10 @@
     								<div id="loadingUPC" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
     									Cargando datos... <i class="material-icons align-middle loading">cached</i>
     								</div>
-    								{{ Form::cSelect('Upc', 'upc', $upcs ?? [],['class'=>'select2','data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api']) }}
+    								{{ Form::cSelect('Upc', 'upc', $upcs ?? [],[
+										'class'=>'select2',
+										'data-url'=>companyAction('Inventarios\ProductosController@getThisSkus',['id'=>'?id']),
+										]) }}
     							</div>
     							<div class="form-group col-md-4">
     								{{ Form::cNumber('* Tiempo Entrega (dias)', 'tiempo_entrega') }}
