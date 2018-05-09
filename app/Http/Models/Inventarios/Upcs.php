@@ -10,6 +10,7 @@ use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Inventarios\DetalleIndicaciones;
 use App\Http\Models\Inventarios\DetallePresentaciones;
+use App\Http\Models\Administracion\Especificaciones;
 
 class Upcs extends ModelBase
 {
@@ -65,7 +66,7 @@ class Upcs extends ModelBase
         'upc' => 'UPC',
         'descripcion' => 'Descripcion',
         'nombre_comercial' => 'Nombre Comercial',
-        'registro_sanitario' => 'Registro Sanitario',
+        // 'registro_sanitario' => 'Registro Sanitario',
         'marca' => 'Marca',
         'presentacion.presentacion_venta' => 'Presentacion',
         'laboratorio.laboratorio' => 'Laboratorio',
@@ -138,9 +139,8 @@ class Upcs extends ModelBase
     {
         return $this->hasMany(DetalleIndicaciones::class, 'fk_id_upc','id_upc');
     }
-
     public function especificaciones()
     {
-        return $this->belongsToMany('inv_det_especificaciones_upc','fk_id_upc','id_upc');
+        return $this->belongsToMany(Especificaciones::class,'inv_det_especificaciones_upc','fk_id_upc','fk_id_especificacion','id_upc','id_especificacion');
     }
 }

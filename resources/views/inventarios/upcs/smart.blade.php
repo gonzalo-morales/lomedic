@@ -29,7 +29,6 @@
 			{{ Form::cTextArea('* Descripcion', 'descripcion',['maxlength' => '200', 'rows' => '1']) }}
 		</div>
 	</div>
-
     <!--/Inicio Tabs-->
     <div id="detallesku" class="w-100 container-fluid z-depth-1-half mt-2 px-0">
 		<div class="card" style="min-height: 100px">
@@ -116,10 +115,10 @@
 				<div role="tabpanel" class="tab-pane fade" id="tab-upcs" aria-labelledby="upcs-tab">
 					<div class="row">
 						<div class="form-group col-sm-12 text-center">
-							{{ Form::cCheckboxBtn('Tipo de medicamento','Material Curación','material_curacion', $data['activo'] ?? null, 'Otro') }}
+							{{ Form::cCheckboxBtn('¿Material de curación?','Si','material_curacion', $data['material_curacion'] ?? null, 'No') }}
 						</div>
 
-						<div id="tableIndicacion" class="col-sm-12 col-md-6">
+						<div id="tableIndicacion" class="col-sm-12 col-md-6" {{ ($data['material_curacion'] == false) ? '' : 'style=display:none'}}>
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -172,7 +171,7 @@
 							</div>
 						</div>
 						
-						<div id="tableSal" class="col-sm-12 col-md-6">
+						<div id="tableSal" class="col-sm-12 col-md-6" {{ ($data['material_curacion'] == false) ? '' : 'style=display:none'}}>
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -243,7 +242,7 @@
 							</div>
 						</div><!--/table-->
 
-						<div id="tableMaterial" class="col-md-12" style="display:none">
+					<div id="tableMaterial" class="col-md-12" style="display:none">
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -282,9 +281,9 @@
 											@foreach($data->especificaciones as $row => $detalle)
 												<tr>
 													<td>
-														<input type="hidden" value="{{$detalle->id_detalle}}" name="relations[has][detalle][{{$row}}][id_detalle]">
+														<input type="hidden" value="{{$detalle->id_especificacion}}" name="especificaciones[{{$row}}][fk_id_especificacion]">
 														{{ Form::hidden('especificaciones['.$row.'][fk_id_especificacion]',$detalle->fk_id_especificacion) }}
-														{{ $detalle->especificaciones->especificacion }}
+														{{ $detalle->especificacion }}
 													</td>
 														@if(Route::currentRouteNamed(currentRouteName('show')))
 														@else
