@@ -24,7 +24,7 @@ class ClaveClienteProductos extends ModelCompany
 
     protected $fillable = ['fk_id_cliente', 'clave_producto_cliente','subclave','descripcion','fk_id_presentacion',
         'fk_id_forma_farmaceutica','fk_id_unidad_medida','fk_id_clave_producto_servicio','fk_id_clave_unidad','precio',
-        'fk_id_impuesto','activo','tope_receta'];
+        'fk_id_impuesto','activo','tope_receta','material_curacion','pertenece_cuadro','fraccionado'];
 
 	public $rules = [
         'tope_receta' => ['required','numeric','min:1','digits_between:1,16'],

@@ -13,31 +13,6 @@
 
 @section('form-content')
 	{{ Form::setModel($data) }}
-	<div class="modal" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 align="center" class="modal-title text-danger"><i class="material-icons">warning</i>¡Advertencia!</h5>
-					<button type="button" class="close cancelar_cambio" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<p class="text-center">Recuerda que al cambiar alguno de los siguientes campos, se eliminarán los productos asociados.</p>
-					<ul>
-						<li class="list-group-item forma_farmaceutica_modal">Forma Farmacéutica</li>
-						<li class="list-group-item presentacion_modal">Presentación</li>
-						<li class="list-group-item sales_modal">Tabla de sales</li>
-					</ul>
-					<h6 class="text-info">*El elemento que cambió está seleccionado de color azul.</h6>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" id="aceptar_cambio">Aceptar</button>
-					<button type="button" class="btn btn-secondary cancelar_cambio" data-dismiss="modal">Cancelar</button>
-				</div>
-			</div>
-		</div>
-	</div>
     <div class="row">
 		<div class="w-50 card container-fluid z-depth-1-half mt-2 px-0">
 			<div class="card-header">
@@ -54,20 +29,23 @@
 					<div class="form-group col-md-6">
 						{{Form::cText('* Subclave','subclave')}}
 					</div>
-					<div class="form-group col-md-6">
+					<div class="form-group col-md-12">
 						{{Form::cText('* Descripcion','descripcion')}}
 					</div>
-					<div  class="col-md-3 text-center mt-4">
-						{{ Form::cCheckboxBtn('Dentro de Cuadro','Si','pertenece_cuadro', $data['pertenece_cuadro'] ?? null, 'No') }}
+					<div  class="col-md-4 text-center mt-4">
+						{{ Form::cCheckboxBtn('Dentro de Cuadro','Si','pertenece_cuadro', $data->pertenece_cuadro ?? null, 'No') }}
 					</div>
-					<div  class="col-md-3 text-center mt-4">
-						{{ Form::cCheckboxBtn('Fraccionado','Si','fraccionado', $data['fraccionado'] ?? null, 'No') }}
+					<div  class="col-md-4 text-center mt-4">
+						{{ Form::cCheckboxBtn('Fraccionado','Si','fraccionado', $data->fraccionado ?? null, 'No') }}
+					</div>
+					<div  class="col-md-4 text-center mt-4">
+						{{ Form::cCheckboxBtn('Material de curación','Si','material_curacion', $data->material_curacion ?? null, 'No') }}
 					</div>
 					<div class="col-sm-6 col-md-4">
-						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '','data-old'=>$data->fk_id_forma_farmaceutica ?? '']) }}
+						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '']) }}
 					</div>
 					<div class="col-sm-6 col-md-4">
-						{{ Form::cSelect('* Presentación','fk_id_presentacion', $presentaciones ?? [],['style' => 'width:100%;','class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '','data-old'=>$data->fk_id_presentacion ?? '',Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : '' ]) }}
+						{{ Form::cSelect('* Presentación','fk_id_presentacion', $presentaciones ?? [],['style' => 'width:100%;','class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : '' ]) }}
 					</div>
 					<div class="form-group col-md-4">
 						{{Form::cSelectWithDisabled('* Unidad Medida','fk_id_unidad_medida',$unidadesmedidas ?? [],['class'=>''])}}
@@ -124,7 +102,7 @@
 								<div class="col-sm-12 text-center my-3">
 									<div class="sep">
 										<div class="sepBtn">
-											<button id="addSal" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" {{Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : '' }} data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+											<button id="addSal" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
 										</div>
 									</div>
 								</div>
@@ -170,16 +148,16 @@
 		<div class="w-100 card">
 			<div class="card-header">
 				<h1 class="text-info text-center">Productos</h1>
+				<div  class="col-md-12 text-center mt-4">
+					<div class="alert alert-warning" role="alert">
+						Recuerda que al cambiar <b>forma farmacéutica</b>, <b>presentación</b> o al <b>agregar una sal</b> se borrarán los productos actuales y se buscarán otros.
+					</div>
+					{{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
+				</div>
 			</div>
 			<div class="card-body" id="productos" data-url="{{companyAction('Inventarios\ProductosController@getRelatedSkus')}}">
 				<div class="col-md-12">
 					<ul class="nav nav-tabs" id="skus" role="tablist">
-						{{--<li class="nav-item">--}}
-							{{--<a class="nav-link active" id="sku_1_tab" data-toggle="tab" href="#sku_1" role="tab" aria-controls="sku_1" aria-selected="true">SKU 1</a>--}}
-						{{--</li>--}}
-						{{--<li class="nav-item">--}}
-							{{--<a class="nav-link" id="sku_2_tab" data-toggle="tab" href="#sku_2" role="tab" aria-controls="sku_2" aria-selected="false">SKU 2</a>--}}
-						{{--</li>--}}
 						@notroute(['index','create'])
 							@foreach($skus as $index=>$producto)
 								<li class="nav-item">
@@ -189,12 +167,6 @@
 						@endif
 					</ul>
 					<div class="tab-content" id="upcs">
-						{{--<div class="tab-pane fade active" id="sku_1" aria-labelledby="sku_1_tab" role="tabpanel">--}}
-							{{--<div>AAAAAAAAAA</div>--}}
-						{{--</div>--}}
-						{{--<div class="tab-pane fade" id="sku_2" aria-labelledby="sku_2_tab" role="tabpanel">--}}
-							{{--<div>BBBBBBBBBB</div>--}}
-						{{--</div>--}}
 						@notroute(['index','create'])
 							@foreach($skus as $index=>$producto)
 								<div class="tab-pane fade {{$index==0 ? 'active' : ''}}" id="sku_{{$index}}" aria-labelledby="sku_{{$index}}_tab" role="tabpanel">
