@@ -1,4 +1,4 @@
-<div class="form-check custom-control custom-checkbox">
+<div class="custom-control custom-checkbox">
     {{ Form::hidden($name, 0) }}
     {{ Form::checkbox($name, 1, $value ?? old($name), [
         'id' => $name,
