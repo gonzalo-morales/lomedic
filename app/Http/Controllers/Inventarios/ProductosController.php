@@ -105,20 +105,27 @@ class ProductosController extends ControllerBase
 
         if(is_array($return))
         {
-            $entity = $return['entity'];
-            $sync = [];
-            foreach ($request->especificaciones as $especificacion){
-                $sync[]=['fk_id_especificacion'=>$especificacion['fk_id_especificacion']];
-            }
-            $insert = $entity->especificaciones()->sync($sync);
-
-            if($insert)
+            if($request->especificaciones)
             {
-                return $return['redirect'];
-            }
+                $entity = $return['entity'];
+                $sync = [];
+                foreach ($request->especificaciones as $especificacion){
+                    $sync[]=['fk_id_especificacion'=>$especificacion['fk_id_especificacion']];
+                }
+                $insert = $entity->especificaciones()->sync($sync);
+    
+                if($insert)
+                {
+                    return $return['redirect'];
+                }
+                else
+                {
+                    return $this->redirect('error_store');
+                }
+            } 
             else
             {
-                return $this->redirect('error_store');
+                return $return['redirect'];
             }
             
         }
@@ -133,20 +140,27 @@ class ProductosController extends ControllerBase
         $return = parent::update($request, $company, $id, true);
         if(is_array($return))
         {
-            $entity = $return['entity'];
-            $sync = [];
-            foreach ($request->especificaciones as $especificacion){
-                $sync[]=['fk_id_especificacion'=>$especificacion['fk_id_especificacion']];
-            }
-            $insert = $entity->especificaciones()->sync($sync);
-
-            if($insert)
+            if($request->especificaciones)
             {
-                return $return['redirect'];
-            }
+                $entity = $return['entity'];
+                $sync = [];
+                foreach ($request->especificaciones as $especificacion){
+                    $sync[]=['fk_id_especificacion'=>$especificacion['fk_id_especificacion']];
+                }
+                $insert = $entity->especificaciones()->sync($sync);
+    
+                if($insert)
+                {
+                    return $return['redirect'];
+                }
+                else
+                {
+                    return $this->redirect('error_store');
+                }
+            } 
             else
             {
-                return $this->redirect('error_store');
+                return $return['redirect'];
             }
             
         }
