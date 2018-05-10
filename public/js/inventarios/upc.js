@@ -1,4 +1,11 @@
-$(document).ready(function () {  
+$(document).ready(function () {
+	var campoMaterial = document.getElementById('material_curacion');
+
+	if(campoMaterial.hasAttribute('checked')){
+        $('#tableIndicacion').toggle('slow');
+        $('#tableSal').toggle('slow');
+        $('#tableMaterial').toggle('slow');
+	} 
     $('#addIndication').on('click', function () {
         addIndication();
     });
@@ -9,17 +16,18 @@ $(document).ready(function () {
         addMaterial();
     });
     $(document).on('submit', function (e) {
-        if($('#material_curacion').attr('checked') == true){
-            if( $('#tbodyIndication tr').length == 0 || $('#tbodyPresentation tr').length == 0 )
-            {
-                e.preventDefault();
-                mensajeAlerta("Para guardar el UPC se requiere que mínimo se agregue una Indicación terapéutica y una Presentación", "danger");
-            }
-        } else{
+        let material = document.getElementById('material_curacion');
+        if(material.hasAttribute('checked')){
             if($('#tbodyMaterials tr').length == 0)
             {
                 e.preventDefault();
                 mensajeAlerta("Para guardar el UPC se requiere que mínimo se agregue una Especificación", "danger");
+            }
+        } else{
+            if( $('#tbodyIndication tr').length == 0 || $('#tbodyPresentation tr').length == 0 )
+            {
+                e.preventDefault();
+                mensajeAlerta("Para guardar el UPC se requiere que mínimo se agregue una Indicación terapéutica y una Presentación", "danger");
             }
         }
     });
@@ -37,8 +45,11 @@ $(document).ready(function () {
     });
     $('#material_curacion').on('change',function(){
         $('#tableIndicacion').toggle('slow');
+        $('#tbodyIndication').empty();
         $('#tableSal').toggle('slow');
+        $('#tbodyPresentation').empty();
         $('#tableMaterial').toggle('slow');
+        $('#tbodyMaterials').empty();
     })
 });
 

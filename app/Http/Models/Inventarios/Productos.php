@@ -10,6 +10,7 @@ use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Compras\DetalleOrdenes;
 use App\Http\Models\Administracion\Presentaciones;
+use App\Http\Models\Administracion\Especificaciones;
 
 class Productos extends ModelCompany
 {
@@ -61,7 +62,8 @@ class Productos extends ModelCompany
         "descripcion_cenefas",
         "descripcion_ticket",
         "descripcion_rack",
-        "descripcion_cbn"
+        "descripcion_cbn",
+        'material_curacion'
     ];
 
     public $rules = [
@@ -151,6 +153,11 @@ class Productos extends ModelCompany
     public function setUpcsAttribute($upc)
     {
         $this->attributes['upcs'] = $upc;
+    }
+
+    public function especificaciones()
+    {
+        return $this->belongsToMany(Especificaciones::class,'inv_det_especificaciones_producto','fk_id_sku','fk_id_especificacion','id_sku','id_especificacion');
     }
 
 }

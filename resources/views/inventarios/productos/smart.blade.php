@@ -55,28 +55,24 @@
             	</div>
         	</div>
         	<div class="col-sm-6 col-md-4 col-lg-3 row">
-            	<div class="col-sm-12">
-            		<div class="form-group">
-            			{{ Form::cCheckbox('Articulo de Venta', 'articulo_venta') }}
+            	<div class="col-sm-12 col-md-6">
+            		<div class="form-group text-center">
+						{{ Form::cCheckboxBtn('¿Artículo de venta?','Si','articulo_venta', $data['articulo_venta'] ?? null, 'No') }}
             		</div>
             	</div>
-            	<div class="col-sm-12">
-            		<div class="form-group">
-            			{{ Form::cCheckbox('Articulo de Compra', 'articulo_compra') }}
+            	<div class="col-sm-12 col-md-6">
+            		<div class="form-group text-center">
+						{{ Form::cCheckboxBtn('¿Artículo de compra?','Si','articulo_compra', $data['articulo_compra'] ?? null, 'No') }}
             		</div>
             	</div>
-            	<div class="col-sm-12">
-            		<div class="form-group">
-            			{{ Form::cCheckbox('Articulo de Inventario', 'articulo_inventario') }}
+            	<div class="col-sm-12 col-md-6">
+            		<div class="form-group text-center">
+						{{ Form::cCheckboxBtn('¿Artículo de inventario?','Si','articulo_inventario', $data['articulo_inventario'] ?? null, 'No') }}
             		</div>
 				</div>
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" id="customCheck1">
-					<label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
-				  </div>
-            	<div class="col-sm-12">
-            		<div class="form-group">
-            			{{ Form::cCheckbox('Maneja Lote', 'maneja_lote') }}
+            	<div class="col-sm-12 col-md-6">
+            		<div class="form-group text-center">
+						{{ Form::cCheckboxBtn('¿Maneja lote?','Si','maneja_lote', $data['maneja_lote'] ?? null, 'No') }}
             		</div>
             	</div>
             </div>
@@ -131,17 +127,20 @@
 									</div>
 								</div>
 								<div class="col-sm-12 col-md-12 row">
-									<div class="col-sm-12 col-md-4 text-center">
+									<div class="form-group col-sm-12 col-md-3 text-center">
+										{{ Form::cCheckboxBtn('¿Material de curación?','Si','material_curacion', $data['material_curacion'] ?? null, 'No') }}
+									</div>
+									<div class="col-sm-12 col-md-3 text-center">
 										<div class="form-group">
 											{{ Form::cCheckboxBtn('Estatus', 'Activo', 'activo', $data['activo'] ?? null, 'Inactivo') }}
 										</div>
 									</div>
-									<div class="col-sm-6 col-md-4">
+									<div class="col-sm-6 col-md-3">
 										<div class="form-group">
 											{{ Form::cText('Desde', 'activo_desde') }}
 										</div>
 									</div>
-									<div class="col-sm-6 col-md-4">
+									<div class="col-sm-6 col-md-3">
 										<div class="form-group">
 											{{ Form::cText('Hasta', 'activo_hasta') }}
 										</div>
@@ -149,7 +148,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-12 col-md-6">
+
+						<div id="tableSal" class="col-sm-12 col-md-6">
 							<div class="row">
 								<div class="col-sm-12">
 									@if(!Route::currentRouteNamed(currentRouteName('show')))
@@ -223,6 +223,65 @@
 								</div>
 							</div>
 						</div>
+
+						<div id="tableMaterial" class="col-sm-12 col-md-6" style="display:none">
+							@if(!Route::currentRouteNamed(currentRouteName('show')))
+								<div class="card-header">
+									<form id="overallForm">
+										<fieldset id="detalle-form">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="from-group">
+														{{ Form::cSelect('* Especificaciones','especificacion', $especificaciones ?? [],[
+															'style' => 'width:100%;',
+															'class' => 'select2',
+															]) }}
+													</div>
+												</div>
+											</div><!--/row-->
+										<div class="col-sm-12 text-center my-3">
+											<div class="sep">
+												<div class="sepBtn">
+													<button id="addMaterial" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+												</div>
+											</div>
+										</div>
+										</fieldset>
+									</form>
+								</div><!--/card-header-->
+							@endif
+							<div class="card-body">
+								<table class="table table-responsive-sm table-striped table-hover">
+									<thead>
+										<tr>
+											<th>Especificación</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody id="tbodyMaterials">
+										@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
+											@foreach($data->especificaciones as $row => $detalle)
+												<tr>
+													<td>
+														<input type="hidden" value="{{$detalle->id_detalle}}" name="especificaciones[{{$row}}][id_detalle]">
+														{{ Form::hidden('especificaciones['.$row.'][fk_id_especificacion]',$detalle->id_especificacion,['class' => 'id_mat']) }}
+														{{ Form::hidden('especificaciones['.$row.'][fk_id_sku]',$detalle->fk_id_sku) }}
+														{{ $detalle->especificacion }}
+													</td>
+														@if(Route::currentRouteNamed(currentRouteName('show')))
+														@else
+													<td>
+														<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
+													</td>
+														@endif
+												</tr>
+											@endforeach
+										@endif
+									</tbody>
+								</table>
+							</div>
+						</div><!--/detalle-->
+
 					</div>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab-upcs" aria-labelledby="upcs-tab">

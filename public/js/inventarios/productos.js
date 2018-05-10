@@ -1,7 +1,13 @@
 $(document).ready(function () {
 	var from_picker = $('#activo_desde').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	var to_picker = $('#activo_hasta').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
-	
+	var campoMaterial = document.getElementById('material_curacion');
+
+	if(campoMaterial.hasAttribute('checked')){
+		$('#tableSal').toggle();
+		$('#tableMaterial').toggle();
+	}
+
 	if(!$('#activo').prop('checked')) {
 		from_picker.clear().stop();
 		to_picker.clear().stop();
@@ -63,6 +69,13 @@ $(document).ready(function () {
 		}
 	});
 
+    $('#material_curacion').on('change',function(){
+		$('#tableSal').toggle();
+		$('#tbodyMaterials').empty();
+		$('#tableMaterial').toggle();
+		$('#tbodyPresentation').empty();
+    });
+
 	$('#cantidad').on('change', function() {
 		var oldvalue = this.old;
 		var newvalue = this.value;
@@ -70,22 +83,39 @@ $(document).ready(function () {
 		// console.log(oldvalue+ ' '+newvalue);
 	});
 
+	$('[data-toggle]').tooltip();
+	$('.nav-link').on('click', function (e) {
+		e.preventDefault();
+		$('#clothing-nav li').each(function () {
+			$(this).children().removeClass('active');
+		});
+		$('.tab-pane').removeClass('active').removeClass('show');
+		$(this).addClass('active');
+		let tab = $(this).prop('href');
+		tab = tab.split('#');
+		$('#' + tab[1]).addClass('active').addClass('show');
+	});
+
     $('#addPresentation').on('click', function () {
         return addSalt();
 	});
-	
-    $('[data-toggle]').tooltip();
-    $('.nav-link').on('click', function (e) {
-        e.preventDefault();
-        $('#clothing-nav li').each(function () {
-            $(this).children().removeClass('active');
-        });
-        $('.tab-pane').removeClass('active').removeClass('show');
-        $(this).addClass('active');
-        let tab = $(this).prop('href');
-        tab = tab.split('#');
-        $('#' + tab[1]).addClass('active').addClass('show');
+    $('#addMaterial').on('click',function(){
+        return addMaterial();
 	});
+
+	$('#fk_id_forma_farmaceutica').on('change',function(){
+		return validateFieldsforUPC();
+	})
+
+	$('#fk_id_presentaciones').on('change',function(){
+		return validateFieldsforUPC();
+	})
+	if($('#fk_id_forma_farmaceutica').val() > 0 && $('#fk_id_presentaciones').val() > 0 && $('#tbodyPresentation tr').length > 0){
+		getUpcs();
+	}
+	if($('#fk_id_forma_farmaceutica').val() > 0 && $('#fk_id_presentaciones').val() > 0 && $('#tbodyMaterials tr').length > 0){
+		getUpcs();
+	}
 	
 	$(document).on('submit',function (e) {
 		if($('#upcs tbody tr').length == 0)
@@ -100,36 +130,35 @@ $(document).ready(function () {
 			mensajeAlerta("Para guardar se requiere que mínimo indiques el Impuesto y Subgrupo al producto, puedes agregarlos en la pestaña <b>General</b>","danger");
 		}
 	});
-
-	$('#fk_id_forma_farmaceutica').on('change',function(){
-		return validateFieldsforUPC();
-	})
-
-	$('#fk_id_presentaciones').on('change',function(){
-		return validateFieldsforUPC();
-	})
-	if($('#fk_id_forma_farmaceutica').val() > 0 && $('#fk_id_presentaciones').val() > 0 && $('#tbodyPresentation tr').length > 0){
-		getUpcs();
-	}
 });
 
 function validateFieldsforUPC(){
-	let $tableLength = $('#tbodyPresentation tr').length;
 	let formaFarma = $('#fk_id_forma_farmaceutica').val();
-	if( $tableLength > 0 && formaFarma != '' ){
-		return getUpcs();
-	} else{
-		return mensajeAlerta("Necesito de mínimo una sal, concentración, presentación y forma farmacéutica para poder mostrar los UPCs relacionados.","warning",10000);
+	let material = document.getElementById('material_curacion');
+	if(material.hasAttribute('checked')){
+		let $matTable = $('#tbodyMaterials tr').length;
+		if( $matTable > 0 && formaFarma != '' ){
+			return getUpcs();
+		} else{
+			return mensajeAlerta("Necesito de mínimo: <ul><li>Una especificación del material</li><li>Presentación</li><li>Forma farmacéutica</li></ul> Para poder mostrar los UPCs relacionados.","warning",10000);
+		}
+	} else {
+		let $preTable = $('#tbodyPresentation tr').length;
+		if( $preTable > 0 && formaFarma != '' ){
+			return getUpcs();
+		} else{
+			return mensajeAlerta("Necesito de mínimo: <ul><li>Una sal</li><li>Concentración</li><li>Presentación y forma farmacéutica</li></ul> Para poder mostrar los UPCs relacionados.","warning",10000);
+		}
 	}
 }
 
 function borrarFila(el) {
     var tr = $(el).closest('tr');
     tr.fadeOut(400, function(){
-		tr.remove().stop();
+		tr.remove();
+		mensajeAlerta("Fila eliminada con éxito","success");
+		validateFieldsforUPC();
 	})
-	mensajeAlerta("Fila eliminada con éxito","warning");
-	validateFieldsforUPC();
 }
 
 function validateDetail() {
@@ -180,6 +209,38 @@ function addSalt(){
 	}
 }
 
+function addMaterial(){
+    let materialId = $('#especificacion option:selected').val();
+    let materialText = $('#especificacion option:selected').text();
+    let $tbody = $('#tbodyMaterials');
+    let i = $('#tbodyMaterials > tr').length;
+    let row_id = i > 0 ? +$('#tbodyMaterials > tr:last').find('#index').val()+1 : 0;
+    let existe = false;
+
+    if(i > 0){
+        $tbody.children().each(function(){
+            let matRow = $(this).find('.id_mat').val()
+            if(matRow == materialId){
+                existe = true;
+            }
+        })
+    }
+
+    if(!existe){
+        $tbody.append(
+            '<tr>'+
+            '<td>' + '<input type="hidden" id="index" value="'+row_id+'"><input class="id_mat" type="hidden" name="especificaciones['+row_id+'][fk_id_especificacion]" value="'+materialId+'">' + materialText + '</td>' +
+            '<td>' + '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>' + '</td>' +
+             +'</tr>'
+        );
+        mensajeAlerta("Elemento agregado con éxito","success");
+		$('[data-toggle]').tooltip();
+		validateFieldsforUPC();
+    } else {
+		mensajeAlerta(`El material: <b>${materialText}</b> ya existe, prueba con otro material.`,"warning");
+	}
+}
+
 function mensajeAlerta(mensaje,tipo,tiempo){
     var titulo = '';
     if(tipo == 'danger'){ titulo = '¡Error!'}
@@ -197,32 +258,60 @@ function mensajeAlerta(mensaje,tipo,tiempo){
 function getUpcs(){
 	let idForma = $('#fk_id_forma_farmaceutica').val();
 	let	idPresentaciones = $('#fk_id_presentaciones').val();
-	let sales = [];
-	for (const row of $('#tbodyPresentation tr')) {
-		let sal =  +$(row).find('.id_sal').val();
-		let concentracion =  +$(row).find('.id_concentracion').val();
-		let obj = {};
-		obj.id_sal = sal;
-		obj.id_concentracion = concentracion;
-		sales.push(obj);
-	}
-	$.ajax({
-		url: $('#fk_id_forma_farmaceutica').data('url'),
-		data: {
-			'id_forma':idForma,
-			'id_presentaciones':idPresentaciones,
-			'arr_sales':JSON.stringify(sales),
-		},
-		dataType: "json",
-		success: function (response) {
-			if(response.length > 0){
-				$('#current_upcs').text(response.length)
-				addUpcs(response);
-			}else{
-				mensajeAlerta("Al parecer no hay UPC's con las características indicadas, verifica que la presentación, forma farmacéutica y sales sean los adecuados.","danger");
-			}
+	let material = document.getElementById('material_curacion');
+	if(material.hasAttribute('checked')){
+		let especificaciones = [];
+		for (const row of $('#tbodyMaterials tr')) {
+			let mat =  +$(row).find('.id_mat').val();
+			especificaciones.push(mat);
 		}
-	});
+		$.ajax({
+			url: $('#fk_id_forma_farmaceutica').data('url'),
+			data: {
+				'id_forma':idForma,
+				'id_presentaciones':idPresentaciones,
+				'arr_especificaciones':JSON.stringify(especificaciones),
+			},
+			dataType: "json",
+			success: function (response) {
+				if(response.length > 0){
+					$('#current_upcs').text(response.length)
+					addUpcs(response);
+				}else{
+					mensajeAlerta("Al parecer no hay UPC's con las características indicadas, verifica que la presentación, forma farmacéutica y la especificación sean correctas.","danger");
+				}
+			}
+		});
+	} else{
+		let sales = [];
+		let especificaciones = [];
+		for (const row of $('#tbodyPresentation tr')) {
+			let sal =  +$(row).find('.id_sal').val();
+			let concentracion =  +$(row).find('.id_concentracion').val();
+			let obj = {};
+			obj.id_sal = sal;
+			obj.id_concentracion = concentracion;
+			sales.push(obj);
+		}
+		$.ajax({
+			url: $('#fk_id_forma_farmaceutica').data('url'),
+			data: {
+				'id_forma':idForma,
+				'id_presentaciones':idPresentaciones,
+				'arr_sales':JSON.stringify(sales),
+				'arr_especificaciones':JSON.stringify(especificaciones),
+			},
+			dataType: "json",
+			success: function (response) {
+				if(response.length > 0){
+					$('#current_upcs').text(response.length)
+					addUpcs(response);
+				}else{
+					mensajeAlerta("Al parecer no hay UPC's con las características indicadas, verifica que la presentación, forma farmacéutica y sales sean los adecuados.","danger");
+				}
+			}
+		});
+	}
 }
 
 function addUpcs(response){

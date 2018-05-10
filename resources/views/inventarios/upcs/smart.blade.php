@@ -118,7 +118,7 @@
 							{{ Form::cCheckboxBtn('¿Material de curación?','Si','material_curacion', $data['material_curacion'] ?? null, 'No') }}
 						</div>
 
-						<div id="tableIndicacion" class="col-sm-12 col-md-6" {{ ($data['material_curacion'] == false) ? '' : 'style=display:none'}}>
+						<div id="tableIndicacion" class="col-sm-12 col-md-6">
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -171,7 +171,7 @@
 							</div>
 						</div>
 						
-						<div id="tableSal" class="col-sm-12 col-md-6" {{ ($data['material_curacion'] == false) ? '' : 'style=display:none'}}>
+						<div id="tableSal" class="col-sm-12 col-md-6">
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -281,8 +281,9 @@
 											@foreach($data->especificaciones as $row => $detalle)
 												<tr>
 													<td>
-														<input type="hidden" value="{{$detalle->id_especificacion}}" name="especificaciones[{{$row}}][fk_id_especificacion]">
-														{{ Form::hidden('especificaciones['.$row.'][fk_id_especificacion]',$detalle->fk_id_especificacion) }}
+														<input type="hidden" value="{{$detalle->id_detalle}}" name="especificaciones[{{$row}}][id_detalle]">
+														{{ Form::hidden('especificaciones['.$row.'][fk_id_especificacion]',$detalle->id_especificacion,['class' => 'id_mat']) }}
+														{{ Form::hidden('especificaciones['.$row.'][fk_id_sku]',$detalle->fk_id_sku) }}
 														{{ $detalle->especificacion }}
 													</td>
 														@if(Route::currentRouteNamed(currentRouteName('show')))

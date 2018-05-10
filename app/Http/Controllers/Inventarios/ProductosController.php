@@ -23,6 +23,7 @@ use DB;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Administracion\Periodos;
 use App\Http\Models\Administracion\MetodosValoracion;
+use App\Http\Models\Administracion\Especificaciones;
 
 class ProductosController extends ControllerBase
 {
@@ -31,37 +32,37 @@ class ProductosController extends ControllerBase
         $this->entity = new Productos;
     }
 
-    public function update(Request $request, $company, $id, $compact = false)
-    {
-        # ¿Usuario tiene permiso para actualizar?
-        #$this->authorize('update', $this->entity);
+    // public function update(Request $request, $company, $id, $compact = false)
+    // {
+    //     # ¿Usuario tiene permiso para actualizar?
+    //     #$this->authorize('update', $this->entity);
 
-        # Validamos request, si falla regresamos atras
-        $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
+    //     # Validamos request, si falla regresamos atras
+    //     $this->validate($request, $this->entity->rules, [], $this->entity->niceNames);
 
-        DB::beginTransaction();
-        $entity = $this->entity->findOrFail($id);
-        $entity->fill($request->all());
+    //     DB::beginTransaction();
+    //     $entity = $this->entity->findOrFail($id);
+    //     $entity->fill($request->all());
 
-        if ($entity->save()) {
-            if(isset($request->detalles)) {
-                foreach ($request->detalles as $detalle) {
-                    $sync[$detalle['fk_id_upc']] = $detalle;
-                }
-                $entity->findOrFail($id)->upcs()->sync($sync);
-            }
-            DB::commit();
+    //     if ($entity->save()) {
+    //         if(isset($request->detalles)) {
+    //             foreach ($request->detalles as $detalle) {
+    //                 $sync[$detalle['fk_id_upc']] = $detalle;
+    //             }
+    //             $entity->findOrFail($id)->upcs()->sync($sync);
+    //         }
+    //         DB::commit();
 
-            # Eliminamos cache
-            Cache::tags(getCacheTag('index'))->flush();
-            #$this->log('update', $id);
-            return $this->redirect('update');
-        } else {
-            DB::rollBack();
-            #$this->log('error_update', $id);
-            return $this->redirect('error_update');
-        }
-    }
+    //         # Eliminamos cache
+    //         Cache::tags(getCacheTag('index'))->flush();
+    //         #$this->log('update', $id);
+    //         return $this->redirect('update');
+    //     } else {
+    //         DB::rollBack();
+    //         #$this->log('error_update', $id);
+    //         return $this->redirect('error_update');
+    //     }
+    // }
 
     public function getDataView($entity = null)
     {
@@ -74,6 +75,7 @@ class ProductosController extends ControllerBase
         }
 
         return [
+            'especificaciones' => Especificaciones::where('activo',1)->pluck('especificacion','id_especificacion')->sortBy('especificacion'),
             'seriesku'         => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('...',''),
             'subgrupo'         => collect($subgrupos ?? [])->prepend('...','')->toArray(),
             'formafarmaceutica'=> FormaFarmaceutica::where('activo',1)->pluck('forma_farmaceutica','id_forma_farmaceutica')->sortBy('forma_farmaceutica')->prepend('...',''),
@@ -95,6 +97,63 @@ class ProductosController extends ControllerBase
             // "whereHas": [{"presentaciones":{"where":["fk_id_presentaciones", "$fk_id_presentaciones"],["fk_id_sal", "$fk_id_sal"]}}]
             // ')
         ];
+    }
+
+    public function store(Request $request, $company, $compact = false)
+    {
+        $return = parent::store($request, $company, true);
+
+        if(is_array($return))
+        {
+            $entity = $return['entity'];
+            $sync = [];
+            foreach ($request->especificaciones as $especificacion){
+                $sync[]=['fk_id_especificacion'=>$especificacion['fk_id_especificacion']];
+            }
+            $insert = $entity->especificaciones()->sync($sync);
+
+            if($insert)
+            {
+                return $return['redirect'];
+            }
+            else
+            {
+                return $this->redirect('error_store');
+            }
+            
+        }
+        else
+        {
+            return $this->redirect('error_store');
+        }
+    }
+
+    public function update(Request $request, $company, $id, $compact = false)
+    {
+        $return = parent::update($request, $company, $id, true);
+        if(is_array($return))
+        {
+            $entity = $return['entity'];
+            $sync = [];
+            foreach ($request->especificaciones as $especificacion){
+                $sync[]=['fk_id_especificacion'=>$especificacion['fk_id_especificacion']];
+            }
+            $insert = $entity->especificaciones()->sync($sync);
+
+            if($insert)
+            {
+                return $return['redirect'];
+            }
+            else
+            {
+                return $this->redirect('error_store');
+            }
+            
+        }
+        else
+        {
+            return $this->redirect('error_store');
+        }
     }
 
     public function obtenerSkus($company,Request $request)
@@ -132,8 +191,37 @@ class ProductosController extends ControllerBase
         $id_forma_farmaceutica = request()->id_forma;
         $id_presentaciones = request()->id_presentaciones;
         $sales = json_decode(request()->arr_sales);
+        $especificaciones = json_decode(request()->arr_especificaciones);
         $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->where('activo',1)->with('laboratorio')->get();
 
+        if(isset($sales))
+        { 
+            return $this->filterUpcsWithSalts($upcs,$sales);
+        } 
+        if(isset($especificaciones))
+        {
+            return $this->filterUpcsWithMaterials($upcs,$especificaciones);
+        }
+        return false;
+    }
+
+    public function filterUpcsWithMaterials($upcs,$especificaciones)
+    {
+        $upcFiltered = $upcs->filter(function($upc) use ($especificaciones){
+            foreach ($upc->especificaciones as $upc_detalle) {
+                foreach ($especificaciones as $especificacion) {
+                    if($upc_detalle->id_especificacion == $especificacion)
+                    {
+                        return $upc;
+                    }
+                }
+            }
+        });
+        return json_encode($upcFiltered);
+    }
+
+    public function filterUpcsWithSalts($upcs,$sales)
+    {
         $upcFiltered = $upcs->filter(function($upc) use ($sales){
             foreach ($upc->presentaciones as $upc_detalle) {
                 foreach ($sales as $sal) {
