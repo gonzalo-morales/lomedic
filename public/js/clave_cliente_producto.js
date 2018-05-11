@@ -1,5 +1,30 @@
 $(document).ready(function () {
 
+    if($('#material_curacion').is(':checked')) {
+        $('#tableEspecificaciones').show('slow');
+    }
+    else{
+        $('#tableSal').show('slow');
+    }
+
+    $('#material_curacion').on('change',function(){
+        if($(this).is(':checked')) {
+            $('#tableEspecificaciones').show('slow');
+            $('#tableSal').hide('slow');
+            $('#tableEspecificaciones tbody ').empty();
+        }
+        else{
+            $('#tableSal').show('slow');
+            $('#tableEspecificaciones').hide('slow');
+            $('#tableSal tbody').empty();
+        }
+        buscaProductos();
+    });
+
+    $('#addEspecificacion').on('click',function () {
+       addEspecificacion();
+    });
+
     $('#skus a').on('click',function (e) {
         $(this).tab('show');
         e.preventDefault();
@@ -11,7 +36,8 @@ $(document).ready(function () {
             $('#skus,#upcs').empty();
         }
         else{
-            $('#fk_id_presentacion').attr('disabled',false);
+            if(!$('#material_curacion').is(':checked'))
+                $('#fk_id_presentacion').attr('disabled',false);
         }
     });
 
@@ -86,7 +112,7 @@ function buscaProductos() {
     $('.list-group-item').removeClass('active');
     $('#skus,#upcs').empty();
     //Función AJAX para obtener función de productos
-    let id_forma = $('#fk_id_forma_farmaceutica').val();
+    let id_forma = $('#fk_id_forma_farmaceutica').val() ? $('#fk_id_forma_farmaceutica').val() : 0;
     let id_presentaciones = $('#fk_id_presentacion').val() ? $('#fk_id_presentacion').val() : 0;
     let sales = [];
     $('#tbodySales tr').each(function () {
@@ -95,13 +121,22 @@ function buscaProductos() {
         obj.id_concentraciones = $(this).find('.concentracion').val();
         sales.push(obj);
     });
-    if(id_forma > 0)
+    let especificaciones = [];
+    $('#tbodyEspecificaciones tr').each(function () {
+        let obj = {};
+        obj.id_especificacion = $(this).find('.especificacion').val();
+        especificaciones.push(obj);
+    });
+    let material_curacion = $('#material_curacion').is(':checked');
+    if(sales.length > 0 || especificaciones.length > 0)
         $.ajax({
             url:$('#productos').data('url'),
             data:{
                 id_forma:id_forma,
                 id_presentaciones:id_presentaciones,
-                sales:JSON.stringify(sales)
+                sales:JSON.stringify(sales),
+                material_curacion:material_curacion,
+                especificaciones:especificaciones
             },
             success:function (data) {
                 data = JSON.parse(data);
@@ -195,10 +230,11 @@ function addSalt(){
 }
 
 function borrarFila(el) {
-    var tr = $(el).closest('tr');
+    let tr = $(el).closest('tr');
     tr.fadeOut(400, function(){
         tr.remove().stop();
-    })
+        buscaProductos();
+    });
     $.toaster({priority:'success',
             title: '¡Éxito!',
             message:"Se ha eliminado la fila",
@@ -206,8 +242,32 @@ function borrarFila(el) {
                 'toaster':{'css':{'top':'5em'}}}
         }
     );
-};
+}
 
 function cambio(element) {
     $(element).closest('li').tab('show');
+}
+
+function addEspecificacion(){
+    let especificacionId = $('#especificacion').val();
+    let especificacionText = $('#especificacion option:selected').text();
+    let $tbody = $('#tbodyEspecificaciones');
+    let i = $('#tbodyEspecificaciones > tr').length;
+    let row_id = i > 0 ? +$('#tbodyEspecificaciones > tr:last').find('#index').val()+1 : 0;
+
+    $tbody.append(
+        '<tr>'+
+        '<td>' + '<input type="hidden" id="index" value="'+row_id+'"><input class="especificacion" type="hidden" name="especificaciones['+row_id+'][fk_id_especificacion]" value="'+especificacionId+'">' + especificacionText + '</td>' +
+        '<td>' + '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>' + '</td>' +
+        +'</tr>'
+    );
+    $.toaster({priority:'success',
+            title: '¡Éxito!',
+            message:"Elemento agregado con éxito",
+            settings:{'timeout':8000,
+                'toaster':{'css':{'top':'5em'}}}
+        }
+    );
+    buscaProductos();
+    $('[data-toggle]').tooltip();
 }

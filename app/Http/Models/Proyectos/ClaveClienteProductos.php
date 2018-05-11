@@ -4,6 +4,7 @@ namespace App\Http\Models\Proyectos;
 
 use App\Http\Models\Administracion\ClavesProductosServicios;
 use App\Http\Models\Administracion\ClavesUnidades;
+use App\Http\Models\Administracion\Especificaciones;
 use App\Http\Models\Administracion\FormaFarmaceutica;
 use App\Http\Models\Administracion\Impuestos;
 use App\Http\Models\Administracion\Presentaciones;
@@ -119,4 +120,8 @@ class ClaveClienteProductos extends ModelCompany
         return $this->belongsToMany(Upcs::class,'inv_det_upc_clave_cliente','fk_id_clave_cliente','fk_id_upc','id_clave_cliente_producto','id_upc');
     }
 
+    public function especificaciones()
+    {
+        return $this->belongsToMany(Especificaciones::class,'inv_det_especificaciones_clave_cliente','fk_id_clave_cliente','fk_id_especificacion','id_clave_cliente_producto','id_especificacion');
+    }
 }

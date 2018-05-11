@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Proyectos;
 
 use App\Http\Controllers\ControllerBase;
+use App\Http\Models\Administracion\Especificaciones;
 use App\Http\Models\Administracion\FormaFarmaceutica;
 use App\Http\Models\Administracion\Presentaciones;
 use App\Http\Models\Inventarios\Productos;
@@ -30,24 +31,22 @@ class ClaveClienteProductosController extends ControllerBase
         $upcs = null;
         if($entity){
             $claveproductoservicio = ClavesProductosServicios::selectRaw("id_clave_producto_servicio as id, CONCAT(clave_producto_servicio,' - ',descripcion) as text")->where('id_clave_producto_servicio',$entity->fk_id_clave_producto_servicio)->orderBy('text')->pluck('text','id');
-//            $upcs = Upcs::selectRaw("id_upc as id, CONCAT(upc,' - ',nombre_comercial) as text")->where('activo',1)->whereHas('skus',function ($q) use ($entity){
-//                $q->where('id_sku',$entity->fk_id_sku);
-//            })->pluck('text','id');
 
-            $id_forma_farmaceutica = $entity->fk_id_forma_farmaceutica;
-            $id_presentaciones = $entity->fk_id_presentacion;
-            $sales = $entity->concentraciones()->get();
-            $skus = $entity->fk_id_presentacion > 0 ? Productos::select('id_sku','sku')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->get() : Productos::select('id_sku','sku')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->get();
-            $upcs = $entity->fk_id_presentacion > 0 ? Upcs::select('id_upc','upc','nombre_comercial','marca','descripcion','fk_id_laboratorio')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->with('laboratorio:id_laboratorio,laboratorio')->get() : Upcs::select('id_upc','upc','nombre_comercial','marca','descripcion','fk_id_laboratorio')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->with('laboratorio:id_laboratorio,laboratorio')->get();
+            $id_forma_farmaceutica = $entity->fk_id_forma_farmaceutica != 0 ? $entity->fk_id_forma_farmaceutica: null  ;
+            $id_presentaciones = $entity->fk_id_presentacion != 0 ? $entity->fk_id_presentacion : null;
+            $sales = $entity->presentaciones ?? null;
+            $material_curacion = $entity->material_curacion == 'true' ? 1 : 0;
+            $especificaciones = $entity->especificaciones ?? null;
+            $skus = $material_curacion ? Productos::select('id_sku','sku')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->get() : Productos::select('id_sku','sku')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->get();
+            $upcs = $material_curacion ? Upcs::select('id_upc','upc','nombre_comercial','marca','descripcion','fk_id_laboratorio')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->with('laboratorio:id_laboratorio,laboratorio')->get() : Upcs::select('id_upc','upc','nombre_comercial','marca','descripcion','fk_id_laboratorio')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->with('laboratorio:id_laboratorio,laboratorio')->get();
+
             if(count($sales) > 0)
                 $skus = $skus->filter(function ($sku) use ($sales){//Para obtener los SKUS que coinciden
                     $presentacion = $sku->presentaciones->filter(function ($presentacion) use ($sales){
-                        $bool = false;
                         foreach ($sales as $sal){
-                            if($sal->fk_id_sal == $presentacion->fk_id_sal && $sal->fk_id_concentracion == $presentacion->fk_id_presentaciones)
-                                $bool = true;
+                            if($sal->id_sal == $presentacion->fk_id_sal && $sal->id_concentraciones == $presentacion->fk_id_presentaciones)
+                                return $presentacion;
                         }
-                        return $bool;
                     });
                     return $presentacion->count() == count($sales) ? true : false;
                 })->filter(function ($sku) use ($sales,$upcs){//Agrega los UPCS que coinciden con el SKU
@@ -55,23 +54,27 @@ class ClaveClienteProductosController extends ControllerBase
                     foreach ($upcs as $upc)
                     {
                         $presentacion = $upc->presentaciones->filter(function ($presentacion) use ($sales){
-                            $bool = false;
                             foreach ($sales as $sal){
-                                if($sal->fk_id_sal == $presentacion->fk_id_sal && $sal->fk_id_concentracion == $presentacion->fk_id_presentaciones)
-                                    $bool = true;
+                                if($sal->id_sal == $presentacion->fk_id_sal && $sal->id_concentraciones == $presentacion->fk_id_presentaciones)
+                                    return $presentacion;
                             }
-                            return $bool;
                         });
                         $presentacion->count() == count($sales) ? $newcollection[] = $upc : false;
                     }
                     return $sku->upcs = $newcollection;
                 });
             else
-                $skus = $skus->filter(function ($sku) use ($upcs){
+                $skus = $skus->filter(function ($sku) use ($upcs,$especificaciones){
                     $newcollection = [];
                     foreach ($upcs as $upc)
                     {
-                        $newcollection[] = $upc;
+                        $especificacion = $upc->especificaciones->filter(function ($especificacion) use ($especificaciones){
+                            foreach ($especificaciones as $_especificacion){
+                                if($_especificacion['id_especificacion'] == $especificacion->id_especificacion)
+                                    return $especificacion;
+                            }
+                        });
+                        $especificacion->count() == count($especificaciones) ? $newcollection[] = $upc : false;
                     }
                     return $sku->upcs = $newcollection;
                 });
@@ -85,7 +88,7 @@ class ClaveClienteProductosController extends ControllerBase
             'impuestos' => Impuestos::where('activo',1)->orderBy('impuesto')->pluck('impuesto','id_impuesto'),
             'skus' => $skus ?? null,
 //            'upcs' => $upcs,
-            'formafarmaceutica' => FormaFarmaceutica::where('activo',1)->where('eliminar',0)->pluck('forma_farmaceutica','id_forma_farmaceutica'),
+            'formafarmaceutica' => FormaFarmaceutica::where('activo',1)->where('eliminar',0)->pluck('forma_farmaceutica','id_forma_farmaceutica')->prepend('...',''),
             'presentaciones' => Presentaciones::join('gen_cat_unidades_medidas', 'gen_cat_unidades_medidas.id_unidad_medida', '=', 'adm_cat_presentaciones.fk_id_unidad_medida')
                 ->whereNotNull('clave')->selectRaw("Concat(cantidad,' ',clave) as text, id_presentacion as id")->pluck('text','id')->prepend('...',''),
             'sales' => Sales::where('activo',1)->pluck('nombre','id_sal')->sortBy('nombre'),
@@ -93,6 +96,7 @@ class ClaveClienteProductosController extends ControllerBase
             'js_cantidad_upc' => Crypt::encryptString('"conditions":[{"where":["id_upc","$fk_id_upc"]}],"whereHas":[{"skus": {"where": ["fk_id_sku", "$fk_id_sku"]}}],"pivot":["skus"]'),
             'js_clave_producto_servicio' => Crypt::encryptString('"selectRaw":["id_clave_producto_servicio as id, CONCAT(clave_producto_servicio,\' - \',descripcion) as text"],"conditions":[{"where":["clave_producto_servicio","ILIKE","%$term%"]},{"orWhere":["descripcion","ILIKE","%$term%"]}]'),
             'js_clave_unidad' => Crypt::encryptString('"selectRaw":["id_clave_unidad as id, CONCAT(clave_unidad,\' - \',descripcion) as text"],"conditions":[{"where":["clave_unidad","ILIKE","%$term%"]},{"orWhere":["descripcion","ILIKE","%$term%"]}]'),
+            'especificaciones' => Especificaciones::where('activo',1)->pluck('especificacion','id_especificacion')
             ];
     }
 
@@ -111,8 +115,17 @@ class ClaveClienteProductosController extends ControllerBase
             foreach ($request->productos as $producto){
                 $sync[]=['fk_id_upc'=>$producto['fk_id_upc']];
             }
-            $insert = $entity->productos()->sync($sync);
-            if($insert){
+            $productos = $entity->productos()->sync($sync);
+            $especificaciones = true;
+            if(isset($request->especificaciones)) {
+                $sync = [];
+                foreach ($request->especificaciones as $especificacion) {
+                    $sync[] = ['fk_id_especificacion' => $especificacion['fk_id_especificacion']];
+                }
+                $especificaciones = $entity->especificaciones()->sync($sync);
+            }
+
+            if($productos || $especificaciones){
                 return $return['redirect'];
             }else{
                 return $this->redirect('error_store');

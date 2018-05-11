@@ -269,14 +269,15 @@ class ProductosController extends ControllerBase
 
     public function getRelatedSkus()
     {
-        $id_forma_farmaceutica = request()->id_forma;
-        $id_presentaciones = request()->id_presentaciones;
+        $id_forma_farmaceutica = request()->id_forma != 0 ? request()->id_forma : null  ;
+        $id_presentaciones = request()->id_presentaciones != 0 ? request()->id_presentaciones : null;
         $sales = json_decode(request()->sales) ?? null;
         $material_curacion = json_decode(request()->material_curacion) == 'true' ? 1 : 0;
+        $especificaciones = request()->especificaciones ?? null;
         // $sales = json_decode(request()->arr_sales);
         // $presentaciones = json_decode(request()->arr_presentaciones);
-        $skus = $id_presentaciones > 0 ? Productos::select('id_sku','sku')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->get() : Productos::select('id_sku','sku')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->get();
-        $upcs = $id_presentaciones > 0 ? Upcs::select('id_upc','upc','nombre_comercial','marca','descripcion','fk_id_laboratorio')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->with('laboratorio:id_laboratorio,laboratorio')->get() : Upcs::select('id_upc','upc','nombre_comercial','marca','descripcion','fk_id_laboratorio')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->with('laboratorio:id_laboratorio,laboratorio')->get();
+        $skus = $material_curacion ? Productos::select('id_sku','sku')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->get() : Productos::select('id_sku','sku')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->get();
+        $upcs = $material_curacion ? Upcs::select('id_upc','upc','nombre_comercial','marca','descripcion','fk_id_laboratorio')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->with('laboratorio:id_laboratorio,laboratorio')->get() : Upcs::select('id_upc','upc','nombre_comercial','marca','descripcion','fk_id_laboratorio')->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->with('laboratorio:id_laboratorio,laboratorio')->get();
 
         if(count($sales) > 0)
             $skus = $skus->filter(function ($sku) use ($sales){//Para obtener los SKUS que coinciden
@@ -302,11 +303,17 @@ class ProductosController extends ControllerBase
                 return $sku->upcs = $newcollection;
             });
         else
-            $skus = $skus->filter(function ($sku) use ($upcs){
+            $skus = $skus->filter(function ($sku) use ($upcs,$especificaciones){
                 $newcollection = [];
                 foreach ($upcs as $upc)
                 {
-                    $newcollection[] = $upc;
+                    $especificaciones_upc = $upc->especificaciones->filter(function ($especificacion) use ($especificaciones){
+                        foreach ($especificaciones as $_especificacion){
+                            if($_especificacion['id_especificacion'] == $especificacion->id_especificacion)
+                                return $especificacion;
+                        }
+                    });
+                    $especificaciones_upc->count() == count($especificaciones) ? $newcollection[] = $upc : false;
                 }
                 return $sku->upcs = $newcollection;
             });

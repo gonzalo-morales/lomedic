@@ -33,13 +33,13 @@
 						{{Form::cText('* Descripcion','descripcion')}}
 					</div>
 					<div  class="col-md-4 text-center mt-4">
-						{{ Form::cCheckboxBtn('Dentro de Cuadro','Si','pertenece_cuadro', $data->pertenece_cuadro ?? null, 'No') }}
+						{{ Form::cCheckboxBtn('Dentro de Cuadro','Si','pertenece_cuadro', $data['pertenece_cuadro'] ?? null, 'No') }}
 					</div>
 					<div  class="col-md-4 text-center mt-4">
-						{{ Form::cCheckboxBtn('Fraccionado','Si','fraccionado', $data->fraccionado ?? null, 'No') }}
+						{{ Form::cCheckboxBtn('Fraccionado','Si','fraccionado', $data['fraccionado'] ?? null, 'No') }}
 					</div>
 					<div  class="col-md-4 text-center mt-4">
-						{{ Form::cCheckboxBtn('Material de curación','Si','material_curacion', $data->material_curacion ?? null, 'No') }}
+						{{ Form::cCheckboxBtn('Material de curación','Si','material_curacion', $data['material_curacion'] ?? null, 'No') }}
 					</div>
 					<div class="col-sm-6 col-md-4">
 						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '']) }}
@@ -76,9 +76,9 @@
 		</div>
 		<div class="w-50 card container-fluid z-depth-1-half mt-2 px-0">
 			<div class="card-header">
-				<h1 class="text-center text-info">Sales</h1>
+				<h1 class="text-center text-info" id="titulo_detalle">Sales</h1>
 			</div>
-			<div class="col-sm-12 col-md-12">
+			<div id="tableSal" class="col-sm-12 col-md-12">
 					<div class="card-header">
 							<fieldset id="detalle-form">
 								<div class="row">
@@ -119,7 +119,7 @@
 						</thead>
 						<tbody id="tbodySales">
 						@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
-							@foreach($data->concentraciones as $row => $detalle)
+							@foreach($data->concentraciones ?? [] as $row => $detalle)
 								<tr>
 									<td>
 										<input type="hidden" value="{{$detalle->id_detalle}}" name="relations[has][concentraciones][{{$row}}][id_detalle]">
@@ -144,7 +144,63 @@
 					</table>
 				</div>
 			</div><!--/detalle-->
-		</div>
+			<div id="tableEspecificaciones" class="col-md-12">
+				@if(!Route::currentRouteNamed(currentRouteName('show')))
+					<div class="card-header">
+						<form id="overallForm">
+							<fieldset id="detalle-form">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="from-group">
+											{{ Form::cSelect('* Especificaciones','especificacion', $especificaciones ?? [],[
+												'style' => 'width:100%;',
+												'class' => 'select2',
+												]) }}
+										</div>
+									</div>
+								</div><!--/row-->
+								<div class="col-sm-12 text-center my-3">
+									<div class="sep">
+										<div class="sepBtn">
+											<button id="addEspecificacion" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+										</div>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div><!--/card-header-->
+				@endif
+				<div class="card-body">
+					<table class="table table-responsive-sm table-striped table-hover">
+						<thead>
+						<tr>
+							<th>Especificación</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody id="tbodyEspecificaciones">
+						@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
+							@foreach($data->especificaciones ?? [] as $row => $detalle)
+								<tr>
+									<td>
+										{{ Form::hidden('especificaciones['.$row.'][fk_id_especificacion]',$detalle->fk_id_especificacion) }}
+										{{ $detalle->especificacion }}
+									</td>
+									@if(Route::currentRouteNamed(currentRouteName('show')))
+									@else
+										<td>
+											<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
+										</td>
+									@endif
+								</tr>
+							@endforeach
+						@endif
+						</tbody>
+					</table>
+				</div>
+			</div><!--/detalle-->
+            </div>
+        </div>
 		<div class="w-100 card">
 			<div class="card-header">
 				<h1 class="text-info text-center">Productos</h1>
@@ -152,7 +208,6 @@
 					<div class="alert alert-warning" role="alert">
 						Recuerda que al cambiar <b>forma farmacéutica</b>, <b>presentación</b> o al <b>agregar una sal</b> se borrarán los productos actuales y se buscarán otros.
 					</div>
-					{{ Form::cCheckboxBtn('Estatus','Activo','activo', $data['activo'] ?? null, 'Inactivo') }}
 				</div>
 			</div>
 			<div class="card-body" id="productos" data-url="{{companyAction('Inventarios\ProductosController@getRelatedSkus')}}">
@@ -169,39 +224,39 @@
 					<div class="tab-content" id="upcs">
 						@notroute(['index','create'])
 							@foreach($skus as $index=>$producto)
-								<div class="tab-pane fade {{$index==0 ? 'active' : ''}}" id="sku_{{$index}}" aria-labelledby="sku_{{$index}}_tab" role="tabpanel">
-									@foreach($producto->upcs as $indice=>$upc)
-										<table class="table table-responsive-sm table-striped table-hover" width="100%">
-											<thead>
-												<tr>
-													<th></th>
-													<th>UPC</th>
-													<th>Nombre Comercial</th>
-													<th>Marca</th>
-													<th>Descripcion</th>
-													<th>Laboratorio</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>
-														<div class="form-check">
-															<input name="productos[{{$indice}}][fk_id_upc]" type="hidden" value="0">
-															<label class="form-check-label custom-control custom-checkbox">
-																<input class="form-check-input custom-control-input" name="productos[{{$indice}}][fk_id_upc]" type="checkbox" value="{{$upc->id_upc}}" {{in_array(24,$data->productos->pluck('id_upc')->toArray()) ? 'checked' : ''}}>
-																<span class="custom-control-indicator"></span>
-															</label>
-														</div>
-													</td>
-													<td>{{$upc->upc}}</td>
-													<td>{{$upc->nombre_comercial}}</td>
-													<td>{{$upc->marca}}</td>
-													<td>{{$upc->descripcion}}</td>
-													<td>{{$upc->laboratorio->laboratorio}}</td>
-												</tr>
-											</tbody>
-										</table>
-									@endforeach
+								<div class="tab-pane fade {{$index==0 ? 'active show' : ''}}" id="sku_{{$index}}" aria-labelledby="sku_{{$index}}_tab" role="tabpanel">
+									<table class="table table-responsive-sm table-striped table-hover" width="100%">
+										<thead>
+											<tr>
+												<th></th>
+												<th>UPC</th>
+												<th>Nombre Comercial</th>
+												<th>Marca</th>
+												<th>Descripcion</th>
+												<th>Laboratorio</th>
+											</tr>
+										</thead>
+										<tbody>
+										@foreach($producto->upcs as $indice=>$upc)
+											<tr>
+												<td>
+													<div class="form-check">
+														<input name="productos[{{$indice}}][fk_id_upc]" type="hidden" value="0">
+														<label class="form-check-label custom-control custom-checkbox">
+															<input class="form-check-input custom-control-input" name="productos[{{$indice}}][fk_id_upc]" type="checkbox" value="{{$upc->id_upc}}" {{in_array($upc->id_upc,$data->productos->pluck('id_upc')->toArray()) ? 'checked' : ''}}>
+															<span class="custom-control-indicator"></span>
+														</label>
+													</div>
+												</td>
+												<td>{{$upc->upc}}</td>
+												<td>{{$upc->nombre_comercial}}</td>
+												<td>{{$upc->marca}}</td>
+												<td>{{$upc->descripcion}}</td>
+												<td>{{$upc->laboratorio->laboratorio}}</td>
+											</tr>
+										@endforeach
+										</tbody>
+									</table>
 								</div>
 							@endforeach
 						@endif
