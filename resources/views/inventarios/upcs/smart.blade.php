@@ -102,7 +102,7 @@
 							<div class="alert alert-warning" role="alert">
 								Recuerda que al ser <b>descontinuado</b>, este <b>producto</b> no se mostrara en los modulos correspondientes que se requieran.
 							</div>
-							{{ Form::cCheckbox('Producto Descontinuado', 'descontinuado') }}
+							{{ Form::cCheckboxBtn('¿Producto Descontinuado?','Si','descontinuado', $data['descontinuado'] ?? null, 'No') }}
 						</div>
 						<div class="form-group col-sm-6 col-md-6">
 							<div class="alert alert-warning" role="alert">

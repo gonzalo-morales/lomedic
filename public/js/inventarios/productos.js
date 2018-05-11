@@ -153,9 +153,11 @@ function validateFieldsforUPC(){
 }
 
 function borrarFila(el) {
-    var tr = $(el).closest('tr');
+	let tr = $(el).closest('tr');
     tr.fadeOut(400, function(){
 		tr.remove();
+		$('#upcs > tbody').empty();
+		$('#current_upcs').text(0);
 		mensajeAlerta("Fila eliminada con éxito","success");
 		validateFieldsforUPC();
 	})
@@ -274,8 +276,9 @@ function getUpcs(){
 			},
 			dataType: "json",
 			success: function (response) {
-				if(response.length > 0){
-					$('#current_upcs').text(response.length)
+				let type = typeof(response);
+				if(response.length > 0 || (type == "object" && Object.keys(response).length > 0)){
+					(type == "object") ? $('#current_upcs').text(Object.keys(response).length) : $('#current_upcs').text(response.length);
 					addUpcs(response);
 				}else{
 					mensajeAlerta("Al parecer no hay UPC's con las características indicadas, verifica que la presentación, forma farmacéutica y la especificación sean correctas.","danger");

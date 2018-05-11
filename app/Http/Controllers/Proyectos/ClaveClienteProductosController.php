@@ -102,7 +102,7 @@ class ClaveClienteProductosController extends ControllerBase
 
     public function obtenerClavesCliente($company,$id)
     {
-        return ClaveClienteProductos::where('fk_id_cliente',$id)->select('id_clave_cliente_producto as id','clave_producto_cliente as text','descripcion as descripcionClave','fk_id_sku','precio','fk_id_impuesto')->get();
+        return ClaveClienteProductos::where('fk_id_cliente',$id)->select('id_clave_cliente_producto as id','clave_producto_cliente as text','descripcion as descripcionClave','precio','fk_id_impuesto')->get();
     }
 
     public function store(Request $request, $company, $compact = false)

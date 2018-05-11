@@ -207,7 +207,6 @@ class ProductosController extends ControllerBase
         $sales = json_decode(request()->arr_sales);
         $especificaciones = json_decode(request()->arr_especificaciones);
         $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->where('activo',1)->with('laboratorio')->get();
-
         if(isset($sales))
         { 
             return $this->filterUpcsWithSalts($upcs,$sales);
@@ -222,12 +221,30 @@ class ProductosController extends ControllerBase
     public function filterUpcsWithMaterials($upcs,$especificaciones)
     {
         $upcFiltered = $upcs->filter(function($upc) use ($especificaciones){
+            $numEspecInUpc = $upc->especificaciones->count();
+            $numEspecInField = count($especificaciones);
             foreach ($upc->especificaciones as $upc_detalle) {
-                foreach ($especificaciones as $especificacion) {
-                    if($upc_detalle->id_especificacion == $especificacion)
+                if($numEspecInUpc > 1)
+                {
+                    $id_founded[] = array_search($upc_detalle->id_especificacion, $especificaciones);
+                    if($numEspecInUpc == $numEspecInField)
                     {
-                        return $upc;
+                        if(!in_array(false,$id_founded,true))
+                        {
+                            return $upc;
+                        }
                     }
+
+                }
+                else
+                {
+                    foreach ($especificaciones as $especificacion)
+                    {
+                        if($upc_detalle->id_especificacion == $especificacion)
+                        {
+                            return $upc;
+                        }
+                    }            
                 }
             }
         });
