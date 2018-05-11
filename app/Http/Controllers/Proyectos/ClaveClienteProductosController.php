@@ -80,7 +80,9 @@ class ClaveClienteProductosController extends ControllerBase
                 });
         }
         return [
-            'clientes' => SociosNegocio::where('activo',1)->whereNotNull('fk_id_tipo_socio_venta')->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
+            'clientes' => SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_venta',1)->whereHas('empresas',function ($empresa){
+                $empresa->where('id_empresa',request()->empresa->id_empresa)->where('eliminar','f');
+            })->orderBy('nombre_comercial')->pluck('nombre_comercial','id_socio_negocio'),
             'unidadesmedidas' => UnidadesMedidas::where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida'),
             'clavesproductosservicios' => $claveproductoservicio,
             'clavesunidades' => ClavesUnidades::selectRaw("id_clave_unidad, CONCAT(clave_unidad,' - ',descripcion) as descripcion")->where('activo',1)->orderBy('descripcion')
