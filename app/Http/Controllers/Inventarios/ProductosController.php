@@ -78,7 +78,7 @@ class ProductosController extends ControllerBase
             'especificaciones' => Especificaciones::where('activo',1)->pluck('especificacion','id_especificacion')->sortBy('especificacion'),
             'seriesku'         => SeriesSkus::where('activo',1)->pluck('nombre_serie','id_serie_sku')->sortBy('nombre_serie')->prepend('...',''),
             'subgrupo'         => collect($subgrupos ?? [])->prepend('...','')->toArray(),
-            'formafarmaceutica'=> FormaFarmaceutica::where('activo',1)->pluck('forma_farmaceutica','id_forma_farmaceutica')->sortBy('forma_farmaceutica')->prepend('...',''),
+            'formafarmaceutica'=> FormaFarmaceutica::where('activo',1)->pluck('forma_farmaceutica','id_forma_farmaceutica')->sortBy('forma_farmaceutica'),
             'cbn'              => Cbn::where('activo',1)->selectRaw("Concat(clave_cbn,'-',descripcion) as text,id_cbn as id")->pluck('text','id')->prepend('...',''),
             'impuesto'         => Impuestos::where('activo',1)->pluck('impuesto','id_impuesto')->sortBy('impuesto')->prepend('...',''),
             'familia'          => FamiliasProductos::where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('...',''),
@@ -302,7 +302,7 @@ class ProductosController extends ControllerBase
         $sku_presen = $sku_data->fk_id_presentaciones;
         $bolean = $sku_data->material_curacion;
         $upcs = Upcs::where('fk_id_forma_farmaceutica',$sku_forma)->where('fk_id_presentaciones',$sku_presen)->where('material_curacion',$bolean)->where('activo',1)->with('laboratorio')->get();
-        
+
         if($bolean == false)
         {
             $sales = $sku_data->presentaciones()->get();
