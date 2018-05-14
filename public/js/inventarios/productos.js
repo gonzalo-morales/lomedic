@@ -292,8 +292,8 @@ function getUpcs(){
 			let sal =  +$(row).find('.id_sal').val();
 			let concentracion =  +$(row).find('.id_concentracion').val();
 			let obj = {};
-			obj.id_sal = sal;
-			obj.id_concentracion = concentracion;
+			obj.fk_id_sal = sal;
+			obj.fk_id_presentaciones = concentracion;
 			sales.push(obj);
 		}
 		$.ajax({

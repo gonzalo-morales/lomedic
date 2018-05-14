@@ -259,7 +259,7 @@ class ProductosController extends ControllerBase
                     {
                         foreach ($values as $value)
                         {
-                            if($upc_detalle->fk_id_presentaciones == $value->id_concentracion && $upc_detalle->fk_id_sal == $value->id_sal)
+                            if($upc_detalle->fk_id_presentaciones == $value->fk_id_presentaciones && $upc_detalle->fk_id_sal == $value->fk_id_sal)
                             {
                                 $id_presentaciones_founded[] = true;
                             }
@@ -279,7 +279,7 @@ class ProductosController extends ControllerBase
                     {
                         foreach ($values as $value)
                         {
-                            if($upc_detalle->fk_id_presentaciones == $value->id_concentracion && $upc_detalle->fk_id_sal == $value->id_sal)
+                            if($upc_detalle->fk_id_presentaciones == $value->fk_id_presentaciones && $upc_detalle->fk_id_sal == $value->fk_id_sal)
                             {
                                 return $upc;
                             }
@@ -297,22 +297,26 @@ class ProductosController extends ControllerBase
 
     public function getThisSkus($company, $id, Request $request)
     {
-        $sku_data = $this->entity->find($id)->presentaciones()->get();
-        $upcs = Upcs::where('activo',1)->with('presentaciones')->get();
-        $sales = json_decode(request()->arr_sales);
-        $especificaciones = json_decode(request()->arr_especificaciones);
+        $sku_data = $this->entity->find($id);
+        $sku_forma = $sku_data->fk_id_forma_farmaceutica;
+        $sku_presen = $sku_data->fk_id_presentaciones;
+        $bolean = $sku_data->material_curacion;
+        $upcs = Upcs::where('fk_id_forma_farmaceutica',$sku_forma)->where('fk_id_presentaciones',$sku_presen)->where('material_curacion',$bolean)->where('activo',1)->with('laboratorio')->get();
         
-        $upcFiltered = $upcs->filter(function($upc) use ($sku_data){
-            foreach ($upc->presentaciones as $detalle) {
-                foreach ($sku_data as $sku_detalle) {
-                    if($detalle->fk_id_presentaciones == $sku_detalle->fk_id_presentaciones && $detalle->fk_id_sal == $sku_detalle->fk_id_sal)
-                    {
-                        return $upc;
-                    }
-                }
+        if($bolean == false)
+        {
+            $sales = $sku_data->presentaciones()->get();
+            return $this->filterUpcs($upcs,$sales,'presentaciones');
+        } 
+        else
+        {
+            $sku_all_espe = $sku_data->especificaciones()->get();
+            foreach ($sku_all_espe as $key => $especificacion) {
+                $especificaciones[] = $especificacion->id_especificacion;
             }
-        });
-        return json_encode($upcFiltered);
+            return $this->filterUpcs($upcs,$especificaciones,'especificaciones');
+        }
+        return false;
     }
 
     public function getRelatedSkus()
