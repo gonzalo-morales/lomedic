@@ -639,6 +639,11 @@ function file_name(obj) {
     }
 }
 
+function clearCustomFileInputText(element) {
+    let span = $(element[0]).next('span');
+    $(span).attr('data-content',$(span).attr('data-original-content'))
+}
+
 function addCommas(nStr)
 {
     nStr += '';

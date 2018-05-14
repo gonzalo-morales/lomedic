@@ -259,16 +259,17 @@ $(document).ready(function () {
 						url: $('#agregarProducto').data('url'),
 						data: {
 							productos:datos,
-							fk_id_cliente: $('#fk_id_cliente').val()
+							$fk_id_cliente: $('#fk_id_cliente').val()
 						},
 						dataType: 'JSON',
 						type: 'POST',
 						success: function (respuesta) {
-                            var error = '';
-                            $.each(respuesta[1], function (index,clave) {
-                                error += clave + ', ';
+                            let error = '<ul>';
+                            $.each(respuesta[1], function (index,text) {
+                                error += '<li>'+index + ': ' + text + '</li>';
                             });
-                            if (error)
+                            error += '</ul>';
+                            if (error != '<ul></ul>')
                                 $.toaster({
                                     priority: 'danger',
                                     title: 'No se encontraron las siguientes claves de cliente',
@@ -276,17 +277,6 @@ $(document).ready(function () {
                                     settings: {'toaster': {'css': {'top': '5em'}}, 'donotdismiss': ['danger'],},
                                 });
 
-                            error = '';
-                            $.each(respuesta[2], function (index,upc) {
-                                error += upc + ', ';
-                            });
-                            if (error)
-                                $.toaster({
-                                    priority: 'danger',
-                                    title: 'No se encontraron los siguientes UPCs',
-                                    message: '<br>' + error,
-                                    settings: {'toaster': {'css': {'top': '5em'}}, 'donotdismiss': ['danger'],},
-                                });
                             //Importar las filas a la tabla
                             var repetidos = [];
                             $.each(respuesta[0], function (index, value) {
@@ -300,22 +290,12 @@ $(document).ready(function () {
                                 if(!repetido){
                                     var i = $('#detalleProductos tbody tr').length;
                                     var row_id = i > 0 ? +$('#detalleProductos tr:last').find('.index').val()+1 : 0;
-                                    var id_upc = 0;
-                                    var text_upc = 'Sin UPC';
-                                    var descripcion_upc = '';
-                                    if (value['fk_id_upc']) {
-                                        id_upc = value['fk_id_upc'];
-                                        text_upc = value['codigo_barras'];
-                                        descripcion_upc = value['descripcion'];
-                                    }
 
                                     $('#detalleProductos').append('<tr>'+
                                         '<td><input class="index" name="relations[has][productos]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
                                         '<input class="index" name="relations[has][productos]['+row_id+'][id_proyecto_producto]" type="hidden" value="">'+
                                         '<input type="hidden" name="relations[has][productos]['+row_id+'][fk_id_clave_cliente_producto]" value="'+value['id_clave_cliente_producto']+'"/><span>'+ value['clave']+'</span></td>'+
                                         '<td>'+value['descripcion_clave']+'</td>'+
-                                        '<td>'+$('<input type="hidden" name="relations[has][productos][' + row_id + '][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc+'</td>'+
-                                        '<td>'+descripcion_upc+'</td>'+
                                         '<td>'+$('<input class="form-control prioridad" maxlength="2" name="relations[has][productos][' + row_id + '][prioridad]" type="text" value="" />')[0].outerHTML+'</td>'+
                                         '<td>'+$('<input class="form-control cantidad" maxlength="3" name="relations[has][productos][' + row_id + '][cantidad]" type="text" value="" />')[0].outerHTML+'</td>'+
                                         '<td>'+$('<input class="form-control precio_sugerido" maxlength="13" name="relations[has][productos][' + row_id + '][precio_sugerido]" type="text" value="'+value['costo']+'" />')[0].outerHTML+'</td>'+
@@ -332,15 +312,17 @@ $(document).ready(function () {
                                         '</td>'+
                                         '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Producto"><i class="material-icons">delete</i></button>'+
                                         '</tr>');
-
                                 }
                             });
                             if(repetidos.length){
                                 $.toaster({priority:'info',title:'¡Error!',message:'Algunos productos ya se encuentran en la tabla: '+repetidos.toString(),
                                     settings:{'donotdismiss':['danger'],'toaster':{'css':{'top':'5em'}}}});
                             }else{
-                                $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
-							}
+                                if($('#tbodyproductosproyectos tr').length)
+                                    $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
+                                else
+                                    $.toaster({priority: 'danger', title: '¡Oooops!', message: 'No se ha cargado ningún producto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
+                            }
                             $('.loadingtabla').hide();
 						},
 						error: function () {
@@ -380,11 +362,15 @@ $(document).ready(function () {
         $('#fk_id_localidad').val(0).trigger('change');
 
         //En productos carga las claves relacionadas con el cliente actual
-        var _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
+        var _url = $('#fk_id_clave_cliente_producto').data('url');
         $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
         $('#loadingfk_id_clave_cliente_producto').show();
         $.ajax({
             url: _url,
+            data:{
+                param_js:claves_cliente_js,
+                $id_cliente:$('#fk_id_cliente').val()
+            },
             dataType:'json',
             success:function (data) {
                 var option = $('<option/>');
@@ -397,8 +383,11 @@ $(document).ready(function () {
                     option.text('...');
 
                 $('#fk_id_clave_cliente_producto').prepend(option).select2({
-                    minimumResultsForSearch:'50',
+                    minimumResultsForSearch:'20',
+                    escapeMarkup: function (markup) { return markup; },
                     data:data,
+                    templateResult: formatClaveCliente,
+                    templateSelection: formatClaveClienteSelection
                 }).attr('disabled',false);
                 $('#loadingfk_id_clave_cliente_producto').hide();
             }
@@ -435,7 +424,6 @@ $(document).ready(function () {
             cDigits: true,
             minStrict: 0
         });
-
         $.validator.addClassRules('maximo',{
             cRequerido:true,
             cDigits:true,
@@ -517,4 +505,29 @@ function cargar_sucursales() {
             }
         });
     }
+}
+
+// FUNCIONES PARA FORMATO DEL RESULTADO EN EL SELECT2 de SKU
+function formatClaveCliente (clave) {
+    if (clave.element && clave.id > 0) {
+        let precio = +clave.precio;
+        //Generamos nuestro template
+        var markup =
+            "<div class='select2-result-pers clearfix'>" +
+                "<div class='select2-result-pers__avatar'><i class='material-icons align-left'>vpn_key</i></div>" +
+                "<div class='select2-result-pers__meta'>" +
+                    "<div class='select2-result-pers__text'>" + clave.text + "</div>" +
+                    "<div class='select2-result-pers__statistics'>" +
+                        "<div class='select2-result-pers__descripcion text-success mr-3'><i class='material-icons align-left'>description</i>" + clave.descripcionClave + "</div>" +
+                        "<div class='select2-result-pers__precio'><i class='material-icons align-left'>attach_money</i> " + precio.toFixed(2)+ "</div>" +
+                    "</div>" +
+                "</div>" +
+            "</div>";
+
+            return markup;
+    }
+    return clave.text;
+}
+function formatClaveClienteSelection (clave) {
+    return clave.text;
 }

@@ -41,14 +41,11 @@
 					<div  class="col-md-4 text-center mt-4">
 						{{ Form::cCheckboxBtn('Material de curación','Si','material_curacion', $data['material_curacion'] ?? null, 'No') }}
 					</div>
-					<div class="col-sm-6 col-md-4">
+					<div class="col-sm-6 col-md-6">
 						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '']) }}
 					</div>
-					<div class="col-sm-6 col-md-4">
+					<div class="col-sm-6 col-md-6">
 						{{ Form::cSelect('* Presentación','fk_id_presentacion', $presentaciones ?? [],['style' => 'width:100%;','class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',Route::currentRouteNamed(currentRouteName('create')) ? 'disabled' : '' ]) }}
-					</div>
-					<div class="form-group col-md-4">
-						{{Form::cSelectWithDisabled('* Unidad Medida','fk_id_unidad_medida',$unidadesmedidas ?? [],['class'=>''])}}
 					</div>
 					<div class="form-group col-md-6">
 						{{Form::cSelect('* Clave Producto SAT','fk_id_clave_producto_servicio',$clavesproductosservicios ?? [],['class'=>'select2','data-url'=>ApiAction('administracion.clavesproductosservicios')])}}

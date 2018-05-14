@@ -4,47 +4,6 @@
 $(document).ready(function(){
     $('#form-model').attr('enctype',"multipart/form-data");
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-    
-    // $('#fk_id_cliente').on('change',function () {
-    //
-    // });
-
-
-    //Por si se selecciona un UPC
-    $('#activo_upc').on('change',function () {
-        if( !this.checked ){
-            $( this ).parent().nextAll( "select" ).val(0).trigger('change').prop( "disabled", !this.checked ).empty();
-        }else{
-            if($('#fk_id_clave_cliente_producto').val()){
-                $('#loadingfk_id_upc').show();
-                let _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_clave_cliente_producto').select2('data')[0].fk_id_sku);
-                $('#fk_id_upc').empty();
-                $.ajax({
-                    url: _url,
-                    dataType: 'json',
-                    success: function (data) {
-                        let option = $('<option/>');
-                        option.val(0);
-                        option.attr('disabled','disabled');
-                        option.attr('selected','selected');
-                        if (Object.keys(data).length == 0)
-                            option.text('No se encontraron elementos');
-                        else
-                            option.text('...');
-                        $('#fk_id_upc').attr('disabled',false).prepend(option).select2({
-                            minimumResultsForSearch: 15,
-                            data: data
-                        });
-                        $('#loadingfk_id_upc').hide();
-                    }
-                });
-            }else{
-                $( this ).prop('checked',false);
-                $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-                $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes una Clave cliente producto',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-            }
-        }
-    });
 
     $('#agregarProducto').on('click',function () {
     	if($('#file_xlsx').val()){
@@ -69,50 +28,30 @@ $(document).ready(function(){
                         processData: false,
                         dataType: 'json',
                         success: function (data) {
-                            let filas = '';
-                            $.each(data[1], function (index) {
-                                filas += index + ', ';
+                            // $('#tbodyproductosproyectos').empty();
+                            clearCustomFileInputText($('#file_xlsx'));
+                            let filas = '<ul>';
+                            $.each(data[1], function (index,text) {
+                                filas += '<li>'+index + ': ' + text + '</li>';
                             });
-                            if (filas)
+                            filas += '</ul>';
+                            if (filas != '<ul></ul>')
                                 $.toaster({
                                     priority: 'danger',
                                     title: 'Las siguientes filas contienen un error en la clave del cliente',
                                     message: '<br>' + filas,
                                     settings: {'toaster': {'css': {'top': '5em'}}, 'donotdismiss': ['danger'],},
                                 });
-
-                            filas = '';
-                            $.each(data[2], function (index) {
-                                filas += index + ', ';
-                            });
-                            if (filas)
-                                $.toaster({
-                                    priority: 'danger',
-                                    title: 'Las siguientes filas contienen un error en los UPC',
-                                    message: '<br>' + filas,
-                                    settings: {'toaster': {'css': {'top': '5em'}}, 'donotdismiss': ['danger'],},
-                                });
                             //Importar las filas a la tabla
-                            let arreglo = [];
                             $.each(data[0], function (index, value) {
                             	var i = $('#detalleProductos tbody tr').length;
                                 var row_id = i > 0 ? +$('#detalleProductos tr:last').find('.index').val()+1 : 0;
-                                let id_upc = 0;
-                                let text_upc = 'Sin UPC';
-                                let descripcion_upc = '';
-                                if (value['fk_id_upc']) {
-                                    id_upc = value['fk_id_upc'];
-                                    text_upc = value['upc'];
-                                    descripcion_upc = value['descripcion_upc'];
-                                }
                                 
                                 $('#detalleProductos').append('<tr>'+
                             		'<td><input class="index" name="relations[has][productos]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
                             			'<input class="index" name="relations[has][productos]['+row_id+'][id_proyecto_producto]" type="hidden" value="">'+
                             			'<input type="hidden" name="relations[has][productos]['+row_id+'][fk_id_clave_cliente_producto]" value="'+value['id_clave_cliente_producto']+'" /><span>' + value['clave_cliente_producto']+'</span></td>'+
                             		'<td>'+value['descripcion_clave']+'</td>'+
-                            		'<td>'+$('<input type="hidden" name="relations[has][productos][' + row_id + '][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc+'</td>'+
-                            		'<td>'+descripcion_upc+'</td>'+
                             		'<td>'+$('<input class="form-control prioridad" maxlength="2" name="relations[has][productos][' + row_id + '][prioridad]" type="text" value="'+value['prioridad']+'" />')[0].outerHTML+'</td>'+
                             		'<td>'+$('<input class="form-control cantidad" maxlength="3" name="relations[has][productos][' + row_id + '][cantidad]" type="text" value="'+value['cantidad']+'" />')[0].outerHTML+'</td>'+
                             		'<td>'+$('<input class="form-control precio_sugerido" maxlength="13" name="relations[has][productos][' + row_id + '][precio_sugerido]" type="text" value="'+value['precio_sugerido']+'" />')[0].outerHTML+'</td>'+
@@ -131,7 +70,10 @@ $(document).ready(function(){
                                     '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Producto"><i class="material-icons">delete</i></button>'+
                                 '</tr>');
                             });
-                            $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
+                            if($('#tbodyproductosproyectos tr').length)
+                                $.toaster({priority: 'success', title: '¡Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
+                            else
+                                $.toaster({priority: 'danger', title: '¡Oooops!', message: 'No se ha cargado ningún producto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
                             $('.loadingtabla').hide();
                         },
                         error: function () {
@@ -149,29 +91,18 @@ $(document).ready(function(){
             if ($('#form-model').valid()) {
             	var i = $('#detalleProductos tbody tr').length;
                 var row_id = i > 0 ? +$('#detalleProductos tr:last').find('.index').val()+1 : 0;
-            	
-                let id_upc = 0;
-                let text_upc = 'Sin UPC';
-                let descripcion_upc = '';
-                if ($('#fk_id_upc').val()) {
-                    id_upc = $('#fk_id_upc').select2('data')[0].id;
-                    text_upc = $('#fk_id_upc').select2('data')[0].text;
-                    descripcion_upc = $('#fk_id_upc').select2('data')[0].descripcion;
-                }
-                
+
+                var precio = +$('#fk_id_clave_cliente_producto').select2('data')[0].precio;
+
                 $('#detalleProductos').append('<tr>'+
             		'<td><input class="index" name="relations[has][productos]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
             			'<input class="index" name="relations[has][productos]['+row_id+'][id_proyecto_producto]" type="hidden" value="">'+
             			$('<input type="hidden" name="relations[has][productos]['+row_id+'][fk_id_clave_cliente_producto]" value="'+$("#fk_id_clave_cliente_producto").select2("data")[0].id+'" />')[0].outerHTML + $('#fk_id_clave_cliente_producto').select2('data')[0].text+'</td>'+
             		'<td>'+$('#fk_id_clave_cliente_producto').select2('data')[0].descripcionClave+'</td>'+
-            		'<td>'+$('<input type="hidden" name="relations[has][productos][' + row_id + '][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc+'</td>'+
-            		'<td>'+descripcion_upc+'</td>'+
             		'<td>'+$('<input class="form-control prioridad" maxlength="2" name="relations[has][productos][' + row_id + '][prioridad]" type="text" value="" />')[0].outerHTML+'</td>'+
             		'<td>'+$('<input class="form-control cantidad" maxlength="3" name="relations[has][productos][' + row_id + '][cantidad]" type="text" value="" />')[0].outerHTML+'</td>'+
-            		'<td>'+$('<input class="form-control precio_sugerido" maxlength="13" name="relations[has][productos][' + row_id + '][precio_sugerido]" type="text" value="" />')[0].outerHTML+'</td>'+
-            		
+            		'<td>'+$('<input class="form-control precio_sugerido" maxlength="13" name="relations[has][productos][' + row_id + '][precio_sugerido]" type="text" value="'+ precio.toFixed(2) +'" />')[0].outerHTML+'</td>'+
             		'<td>'+$('#campo_moneda').html().replace('$row_id',row_id).replace('$row_id',row_id)+'</td>'+
-            		
             		'<td>'+$('<input class="form-control maximo" maxlength="4" name="relations[has][productos][' + row_id + '][maximo]" type="text" value="" />')[0].outerHTML+'</td>'+
             		'<td>'+$('<input class="form-control minimo" maxlength="4" name="relations[has][productos][' + row_id + '][minimo]" type="text" value="" />')[0].outerHTML+'</td>'+
             		'<td>'+$('<input class="form-control numero_reorden" maxlength="4" name="relations[has][productos][' + row_id + '][numero_reorden]" type="text" value="" />')[0].outerHTML+'</td>'+
@@ -224,11 +155,8 @@ $(document).ready(function(){
 });
 
 function limpiarCampos() {
-    $('#fk_id_upc').empty().prop('disabled',true);
-    $('#activo_upc').prop('checked',false);
     $('#fk_id_clave_cliente_producto').val(0).trigger('change');
-    //Eliminar reglas de validaciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n detalle
-    $('#fk_id_upc').rules('remove');
+    //Eliminar reglas de validación detalle
     $('#fk_id_clave_cliente_producto').rules('remove');
 }
 
@@ -239,21 +167,13 @@ function validateDetail() {
             required: 'Selecciona un cliente'
         }
     });
+
     $('#fk_id_clave_cliente_producto').rules('add',{
-        required: true,
+        required: function () {
+            return !$('#file_xlsx').val()
+        },
         messages:{
             required: 'Selecciona una clave cliente producto'
         }
     });
-
-    if($('#activo_upc').is(':checked')){
-        $('#fk_id_upc').rules('add',{
-            required: true,
-            messages:{
-                required: 'Selecciona un UPC'
-            }
-        });
-    }else{
-        $('#fk_id_upc').rules('remove');
-    }
 }

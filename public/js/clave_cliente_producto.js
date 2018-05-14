@@ -117,14 +117,14 @@ function buscaProductos() {
     let sales = [];
     $('#tbodySales tr').each(function () {
         let obj = {};
-        obj.id_sal = $(this).find('.sal').val();
-        obj.id_concentraciones = $(this).find('.concentracion').val();
+        obj.fk_id_sal = $(this).find('.sal').val();
+        obj.fk_id_presentaciones = $(this).find('.concentracion').val();
         sales.push(obj);
     });
     let especificaciones = [];
     $('#tbodyEspecificaciones tr').each(function () {
         let obj = {};
-        obj.id_especificacion = $(this).find('.especificacion').val();
+        obj.fk_id_especificacion = $(this).find('.especificacion').val();
         especificaciones.push(obj);
     });
     let material_curacion = $('#material_curacion').is(':checked');
@@ -132,11 +132,11 @@ function buscaProductos() {
         $.ajax({
             url:$('#productos').data('url'),
             data:{
-                id_forma:id_forma,
-                id_presentaciones:id_presentaciones,
+                fk_id_forma_farmaceutica:id_forma,
+                fk_id_presentaciones:id_presentaciones,
                 sales:JSON.stringify(sales),
                 material_curacion:material_curacion,
-                especificaciones:especificaciones
+                especificaciones:JSON.stringify(especificaciones)
             },
             success:function (data) {
                 data = JSON.parse(data);

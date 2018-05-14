@@ -203,25 +203,13 @@
     						<div class="card-header">
     							<fieldset name="detalle-form" id="detalle-form">
     								<div class="row">
-    									<div class="form-group input-field col-md-6 col-sm-6">
+    									<div class="form-group input-field col-md-12 col-sm-12">
                                             <div id="loadingfk_id_clave_cliente_producto" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
                                                 Cargando datos... <i class="material-icons align-middle loading">cached</i>
                                             </div>
-    										{{Form::cSelect('* Clave cliente producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','disabled'=>true,'data-url'=>companyAction('Proyectos\ClaveClienteProductosController@obtenerClavesCliente',['id'=>'?id'])])}}
+    										{{Form::cSelect('* Clave cliente producto','fk_id_clave_cliente_producto', $productos ?? [],['class'=>'index','disabled'=>true,'data-url'=>apiAction('proyectos.claveclienteproductos')])}}
     									</div>
-    									<div class="form-group input-field col-md-6 col-sm-6">
-                                            <div id="loadingfk_id_upc" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-                                                Cargando datos... <i class="material-icons align-middle loading">cached</i>
-                                            </div>
-    										{{Form::label('fk_id_upc','UPC')}}
-    										<div class="input-group">
-    											<span class="input-group-addon">
-    												<input type="checkbox" id="activo_upc">
-    											</span>
-    											{{Form::cSelect(null,'fk_id_upc',$upcs ?? [],['class'=>'index','disabled'=>true,'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id'])])}}
-    										</div>
-    									</div>
-    									<div class="col-sm-12 text-center border">
+    									<div class="col-sm-12 text-center">
     										<div class="sep">
     											<div class="sepText bg-light">ó</div>
     										</div>
@@ -229,6 +217,9 @@
         									<div class="row text-center">
         										<div class="form-goup col-md-12 text-center">
         											<a href="{{companyAction('layoutProductosProyecto')}}" id="layout" class="btn btn-outline-info btn-lg">Descargar Layout</a>
+													<div class="alert alert-info" role="alert">
+														Al cargar un layout siempre verifica que todos los productos se hayan cargado en la tabla.
+													</div>
         										</div>
         										<div class="form-goup col-sm-2"></div>
         										<div class="form-goup col-sm-8">
@@ -259,8 +250,6 @@
     						<tr>
     							<th>Clave cliente producto</th>
     							<th>Descripción clave</th>
-    							<th>UPC</th>
-    							<th>Descripción UPC</th>
     							<th>Prioridad</th>
     							<th>Cantidad</th>
     							<th>Precio venta</th>
@@ -285,13 +274,7 @@
     										{{$detalle->claveClienteProducto->clave_producto_cliente}}
     									</td>
     									<td>
-    										{{$detalle->claveClienteProducto->sku->descripcion_corta}}
-    									</td>
-    									<td>
-    										{{$detalle->upc->upc ?? 'Sin UPC'}}
-    									</td>
-    									<td>
-    										{{$detalle->upc->descripcion ?? ''}}
+    										{{$detalle->descripcion}}
     									</td>
     									<td>
     										{{ Form::text('relations[has][productos]['.$row.'][prioridad]',$detalle->prioridad,['class'=>'form-control prioridad','maxlength'=>'2']) }}
@@ -436,6 +419,7 @@
         var contratos_js = '{{$js_contratos ?? ''}}';
         var partidas_js = '{{$js_partidas ?? ''}}';
         var subdependencias_js = '{{$js_subdependencias ?? ''}}'
+        var claves_cliente_js = '{{$js_claves_cliente ?? ''}}'
 	</script>
     <!-- Resources -->
     <style>
