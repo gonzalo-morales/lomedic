@@ -298,8 +298,10 @@ class ProductosController extends ControllerBase
     public function getThisSkus($company, $id, Request $request)
     {
         $sku_data = $this->entity->find($id)->presentaciones()->get();
-
         $upcs = Upcs::where('activo',1)->with('presentaciones')->get();
+        $sales = json_decode(request()->arr_sales);
+        $especificaciones = json_decode(request()->arr_especificaciones);
+        
         $upcFiltered = $upcs->filter(function($upc) use ($sku_data){
             foreach ($upc->presentaciones as $detalle) {
                 foreach ($sku_data as $sku_detalle) {
