@@ -67,7 +67,7 @@ class Pedidos extends ModelCompany
         'fecha_limite' => 'Fecha Limite',
         'total' => 'Total',
         'moneda.descripcion' => 'Moneda',
-        'estatus_documento_span' => 'Estatus'
+        // 'fk_id_estatus' => 'Estatus'
     ];
 
     public function localidad()

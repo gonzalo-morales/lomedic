@@ -114,6 +114,7 @@ $(document).ready(function () {
 			upc.val('');
 		}
 		if($('#sku').val() != 0) {
+			upc.empty();
 			let data_codigo = $('#upc').data('url');
 			var _url = data_codigo.replace('?id', $('#sku').val());
 			$.ajax({

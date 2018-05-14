@@ -137,14 +137,14 @@ function validateFieldsforUPC(){
 	let material = document.getElementById('material_curacion');
 	if(material.hasAttribute('checked')){
 		let $matTable = $('#tbodyMaterials tr').length;
-		if( $matTable > 0 && formaFarma != '' ){
+		if( $matTable > 0){
 			return getUpcs();
 		} else{
 			return mensajeAlerta("Necesito de mínimo: <ul><li>Una especificación del material</li><li>Presentación</li><li>Forma farmacéutica</li></ul> Para poder mostrar los UPCs relacionados.","warning",10000);
 		}
 	} else {
 		let $preTable = $('#tbodyPresentation tr').length;
-		if( $preTable > 0 && formaFarma != '' ){
+		if( $preTable > 0){
 			return getUpcs();
 		} else{
 			return mensajeAlerta("Necesito de mínimo: <ul><li>Una sal</li><li>Concentración</li><li>Presentación y forma farmacéutica</li></ul> Para poder mostrar los UPCs relacionados.","warning",10000);
@@ -292,8 +292,8 @@ function getUpcs(){
 			let sal =  +$(row).find('.id_sal').val();
 			let concentracion =  +$(row).find('.id_concentracion').val();
 			let obj = {};
-			obj.id_sal = sal;
-			obj.id_concentracion = concentracion;
+			obj.fk_id_sal = sal;
+			obj.fk_id_presentaciones = concentracion;
 			sales.push(obj);
 		}
 		$.ajax({

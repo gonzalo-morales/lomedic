@@ -66,7 +66,9 @@
 						
                         @foreach ($empresas as $row)
                         <li class="list-group-item form-group row">
-                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresa_socio)?1:0) ) }}
+							{{ Form::Checkbox('empresas['.$row->id_empresa.']',(in_array($row->id_empresa, $empresa_socio)?1:0),['class'=>'socio-empresa']) }}
+							{{ Form::Label("empresas['$row->id_empresa']",$row->nombre_comercial) }}
+                        	{{-- {{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresa_socio)?1:0) ) }} --}}
                         </li>
                         @endforeach
                     </ul>
