@@ -2,9 +2,13 @@ $(document).ready(function () {
 
     if($('#material_curacion').is(':checked')) {
         $('#tableEspecificaciones').show('slow');
+        $('#tableSal').hide('slow');
+        $('#titulo_detalle').text('Material de curación');
     }
     else{
         $('#tableSal').show('slow');
+        $('#tableEspecificaciones').hide('slow');
+        $('#titulo_detalle').text('Sales');
     }
 
     $('#material_curacion').on('change',function(){
@@ -12,11 +16,13 @@ $(document).ready(function () {
             $('#tableEspecificaciones').show('slow');
             $('#tableSal').hide('slow');
             $('#tableEspecificaciones tbody ').empty();
+            $('#titulo_detalle').text('Material de curación');
         }
         else{
             $('#tableSal').show('slow');
             $('#tableEspecificaciones').hide('slow');
             $('#tableSal tbody').empty();
+            $('#titulo_detalle').text('Sales');
         }
         buscaProductos();
     });

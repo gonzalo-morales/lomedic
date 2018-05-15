@@ -261,7 +261,9 @@ class ProductosController extends ControllerBase
                     {
                         foreach ($values as $value)
                         {
-                            if($sku_detalle->fk_id_presentaciones == $value->fk_id_presentaciones && $sku_detalle->fk_id_sal == $value->fk_id_sal)
+                            $presentacion = isset($value->fk_id_concentracion) ? $value->fk_id_concentracion : $value->fk_id_presentaciones;
+
+                            if($sku_detalle->fk_id_presentaciones == $presentacion && $sku_detalle->fk_id_sal == $value->fk_id_sal)
                             {
                                 $id_presentaciones_founded[] = true;
                             }
@@ -269,10 +271,11 @@ class ProductosController extends ControllerBase
                     }
                     if($numRelationsInSku == $numRelationsInField)
                     {
-                        if(!in_array(false,$id_presentaciones_founded,true) && count($id_presentaciones_founded) == $numRelationsInSku)
-                        {
-                            return $sku;
-                        }
+                        if(isset($id_presentaciones_founded))
+                            if(!in_array(false,$id_presentaciones_founded,true) && count($id_presentaciones_founded) == $numRelationsInSku)
+                            {
+                                return $sku;
+                            }
                     }
                 }
                 else if($numRelationsInSku == 1)
@@ -281,7 +284,6 @@ class ProductosController extends ControllerBase
                     {
                         foreach ($values as $value)
                         {
-                            $value = is_object($value) ? $value->fk_id_especificacion : $value;
                             if($sku_detalle->fk_id_presentaciones == $value->fk_id_presentaciones && $sku_detalle->fk_id_sal == $value->fk_id_sal)
                             {
                                 return $sku;
@@ -323,7 +325,7 @@ class ProductosController extends ControllerBase
                     {
                         foreach ($values as $value)
                         {
-                            $value = is_object($value) ? $value->fk_id_especificacion : $value;
+                            $value = is_object($value) ? $value->id_especificacion : $value;
                             if($upc_detalle->fk_id_especificacion == $value)
                             {
                                 return $upc;
@@ -407,7 +409,7 @@ class ProductosController extends ControllerBase
         $sales = json_decode(request()->sales);
         $especificaciones = json_decode(request()->especificaciones);
         $material_curacion = json_decode(request()->material_curacion) == 'true' ? 1 : 0;
-        $skus = $fk_id_presentaciones > 0 ? Productos::select('id_sku','sku','fk_id_presentaciones','fk_id_forma_farmaceutica','material_curacion')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$fk_id_forma_farmaceutica)->where('fk_id_presentaciones',$fk_id_presentaciones)->where('activo',1)->get() : Upcs::select('id_sku','sku','fk_id_presentaciones','fk_id_forma_farmaceutica','material_curacion')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$fk_id_forma_farmaceutica)->where('activo',1)->get();
+        $skus = $fk_id_presentaciones > 0 ? Productos::select('id_sku','sku','fk_id_presentaciones','fk_id_forma_farmaceutica','material_curacion')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$fk_id_forma_farmaceutica)->where('fk_id_presentaciones',$fk_id_presentaciones)->where('activo',1)->get() : Productos::select('id_sku','sku','fk_id_presentaciones','fk_id_forma_farmaceutica','material_curacion')->where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$fk_id_forma_farmaceutica)->where('activo',1)->get();
 
         if(!empty($sales))
             $skus = collect(json_decode($this->filterSkus($skus,$sales,'presentaciones')));
