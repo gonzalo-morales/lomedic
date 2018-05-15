@@ -77,7 +77,7 @@ class Proyectos extends ModelCompany
         'num_evento' => 'No. Evento',
         'fecha_inicio' => 'Fecha Inicio',
         'fecha_terminacion' => 'Fecha Terminacion',
-        'estatestatus_documento_span' => 'Estatus'
+        'estatus_documento_span' => 'Estatus'
     ];
 
     function cliente()
