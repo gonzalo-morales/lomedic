@@ -219,87 +219,6 @@ class ProductosController extends ControllerBase
         return false;
     }
 
-    public function filterSkus($skus,$values,$relation)
-    {
-        $skuFiltered = $skus->filter(function($sku) use ($values,$relation){
-            $numRelationsInSku = $sku->$relation->count();
-            $numRelationsInField = count($values);
-            if($relation == 'especificaciones')
-            {
-                foreach ($sku->$relation as $sku_detalle)
-                {
-                    if($numRelationsInSku > 1)
-                    {
-                        $id_founded[] = array_search($sku_detalle->fk_id_especificacion, $values);
-                        if($numRelationsInSku == $numRelationsInField)
-                        {
-                            if(!in_array(false,$id_founded,true))
-                            {
-                                return $sku;
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        foreach ($values as $value)
-                        {
-                            $value = is_object($value) ? $value->fk_id_especificacion : $value;
-                            if($sku_detalle->fk_id_especificacion == $value)
-                            {
-                                return $sku;
-                            }
-                        }
-                    }
-                }
-            }
-            elseif('presentaciones')
-            {
-                if($numRelationsInSku > 1 && $numRelationsInField > 1)
-                {
-                    foreach ($sku->$relation as $sku_detalle)
-                    {
-                        foreach ($values as $value)
-                        {
-                            $presentacion = isset($value->fk_id_concentracion) ? $value->fk_id_concentracion : $value->fk_id_presentaciones;
-
-                            if($sku_detalle->fk_id_presentaciones == $presentacion && $sku_detalle->fk_id_sal == $value->fk_id_sal)
-                            {
-                                $id_presentaciones_founded[] = true;
-                            }
-                        }
-                    }
-                    if($numRelationsInSku == $numRelationsInField)
-                    {
-                        if(isset($id_presentaciones_founded))
-                            if(!in_array(false,$id_presentaciones_founded,true) && count($id_presentaciones_founded) == $numRelationsInSku)
-                            {
-                                return $sku;
-                            }
-                    }
-                }
-                else if($numRelationsInSku == 1)
-                {
-                    foreach ($sku->$relation as $sku_detalle)
-                    {
-                        foreach ($values as $value)
-                        {
-                            if($sku_detalle->fk_id_presentaciones == $value->fk_id_presentaciones && $sku_detalle->fk_id_sal == $value->fk_id_sal)
-                            {
-                                return $sku;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        });
-        return json_encode($skuFiltered);
-    }
-
     public function filterUpcs($upcs,$values,$relation)
     {  
         $upcFiltered = $upcs->filter(function($upc) use ($values,$relation){
@@ -326,7 +245,7 @@ class ProductosController extends ControllerBase
                         foreach ($values as $value)
                         {
                             $value = is_object($value) ? $value->id_especificacion : $value;
-                            if($upc_detalle->fk_id_especificacion == $value)
+                            if($upc_detalle->id_especificacion == $value)
                             {
                                 return $upc;
                             }

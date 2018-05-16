@@ -71,60 +71,65 @@ class SociosNegocioController extends ControllerBase
 	
 	public function store(Request $request, $company, $compact = false)
 	{
+		$entity = $this->entity->create($request->all());
         $return = parent::store($request, $company,true);
-        if(is_array($return))
+        if(is_array($return) && $entity)
         {
-            if($request->empresas)
+			$id = $entity->id_socio_negocio;
+            if($request->empresas_)
             {
-                $entity = $return['entity'];
-				$sync = [];
-                foreach ($request->empresas as $empresa){
-                    $sync[]=['fk_id_empresa'=>$empresa['id_empresa']];
-                }
-                $empresas = $entity->empresas()->sync($sync);
+                foreach ($request->empresas_ as $empre){
+					if($empre['fk_id_empresa'] > 0)
+                    	$sync[]=[
+							'fk_id_socio_negocio' => $id,
+							'fk_id_empresa'=>$empre['fk_id_empresa']
+						];
+				}
+                $empresas_done = $entity->empresas()->sync($sync);
 			} 
             if($request->formaspago)
             {
                 $sync = [];
                 foreach ($request->formaspago as $formapago){
-                    $sync[]=[
-						'fk_id_socio_negocio' => $id,
-						'fk_id_forma_pago'=>$formapago['fk_id_forma_pago']
-					];
+					if($formapago['fk_id_forma_pago'] > 0)
+						$sync[]=[
+							'fk_id_socio_negocio' => $id,
+							'fk_id_forma_pago'=>$formapago['fk_id_forma_pago'],
+						];
                 }
-                $formaspago = $entity->formaspago()->sync($sync);
+                $formaspago_done = $entity->formaspago()->sync($sync);
             } 
-			// if(isset($request->anexos))
-			// {
-	        //     $anexos = $request->anexos;
+			if(isset($request->anexos))
+			{
+	            $anexos = $request->anexos;
 
-	        //     #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
-	        //     $ids_anexos = collect($anexos)->pluck('id_anexo');
-	        //     $entity->anexos()->whereNotIn('id_anexo', $ids_anexos)->update(['eliminar' => 1]);
+	            #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
+	            $ids_anexos = collect($anexos)->pluck('id_anexo');
+	            $entity->anexos()->whereNotIn('id_anexo', $ids_anexos)->update(['eliminar' => 1]);
 
-	        //     #Inserta o Actualiza la informacion del contacto
-	        //     foreach ($anexos as $anexo)
-	        //     {
-			// 		if(isset($anexo['archivo']))
-			// 		{
-	        //             $myfile = $anexo['archivo'];
-	        //             $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
-	        //             $file_save = Storage::disk('socios_anexos')->put($id.'/'.$filename, file_get_contents($myfile->getRealPath()));
+	            #Inserta o Actualiza la informacion del contacto
+	            foreach ($anexos as $anexo)
+	            {
+					if(isset($anexo['archivo']))
+					{
+	                    $myfile = $anexo['archivo'];
+	                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
+	                    $file_save = Storage::disk('socios_anexos')->put($id.'/'.$filename, file_get_contents($myfile->getRealPath()));
 
-			// 			if($file_save)
-			// 			{
-        	//                 array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
-        	//                 $anexo['archivo'] = $filename;
-        	//                 $entity->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
-    	    //             }
-	        //         }
-	        //     }
-			// }
+						if($file_save)
+						{
+        	                array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
+        	                $anexo['archivo'] = $filename;
+        	                $entity->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
+    	                }
+	                }
+	            }
+			}
 			// else
 			// {
 			// 	$entity->anexos()->update(['eliminar' => 1]);
 			// }
-			if($empresas || $formaspago)
+			if($empresas_done || $formaspago_done)
 			{
 				return $return['redirect'];
 			}
@@ -141,57 +146,61 @@ class SociosNegocioController extends ControllerBase
 		$return = parent::update($request, $company, $id, true);
         if(is_array($return))
         {
-			$entity = $return['entity'];
-            if($request->empresas)
+			$entity = $this->entity->findOrFail($id);
+            if($request->empresas_)
             {
-				$sync = [];
-                foreach ($request->empresas as $empresa){
-                    $sync[]=['fk_id_empresa'=>$empresa['id_empresa']];
-                }
-                $empresas = $entity->empresas()->sync($sync);
+                foreach ($request->empresas_ as $empre){
+					if($empre['fk_id_empresa'] > 0)
+                    	$sync[]=[
+							'fk_id_socio_negocio' => $id,
+							'fk_id_empresa'=>$empre['fk_id_empresa']
+						];
+				}
+                $empresas_done = $entity->empresas()->sync($sync);
 			} 
             if($request->formaspago)
             {
                 $sync = [];
                 foreach ($request->formaspago as $formapago){
-                    $sync[]=[
-						'fk_id_socio_negocio' => $id,
-						'fk_id_forma_pago'=>$formapago['fk_id_forma_pago'],
-					];
+					if($formapago['fk_id_forma_pago'] > 0)
+						$sync[]=[
+							'fk_id_socio_negocio' => $id,
+							'fk_id_forma_pago'=>$formapago['fk_id_forma_pago'],
+						];
                 }
-                $formaspago = $entity->formaspago()->sync($sync);
+                $formaspago_done = $entity->formaspago()->sync($sync);
             } 
-			// if(isset($request->anexos))
-			// {
-	        //     $anexos = $request->anexos;
+			if(isset($request->anexos))
+			{
+	            $anexos = $request->anexos;
 
-	        //     #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
-	        //     $ids_anexos = collect($anexos)->pluck('id_anexo');
-	        //     $entity->anexos()->whereNotIn('id_anexo', $ids_anexos)->update(['eliminar' => 1]);
+	            #Elimina los contactos que existian y que no se encuentran en el arreglo de datos
+	            $ids_anexos = collect($anexos)->pluck('id_anexo');
+	            $entity->anexos()->whereNotIn('id_anexo', $ids_anexos)->update(['eliminar' => 1]);
 
-	        //     #Inserta o Actualiza la informacion del contacto
-	        //     foreach ($anexos as $anexo)
-	        //     {
-			// 		if(isset($anexo['archivo']))
-			// 		{
-	        //             $myfile = $anexo['archivo'];
-	        //             $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
-	        //             $file_save = Storage::disk('socios_anexos')->put($id.'/'.$filename, file_get_contents($myfile->getRealPath()));
+	            #Inserta o Actualiza la informacion del contacto
+	            foreach ($anexos as $anexo)
+	            {
+					if(isset($anexo['archivo']))
+					{
+	                    $myfile = $anexo['archivo'];
+	                    $filename = str_replace([':',' '],['-','_'],Carbon::now()->toDateTimeString().' '.$myfile->getClientOriginalName());
+	                    $file_save = Storage::disk('socios_anexos')->put($id.'/'.$filename, file_get_contents($myfile->getRealPath()));
 
-			// 			if($file_save)
-			// 			{
-        	//                 array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
-        	//                 $anexo['archivo'] = $filename;
-        	//                 $entity->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
-    	    //             }
-	        //         }
-	        //     }
-			// }
+						if($file_save)
+						{
+        	                array_unshift($anexo, ['fk_id_socio_negocio'=> $id]);
+        	                $anexo['archivo'] = $filename;
+        	                $entity->anexos()->updateOrCreate(['id_anexo' => null], $anexo);
+    	                }
+	                }
+	            }
+			}
 			// else
 			// {
 			// 	$entity->anexos()->update(['eliminar' => 1]);
 			// }
-			if($empresas || $formaspago)
+			if($empresas_done || $formaspago_done)
 			{
 				return $return['redirect'];
 			}

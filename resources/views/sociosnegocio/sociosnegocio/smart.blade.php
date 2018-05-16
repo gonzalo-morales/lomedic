@@ -56,18 +56,17 @@
 					<ul class="list-group">
 						@php $empresa_socio = []; @endphp
 						@if(isset($data->empresas))
-    						@foreach ($data->empresas as $empresa)
-                                @php array_push($empresa_socio, $empresa->pivot->fk_id_empresa); @endphp
+							@foreach ($data->empresas as $empresa)
+                                @php array_push($empresa_socio, $empresa->id_empresa); @endphp
 							@endforeach
 						@endif
-						
 						@foreach ($empresas as $i => $row)
                         <li class="list-group-item form-group row">
 							<div class="form-check">
-								<input name="empresas[{{$i}}][fk_id_empresa]" type="hidden" value="0">
+								<input name="empresas_[{{$row->id_empresa}}][fk_id_empresa]" type="hidden" value="0">
 								<label class="form-check-label custom-control custom-checkbox">
 									{{ $row->nombre_comercial }}
-									<input class="form-check-input custom-control-input" name="empresas[{{$i}}][fk_id_empresa]" type="checkbox" value="{{$row->id_empresa}}" {{in_array($row->id_empresa,$empresa_socio) ? 'checked' : ''}}>
+									<input class="form-check-input custom-control-input" name="empresas_[{{$row->id_empresa}}][fk_id_empresa]" type="checkbox" value="{{$row->id_empresa}}" {{in_array($row->id_empresa,$empresa_socio) ? 'checked' : ''}}>
 									<span class="custom-control-indicator"></span>
 								</label>
 							</div>
@@ -357,8 +356,10 @@
 					$formas_pago = [];
 					if(isset($data->formaspago))
 					{
-    					foreach ($data->formaspago as $formapago)
-    					    array_push($formas_pago, $formapago->pivot->fk_id_forma_pago);
+						foreach ($data->formaspago as $formapago)
+						{
+							array_push($formas_pago, $formapago->id_forma_pago);
+						}
 					}
 					?>
             		<div class="col-sm-12 col-md-6 col-lg-7">
@@ -369,7 +370,7 @@
             				</div>
             				<div class="card-body">
             					<ul class="row">
-                                    @foreach ($formaspago as $key=>$formapago)
+									@foreach ($formaspago as $key=>$formapago)
 								<li class="list-group-item form-group col-lg-12 col-xl-6 p-2">
 										<div class="form-check">
 											<input name="formaspago[{{$key}}][fk_id_forma_pago]" type="hidden" value="0">
