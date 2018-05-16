@@ -5,6 +5,7 @@ namespace App\Http\Models\SociosNegocio;
 use App\Http\Models\ModelBase;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Inventarios\Upcs;
+use App\Http\Models\Administracion\Monedas;
 
 class ProductosSociosNegocio extends ModelBase
 {
@@ -24,14 +25,23 @@ class ProductosSociosNegocio extends ModelBase
      * The attributes that are mass assignable.
      * @var array
      */
-    protected $fillable = ['fk_id_socio_negocio', 'fk_id_sku', 'fk_id_upc', 'tiempo_entrega', 'precio', 'precio_de', 'precio_hasta'];
+    protected $fillable = [
+        'fk_id_socio_negocio',
+        'fk_id_moneda',
+        'fk_id_upc',
+        'tiempo_entrega',
+        'precio',
+        'precio_de',
+        'precio_hasta'
+    ];
 
     public function sociosnegocio(){
         return $this->belongsTo(SociosNegocio::class,'fk_id_socio_negocio');
     }
 
-    public function sku(){
-        return $this->belongsTo(Productos::class,'fk_id_sku');
+    public function moneda()
+    {
+        return $this->hasOne(Monedas::class,'id_moneda','fk_id_moneda');
     }
     
     public function upc(){

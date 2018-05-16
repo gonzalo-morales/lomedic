@@ -9,6 +9,23 @@ $(document).ready(function () {
 		$('#activo_hasta').prop('readonly', true);
 	}
 
+	$('#upc').select2({
+		disabled:true,
+		placeholder: "Seleccione el SKU...",
+	})
+
+	$('.nav-link').on('click', function (e) {
+		e.preventDefault();
+		$('#clothing-nav li').each(function () {
+			$(this).children().removeClass('active');
+		});
+		$('.tab-pane').removeClass('active').removeClass('show');
+		$(this).addClass('active');
+		let tab = $(this).prop('href');
+		tab = tab.split('#');
+		$('#' + tab[1]).addClass('active').addClass('show');
+	});
+
 	$('#activo').click(function (e) {
 		if(!$(this).prop('checked')) {
 			from_picker.clear().stop();
@@ -111,7 +128,11 @@ $(document).ready(function () {
 		let upc = $('#upc');
 
 		if($(this).val() == ''){
-			upc.val('');
+			upc.empty();
+			upc.select2({
+				disabled:true,
+				placeholder: "Seleccione el SKU...",
+			});
 		}
 		if($('#sku').val() != 0) {
 			upc.empty();
@@ -121,7 +142,6 @@ $(document).ready(function () {
 				url: _url,
 				dataType: 'json',
 				success: function (data) {
-					console.table(data);
 					var options = [];
 					var count = Object.keys(data).length;
 					/* Si hay resultados */
@@ -136,7 +156,7 @@ $(document).ready(function () {
 						options.push('<option value="0" selected disabled>Seleccione el UPC...</option>');
 						for (const key in data) {
 							if (data.hasOwnProperty(key)) {
-								options.push('<option value="' + data[key].id_upc + '">' + data[key].upc + '</option>');
+								options.push('<option data-desc="'+ data[key].descripcion +'" value="' + data[key].id_upc + '">' + data[key].upc + '</option>');
 							}
 						}
 						$('#upc').select2({
@@ -188,19 +208,19 @@ $(document).ready(function () {
     	extension = $('#extension_oficina').val();
     	iextension = ' - ' + extension;
         
-    	if(tipo == '' | nombre == '' | puesto == '' | correo == '') {
+    	if(tipo == '' | nombre == '' | puesto == '' | correo == '' || telefono == '') {
     		$.toaster({priority:'danger',title:'¡Error!',message:'Los siguientes campos son necesarios: Tipo contacto, Nombre, Puesto y Correo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     	}
         else {
         	$('#tContactos').append('<tr>'+
-        		'<td><input class="index" name="relations[has][contratos]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
-					'<input name="relations[has][contratos]['+row_id+'][fk_id_tipo_contacto]" type="hidden" value="'+id_tipo+'">'+tipo+'</td>'+
-				'<td>'+nombre+' <input name="contactos['+row_id+'][nombre]" type="hidden" value="'+nombre+'"></td>'+
-				'<td>'+puesto+' <input name="contactos['+row_id+'][puesto]" type="hidden" value="'+puesto+'"></td>'+
-				'<td>'+correo+' <input name="contactos['+row_id+'][correo]" type="hidden" value="'+correo+'"></td>'+
-				'<td>'+celular+' <input name="contactos['+row_id+'][celular]" type="hidden" value="'+celular+'"></td>'+
-				'<td>'+telefono+iextension+' <input name="contactos['+row_id+'][telefono_oficina]" type="hidden" value="'+telefono+'">'+
-				'<input name="contactos['+row_id+'][extension_oficina]" type="hidden" value="'+extension+'"></td>'+
+        		'<td><input class="index" name="relations[has][contactos]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
+					'<input name="relations[has][contactos]['+row_id+'][fk_id_tipo_contacto]" type="hidden" value="'+id_tipo+'">'+tipo+'</td>'+
+				'<td>'+nombre+' <input name="relations[has][contactos]['+row_id+'][nombre]" type="hidden" value="'+nombre+'"></td>'+
+				'<td>'+puesto+' <input name="relations[has][contactos]['+row_id+'][puesto]" type="hidden" value="'+puesto+'"></td>'+
+				'<td>'+correo+' <input name="relations[has][contactos]['+row_id+'][correo]" type="hidden" value="'+correo+'"></td>'+
+				'<td>'+celular+' <input name="relations[has][contactos]['+row_id+'][celular]" type="hidden" value="'+celular+'"></td>'+
+				'<td>'+telefono+iextension+' <input name="relations[has][contactos]['+row_id+'][telefono_oficina]" type="hidden" value="'+telefono+'">'+
+				'<input name="relations[has][contactos]['+row_id+'][extension_oficina]" type="hidden" value="'+extension+'"></td>'+
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Contrato"><i class="material-icons">delete</i></button></td>'+
 			'</tr>');
         	$.toaster({priority:'success',title:'¡Correcto!',message:'El contacto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
@@ -225,8 +245,8 @@ $(document).ready(function () {
     	id_pais		 = $('#pais option:selected').val();
     	pais		 = $('#pais option:selected').text();
     	
-    	if(tipo == '' | calle == '' | num_exterior == '' | num_interior == '' | cp == '' | id_pais == '' | id_estado == '' | id_municipio == '' | colonia == '') {
-    		$.toaster({priority:'danger',title:'¡Error!',message:'Los siguientes campos son necesarios: Tipo contacto, Nombre, Puesto y Correo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    	if(tipo == '' | calle == '' | num_exterior == '' | cp == '' | id_pais == '' | id_estado == '' | id_municipio == '' | colonia == '') {
+    		$.toaster({priority:'danger',title:'¡Error!',message:'Para guardar es necesario llenar todos los datos obligatorios: *',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
     	}
         else {
 			$('#tDirecciones').append('<tr>'+
@@ -273,13 +293,13 @@ $(document).ready(function () {
 		else {
 			$('#tCuentas').append('<tr>'+
 				'<td>' + banco +
-				'<input class="id_cuenta" name="cuentas['+row_id+'][id_cuenta]" type="hidden" value="">'+
-				'<input class="fk_id_banco" name="cuentas['+row_id+'][fk_id_banco]" type="hidden" value="'+id_banco+'">'+
-				'<input class="uniquekey" name="cuentas['+row_id+'][uniquekey]" type="hidden" value="'+id_banco+'-'+no_cuenta+'"></td>'+
-				'<td>' + no_cuenta + ' <input name="cuentas['+row_id+'][no_cuenta]" type="hidden" value="'+no_cuenta+'"></td>'+
-				'<td>' + sucursal + ' <input name="cuentas['+row_id+'][no_sucursal]" type="hidden" value="'+sucursal+'"></td>'+
-				'<td>' + clave_int + ' <input name="cuentas['+row_id+'][clave_interbancaria]" type="hidden" value="'+clave_int+'"></td>'+
-				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCuenta(this)"> <i class="material-icons">delete</i></button></td>'+
+				'<input class="id_cuenta" name="relations[has][cuentas]['+row_id+'][id_cuenta]" type="hidden" value="">'+
+				'<input class="fk_id_banco" name="relations[has][cuentas]['+row_id+'][fk_id_banco]" type="hidden" value="'+id_banco+'">'+
+				'<input class="uniquekey" name="relations[has][cuentas]['+row_id+'][uniquekey]" type="hidden" value="'+id_banco+'-'+no_cuenta+'"></td>'+
+				'<td>' + no_cuenta + ' <input name="relations[has][cuentas]['+row_id+'][no_cuenta]" type="hidden" value="'+no_cuenta+'"></td>'+
+				'<td>' + sucursal + ' <input name="relations[has][cuentas]['+row_id+'][no_sucursal]" type="hidden" value="'+sucursal+'"></td>'+
+				'<td>' + clave_int + ' <input name="relations[has][cuentas]['+row_id+'][clave_interbancaria]" type="hidden" value="'+clave_int+'"></td>'+
+				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$.toaster({priority:'success',title:'¡Correcto!',message:'La cuenta se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
@@ -304,10 +324,10 @@ $(document).ready(function () {
 		}
 		else {
 			$('#tAnexos').append('<tr>'+
-				'<td>' + tipo + '<input class="id_tipo" name="anexos['+row_id+'][fk_id_tipo_anexo]" type="hidden" value="'+id_tipo+'"></td>'+
-				'<td>' + nombre+' <input name="anexos['+row_id+'][nombre]" type="hidden" value="'+nombre+'"></td>'+
-				'<td>' + archivo[0].name + ' <input id="anexos-'+row_id+'" class="file-anexos" name="anexos['+row_id+'][archivo]" type="file" style="display:none"></td>'+
-				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarAnexo(this)"> <i class="material-icons">delete</i></button></td>'+
+				'<td>' + tipo + '<input class="id_tipo" name="relations[has][anexos]['+row_id+'][fk_id_tipo_anexo]" type="hidden" value="'+id_tipo+'"></td>'+
+				'<td>' + nombre+' <input name="relations[has][anexos]['+row_id+'][nombre]" type="hidden" value="'+nombre+'"></td>'+
+				'<td>' + archivo[0].name + ' <input id="anexos-'+row_id+'" class="file-anexos" name="relations[has][anexos]['+row_id+'][archivo]" type="file" style="display:none"></td>'+
+				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#anexos-'+row_id).prop('files',archivo);
 			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
@@ -315,70 +335,57 @@ $(document).ready(function () {
 	});
 
 	$('#fk_id_tipo_socio_compra').on('change', function() {
-		console.log($(this).val());
 		$('#fieldProductos').prop('disabled',$(this).val() == '');
 	});
 	
 	$('#agregar-producto').on('click', function() {
 		let row_id = $('#tProductos tr').length;
-		
-		var skus_ids = [];
-    	$('.id_sku').each(function (i) {
-    		skus_ids.push($('.id_sku')[i].value + $('.id_sku').parent().find('.id_upc').value ); 
-		});
-		
+		let existe = false;
+		let $tBodyProductos = $('#tProductos');
 		id_sku  = $('#sku option:selected').val();
 		sku  = $('#sku option:selected').text();
+		descripcion  = $('#upc option:selected').data('desc');
 		id_upc  = $('#upc option:selected').val();
-		upc  = id_upc == '' ? '' : $('#upc option:selected').text();
+		upc  = $('#upc option:selected').text();
 		tiempo_entrega = $('#tiempo_entrega').val();
 		precio = $("#precio").val();
 		precio_de = $("#precio_de").val();
 		precio_hasta = $("#precio_hasta").val();
-		
-		if(id_sku == '' | tiempo_entrega == '' | precio == '' | precio_de == '' | precio_hasta == ''){
-			$.toaster({priority:'danger',title:'¡Error!',message:'Los campos, Sku, Tiempo Entrega, Precio, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		moneda = $('#fk_id_moneda option:selected').val();
+		moneda_clave = $('#fk_id_moneda option:selected').text();
+
+		if(row_id > 0){
+			$tBodyProductos.children().each(function(){
+				let upcRow = $(this).find('.id_upc').val()
+				if(upcRow == id_upc){
+					existe = true;
+				}
+			})
 		}
-		else if(skus_ids.indexOf(id_sku + id_upc) !== -1) {
-        	$.toaster({priority:'danger',title:'¡Error!',message:'El producto seleccionado ya fue agregado.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-        }
-		else {
-			if(id_upc != '') {
-				var url_ajax = $('#upc').data('url');
-				var param_js = upc_js;
-				var params = {'param_js':param_js,'$id_upc':id_upc}
-			}
-			else {
-				var url_ajax = $('#sku').data('url');
-				var param_js = sku_js;
-				var params = {'param_js':param_js,'$id_sku':id_sku}
-			}
-			console.log(params);
-			
-			$.ajax({
-    		    async: true,
-    		    url: url_ajax,
-    		    data: params,
-    		    dataType: 'json',
-                success: function (data) {
-                	$('#tProductos').append('<tr>'+
-        				'<td>' + sku + '<input class="id_sku" name="productos['+row_id+'][fk_id_sku]" type="hidden" value="'+id_sku+'"></td>'+
-        				'<td>' + upc + '<input class="id_upc" name="productos['+row_id+'][fk_id_upc]" type="hidden" value="'+id_upc+'"></td>'+
-        				'<td>'+data[0].descripcion+'</td>'+
-        				'<td>' + tiempo_entrega + ' <input name="productos['+row_id+'][tiempo_entrega]" type="hidden" value="'+tiempo_entrega+'"></td>'+
-        				'<td>' + precio + ' <input name="productos['+row_id+'][precio]" type="hidden" value="'+precio+'"></td>'+
-        				'<td>' + precio_de + ' <input name="productos['+row_id+'][precio_de]" type="hidden" value="'+precio_de+'"></td>'+
-        				'<td>' + precio_hasta + ' <input name="productos['+row_id+'][precio_hasta]" type="hidden" value="'+precio_hasta+'"></td>'+
-        				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarProducto(this)"> <i class="material-icons">delete</i></button></td>'+
-        			'</tr>');
-        			$.toaster({priority:'success',title:'¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-    		    }
-    		});
+		
+		if(id_sku == '' | tiempo_entrega == '' | precio == '' | precio_de == '' | precio_hasta == '' || id_upc == 0 || moneda == ''){
+			$.toaster({priority:'danger',title:'¡Error!',message:'Los campos: Sku, UPC, Tiempo Entrega, Precio, Moneda, Precio Valido De y Precio Valido Hasta son requeridos.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+		else if(existe) {
+        	$.toaster({priority:'danger',title:'¡Error!',message:`El producto: <b>${upc}</b> ya fue agregado.`,settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+		}
+		else{
+			$tBodyProductos.append('<tr>'+
+			'<td>' + sku + '<input name="relations[has][productos]['+row_id+'][fk_id_moneda]" type="hidden" value="'+moneda+'"></td>'+
+			'<td>' + upc + '<input class="id_upc" name="relations[has][productos]['+row_id+'][fk_id_upc]" type="hidden" value="'+id_upc+'"></td>'+
+			'<td>' + descripcion + '</td>'+
+			'<td>' + tiempo_entrega + ' <input name="relations[has][productos]['+row_id+'][tiempo_entrega]" type="hidden" value="'+tiempo_entrega+'"></td>'+
+			'<td>' +'$'+ precio + '<br><small>'+ moneda_clave +'</small>' + ' <input name="relations[has][productos]['+row_id+'][precio]" type="hidden" value="'+precio+'"></td>'+
+			'<td>' + precio_de + ' <input name="relations[has][productos]['+row_id+'][precio_de]" type="hidden" value="'+precio_de+'"></td>'+
+			'<td>' + precio_hasta + ' <input name="relations[has][productos]['+row_id+'][precio_hasta]" type="hidden" value="'+precio_hasta+'"></td>'+
+			'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)"> <i class="material-icons">delete</i></button></td>'+
+			'</tr>');
+			$.toaster({priority:'success',title:'¡Correcto!',message:'El producto se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 });
 
 function borrarFila(el) {
     $(el).parent().parent('tr').remove();
-    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el '+$(el).data('tooltip'),settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+    $.toaster({priority:'success',title:'¡Correcto!',message:'Se ha eliminado correctamente el elemento',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 }

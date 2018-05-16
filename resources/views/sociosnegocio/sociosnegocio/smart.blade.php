@@ -8,9 +8,6 @@
     	<script type="text/javascript">
         	var estados_js = '{{ $js_estados ?? '' }}';
         	var municipios_js = '{{ $js_municipios ?? '' }}';
-        	var upcs_js = '{{ $js_upcs ?? '' }}';
-        	var upc_js = '{{ $js_upc ?? '' }}';
-        	var sku_js = '{{ $js_sku ?? '' }}';
         </script>
     	{{ HTML::script(asset('js/sociosnegocios/socios.js')) }}
     @endif
@@ -64,11 +61,19 @@
 							@endforeach
 						@endif
 						
-                        @foreach ($empresas as $row)
+						@foreach ($empresas as $i => $row)
                         <li class="list-group-item form-group row">
-							{{ Form::Checkbox('empresas['.$row->id_empresa.']',(in_array($row->id_empresa, $empresa_socio)?1:0),['class'=>'socio-empresa']) }}
-							{{ Form::Label("empresas['$row->id_empresa']",$row->nombre_comercial) }}
-                        	{{-- {{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresa_socio)?1:0) ) }} --}}
+							<div class="form-check">
+								<input name="empresas[{{$i}}][fk_id_empresa]" type="hidden" value="0">
+								<label class="form-check-label custom-control custom-checkbox">
+									{{ $row->nombre_comercial }}
+									<input class="form-check-input custom-control-input" name="empresas[{{$i}}][fk_id_empresa]" type="checkbox" value="{{$row->id_empresa}}" {{in_array($row->id_empresa,$empresa_socio) ? 'checked' : ''}}>
+									<span class="custom-control-indicator"></span>
+								</label>
+							</div>
+							{{-- {{ Form::Checkbox('empresas['.$row->id_empresa.']',(in_array($row->id_empresa, $empresa_socio)?1:0),['class'=>'socio-empresa']) }}
+							{{ Form::Label("empresas][$row->id_empresa]",$row->nombre_comercial) }} --}}
+                        	{{-- {{ Form::cCheckbox($row->nombre_comercial, 'empresas]['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresa_socio)?1:0) ) }} --}}
                         </li>
                         @endforeach
                     </ul>
@@ -81,7 +86,7 @@
 	<!-- Card -->
 	<div class="row mb-3 card z-depth-1-half">
 		<div class="card-header mb-0 pb-0">
-			<ul class="nav nav-pills nav-justified">
+			<ul id="clothing-nav" class="nav nav-pills nav-justified">
 				<li class="nav-item"><a class="nav-link active"  role="tab" data-toggle="tab"  href="#general">General</a></li>
 				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#contactos">Personas contacto</a></li>
 				<li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"  href="#direcciones">Direcciones</a></li>
@@ -178,8 +183,16 @@
     							@foreach($data->contactos->where('eliminar',0) as $row=>$detalle)
 								<tr>
 									<td>
-										{{ Form::hidden('relations[has][contratos]['.$row.'][index]',$row,['class'=>'index']) }}
-										{{ Form::hidden('relations[has][contactos]['.$row.'][id_contacto]',$detalle->id_contacto,['class'=>'id_contacto']) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.']',$row,['class'=>'index']) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][id_contacto]',$detalle->id_contacto) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][fk_id_socio_negocio]',$detalle->fk_id_socio_negocio) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][fk_id_tipo_contacto]',$detalle->fk_id_tipo_contacto) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][nombre]',$detalle->nombre) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][puesto]',$detalle->puesto) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][correo]',$detalle->correo) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][telefono_oficina]',$detalle->telefono_oficina) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][extension_oficina]',$detalle->extension_oficina) }}
+										{{ Form::hidden('relations[has][contactos]['.$row.'][celular]',$detalle->celular) }}
 										{{$detalle->tipocontacto->tipo_contacto}}
 									</td>
 									<td>
@@ -268,8 +281,18 @@
     							@foreach($data->direcciones as $row=>$detalle)
 								<tr>
 									<td>
-										{{ Form::hidden('relations[has][direcciones]['.$row.'][index]',$row,['class'=>'index']) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.']',$row,['class'=>'index']) }}
 										{{ Form::hidden('relations[has][direcciones]['.$row.'][id_direccion]',$detalle->id_direccion,['class'=>'id_direccion']) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][fk_id_socio_negocio]',$detalle->fk_id_socio_negocio) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][fk_id_pais]',$detalle->fk_id_pais) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][fk_id_estado]',$detalle->fk_id_estado) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][fk_id_municipio]',$detalle->fk_id_municipio) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][colonia]',$detalle->colonia) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][fk_id_tipo_direccion]',$detalle->fk_id_tipo_direccion) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][calle]',$detalle->calle) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][num_exterior]',$detalle->num_exterior) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][num_interior]',$detalle->num_interior) }}
+										{{ Form::hidden('relations[has][direcciones]['.$row.'][codigo_postal]',$detalle->codigo_postal) }}
 										{{$detalle->tipoDireccion->tipo_direccion}}
 									</td>
 									<td>
@@ -327,7 +350,7 @@
             				</div>
         				</div>
     				</div>
-    		
+
 					<!-- Formas de pago -->
             		@if(isset($formaspago))
             		<?php 
@@ -346,9 +369,19 @@
             				</div>
             				<div class="card-body">
             					<ul class="row">
-                                    @foreach ($formaspago as $key=>$value)
-                                    <li class="list-group-item form-group col-lg-12 col-xl-6 p-2">
-                                    	{{ Form::cCheckbox($value, 'formaspago['.$key.']', [], (in_array($key, $formas_pago)?1:0) ) }}
+                                    @foreach ($formaspago as $key=>$formapago)
+								<li class="list-group-item form-group col-lg-12 col-xl-6 p-2">
+										<div class="form-check">
+											<input name="formaspago[{{$key}}][fk_id_forma_pago]" type="hidden" value="0">
+											<label class="form-check-label custom-control custom-checkbox">
+												{{ $formapago}}
+												<input class="form-check-input custom-control-input" name="formaspago[{{$key}}][fk_id_forma_pago]" type="checkbox" value="{{$key}}" {{in_array($key,$formas_pago) ? 'checked' : ''}}>
+												<span class="custom-control-indicator"></span>
+											</label>
+										</div>
+										{{-- {{ Form::Checkbox('formaspago['.$key.'][fk_id_forma_pago]',(in_array($key, $formas_pago)?1:0)) }}
+										{{ Form::Label("formaspago][$key][fk_id_forma_pago]",$value) }} --}}
+                                    	{{-- {{ Form::cCheckbox($value, 'formaspago['.$key.']', [], (in_array($key, $formas_pago)?1:0) ) }} --}}
                                     </li>
                                     @endforeach
                                 </ul>
@@ -399,23 +432,23 @@
 								<tr>
 									<td>
 										{{$detalle->banco->banco ?? ''}}
-										{!! Form::hidden('cuentas['.$key.'][id_cuenta]',$detalle->id_cuenta,['class'=>'id_cuenta']) !!}
-										{!! Form::hidden('cuentas['.$key.'][fk_id_banco]',$detalle->fk_id_banco,['class'=>'fk_id_banco']) !!}
-										{!! Form::hidden('cuentas['.$key.'][fk_id_socio_negocio]',$detalle->fk_id_socio_negocio,['class'=>'fk_id_socio_negocio']) !!}
+										{!! Form::hidden('relations[has][cuentas]['.$key.'][id_cuenta]',$detalle->id_cuenta,['class'=>'id_cuenta']) !!}
+										{!! Form::hidden('relations[has][cuentas]['.$key.'][fk_id_banco]',$detalle->fk_id_banco,['class'=>'fk_id_banco']) !!}
+										{!! Form::hidden('relations[has][cuentas]['.$key.'][fk_id_socio_negocio]',$detalle->fk_id_socio_negocio,['class'=>'fk_id_socio_negocio']) !!}
 										
-										{!! Form::hidden('cuentas['.$key.'][uniquekey]',$detalle->fk_id_banco.'-'.$detalle->no_cuenta,['class'=>'uniquekey']) !!} 
+										{!! Form::hidden('relations[has][cuentas]['.$key.'][uniquekey]',$detalle->fk_id_banco.'-'.$detalle->no_cuenta,['class'=>'uniquekey']) !!} 
 									</td>
 									<td>
 										{{$detalle->no_cuenta}}
-										{!! Form::hidden('cuentas['.$key.'][no_cuenta]',$detalle->no_cuenta) !!} 
+										{!! Form::hidden('relations[has][cuentas]['.$key.'][no_cuenta]',$detalle->no_cuenta) !!} 
 									</td>
 									<td>
 										{{$detalle->no_sucursal}}
-										{!! Form::hidden('cuentas['.$key.'][no_sucursal]',$detalle->no_sucursal) !!} 
+										{!! Form::hidden('relations[has][cuentas]['.$key.'][no_sucursal]',$detalle->no_sucursal) !!} 
 									</td>
 									<td>
 										{{$detalle->clave_interbancaria}}
-										{!! Form::hidden('cuentas['.$key.'][clave_interbancaria]',$detalle->clave_interbancaria) !!} 
+										{!! Form::hidden('relations[has][cuentas]['.$key.'][clave_interbancaria]',$detalle->clave_interbancaria) !!} 
 									</td>
 									<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarCuenta(this)"><i class="material-icons">delete</i></button></td>
 								</tr>
@@ -463,7 +496,7 @@
     							@foreach($data->anexos->where('eliminar',0) as $key=>$detalle)
 								<tr>
 									<td>
-										{!! Form::hidden('anexos['.$key.'][id_anexo]',$detalle->id_anexo,['class'=>'id_anexo']) !!}
+										{!! Form::hidden('relations[has][anexos]['.$key.'][id_anexo]',$detalle->id_anexo,['class'=>'id_anexo']) !!}
 										{{$detalle->tipoanexo->tipo_anexo}}
 									</td>
 									<td>
@@ -500,7 +533,7 @@
     								<div id="loadingUPC" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
     									Cargando datos... <i class="material-icons align-middle loading">cached</i>
     								</div>
-    								{{ Form::cSelect('Upc', 'upc', $upcs ?? [],[
+    								{{ Form::cSelect('* Upc', 'upc', $upcs ?? [],[
 										'class'=>'select2',
 										'data-url'=>companyAction('Inventarios\ProductosController@getThisSkus',['id'=>'?id']),
 										]) }}
@@ -508,13 +541,16 @@
     							<div class="form-group col-md-4">
     								{{ Form::cNumber('* Tiempo Entrega (dias)', 'tiempo_entrega') }}
     							</div>
-    							<div class="form-group col-md-4">
+    							<div class="form-group col-md-3">
     								{{ Form::cNumber('* Precio', 'precio') }}
-    							</div>
-    							<div class="form-group col-md-4">
+								</div>
+    							<div class="form-group col-md-3">
+									{{ Form::cSelect('* Moneda', 'fk_id_moneda', $monedas ?? [],['class'=>!Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '']) }}
+									</div>
+    							<div class="form-group col-md-3">
     								{{ Form::cText('* Precio Valido De', 'precio_de') }}
     							</div>
-    							<div class="form-group col-md-4">
+    							<div class="form-group col-md-3">
     								{{ Form::cText('* Precio Valido Hasta', 'precio_hasta') }}
     							</div>
     							<div class="form-group col-sm-12 my-3">
@@ -528,7 +564,7 @@
     						<table class="table responsive-table highlight" id="tProductos">
     							<thead>
     								<tr>
-    									<th>Sku</th>
+										<th>Sku</th>
     									<th>Upc</th>
     									<th>Descripcion</th>
     									<th>Tiempo entrega</th>
@@ -540,17 +576,25 @@
     							</thead>
     							<tbody>
     							@if(isset($data->productos)) 
-        							@foreach($data->productos->where('eliminar',0) as $key=>$detalle)
+									@foreach($data->productos->where('eliminar',0) as $key=>$detalle)
     								<tr>
+										<td>
+											{{$detalle->sku->sku ?? ''}}
+										</td>
     									<td>
-    										{!! Form::hidden('productos['.$key.'][id_producto]',$detalle->id_producto,['class'=>'id_producto']) !!}
-    										{{$detalle->sku->sku}}
-    									</td>
-    									<td>
+											{{ Form::hidden('relations[has][productos]['.$row.']',$row,['class'=>'index']) }}
+											{!! Form::hidden('relations[has][productos]['.$key.'][id_producto]',$detalle->id_producto,['class'=>'id_producto']) !!}
+											{!! Form::hidden('relations[has][productos]['.$key.'][fk_id_socio_negocio]',$detalle->fk_id_socio_negocio) !!}
+											{!! Form::hidden('relations[has][productos]['.$key.'][fk_id_moneda]',$detalle->fk_id_moneda) !!}
+											{!! Form::hidden('relations[has][productos]['.$key.'][fk_id_upc]',$detalle->fk_id_upc) !!}
+											{!! Form::hidden('relations[has][productos]['.$key.'][tiempo_entrega]',$detalle->tiempo_entrega) !!}
+											{!! Form::hidden('relations[has][productos]['.$key.'][precio]',$detalle->precio) !!}
+											{!! Form::hidden('relations[has][productos]['.$key.'][precio_de]',$detalle->precio_de) !!}
+											{!! Form::hidden('relations[has][productos]['.$key.'][precio_hasta]',$detalle->precio_hasta) !!}
     										{{$detalle->upc->upc ?? ''}}
     									</td>
     									<td>
-    										{{$detalle->upc->descreipcion ?? $detalle->sku->descripcion_corta}}
+    										{{$detalle->upc->descripcion ?? $detalle->sku->descripcion_corta}}
     									</td>
     									<td>
     										{{$detalle->tiempo_entrega}}

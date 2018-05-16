@@ -311,7 +311,7 @@ class ProductosController extends ControllerBase
                 {
                     if($numRelationsInUpc > 1)
                     {
-                        $id_founded[] = array_search($upc_detalle->fk_id_especificacion, $values);
+                        $id_founded[] = array_search($upc_detalle->id_especificacion, $values);
                         if($numRelationsInUpc == $numRelationsInField)
                         {
                             if(!in_array(false,$id_founded,true))
