@@ -2,40 +2,13 @@ var primeracarga = true;
 $(document).ready(function(){
 
     $('[data-toggle]').tooltip();
-    
+    $('#fk_id_upc').select2({
+        disabled:true,
+        placeholder:"Seleccione el proveedor..."
+    })
     initSelects();
     totalOferta();
 
-    //Por si se selecciona un UPC
-    $('#activo_upc').on('change',function () {
-        $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-        if( !this.checked ){
-            $( this ).parent().nextAll( "select" ).val(0).trigger('change');
-        }else{
-            if($('#fk_id_sku').val()){
-                var _url = $('#fk_id_upc').data('url').replace('?id',$('#fk_id_sku').val());
-                $( this ).parent().nextAll( "select" ).select2({
-                    minimumResultsForSearch: Infinity,
-                    ajax:{
-                        url: _url,
-                        dataType: 'json',
-                        data: function (term) {
-                            return {term: term};
-                        },
-                        processResults: function (data) {
-                            return {results: data}
-                        },
-                        cache:true
-                    }
-                })
-            }else{
-                $( this ).prop('checked',false);
-                $( this ).parent().nextAll( "select" ).prop( "disabled", !this.checked );
-                $.toaster({priority : 'danger',title : '¡Error!',message : 'Selecciona antes un SKU',
-                    settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
-            }
-        }
-    })//Fin UPC
     //Para obtener los IVAS con sus porcentajes y IDs
     $.ajax({
         url: $('#fk_id_impuesto').data('url'),
@@ -69,40 +42,38 @@ $(document).ready(function(){
     });
 
     $('#fk_id_proveedor').on('change',function(){
+        let _url = $(this).data('url'),;
         if($(this).val() > 0){
-            $("#fk_id_sku").select2({
-                disabled:false,
-                minimumInputLength:3,
-                ajax:{
-                    delay:500,
-                    url: $("#fk_id_proveedor").data('url'),
-                    dataType: 'json',
-                    data: function (params) {
-                        return {
-                            term: params.term,fk_id_socio_negocio:$('#fk_id_proveedor').val()};
-                    },
-                    processResults: function (data) {
-                        console.log(data)
-                        return {results: data}
-                    },
-                    error:function(){
-                        $.toaster({priority : 'danger',title : '¡Error!',message : 'Al parecer no ingresaste un SKU válido, verifica que el SKU sea el correcto',
-                        settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}}); 
-                    }
+            $.ajax({
+                url: _url,
+                data: "data",
+                dataType: "dataType",
+                success: function (response) {
+                    
                 }
             });
+            // $("#fk_id_upc").select2({
+            //     disabled:false,
+            //     minimumInputLength:3,
+            //     ajax:{
+            //         delay:500,
+            //         url: _url,
+            //         dataType: 'json',
+            //         data: function (params) {
+            //             return {
+            //                 term: params.term,fk_id_socio_negocio:$('#fk_id_proveedor').val()};
+            //         },
+            //         processResults: function (data) {
+            //             console.log(data)
+            //             return {results: data}
+            //         },
+            //         error:function(){
+            //             $.toaster({priority : 'danger',title : '¡Error!',message : 'Al parecer no ingresaste un SKU válido, verifica que el SKU sea el correcto',
+            //             settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}}); 
+            //         }
+            //     }
+            // });
         } else {
-            $('#fk_id_sku').val('');
-            $('#fk_id_sku').select2({
-                disabled:true,
-            });
-            $('#fk_id_proyecto').val('');
-            $('#fk_id_proyecto').select2({
-                disabled:true,
-                placeholder: "Seleccione primero el proveedor..."
-            });
-            $('#fk_id_upc').val('');
-            $('#activo_upc').prop('checked',false);
             $('#fk_id_upc').select2({
                 disabled:true,
                 placeholder: "Seleccione primero el proveedor..."
@@ -137,58 +108,6 @@ $(document).ready(function(){
             primeracarga = false;
         }else{
             primeracarga = false;
-        }
-    });
-
-    $('#fk_id_sku').on('change',function(){
-        if($(this).val() > 0){
-            $('#fk_id_proyecto').select2({
-                disabled: false,
-                minimumResultsForSearch: Infinity,
-                ajax:{
-                    url: $('#fk_id_proyecto').data('url'),
-                    dataType: 'json',
-                    data: function(){
-                        var upc = 'NULL'
-                        if($('#fk_id_upc').val()){
-                            upc = $('#fk_id_upc').val();
-                        }
-
-                        var sku = 'NULL'
-                        if($('#fk_id_sku').val()){
-                            sku = $('#fk_id_sku').val();
-                        }
-                        return{
-                            'param_js':proyectos_js,
-                            $fk_id_upc: upc,
-                            $fk_id_sku: sku
-                        }
-                    },
-                    cache:true,
-                    processResults: function (data) {
-                        if(data.length > 0){
-                            return {
-                                results: $.map(data, function (value) {
-                                    return {
-                                        id: value.id,
-                                        text: value.text
-                                    }
-                                })
-                            }
-                        }else{
-                            $.toaster({priority : 'warning',title : '¡Oooops!',message : 'No se encontraron proyectos. Verifica que el SKU y el UPC coincidan con un proyecto',
-                                settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}
-                            });
-                            return{
-                                results:{
-                                    id:0,
-                                    text: 'Sin proyecto'
-                                }
-                            }
-                        }
-                    }
-                }
-            });
         }
     });
 
@@ -508,8 +427,4 @@ function borrarFila(el) {
     $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
         settings:{'timeout':2000,'toaster':{'css':{'top':'5em'}}}});
     totalOferta();
-}
-
-function totalRow() {
-
 }

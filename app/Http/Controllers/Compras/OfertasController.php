@@ -69,6 +69,12 @@ class OfertasController extends ControllerBase
                     }
                 }]
             '),
+            'js_upcs' => Crypt::encryptString('"select":["id_upc","upc", "descripcion"],
+                "whereHas":[{
+                    "clientes":{
+                        "where":["fk_id_cliente",$fk_id_socio_negocio]
+                    }
+                }]'),
             'js_porcentaje'    => Crypt::encryptString('"select": ["tasa_o_cuota"], "conditions": [{"where":["id_impuesto", "$id_impuesto"]}], "limit": "1"'),
             'js_tiempo_entrega' => Crypt::encryptString('
                 "selectRaw": ["max(tiempo_entrega) as tiempo_entrega"],

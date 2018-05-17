@@ -89,7 +89,7 @@ class ProductosController extends ControllerBase
             'presentaciones'   => Presentaciones::join('gen_cat_unidades_medidas', 'gen_cat_unidades_medidas.id_unidad_medida', '=', 'adm_cat_presentaciones.fk_id_unidad_medida')
                                                 ->whereNotNull('clave')->selectRaw("Concat(cantidad,' ',clave) as text, id_presentacion as id")->pluck('text','id'),
             'sales'            => Sales::where('activo',1)->pluck('nombre','id_sal')->sortBy('nombre'),
-            'api_js'           => Crypt::encryptString('"select": ["nombre_comercial", "descripcion","fk_id_laboratorio"], "conditions": [{"where": ["id_upc","$id_upc"]}], "with": ["laboratorio"]'),
+            'api_js'           => Crypt::encryptString('"select": ["nombre_comercial", "descripcion","fk_id_laboratorio"],"with": ["laboratorio"], "conditions": [{"where": ["id_upc","$id_upc"]}]'),
             // 'upcs_js'          => Crypt::encryptString('
             // "select":["id_upc","upc","descripcion","marca","nombre_comercial"],
             // "conditions":
@@ -204,34 +204,35 @@ class ProductosController extends ControllerBase
     {
         $id_forma_farmaceutica = request()->id_forma;
         $id_presentaciones = request()->id_presentaciones;
-        $sales = json_decode(request()->arr_sales);
-        $especificaciones = json_decode(request()->arr_especificaciones);
-        $material_curacion = json_decode(request()->material_curacion ?? 0);
-        $upcs = Upcs::where('material_curacion',$material_curacion)->where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->where('activo',1)->with('laboratorio')->get();
-        if(isset($sales))
+        $data_sales = json_decode(request()->arr_sales);
+        $data_especificaciones = json_decode(request()->arr_especificaciones);
+        $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->where('activo',1)->with('laboratorio')->get();
+        if(isset($data_sales) && isset($data_especificaciones))
         {
-            return $this->filterUpcs($upcs,$sales,'presentaciones');
-        } 
-        if(isset($especificaciones))
-        {
-            return $this->filterUpcs($upcs,$especificaciones,'especificaciones');
+            $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
         }
-        return false;
+        else
+        {
+            $upcsDone = collect(json_decode($this->filterUpcs($upcs,$data_sales,$data_especificaciones)));
+            return $upcsDone;
+        }
     }
 
-    public function filterUpcs($upcs,$values,$relation)
+    public function filterUpcs($upcs,$data_sales,$data_especificaciones)
     {  
-        $upcFiltered = $upcs->filter(function($upc) use ($values,$relation){
-            $numRelationsInUpc = $upc->$relation->count();
-            $numRelationsInField = count($values);
-            if($relation == 'especificaciones')
+        $upcFiltered = $upcs->filter(function($upc) use ($data_sales,$data_especificaciones){
+            $numEspecRelations = $upc->especificaciones()->count();
+            $numPreseRelations = $upc->presentaciones()->count();
+            $numEspecData = count($data_especificaciones);
+            $numSalesData = count($data_sales);
+            if($numEspecRelations > 0)
             {
-                foreach ($upc->$relation as $upc_detalle)
+                foreach ($upc->especificaciones as $especificacion)
                 {
-                    if($numRelationsInUpc > 1)
+                    if($numEspecRelations > 1)
                     {
-                        $id_founded[] = array_search($upc_detalle->id_especificacion, $values);
-                        if($numRelationsInUpc == $numRelationsInField)
+                        $id_founded[] = array_search($especificacion->id_especificacion, $data_especificaciones);
+                        if($numEspecRelations == $numEspecData)
                         {
                             if(!in_array(false,$id_founded,true))
                             {
@@ -242,10 +243,10 @@ class ProductosController extends ControllerBase
                     }
                     else
                     {
-                        foreach ($values as $value)
+                        foreach ($data_especificaciones as $value)
                         {
                             $value = is_object($value) ? $value->id_especificacion : $value;
-                            if($upc_detalle->id_especificacion == $value)
+                            if($especificacion->id_especificacion == $value)
                             {
                                 return $upc;
                             }
@@ -253,35 +254,35 @@ class ProductosController extends ControllerBase
                     }
                 }
             }
-            else
+            if($numPreseRelations > 0)
             {
-                if($numRelationsInUpc > 1 && $numRelationsInField > 1)
+                if($numPreseRelations > 1 && $numSalesData > 1)
                 {
-                    foreach ($upc->$relation as $upc_detalle)
+                    foreach ($upc->presentaciones as $presentacion)
                     {
-                        foreach ($values as $value)
+                        foreach ($data_sales as $value)
                         {
-                            if($upc_detalle->fk_id_presentaciones == $value->fk_id_presentaciones && $upc_detalle->fk_id_sal == $value->fk_id_sal)
+                            if($presentacion->fk_id_presentaciones == $value->fk_id_presentaciones && $presentacion->fk_id_sal == $value->fk_id_sal)
                             {
                                 $id_presentaciones_founded[] = true;
                             }
                         }
                     }
-                    if($numRelationsInUpc == $numRelationsInField)
+                    if($numPreseRelations == $numSalesData)
                     {
-                        if(!in_array(false,$id_presentaciones_founded,true) && count($id_presentaciones_founded) == $numRelationsInUpc)
+                        if(!in_array(false,$id_presentaciones_founded,true) && count($id_presentaciones_founded) == $numPreseRelations)
                         {
                             return $upc;
                         }
                     }
                 }
-                else if($numRelationsInUpc == 1)
+                else if($numPreseRelations == 1)
                 {
-                    foreach ($upc->$relation as $upc_detalle)
+                    foreach ($upc->presentaciones as $presentacion)
                     {
-                        foreach ($values as $value)
+                        foreach ($data_sales as $value)
                         {
-                            if($upc_detalle->fk_id_presentaciones == $value->fk_id_presentaciones && $upc_detalle->fk_id_sal == $value->fk_id_sal)
+                            if($presentacion->fk_id_presentaciones == $value->fk_id_presentaciones && $presentacion->fk_id_sal == $value->fk_id_sal)
                             {
                                 return $upc;
                             }
@@ -293,9 +294,88 @@ class ProductosController extends ControllerBase
                     return false;
                 }
             }
+            
         });
-        return json_encode($upcFiltered);
+        return $upcFiltered;
     }
+
+    // public function filterUpcs($upcs,$values,$relation)
+    // {  
+    //     $upcFiltered = $upcs->filter(function($upc) use ($values,$relation){
+    //         $numRelationsInUpc = $upc->$relation->count();
+    //         $numRelationsInField = count($values);
+    //         if($relation == 'especificaciones')
+    //         {
+    //             foreach ($upc->$relation as $upc_detalle)
+    //             {
+    //                 if($numRelationsInUpc > 1)
+    //                 {
+    //                     $id_founded[] = array_search($upc_detalle->id_especificacion, $values);
+    //                     if($numRelationsInUpc == $numRelationsInField)
+    //                     {
+    //                         if(!in_array(false,$id_founded,true))
+    //                         {
+    //                             return $upc;
+    //                         }
+    //                     }
+
+    //                 }
+    //                 else
+    //                 {
+    //                     foreach ($values as $value)
+    //                     {
+    //                         $value = is_object($value) ? $value->id_especificacion : $value;
+    //                         if($upc_detalle->id_especificacion == $value)
+    //                         {
+    //                             return $upc;
+    //                         }
+    //                     }            
+    //                 }
+    //             }
+    //         }
+    //         else if ($relation == 'presentaciones')
+    //         {
+    //             if($numRelationsInUpc > 1 && $numRelationsInField > 1)
+    //             {
+    //                 foreach ($upc->$relation as $upc_detalle)
+    //                 {
+    //                     foreach ($values as $value)
+    //                     {
+    //                         if($upc_detalle->fk_id_presentaciones == $value->fk_id_presentaciones && $upc_detalle->fk_id_sal == $value->fk_id_sal)
+    //                         {
+    //                             $id_presentaciones_founded[] = true;
+    //                         }
+    //                     }
+    //                 }
+    //                 if($numRelationsInUpc == $numRelationsInField)
+    //                 {
+    //                     if(!in_array(false,$id_presentaciones_founded,true) && count($id_presentaciones_founded) == $numRelationsInUpc)
+    //                     {
+    //                         return $upc;
+    //                     }
+    //                 }
+    //             }
+    //             else if($numRelationsInUpc == 1)
+    //             {
+    //                 foreach ($upc->$relation as $upc_detalle)
+    //                 {
+    //                     foreach ($values as $value)
+    //                     {
+    //                         if($upc_detalle->fk_id_presentaciones == $value->fk_id_presentaciones && $upc_detalle->fk_id_sal == $value->fk_id_sal)
+    //                         {
+    //                             return $upc;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //             else
+    //             {
+    //                 return false;
+    //             }
+    //         }
+    //     });
+    //     return json_encode($upcFiltered);
+    // }
 
     public function getThisSkus($company, $id, Request $request)
     {

@@ -39,7 +39,6 @@
 					<div class="form-group">
 						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],[
 							'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
-							'data-url'=>companyRoute('getUpcs'),
 						]) }}
 					</div>
 				</div>

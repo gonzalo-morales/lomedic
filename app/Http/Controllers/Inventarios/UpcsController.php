@@ -19,6 +19,7 @@ use App\Http\Models\Administracion\SubgrupoProductos;
 use App\Http\Models\Administracion\Sales;
 use Illuminate\Http\Request;
 use App\Http\Models\Administracion\Especificaciones;
+use Illuminate\Support\Facades\Crypt;
 
 class UpcsController extends ControllerBase
 {
@@ -45,12 +46,13 @@ class UpcsController extends ControllerBase
                                                 ->whereNotNull('clave')->selectRaw("Concat(cantidad,' ',clave) as text, id_presentacion as id")->pluck('text','id'),
             'tipoproducto'      => TiposProductos::select('tipo_producto', 'id_tipo')->where('activo',1)->pluck('tipo_producto','id_tipo')->prepend('...',''),
             'presentacionventa' => PresentacionVenta::where('activo',1)->pluck('presentacion_venta','id_presentacion_venta')->sortBy('presentacion_venta')->prepend('...',''),
-            'formafarmaceutica' => FormaFarmaceutica::where('activo',1)->pluck('forma_farmaceutica','id_forma_farmaceutica')->sortBy('forma_farmaceutica')->prepend('...',''),
+            'formafarmaceutica' => FormaFarmaceutica::where('activo',1)->pluck('forma_farmaceutica','id_forma_farmaceutica')->sortBy('forma_farmaceutica'),
             'viaadministracion' => ViaAdministracion::where('activo',1)->pluck('via_administracion','id_via_administracion')->sortBy('via_administracion')->prepend('...',''),
             'monedas'           => Monedas::where('activo',1)->selectRaw("Concat(moneda,'-',descripcion) as text, id_moneda as id")->pluck('text', 'id')->prepend('...',''),
             'familias'          => FamiliasProductos::where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('...',''),
             'sales'             => Sales::where('activo',1)->pluck('nombre','id_sal')->sortBy('nombre'),
             'subgrupo'          => collect($subgrupos ?? [])->prepend('...','')->toArray(),
+            'js_subgrupo'       => Crypt::encryptString('"select": ["id_subgrupo","fk_id_grupo"], "conditions": [{"where": ["id_subgrupo","$id_subgrupo"]}], "with": ["grupo:id_grupo,sales,especificaciones"]'),
         ];
     }
 

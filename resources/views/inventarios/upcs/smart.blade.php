@@ -4,6 +4,9 @@
 	@parent
 	@notroute(['index'])
 		<script src="{{ asset('js/inventarios/upc.js') }}"></script>
+		<script>
+			const subgrupo_js = '{{ $js_subgrupo ?? '' }}';
+		</script>
 	@endif
 @endsection
 
@@ -12,7 +15,9 @@
     <div class="row">
     	<div class="col-sm-6 col-md-4">
     		<div class="form-group">
-    			{{ Form::cText('* Upc', 'upc') }}
+    			{{ Form::cText('* Upc', 'upc',[
+					'data-url'=>companyAction('Inventarios\ProductosController@getUpcs'),
+				]) }}
     		</div>
     	</div>
     	<div class="col-sm-6 col-md-4">
@@ -48,6 +53,9 @@
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-inventario" id="inventario-tab" aria-controls="inventario" aria-expanded="true">Compra</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-clientes" id="clientes-tab" aria-controls="clientes" aria-expanded="true">Clientes<span id="current_clients" class="badge badge-light">0</span></a>
 				</li>
 			</ul>
 			</div>
@@ -114,11 +122,33 @@
 				</div>
 				<div role="tabpanel" class="tab-pane fade" id="tab-upcs" aria-labelledby="upcs-tab">
 					<div class="row">
-						<div class="form-group col-sm-12 text-center">
-							{{ Form::cCheckboxBtn('¿Material de curación?','Si','material_curacion', $data['material_curacion'] ?? null, 'No') }}
+						<div class="col-sm-12 col-md-4">
+							<div class="form-group">
+								{{ Form::cSelect('* Subgrupo productos','fk_id_subgrupo_producto',$subgrupo ?? [],[
+								'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
+								'data-url'=>companyAction('HomeController@index').'/administracion.subgrupoproductos/api',
+								]) }}
+							</div>
 						</div>
-
-						<div id="tableIndicacion" class="col-sm-12 col-md-6">
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group">
+								{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],[
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
+								]) }}
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group">
+								{{ Form::cSelect('* Presentación','fk_id_presentaciones', $presentaciones ?? [],[
+									'style' => 'width:100%;',
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
+									]) }}
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div id="tableIndicacion" class="col" style="display:none;">
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -171,7 +201,7 @@
 							</div>
 						</div>
 						
-						<div id="tableSal" class="col-sm-12 col-md-6">
+						<div id="tableSal" class="col" style="display:none;">
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -242,7 +272,7 @@
 							</div>
 						</div><!--/table-->
 
-					<div id="tableMaterial" class="col-md-12" style="display:none">
+					<div id="tableMaterial" class="col" style="display:none;">
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">
@@ -320,13 +350,6 @@
 						</div>
 						<div class="col-sm-6 col-md-4">
 							<div class="form-group">
-								{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],[
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
-								]) }}
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-4">
-							<div class="form-group">
 								{{ Form::cSelect('* Vía Administración','fk_id_via_administracion',$viaadministracion ?? [],[
 									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
 								]) }}
@@ -339,34 +362,36 @@
 						<div class="form-group col-sm-6 col-md-2">
 							{{ Form::cNumber('* Costo base', 'costo_base',['placeholder'=>'Ejm: 10', 'max'=>'999']) }}
 						</div>
-						<div class="col-sm-6 col-md-2">
+						<div class="col-sm-6 col-md-5">
 							<div class="form-group">
 								{{ Form::cSelect('* Tipo de moneda','fk_id_moneda',$monedas ?? [],[
 									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
 								]) }}
 							</div>
 						</div>
-						<div class="col-sm-12 col-md-3">
+						<div class="col-sm-12 col-md-5">
 							<div class="form-group">
 								{{ Form::cSelect('* Tipo de familia','fk_id_tipo_familia',$familias ?? [],[
 									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
 								]) }}
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group">
-								{{ Form::cSelect('* Presentación','fk_id_presentaciones', $presentaciones ?? [],[
-									'style' => 'width:100%;',
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
-									]) }}
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">
-							<div class="form-group">
-								{{ Form::cSelect('* Subgrupo productos','fk_id_subgrupo_producto',$subgrupo ?? [],[
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
-								]) }}
-							</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane fade" id="tab-clientes" aria-labelledby="clientes-tab">
+					<div class="row">
+						<div class="col-md-12">
+							<table class="table table-responsive-sm table-striped table-hover">
+								<thead>
+									<tr>
+										<th>Clave cliente</th>
+										<th>Upc</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody id="tbodyClients">
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>

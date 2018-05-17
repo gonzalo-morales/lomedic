@@ -55,7 +55,6 @@ class Upcs extends ModelBase
         'fk_id_tipo_familia',
         'fk_id_subgrupo_producto',
         'fk_id_presentaciones',
-        'material_curacion'
     ];
 
     /**
