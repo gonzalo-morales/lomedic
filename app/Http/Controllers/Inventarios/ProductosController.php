@@ -207,13 +207,19 @@ class ProductosController extends ControllerBase
         $data_sales = json_decode(request()->arr_sales);
         $data_especificaciones = json_decode(request()->arr_especificaciones);
         $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->where('activo',1)->with('laboratorio')->get();
-        if(isset($data_sales) && isset($data_especificaciones))
+        if(count($data_sales) > 0 && count($data_especificaciones) > 0)
         {
+            dump($upcs);
+            dump('Entró con varios: ');
             $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
+            dump($upcsDone);
+            return $upcsDone;
         }
         else
         {
-            $upcsDone = collect(json_decode($this->filterUpcs($upcs,$data_sales,$data_especificaciones)));
+            dump('Entró con uno de ellos: ');
+            $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
+            dump($upcsDone);
             return $upcsDone;
         }
     }
@@ -223,10 +229,14 @@ class ProductosController extends ControllerBase
         $upcFiltered = $upcs->filter(function($upc) use ($data_sales,$data_especificaciones){
             $numEspecRelations = $upc->especificaciones()->count();
             $numPreseRelations = $upc->presentaciones()->count();
+            dump($upc->load('especificaciones','presentaciones'));
             $numEspecData = count($data_especificaciones);
             $numSalesData = count($data_sales);
+            $statusEspecificaciones = false;
+            $statusPresentaciones = false;
             if($numEspecRelations > 0)
             {
+                dump('Entró con especificacón: ');
                 foreach ($upc->especificaciones as $especificacion)
                 {
                     if($numEspecRelations > 1)
@@ -236,7 +246,7 @@ class ProductosController extends ControllerBase
                         {
                             if(!in_array(false,$id_founded,true))
                             {
-                                return $upc;
+                                $statusEspecificaciones = true;
                             }
                         }
 
@@ -248,7 +258,7 @@ class ProductosController extends ControllerBase
                             $value = is_object($value) ? $value->id_especificacion : $value;
                             if($especificacion->id_especificacion == $value)
                             {
-                                return $upc;
+                                $statusEspecificaciones = true;
                             }
                         }            
                     }
@@ -256,6 +266,7 @@ class ProductosController extends ControllerBase
             }
             if($numPreseRelations > 0)
             {
+                dump('Entró con presentación: ');
                 if($numPreseRelations > 1 && $numSalesData > 1)
                 {
                     foreach ($upc->presentaciones as $presentacion)
@@ -272,11 +283,11 @@ class ProductosController extends ControllerBase
                     {
                         if(!in_array(false,$id_presentaciones_founded,true) && count($id_presentaciones_founded) == $numPreseRelations)
                         {
-                            return $upc;
+                            $statusPresentaciones = true;
                         }
                     }
                 }
-                else if($numPreseRelations == 1)
+                if($numPreseRelations == 1)
                 {
                     foreach ($upc->presentaciones as $presentacion)
                     {
@@ -284,19 +295,34 @@ class ProductosController extends ControllerBase
                         {
                             if($presentacion->fk_id_presentaciones == $value->fk_id_presentaciones && $presentacion->fk_id_sal == $value->fk_id_sal)
                             {
-                                return $upc;
+                                $statusPresentaciones = true;
                             }
                         }
                     }
                 }
-                else
-                {
-                    return false;
-                }
             }
-            
+            if(($statusEspecificaciones == true && $statusPresentaciones == true) && ($upc->especificaciones()->exists() && $upc->presentaciones()->exists()))
+            {
+                dump('Primer if: ');
+                return $upc;
+            }
+            else if($statusEspecificaciones == true && ($upc->especificaciones()->exists() && !$upc->presentaciones()->exists()))
+            {
+                dump('segundo if: ');
+                return $upc;
+            }
+            else if($statusPresentaciones == true && ($upc->presentaciones()->exists() && !$upc->especificaciones()->exists()))
+            {
+                dump('tercer if: ');
+                return $upc;
+            }
+            else
+            {
+                dump('No entró: ');
+                return false;
+            }
         });
-        return $upcFiltered;
+        return json_encode($upcFiltered);
     }
 
     // public function filterUpcs($upcs,$values,$relation)
