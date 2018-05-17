@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Compras;
 
+use App\Http\Models\Inventarios\Upcs;
 use App\Http\Models\ModelCompany;
 use App\Http\Models\Ventas\Pedidos;
 use DB;
@@ -27,7 +28,6 @@ class DetalleSolicitudes extends ModelCompany
      * @var array
      */
     protected $fillable = [
-        'fk_id_sku',
         'fk_id_upc',
         'fk_id_proveedor',
         'cantidad',
@@ -49,14 +49,9 @@ class DetalleSolicitudes extends ModelCompany
         return $this->fields;
     }
 
-    public function sku()
-    {
-        return $this->hasOne('App\Http\Models\Inventarios\Productos','id_sku','fk_id_sku');
-    }
-
     public function upc()
     {
-        return $this->hasOne('App\Http\Models\Inventarios\Upcs','id_upc','fk_id_upc');
+        return $this->hasOne(Upcs::class,'id_upc','fk_id_upc');
     }
 
     public function unidad_medida()

@@ -39,7 +39,7 @@
 						{{ Form::cCheckboxBtn('Fraccionado','Si','fraccionado', $data['fraccionado'] ?? null, 'No') }}
 					</div>
 					<div  class="col-md-4 text-center mt-4">
-						{{ Form::cCheckboxBtn('Material de curación','Si','material_curacion', $data['material_curacion'] ?? null, 'No') }}
+						{{Form::cSelectWithDisabled('* Subgrupo','fk_id_subgrupo',$subgrupo ?? [],[],$subgrupo_data ?? [])}}
 					</div>
 					<div class="col-sm-6 col-md-6">
 						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '']) }}
@@ -54,7 +54,7 @@
 						{{Form::cSelectWithDisabled('* Clave Unidad Medida','fk_id_clave_unidad',$clavesunidades ?? [],['class'=>'select2','data-url'=>ApiAction('administracion.clavesunidades')])}}
 					</div>
 					<div class="form-group col-md-4">
-						{{Form::cNumber('* Precio','precio')}}
+						{{Form::cNumber('* Precio','precio',[],isset($data->precio) ? $data->precio : null,'4','.')}}
 					</div>
 					<div class="form-group col-md-4">
 						{{Form::cNumber('* Tope Receta','tope_receta')}}
@@ -128,12 +128,9 @@
 									<td>
 										{{ $detalle->concentracion->cantidad.' '.$detalle->concentracion->unidad->clave }}
 									</td>
-									@if(Route::currentRouteNamed(currentRouteName('show')))
-									@else
-										<td>
-											<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
-										</td>
-									@endif
+                                    <td>
+                                        <button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
+                                    </td>
 								</tr>
 							@endforeach
 						@endif
@@ -183,12 +180,9 @@
 										{{ Form::hidden('especificaciones['.$row.'][fk_id_especificacion]',$detalle->fk_id_especificacion) }}
 										{{ $detalle->especificacion }}
 									</td>
-									@if(Route::currentRouteNamed(currentRouteName('show')))
-									@else
-										<td>
-											<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
-										</td>
-									@endif
+                                    <td>
+                                        <button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
+                                    </td>
 								</tr>
 							@endforeach
 						@endif
@@ -196,70 +190,69 @@
 					</table>
 				</div>
 			</div><!--/detalle-->
+        </div>
+        <div class="w-100 card">
+            <div class="card-header">
+                <h1 class="text-info text-center">Productos</h1>
+                <div  class="col-md-12 text-center mt-4">
+                    <div class="alert alert-warning" role="alert">
+                        Recuerda que al cambiar <b>forma farmacéutica</b>, <b>presentación</b> o al <b>agregar una sal</b> se borrarán los productos actuales y se buscarán otros.
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" id="productos" data-url="{{companyAction('Inventarios\ProductosController@getRelatedSkus')}}">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs" id="skus" role="tablist">
+                        @notroute(['index','create'])
+                            @foreach($skus as $index=>$producto)
+                                <li class="nav-item">
+                                    <a class="nav-link {{$index == 0 ? 'active' : ''}}" id="sku_{{$index}}_tab" data-toggle="tab" href="#sku_{{$index}}" role="tab" aria-controls="sku_{{$index}}" aria-selected="{{$index == 0 ? 'true' : 'false'}}">{{$producto->sku}}</a>
+                                </li>
+                            @endforeach
+                        @endif
+                    </ul>
+                    <div class="tab-content" id="upcs">
+                        @notroute(['index','create'])
+                            @foreach($skus as $index=>$producto)
+                                <div class="tab-pane fade {{$index==0 ? 'active show' : ''}}" id="sku_{{$index}}" aria-labelledby="sku_{{$index}}_tab" role="tabpanel">
+                                    <table class="table table-responsive-sm table-hover" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>UPC</th>
+                                                <th>Nombre Comercial</th>
+                                                <th>Marca</th>
+                                                <th>Descripcion</th>
+                                                <th>Laboratorio</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($producto->upcs as $indice=>$upc)
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input name="productos[{{$indice}}][fk_id_upc]" type="hidden" value="0">
+                                                        <label class="form-check-label custom-control custom-checkbox">
+                                                            <input class="form-check-input custom-control-input" name="productos[{{$indice}}][fk_id_upc]" type="checkbox" value="{{$upc->id_upc}}" {{in_array($upc->id_upc,$data->productos->pluck('id_upc')->toArray()) ? 'checked' : ''}}>
+                                                            <span class="custom-control-indicator"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>{{$upc->upc}}</td>
+                                                <td>{{$upc->nombre_comercial}}</td>
+                                                <td>{{$upc->marca}}</td>
+                                                <td>{{$upc->descripcion}}</td>
+                                                <td>{{$upc->laboratorio->laboratorio}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
-		<div class="w-100 card">
-			<div class="card-header">
-				<h1 class="text-info text-center">Productos</h1>
-				<div  class="col-md-12 text-center mt-4">
-					<div class="alert alert-warning" role="alert">
-						Recuerda que al cambiar <b>forma farmacéutica</b>, <b>presentación</b> o al <b>agregar una sal</b> se borrarán los productos actuales y se buscarán otros.
-					</div>
-				</div>
-			</div>
-			<div class="card-body" id="productos" data-url="{{companyAction('Inventarios\ProductosController@getRelatedSkus')}}">
-				<div class="col-md-12">
-					<ul class="nav nav-tabs" id="skus" role="tablist">
-						@notroute(['index','create'])
-							@foreach($skus as $index=>$producto)
-								<li class="nav-item">
-									<a class="nav-link {{$index == 0 ? 'active' : ''}}" id="sku_{{$index}}_tab" data-toggle="tab" href="#sku_{{$index}}" role="tab" aria-controls="sku_{{$index}}" aria-selected="{{$index == 0 ? 'true' : 'false'}}">{{$producto->sku}}</a>
-								</li>
-							@endforeach
-						@endif
-					</ul>
-					<div class="tab-content" id="upcs">
-						@notroute(['index','create'])
-							@foreach($skus as $index=>$producto)
-								<div class="tab-pane fade {{$index==0 ? 'active show' : ''}}" id="sku_{{$index}}" aria-labelledby="sku_{{$index}}_tab" role="tabpanel">
-									<table class="table table-responsive-sm table-striped table-hover" width="100%">
-										<thead>
-											<tr>
-												<th></th>
-												<th>UPC</th>
-												<th>Nombre Comercial</th>
-												<th>Marca</th>
-												<th>Descripcion</th>
-												<th>Laboratorio</th>
-											</tr>
-										</thead>
-										<tbody>
-										@foreach($producto->upcs as $indice=>$upc)
-											<tr>
-												<td>
-													<div class="form-check">
-														<input name="productos[{{$indice}}][fk_id_upc]" type="hidden" value="0">
-														<label class="form-check-label custom-control custom-checkbox">
-															<input class="form-check-input custom-control-input" name="productos[{{$indice}}][fk_id_upc]" type="checkbox" value="{{$upc->id_upc}}" {{in_array($upc->id_upc,$data->productos->pluck('id_upc')->toArray()) ? 'checked' : ''}}>
-															<span class="custom-control-indicator"></span>
-														</label>
-													</div>
-												</td>
-												<td>{{$upc->upc}}</td>
-												<td>{{$upc->nombre_comercial}}</td>
-												<td>{{$upc->marca}}</td>
-												<td>{{$upc->descripcion}}</td>
-												<td>{{$upc->laboratorio->laboratorio}}</td>
-											</tr>
-										@endforeach
-										</tbody>
-									</table>
-								</div>
-							@endforeach
-						@endif
-					</div>
-				</div>
-			</div>
-		</div>
     </div>
 @endsection

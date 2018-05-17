@@ -6,7 +6,9 @@ use App\Http\Controllers\ControllerBase;
 use App\Http\Controllers\Inventarios\ProductosController;
 use App\Http\Models\Administracion\Especificaciones;
 use App\Http\Models\Administracion\FormaFarmaceutica;
+use App\Http\Models\Administracion\GrupoProductos;
 use App\Http\Models\Administracion\Presentaciones;
+use App\Http\Models\Administracion\SubgrupoProductos;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
@@ -16,6 +18,7 @@ use App\Http\Models\Administracion\ClavesUnidades;
 use App\Http\Models\Administracion\Impuestos;
 use App\Http\Models\Administracion\Sales;
 use App\Http\Models\Inventarios\Upcs;
+use function foo\func;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
@@ -28,6 +31,25 @@ class ClaveClienteProductosController extends ControllerBase
     
     public function getDataView($entity = null)
     {
+        $grupos = GrupoProductos::where('activo',1)->get()->sortBy('grupo');
+
+        foreach ($grupos as $grupo) {
+            $_subgrupos = SubgrupoProductos::where('fk_id_grupo',$grupo['id_grupo'])->where('activo',1)->get()->sortBy('subgrupo')->toArray();
+            if(!empty($_subgrupos)){
+                    $subgrupos[$grupo['grupo']] = collect($_subgrupos)->pluck('subgrupo','id_subgrupo');
+            }
+            $subgrupo_data[$grupo['grupo']] = collect($_subgrupos)->mapWithKeys(function ($item) use ($grupo){
+                $sales = $grupo->sales  ? 'true' : 'false';
+                $especificaciones = $grupo->especificaciones ? 'true' : 'false';
+                return [
+                    $item['id_subgrupo'] => [
+                        "data-grupo"=>$item['fk_id_grupo'],
+                        "data-sales"=>$sales,
+                        "data-especificaciones"=>$especificaciones]
+                ];
+            })->toArray();
+        }
+
         $claveproductoservicio = null;
         $upcs = null;
         if($entity){
@@ -82,7 +104,9 @@ class ClaveClienteProductosController extends ControllerBase
             'js_cantidad_upc' => Crypt::encryptString('"conditions":[{"where":["id_upc","$fk_id_upc"]}],"whereHas":[{"skus": {"where": ["fk_id_sku", "$fk_id_sku"]}}],"pivot":["skus"]'),
             'js_clave_producto_servicio' => Crypt::encryptString('"selectRaw":["id_clave_producto_servicio as id, CONCAT(clave_producto_servicio,\' - \',descripcion) as text"],"conditions":[{"where":["clave_producto_servicio","ILIKE","%$term%"]},{"orWhere":["descripcion","ILIKE","%$term%"]}]'),
             'js_clave_unidad' => Crypt::encryptString('"selectRaw":["id_clave_unidad as id, CONCAT(clave_unidad,\' - \',descripcion) as text"],"conditions":[{"where":["clave_unidad","ILIKE","%$term%"]},{"orWhere":["descripcion","ILIKE","%$term%"]}]'),
-            'especificaciones' => Especificaciones::where('activo',1)->pluck('especificacion','id_especificacion')
+            'especificaciones' => Especificaciones::where('activo',1)->pluck('especificacion','id_especificacion'),
+            'subgrupo'          => collect($subgrupos ?? [])->toArray(),
+            'subgrupo_data' => $subgrupo_data ?? []
             ];
     }
 

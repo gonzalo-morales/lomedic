@@ -9,10 +9,11 @@
 	@parent
 	@if(!Route::currentRouteNamed(currentRouteName('index')))
     <script type="text/javascript">
-		var proveedores_js = '{{$js_proveedores ?? ''}}';
 		var sucursales_js = '{{$js_sucursales ?? ''}}';
 		var usuarios_js = '{{$js_usuarios ?? ''}}';
 		var porcentaje_js = '{{ $js_porcentaje ?? '' }}';
+		var upcs_js = '{{ $js_upcs ?? '' }}'
+		var proveedores_js = '{{ $js_proveedores ?? '' }}'
     </script>
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
 	@endif
@@ -91,29 +92,14 @@
 				<div class="card-header">
 					<fieldset name="detalle-form" id="detalle-form">
 						<div class="row">
-							<div class="form-group input-field col-md-3 col-sm-6">
-								<div id="whaitplease" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-									Espere porfavor... <i class="material-icons align-middle loading">cached</i>
-								</div>
-								{{Form::cSelectWithDisabled('*SKU','fk_id_sku',$skus??[],['id'=>'fk_id_sku','class'=>'select2'])}}
+							<div class="form-group input-field col-md-6 col-sm-6">
+								{{Form::cSelect('* UPC','fk_id_upc',null,['data-url'=>ApiAction('inventarios.upcs')])}}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
-								{{Form::label('fk_id_upc','* Código de barras')}}
-								<div id="loadingUPC" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-									Cargando datos... <i class="material-icons align-middle loading">cached</i>
-								</div>
-								{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
-								'data-url'=>companyAction('Inventarios\ProductosController@getThisSkus',['id'=>'?id']),
-								'class'=>'form-control','style'=>'width:100%']) !!}
-							</div>
-							<div class="form-group input-field col-md-3 col-sm-6">
-                                <div id="loadingproveedor" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
-                                    Cargando datos... <i class="material-icons align-middle loading">cached</i>
-								</div>
                                 {{Form::cSelect('Proveedor','fk_id_proveedor',$proveedores ?? [],[
 									'style' => 'width:100%;',
 									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
-									'data-url'=>companyAction('HomeController@index').'/sociosnegocio.sociosnegocio/api',
+									'data-url'=>ApiAction('sociosnegocio.sociosnegocio'),
 								])}}
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
@@ -172,7 +158,6 @@
 						<thead>
 							<tr>
 								<th>Documento</th>
-								<th>SKU(s)</th>
 								<th>UPC(s)</th>
 								<th>Proveedor</th>
 								<th>Fecha necesidad</th>
@@ -197,12 +182,8 @@
 									<td>
 										{!! Form::hidden('relations[has][detalle]['.$index.'][fecha_necesario]',$detalle->fecha_necesario ?? Carbon\Carbon::now()->toDateString()) !!}
 										{{Form::hidden('relations[has][detalle]['.$index.'][fk_id_tipo_documento_base]',$detalle->fk_id_tipo_documento)}}
-										{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 										{!! Form::hidden('relations[has][detalle]['.$index.'][fk_id_upc]',$detalle->fk_id_upc) !!}
 										{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][impuesto_total]',$detalle->impuesto_total,['class'=>'totalImpuestoThisRow']) !!}
-										{{$detalle->sku->sku ?? ''}}
-									</td>
-									<td>
 										{{$detalle->upc->upc ?? ''}}
 									</td>
 									<td>
@@ -251,11 +232,8 @@
 											{{$detalle->fk_id_documento_base ?? 'N/A'}}
 										</th>
 										<td>
-											<img style="max-height:40px" src="img/sku.png" alt="sku"/>
-											{{$detalle->sku->sku}}
 											{!! Form::hidden('',$detalle->id_documento_detalle,['id'=>'index']) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][id_documento_detalle]',$detalle->id_documento_detalle,['class'=>'id']) !!}
-											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_sku]',$detalle->fk_id_sku) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_solicitud]',$detalle->fk_id_solicitud) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_documento_base]',$detalle->fk_id_documento_base) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_upc]',$detalle->fk_id_upc) !!}
@@ -265,8 +243,6 @@
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][fk_id_proyecto]',$detalle->fk_id_proyecto) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][cantidad]',$detalle->cantidad) !!}
 											{!! Form::hidden('relations[has][detalle]['.$detalle->id_documento_detalle.'][impuesto_total]',$detalle->impuesto_total,['class'=>'totalImpuestoThisRow']) !!}
-										</td>
-										<td>
 											<img style="max-height:40px" src="img/upc.png" alt="upc"/>
 											{{$detalle->upc->upc ?? ''}}
 										</td>
