@@ -219,12 +219,12 @@ class ProductosController extends ControllerBase
         $id_presentaciones = request()->id_presentaciones;
         $data_sales = json_decode(request()->arr_sales);
         $data_especificaciones = json_decode(request()->arr_especificaciones);
-        $module_upc = request()->upc;
+        $module_upc = request()->upc ?? null;
         $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->where('activo',1)->with('laboratorio')->get();
         if(count($data_sales) > 0 && count($data_especificaciones) > 0)
         {
             $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
-            if($module_upc !== 'true')
+            if(!empty($module_upc))
             {
                 return json_encode($upcsDone);
             }
@@ -242,7 +242,7 @@ class ProductosController extends ControllerBase
         else
         {
             $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
-            if($module_upc !== 'true')
+            if(!empty($module_upc))
             {
                 return json_encode($upcsDone);
             }

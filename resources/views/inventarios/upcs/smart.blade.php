@@ -124,7 +124,7 @@
 					<div class="row">
 						<div class="col-sm-12 col-md-4">
 							<div class="form-group">
-								{{ Form::cSelectWithDisabled('* Subgrupo productos','fk_id_subgrupo_producto',$subgrupo ?? [],[],$subgrupo_data ?? []) }}
+								{{ Form::cSelectWithDisabled('* Subgrupo productos','fk_id_subgrupo',$subgrupo ?? [],[],$subgrupo_data ?? []) }}
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-4">
@@ -248,8 +248,8 @@
 													<td>
 														<input type="hidden" value="{{$detalle->id_detalle}}" name="relations[has][detalle][{{$row}}][id_detalle]">
 														{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_upc]',$detalle->fk_id_upc) }}
-														{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_presentaciones]',$detalle->fk_id_presentaciones) }}
-														{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_sal]',$detalle->fk_id_sal) }}
+														{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_presentaciones]',$detalle->fk_id_presentaciones,['class' => 'id_concentracion']) }}
+														{{ Form::hidden('relations[has][detalle]['.$row.'][fk_id_sal]',$detalle->fk_id_sal,['class' => 'id_sal']) }}
 														{{ $detalle->sal->nombre }}
 													</td>
 													<td>

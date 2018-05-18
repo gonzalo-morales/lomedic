@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    ($('#fk_id_subgrupo_producto option:selected').val() > 0)
+        ? showMeTheTables(optionSelected = $('#fk_id_subgrupo_producto option:selected').data())
+        : '';
 	var from_picker = $('#activo_desde').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	var to_picker = $('#activo_hasta').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 
@@ -104,11 +107,8 @@ $(document).ready(function () {
 	$('#fk_id_presentaciones').on('change',function(){
 		return validateFieldsforUPC();
 	})
-	if($('#fk_id_forma_farmaceutica').val() > 0 && $('#fk_id_presentaciones').val() > 0 && $('#tbodyPresentation tr').length > 0){
-		getUpcs();
-	}
-	if($('#fk_id_forma_farmaceutica').val() > 0 && $('#fk_id_presentaciones').val() > 0 && $('#tbodyMaterials tr').length > 0){
-		getUpcs();
+	if($('#fk_id_forma_farmaceutica').val() > 0 && $('#fk_id_presentaciones').val() > 0 && ($('#tbodyPresentation tr').length > 0 || $('#tbodyMaterials tr').length > 0)){
+		validateFieldsforUPC()
 	}
 	
 	$(document).on('submit',function (e) {
@@ -246,7 +246,6 @@ function getUpcs($matTable,$preTable,formaFarma){
 	let	idPresentaciones = $('#fk_id_presentaciones').val();
     let sales = [];
     let especificaciones = [];
-    let upc = false;
 	if($preTable.length > 0){
 		for (const row of $preTable) {
 			let sal =  +$(row).find('.id_sal').val();
@@ -270,7 +269,6 @@ function getUpcs($matTable,$preTable,formaFarma){
             'id_presentaciones':idPresentaciones,
             'arr_especificaciones':JSON.stringify(especificaciones),
             'arr_sales':JSON.stringify(sales),
-            'upc':upc,
         },
         dataType: "json",
         success: function (response) {

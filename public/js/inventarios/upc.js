@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    ($('#fk_id_subgrupo option:selected').val() > 0)
+        ? showMeTheTables(optionSelected = $('#fk_id_subgrupo option:selected').data())
+        : '';
     $('#addIndication').on('click', function () {
         addIndication();
     });
@@ -12,7 +15,7 @@ $(document).ready(function () {
 		return validateFieldsforUPC();
 	})
     $(document).on('submit', function (e) {
-        if($('#fk_id_subgrupo_producto').val() == ''){
+        if($('#fk_id_subgrupo').val() == ''){
             e.preventDefault();
             mensajeAlerta("Es necesario que ingreses", "danger");
         }
@@ -29,13 +32,16 @@ $(document).ready(function () {
         tab = tab.split('#');
         $('#' + tab[1]).addClass('active').addClass('show');
     });
-    $('#fk_id_subgrupo_producto').on('change',function(){
+    $('#fk_id_subgrupo').on('change',function(){
         $('#tbodyIndication').empty();
         $('#tbodyPresentation').empty();
         $('#tbodyMaterials').empty();
-        const optionSelected = $('#fk_id_subgrupo_producto option:selected').data()
+        const optionSelected = $('#fk_id_subgrupo option:selected').data()
         showMeTheTables(optionSelected);
     })
+	if($('#fk_id_forma_farmaceutica').val() > 0 && $('#fk_id_presentaciones').val() > 0 && ($('#tbodyPresentation tr').length > 0 || $('#tbodyMaterials tr').length > 0)){
+		validateFieldsforUPC();
+	}
 });
 
 function showMeTheTables(optionSelected){
@@ -165,24 +171,25 @@ function validateFieldsforUPC(){
     }
 }
 
-// function appendToTable(fields,tablebody,nameRelation,nameDatatoSave){
-//     console.log(tablebody)
-//     let i = tablebody.children().length;
-//     let row_id = i > 0 ? + tablebody.children().last().find('#index').val()+1 : 0;
-//     for (const key in fields) {
-//         if (fields.hasOwnProperty(key)){
-//             console.log(fields[key]);
-//             tablebody.append(
-//                 '<tr>'+
-//                 '<td>' + '<input type="hidden" id="index" value="'+row_id+'"><input type="hidden" name="especificaciones['+row_id+'][fk_id_especificacion]" value="'+indicationId+'">' + indicationText + '</td>' +
-//                 '<td>' + '<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>' + '</td>' +
-//                  +'</tr>'
-//             );
-//         }
-//     }
-//     mensajeAlerta("Elemento(s) agregado(s) con éxito","success");
-//     $('[data-toggle]').tooltip();
-// }
+function addUpcs(response){
+	let $tbody = $('#tbodyClients');
+	$tbody.empty();
+	for (const key in response) {
+		if (response.hasOwnProperty(key)) {
+			$tbody.append(
+				'<tr>'+
+				'<td>' + response[key].upc + '</td>' +
+				'<td>' + response[key].nombre_comercial + '</td>' +
+				'<td>' + response[key].descripcion + '</td>' +
+				'<td>' + response[key].laboratorio.laboratorio + '</td>' +
+				'<td>' + '$' + response[key].costo_base + '</td>' +
+				+'</tr>'
+			);
+		}
+	}
+    mensajeAlerta("UPC(s) obtenidos con éxito.","success");
+    $('[data-toggle]').tooltip();
+}
 
 function getUpcs($matTable,$preTable,formaFarma){
 	let	idPresentaciones = $('#fk_id_presentaciones').val();
@@ -218,7 +225,7 @@ function getUpcs($matTable,$preTable,formaFarma){
         success: function (response) {
             let type = typeof(response);
             if(response.length > 0 || (type == "object" && Object.keys(response).length > 0)){
-                (type == "object") ? $('#current_upcs').text(Object.keys(response).length) : $('#current_upcs').text(response.length);
+                (type == "object") ? $('#current_clients').text(Object.keys(response).length) : $('#current_clients').text(response.length);
                 addUpcs(response);
             }else{
                 mensajeAlerta("Al parecer no hay UPC's con las características indicadas, verifica que la presentación, forma farmacéutica y la especificación sean correctas.","danger");

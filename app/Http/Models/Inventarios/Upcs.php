@@ -53,7 +53,7 @@ class Upcs extends ModelBase
         'costo_base',
         'fk_id_moneda',
         'fk_id_tipo_familia',
-        'fk_id_subgrupo_producto',
+        'fk_id_subgrupo',
         'fk_id_presentaciones',
     ];
 
@@ -92,7 +92,7 @@ class Upcs extends ModelBase
         'costo_base' => 'required',
         'fk_id_moneda' => 'required',
         'fk_id_tipo_familia' => 'required',
-        'fk_id_subgrupo_producto' => 'required',
+        'fk_id_subgrupo' => 'required',
         'fk_id_presentaciones' => 'required'
     ];
 
