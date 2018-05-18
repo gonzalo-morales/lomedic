@@ -224,7 +224,7 @@ class ProductosController extends ControllerBase
         if(count($data_sales) > 0 && count($data_especificaciones) > 0)
         {
             $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
-            if(!empty($module_upc))
+            if(empty($module_upc))
             {
                 return json_encode($upcsDone);
             }
@@ -242,7 +242,7 @@ class ProductosController extends ControllerBase
         else
         {
             $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
-            if(!empty($module_upc))
+            if(empty($module_upc))
             {
                 return json_encode($upcsDone);
             }

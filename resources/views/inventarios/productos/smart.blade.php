@@ -126,18 +126,18 @@
 										{{ Form::cSelect('Familia', 'fk_id_familia', $familia ?? [],['class'=>'select2']) }}
 									</div>
 								</div>
-								<div class="col-sm-12 col-md-12 row">
+								<div class="row">
 									<div class="col-sm-12 col-md-3 text-center">
 										<div class="form-group">
 											{{ Form::cCheckboxBtn('Estatus', 'Activo', 'activo', $data['activo'] ?? null, 'Inactivo') }}
 										</div>
 									</div>
-									<div class="col-sm-6 col-md-6">
+									<div class="col-sm-6 col-md-4">
 										<div class="form-group">
 											{{ Form::cText('Desde', 'activo_desde') }}
 										</div>
 									</div>
-									<div class="col-sm-6 col-md-6">
+									<div class="col-sm-6 col-md-4">
 										<div class="form-group">
 											{{ Form::cText('Hasta', 'activo_hasta') }}
 										</div>

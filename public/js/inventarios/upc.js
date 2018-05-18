@@ -17,7 +17,11 @@ $(document).ready(function () {
     $(document).on('submit', function (e) {
         if($('#fk_id_subgrupo').val() == ''){
             e.preventDefault();
-            mensajeAlerta("Es necesario que ingreses", "danger");
+            mensajeAlerta("Es necesario que ingreses el Subgrupo para posteriormente indicar su composición.", "danger");
+        }
+        if($('#tbodyPresentation tr').length == 0 && $('#tbodyMaterials tr').length == 0){
+            e.preventDefault();
+            mensajeAlerta("Es necesario indicar la(s) sales y/o materiales del UPC", "danger");
         }
     });
     $('[data-toggle]').tooltip();
@@ -166,8 +170,6 @@ function validateFieldsforUPC(){
     const $preTable = $('#tbodyPresentation tr');
     if($matTable.length > 0 || $preTable.length > 0){
         return getUpcs($matTable,$preTable,formaFarma);
-    } else{
-        return mensajeAlerta("Necesito de mínimo: <ul><li>Una sal y/o Una especificación del material</li><li>Forma farmacéutica</li></ul> Para poder mostrar los UPCs relacionados.","warning",10000);
     }
 }
 
@@ -187,7 +189,7 @@ function addUpcs(response){
 			);
 		}
 	}
-    mensajeAlerta("UPC(s) obtenidos con éxito.","success");
+    mensajeAlerta("Detectamos que este UPC cuenta con las mismas características que otros ya <b>relacionados a claves Cliente</b>, le recomendamos verificar en la pestaña <b>Clientes</b>.","success");
     $('[data-toggle]').tooltip();
 }
 
@@ -228,7 +230,7 @@ function getUpcs($matTable,$preTable,formaFarma){
                 (type == "object") ? $('#current_clients').text(Object.keys(response).length) : $('#current_clients').text(response.length);
                 addUpcs(response);
             }else{
-                mensajeAlerta("Al parecer no hay UPC's con las características indicadas, verifica que la presentación, forma farmacéutica y la especificación sean correctas.","danger");
+                mensajeAlerta("Al parecer este UPC <b>no se encuentra relacionado a una clave cliente</b>, en caso requerido verifica los datos","warning");
             }
         }
     });

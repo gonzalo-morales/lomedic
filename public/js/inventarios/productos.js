@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    ($('#fk_id_subgrupo_producto option:selected').val() > 0)
-        ? showMeTheTables(optionSelected = $('#fk_id_subgrupo_producto option:selected').data())
+    ($('#fk_id_subgrupo option:selected').val() > 0)
+        ? showMeTheTables(optionSelected = $('#fk_id_subgrupo option:selected').data())
         : '';
 	var from_picker = $('#activo_desde').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	var to_picker = $('#activo_hasta').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
