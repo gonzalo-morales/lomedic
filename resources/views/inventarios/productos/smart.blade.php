@@ -39,6 +39,7 @@
 					<div class="form-group">
 						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],[
 							'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
+							'data-url'=>companyAction('Inventarios\ProductosController@getUpcs'),
 						]) }}
 					</div>
 				</div>
@@ -108,38 +109,35 @@
             <div id="clothing-nav-content" class="tab-content">
                 <div role="tabpanel" class="tab-pane fade show active" id="tab-general" aria-labelledby="general-tab">
 					<div class="row">
-						<div class="col-sm-12 col-md-6">
+						<div class="col-sm-12 col-md-4">
 							<div class="row">
-								<div class="col-sm-12 col-md-6 col-lg-4">
+								<div class="col-sm-12 col-md-6">
 									<div class="form-group">
 										{{ Form::cSelect('* Impuesto', 'fk_id_impuesto', $impuesto ?? [],['class'=>'select2']) }}
 									</div>
 								</div>
-								<div class="col-sm-12 col-md-6 col-lg-4">
+								<div class="col-sm-12 col-md-6">
 									<div class="form-group">
-										{{ Form::cSelect('* Subgrupo', 'fk_id_subgrupo', $subgrupo ?? [],['class'=>'select2']) }}
+											{{ Form::cSelectWithDisabled('* Subgrupo productos','fk_id_subgrupo',$subgrupo ?? [],[],$subgrupo_data ?? []) }}
 									</div>
 								</div>
-								<div class="col-sm-12 col-md-6 col-lg-4">
+								<div class="col-md-12">
 									<div class="form-group">
 										{{ Form::cSelect('Familia', 'fk_id_familia', $familia ?? [],['class'=>'select2']) }}
 									</div>
 								</div>
 								<div class="col-sm-12 col-md-12 row">
-									<div class="form-group col-sm-12 col-md-3 text-center">
-										{{ Form::cCheckboxBtn('¿Material de curación?','Si','material_curacion', $data['material_curacion'] ?? null, 'No') }}
-									</div>
 									<div class="col-sm-12 col-md-3 text-center">
 										<div class="form-group">
 											{{ Form::cCheckboxBtn('Estatus', 'Activo', 'activo', $data['activo'] ?? null, 'Inactivo') }}
 										</div>
 									</div>
-									<div class="col-sm-6 col-md-3">
+									<div class="col-sm-6 col-md-6">
 										<div class="form-group">
 											{{ Form::cText('Desde', 'activo_desde') }}
 										</div>
 									</div>
-									<div class="col-sm-6 col-md-3">
+									<div class="col-sm-6 col-md-6">
 										<div class="form-group">
 											{{ Form::cText('Hasta', 'activo_hasta') }}
 										</div>
@@ -148,7 +146,7 @@
 							</div>
 						</div>
 
-						<div id="tableSal" class="col-sm-12 col-md-6">
+						<div id="tableSal" class="col" style="display:none">
 							<div class="row">
 								<div class="col-sm-12">
 									@if(!Route::currentRouteNamed(currentRouteName('show')))
@@ -223,7 +221,7 @@
 							</div>
 						</div>
 
-						<div id="tableMaterial" class="col-sm-12 col-md-6" style="display:none">
+						<div id="tableMaterial" class="col" style="display:none">
 							@if(!Route::currentRouteNamed(currentRouteName('show')))
 								<div class="card-header">
 									<form id="overallForm">

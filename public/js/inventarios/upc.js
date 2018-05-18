@@ -33,38 +33,23 @@ $(document).ready(function () {
         $('#tbodyIndication').empty();
         $('#tbodyPresentation').empty();
         $('#tbodyMaterials').empty();
-        $.ajax({
-            url: $(this).data('url'),
-            data: {
-                'param_js':subgrupo_js,
-                $id_subgrupo:$(this).val(),
-            },
-            dataType: "json",
-            success: function (response) {
-                if(response.length > 0){
-                    const sal = (response[0].grupo.sales);
-                    const especificacion = response[0].grupo.especificaciones;
-                    showMeTheTables(sal,especificacion);
-                } else{
-                    mensajeAlerta("Verifica que el subgrupo seleccionado cuente con la posibilidad de agregar sales o especificaciones","warning")
-                }
-            }
-        });
+        const optionSelected = $('#fk_id_subgrupo_producto option:selected').data()
+        showMeTheTables(optionSelected);
     })
 });
 
-function showMeTheTables(sal,especificacion){
+function showMeTheTables(optionSelected){
     let $tIndication = $('#tableIndicacion');
     let $tSal = $('#tableSal');
     let $tMaterial = $('#tableMaterial');
-    if(sal == true){
+    if(optionSelected.sales == true){
         $tIndication.show('slow');
         $tSal.show('slow');
     } else{
         $tIndication.hide('slow');
         $tSal.hide('slow');
     }
-    if(especificacion == true){
+    if(optionSelected.especificaciones == true){
         $tMaterial.show('slow');
     } else{
         $tMaterial.hide('slow');
@@ -203,6 +188,7 @@ function getUpcs($matTable,$preTable,formaFarma){
 	let	idPresentaciones = $('#fk_id_presentaciones').val();
     let sales = [];
     let especificaciones = [];
+    let upc = true;
 	if($preTable.length > 0){
 		for (const row of $preTable) {
 			let sal =  +$(row).find('.id_sal').val();
@@ -226,6 +212,7 @@ function getUpcs($matTable,$preTable,formaFarma){
             'id_presentaciones':idPresentaciones,
             'arr_especificaciones':JSON.stringify(especificaciones),
             'arr_sales':JSON.stringify(sales),
+            'upc':upc,
         },
         dataType: "json",
         success: function (response) {

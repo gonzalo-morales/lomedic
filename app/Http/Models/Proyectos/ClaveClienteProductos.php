@@ -67,10 +67,10 @@ class ClaveClienteProductos extends ModelCompany
         return $this->hasMany(ProyectosProductos::class,'fk_id_clave_cliente_producto','id_clave_cliente_producto');
     }
 
-    public function producto()
-    {
-        return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
-    }
+    // public function producto()
+    // {
+    //     return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
+    // }
 
     public function impuesto()
     {

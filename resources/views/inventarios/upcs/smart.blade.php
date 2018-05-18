@@ -124,10 +124,7 @@
 					<div class="row">
 						<div class="col-sm-12 col-md-4">
 							<div class="form-group">
-								{{ Form::cSelect('* Subgrupo productos','fk_id_subgrupo_producto',$subgrupo ?? [],[
-								'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '',
-								'data-url'=>companyAction('HomeController@index').'/administracion.subgrupoproductos/api',
-								]) }}
+								{{ Form::cSelectWithDisabled('* Subgrupo productos','fk_id_subgrupo_producto',$subgrupo ?? [],[],$subgrupo_data ?? []) }}
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-4">

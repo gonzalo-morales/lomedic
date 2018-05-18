@@ -30,12 +30,23 @@ class UpcsController extends ControllerBase
     
     public function getDataView($entity = null)
     {
-        $grupos = GrupoProductos::where('activo',1)->pluck('grupo','id_grupo')->sortBy('grupo');
+        $grupos = GrupoProductos::where('activo',1)->get()->sortBy('grupo');
 
-        foreach ($grupos as $id => $grupo) {
-            $subgrupo = SubgrupoProductos::where('fk_id_grupo',$id)->where('activo',1)->pluck('subgrupo','id_subgrupo')->sortBy('subgrupo')->toArray();
-            if(!empty($subgrupo))
-            { $subgrupos[$grupo] = $subgrupo; }
+        foreach ($grupos as $grupo) {
+            $_subgrupos = SubgrupoProductos::where('fk_id_grupo',$grupo['id_grupo'])->where('activo',1)->get()->sortBy('subgrupo')->toArray();
+            if(!empty($_subgrupos)){
+                    $subgrupos[$grupo['grupo']] = collect($_subgrupos)->pluck('subgrupo','id_subgrupo');
+            }
+            $subgrupo_data[$grupo['grupo']] = collect($_subgrupos)->mapWithKeys(function ($item) use ($grupo){
+                $sales = $grupo->sales  ? 'true' : 'false';
+                $especificaciones = $grupo->especificaciones ? 'true' : 'false';
+                return [
+                    $item['id_subgrupo'] => [
+                        "data-grupo"=>$item['fk_id_grupo'],
+                        "data-sales"=>$sales,
+                        "data-especificaciones"=>$especificaciones]
+                ];
+            })->toArray();
         }
         return [
             'especificaciones'  => Especificaciones::where('activo',1)->pluck('especificacion','id_especificacion')->sortBy('especificacion'),
@@ -51,8 +62,8 @@ class UpcsController extends ControllerBase
             'monedas'           => Monedas::where('activo',1)->selectRaw("Concat(moneda,'-',descripcion) as text, id_moneda as id")->pluck('text', 'id')->prepend('...',''),
             'familias'          => FamiliasProductos::where('activo',1)->pluck('descripcion','id_familia')->sortBy('descripcion')->prepend('...',''),
             'sales'             => Sales::where('activo',1)->pluck('nombre','id_sal')->sortBy('nombre'),
-            'subgrupo'          => collect($subgrupos ?? [])->prepend('...','')->toArray(),
-            'js_subgrupo'       => Crypt::encryptString('"select": ["id_subgrupo","fk_id_grupo"], "conditions": [{"where": ["id_subgrupo","$id_subgrupo"]}], "with": ["grupo:id_grupo,sales,especificaciones"]'),
+            'subgrupo'          => collect($subgrupos ?? [])->toArray(),
+            'subgrupo_data'     => $subgrupo_data ?? []
         ];
     }
 
