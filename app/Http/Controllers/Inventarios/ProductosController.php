@@ -115,12 +115,12 @@ class ProductosController extends ControllerBase
     public function store(Request $request, $company, $compact = false)
     {
         $return = parent::store($request, $company, true);
-
+        
         if(is_array($return))
         {
+            $entity = $return['entity'];
             if($request->especificaciones)
             {
-                $entity = $return['entity'];
                 $sync = [];
                 foreach ($request->especificaciones as $especificacion){
                     $sync[]=['fk_id_especificacion'=>$especificacion['fk_id_especificacion']];
@@ -183,34 +183,17 @@ class ProductosController extends ControllerBase
         }
     }
 
-    public function obtenerSkus($company,Request $request)
+    public function getUpcsFromSku($company, $id, Request $request)
     {
-        $term = $request->term;     
-        $id_proyecto = $request->fk_id_proyecto;
-        $id_socio = $request->fk_id_socio_negocio;
-        $skus = null;
-        if($id_proyecto) {
-            $skus = Productos::where('activo',1)->whereRaw("(sku ILIKE '%$term%' OR descripcion_corta ILIKE '%$term%' OR descripcion ILIKE '%$term%')")->
-            whereHas('clave_cliente_productos', function ($q) use ($id_proyecto) {
-                $q->whereHas('proyectos', function ($q2) use ($id_proyecto) {
-                    $q2->where('id_proyecto', $id_proyecto);
-                });
-            })
-                ->whereIn('id_sku',SociosNegocio::find($id_socio)->productos->pluck('fk_id_sku'))
-                ->get();
-        }else{
-            $skus = Productos::where('activo',1)->whereRaw("(sku ILIKE '%$term%' OR descripcion_corta ILIKE '%$term%' OR descripcion ILIKE '%$term%')")->whereIn('id_sku',SociosNegocio::find($id_socio)->productos->pluck('fk_id_sku'))->get();
-        }
-        $skus_set = [];
-        foreach ($skus as $sku)
-        {
-            $sku_data['id'] = (int)$sku->id_sku;
-            $sku_data['text'] = $sku->sku;
-            $sku_data['descripcion_corta'] = $sku->descripcion_corta;
-            $sku_data['descripcion'] = $sku->descripcion;
-            $skus_set[] = $sku_data;
-        }
-        return Response::json($skus_set);
+        $sku_data = $this->entity->find($id);
+        $sku_forma = $sku_data->fk_id_forma_farmaceutica;
+        $sku_presen = $sku_data->fk_id_presentaciones;
+        $data_sales = $sku_data->presentaciones ?? [];
+        $data_especificaciones = $sku_data->especificaciones ?? [];
+        $upcs = Upcs::where('fk_id_forma_farmaceutica',$sku_forma)->where('fk_id_presentaciones',$sku_presen)->where('activo',1)->with('laboratorio')->get();
+        $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
+
+        return json_encode($upcsDone);
     }
 
     public function getUpcs()
@@ -221,41 +204,21 @@ class ProductosController extends ControllerBase
         $data_especificaciones = json_decode(request()->arr_especificaciones);
         $module_upc = request()->upc ?? null;
         $upcs = Upcs::where('fk_id_forma_farmaceutica',$id_forma_farmaceutica)->where('fk_id_presentaciones',$id_presentaciones)->where('activo',1)->with('laboratorio')->get();
-        if(count($data_sales) > 0 && count($data_especificaciones) > 0)
+        $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
+
+        if(empty($module_upc))
         {
-            $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
-            if(!empty($module_upc))
-            {
-                return json_encode($upcsDone);
-            }
-            else
-            {
-                $ids_upc = $upcsDone->map(function($upc){
-                    return $upc->id_upc;
-                })->toArray();
-                $idsClaves =  ClaveClienteProductos::where('activo',1)->whereHas('productos',function($c) use ($ids_upc){
-                    $c->whereIn('fk_id_upc',$ids_upc);
-                });
-                return json_encode($idsClaves);
-            }
+            return json_encode($upcsDone);
         }
         else
         {
-            $upcsDone = $this->filterUpcs($upcs,$data_sales,$data_especificaciones);
-            if(!empty($module_upc))
-            {
-                return json_encode($upcsDone);
-            }
-            else
-            {
-                $ids_upc = $upcsDone->map(function($upc){
-                    return $upc->id_upc;
-                })->toArray();
-                $idsClaves =  ClaveClienteProductos::where('activo',1)->whereHas('productos',function($c) use ($ids_upc){
-                    $c->whereIn('fk_id_upc',$ids_upc);
-                });
-                return json_encode($idsClaves);
-            }
+            $ids_upc = $upcsDone->map(function($upc){
+                return $upc->id_upc;
+            })->toArray();
+            $idsClaves =  ClaveClienteProductos::where('activo',1)->whereHas('productos',function($c) use ($ids_upc){
+                $c->whereIn('fk_id_upc',$ids_upc);
+            })->get();
+            return json_encode($idsClaves);
         }
     }
 
@@ -354,29 +317,6 @@ class ProductosController extends ControllerBase
             }
         });
         return $upcFiltered;
-    }
-
-    public function getThisSkus($company, $id, Request $request)
-    {
-        $sku_data = $this->entity->find($id);
-        $sku_forma = $sku_data->fk_id_forma_farmaceutica;
-        $sku_presen = $sku_data->fk_id_presentaciones;
-        $bolean = $sku_data->material_curacion;
-        $upcs = Upcs::where('fk_id_forma_farmaceutica',$sku_forma)->where('fk_id_presentaciones',$sku_presen)->where('material_curacion',$bolean)->where('activo',1)->with('laboratorio')->get();
-
-        if($bolean == false)
-        {
-            $sales = $sku_data->presentaciones()->get();
-            return $this->filterUpcs($upcs,$sales,'presentaciones');
-        } 
-        else
-        {
-            $sku_all_espe = $sku_data->especificaciones()->get();
-            foreach ($sku_all_espe as $key => $especificacion) {
-                $especificaciones[] = $especificacion->id_especificacion;
-            }
-            return $this->filterUpcs($upcs,$especificaciones,'especificaciones');
-        }
     }
 
     public function filterSkus($skus,$data_sales,$data_especificaciones)

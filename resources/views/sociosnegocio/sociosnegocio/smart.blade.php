@@ -536,7 +536,7 @@
     								</div>
     								{{ Form::cSelect('* Upc', 'upc', $upcs ?? [],[
 										'class'=>'select2',
-										'data-url'=>companyAction('Inventarios\ProductosController@getThisSkus',['id'=>'?id']),
+										'data-url'=>companyAction('Inventarios\ProductosController@getUpcsFromSku',['id'=>'?id']),
 										]) }}
     							</div>
     							<div class="form-group col-md-4">

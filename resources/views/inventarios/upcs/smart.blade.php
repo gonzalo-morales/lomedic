@@ -55,7 +55,7 @@
 					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-inventario" id="inventario-tab" aria-controls="inventario" aria-expanded="true">Compra</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-clientes" id="clientes-tab" aria-controls="clientes" aria-expanded="true">Clientes<span id="current_clients" class="badge badge-light">0</span></a>
+					<a class="nav-link" role="tab" data-toggle="tab" href="#tab-clientes" id="clientes-tab" aria-controls="clientes" aria-expanded="true">Clientes <span id="current_clients" class="badge badge-light">0</span></a>
 				</li>
 			</ul>
 			</div>
@@ -382,8 +382,9 @@
 								<thead>
 									<tr>
 										<th>Clave cliente</th>
-										<th>Upc</th>
-										<th></th>
+										<th>Subclave</th>
+										<th>Descripción</th>
+										<th>Precio</th>
 									</tr>
 								</thead>
 								<tbody id="tbodyClients">

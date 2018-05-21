@@ -156,7 +156,7 @@ $(document).ready(function () {
 						options.push('<option value="0" selected disabled>Seleccione el UPC...</option>');
 						for (const key in data) {
 							if (data.hasOwnProperty(key)) {
-								options.push('<option data-desc="'+ data[key].descripcion +'" value="' + data[key].id_upc + '">' + data[key].upc + '</option>');
+								options.push('<option data-desc="'+ data[key].descripcion +'" data-precio="'+ data[key].costo_base +'" data-marca="'+ data[key].marca +'" data-nombre_comercial="'+ data[key].nombre_comercial +'" value="' + data[key].id_upc + '">' + data[key].upc + '</option>');
 							}
 						}
 						$('#upc').select2({

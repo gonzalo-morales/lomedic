@@ -180,11 +180,10 @@ function addUpcs(response){
 		if (response.hasOwnProperty(key)) {
 			$tbody.append(
 				'<tr>'+
-				'<td>' + response[key].upc + '</td>' +
-				'<td>' + response[key].nombre_comercial + '</td>' +
+				'<td>' + response[key].clave_producto_cliente + '</td>' +
+				'<td>' + response[key].subclave + '</td>' +
 				'<td>' + response[key].descripcion + '</td>' +
-				'<td>' + response[key].laboratorio.laboratorio + '</td>' +
-				'<td>' + '$' + response[key].costo_base + '</td>' +
+				'<td>' + '$' +  response[key].precio + '</td>' +
 				+'</tr>'
 			);
 		}

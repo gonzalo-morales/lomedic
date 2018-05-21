@@ -71,17 +71,15 @@ class SociosNegocioController extends ControllerBase
 	
 	public function store(Request $request, $company, $compact = false)
 	{
-		$entity = $this->entity->create($request->all());
-        $return = parent::store($request, $company,true);
-        if(is_array($return) && $entity)
+		$return = parent::store($request, $company, true);
+        if(is_array($return))
         {
-			$id = $entity->id_socio_negocio;
+			$entity = $return['entity'];
             if($request->empresas_)
             {
                 foreach ($request->empresas_ as $empre){
 					if($empre['fk_id_empresa'] > 0)
                     	$sync[]=[
-							'fk_id_socio_negocio' => $id,
 							'fk_id_empresa'=>$empre['fk_id_empresa']
 						];
 				}
@@ -93,13 +91,12 @@ class SociosNegocioController extends ControllerBase
                 foreach ($request->formaspago as $formapago){
 					if($formapago['fk_id_forma_pago'] > 0)
 						$sync[]=[
-							'fk_id_socio_negocio' => $id,
 							'fk_id_forma_pago'=>$formapago['fk_id_forma_pago'],
 						];
                 }
                 $formaspago_done = $entity->formaspago()->sync($sync);
             } 
-			if(isset($request->anexos))
+			if($request->anexos)
 			{
 	            $anexos = $request->anexos;
 
@@ -146,25 +143,23 @@ class SociosNegocioController extends ControllerBase
 		$return = parent::update($request, $company, $id, true);
         if(is_array($return))
         {
-			$entity = $this->entity->findOrFail($id);
-            if($request->empresas_)
+            if(isset($request->empresas_))
             {
+				$entity = $return['entity'];
                 foreach ($request->empresas_ as $empre){
 					if($empre['fk_id_empresa'] > 0)
                     	$sync[]=[
-							'fk_id_socio_negocio' => $id,
 							'fk_id_empresa'=>$empre['fk_id_empresa']
 						];
 				}
                 $empresas_done = $entity->empresas()->sync($sync);
 			} 
-            if($request->formaspago)
+            if(isset($request->formaspago))
             {
                 $sync = [];
                 foreach ($request->formaspago as $formapago){
 					if($formapago['fk_id_forma_pago'] > 0)
 						$sync[]=[
-							'fk_id_socio_negocio' => $id,
 							'fk_id_forma_pago'=>$formapago['fk_id_forma_pago'],
 						];
                 }
