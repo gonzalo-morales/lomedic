@@ -1,4 +1,38 @@
 $(document).ready(function () {
+
+    if(accion === 'edit'){
+        var _url = $('#fk_id_clave_cliente_producto').data('url');
+        $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
+        $('#loadingfk_id_clave_cliente_producto').show();
+        $.ajax({
+            url: _url,
+            data:{
+                param_js:claves_cliente_js,
+                $id_cliente:$('#fk_id_cliente').val()
+            },
+            dataType:'json',
+            success:function (data) {
+                var option = $('<option/>');
+                option.val(0);
+                option.attr('disabled','disabled');
+                option.attr('selected','selected');
+                if (Object.keys(data).length == 0)
+                    option.text('No se encontraron elementos');
+                else
+                    option.text('...');
+
+                $('#fk_id_clave_cliente_producto').prepend(option).select2({
+                    minimumResultsForSearch:'20',
+                    escapeMarkup: function (markup) { return markup; },
+                    data:data,
+                    templateResult: formatClaveCliente,
+                    templateSelection: formatClaveClienteSelection
+                }).attr('disabled',false);
+                $('#loadingfk_id_clave_cliente_producto').hide();
+            }
+        });
+    }
+
 	var from_picker = $('#fecha_inicio').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	var to_picker = $('#fecha_terminacion').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	
@@ -337,7 +371,7 @@ $(document).ready(function () {
     $("#fk_id_cliente").on('select2:selecting',function() {
     	var val = $('#fk_id_cliente').val() ? $('#fk_id_cliente').val() : 0;
         $('#fk_id_cliente').attr("data-old",val).trigger('change');
-    });
+    }).trigger("change");
 
     $('#fk_id_cliente').change(function () {
         $('#confirmacion').modal({backdrop:'static',keyboard:false});
