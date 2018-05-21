@@ -420,6 +420,8 @@
         var partidas_js = '{{$js_partidas ?? ''}}';
         var subdependencias_js = '{{$js_subdependencias ?? ''}}'
         var claves_cliente_js = '{{$js_claves_cliente ?? ''}}'
+		@php($ruta = explode('.',currentRouteName()))
+		var accion = '{{$ruta[2]}}'
 	</script>
     <!-- Resources -->
     <style>
