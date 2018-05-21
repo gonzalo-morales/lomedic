@@ -1,30 +1,18 @@
 $(document).ready(function () {
 
-    if($('#material_curacion').is(':checked')) {
-        $('#tableEspecificaciones').show('slow');
-        $('#tableSal').hide('slow');
-        $('#titulo_detalle').text('Material de curación');
-    }
-    else{
-        $('#tableSal').show('slow');
-        $('#tableEspecificaciones').hide('slow');
-        $('#titulo_detalle').text('Sales');
-    }
+    $('#fk_id_subgrupo').on('change',function () {
+        let table_sal = $('#tableSal');
+        let table_especificaciones = $('#tableEspecificaciones');
+        $(table_sal).hide('slow');
+        $(table_especificaciones).hide('slow');
 
-    $('#material_curacion').on('change',function(){
-        if($(this).is(':checked')) {
-            $('#tableEspecificaciones').show('slow');
-            $('#tableSal').hide('slow');
-            $('#tableEspecificaciones tbody ').empty();
-            $('#titulo_detalle').text('Material de curación');
+        const elemento = $(this).select2('data')[0].element;
+        if($(elemento).data('sales')){
+            $(table_sal).show('slow');
         }
-        else{
-            $('#tableSal').show('slow');
-            $('#tableEspecificaciones').hide('slow');
-            $('#tableSal tbody').empty();
-            $('#titulo_detalle').text('Sales');
+        if($(elemento).data('especificaciones')){
+            $(table_especificaciones).show('slow');
         }
-        buscaProductos();
     });
 
     $('#addEspecificacion').on('click',function () {
@@ -130,10 +118,10 @@ function buscaProductos() {
     let especificaciones = [];
     $('#tbodyEspecificaciones tr').each(function () {
         let obj = {};
-        obj.fk_id_especificacion = $(this).find('.especificacion').val();
+        obj.id_especificacion = $(this).find('.especificacion').val();
         especificaciones.push(obj);
     });
-    let material_curacion = $('#material_curacion').is(':checked');
+    let fk_id_subgrupo = $('#fk_id_subgrupo').val();
     if(sales.length > 0 || especificaciones.length > 0)
         $.ajax({
             url:$('#productos').data('url'),
@@ -141,7 +129,7 @@ function buscaProductos() {
                 fk_id_forma_farmaceutica:id_forma,
                 fk_id_presentaciones:id_presentaciones,
                 sales:JSON.stringify(sales),
-                material_curacion:material_curacion,
+                fk_id_subgrupo:fk_id_subgrupo,
                 especificaciones:JSON.stringify(especificaciones)
             },
             success:function (data) {

@@ -14,7 +14,7 @@
 @section('form-content')
 	{{ Form::setModel($data) }}
     <div class="row">
-		<div class="w-50 card container-fluid z-depth-1-half mt-2 px-0">
+		<div class="w-100 card container-fluid z-depth-1-half mt-2 px-0">
 			<div class="card-header">
 				<h1 class="text-center text-info">Generales</h1>
 			</div>
@@ -39,7 +39,7 @@
 						{{ Form::cCheckboxBtn('Fraccionado','Si','fraccionado', $data['fraccionado'] ?? null, 'No') }}
 					</div>
 					<div  class="col-md-4 text-center mt-4">
-						{{Form::cSelectWithDisabled('* Subgrupo','fk_id_subgrupo',$subgrupo ?? [],[],$subgrupo_data ?? [])}}
+						{{Form::cSelectWithDisabled('* Subgrupo','fk_id_subgrupo',$subgrupo ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''],$subgrupo_data ?? [])}}
 					</div>
 					<div class="col-sm-6 col-md-6">
 						{{ Form::cSelect('* Forma farmacéutica','fk_id_forma_farmaceutica',$formafarmaceutica ?? [],['class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2': '']) }}
@@ -71,28 +71,29 @@
 				</div>
 			</div>
 		</div>
-		<div class="w-50 card container-fluid z-depth-1-half mt-2 px-0">
+		<div class="w-100 card container-fluid z-depth-1-half mt-2 px-0">
 			<div class="card-header">
-				<h1 class="text-center text-info" id="titulo_detalle">Sales</h1>
+				<h1 class="text-center text-info">Características</h1>
 			</div>
-			<div id="tableSal" class="col-sm-12 col-md-12">
+			<div class="row">
+				<div id="tableSal" class="col">
 					<div class="card-header">
 							<fieldset id="detalle-form">
 								<div class="row">
 									<div class="col-md-8">
 										<div class="from-group">
 											{{ Form::cSelect('* Sal','sal', $sales ?? [],[
-                                                'style' => 'width:100%;',
-                                                'class' => 'select2',
-                                            ]) }}
+												'style' => 'width:100%;',
+												'class' => 'select2',
+											]) }}
 										</div>
 									</div>
 									<div class="col-md-4">
 										<div class="form-group">
 											{{ Form::cSelect('* Concentración','concentracion', $presentaciones ?? [],[
-                                            'style' => 'width:100%;',
-                                            'class' => 'select2',
-                                            ]) }}
+											'style' => 'width:100%;',
+											'class' => 'select2',
+											]) }}
 										</div>
 									</div>
 								</div><!--/row-->
@@ -105,91 +106,92 @@
 								</div>
 							</fieldset>
 					</div><!--/card-header-->
-				<div class="card-body">
-					<table class="table table-responsive-sm table-striped table-hover" width="100%">
-						<thead>
-						<tr>
-							<th>Sal</th>
-							<th>Concentración</th>
-							<th></th>
-						</tr>
-						</thead>
-						<tbody id="tbodySales">
-						@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
-							@foreach($data->concentraciones ?? [] as $row => $detalle)
-								<tr>
-									<td>
-										<input type="hidden" value="{{$detalle->id_detalle}}" name="relations[has][concentraciones][{{$row}}][id_detalle]">
-										{{ Form::hidden('relations[has][concentraciones]['.$row.'][fk_id_clave_cliente_producto]',$detalle->fk_id_clave_cliente_producto) }}
-										{{ Form::hidden('relations[has][concentraciones]['.$row.'][fk_id_concentracion]',$detalle->fk_id_concentracion) }}
-										{{ Form::hidden('relations[has][concentraciones]['.$row.'][fk_id_sal]',$detalle->fk_id_sal) }}
-										{{ $detalle->sal->nombre }}
-									</td>
-									<td>
-										{{ $detalle->concentracion->cantidad.' '.$detalle->concentracion->unidad->clave }}
-									</td>
-                                    <td>
-                                        <button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
-                                    </td>
-								</tr>
-							@endforeach
-						@endif
-						</tbody>
-					</table>
-				</div>
-			</div><!--/detalle-->
-			<div id="tableEspecificaciones" class="col-md-12">
-				@if(!Route::currentRouteNamed(currentRouteName('show')))
-					<div class="card-header">
-						<form id="overallForm">
-							<fieldset id="detalle-form">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="from-group">
-											{{ Form::cSelect('* Especificaciones','especificacion', $especificaciones ?? [],[
-												'style' => 'width:100%;',
-												'class' => 'select2',
-												]) }}
+					<div class="card-body">
+						<table class="table table-responsive-sm table-striped table-hover" width="100%">
+							<thead>
+							<tr>
+								<th>Sal</th>
+								<th>Concentración</th>
+								<th></th>
+							</tr>
+							</thead>
+							<tbody id="tbodySales">
+							@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
+								@foreach($data->concentraciones ?? [] as $row => $detalle)
+									<tr>
+										<td>
+											<input type="hidden" value="{{$detalle->id_detalle}}" name="relations[has][concentraciones][{{$row}}][id_detalle]">
+											{{ Form::hidden('relations[has][concentraciones]['.$row.'][fk_id_clave_cliente_producto]',$detalle->fk_id_clave_cliente_producto) }}
+											{{ Form::hidden('relations[has][concentraciones]['.$row.'][fk_id_concentracion]',$detalle->fk_id_concentracion) }}
+											{{ Form::hidden('relations[has][concentraciones]['.$row.'][fk_id_sal]',$detalle->fk_id_sal) }}
+											{{ $detalle->sal->nombre }}
+										</td>
+										<td>
+											{{ $detalle->concentracion->cantidad.' '.$detalle->concentracion->unidad->clave }}
+										</td>
+										<td>
+											<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
+										</td>
+									</tr>
+								@endforeach
+							@endif
+							</tbody>
+						</table>
+					</div>
+				</div><!--/detalle-->
+				<div id="tableEspecificaciones" class="col">
+					@if(!Route::currentRouteNamed(currentRouteName('show')))
+						<div class="card-header">
+							<form id="overallForm">
+								<fieldset id="detalle-form">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="from-group">
+												{{ Form::cSelect('* Especificaciones','especificacion', $especificaciones ?? [],[
+													'style' => 'width:100%;',
+													'class' => 'select2',
+													]) }}
+											</div>
+										</div>
+									</div><!--/row-->
+									<div class="col-sm-12 text-center my-3">
+										<div class="sep">
+											<div class="sepBtn">
+												<button id="addEspecificacion" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
+											</div>
 										</div>
 									</div>
-								</div><!--/row-->
-								<div class="col-sm-12 text-center my-3">
-									<div class="sep">
-										<div class="sepBtn">
-											<button id="addEspecificacion" style="width: 4em; height:4em; border-radius:50%;" class="btn btn-primary btn-large" data-position="bottom" data-delay="50" data-toggle="Agregar" title="Agregar" type="button"><i class="material-icons">add</i></button>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div><!--/card-header-->
-				@endif
-				<div class="card-body">
-					<table class="table table-responsive-sm table-striped table-hover">
-						<thead>
-						<tr>
-							<th>Especificación</th>
-							<th></th>
-						</tr>
-						</thead>
-						<tbody id="tbodyEspecificaciones">
-						@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
-							@foreach($data->especificaciones ?? [] as $row => $detalle)
-								<tr>
-									<td>
-										{{ Form::hidden('especificaciones['.$row.'][fk_id_especificacion]',$detalle->fk_id_especificacion) }}
-										{{ $detalle->especificacion }}
-									</td>
-                                    <td>
-                                        <button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
-                                    </td>
-								</tr>
-							@endforeach
-						@endif
-						</tbody>
-					</table>
-				</div>
-			</div><!--/detalle-->
+								</fieldset>
+							</form>
+						</div><!--/card-header-->
+					@endif
+					<div class="card-body">
+						<table class="table table-responsive-sm table-striped table-hover">
+							<thead>
+							<tr>
+								<th>Especificación</th>
+								<th></th>
+							</tr>
+							</thead>
+							<tbody id="tbodyEspecificaciones">
+							@if(Route::currentRouteNamed(currentRouteName('show')) || Route::currentRouteNamed(currentRouteName('edit')))
+								@foreach($data->especificaciones ?? [] as $row => $detalle)
+									<tr>
+										<td>
+											{{ Form::hidden('especificaciones['.$row.'][fk_id_especificacion]',$detalle->fk_id_especificacion) }}
+											{{ $detalle->especificacion }}
+										</td>
+										<td>
+											<button data-toggle="Eliminar" data-placement="top" title="Eliminar" data-original-title="Eliminar" type="button" class="text-primary btn btn_tables is-icon eliminar bg-white" data-delay="50" onclick="borrarFila(this)"><i class="material-icons">delete</i></button>
+										</td>
+									</tr>
+								@endforeach
+							@endif
+							</tbody>
+						</table>
+					</div>
+				</div><!--/detalle-->
+			</div>
         </div>
         <div class="w-100 card">
             <div class="card-header">
