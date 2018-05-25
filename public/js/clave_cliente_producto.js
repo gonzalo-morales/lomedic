@@ -1,5 +1,18 @@
 $(document).ready(function () {
 
+    $(document).on('submit',function (e) {
+       if($('input:checkbox.upc:checked').length < 1){
+           $.toaster({priority:'danger',
+                   title: '¡Error!',
+                   message:"Verifica que tengas al menos un UPC seleccionado",
+                   settings:{'timeout':8000,
+                       'toaster':{'css':{'top':'5em'}}}
+               }
+           );
+           e.preventDefault();
+       }
+    });
+
     $('#fk_id_subgrupo').on('change',function () {
         let table_sal = $('#tableSal');
         let table_especificaciones = $('#tableEspecificaciones');
@@ -121,7 +134,6 @@ function buscaProductos() {
         obj.id_especificacion = $(this).find('.especificacion').val();
         especificaciones.push(obj);
     });
-    let fk_id_subgrupo = $('#fk_id_subgrupo').val();
     if(sales.length > 0 || especificaciones.length > 0)
         $.ajax({
             url:$('#productos').data('url'),
@@ -129,10 +141,10 @@ function buscaProductos() {
                 fk_id_forma_farmaceutica:id_forma,
                 fk_id_presentaciones:id_presentaciones,
                 sales:JSON.stringify(sales),
-                fk_id_subgrupo:fk_id_subgrupo,
                 especificaciones:JSON.stringify(especificaciones)
             },
             success:function (data) {
+                $('#skus,#upcs').empty();
                 data = JSON.parse(data);
                 $(data).each(function (index,sku) {
                     let activo = '';
@@ -152,7 +164,7 @@ function buscaProductos() {
                             '<div class="form-check">' +
                             '<input name="productos['+index+'][fk_id_upc]" type="hidden" value="0">' +
                             '<label class="form-check-label custom-control custom-checkbox">' +
-                            '<input  class="form-check-input custom-control-input" name="productos['+index+'][fk_id_upc]" type="checkbox" value="'+upc.id_upc+'">' +
+                            '<input  class="form-check-input custom-control-input upc" name="productos['+index+'][fk_id_upc]" type="checkbox" value="'+upc.id_upc+'">' +
                             '<span class="custom-control-indicator"></span>' +
                             '</label>' +
                             '</div>' +

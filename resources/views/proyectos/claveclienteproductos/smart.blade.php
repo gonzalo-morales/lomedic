@@ -205,7 +205,7 @@
             <div class="card-body" id="productos" data-url="{{companyAction('Inventarios\ProductosController@getRelatedSkus')}}">
                 <div class="col-md-12">
                     <ul class="nav nav-tabs" id="skus" role="tablist">
-                        @notroute(['index','create'])
+                        @notroute(['index','create','export'])
                             @foreach($skus as $index=>$producto)
                                 <li class="nav-item">
                                     <a class="nav-link {{$index == 0 ? 'active' : ''}}" id="sku_{{$index}}_tab" data-toggle="tab" href="#sku_{{$index}}" role="tab" aria-controls="sku_{{$index}}" aria-selected="{{$index == 0 ? 'true' : 'false'}}">{{$producto->sku}}</a>
@@ -214,7 +214,7 @@
                         @endif
                     </ul>
                     <div class="tab-content" id="upcs">
-                        @notroute(['index','create'])
+                        @notroute(['index','create','export'])
                             @foreach($skus as $index=>$producto)
                                 <div class="tab-pane fade {{$index==0 ? 'active show' : ''}}" id="sku_{{$index}}" aria-labelledby="sku_{{$index}}_tab" role="tabpanel">
                                     <table class="table table-responsive-sm table-hover" width="100%">
