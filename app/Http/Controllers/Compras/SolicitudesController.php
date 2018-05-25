@@ -36,6 +36,16 @@ class SolicitudesController extends ControllerBase
     
     public function getDataView($entity = null)
     {
+        dd(
+          Proyectos::whereHas('productos',function ($q){
+              $q->whereHas('claveClienteProducto',function ($q){
+//                  $q->whereHas('productos',function ($q){
+//                     $q->where('id_upc',66);
+//                  });
+              });
+          })->first()
+        );
+
         switch (\request()->tipo_documento){
             case 4:
                 $detalles_documento = FacturasClientes::find(\request('id'))->detalle;

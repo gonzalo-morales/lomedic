@@ -206,51 +206,47 @@
                 <div class="col-md-12">
                     <ul class="nav nav-tabs" id="skus" role="tablist">
                         @notroute(['index','create','export'])
-                            @foreach($skus as $index=>$producto)
-                                <li class="nav-item">
-                                    <a class="nav-link {{$index == 0 ? 'active' : ''}}" id="sku_{{$index}}_tab" data-toggle="tab" href="#sku_{{$index}}" role="tab" aria-controls="sku_{{$index}}" aria-selected="{{$index == 0 ? 'true' : 'false'}}">{{$producto->sku}}</a>
-                                </li>
-                            @endforeach
+							<li class="nav-item">
+								<a class="nav-link active" id="sku_tab" data-toggle="tab" href="#sku" role="tab" aria-controls="sku" aria-selected="true">{{$producto->sku}}</a>
+							</li>
                         @endif
                     </ul>
                     <div class="tab-content" id="upcs">
                         @notroute(['index','create','export'])
-                            @foreach($skus as $index=>$producto)
-                                <div class="tab-pane fade {{$index==0 ? 'active show' : ''}}" id="sku_{{$index}}" aria-labelledby="sku_{{$index}}_tab" role="tabpanel">
-                                    <table class="table table-responsive-sm table-hover" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>UPC</th>
-                                                <th>Nombre Comercial</th>
-                                                <th>Marca</th>
-                                                <th>Descripcion</th>
-                                                <th>Laboratorio</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($producto->upcs as $indice=>$upc)
-                                            <tr>
-                                                <td>
-                                                    <div class="form-check">
-                                                        <input name="productos[{{$indice}}][fk_id_upc]" type="hidden" value="0">
-                                                        <label class="form-check-label custom-control custom-checkbox">
-                                                            <input class="form-check-input custom-control-input" name="productos[{{$indice}}][fk_id_upc]" type="checkbox" value="{{$upc->id_upc}}" {{in_array($upc->id_upc,$data->productos->pluck('id_upc')->toArray()) ? 'checked' : ''}}>
-                                                            <span class="custom-control-indicator"></span>
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td>{{$upc->upc}}</td>
-                                                <td>{{$upc->nombre_comercial}}</td>
-                                                <td>{{$upc->marca}}</td>
-                                                <td>{{$upc->descripcion}}</td>
-                                                <td>{{$upc->laboratorio->laboratorio}}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @endforeach
+							<div class="tab-pane fade active show" id="sku" aria-labelledby="sku_tab" role="tabpanel">
+								<table class="table table-responsive-sm table-hover" width="100%">
+									<thead>
+										<tr>
+											<th></th>
+											<th>UPC</th>
+											<th>Nombre Comercial</th>
+											<th>Marca</th>
+											<th>Descripcion</th>
+											<th>Laboratorio</th>
+										</tr>
+									</thead>
+									<tbody>
+									@foreach($producto->upcs as $indice=>$upc)
+										<tr>
+											<td>
+												<div class="form-check">
+													<input name="productos[{{$indice}}][fk_id_upc]" type="hidden" value="0">
+													<label class="form-check-label custom-control custom-checkbox">
+														<input class="form-check-input custom-control-input" name="productos[{{$indice}}][fk_id_upc]" type="checkbox" value="{{$upc['id_upc']}}" {{in_array($upc['id_upc'],$data->productos->pluck('id_upc')->toArray()) ? 'checked' : ''}}>
+														<span class="custom-control-indicator"></span>
+													</label>
+												</div>
+											</td>
+											<td>{{$upc['upc']}}</td>
+											<td>{{$upc['nombre_comercial']}}</td>
+											<td>{{$upc['marca']}}</td>
+											<td>{{$upc['descripcion']}}</td>
+											<td>{{$upc['laboratorio']['laboratorio']}}</td>
+										</tr>
+									@endforeach
+									</tbody>
+								</table>
+							</div>
                         @endif
                     </div>
                 </div>
