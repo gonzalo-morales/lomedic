@@ -42,7 +42,7 @@
     	<div class="form-group col-md-3 col-sm-6">
     		{!! Form::cSelectWithDisabled('*Proveedor','fk_id_proveedor',$proveedores ?? [],[
 				'style' => 'width:100%;',
-				'data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api'
+				'data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api',
 				'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
 			])!!}
     	</div>
