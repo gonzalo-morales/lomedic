@@ -41,7 +41,7 @@ class PresentacionVenta extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'presentacion_venta' => 'Presentacion Venta',
+		'presentacion_venta' => 'Presentación Venta',
 		'activo_span' => 'Estatus',
 	];
 }

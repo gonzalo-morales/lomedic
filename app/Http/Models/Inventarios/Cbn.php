@@ -25,7 +25,17 @@ class Cbn extends ModelBase
      * @var array
      */
     protected $fillable = ['clave_cbn','descripcion','precio_comision','precio_causes','precio_imss','vigencia','activo'];
-    
+
+	/**
+	 * The validation rules
+	 * @var array
+	 */
+	public $rules = [
+		'clave_cbn' => ['required','max:90'],
+		'descripcion' => ['max:150'],
+        'vigencia' => 'required'
+	];
+
     /**
      * Los atributos que seran visibles en index-datable
      * @var array

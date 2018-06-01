@@ -4,7 +4,11 @@ namespace App\Http\Models\Proyectos;
 
 use App\Http\Models\Administracion\ClavesProductosServicios;
 use App\Http\Models\Administracion\ClavesUnidades;
+use App\Http\Models\Administracion\Especificaciones;
+use App\Http\Models\Administracion\FormaFarmaceutica;
 use App\Http\Models\Administracion\Impuestos;
+use App\Http\Models\Administracion\Presentaciones;
+use App\Http\Models\Administracion\Sales;
 use App\Http\Models\Administracion\UnidadesMedidas;
 use App\Http\Models\Inventarios\Productos;
 use App\Http\Models\Inventarios\Upcs;
@@ -19,22 +23,14 @@ class ClaveClienteProductos extends ModelCompany
 
 	protected $primaryKey = 'id_clave_cliente_producto';
 
-	protected $fillable = ['fk_id_cliente', 'clave_producto_cliente','subclave','descripcion','presentacion',
-        'cantidad_presentacion','fk_id_unidad_medida','fk_id_clave_producto_servicio','fk_id_clave_unidad',
-        'marca','fabricante','precio','precio_referencia','descuento','descuento_porcentaje','fk_id_impuesto',
-        'dispensacion','dispensacion_porcentaje','fk_id_proyecto_tipo_producto','fk_id_propietario',
-        'fk_id_tipo_almacen','pertenece_cuadro','minimo','maximo','fk_id_sku','activo','tope_receta','disponibilidad',
-        'fk_id_upc'];
+    protected $fillable = ['fk_id_cliente', 'clave_producto_cliente','subclave','descripcion','fk_id_presentacion',
+        'fk_id_forma_farmaceutica','fk_id_unidad_medida','fk_id_clave_producto_servicio','fk_id_clave_unidad','precio',
+        'fk_id_impuesto','activo','tope_receta','fk_id_subgrupo','pertenece_cuadro','fraccionado'];
 
 	public $rules = [
-        'cantidad_presentacion' => 'required|numeric|min:1',
-        'descuento' => ['required','less_than_field:precio','less_than_field:precio_referencia','regex:/^([1-9][0-9]{1,10})(\.[0-9]{2})?$/'],
-        'descuento_porcentaje' => ['required','numeric','between:0,100'],
-        'dispensacion' => ['required','numeric','between:0,100'],
-        'dispensacion_porcentaje' => ['required','numeric','between:0,99.9999999999'],
-        'minimo' => ['required','numeric','min:1'],
-        'maximo' => ['required','numeric','min:1','greater_than_field:minimo'],
         'tope_receta' => ['required','numeric','min:1','digits_between:1,16'],
+        'clave_producto_cliente' => 'required|max:20',
+        'subclave' => 'required|max:20'
     ];
 
 	protected $fields = [
@@ -42,9 +38,7 @@ class ClaveClienteProductos extends ModelCompany
 	    'clave_producto_cliente' => 'Clave Cliente',
 	    'subclave' => 'Subclave',
 	    'descripcion' => 'Descripcion',
-	    'presentacion' => 'Presentacion',
-	    'marca' => 'Marca',
-	    'fabricante' => 'Fabricante',
+	    'presentacion_text' => 'Presentacion',
 	];
 
 	public $niceNames = [];
@@ -73,10 +67,10 @@ class ClaveClienteProductos extends ModelCompany
         return $this->hasMany(ProyectosProductos::class,'fk_id_clave_cliente_producto','id_clave_cliente_producto');
     }
 
-    public function producto()
-    {
-        return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
-    }
+    // public function producto()
+    // {
+    //     return $this->hasOne(Productos::class,'id_sku','fk_id_sku');
+    // }
 
     public function impuesto()
     {
@@ -96,5 +90,38 @@ class ClaveClienteProductos extends ModelCompany
     public function upc()
     {
         return $this->hasOne(Upcs::class,'id_upc','fk_id_upc');
+    }
+
+    public function concentraciones()
+    {
+        return $this->hasMany(ClaveClienteSalConcentracion::class,'fk_id_clave_cliente_producto','id_clave_cliente_producto');
+    }
+
+    public function presentacion()
+    {
+        return $this->hasOne(Presentaciones::class,'id_presentacion','fk_id_presentacion');
+    }
+
+    public function formafarmaceutica()
+    {
+        return $this->hasOne(FormaFarmaceutica::class,'id_forma_facmaceutica','fk_id_forma_farmaceutica');
+    }
+
+    public function getPresentacionTextAttribute()
+    {
+        if(!empty($this->fk_id_presentacion))
+            return ucwords(strtolower($this->presentacion->unidad->nombre));
+        else
+            return '';
+    }
+
+    public function productos()
+    {
+        return $this->belongsToMany(Upcs::class,'inv_det_upc_clave_cliente','fk_id_clave_cliente','fk_id_upc','id_clave_cliente_producto','id_upc');
+    }
+
+    public function especificaciones()
+    {
+        return $this->belongsToMany(Especificaciones::class,'inv_det_especificaciones_clave_cliente','fk_id_clave_cliente','fk_id_especificacion','id_clave_cliente_producto','id_especificacion');
     }
 }

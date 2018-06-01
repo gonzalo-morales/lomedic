@@ -41,7 +41,7 @@ class ViaAdministracion extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'via_administracion' => 'Via Administracion',
+		'via_administracion' => 'Via Administración',
 		'activo_span' => 'Estatus',
 	];
 }

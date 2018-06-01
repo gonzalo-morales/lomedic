@@ -10,6 +10,7 @@ use App\Http\Models\Proyectos\ClaveClienteProductos;
 use App\Http\Models\SociosNegocio\SociosNegocio;
 use App\Http\Models\Inventarios\DetalleIndicaciones;
 use App\Http\Models\Inventarios\DetallePresentaciones;
+use App\Http\Models\Administracion\Especificaciones;
 
 class Upcs extends ModelBase
 {
@@ -52,8 +53,8 @@ class Upcs extends ModelBase
         'costo_base',
         'fk_id_moneda',
         'fk_id_tipo_familia',
-        'fk_id_subgrupo_producto',
-        'fk_id_presentaciones'
+        'fk_id_subgrupo',
+        'fk_id_presentaciones',
     ];
 
     /**
@@ -64,11 +65,12 @@ class Upcs extends ModelBase
         'upc' => 'UPC',
         'descripcion' => 'Descripcion',
         'nombre_comercial' => 'Nombre Comercial',
-        'registro_sanitario' => 'Registro Sanitario',
+        // 'registro_sanitario' => 'Registro Sanitario',
         'marca' => 'Marca',
         'presentacion.presentacion_venta' => 'Presentacion',
         'laboratorio.laboratorio' => 'Laboratorio',
         'pais.pais' => 'Pais Origen',
+        'activo_span' => 'Estatus'
     ];
 
     /**
@@ -87,10 +89,10 @@ class Upcs extends ModelBase
         'fk_id_tipo_producto' => 'required',
         'fk_id_forma_farmaceutica' => 'required',
         'fk_id_via_administracion' => 'required',
-        'costo_base' => 'required|numeric',
+        'costo_base' => 'required',
         'fk_id_moneda' => 'required',
         'fk_id_tipo_familia' => 'required',
-        'fk_id_subgrupo_producto' => 'required',
+        'fk_id_subgrupo' => 'required',
         'fk_id_presentaciones' => 'required'
     ];
 
@@ -118,7 +120,8 @@ class Upcs extends ModelBase
 
     public function clavesclientes()
     {
-        return $this->hasMany(ClaveClienteProductos::class,'fk_id_upc','id_upc');
+        return $this->belongsToMany(ClaveClienteProductos::class,'inv_det_upc_clave_cliente','fk_id_upc','fk_id_clave_cliente','id_upc','id_clave_cliente_producto');
+//        return $this->hasMany(ClaveClienteProductos::class,'fk_id_upc','id_upc');
     }
 
     public function clientes()
@@ -134,5 +137,9 @@ class Upcs extends ModelBase
     public function indicaciones()
     {
         return $this->hasMany(DetalleIndicaciones::class, 'fk_id_upc','id_upc');
+    }
+    public function especificaciones()
+    {
+        return $this->belongsToMany(Especificaciones::class,'inv_det_especificaciones_upc','fk_id_upc','fk_id_especificacion','id_upc','id_especificacion');
     }
 }

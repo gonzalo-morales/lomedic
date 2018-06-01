@@ -35,7 +35,7 @@ class Empresas extends ModelBase
 	    'nombre_comercial' => 'Nombre Comercial',
 	    'razon_social' => 'Razon Social',
 	    'rfc' => 'Rfc',
-	    'activo_text' => 'Estatus',
+	    'activo_span' => 'Estatus',
 	];
 	
 	protected $unique = ['rfc','razon_social','nombre_comercial'];

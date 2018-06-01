@@ -41,11 +41,11 @@ class ProyectosController extends ControllerBase
     {
         $sucursales = null;
         if(!empty($entity)){
-            $sucursales = Sucursales::where('fk_id_cliente',$entity->fk_id_cliente)->where('fk_id_localidad',$entity->fk_id_localidad)->whereHas("empresas",function ($q){$q->where('id_empresa',dataCompany()->id_empresa);})->pluck('sucursal','id_sucursal');
+            $sucursales = Sucursales::where('fk_id_cliente',$entity->fk_id_cliente)->where('fk_id_localidad',$entity->fk_id_localidad)->whereHas("empresas",function ($q){$q->where('id_empresa',request()->empresa->id_empresa);})->pluck('sucursal','id_sucursal');
         }
         return [
             'clientes' => SociosNegocio::where('activo',1)->where('fk_id_tipo_socio_venta',1)->whereHas('empresas',function ($empresa){
-                $empresa->where('id_empresa',dataCompany()->id_empresa)->where('eliminar','f');
+            $empresa->where('id_empresa',request()->empresa->id_empresa)->where('eliminar','f');
             })->pluck('nombre_comercial','id_socio_negocio'),
             'localidades' => Localidades::where('activo',1)->pluck('localidad','id_localidad'),
             'estatus' => EstatusDocumentos::select('estatus','id_estatus')->whereHas('tiposdocumentos',function ($q){$q->where('id_tipo_documento',9);})->pluck('estatus','id_estatus'),//Estatus asignados a proyectos
@@ -59,10 +59,11 @@ class ProyectosController extends ControllerBase
             'modalidadesentrega' => ModalidadesEntrega::where('activo',1)->orderBy('modalidad_entrega')->pluck('modalidad_entrega','id_modalidad_entrega'),
             'sucursales' => $sucursales,
             'js_licitacion' => Crypt::encryptString('"select":["tipo_evento","dependencia","subdependencia","unidad","modalidad_entrega","caracter_evento","forma_adjudicacion","pena_convencional","tope_pena_convencional"],"conditions":[{"where":["no_oficial","$num_evento"]}]'),
-            'js_sucursales' => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"conditions":[{"where":["fk_id_cliente",$fk_id_cliente]},{"where":["fk_id_localidad",$fk_id_localidad]},{"where":["activo","1"]}],"whereHas":[{"empresas":{"where":["id_empresa","'.dataCompany()->id_empresa.'"]}}]'),
+            'js_sucursales' => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"conditions":[{"where":["fk_id_cliente",$fk_id_cliente]},{"where":["fk_id_localidad",$fk_id_localidad]},{"where":["activo","1"]}],"whereHas":[{"empresas":{"where":["id_empresa","'.request()->empresa->id_empresa.'"]}}]'),
             'js_contratos' => Crypt::encryptString('"select":["representante_legal_cliente","no_contrato","vigencia_fecha_inicio","vigencia_fecha_fin"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
             'js_partidas' => Crypt::encryptString('"select":["clave","descripcion","cantidad_maxima","cantidad_minima","codigo_barras","costo"],"conditions":[{"where":["no_oficial","$num_contrato"]}]'),
-            'js_subdependencias'=>Crypt::encryptString('"select":["id_subdependencia as id","subdependencia as text"],"conditions":[{"where":["fk_id_dependencia",$fk_id_dependencia]},{"where":["activo",1]}]')
+            'js_subdependencias'=>Crypt::encryptString('"select":["id_subdependencia as id","subdependencia as text"],"conditions":[{"where":["fk_id_dependencia",$fk_id_dependencia]},{"where":["activo",1]}]'),
+            'js_claves_cliente' => Crypt::encryptString('"select":["id_clave_cliente_producto as id","clave_producto_cliente as text","descripcion as descripcionClave","precio","fk_id_impuesto"],"conditions":[{"where":["fk_id_cliente","$id_cliente"]}]')
         ];
     }
     
@@ -190,7 +191,7 @@ class ProyectosController extends ControllerBase
     {
         Excel::create('producto_proyecto_layout', function($excel){
             $excel->sheet(currentEntityBaseName(), function($sheet){
-                $sheet->fromArray(['*Clave cliente producto','UPC','*Prioridad','*Cantidad','*Precio sugerido','*Máximo','*Mínimo','*Número reorden']);
+                $sheet->fromArray(['*Clave cliente producto','*Prioridad','*Cantidad','*Precio sugerido','*Máximo','*Mínimo','*Número reorden']);
             });
         })->download('xlsx');
     }
@@ -203,38 +204,25 @@ class ProyectosController extends ControllerBase
         $data_xlsx = $data_xlsx->toArray();
         $data = [];
         $errores_clave = [];
-        $errores_upc = [];
         foreach ($data_xlsx as $num=>$row) {
-            $success_clave = false;
-            $success_upc = false;
-            $proyecto = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)->where('clave_producto_cliente','LIKE',$row['clave_cliente_producto'])->first();
-            if(empty($proyecto)){
-                $errores_clave[$num] = $row['clave_cliente_producto'];
-            }else{
-                $row['id_clave_cliente_producto'] = $proyecto->id_clave_cliente_producto;
-                $row['descripcion_clave'] = $proyecto->descripcion;
-                $success_clave = true;
-            }
-
-            if(!empty($row['upc']) && $success_clave){
-                $upc = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)->where('clave_producto_cliente','LIKE',$row['clave_cliente_producto'])->first()->sku()->first()->upcs()->where('upc',$row['upc'])->first();
-                if(empty($upc)){
-                    $errores_upc[$num] = $row['upc'];
-                }else{
-                    $row['fk_id_upc'] = $upc->id_upc;
-                    $row['descripcion_upc'] = $upc->descripcion;
-                    $success_upc = true;
+            if($row['clave_cliente_producto'] && $row['prioridad'] && $row['cantidad'] && $row['precio_sugerido'] && $row['maximo'] && $row['minimo'] && $row['numero_reorden']){
+                $success_clave = false;
+                $proyecto = ClaveClienteProductos::where('fk_id_cliente', $request->fk_id_cliente)->where('clave_producto_cliente', 'LIKE', $row['clave_cliente_producto'])->first();
+                if (empty($proyecto)) {
+                    $errores_clave[$num + 1] = $row['clave_cliente_producto'];
+                } else {
+                    $row['id_clave_cliente_producto'] = $proyecto->id_clave_cliente_producto;
+                    $row['descripcion_clave'] = $proyecto->descripcion;
+                    $success_clave = true;
                 }
-            }else{
-                $success_upc = true;
-            }
-            if(($success_clave && $success_upc)){
-                $data[] = $row;
+
+                if (($success_clave)) {
+                    $data[] = $row;
+                }
             }
         }
         $respuesta[0] = $data;//Filas que sí se encontraron al final
         $respuesta[1] = $errores_clave;//Filas con error en la clave
-        $respuesta[2] = $errores_upc;//Filas con error en el UPC
         return Response::json($respuesta);
     }
     
@@ -271,10 +259,8 @@ class ProyectosController extends ControllerBase
     {
         $data = [];
         $errores_clave = [];
-        $errores_upc = [];
         foreach($request->productos as $key => $producto_liciplus){
             $success_clave = false;
-            $success_upc = false;
             $producto = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)->where('clave_producto_cliente','LIKE',$producto_liciplus['clave'])->first();
             if(empty($producto)){
                 $errores_clave[$key] = $producto_liciplus['clave'];
@@ -283,26 +269,12 @@ class ProyectosController extends ControllerBase
                 $producto_liciplus['descripcion_clave'] = $producto->descripcion;
                 $success_clave = true;
             }
-
-            if(!empty($producto_liciplus['codigo_barras']) && $success_clave){
-                $upc = ClaveClienteProductos::where('fk_id_cliente',$request->fk_id_cliente)->where('clave_producto_cliente','LIKE',$producto_liciplus['clave'])->first()->sku()->first()->upcs()->where('upc',$producto_liciplus['codigo_barras'])->first();
-                if(empty($upc)){
-                    $errores_upc[$key] = $producto_liciplus['codigo_barras'];
-                }else{
-                    $producto_liciplus['fk_id_upc'] = $upc->id_upc;
-                    $producto_liciplus['descripcion'] = $upc->descripcion;
-                    $success_upc = true;
-                }
-            }else{
-                $success_upc = true;
-            }
-            if($success_clave && $success_upc){
+            if($success_clave){
                 $data[] = $producto_liciplus;
             }
         }
         $respuesta[0] = $data;//Filas que sí se encontraron al final
         $respuesta[1] = $errores_clave;//Filas con error en la clave
-        $respuesta[2] = $errores_upc;//Filas con error en el código de barras
         return Response::json($respuesta);
     }
 }

@@ -2,7 +2,7 @@
 
 return [
 	'login' => 'Entrar',
-    'logout' => 'Cerrar Sesi�n',
+    'logout' => 'Cerrar Sesión',
     'save' => 'Guardar',
     'create' => 'Nuevo',
     'show' => 'Ver',
@@ -12,17 +12,17 @@ return [
     'send' => 'Enviar',
     'back' => 'Regresar',
     'change' => 'Cambiar',
-	'fgpassword' => '�Olvidaste contrase�a?',
+	'fgpassword' => '¿Olvidaste contraseña?',
     'user' => 'Usuario',
-    'password' => 'Contrase�a',
+    'password' => 'Contraseña',
     'deselected' => 'Deseleccionar',
     'delete' => 'Eliminar',
     'file' => 'Archivo',
     'menu_search' => 'Buscar en menu',
-    'email' => 'Direcci�n Correo Electronico',
-    'cpassword' => 'Contrase�a actual',
-    'npasswword' => 'Nueva contrase�a',
-    'opassword' => 'Confirmar contrase�a',
+    'email' => 'Dirección Correo Electronico',
+    'cpassword' => 'Contraseña actual',
+    'npasswword' => 'Nueva contraseña',
+    'opassword' => 'Confirmar contraseña',
     'save_stamp' =>'Guardar y Timbrar',
     
     

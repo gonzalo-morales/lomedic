@@ -44,7 +44,8 @@ class ModelBase extends Model
 	{
 	    $this->schema = !empty($this->schema) ? $this->schema : getSchema($this->connection);
 	    $this->table = $this->schema.'.'.$this->table;
-	        
+	    
+	    $this->appends = $this->getAppendableFields();
 		$this->eagerLoaders = $this->getAutoEager();
 		$this->rules = array_merge($this->getRulesDefaults(),$this->rules);
 		$this->addUniqueRules();
@@ -242,9 +243,9 @@ class ModelBase extends Model
 	 */
 	public function getFields()
 	{
-		if (!$this->fields) {
+		/*if (!$this->fields) {
 			throw new \Exception('Undefined $fields in ' . class_basename($this) . ' model.');
-		}
+		}*/
 		return $this->fields;
 	}
 
@@ -312,7 +313,7 @@ class ModelBase extends Model
 	public function getActivoSpanAttribute()
 	{
 		# Retornamos HTML-Element
-		$format = new HtmlString('<span class="p-1 ' . ($this->activo ? 'alert alert-success' : 'alert alert-danger') . '">&nbsp;'.$this->activo_text.'&nbsp;</span>');
+		$format = new HtmlString('<span class="p-1 w-100 ' . ($this->activo ? 'alert alert-success' : 'alert alert-danger') . '">'.$this->activo_text.'</span>');
 		# Si Ajax, retornamos HTML-String
 		if (request()->ajax()) {
 			return $format->toHtml();
@@ -353,7 +354,7 @@ class ModelBase extends Model
 	            'length' => !empty($column->getLength()) ? $column->getLength() : $column->getPrecision(),
 	            'decimal' => $column->getScale(),
 				'comment'  => $column->getComment(),
-				'pattern' => '[a-zA-ZñÑáéíóúÁÉÍÓÚ{0-9}\-\_\,\d\s]',
+				'pattern' => '[a-zA-ZñÑáéíóúÁÉÍÓÚ{0-9}\-\_\,\.\d\s]',
 	        ];
 	    }, $columns );
 

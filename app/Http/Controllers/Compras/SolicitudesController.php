@@ -36,6 +36,16 @@ class SolicitudesController extends ControllerBase
     
     public function getDataView($entity = null)
     {
+        dd(
+          Proyectos::whereHas('productos',function ($q){
+              $q->whereHas('claveClienteProducto',function ($q){
+//                  $q->whereHas('productos',function ($q){
+//                     $q->where('id_upc',66);
+//                  });
+              });
+          })->first()
+        );
+
         switch (\request()->tipo_documento){
             case 4:
                 $detalles_documento = FacturasClientes::find(\request('id'))->detalle;
@@ -70,11 +80,9 @@ class SolicitudesController extends ControllerBase
             'sucursales'        => $sucursales ?? '', 
             'impuestos'         => Impuestos::select('id_impuesto','impuesto')->where('activo',1)->orderBy('impuesto')->with('porcentaje')->pluck('impuesto','id_impuesto')->prepend('Seleccione...',''),
             'unidadesmedidas'   => Unidadesmedidas::select('nombre','id_unidad_medida')->where('activo',1)->orderBy('nombre')->pluck('nombre','id_unidad_medida')->prepend('Seleccione...',''),
-            'skus'              => Productos::where('activo',1)->where('articulo_compra',1)->orderBy('sku')->pluck('sku','id_sku'),
             'usuarios'          => Usuarios::where('activo',1)->orderBy('usuario')->pluck('usuario','id_usuario')->prepend('Seleccione un usuario','')->put($user,'Yo'.' ('.$userName.')'),
-            // 'usuarios'       => Usuarios::where('activo',1)->orderBy('usuario')->get()->put($user,'Yo'.' ('.$userName.')'),
-//            'js_sucursales'     => Crypt::encryptString('"select":["id_sucursal as id","sucursal as text"],"hasEmpresa":[],"isActivo":[]'),
-             'js_sucursales'     => Crypt::encryptString('
+            'js_upcs'           => Crypt::encryptString('"select":["id_upc as id","upc as text","descripcion","nombre_comercial","marca","costo_base"],"conditions":[{"whereRaw":["upc ILIKE \'%$term%\' or descripcion ILIKE \'%$term%\'"]}],"with":["laboratorio:id_laboratorio,laboratorio"]'),
+            'js_sucursales'     => Crypt::encryptString('
                 "select": ["id_sucursal as id","sucursal as text"],
                 "isActivo": [],
                 "hasEmpresa": [],
@@ -93,16 +101,17 @@ class SolicitudesController extends ControllerBase
                 }],
                 "whereHas":[{
                     "empresas":{
-                        "where":["fk_id_empresa","'.dataCompany()->id_empresa.'"]
+                        "where":["fk_id_empresa","'.request()->empresa->id_empresa.'"]
                     }
                 },
                 {
                     "productos":{
-                        "where":["fk_id_sku",$id_sku]
+                        "where":["fk_id_upc",$fk_id_upc]
                     }
                 }]
             '),
             'js_porcentaje'     => Crypt::encryptString('"select": ["tasa_o_cuota"], "conditions": [{"where":["id_impuesto", "$id_impuesto"]}], "limit": "1"'),
+            'js_proyectos' => Crypt::encryptString('"select":["id_proyecto","proyecto"], "conditions":[{"where":["eliminar",0]},{"where":["fk_id_localidad",$fk_id_localidad]}]'),
             'detalles_documento'=> $detalles_documento,
         ];
     }
@@ -223,5 +232,6 @@ class SolicitudesController extends ControllerBase
         return $pdf->stream('solicitud')->header('Content-Type',"application/pdf");
 //        return view(currentRouteName('imprimir'));
     }
+
 }
 

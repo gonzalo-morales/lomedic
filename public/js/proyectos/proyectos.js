@@ -1,4 +1,38 @@
 $(document).ready(function () {
+
+    if(accion === 'edit'){
+        var _url = $('#fk_id_clave_cliente_producto').data('url');
+        $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
+        $('#loadingfk_id_clave_cliente_producto').show();
+        $.ajax({
+            url: _url,
+            data:{
+                param_js:claves_cliente_js,
+                $id_cliente:$('#fk_id_cliente').val()
+            },
+            dataType:'json',
+            success:function (data) {
+                var option = $('<option/>');
+                option.val(0);
+                option.attr('disabled','disabled');
+                option.attr('selected','selected');
+                if (Object.keys(data).length == 0)
+                    option.text('No se encontraron elementos');
+                else
+                    option.text('...');
+
+                $('#fk_id_clave_cliente_producto').prepend(option).select2({
+                    minimumResultsForSearch:'20',
+                    escapeMarkup: function (markup) { return markup; },
+                    data:data,
+                    templateResult: formatClaveCliente,
+                    templateSelection: formatClaveClienteSelection
+                }).attr('disabled',false);
+                $('#loadingfk_id_clave_cliente_producto').hide();
+            }
+        });
+    }
+
 	var from_picker = $('#fecha_inicio').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	var to_picker = $('#fecha_terminacion').pickadate({ selectMonths: true, selectYears: 3, format: 'yyyy-mm-dd' }).pickadate('picker');
 	
@@ -27,17 +61,17 @@ $(document).ready(function () {
 		  }
 	});
 	
-    $(".nav-pills").click(function (e) {
+    $('.nav-link').on('click', function (e) {
         e.preventDefault();
         $('#clothing-nav li').each(function () {
             $(this).children().removeClass('active');
         });
         $('.tab-pane').removeClass('active').removeClass('show');
         $(this).addClass('active');
-        var tab = $(this).prop('href');
+        let tab = $(this).prop('href');
         tab = tab.split('#');
         $('#' + tab[1]).addClass('active').addClass('show');
-    });
+	});
     
     $('#agregarContrato').on('click', function() {
     	var i = $('#detalleContratos tbody tr').length;
@@ -50,7 +84,7 @@ $(document).ready(function () {
 		archivo = $("#contrato").prop('files');
 		
 		if(representante == '' || contrato == '' || fechainicio == '' || fechafin == '' || !$("#contrato").val()) {
-			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el representante legal, No. contrato, fecha inicio, fecha fin y archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleContratos').append('<tr>'+
@@ -71,7 +105,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileContrato-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
     
@@ -83,10 +117,10 @@ $(document).ready(function () {
 		archivo = $("#archivo").prop('files');
 		
 		if(nombre == '') {
-			$.toaster({priority:'danger',title:'Â¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Debe introducir el nombre para el documento.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else if(!$("#archivo").val()) {
-			$.toaster({priority:'danger',title:'Â¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'danger',title:'¡Error!',message:'Selecciona un archivo.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 		else {
 			$('#detalleAnexos').append('<tr>'+
@@ -96,7 +130,7 @@ $(document).ready(function () {
 				'<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Anexo"> <i class="material-icons">delete</i></button></td>'+
 			'</tr>');
 			$('#fileAnexo-'+row_id).prop('files',archivo);
-			$.toaster({priority:'success',title:'Â¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
+			$.toaster({priority:'success',title:'¡Correcto!',message:'El archivo se agrego correctamente.',settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}
 	});
 
@@ -226,16 +260,16 @@ $(document).ready(function () {
                     });
 
 					if(repetidos.length){
-                        $.toaster({priority:'danger',title:'Â¡Error!',message:'Algunos contratos ya se encuentran en la tabla: '+repetidos.toString(),
+                        $.toaster({priority:'danger',title:'¡Error!',message:'Algunos contratos ya se encuentran en la tabla: '+repetidos.toString(),
                             settings:{'donotdismiss':['danger'],'toaster':{'css':{'top':'5em'}}}});
 					}else{
-                        $.toaster({priority:'success',title:'Â¡Ã‰xito!',message:'Se han agregado los contratos relacionados de LICIPLUS',
+                        $.toaster({priority:'success',title:'¡Éxito!',message:'Se han agregado los contratos relacionados de LICIPLUS',
                             settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 					}
 				}
             },
 			error: function () {
-				$.toaster({priority:'danger',title:'Â¡Error!',message:'OcurriÃ³ un error al obtener los contratos',
+				$.toaster({priority:'danger',title:'¡Error!',message:'OcurriÃ³ un error al obtener los contratos',
 					settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
             }
 		});
@@ -243,7 +277,7 @@ $(document).ready(function () {
 
     $('#importar_productos').click(function () {
     	if(!$('#fk_id_cliente').val()){
-            $.toaster({priority:'danger',title:'Â¡Error!',message:'Por favor selecciona un cliente',
+            $.toaster({priority:'danger',title:'¡Error!',message:'Por favor selecciona un cliente',
                 settings:{'timeout':10000,'toaster':{'css':{'top':'5em'}}}});
 		}else{
 			$.ajax({
@@ -259,16 +293,17 @@ $(document).ready(function () {
 						url: $('#agregarProducto').data('url'),
 						data: {
 							productos:datos,
-							fk_id_cliente: $('#fk_id_cliente').val()
+							$fk_id_cliente: $('#fk_id_cliente').val()
 						},
 						dataType: 'JSON',
 						type: 'POST',
 						success: function (respuesta) {
-                            var error = '';
-                            $.each(respuesta[1], function (index,clave) {
-                                error += clave + ', ';
+                            let error = '<ul>';
+                            $.each(respuesta[1], function (index,text) {
+                                error += '<li>'+index + ': ' + text + '</li>';
                             });
-                            if (error)
+                            error += '</ul>';
+                            if (error != '<ul></ul>')
                                 $.toaster({
                                     priority: 'danger',
                                     title: 'No se encontraron las siguientes claves de cliente',
@@ -276,17 +311,6 @@ $(document).ready(function () {
                                     settings: {'toaster': {'css': {'top': '5em'}}, 'donotdismiss': ['danger'],},
                                 });
 
-                            error = '';
-                            $.each(respuesta[2], function (index,upc) {
-                                error += upc + ', ';
-                            });
-                            if (error)
-                                $.toaster({
-                                    priority: 'danger',
-                                    title: 'No se encontraron los siguientes UPCs',
-                                    message: '<br>' + error,
-                                    settings: {'toaster': {'css': {'top': '5em'}}, 'donotdismiss': ['danger'],},
-                                });
                             //Importar las filas a la tabla
                             var repetidos = [];
                             $.each(respuesta[0], function (index, value) {
@@ -300,22 +324,12 @@ $(document).ready(function () {
                                 if(!repetido){
                                     var i = $('#detalleProductos tbody tr').length;
                                     var row_id = i > 0 ? +$('#detalleProductos tr:last').find('.index').val()+1 : 0;
-                                    var id_upc = 0;
-                                    var text_upc = 'Sin UPC';
-                                    var descripcion_upc = '';
-                                    if (value['fk_id_upc']) {
-                                        id_upc = value['fk_id_upc'];
-                                        text_upc = value['codigo_barras'];
-                                        descripcion_upc = value['descripcion'];
-                                    }
 
                                     $('#detalleProductos').append('<tr>'+
                                         '<td><input class="index" name="relations[has][productos]['+row_id+'][index]" type="hidden" value="'+row_id+'">'+
                                         '<input class="index" name="relations[has][productos]['+row_id+'][id_proyecto_producto]" type="hidden" value="">'+
                                         '<input type="hidden" name="relations[has][productos]['+row_id+'][fk_id_clave_cliente_producto]" value="'+value['id_clave_cliente_producto']+'"/><span>'+ value['clave']+'</span></td>'+
                                         '<td>'+value['descripcion_clave']+'</td>'+
-                                        '<td>'+$('<input type="hidden" name="relations[has][productos][' + row_id + '][fk_id_upc]" value="' + id_upc + '" />')[0].outerHTML + text_upc+'</td>'+
-                                        '<td>'+descripcion_upc+'</td>'+
                                         '<td>'+$('<input class="form-control prioridad" maxlength="2" name="relations[has][productos][' + row_id + '][prioridad]" type="text" value="" />')[0].outerHTML+'</td>'+
                                         '<td>'+$('<input class="form-control cantidad" maxlength="3" name="relations[has][productos][' + row_id + '][cantidad]" type="text" value="" />')[0].outerHTML+'</td>'+
                                         '<td>'+$('<input class="form-control precio_sugerido" maxlength="13" name="relations[has][productos][' + row_id + '][precio_sugerido]" type="text" value="'+value['costo']+'" />')[0].outerHTML+'</td>'+
@@ -332,15 +346,17 @@ $(document).ready(function () {
                                         '</td>'+
                                         '<td><button class="btn is-icon text-primary bg-white" type="button" data-delay="50" onclick="borrarFila(this)" data-tooltip="Producto"><i class="material-icons">delete</i></button>'+
                                         '</tr>');
-
                                 }
                             });
                             if(repetidos.length){
-                                $.toaster({priority:'info',title:'Â¡Error!',message:'Algunos productos ya se encuentran en la tabla: '+repetidos.toString(),
+                                $.toaster({priority:'info',title:'¡Error!',message:'Algunos productos ya se encuentran en la tabla: '+repetidos.toString(),
                                     settings:{'donotdismiss':['danger'],'toaster':{'css':{'top':'5em'}}}});
                             }else{
-                                $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
-							}
+                                if($('#tbodyproductosproyectos tr').length)
+                                    $.toaster({priority: 'success', title: '!Correcto!', message: 'Productos importados con Exito',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
+                                else
+                                    $.toaster({priority: 'danger', title: '¡Oooops!', message: 'No se ha cargado ningún producto',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}});
+                            }
                             $('.loadingtabla').hide();
 						},
 						error: function () {
@@ -355,10 +371,10 @@ $(document).ready(function () {
     $("#fk_id_cliente").on('select2:selecting',function() {
     	var val = $('#fk_id_cliente').val() ? $('#fk_id_cliente').val() : 0;
         $('#fk_id_cliente').attr("data-old",val).trigger('change');
-    });
+    }).trigger("change");
 
     $('#fk_id_cliente').change(function () {
-        $('#confirmacion').modal('show');
+        $('#confirmacion').modal({backdrop:'static',keyboard:false});
     });
 
     $('#confirmar').click(function () {//Confirmar cambio de cliente
@@ -380,11 +396,15 @@ $(document).ready(function () {
         $('#fk_id_localidad').val(0).trigger('change');
 
         //En productos carga las claves relacionadas con el cliente actual
-        var _url = $('#fk_id_clave_cliente_producto').data('url').replace('?id',$('#fk_id_cliente').val());
+        var _url = $('#fk_id_clave_cliente_producto').data('url');
         $('#fk_id_clave_cliente_producto').empty().prop('disabled',true);
         $('#loadingfk_id_clave_cliente_producto').show();
         $.ajax({
             url: _url,
+            data:{
+                param_js:claves_cliente_js,
+                $id_cliente:$('#fk_id_cliente').val()
+            },
             dataType:'json',
             success:function (data) {
                 var option = $('<option/>');
@@ -397,8 +417,11 @@ $(document).ready(function () {
                     option.text('...');
 
                 $('#fk_id_clave_cliente_producto').prepend(option).select2({
-                    minimumResultsForSearch:'50',
+                    minimumResultsForSearch:'20',
+                    escapeMarkup: function (markup) { return markup; },
                     data:data,
+                    templateResult: formatClaveCliente,
+                    templateSelection: formatClaveClienteSelection
                 }).attr('disabled',false);
                 $('#loadingfk_id_clave_cliente_producto').hide();
             }
@@ -435,7 +458,6 @@ $(document).ready(function () {
             cDigits: true,
             minStrict: 0
         });
-
         $.validator.addClassRules('maximo',{
             cRequerido:true,
             cDigits:true,
@@ -479,7 +501,7 @@ $(document).ready(function () {
                 $('.archivo').rules('remove');
             }
             $.toaster({
-                priority: 'danger', title: 'Ã‚Â¡Error!', message: 'Hay campos que requieren de tu atencion. Revisa todas las pestaÃ±as.',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
+                priority: 'danger', title: '¡Error!', message: 'Hay campos que requieren de tu atencion. Revisa todas las pestaÃ±as.',settings: {'timeout': 10000, 'toaster': {'css': {'top': '5em'}}}
             });
 
         }
@@ -517,4 +539,29 @@ function cargar_sucursales() {
             }
         });
     }
+}
+
+// FUNCIONES PARA FORMATO DEL RESULTADO EN EL SELECT2 de SKU
+function formatClaveCliente (clave) {
+    if (clave.element && clave.id > 0) {
+        let precio = +clave.precio;
+        //Generamos nuestro template
+        var markup =
+            "<div class='select2-result-pers clearfix'>" +
+                "<div class='select2-result-pers__avatar'><i class='material-icons align-left'>vpn_key</i></div>" +
+                "<div class='select2-result-pers__meta'>" +
+                    "<div class='select2-result-pers__text'>" + clave.text + "</div>" +
+                    "<div class='select2-result-pers__statistics'>" +
+                        "<div class='select2-result-pers__descripcion text-success mr-3'><i class='material-icons align-left'>description</i>" + clave.descripcionClave + "</div>" +
+                        "<div class='select2-result-pers__precio'><i class='material-icons align-left'>attach_money</i> " + precio.toFixed(2)+ "</div>" +
+                    "</div>" +
+                "</div>" +
+            "</div>";
+
+            return markup;
+    }
+    return clave.text;
+}
+function formatClaveClienteSelection (clave) {
+    return clave.text;
 }

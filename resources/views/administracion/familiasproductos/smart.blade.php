@@ -13,7 +13,7 @@
             {{Form::cSelect('Tipo','fk_id_tipo_producto',$product_types ?? [])}}
         </div>
         <div class="form-group col-md-6 col-xs-12">
-            {{ Form::cSelect('Presentacion','tipo_presentacion',['1'=>'Cantidad','2'=>'Cantidad y Unidad','3'=>'Ampolletas (Ã�mpulas)','4'=>'Dosis']) }}
+            {{ Form::cSelect('Presentación','tipo_presentacion',['1'=>'Cantidad','2'=>'Cantidad y Unidad','3'=>'Ampolletas (Ampulas)','4'=>'Dosis']) }}
         </div>
         <div  class="col-md-12 text-center mt-2">
             <div class="alert alert-warning" role="alert">

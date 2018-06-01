@@ -542,7 +542,7 @@ $(document).ready(function(){
 
 	//Cambio de text para checkbox toggeable
     $('.toggeable').bind('click', function () {
-    	$(this).attr('checked',!$(this).is(':checked'));
+    	$(this).attr('checked',$(this).is(':checked'));
     }).trigger('change');
 
     $('.toggeable').bind('change', function () {
@@ -637,6 +637,11 @@ function file_name(obj) {
 
         $target.attr('data-content', name);
     }
+}
+
+function clearCustomFileInputText(element) {
+    let span = $(element[0]).next('span');
+    $(span).attr('data-content',$(span).attr('data-original-content'))
 }
 
 function addCommas(nStr)

@@ -70,11 +70,6 @@
               {{ Form::cText('* Destino:','destino') }}
             </div>
           </div>
-          <div class="col-12">
-          	{{ Form::hidden('total_detalles',null, ['id'=>'total_detalles']) }}
-            {{ Form::hidden('subtotal_detalles',null, ['id'=>'subtotal_detalles']) }}
-            {{ Form::hidden('fecha', $fechaActual ?? '') }}
-          </div>
         </div>
       </div><!--/col-md-5 col-sm-5-->
     
@@ -105,7 +100,7 @@
             <div class="row">
               <div class="col s4">
                 <div class="input-field">
-                  {{ Form::cNumber('* Subtotal','subtotal_fac') }}
+                  {{ Form::cText('* Subtotal','subtotal_fac') }}
                 </div>
               </div>
               <div class="col s4">
@@ -116,7 +111,7 @@
               </div>
               <div class="col s4">
                 <div class="input-field">
-                  {{ Form::cNumber('* Total','total_fac', ['readonly'=>'true']) }}
+                  {{ Form::cText('* Total','total_fac', ['readonly'=>'true']) }}
                 </div>
               </div>
             </div><!--/row-->

@@ -26,22 +26,35 @@ class DetalleOfertas extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_sku','fk_id_upc','cantidad','fk_id_unidad_medida',
-        'fk_id_impuesto','precio_unitario','total_producto','fk_id_proyecto','descuento_detalle','fk_id_documento',
-        'fk_id_tipo_documento_base','fk_id_documento_base','fk_id_linea','total_impuesto'];
+    protected $fillable = [
+        // 'fk_id_sku',
+        'fk_id_upc',
+        'cantidad',
+        'fk_id_unidad_medida',
+        'fk_id_impuesto',
+        'precio_unitario',
+        'total_producto',
+        'fk_id_proyecto',
+        'descuento_detalle',
+        'fk_id_documento',
+        'fk_id_tipo_documento_base',
+        'fk_id_documento_base',
+        'fk_id_linea',
+        'total_impuesto'
+    ];
 
     public $niceNames = [
-        'fk_id_sku' => 'sku',
+        // 'fk_id_sku' => 'sku',
         'fk_id_upc' => 'upc',
         'fk_id_unidad_medida' => 'unidad medida',
         'fk_id_impuesto' => 'impuesto',
         'descuento_detalle' => 'descuento producto'
     ];
 
-    public function sku()
-    {
-        return $this->hasOne('App\Http\Models\Inventarios\Productos','id_sku','fk_id_sku');
-    }
+    // public function sku()
+    // {
+    //     return $this->hasOne('App\Http\Models\Inventarios\Productos','id_sku','fk_id_sku');
+    // }
 
     public function upc()
     {

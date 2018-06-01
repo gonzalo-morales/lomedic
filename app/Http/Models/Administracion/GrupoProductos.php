@@ -24,7 +24,7 @@ class GrupoProductos extends ModelBase
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['grupo','activo'];
+	protected $fillable = ['grupo','sales','especificaciones','activo'];
 
 	/**
 	 * The validation rules

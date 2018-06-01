@@ -128,8 +128,6 @@ $(document).ready(function () {
         $.toaster({priority : 'danger',title : '¡Error!',message : 'Hay campos que requieren de tu atención',
           settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}});
     }
-    // limpiamos el formulario
-    sumarTodosLosTotales();
   }); 
 });
 
@@ -187,12 +185,10 @@ function validateDetail() {
   }, "Ingresa un valor mayor a 0" );
   $('#subtotal_fac').rules('add',{
       required: true,
-      number: true,
       subtotal:true,
       greaterThan:0,
       messages:{
           required: 'Para continuar es necesario un subtotal',
-          number: 'El campo debe ser un número',
           greaterThan: 'El número debe ser mayor a 0',
       }
   });
@@ -230,22 +226,6 @@ function borrarFila(el) {
   $.toaster({priority : 'success',title : '¡Advertencia!',message : 'Se ha eliminado la fila correctamente',
       settings:{'timeout':1000,'toaster':{'css':{'top':'5em'}}}});
 };
-
-function sumarTodosLosTotales(){
-  var tdTotal = $('#detalle-form-body > tr > td > input.total');
-  var tdSubtotal = $('#detalle-form-body > tr > td > input.subtotal');
-
-  //Usamos la función de array.reduce.call para ir sumando los valores
-  var total = [].reduce.call(tdTotal, function(a, b) {
-      return a + parseFloat($(b).val());
-  }, 0);
-  var subtotal = [].reduce.call(tdSubtotal, function(a, b) {
-      return a + parseFloat($(b).val());
-  }, 0);
-
-  $('#total_detalles').val(total.toFixed(2));
-  $('#subtotal_detalles').val(subtotal.toFixed(2));
-}
 
 function calcular(){
   var subtotal = +$('#subtotal_fac').val();

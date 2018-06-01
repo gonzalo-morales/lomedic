@@ -31,8 +31,8 @@ class FormaFarmaceutica extends ModelBase
 	 * @var array
 	 */
 	public $rules = [
-		'forma_farmaceutica' => 'required|max:80|regex:/^[a-zA-Z\s]+/',
-		'descripcion' => 'required|max:100|regex:/^[a-zA-Z\s]+/',
+		'forma_farmaceutica' => 'required|max:80',
+		'descripcion' => 'max:100',
 	];
 
 	protected $unique = ['forma_farmaceutica'];
@@ -42,8 +42,8 @@ class FormaFarmaceutica extends ModelBase
 	 * @var null|array
 	 */
 	protected $fields = [
-		'forma_farmaceutica' => 'Forma Farmaceutica',
-	    'descripcion' => 'Descripcion',
+		'forma_farmaceutica' => 'Forma Farmacéutica',
+	    'descripcion' => 'Descripción',
 		'activo_span' => 'Estatus',
 	];
 }

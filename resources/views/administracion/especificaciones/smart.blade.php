@@ -3,15 +3,9 @@
 @section('form-content')
     {{ Form::setModel($data) }}
     <div class="row">
-    	<div class="form-group col-md-4">
-    		{{ Form::cText('* Grupo','grupo') }}
-        </div>
-        <div class="form-group col-md-4 text-center">
-            {{ Form::cCheckboxBtn('¿Producto con Sales?','Si','sales', $data['sales'] ?? null, 'No') }}
-        </div>
-        <div class="form-group col-md-4 text-center">
-            {{ Form::cCheckboxBtn('¿Producto tipo material de curación?','Si','especificaciones', $data['especificaciones'] ?? null, 'No') }}
-        </div>
+    	<div class="form-group col-md-12 col-xs-12">
+    		{{ Form::cText('* Especificación:','especificacion') }}
+    	</div>
     	<div  class="col-md-12 text-center mt-2">
     		<div class="alert alert-warning" role="alert">
                 Recuerda que al no estar <b>activo</b>, este <b>dato</b> no se mostrara en los modulos correspondientes que se requieran.

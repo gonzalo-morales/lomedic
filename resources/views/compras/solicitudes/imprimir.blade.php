@@ -63,7 +63,6 @@
     <div style="width: 100%;clear: both">
         <table style="width: 100%;" class="detalle">
             <tr>
-                <th><h5>SKU</h5></th>
                 <th><h5>Código de barras</h5></th>
                 <th><h5>Producto</h5></th>
                 <th><h5>Proveedor</h5></th>
@@ -78,9 +77,8 @@
             {{--For each detalle--}}
             @foreach($solicitud->detalle->where('eliminar',0) as $detalle)
             <tr>
-                <td>{{$detalle->sku->sku}}</td>
                 <td>{{$detalle->upc->upc ?? ''}}</td>
-                <td>{{$detalle->sku->descripcion_corta}}</td>
+                <td>{{$detalle->upc->descripcion}}</td>
                 <td>{{$detalle->proveedor->nombre_comercial ?? ''}}</td>
                 <td>{{$detalle->fecha_necesario}}</td>
                 <td>{{isset($detalle->fk_id_proyecto) ? $detalle->proyecto->proyecto : ''}}</td>

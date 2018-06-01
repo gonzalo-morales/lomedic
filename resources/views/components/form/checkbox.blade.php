@@ -1,11 +1,9 @@
-<div class="form-check">
-    {{ Form::hidden($name, 0) }}
-    <label class="form-check-label custom-control custom-checkbox">
-        {{ Form::checkbox($name, 1, $value ?? old($name), [
-            'id' => $name,
-            'class' => 'form-check-input custom-control-input',
-        ] + ($attributes ?? [])) }} {!! ucwords(cTrans('forms.'.$name,$text)) !!}
-        <span class="custom-control-indicator"></span>
-    </label>
+<div class="custom-control custom-checkbox">
+    {{-- {{ Form::hidden($name, 0) }} --}}
+    {{ Form::checkbox($name, 1, $value ?? old($name), [
+        'id' => $name,
+        'class' => 'custom-control-input',
+    ] + ($attributes ?? [])) }}
+	{{ Form::label($name, ucwords(cTrans('forms.'.$name,$text)),['class'=>'custom-control-label','for' => $name]) }}
 </div>
 {{ $errors->has($name) ? HTML::tag('span', $errors->first($name), ['class'=>'help-block error-help-block']) : '' }}

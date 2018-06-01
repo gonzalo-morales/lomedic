@@ -13,7 +13,6 @@
 			var proyectos_js = '{{$js_proyectos ?? ''}}';
 			var tiempo_entrega_js = '{{$js_tiempo_entrega ?? ''}}';
 			var porcentaje_js = '{{ $js_porcentaje ?? '' }}';
-			var skus_js = '{{ $js_skus ?? '' }}';
 			var upcs_js = '{{ $js_upcs ?? '' }}'
         </script>
 	@endif
@@ -43,7 +42,7 @@
     	<div class="form-group col-md-3 col-sm-6">
     		{!! Form::cSelectWithDisabled('*Proveedor','fk_id_proveedor',$proveedores ?? [],[
 				'style' => 'width:100%;',
-				'data-url'=>companyAction('Inventarios\ProductosController@obtenerSkus'),
+				'data-url'=>companyAction('HomeController@index').'/inventarios.upcs/api'
 				'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
 			])!!}
     	</div>
@@ -73,25 +72,13 @@
     				<fieldset name="detalle-form" id="detalle-form">
     					<div class="row">
 							<div class="form-group input-field col-md-3 col-sm-6">
-								<div id="loadingskus" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
+								<div id="loadingupcs" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">
 									Actualizando. Porfavor espere...<i class="material-icons align-middle loading">cached</i>
 								</div>
-								{!! Form::cSelect('* SKU','fk_id_sku',$skus ?? [],[
+								{!! Form::cSelect('* Upc(s)','fk_id_upc',$upcs ?? [],[
 									'style' => 'width:100%;',
-									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
-									'data-url-tiempo_entrega'=>companyAction('HomeController@index').'/sociosnegocio.sociosnegocio/api'
+									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : ''
 								]) !!}
-							</div>
-							<div class="form-group input-field col-md-3 col-sm-6">
-								{{Form::label('fk_id_upc','UPC')}}
-								<div class="input-group">
-									<span class="input-group-addon">
-										<input type="checkbox" id="activo_upc">
-									</span>
-									{!! Form::select('fk_id_upc',[],null,['id'=>'fk_id_upc','disabled',
-									'data-url'=>companyAction('Inventarios\ProductosController@obtenerUpcs',['id'=>'?id']),
-									'class'=>'form-control select2','style'=>'width:100%',])!!}
-								</div>
 							</div>
 							<div class="form-group input-field col-md-3 col-sm-6">
 								<div id="loadingproyectos" class="w-100 h-100 text-center text-white align-middle loadingData" style="display: none">

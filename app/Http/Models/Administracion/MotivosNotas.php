@@ -42,7 +42,7 @@ class MotivosNotas extends ModelBase
 	 * @var array
 	 */
 	protected $fields = [
-		'motivo' => 'Laboratorio',
+		'motivo' => 'Descripción',
 		'tipo_formated' => 'Tipo',
 		'activo_span' => 'Estatus',
 	];

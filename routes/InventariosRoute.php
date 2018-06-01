@@ -16,8 +16,11 @@ Route::prefix('{company}')->group(function () {
     Route::group(['prefix' => 'inventarios', 'as' => 'inventarios.', 'middleware' => ['auth','csrf','password_expired'] ], function() {
         Route::view("/","inventarios.index");
         
-        Route::get('getSkus','Inventarios\ProductosController@obtenerSkus');
-        Route::get('getUpcs/{id}','Inventarios\ProductosController@obtenerUpcs');
+        // Route::get('getSkus','Inventarios\ProductosController@obtenerSkus');
+        Route::get('getRelatedSkus','Inventarios\ProductosController@getRelatedSkus');
+        // Route::get('getUpcs/{id}','Inventarios\ProductosController@obtenerUpcs');
+        Route::get('getUpcsFromSku/{id}','Inventarios\ProductosController@getUpcsFromSku');
+        Route::get('getUpcs','Inventarios\ProductosController@getUpcs')->name('productos.getUpcs');
         
         collect(\File::glob(app_path().'/Http/Controllers/Inventarios/*Controller.php'))->map(function($file) {
             $name = strtolower(substr(basename($file),0,-14));
