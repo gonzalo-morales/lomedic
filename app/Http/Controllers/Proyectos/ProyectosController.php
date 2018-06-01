@@ -277,4 +277,19 @@ class ProyectosController extends ControllerBase
         $respuesta[1] = $errores_clave;//Filas con error en la clave
         return Response::json($respuesta);
     }
+
+    public function getProyectosRelacionados(){
+
+        $id_localidad = Localidades::select('id_localidad')->whereHas('sucursales',function ($sucursales){$sucursales->where('id_sucursal',\request()->fk_id_sucursal);})->first()->id_localidad;
+
+        $proyectos = Proyectos::select('id_proyecto as id','proyecto as text')->where('fk_id_localidad',$id_localidad)->whereHas('productos',function ($productos){
+              $productos->whereHas('claveClienteProducto',function ($claves){
+                  $claves->whereHas('productos',function ($productos){
+                      $productos->where('id_upc',\request()->id_upc);
+                  })->get();
+              })->get();
+          })->get();
+
+        return Response::json($proyectos);
+    }
 }

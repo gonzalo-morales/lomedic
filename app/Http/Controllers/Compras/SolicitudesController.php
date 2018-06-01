@@ -36,15 +36,6 @@ class SolicitudesController extends ControllerBase
     
     public function getDataView($entity = null)
     {
-        dd(
-          Proyectos::whereHas('productos',function ($q){
-              $q->whereHas('claveClienteProducto',function ($q){
-//                  $q->whereHas('productos',function ($q){
-//                     $q->where('id_upc',66);
-//                  });
-              });
-          })->first()
-        );
 
         switch (\request()->tipo_documento){
             case 4:
@@ -75,7 +66,7 @@ class SolicitudesController extends ControllerBase
             })->pluck('sucursal','id_sucursal');
         }
         return [
-            'proyectos'         => Proyectos::where('fk_id_estatus',1)->orderBy('proyecto')->pluck('proyecto','id_proyecto')->prepend('Seleccione el proyecto',''),
+//            'proyectos'         => Proyectos::where('fk_id_estatus',1)->orderBy('proyecto')->pluck('proyecto','id_proyecto')->prepend('Seleccione el proyecto',''),
             'proveedores'       => $proveedores ?? '',
             'sucursales'        => $sucursales ?? '', 
             'impuestos'         => Impuestos::select('id_impuesto','impuesto')->where('activo',1)->orderBy('impuesto')->with('porcentaje')->pluck('impuesto','id_impuesto')->prepend('Seleccione...',''),
@@ -111,7 +102,27 @@ class SolicitudesController extends ControllerBase
                 }]
             '),
             'js_porcentaje'     => Crypt::encryptString('"select": ["tasa_o_cuota"], "conditions": [{"where":["id_impuesto", "$id_impuesto"]}], "limit": "1"'),
-            'js_proyectos' => Crypt::encryptString('"select":["id_proyecto","proyecto"], "conditions":[{"where":["eliminar",0]},{"where":["fk_id_localidad",$fk_id_localidad]}]'),
+            'js_proyectos' => Crypt::encryptString('
+                "select": ["id_proyecto", "proyecto"],
+                "conditions": [{
+                    "where": ["eliminar", 0]
+                }, {
+                    "where": ["fk_id_localidad", "$fk_id_localidad"]
+                }],
+                "whereHas": [{
+                    "productos": {
+                        "cwhereHas": [{
+                            "claveClienteProducto": {
+                                "cwhereHas": [{
+                                    "productos": {
+                                        "where": ["id_upc","$id_upc"]
+                                    }
+                                }]
+                            }
+                        }]
+                    }
+                }]
+            '),
             'detalles_documento'=> $detalles_documento,
         ];
     }

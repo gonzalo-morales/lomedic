@@ -2,6 +2,9 @@
 
 namespace App\Http\Models\Proyectos;
 
+use App\Http\Models\Administracion\CaracterEventos;
+use App\Http\Models\Administracion\FormasAdjudicacion;
+use App\Http\Models\Administracion\ModalidadesEntrega;
 use App\Http\Models\Administracion\Sucursales;
 use App\Http\Models\Liciplus\Licitaciones;
 use App\Http\Models\Administracion\TiposEventos;

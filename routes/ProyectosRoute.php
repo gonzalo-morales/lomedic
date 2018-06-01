@@ -30,5 +30,6 @@ Route::prefix('{company}')->group(function () {
         Route::get('getProyectosCliente/{id}','Proyectos\ProyectosController@obtenerProyectosCliente');
         Route::get('getLayoutProductosProyecto','Proyectos\ProyectosController@layoutProductosProyecto');
         Route::post('getClavesClientesProductos','Proyectos\ProyectosController@getClavesClientesProductos');
+        Route::get('getProyectosRelacionados','Proyectos\ProyectosController@getProyectosRelacionados');
     });
 });

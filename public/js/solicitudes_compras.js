@@ -57,6 +57,20 @@ $(document).ready( function () {
                $('#fk_id_proveedor').empty();
            }
        });
+       $.ajax({
+           url:$('#fk_id_proyecto').data('url'),
+           data:{
+               id_upc : $('#fk_id_upc').val(),
+               fk_id_sucursal : $('#fk_id_sucursal').val()
+           },
+           success : function (data) {
+               data = JSON.parse(data);
+               $('#fk_id_proyecto').select2({data:data});
+           },
+           error: function () {
+               $('#fk_id_proyecto').empty();
+           }
+       });
     });
 
     $('#fk_id_proyecto.select2').select2({
