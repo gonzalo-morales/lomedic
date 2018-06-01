@@ -28,15 +28,16 @@ class Entradas extends ModelCompany
         'fecha_entrada',
         'fk_id_estatus_entrada',
         'fk_id_almacen',
-        'fk_id_ubicacion'
+        'fk_id_ubicacion',
+        'no_poliza'
     ];
 
     protected $fields = [
         'id_documento' => 'Número Entrada',
-//        'tipoDocumento.nombre_documento' => 'Tipo documento',
-//        'numero_documento' => 'Numero de documento',
-        'referencia_documento' => 'Referencia del documentos',
+        'tipoDocumento.nombre_documento' => 'Tipo documento',
+        'numero_documento' => 'Numero de documento',
         'fecha_entrada' => 'Fecha de entrada',
+        'referencia_documento' => 'Referencia del documentos',
         'estatus_documento_span' => 'Estatus de la entrada'
     ];
 
@@ -150,5 +151,10 @@ class Entradas extends ModelCompany
     {
         return $this->hasOne(EstatusDocumentos::class,'id_estatus','fk_id_estatus_entrada');
     }
+    public function detalles()
+    {
+        return $this->hasMany(EntradaDetalle::class,'fk_id_documento','id_documento');
+    }
+
 
 }

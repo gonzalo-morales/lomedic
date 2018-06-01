@@ -43,13 +43,12 @@ class EntradaDetalle extends ModelCompany
     protected $fillable = [
         'fk_id_documento',
         'fk_id_tipo_documento',
-        'fk_id_sku',
         'fk_id_upc',
         'cantidad_surtida',
         'fecha_caducidad',
         'lote',
         'fk_id_linea',
-        'precio_unitario',
+        'costo_unitario',
         'fk_id_proyecto',
         'fk_id_tipo_documento_base'
     ];
@@ -175,6 +174,5 @@ class EntradaDetalle extends ModelCompany
     {
         return $this->belongsTo('App\Http\Models\Inventarios\Entradas','fk_id_entrada_almacen','id_entrada_almacen');
     }
-
 
 }

@@ -29,173 +29,72 @@ class EntradasController extends ControllerBase
 
     public function getDataView($entity = null)
     {
-        switch (empty($entity) ? 0 :$entity->fk_id_tipo_documento)
-        {
-            case 3:
-                $datos_documento = Ordenes::where('id_documento',$entity->numero_documento)->first();
-                break;
-            default:
-                $datos_documento = '';
-                break;
-        }
 
-        if($datos_documento != '')
-        {
-            $datos_orden['sucursales'] = $datos_documento->sucursales;
-            $datos_orden['proveedor'] = $datos_documento->proveedor;
-            $detalle_documento = $datos_documento->detalleOrdenes;
 
-            foreach ( $datos_documento->detalleOrdenes as $id_row => $detalle)
-            {
-                $detalle_productos[$id_row]['sku'] = $detalle->sku->sku;
-                $detalle_productos[$id_row]['sku_descripcion'] = $detalle->sku->descripcion;
-                $detalle_productos[$id_row]['upc'] = $detalle->upc['upc'];
-                $detalle_productos[$id_row]['nombre_cliente'] = $detalle->cliente['nombre_comercial'];
-                $detalle_productos[$id_row]['nombre_proyecto'] = $detalle->proyecto['proyecto'];
-                $detalle_productos[$id_row]['cantidad'] = $detalle->cantidad;
-                $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($entity->fk_id_tipo_documento,$entity->numero_documento,$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_documento_detalle);
-                $detalle_productos[$id_row]['lote'] = $detalle->entradaDetalle['lote'];
-                $detalle_productos[$id_row]['fecha_caducidad'] = $detalle->entradaDetalle['fecha_caducidad'];
-                $detalle_productos[$id_row]['precio_unitario'] = $detalle['precio_unitario'];
-            }
+        return [
+            'tipo_documento' => TiposDocumentos::select('id_tipo_documento','nombre_documento')->orderBy('id_tipo_documento')->pluck('nombre_documento','id_tipo_documento')->prepend('...',''),
+        ];
 
-            $data = [
-                'datos_documento' => $datos_orden ,
-                'detalle_documento' => $detalle_documento,
-                'dato_entrada'=>$datos_documento,
-                'detalle_entrada'=>$detalle_productos];
-        }
-        else
-        {
-            $data = [
-                'sucursales' => Sucursales::where('activo',1)->pluck('sucursal','id_sucursal'),
-                'tipo_documento' => DB::table('gen_cat_tipo_documento')->pluck('nombre_documento','id_tipo_documento'),
-            ];
-        }
 
-        return $data ;
     }
 
-    public function store(Request $request, $company, $compact = false)
-    {
-        $nueva_entrada = Entradas::create(['fk_id_tipo_documento'=>$_POST['fk_id_tipo_documento'],
-            'numero_documento'=> $_POST['numero_documento'],
-            'referencia_documento'=> $_POST['referencia_documento'],
-            'fecha_entrada'=> date("Y-m-d H:i:s")
-        ]);
-        parse_str($_POST['detalle_entrada'] , $datos_detalle);
-        foreach ($datos_detalle["datos_entradas"] as $detalle)
-        {
-            if( $detalle['ingresar'] != 0 )
-            {
-                EntradaDetalle::create(['fk_id_entrada_almacen' => $nueva_entrada->id_entrada_almacen ,
-                    'fk_id_sku' => $detalle['id_sku'],
-                    'fk_id_upc' => $detalle['id_upc'],
-                    'cantidad_surtida' => $detalle['ingresar'],
-                    'lote' => $detalle['lote'],
-                    'fecha_caducidad' => $detalle['caducidad'],
-                    'fk_id_detalle_documento' => $detalle['id_detalle_documento'],
-                ]);
-            }
-        }
-
-        return $this->redirect('store');
-    }
-
-    public function getProveedores()
-    {
-        $ordenes_compra = SociosNegocio::where('fk_id_sucursal',$_POST['id_sucursal'])
-            ->select('id_documento')
-            ->pluck('id_documento')
-            ->toJson();
-
-        return $ordenes_compra;
-    }
-
-    public function getDetalleEntrada()
-    {
-        if($_POST['fk_id_tipo_documento'])
-        {
-            switch ($_POST['fk_id_tipo_documento'])
-            {
-                case 1:
-                    $datos_documento = '';
-                    break;
-                case 2:
-                    $datos_documento = '';
-                    break;
-                case 3:
-                    $datos_documento = Ordenes::where('id_documento',$_POST['numero_documento'])
-                        ->first();
-                    break;
-            }
-        }
-
-        if($datos_documento != '')
-        {
-            $datos_orden['sucursales'] = $datos_documento->sucursales;
-            $datos_orden['proveedor'] = $datos_documento->proveedor;
-            $detalle_documento = $datos_documento->detalleOrdenes;
-
-            foreach ( $datos_documento->detalleOrdenes as $id_row => $detalle)
-            {
-                $detalle_productos[$id_row]['id_sku'] = $detalle->fk_id_sku;
-                $detalle_productos[$id_row]['sku'] = $detalle->sku->sku;
-                $detalle_productos[$id_row]['sku_descripcion'] = $detalle->sku->descripcion;
-                $detalle_productos[$id_row]['id_upc'] = $detalle->fk_id_upc;
-                $detalle_productos[$id_row]['upc'] = $detalle->upc['upc'];
-                $detalle_productos[$id_row]['id_cliente'] = $detalle->fk_id_cliente;
-                $detalle_productos[$id_row]['nombre_cliente'] = $detalle->cliente['nombre_comercial'];
-                $detalle_productos[$id_row]['fk_id_proyecto'] = $detalle->fk_id_proyecto;
-                $detalle_productos[$id_row]['nombre_proyecto'] = $detalle->proyecto['proyecto'];
-                $detalle_productos[$id_row]['cantidad'] = $detalle->cantidad;
-                $detalle_productos[$id_row]['id_detalle'] = $detalle->id_documento_detalle;
-                $detalle_productos[$id_row]['cantidad_surtida'] = $detalle->sumatoriaCantidad($_POST['fk_id_tipo_documento'],$_POST['numero_documento'],$detalle->fk_id_sku,$detalle->fk_id_upc,$detalle->id_documento_detalle);
-                $detalle_productos[$id_row]['lote'] = $detalle->entradaDetalle['lote'];
-                $detalle_productos[$id_row]['fecha_caducidad'] = $detalle->entradaDetalle['fecha_caducidad'];
-                $detalle_productos[$id_row]['precio_unitario'] = $detalle['precio_unitario'];
-            }
-
-            $data = [
-                    'datos_documento' => $datos_orden ,
-                    'detalle_documento' => $detalle_documento,
-                    'company_route'=>companyRoute('store'),
-                    'dato_entrada'=>$datos_documento,
-                    'detalle_entrada'=>$detalle_productos];
-        }
-        else
-        {
-            $data = [];
-        }
-
-        return $data ;
-    }
 
     public function getDocumento($company,Request $request)
     {
-        $documentos = Ordenes::where('fk_id_tipo_documento',$request->fk_id_tipo_documento)->pluck('id_documento');
+
+//        $modelo_base = new ModelBase();
+//        dump($modelo_base->documentos_destino($request->fk_id_tipo_documento)->first()->documento()->toSql());
+
+        switch ($request->fk_id_tipo_documento)
+        {
+            case 1:
+
+            break;
+            case 2:
+
+            break;
+            case 3:
+                $documentos = Ordenes::where('fk_id_tipo_documento',$request->fk_id_tipo_documento)->orderBy('id_documento')->pluck('id_documento');
+            break;
+
+        }
         return $documentos;
+
     }
+
     public function getDetalleDocumento($company,Request $request)
     {
         $documento = Ordenes::where('fk_id_tipo_documento',$request->fk_id_tipo_documento)
-            ->where('id_documento',$request->entrada_escaner)->first();
+            ->where('id_documento',$request->numero_documento)->first();
 
         $detalles = DetalleOrdenes::where('fk_id_tipo_documento',$request->fk_id_tipo_documento)
-            ->where('fk_id_documento',$request->entrada_escaner)->get();
-
+            ->where('fk_id_documento',$request->numero_documento)->get();
 
         foreach ( $detalles as $id_row => $detalle){
+
+            $upcs[] = $detalle->upc->upc;
+
             $detalle_documento[$id_row] = [
-                'sku' => $detalle->sku->sku,
+                'fk_id_sku' => $detalle->fk_id_sku,
+                'fk_id_upc' => $detalle->fk_id_upc,
+                'fk_id_proyecto' => $detalle->fk_id_proyecto,
+                'precio_unitario' => $detalle->precio_unitario,
+                'cantidad' => $detalle->canitdad,
+                'total' => $detalle->total,
+                'fk_id_documento' => $detalle->fk_id_documento,
+                'fk_id_tipo_documento' => $detalle->fk_id_tipo_documento,
+//                'fk_id_tipo_documento_base' => $detalle->fk_id_tipo_documento_base,
+                'fk_id_linea' => $detalle->id_documento_detalle,
+//                'fk_id_documento_base' => $detalle->fk_id_documento_base,
+                'sku' => $detalle->sku['sku'],
                 'upc' => $detalle->upc->upc,
-                'descripcion' => $detalle->sku->descripcion,
-                'cliente' => $detalle->cliente->nombre_comercial,
+                'descripcion' => $detalle->upc->nombre_comercial,
+                'cliente' => $detalle->proyecto->cliente->nombre_comercial,
                 'proyecto' => $detalle->proyecto->proyecto,
                 'precio_unitario' => round($detalle->precio_unitario,2),
                 'total' => round($detalle->total,2),
                 'cantidad' => $detalle->cantidad,
-                'cantidad_surtida' => 0,
+                'cantidad_surtida' => self::cantidad_surtida($detalle->fk_id_documento,$detalle->fk_id_upc),
                 'sucursal' => $documento->sucursales->sucursal,
             ];
         }
@@ -203,7 +102,18 @@ class EntradasController extends ControllerBase
             'sucursal' => $documento->sucursales->sucursal,
             'detalle'=>$detalle_documento,
             'proveedor' => $documento->proveedor->razon_social,
+            'upcs' => $upcs,
         ];
+    }
+
+    public function cantidad_surtida($numero_documento,$fk_id_upc)
+    {
+        $no_entrada = Entradas::where('numero_documento',$numero_documento)->pluck('id_documento');
+        $cantidad_surtida = EntradaDetalle::whereIn('fk_id_documento',$no_entrada)
+            ->where('fk_id_upc',$fk_id_upc)
+            ->sum('cantidad_surtida');
+
+        return $cantidad_surtida;
     }
 
 }

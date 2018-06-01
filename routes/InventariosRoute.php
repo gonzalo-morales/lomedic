@@ -29,6 +29,8 @@ Route::prefix('{company}')->group(function () {
         Route::post('guardarEntrada','Inventarios\EntradasController@guardarEntrada')->name('entradas.guardarEntrada');
         Route::post('getProveedores','Inventarios\EntradasController@getProveedores')->name('entradas.getPorveedores');
         Route::post('getOrdenes','Inventarios\EntradasController@getOrdenes')->name('entradas.getOrdenes');
+        Route::post('getDocumento','Inventarios\EntradasController@getDocumento')->name('entradas.getDocumento');
+        Route::post('getDetalleDocumento','Inventarios\EntradasController@getDetalleDocumento')->name('entradas.getDetalleDocumento');
         Route::post('getDetalleOrden','Inventarios\EntradasController@getDetalleOrden')->name('entradas.getDetalleOrden');
         Route::get('salidas/{salida}/pendientes','Inventarios\SalidasController@pendings')->name('salidas.pendings');
         Route::post('surtidoreceta/getReceta','Inventarios\SurtidoRecetaController@getReceta')->name('surtidoreceta.getReceta');
