@@ -32,9 +32,23 @@ class DetalleOrdenes extends ModelCompany
      *
      * @var array
      */
-    protected $fillable = ['fk_id_documento','fk_id_sku','fk_id_upc','cantidad','total_impuesto',
-        'fk_id_impuesto','precio_unitario','total','fk_id_proyecto','fecha_necesario',
-        'descuento_detalle','cerrado','fk_id_tipo_documento','fk_id_tipo_documento_base','fk_id_documento_base','fk_id_linea'];
+    protected $fillable = [
+        'fk_id_documento',
+        'fk_id_sku',
+        'fk_id_upc',
+        'cantidad',
+        'total_impuesto',
+        'fk_id_impuesto',
+        'precio_unitario',
+        'total',
+        'fk_id_proyecto',
+        'fecha_necesario',
+        'descuento_detalle',
+        'cerrado',
+        'fk_id_tipo_documento',
+        'fk_id_tipo_documento_base',
+        'fk_id_documento_base',
+        'fk_id_linea'];
 
     /**
      * The validation rules
@@ -51,6 +65,7 @@ class DetalleOrdenes extends ModelCompany
         'precio_unitario' => 'required',
         'total' => 'required'
     ];
+
 
     public function getFields()
     {
@@ -77,7 +92,7 @@ class DetalleOrdenes extends ModelCompany
         return $this->hasOne(Proyectos::class,'id_proyecto','fk_id_proyecto');
     }
 
-    public function orden()
+    public function documento()
     {
         return $this->belongsTo(Ordenes::class,'fk_id_documento','id_documento');
     }

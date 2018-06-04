@@ -36,6 +36,7 @@
 
 @section('form-content')
 	{{ Form::setModel($data) }}
+	{{--{{dd($data)}}--}}
 	@if (Route::currentRouteNamed(currentRouteName('create')) || Route::currentRouteNamed(currentRouteName('show')) )
 			<div class="card z-depth-1-half">
 				<div class="card-body">
@@ -48,11 +49,11 @@
 								</div>
 							</div>
 							<div class="col-12 col-md-4 col-lg-2">
-								@if(Route::currentRouteNamed(currentRouteName('create')))
+								{{--@if(Route::currentRouteNamed(currentRouteName('create')))--}}
 									<div class="form-group">
-										{{ Form::cSelect('* Numero de documento','numero_documento',[],['class'=>'select2','data-url'=>companyRoute('getDetalleDocumento')]) }}
+										{{ Form::cSelect('* Numero de documento','numero_documento',$numero_documento ?? [],['class'=>'select2','data-url'=>companyRoute('getDetalleDocumento')]) }}
 									</div>
-								@endif
+
 							</div>
 							<div class="col-md-6 col-sm-4 col-lg-3">
 								<div class="form-group">
@@ -76,7 +77,7 @@
 				</div><!--/row-->
 			</div><!--/row-->
 
-
+			@if(Route::currentRouteNamed(currentRouteName('create')))
 			<div class="card z-depth-1-half">
 
 				<div class="card-body">
@@ -89,6 +90,8 @@
 							{{--<input type="hidden" name="id_documento" id="id_documento" value="0">--}}
 						</div>
 					</nav>
+
+
 					<div class="tab-content" id="nav-tabContent">
 						<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 							<div class="row">
@@ -103,7 +106,6 @@
 								<div class="col-12 col-md-6 col-lg-4">
 									<div class="form-group">
 										{{ Form::cText('Codigo del producto', 'upcs_cb',['onchange'=>'agregar_info_upc(1);']) }}
-{{--										{{ Form::cText('Codigo del producto', 'upcs_cb',['onkeypress'=>'agregar_info_upc(1);']) }}--}}
 									</div>
 								</div>
 							</div>
@@ -137,7 +139,7 @@
 							</div>
 
 						</div>
-						{{--<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>--}}
+
 					</div>
 
 					<div class="row justify-content-center"></div>
@@ -145,7 +147,7 @@
 				</div>
 				{{--</div>--}}
 			</div>
-
+			@endif
 			<div class="card z-depth-1-half">
 
 				<div class="card-body">

@@ -59,7 +59,7 @@ $('#numero_documento').on('change', function() {
                         '<td class="cantidad_surtida">'+ value.cantidad_surtida +'</td>' +
                         '<td>'+ value.precio_unitario +'</td>' +
                         '<td>'+ value.total +'</td>' +
-                        '<td><button type="button" class="btn btn-primary  material-icons " onclick="mostrar_detalle(\''+value.upc+'\');" style="padding-bottom: 0rem;padding-top: 0px;">zoom_in</button></td>' +
+                        '<td><button type="button" class="btn btn-primary" onclick="mostrar_detalle(\''+value.upc+'\');" style="padding-bottom: 0%;padding-top: 0%;">+</button></td>' +
                         '<input type="hidden" class="id_upc" value="'+value.fk_id_upc+'">'+
                         '<input type="hidden" class="fk_id_proyecto" value="'+value.fk_id_proyecto+'" >'+
                         '<input type="hidden" class="costo_unitario" value="'+value.precio_unitario+'" >'+

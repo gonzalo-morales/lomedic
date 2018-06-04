@@ -30,9 +30,13 @@ class EntradasController extends ControllerBase
     public function getDataView($entity = null)
     {
 
-
+//        dd($entity);
         return [
             'tipo_documento' => TiposDocumentos::select('id_tipo_documento','nombre_documento')->orderBy('id_tipo_documento')->pluck('nombre_documento','id_tipo_documento')->prepend('...',''),
+//            'tipo_documento' => !(empty($entity)) ? [] : TiposDocumentos::select('id_tipo_documento','nombre_documento')->orderBy('id_tipo_documento')->pluck('nombre_documento','id_tipo_documento')->prepend('...',''),
+            'numero_documento' => !(empty($entity)) ? Entradas::select('id_documento','numero_documento')->pluck('numero_documento','id_documento'):[],
+            'sucursal' => !(empty($entity)) ? Sucursales::  ,
+            'proceedor' => !(empty($entity)) ? ,
         ];
 
 
