@@ -1,9 +1,6 @@
 @extends(smart())
 
 @section('header-bottom')
-	@foreach($data as $item)
-		{{dump($item)}}
-	@endforeach
 	@parent
 	<script type="text/javascript">
 		var clientes_js =   "{{ $js_clientes ?? '' }}";

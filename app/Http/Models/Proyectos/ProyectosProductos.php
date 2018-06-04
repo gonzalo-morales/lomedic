@@ -48,11 +48,6 @@ class ProyectosProductos extends ModelCompany
         return $this->hasOne(ClaveClienteProductos::class,'id_clave_cliente_producto','fk_id_clave_cliente_producto');
     }
 
-    function upc()
-    {
-        return $this->hasOne(Upcs::class,'id_upc','fk_id_upc');
-    }
-
     function moneda()
     {
         return $this->hasOne(Monedas::class,'id_moneda','fk_id_moneda');

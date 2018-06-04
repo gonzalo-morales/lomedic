@@ -39,4 +39,9 @@ class Localidades extends ModelBase
 		'localidad' => 'Localidad',
 		'activo_span' => 'Estatus'
 	];
+
+	public function sucursales()
+    {
+        return $this->hasMany(Sucursales::class,'fk_id_localidad','id_localidad');
+    }
 }

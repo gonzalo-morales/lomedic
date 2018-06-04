@@ -42,42 +42,35 @@ $(document).ready(function(){
     });
 
     $('#fk_id_proveedor').on('change',function(){
-        let _url = $(this).data('url'),;
-        if($(this).val() > 0){
+        let _url = $(this).data('url');
+        let thisVal = $(this).val();
+        if(thisVal > 0){
             $.ajax({
                 url: _url,
-                data: "data",
-                dataType: "dataType",
+                data:{
+                    'param_js':upcs_js,
+                    $fk_id_socio_negocio:thisVal
+                },
+                dataType: "json",
                 success: function (response) {
-                    
-                }
+                    console.log(response);
+                    const dataUPC = response.forEach(element => {
+                        console.log(element);
+                        return `<option value="${element.id_upc}" data-desc="${element.descripcion}">${element.upc}</option>`;    
+                    });
+                    $("#fk_id_upc").select2({
+                        disabled:false,
+                        data:dataUPC,
+                    });
+                }                  
             });
-            // $("#fk_id_upc").select2({
-            //     disabled:false,
-            //     minimumInputLength:3,
-            //     ajax:{
-            //         delay:500,
-            //         url: _url,
-            //         dataType: 'json',
-            //         data: function (params) {
-            //             return {
-            //                 term: params.term,fk_id_socio_negocio:$('#fk_id_proveedor').val()};
-            //         },
-            //         processResults: function (data) {
-            //             console.log(data)
-            //             return {results: data}
-            //         },
-            //         error:function(){
-            //             $.toaster({priority : 'danger',title : '¡Error!',message : 'Al parecer no ingresaste un SKU válido, verifica que el SKU sea el correcto',
-            //             settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}}); 
-            //         }
-            //     }
-            // });
         } else {
             $('#fk_id_upc').select2({
                 disabled:true,
                 placeholder: "Seleccione primero el proveedor..."
             });
+            $.toaster({priority : 'warning',title : '¡Lo sentimos!',message : 'Al parecer el proveedor no cuenta con UPC(s) dados de alta.',
+            settings:{'timeout':3000,'toaster':{'css':{'top':'5em'}}}}); 
         }
 
         if(primeracarga && $('#productos tbody tr').length > 0) {

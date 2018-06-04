@@ -53,7 +53,15 @@
 						
                         @foreach ($empresas as $row)
                         <li class="list-group-item form-group row">
-                        	{{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresa_socio)?1:0) ) }}
+							{{-- {{ Form::cCheckbox($row->nombre_comercial, 'empresas['.$row->id_empresa.']',['class'=>'socio-empresa'], (in_array($row->id_empresa, $empresa_socio)?1:0) ) }} --}}
+							<div class="form-check">
+								<input name="empresas_[{{$row->id_empresa}}][fk_id_empresa]" type="hidden" value="0">
+								<label class="form-check-label custom-control custom-checkbox">
+									{{ $row->nombre_comercial }}
+									<input class="form-check-input custom-control-input" name="empresas_[{{$row->id_empresa}}][fk_id_empresa]" type="checkbox" value="{{$row->id_empresa}}" {{in_array($row->id_empresa,$empresa_socio) ? 'checked' : ''}}>
+									<span class="custom-control-indicator"></span>
+								</label>
+							</div>
                         </li>
                         @endforeach
                     </ul>
@@ -90,10 +98,10 @@
 										{{ Form::cText('* Calle', 'calle') }}
 									</div>
 									<div class="form-group col-md-3">
-										{{ Form::cText('Num. Interior', 'numero_interior') }}
+										{{ Form::cText('* Num. Exterior', 'numero_exterior') }}
 									</div>
 									<div class="form-group col-md-3">
-										{{ Form::cText('* Num. Exterior', 'numero_exterior') }}
+										{{ Form::cText('Num. Interior', 'numero_interior') }}
 									</div>
 									<div class="form-group col-md-4">
 										{{ Form::cText('* Colonia', 'colonia') }}

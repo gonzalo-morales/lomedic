@@ -14,6 +14,7 @@
 		var porcentaje_js = '{{ $js_porcentaje ?? '' }}';
 		var upcs_js = '{{ $js_upcs ?? '' }}'
 		var proveedores_js = '{{ $js_proveedores ?? '' }}'
+		var proyectos_js = '{{ $js_proyectos ?? '' }}'
     </script>
 	<script type="text/javascript" src="{{ asset('js/solicitudes_compras.js') }}"></script>
 	@endif
@@ -106,7 +107,7 @@
 								{{Form::cSelect('Proyecto','fk_id_proyecto',$proyectos ?? [],[
 									'style' => 'width:100%;',
 									'class' => !Route::currentRouteNamed(currentRouteName('show')) ? 'select2' : '',
-									'data-url'=>companyAction('HomeController@index').'/sociosnegocio.sociosnegocio/api',
+									'data-url'=>companyAction('Proyectos\ProyectosController@getProyectosRelacionados'),
 								])}}
 							</div>
 							<div class="form-group input-field col-md-2 col-sm-4">
